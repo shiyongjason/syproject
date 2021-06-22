@@ -86,6 +86,11 @@ export const addFlowUp: (params: any) => AxiosPromise<any> = (params) => {
     return axios.post('memeber/api/flow-up/boss', params)
 }
 
+/** BOSS-2.0boss跟进记录统计 */
+export const getFlowUpCount: (params: any) => AxiosPromise<any> = (params) => {
+    return axios.get('memeber/api/flow-up/count/boss', { params })
+}
+
 /** BOSS-员工列表 */
 export const getCompanyUserList: (params: any) => AxiosPromise<StaffInfoResponse[]> = (params) => {
     return axios.get(`memeber/openapi/company/user/boss/staff-info`, { params })

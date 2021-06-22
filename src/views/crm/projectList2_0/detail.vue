@@ -29,11 +29,17 @@
                         <!-- <div class="step_arrow left pos7" :class="isActive(flowUpProcess[6].key)"></div>
                         <div class="process-item pos8">{{flowUpProcess[6].value}}</div> -->
                     </div>
-                    <h-button type='assist' @click='add'> + 新增跟进记录</h-button>
+                    <div class="flowup-count" v-if="flowUpCount.total">
+                        <h-button type='assist' @click='add'> + 新增跟进记录</h-button>
+                        <span>
+                            累计跟进{{flowUpCount.total}}次，当面拜访{{flowUpCount.directCount}}次
+                        </span>
+                    </div>
                     <div style="margin-top:20px">
                         <b>跟进动态</b>
                     </div>
-                    <div class="follow-records" ref='records'>
+                    <div v-if="!recordsData.length" style="width: 600px;margin: 10px auto;"><el-divider>暂无跟进动态</el-divider></div>
+                    <div v-else class="follow-records" ref='records'>
                         <div class="follow-cell" v-for="(item,index) in recordsData" :key="item.id">
                             <div class="info"><img :src="userDefault" class="avatar">
                                 <div class="name-container">
@@ -93,6 +99,7 @@
                                 </div>
                             </div>
                         </div>
+                        <div v-if="isNoMore" style="width: 570px;margin: 10px auto;"><el-divider>没有更多</el-divider></div>
                     </div>
                 </div>
                 <div v-if="radio=='项目信息'" class="project-information">
@@ -156,7 +163,13 @@
                     <div style="color:#606266;line-height:40px"><font class="project-detail-others">创建时间：</font>{{projectDetail.createTime | formatDate('YYYY年MM月DD日 HH:mm:ss')}}</div>
                     <div style="color:#606266;line-height:40px"><font class="project-detail-others">创建人：</font>{{projectDetail.createBy}}（{{projectDetail.createPhone}}）</div>
                     <div style="color:#606266;line-height:40px"><font class="project-detail-others">最近维护时间：</font>{{projectDetail.updateTime | formatDate('YYYY年MM月DD日 HH:mm:ss')}}</div>
-                    <div style="color:#606266;line-height:40px;margin-bottom:20px"><font class="project-detail-others">最近维护人：</font>{{projectDetail.updateBy || '-'}} ({{projectDetail.updatePhone}})</div>
+                    <div style="color:#606266;line-height:40px;margin-bottom:20px">
+                        <font class="project-detail-others">最近维护人：</font>
+                        <template v-if="projectDetail.updateBy">
+                            {{projectDetail.updateBy || '-'}} ({{projectDetail.updatePhone}})
+                        </template>
+                        <template v-else>-</template>
+                    </div>
                 </div>
 
             </div>
@@ -237,7 +250,7 @@
                     </div>
                 </div>
                 <!-- 内嵌弹窗-选择联系人 -->
-                <el-dialog width="800px" title="选择联系人" :visible.sync="innerContactVisible" append-to-body >
+                <el-dialog width="800px" title="选择联系人" :visible.sync="innerContactVisible" append-to-body :before-close="()=>onBeforeCloseChooseUser()">
                     <div class="contact">
                         <div class="contact-item">
                             <el-checkbox v-model="radioContact" @change="onChageRadioContact"></el-checkbox>
@@ -245,8 +258,8 @@
                         </div>
                         <div style="margin:10px 0 8px"><b>员工列表</b></div>
                         <template v-if="employeeList.length">
-                            <div class="contact-item" v-for="item in employeeList" :key="item.id">
-                                <el-checkbox v-model="radioContactEmployee" @change="()=>onChageRadioContactEmployee(item)"></el-checkbox>
+                            <div class="contact-item" v-for="(item,index) in employeeList" :key="item.id">
+                                <el-checkbox v-model="item.checked" @change="()=>onChageRadioContactEmployee(item,index)"></el-checkbox>
                                 <div class="checkbox-right iborder"><i class="el-icon-user-solid"></i>{{item.nickName}}（{{item.phoneNumber}}）<span>{{item.roleName}}</span></div>
                             </div>
                         </template>
@@ -282,7 +295,7 @@
                                             </el-form-item>
                                         </div>
                                         <div class="contact-table-item" style="margin-left: 45px;">
-                                            <el-button type="primary" size="mini" @click="()=>onDelCompanyContact(item)">删除</el-button>
+                                            <el-button type="primary" size="mini" @click="()=>onDelCompanyContact(item,index)">删除</el-button>
                                         </div>
                                     </div>
                                 </el-form>
@@ -291,7 +304,7 @@
                         <!-- end -->
                     </div>
                     <div slot="footer" class="dialog-footer">
-                        <el-button @click="innerContactVisible = false">取 消</el-button>
+                        <el-button @click="onBeforeCloseChooseUser">取 消</el-button>
                         <el-button type="primary" @click="onChooseUser">确定</el-button>
                     </div>
                 </el-dialog>
@@ -338,7 +351,7 @@ import { ccpBaseUrl, ossAliyun, ossOldBucket } from '@/api/config'
 import OssFileUtils from '@/utils/OssFileUtils'
 import { Action, Getter, State } from 'vuex-class'
 import { CompanyContactRequest, CompanyContactResponse, FlowUpRequest, ReqProjectSupply, StaffInfoResponse } from '@/interface/hbp-member'
-import { DictionaryList, getFlowUp, upDateProjectDetail, addFlowUp, getCompanyContactList, createCompanyContact, getCompanyUserList, getProcess, putCompanyContact, delCompanyContact } from './api'
+import { DictionaryList, getFlowUp, upDateProjectDetail, addFlowUp, getCompanyContactList, createCompanyContact, getCompanyUserList, getProcess, putCompanyContact, delCompanyContact, getFlowUpCount } from './api'
 import { handleSubmit, validateForm } from '@/decorator'
 import { ROLE, SALESPHASE, USER_DEFAULT } from './const'
 
@@ -399,13 +412,14 @@ export default class ProjectList2Detail extends Vue {
     role = ROLE
     employeeList:StaffInfoResponse[] = [] // 员工列表
     companyContactList:(CompanyContactResponse& {checked?:boolean})[] = []
-
+    companyContactListBak:(CompanyContactResponse& {checked?:boolean})[] = [] // 备份用于取消后还原数据（不用接口取数据）
     action = ccpBaseUrl + 'common/files/upload-old'
     uploadParameters = {
         updateUid: '',
         reservedName: false
     }
-
+    // 没有更多
+    isNoMore:boolean = false
     process = []
     radio: string = '跟进记录';
     // 添加跟进记录 弹窗
@@ -415,15 +429,36 @@ export default class ProjectList2Detail extends Vue {
     // 邀请同事协助 弹窗
     innerHelpVisible:boolean = false
     radioContact:boolean = false
-    radioContactEmployee:boolean = false
+    flowUpCount:any = {
+        directCount: '',
+        total: ''
+    }
 
     stateN = ''
     assistantsNames = ''
-    url = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-    srcList = [
-        'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-        'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg'
-    ]
+
+    queryParams = {
+        keyWord: ''
+    }
+    timeout = null
+
+    recordsQuery = {
+        bizId: '',
+        pageNumber: 1,
+        pageSize: 5
+    }
+    recordsData:any[] = []
+    recordsDataPics:any[] = []
+    recordsPagination = ''
+
+    // 协助人员
+    assistants:any = {
+        assignedUserId: '',
+        assignedUserMobile: '',
+        assignedUserName: ''
+    }
+
+    flowUpRequest:FlowUpRequest & {assistantRemark: string, assistants:any[], createCorpUserId:any} = JSON.parse(JSON.stringify(_flowUpRequest))
 
     get rulesContact () {
         let rules = {
@@ -443,29 +478,6 @@ export default class ProjectList2Detail extends Vue {
         return rules
     }
 
-    queryParams = {
-        keyWord: ''
-    }
-    timeout = null
-
-    recordsQuery = {
-        bizId: '',
-        pageNumber: 1,
-        pageSize: 2
-    }
-    recordsData:any[] = []
-    recordsDataPics:any[] = []
-    recordsPagination = ''
-
-    // 协助人员
-    assistants:any = {
-        assignedUserId: '',
-        assignedUserMobile: '',
-        assignedUserName: ''
-    }
-
-    flowUpRequest:FlowUpRequest & {assistantRemark: string, assistants:any[], createCorpUserId:any} = JSON.parse(JSON.stringify(_flowUpRequest))
-
     isActive (key) {
         // TODO 新增完更新process数据
         if (this.process.length == 0) {
@@ -479,36 +491,48 @@ export default class ProjectList2Detail extends Vue {
     }
     // 未直接联系客户，已与客户经理沟通
     onChageRadioContact () {
-        // TODO 没选择点击确定的时候清空数据
-        this.radioContactEmployee = false
+        console.log(' 🚗 🚕 🚙 🚌 🚎 客户经理', this.projectDetail)
+        this.employeeList.map((item:any) => {
+            item.checked = false
+        })
         this.companyContactList.map(item => {
             item.checked = false
         })
-        this.flowUpRequest.contactName = this.projectDetail.customerName
-        this.flowUpRequest.contactMobile = this.projectDetail.customerMobile
+
+        this.$forceUpdate()
     }
     // 选中员工列表
-    onChageRadioContactEmployee (item) {
+    onChageRadioContactEmployee (item, i) {
         this.radioContact = false
+        this.employeeList.map((item:any, index) => {
+            if (index != i) {
+                item.checked = false
+            }
+        })
         this.companyContactList.map(item => {
             item.checked = false
         })
-        this.flowUpRequest.contactName = item.nickName
-        this.flowUpRequest.contactMobile = item.phoneNumber
+        this.$forceUpdate()
         console.log('🚀 --- onChageRadioContactEmployee --- this.flowUpRequest', this.flowUpRequest)
     }
     // 选中联系列表中的一项
     onChageRadioContactItem (i) {
         this.radioContact = false
-        this.radioContactEmployee = false
+        this.employeeList.map((item:any) => {
+            item.checked = false
+        })
         this.companyContactList.map((item, index) => {
             if (index != i) {
                 item.checked = false
             }
         })
-        this.flowUpRequest.contactName = this.companyContactList[i].contactName
-        this.flowUpRequest.contactMobile = this.companyContactList[i].contactMobile
         this.$forceUpdate()
+    }
+    // 关闭联系人弹窗
+    onBeforeCloseChooseUser () {
+        console.log(' 🚗 🚕 🚙 🚌 🚎 取消')
+        this.innerContactVisible = false
+        this.companyContactList = JSON.parse(JSON.stringify(this.companyContactListBak))
     }
 
     changeProcess () {
@@ -531,7 +555,28 @@ export default class ProjectList2Detail extends Vue {
         } as CompanyContactRequest & {roleCodes:number[], checked:boolean})
     }
 
+    // 点击确定选择客户联系人
     onChooseUser () {
+        if (this.radioContact) {
+            this.flowUpRequest.contactName = this.projectDetail.customerName
+            this.flowUpRequest.contactMobile = this.projectDetail.customerMobile
+        }
+        let item = this.employeeList.find((item:any) => {
+            return item.checked
+        })
+        if (item) {
+            this.flowUpRequest.contactName = item.nickName
+            this.flowUpRequest.contactMobile = item.phoneNumber
+        }
+        let temp = this.companyContactList.find((item:any) => {
+            return item.checked
+        })
+        if (temp) {
+            this.flowUpRequest.contactName = temp.contactName
+            this.flowUpRequest.contactMobile = temp.contactMobile
+        }
+
+        this.companyContactList = JSON.parse(JSON.stringify(this.companyContactListBak))
         this.innerContactVisible = false
         if (this.flowUpRequest.contactName && this.flowUpRequest.contactMobile) {
             // @ts-ignore
@@ -553,7 +598,6 @@ export default class ProjectList2Detail extends Vue {
         return { value: '', key: '' }
     }
 
-    // @validateForm('addUserForm')
     async onBlurSave (item, index) {
         this.$refs['addUserForm'][index].validate(async (value, r) => {
             if (value) {
@@ -581,7 +625,14 @@ export default class ProjectList2Detail extends Vue {
     }
 
     // 删除联系人
-    async onDelCompanyContact (item) {
+    async onDelCompanyContact (item, index) {
+        console.log('🚀 --- onDelCompanyContact --- index', index)
+        if (!item.contactMobile || !item.contactName || !item.roleCodes.length) {
+            this.companyContactList.splice(index, 1)
+            console.log('🚀 --- onDelCompanyContact --- this.companyContactList', this.companyContactList)
+
+            return
+        }
         console.log('🚀 --- onDelCompanyContact --- item', item)
         await delCompanyContact(item.id)
         this.$message.success('删除成功')
@@ -607,6 +658,9 @@ export default class ProjectList2Detail extends Vue {
     @validateForm('addFlowUp')
     @handleSubmit()
     async onSubmitAddRecord () {
+        this.flowUpRequest.createBy = this.userInfo.employeeName
+        this.flowUpRequest.createPhone = this.userInfo.phoneNumber
+
         let picUrls = []
         this.flowUpRequest.picUrls.map(item => {
             // @ts-ignore
@@ -617,6 +671,7 @@ export default class ProjectList2Detail extends Vue {
         query.bizId = this.projectId
         await addFlowUp(query)
         this.$message.success('新增成功')
+        this.$emit('getDetail', this.projectDetail.id)
         this.closeAddRecord()
     }
     // 关闭新增跟进记录
@@ -638,6 +693,7 @@ export default class ProjectList2Detail extends Vue {
         }
         this.$emit('handleClose')
     }
+
     async add () {
         await this.onGetCompanyUserList()
         this.addRecord = true
@@ -647,26 +703,57 @@ export default class ProjectList2Detail extends Vue {
             this.flowUpRequest.flowUpProcess = this.process[this.process.length - 1]
         }
     }
+
+    // 打开选择联系人弹窗
     async onOpenContactVisible () {
+        this.radioContact = false
+        this.employeeList.map((item:any) => {
+            item.checked = false
+        })
+        this.companyContactList.map((item, index) => {
+            item.checked = false
+        })
+
+        if (this.flowUpRequest.contactMobile == this.projectDetail.customerMobile) {
+            this.radioContact = true
+        }
+        this.employeeList.map((item:any) => {
+            if (item.phoneNumber == this.flowUpRequest.contactMobile) {
+                item.checked = true
+            }
+        })
+        this.companyContactList.map((item:any) => {
+            if (item.contactMobile == this.flowUpRequest.contactMobile) {
+                item.checked = true
+            }
+        })
+        this.$forceUpdate()
         this.innerContactVisible = true
     }
+
+    // 打开协助人
     onOpenHelp () {
         this.innerHelpVisible = true
     }
 
+    // 获取员工列表
     async onGetCompanyUserList () {
         const { data: employeeList } = await getCompanyUserList({ companyCode: this.projectDetail.companyCode })
         this.employeeList = employeeList
+        this.employeeList.map((item:any) => {
+            item.checked = false
+        })
         this.onGetCompanyContactList()
     }
 
+    // 获取客户经理添加的人
     async onGetCompanyContactList () {
         const { data: companyContactList } = await getCompanyContactList(this.projectDetail.companyId)
         this.companyContactList = companyContactList
         this.companyContactList.map(item => {
             item.checked = false
         })
-        console.log(' 🚗 🚕 🚙 🚌 🚎 this.companyContactList', this.companyContactList)
+        this.companyContactListBak = JSON.parse(JSON.stringify(this.companyContactList))
     }
 
     // 预览文件
@@ -683,7 +770,8 @@ export default class ProjectList2Detail extends Vue {
     }
 
     async getRecords () {
-        if (Number(this.recordsQuery.pageNumber) > Number(this.recordsPagination)) {
+        if (this.recordsPagination && Number(this.recordsQuery.pageNumber) > Number(this.recordsPagination)) {
+            this.isNoMore = true
             return
         }
         const { data: flowUp } = await getFlowUp(this.recordsQuery)
@@ -780,17 +868,25 @@ export default class ProjectList2Detail extends Vue {
         this.projectDetail.operateUserName = this.userInfo.employeeName
         this.projectDetail.operateUserPhone = this.userInfo.phoneNumber
         await upDateProjectDetail(this.projectDetail)
-        this.$message.success('保存成功')
+        await this.onInitGetDate()
         this.$emit('getDetail', this.projectDetail.id)
+        this.$message.success('保存成功')
+    }
+
+    async onInitGetDate () {
+        this.getRecords()
+        const { data } = await getProcess({ projectId: this.projectId })
+        this.process = data.projectProcessSet
+        const { data: flowUpCount } = await getFlowUpCount({ bizId: this.projectId })
+        if (flowUpCount.total) {
+            this.flowUpCount = flowUpCount
+        }
     }
 
     async mounted () {
         console.log(' 🚗 🚕 🚙 🚌 🚎 详情', this.projectDetail)
         this.recordsQuery.bizId = this.projectId
-        this.getRecords()
-        const { data } = await getProcess({ projectId: this.projectId })
-        this.process = data.projectProcessSet
-        console.log('🚀 --- mounted --- this.process', this.process)
+        this.onInitGetDate()
     }
 }
 </script>
