@@ -30,6 +30,7 @@ export default {
     props: ['id'],
     data () {
         return {
+            Auths,
             queryParams: {
                 'sort.property': 'createTime',
                 'sort.direction': 'DESC',
