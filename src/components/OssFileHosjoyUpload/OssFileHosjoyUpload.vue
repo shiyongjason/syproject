@@ -22,7 +22,7 @@
                     <div class="pdfimg" v-else-if="_checkPicType(item,['.doc','.docx','.word'])">
                         <img :src="worldbase">
                     </div>
-                    <el-image v-else :ref="`preview_${index}`" class="default-pre-view-image" fit="contain" :src="item.tokenUrl" :preview-src-list="previewSrcList"></el-image>
+                    <el-image v-else-if="item.tokenUrl" :ref="`preview_${index}`" class="default-pre-view-image" fit="contain" :src="item.tokenUrl" :preview-src-list="previewSrcList"></el-image>
                 </div>
             </template>
         </template>
