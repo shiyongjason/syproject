@@ -18,7 +18,7 @@
                     <el-button size="medium" type="primary"><i class="el-icon-upload file-icon"></i>上 传 文 件</el-button>
                 </HosJoyUpload>
                 <div class="batch_bot">
-                    <span>应支付总额(元)：{{batchDetail.totalAmount|fundMoneyHasTail}}</span>
+                    <span>应支付总额(元)：{{payTotal|fundMoneyHasTail}}</span>
                     <el-button type="primary" @click="onSubmit">确定并提交</el-button>
                 </div>
             </div>
@@ -65,7 +65,8 @@ export default {
 
             },
             batchDetail: {},
-            fundId: []
+            fundId: [],
+            payTotal: 0
         }
     },
     methods: {
@@ -82,8 +83,10 @@ export default {
         handleSelectionChange (row) {
             console.log(row)
             this.fundId = []
+            this.payTotal = 0
             row && row.map(item => {
                 this.fundId.push(item.id)
+                this.payTotal = item.paymentAmount + this.payTotal
             })
         },
         async onGetList () {
