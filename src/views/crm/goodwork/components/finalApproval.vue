@@ -146,6 +146,9 @@
                     <div class="dialogbaseinfo-item">可代采购额度(元)：{{resolutionDetail.purchaseQuota|fundMoneyHasTail}}</div>
                     <div class="dialogbaseinfo-item">剩余代采购额度(元)：{{resolutionDetail.purchaseBalance|fundMoneyHasTail}}</div>
                 </div>
+                 <div class="dialogbaseinfo">
+                    <div class="dialogbaseinfo-item">经销商评级：{{resolutionDetail.companyLevel}}</div>
+                </div>
                 <el-form id='elform' :model="baseInfoForm" :rules="formRules" label-width="180px" label-position='right' ref="reviewResolutionForm">
                     <div class="reviewResolutionForm-title" style="marginTop:0px">
                         项目信息：
@@ -202,7 +205,7 @@
                             </el-input>
                         </el-form-item>
                         <!--  -->
-                        <el-form-item label="剩余货款支付周期：" prop='remainPaymentCycle' style="marginLeft:-9px;marginTop:10px">
+                        <el-form-item label="剩余货款支付周期：" prop='remainPaymentCycle' style="marginLeft:-9px;">
                             <el-select v-model="purForm.remainPaymentCycle" placeholder="请选择">
                                 <el-option label="1个月" :value="1"></el-option>
                                 <el-option label="2个月" :value="2"></el-option>
@@ -224,7 +227,7 @@
                             </el-input>
                         </el-form-item>
                         <!-- 仅可输入数字，区间为（0，100），最多保留2位小数 -->
-                        <el-form-item label="银行承兑：" prop='acceptBankRate' style="marginLeft:-9px;marginTop:10px">
+                        <el-form-item label="银行承兑：" prop='acceptBankRate' style="marginLeft:-9px">
                             <el-input v-isNum:2 v-inputMAX='100' placeholder="请输入" v-model="purForm.acceptBankRate">
                                 <template slot="append">%</template>
                             </el-input>
@@ -716,6 +719,7 @@ export default class FinalApproval extends Vue {
                 if (this.onValidTable(this.tableForm)) {
                     await resPurchase(this.purForm)
                     this.onFindRes()
+                    this.purchaseConclusionVisible = false
                 }
             }
         })
