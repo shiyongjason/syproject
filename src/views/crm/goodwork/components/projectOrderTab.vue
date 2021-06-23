@@ -86,7 +86,7 @@ export default {
             findPurchaseList: 'crmPurchaseOrder/findPurchaseList'
         }),
         onAddPurchase () {
-            this.$confirm('定对当前项目新增一条采购单吗?', '提示', {
+            this.$confirm('确定对当前项目新增一条采购单吗?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
