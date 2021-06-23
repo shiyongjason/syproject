@@ -8,13 +8,13 @@ export const THREAD_ORIGIN: { label: string; value: number; }[] = [
 ]
 
 /** 主营品类 */
-export const DEVICE_CATEGORY: { label: string; value: number; }[] = [
-    { label: '空调', value: 1 },
-    { label: '采暖', value: 2 },
-    { label: '新风', value: 3 },
-    { label: '净水', value: 4 },
-    { label: '智能化', value: 5 },
-    { label: '辅材', value: 6 },
-    { label: '电梯', value: 7 },
-    { label: '其他', value: 8 }
+export const DEVICE_CATEGORY: { label: string; value: string; }[] = [
+    { label: '空调', value: '1' },
+    { label: '采暖', value: '2' },
+    { label: '新风', value: '3' },
+    { label: '净水', value: '4' },
+    { label: '智能化', value: '5' },
+    { label: '辅材', value: '6' },
+    { label: '电梯', value: '7' },
+    { label: '其他', value: '8' }
 ]

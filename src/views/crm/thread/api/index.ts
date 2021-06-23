@@ -12,6 +12,11 @@ export const getThreadList: (params: any) => AxiosPromise<any> = (params) => {
     return axios.get('memeber/api/clue/boss/page', { params })
 }
 
+// 新建线索
+export const createThread: (params: any) => AxiosPromise<any> = (params) => {
+    return axios.post('memeber/api/clue/boss', params)
+}
+
 // 获取线索详情
 export const getThreadDetail: (params: any) => AxiosPromise<any> = (params) => {
     return axios.get(`memeber/api/clue/boss/${params}`)
