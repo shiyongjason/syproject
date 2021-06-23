@@ -311,6 +311,7 @@ import moment from 'moment'
 export default class FinalApproval extends Vue {
     @Prop({ default: '' }) readonly finalFormID!:any
     moment:Function= moment;
+    Auths:any;
     radio1: string = '评审决议内容';
     tableData: any[] = [];
     Lists:any[] = [];

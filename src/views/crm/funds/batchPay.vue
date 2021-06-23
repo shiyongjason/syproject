@@ -5,7 +5,7 @@
                 <div class="batch_tit">批量支付账单</div>
                 <div class="batch_msg mb20"><i>*</i>经销商：{{batchDetail.companyName}}</div>
                 <HosjoyTable localName="V1.*" ref="hosjoyTable" align="center" isShowselection :column="tableLabel"
-                @selection-change="handleSelectionChange" :data="tableData">
+                @selection-change="handleSelectionChange" :data="tableData" @sort-change='onSortChange'>
                 </HosjoyTable>
                 <div class="batch_msg"><i>*</i>对应账单的付款凭证：</div>
                 <p>（最多支持上传数量为20个文件，单个文件大小不超过20M，上传格式为JPG/JPEG/PNG等主流格式图片）</p>
@@ -46,19 +46,20 @@ export default {
             fileDialog: false,
             docPos: [],
             tableLabel: [
-                { label: '项目名称', prop: 'companyName' },
+                { label: '项目名称', prop: 'projectName' },
                 { label: '账单流水号', prop: 'orderId' },
                 { label: '账单类型', prop: 'repaymentType', dicData: [{ value: 1, label: '首付款' }, { value: 2, label: '剩余货款' }, { value: 3, label: '服务费' }] },
                 { label: '金额(元)', prop: 'paymentAmount', displayAs: 'money' },
                 { label: '状态', prop: 'paymentFlag', dicData: [{ value: 0, label: '待支付' }, { value: 1, label: '支付待确认' }, { value: 2, label: '已支付' }, { value: 3, label: '支付失败' }, { value: 4, label: '已取消' }] },
-                { label: '应支付日期', prop: 'schedulePaymentDate', displayAs: 'YYYY-MM-DD' },
-                { label: '支付时间', prop: 'paidTime', displayAs: 'YYYY-MM-DD HH:mm' }
+                { label: '应支付日期', prop: 'schedulePaymentDate', displayAs: 'YYYY-MM-DD', sortable: 'custom' }
             ],
             tableData: [],
             queryParams: {
                 pageSize: 10,
                 pageNumber: 1,
-                companyId: ''
+                companyId: '',
+                'sort.property': null,
+                'sort.direction': null
             },
             paginationInfo: {
 
@@ -68,6 +69,16 @@ export default {
         }
     },
     methods: {
+        onSortChange (val) {
+            if (val.schedulePaymentDate) {
+                this.queryParams['sort.property'] = val.prop + ''
+                this.queryParams['sort.direction'] = val.order === 'ascending' ? 'ASC' : 'DESC'
+            } else {
+                this.queryParams['sort.property'] = null
+                this.queryParams['sort.direction'] = null
+            }
+            this.onGetList(this.queryParams)
+        },
         handleSelectionChange (row) {
             console.log(row)
             this.fundId = []
