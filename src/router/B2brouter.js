@@ -346,6 +346,17 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/hmall/finance/withdrawalFreight/index')
+                    },
+                    {
+                        path: 'behalfManage',
+                        name: 'behalfManage',
+                        meta: {
+                            title: '代采资金管理',
+                            tagName: '代采资金管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/behalfManage/index')
                     }
                 ]
             },
