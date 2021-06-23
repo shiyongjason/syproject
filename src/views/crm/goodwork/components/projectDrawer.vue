@@ -15,8 +15,8 @@
                 <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='2'" :showPacking='showPacking'></datacolCom>
                 <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='3'" :showPacking='showPacking'></approveCom>
                 <!-- <approveCom ref="finalCom" :projectForm=form :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip @refreshDetail="refreshFinalDetail" v-if="activeName==='4'" :showPacking='showPacking'></approveCom> -->
-                <finalApproval ref="finalApproval" v-if="activeName==='4'" @onCompsback=onCompsback @onBackLoad=onBackLoad :finalFormID=projectId></finalApproval>
-                <ProjectOrderTab v-if="activeName==='5'" @onBackLoad=onBackLoad @onCompsback=onCompsback :id="projectId"></ProjectOrderTab>
+                <finalApproval ref="finalApproval" v-if="activeName==='4'" @onCompsback=onCompsback @onBackLoad=onBackLoad @onHideFoot=onHideFoot :finalFormID=projectId></finalApproval>
+                <ProjectOrderTab v-if="activeName==='5'" @onBackLoad=onBackLoad @onCompsback=onCompsback  :id="projectId"></ProjectOrderTab>
 
                 <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :modal=false :close-on-click-modal=false>
                     <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
@@ -43,7 +43,7 @@
                 </el-dialog>
             </template>
             <template #btn>
-                <div class="drawer-button">
+                <div class="drawer-button" v-if="isShowFoot">
                     <template v-if="activeName==='4'&&status == 11">
                         <h-button @click="onFinalApprove(1)" v-if="hosAuthCheck(newAuth.CRM_WORK_FINAL_NOPASS)">终审不通过</h-button>
                         <h-button type="primary" @click="onFinalApprove(2)" v-if="hosAuthCheck(newAuth.CRM_WORK_FINAL_PASS)">发起评审决议审批流</h-button>
@@ -133,7 +133,8 @@ export default {
             copyForm: {},
             projectId: '',
             colForm: {},
-            bizType: ''
+            bizType: '',
+            isShowFoot: true
         }
     },
     computed: {
@@ -400,6 +401,10 @@ export default {
         },
         onFinalApprove (val) {
             this.$refs.finalApproval._finalApprove(val)
+        },
+        onHideFoot () {
+            console.log(123)
+            this.isShowFoot = false
         }
 
     }
