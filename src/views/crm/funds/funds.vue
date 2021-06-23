@@ -105,7 +105,7 @@
                     <h-button table @click="onUploadPay(scope.data.row)" v-if="scope.data.row.paymentFlag==0&&hosAuthCheck(Auths.CRM_FUNDS_DOWN_UPLOAD)">
                         上传支付凭证
                     </h-button>
-                    <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.payBatch">
+                    <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.payBatch&&scope.data.row.paymentFlag==1">
                         批量确认
                     </h-button>
                 </template>
