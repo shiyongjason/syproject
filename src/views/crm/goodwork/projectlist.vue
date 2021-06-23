@@ -776,10 +776,11 @@ export default {
                 this.queryParams.upstreamSupplierTypeList = this.upstreamSupplierTypeChange.toString()
                 let url = ''
                 for (const key in this.queryParams) {
-                    if (this.queryParams[key] !== '') {
+                    if (this.queryParams[key]) {
                         url += (`${key}=${this.queryParams[key]}&`)
                     }
                 }
+                console.log(url)
                 window.location = interfaceUrl + 'memeber/openapi/project/export?' + url
             }
         },
@@ -866,11 +867,13 @@ export default {
             this.queryParams.categoryId = val
         },
         async searchList () {
+            console.log(this.queryParams)
             this.queryParams.statusList = this.status.toString()
             this.queryParams.typeList = this.typeArr.toString()
             this.queryParams.deviceCategoryList = this.deviceCategoryChange.toString()
             this.queryParams.upstreamSupplierTypeList = this.upstreamSupplierTypeChange.toString()
             const { ...params } = this.queryParams
+            console.log(params)
             await this.findProjetpage(params)
             this.tableData = this.projectData.records || []
             this.paginationInfo = {
