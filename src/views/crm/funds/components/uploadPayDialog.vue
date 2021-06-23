@@ -47,7 +47,7 @@ export default {
             this.dialogVisible = true
             this.fundId = val.id
             this.companyId = val.companyId
-            this.payMoney = val.applyAmount
+            this.payMoney = val.applyAmount ? val.applyAmount : val.paymentAmount
         },
         handleClose () {
             this.dialogVisible = false
