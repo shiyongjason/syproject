@@ -43,9 +43,7 @@
                             <el-option v-for="item in cityList" :key="item.cityId" :label="item.name" :value="item.cityId">
                             </el-option>
                         </el-select>
-
                     </div>
-
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">主营品类：</div>
@@ -79,6 +77,10 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
+                    <el-checkbox class="query-col__label" v-model="queryParams.removeDuplicate">去重合并</el-checkbox>
+                </div>
+
+                <div class="query-cont__col">
                     <h-button type="primary" @click="findThreadList">
                         查询
                     </h-button>
@@ -87,25 +89,31 @@
                     </h-button>
                 </div>
             </div>
-            <hosJoyTable ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="findThreadList" actionWidth='220' isAction
-                :isActionFixed='tableData&&tableData.length>0'>
-                <!-- <template #deviceCategory="slotProps">
+            <el-tag size="medium" class="eltagtop">
+                已经选中{{selectThread.length}}个，可进行批量操作
+                <h-button table :disabled='selectThread.length === 0' style="margin-left:10px" @click="distributor()">批量分配销售</h-button>
+            </el-tag>
+            <hosJoyTable ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="findThreadList" @selection-change="dialogCheckChange"
+                actionWidth='220' isShowselection isAction :isActionFixed='tableData&&tableData.length>0'>
+                <template #deviceCategory="slotProps">
                     {{deviceCategoryString(slotProps.data.row.deviceCategory)}}
-                </template> -->
-
-                <template slot="deviceCategory" slot-scope="scope">
-                    <h-button table @click="viewDetail(scope.data.row)">查看详情</h-button>
                 </template>
-
+                <template #customerName="slotProps">
+                    <div>{{slotProps.data.row.customerName}}</div>
+                    <div>{{slotProps.data.row.customerMobile}}</div>
+                </template>
+                <template #cityName="slotProps">
+                    {{getCityString(slotProps.data.row)}}
+                </template>
                 <template #action="slotProps">
                     <h-button table @click="distributor(slotProps.data.row)">分配客户经理</h-button>
                     <h-button table @click="viewDetail(slotProps.data.row)">查看详情</h-button>
                 </template>
             </hosJoyTable>
 
-            <el-dialog title="分配销售" :visible.sync="distributorVisible" width="30%" :before-close="()=>distributorVisible = false">
+            <el-dialog title="分配销售" :visible.sync="distributorVisible" width="30%" :before-close="clearDispatchFormData">
                 <el-form :model="distributorForm" :rules="rules" ref="distributorForm" label-width="130px" class="demo-ruleForm">
-                    <el-form-item label="分配给（员工）" prop="customerMobile" ref="customerMobile">
+                    <el-form-item label="分配给（员工）" prop="customerMobile" ref='customerMobile'>
                         <el-autocomplete v-model="stateN" :fetch-suggestions="querySearchAsync" placeholder="请输入员工" @blur="onBlurItem" :trigger-on-focus="false" @select="handleSelect">
                             <template slot-scope="{ item }">
                                 <div class="autoflex">
@@ -122,11 +130,11 @@
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-                    <h-button @click="distributorVisible = false">取消</h-button>
+                    <h-button @click="clearDispatchFormData">取消</h-button>
                     <h-button type="primary" @click="distributorSubmit">确定</h-button>
                 </span>
             </el-dialog>
-            <el-dialog title="新增线索" :visible.sync="threadVisible" width="50%" :before-close="()=>threadVisible = false">
+            <el-dialog title="新增线索" :visible.sync="threadVisible" width="50%" :before-close="clearthreadFormData">
                 <el-form :model="threadForm" :rules="rules" ref="threadForm" label-width="130px">
                     <div class="add-cont__row">
                         <el-form-item prop='userMobile' label="客户手机号：">
@@ -210,11 +218,11 @@
                     </div>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-                    <h-button @click="threadVisible = false">取消</h-button>
+                    <h-button @click="clearthreadFormData">取消</h-button>
                     <h-button type="primary" @click="addThreadSubmit">确定</h-button>
                 </span>
             </el-dialog>
-            <detail :drawer='drawer' :threadDetail='threadDetail' :formRules='rules' @getDetail='viewDetail' @handleClose="()=>drawer = false" v-if="drawer" />
+            <detail :drawer='drawer' :threadDetail='threadDetail' :formRules='rules' @getDetail='getDetail' @handleClose="()=>drawer = false" v-if="drawer" />
         </div>
     </div>
 </template>
@@ -282,7 +290,8 @@ export default class Thread extends Vue {
         pageNumber: 1,
         pageSize: 10,
         userMobile: '',
-        userName: ''
+        userName: '',
+        removeDuplicate: true
     }
     tableLabel: tableLabelProps = [
         { label: '客户手机号', prop: 'userMobile', width: '120' },
@@ -290,11 +299,11 @@ export default class Thread extends Vue {
         { label: '企业名称', prop: 'companyName', width: '200' },
         { label: '创建人', prop: 'createBy', width: '120' },
         { label: '创建时间', prop: 'createTime', width: '120', displayAs: 'YYYY-MM-DD' },
-        { label: '所在城市', prop: 'cityName', width: '120' },
+        { label: '所在城市', prop: 'cityName', slot: 'cityName', width: '120' },
         { label: '所属分部', prop: 'customerDeptName', width: '120' },
         { label: '主营品牌', prop: 'deviceBrand', width: '120' },
-        { label: '主营品类', prop: 'deviceCategory', width: '120' },
-        { label: '客户经理', prop: 'customerName', width: '120' }
+        { label: '主营品类', prop: 'deviceCategory', slot: 'deviceCategory', width: '120' },
+        { label: '客户经理', prop: 'customerName', slot: 'customerName', width: '120' }
     ]
     rules = {
         customerMobile: [
@@ -321,15 +330,16 @@ export default class Thread extends Vue {
     countryList: any[] = []
     tableData: RespBossCluePage[] = []
     currentThread: RespBossCluePage = null
+    canDispatchList: string[] = []
     threadDetail: Clue = {}
     distributorVisible: boolean = false
     threadVisible: boolean = false
     isloading: boolean = false
     drawer: boolean = false
-    distributorForm: { customerMobile: string, customerName: string, clueId: number | string, customerDeptName: string } = {
+    distributorForm: { customerMobile: string, customerName: string, clueId: string[], customerDeptName: string } = {
         customerName: '',
         customerMobile: '',
-        clueId: 0,
+        clueId: [],
         customerDeptName: ''
     }
     threadForm: Clue = {
@@ -337,17 +347,15 @@ export default class Thread extends Vue {
         cityId: '',
         countryId: ''
     }
+    selectThread: Clue[] = []
     timeout = null
     stateN: string = ''
 
     get deviceCategoryString () {
-        console.log(222222)
         return deviceCategory => {
-            console.log(deviceCategory, 'deviceCategory')
             const filters = this.devieCategorys.filter((item: { value: string, label: string }) => {
                 return item.value === deviceCategory
             })
-            console.log(filters, 'filters')
             if (filters.length > 0) {
                 return filters[0].label
             }
@@ -355,6 +363,14 @@ export default class Thread extends Vue {
         }
     }
 
+    get getCityString () {
+        return (row: Clue) => {
+            if (row) {
+                return row.provinceName + row.cityName
+            }
+            return '-'
+        }
+    }
     get getCity () {
         return id => {
             const province = this.provinceList.filter(item => item.provinceId === id)
@@ -458,6 +474,10 @@ export default class Thread extends Vue {
         this.threadForm.customerName = item.psnname
     }
 
+    dialogCheckChange (item) {
+        this.selectThread = item
+    }
+
     async findThreadList () {
         const { data } = await getThreadList(this.queryParams)
         this.tableData = data.records
@@ -470,27 +490,36 @@ export default class Thread extends Vue {
 
     distributor (val: RespBossCluePage) {
         this.currentThread = val
+        if (val) {
+            this.canDispatchList = [this.currentThread.id.toString()]
+        } else {
+            this.canDispatchList = this.selectThread.map(item => {
+                return item.id.toString()
+            })
+        }
         this.distributorVisible = true
-        // await assignmentCustomer({
-        //     clueId: val.id,
-        //     customerMobile: val.userMobile
-        // })
     }
 
     async distributorSubmit () {
-        this.distributorForm.clueId = this.currentThread.id
+        this.distributorForm.clueId = this.canDispatchList
         console.log(this.distributorForm)
         this.isloading = true
         this.distributorRef.validate(async (valid) => {
             if (valid) {
                 try {
                     await assignmentCustomer(this.distributorForm)
-                    this.distributorVisible = false
+                    this.clearDispatchFormData()
                     this.isloading = false
                     this.$message({
                         message: `销售分配成功`,
                         type: 'success'
                     })
+                    this.distributorForm = {
+                        customerName: '',
+                        customerMobile: '',
+                        clueId: [],
+                        customerDeptName: ''
+                    }
                     this.findThreadList()
                 } catch (error) {
                     this.isloading = false
@@ -509,7 +538,7 @@ export default class Thread extends Vue {
             if (valid) {
                 try {
                     await createThread(this.threadForm)
-                    this.threadVisible = false
+                    this.clearthreadFormData()
                     this.isloading = false
                     this.$message({
                         message: `销售分配成功`,
@@ -525,12 +554,43 @@ export default class Thread extends Vue {
         })
     }
 
+    clearthreadFormData () {
+        this.$nextTick(() => {
+            this.threadFormRef.clearValidate()
+        })
+        this.threadVisible = false
+        this.threadForm = {
+            provinceId: '',
+            cityId: '',
+            countryId: ''
+        }
+    }
+
+    clearDispatchFormData () {
+        this.$nextTick(() => {
+            this.distributorRef.clearValidate()
+        })
+        this.distributorVisible = false
+        this.stateN = ''
+        this.distributorForm = {
+            customerName: '',
+            customerMobile: '',
+            clueId: [],
+            customerDeptName: ''
+        }
+    }
+
+    getDetail () {
+        this.findThreadList()
+        this.drawer = false
+    }
+
     async viewDetail (val: RespBossCluePage) {
-        console.log(val)
         this.currentThread = val
         const { data } = await getThreadDetail(val.id)
         this.threadDetail = data
         this.drawer = true
+        console.log(data)
     }
 
     async mounted () {
