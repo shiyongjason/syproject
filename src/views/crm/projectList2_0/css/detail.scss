@@ -75,10 +75,12 @@
         }
         .down:before {
             top: 16px;
+            right: -10px;
             transform: rotate(130deg) translateY(-3px) !important;
             transform-origin: 0 0 !important;
         }
         .down:after {
+            right: -10px;
             top: 6px;
             transform: rotate(36deg) translateY(-2px);
             transform-origin: 100% 100%;
@@ -148,7 +150,6 @@
     
                     .name {
                         margin-top: 2px;
-                        width: 104px;
                         height: 16px;
                         font-size: 12px;
                         font-weight: 400;
@@ -181,7 +182,7 @@
     
                 .content {
                     flex: 1;
-    
+                    
                     .title-tag {
                         height: 21px;
                         font-size: 14px;

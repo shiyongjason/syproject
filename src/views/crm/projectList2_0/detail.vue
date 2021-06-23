@@ -1,5 +1,5 @@
 <template>
-    <el-drawer title="项目详情" :visible.sync="drawer" :before-close="handleClose" :modal-append-to-body='false' size='680px' v-if="projectDetail.companyId" >
+    <el-drawer title="项目详情" :visible.sync="drawer" :before-close="handleClose" :modal-append-to-body='false' :close-on-click-modal='false' size='680px' v-if="projectDetail.companyId" >
         <div class="ProjectList2Detail">
             <div class="radio-group">
                 <el-radio-group v-model="radio" @change="()=>onTabRadio()">
@@ -13,25 +13,25 @@
                     <div>
                         <b>项目类型：</b>2.0项目植入供应链产品
                     </div>
-                    <!-- 流程 -->
-                    <div class="process" style="height:138px">
-                        <div class="process-item" :class="isActive(flowUpProcess[0].key)">{{flowUpProcess[0].value}}</div>
-                        <div class="step_arrow"></div>
-                        <div class="process-item" :class="isActive(flowUpProcess[1].key)">{{flowUpProcess[1].value}}</div>
-                        <div class="step_arrow"></div>
-                        <div class="process-item" :class="isActive(flowUpProcess[2].key)">{{flowUpProcess[2].value}}</div>
-                        <div class="step_arrow"></div>
-                        <div class="process-item" :class="isActive(flowUpProcess[3].key)">{{flowUpProcess[3].value}}</div>
-                        <div class="step_arrow down"></div>
-                        <div class="process-item pos5" :class="isActive(flowUpProcess[4].key)">{{flowUpProcess[4].value}}</div>
-                        <div class="step_arrow left"></div>
-                        <div class="process-item pos6" :class="isActive(flowUpProcess[5].key)">{{flowUpProcess[5].value}}</div>
-                        <!-- <div class="step_arrow left pos7" :class="isActive(flowUpProcess[6].key)"></div>
-                        <div class="process-item pos8">{{flowUpProcess[6].value}}</div> -->
+                    <!-- 流程 {nodeKey: 1, nodeName: "首次沟通", nodeStatus: 0}-->
+                    <div class="process" :style="process.length && process.length > 4 ?'height:138px':'height:68px'">
+                        <div class="process-item" v-if="process[0]" :class="process[0].nodeStatus==1?'isActive':''">{{process[0].nodeName}}</div>
+                        <div class="step_arrow" v-if="process[1]"></div>
+                        <div class="process-item" v-if="process[1]" :class="process[1].nodeStatus==1?'isActive':''">{{process[1].nodeName}}</div>
+                        <div class="step_arrow" v-if="process[2]"></div>
+                        <div class="process-item" v-if="process[2]" :class="process[2].nodeStatus==1?'isActive':''">{{process[2].nodeName}}</div>
+                        <div class="step_arrow" v-if="process[3]"></div>
+                        <div class="process-item" v-if="process[3]" :class="process[3].nodeStatus==1?'isActive':''">{{process[3].nodeName}}</div>
+                        <div class="step_arrow down" v-if="process[4]"></div>
+                        <div class="process-item pos5" v-if="process[4]" :class="process[4].nodeStatus==1?'isActive':''">{{process[4].nodeName}}</div>
+                        <div class="step_arrow left" v-if="process[5]"></div>
+                        <div class="process-item pos6" v-if="process[5]" :class="process[5].nodeStatus==1?'isActive':''">{{process[5].nodeName}}</div>
+                        <div class="step_arrow left pos7" v-if="process[6]"></div>
+                        <div class="process-item pos8" v-if="process[6]" :class="process[6].nodeStatus==1?'isActive':''">{{process[6].nodeName}}</div>
                     </div>
-                    <div class="flowup-count" v-if="flowUpCount.total">
+                    <div class="flowup-count">
                         <h-button type='assist' @click='add'> + 新增跟进记录</h-button>
-                        <span>
+                        <span  v-if="flowUpCount.total">
                             累计跟进{{flowUpCount.total}}次，当面拜访{{flowUpCount.directCount}}次
                         </span>
                     </div>
@@ -80,9 +80,10 @@
                             <div class="content-container">
                                 <div class="line"></div>
                                 <div class="content">
-                                    <div class="title-tag" >{{item.type ==1?'当面拜访':'电话/微信沟通/邮件等'}}</div>
+                                    <div class="title-tag" style="margin-top:20px">{{item.type ==1?'当面拜访':'电话/微信沟通/邮件等'}}</div>
                                     <div class="audio-player-container">
-                                        <div class="crm-audio-player" >
+                                       <template v-if="item.picUrls&&item.picUrls.length">{{item.type ==1?'现场图片：':'附件：'}}</template>
+                                        <div class="crm-audio-player" style="margin-top:-15px">
                                             <OssFileHosjoyUpload :showUpload='false' :showPreView='true'  v-model="item.picUrls" :fileNum=8 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px"/>
                                         </div>
                                     </div>
@@ -90,11 +91,19 @@
                                         <div class='title-tag'>客户联系人</div>
                                         <div class='desc'>{{item.projectSupplyFlowUp.contactName}} {{item.projectSupplyFlowUp.contactMobile}}</div>
                                         <div class='title-tag'>跟进节点</div>
-                                        <div class='desc'>{{getProject2FollowUpProcess(item.projectSupplyFlowUp.flowUpProcess).value}}</div>
+                                        <div class='desc'>{{item.projectSupplyFlowUp.flowUpProcess?getProject2FollowUpProcess(item.projectSupplyFlowUp.flowUpProcess).value:'-'}}</div>
+                                        <div class='title-tag' v-if="item.projectSupplyFlowUp.noNeedFlowReason">无需跟进原因</div>
+                                        <div class='desc'  v-if="item.projectSupplyFlowUp.noNeedFlowReason">{{item.projectSupplyFlowUp.noNeedFlowReason||'-'}}</div>
                                     </template>
-                                    <div class="title-tag">跟进内容</div>
-                                    <div class="desc" v-if="item.remark">{{item.content}}</div>
-                                    <div class="title-tag">其他备注</div>
+                                    <div class="title-tag" v-if="item.nextFlowTime">下次跟进时间</div>
+                                    <div class="desc" v-if="item.nextFlowTime">{{item.nextFlowTime | formatDate('YYYY年MM月DD日 HH:mm:ss')}}</div>
+                                    <template v-if="item.customerBackLogWorks&&item.customerBackLogWorks.length">
+                                        <div class="title-tag" >邀请同事协助</div>
+                                        <div class="desc" v-for="w in item.customerBackLogWorks" :key="w.id">{{w.assignedUserName}} {{w.assignedUserMobile}}</div>
+                                    </template>
+                                    <div class="title-tag" v-if="item.content">跟进内容</div>
+                                    <div class="desc" v-if="item.content">{{item.content}}</div>
+                                    <div class="title-tag" v-if="item.remark">其他备注</div>
                                     <div class="desc" v-if="item.remark">{{item.remark}}</div>
                                 </div>
                             </div>
@@ -195,7 +204,7 @@
                                     </OssFileHosjoyUpload>
                                 </div>
                             </div>
-                            <div class="record-dialog-item">
+                            <div class="record-dialog-item" style="margin-top:10px">
                                 <el-form-item  prop='contactName' label="客户联系人：" class="textarea">
                                     <el-input  placeholder="请选择客户联系人" :value="flowUpRequest.contactName" suffix-icon="el-icon-arrow-right" @focus="onOpenContactVisible"></el-input>
                                 </el-form-item>
@@ -210,8 +219,8 @@
                                     <el-input v-if="flowUpRequest.flowUpProcess==7" v-model="flowUpRequest.noNeedFlowReason" placeholder="请输入无需更进原因" style="width:380px;margin-left:17px" type="textarea" maxlength="200" show-word-limit rows='2'></el-input>
                                 </el-form-item>
                             </div>
-                            <div class="record-dialog-item">
-                                <el-form-item  prop='content' label="跟进内容："  class="textarea">
+                            <div class="record-dialog-item" style="margin-top:10px">
+                                <el-form-item  prop='content' label="跟进内容："  class="textarea" >
                                     <el-input v-model="flowUpRequest.content" placeholder="请输入此次跟进结果/下次跟进事项" style="width:380px;" type="textarea" maxlength="200" show-word-limit rows='2'></el-input>
                                 </el-form-item>
                             </div>
@@ -232,7 +241,7 @@
                                 </el-form-item>
                             </div>
                             <div class="record-dialog-item" v-if="flowUpRequest.type != 1">
-                                <el-form-item  prop='picUrls' label="附件（不超过8个）："></el-form-item>
+                                <el-form-item   label="附件（不超过8个）："></el-form-item>
                                 <div>
                                     <OssFileHosjoyUpload :showPreView='true'  v-model="flowUpRequest.picUrls" :fileNum=8 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px">
                                     <div class="a-line">
@@ -448,15 +457,7 @@ export default class ProjectList2Detail extends Vue {
         pageSize: 5
     }
     recordsData:any[] = []
-    recordsDataPics:any[] = []
     recordsPagination = ''
-
-    // 协助人员
-    assistants:any = {
-        assignedUserId: '',
-        assignedUserMobile: '',
-        assignedUserName: ''
-    }
 
     flowUpRequest:FlowUpRequest & {assistantRemark: string, assistants:any[], createCorpUserId:any} = JSON.parse(JSON.stringify(_flowUpRequest))
 
@@ -590,6 +591,7 @@ export default class ProjectList2Detail extends Vue {
     onTabRadio (val) {
         if (this.radio === '跟进记录') {
             this.$emit('getDetail', this.projectDetail.id)
+            this.onInitGetDate()
         }
     }
 
@@ -649,11 +651,6 @@ export default class ProjectList2Detail extends Vue {
         this.$nextTick(() => {
             this.flowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
             this.flowUpRequest.type = val
-            if (this.process.length == 0) {
-                this.flowUpRequest.flowUpProcess = 1
-            } else {
-                this.flowUpRequest.flowUpProcess = this.process[this.process.length - 1]
-            }
             // @ts-ignore
             this.$refs['addFlowUp'].resetFields()
         })
@@ -665,26 +662,36 @@ export default class ProjectList2Detail extends Vue {
     async onSubmitAddRecord () {
         this.flowUpRequest.createBy = this.userInfo.employeeName
         this.flowUpRequest.createPhone = this.userInfo.phoneNumber
-
-        let picUrls = []
-        this.flowUpRequest.picUrls.map(item => {
-            // @ts-ignore
-            picUrls.push(item.fileUrl)
-        })
         let query = JSON.parse(JSON.stringify(this.flowUpRequest))
-        query.picUrls = picUrls
+        if (this.flowUpRequest.picUrls) {
+            let picUrls = []
+            this.flowUpRequest.picUrls.map((item:any) => {
+                picUrls.push(item.fileUrl)
+            })
+            query.picUrls = picUrls
+        }
         query.bizId = this.projectId
         await addFlowUp(query)
         this.$message.success('新增成功')
-        this.$emit('getDetail', this.projectDetail.id)
+        this.recordsQuery = {
+            bizId: this.projectId,
+            pageNumber: 1,
+            pageSize: 5
+        }
+        this.recordsData = []
+        // this.$emit('getDetail', this.projectDetail.id)
+        await this.onInitGetDate()
         this.closeAddRecord()
     }
     // 关闭新增跟进记录
     closeAddRecord () {
         this.flowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
-        // @ts-ignore
-        this.$refs['addFlowUp'].resetFields()
-        this.addRecord = false
+
+        this.$nextTick(() => {
+            // @ts-ignore
+            this.$refs['addFlowUp'].resetFields()
+            this.addRecord = false
+        })
     }
 
     change (val) {
@@ -696,16 +703,25 @@ export default class ProjectList2Detail extends Vue {
         if (projectDetailForm) {
             projectDetailForm.resetFields()
         }
+        this.recordsQuery = {
+            bizId: this.projectId,
+            pageNumber: 1,
+            pageSize: 5
+        }
+        this.recordsData = []
         this.$emit('handleClose')
     }
 
     async add () {
         await this.onGetCompanyUserList()
         this.addRecord = true
-        if (this.process.length == 0) {
-            this.flowUpRequest.flowUpProcess = 1
+        let res = this.process.filter(item => {
+            return item.nodeStatus
+        })
+        if (res.length) {
+            this.flowUpRequest.flowUpProcess = res[res.length - 1].nodeKey
         } else {
-            this.flowUpRequest.flowUpProcess = this.process[this.process.length - 1]
+            this.flowUpRequest.flowUpProcess = 1
         }
     }
 
@@ -761,19 +777,6 @@ export default class ProjectList2Detail extends Vue {
         this.companyContactListBak = JSON.parse(JSON.stringify(this.companyContactList))
     }
 
-    // 预览文件
-    async handleLink (fileUrl) {
-        let tokenUrl = await OssFileUtils.getUrl(fileUrl)
-        if (tokenUrl.indexOf(ossOldBucket + '.') === -1) {
-            tokenUrl = ossAliyun + tokenUrl.replace(OssFileUtils.hostReg, '')
-        }
-        window.open(tokenUrl)
-    }
-
-    handleDelFile (index, fileList) {
-        fileList.splice(index, 1)
-    }
-
     // 跟进记录
     async getRecords () {
         if (this.recordsPagination && Number(this.recordsQuery.pageNumber) > Number(this.recordsPagination)) {
@@ -784,24 +787,27 @@ export default class ProjectList2Detail extends Vue {
         this.recordsPagination = flowUp.pages
         this.recordsData = [...this.recordsData, ...flowUp.records]
         this.recordsData.map(async (item, index) => {
-            let api:any = []
-            let url = ''
-            item.picUrls.map(jtem => {
-                url = jtem
-                api.push(OssFileUtils.getUrl(jtem))
-            })
-            const res = await Promise.all(api)
-            let obj = []
-            res.map(o => {
-                obj.push({
-                    fileUrl: url,
-                    fileName: o,
-                    tokenUrl: o
+            if (item.picUrls) {
+                let api:any = []
+                let url = ''
+                item.picUrls.map(jtem => {
+                    url = jtem
+                    api.push(OssFileUtils.getUrl(jtem))
                 })
-            })
-            // this.recordsDataPics[index] = obj
-            item.picUrls = obj
+                const res = await Promise.all(api)
+                // console.log('🚀 --- this.recordsData.map --- res', res[0])
+                let obj = []
+                res.map(o => {
+                    obj.push({
+                        fileUrl: url,
+                        fileName: o,
+                        tokenUrl: o
+                    })
+                })
+                item.picUrls = obj
+            }
         })
+        console.log(' 🚗 🚕 🚙 🚌 🚎 recordsData', this.recordsData)
     }
 
     recordsScroll (event) {
@@ -892,9 +898,16 @@ export default class ProjectList2Detail extends Vue {
     }
 
     async onInitGetDate () {
+        this.recordsQuery = {
+            bizId: this.projectId,
+            pageNumber: 1,
+            pageSize: 5
+        }
+        this.recordsData = []
         this.getRecords()
         const { data } = await getProcess({ projectId: this.projectId })
-        this.process = data.projectProcessSet
+        this.process = data.projectProcessNodes
+        console.log('🚀 --- onInitGetDate --- this.process', this.process)
         const { data: flowUpCount } = await getFlowUpCount({ bizId: this.projectId })
         if (flowUpCount.total) {
             this.flowUpCount = flowUpCount
@@ -905,6 +918,25 @@ export default class ProjectList2Detail extends Vue {
         console.log(' 🚗 🚕 🚙 🚌 🚎 详情', this.projectDetail)
         this.recordsQuery.bizId = this.projectId
         this.onInitGetDate()
+        // let temp = ['1', '3', '5', '7']
+        // let filter:any = ''
+        // this.flowUpProcess.map((item:any) => {
+        //     temp.map((jtem, jndex) => {
+        //         if (item.key == jtem) {
+        //             item.isActive = true
+        //         }
+        //         if (jtem == '7') {
+        //             if (temp.length > 1) {
+        //                 console.log(' 🚗 🚕 🚙 🚌 🚎 获取上一个节点', temp[jndex - 1])
+        //                 filter = temp[jndex - 1]
+        //             }
+        //         }
+        //     })
+        // })
+        // console.log(' 🚗 🚕 🚙 🚌 🚎 flowUpProcess', this.flowUpProcess)
+        // console.log(' 🚗 🚕 🚙 🚌 🚎 filter', filter) // 5
+        // let _ = this.flowUpProcess.filter(item => item.key <= filter)
+        // console.log('🚀 --- mounted --- _', _)
     }
 }
 </script>
