@@ -211,6 +211,7 @@ export default {
             return this.tokenUrl
         },
         async open (index, item = null) {
+            this.previewSrcList = []
             if ((item.fileName).toLowerCase().indexOf('.png') > -1 || (item.fileName).toLowerCase().indexOf('.jpg') > -1 || (item.fileName).toLowerCase().indexOf('.jpeg') > -1) {
                 let temp = this.fileList[index]
                 let tempArr = JSON.parse(JSON.stringify(this.fileList))
@@ -221,16 +222,16 @@ export default {
                         return item
                     }
                 })
-                this.previewSrcList = tempArr.map(item => {
-                    return item.tokenUrl
+
+                tempArr.map(async item => {
+                    let tokenUrl = await OssFileUtils.getUrl(item.fileUrl)
+                    this.previewSrcList.push(tokenUrl)
                 })
-                this.$nextTick(() => {
-                    const pre = this.$refs[`preview_${index}`]
-                    if (pre && pre[0]) {
-                        console.log(pre)
-                        pre[0].clickHandler()
-                    }
-                })
+                const pre = this.$refs[`preview_${index}`]
+                if (pre && pre[0]) {
+                    console.log(pre[0])
+                    pre[0].clickHandler()
+                }
             } else {
                 let url = await OssFileUtils.getUrl(item.fileUrl)
                 window.open(url)
