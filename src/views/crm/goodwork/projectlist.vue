@@ -157,14 +157,14 @@
                 <div v-if="radio==='跟进记录'">
                     <div class="flowup-count">
                         <h-button type='assist' @click='add'> + 新增跟进记录</h-button>
-                        <span  v-if="flowUpCount.total">
+                        <span>
                             累计跟进{{flowUpCount.total}}次，当面拜访{{flowUpCount.directCount}}次
                         </span>
                     </div>
                     <div style="margin-top:20px">
                         <b>跟进动态</b>
                     </div>
-                    <div v-if="!recordsData.length" style="width: 600px;margin: 10px auto;"><el-divider>暂无跟进动态</el-divider></div>
+                    <div v-if="!recordsData.length" style="width: 600px;margin: 10px auto;"><el-divider>暂无跟进记录</el-divider></div>
                     <div v-else class="follow-records" ref='records'>
                         <div class="follow-cell" v-for="(item,index) in recordsData" :key="index">
                             <div class="info"><img :src="userDefault" class="avatar">
@@ -172,7 +172,7 @@
                                     <div class="follow-tag">跟进人</div>
                                     <div class="name">{{item.createBy||'-'}} {{item.createPhone}}</div>
                                 </div>
-                                <div class="time">{{item.createTime|formatDate('YYYY/MM/DD HH:mm:ss')}}</div>
+                                <div class="time">{{item.createTime|formatDate('YYYY/MM/DD a HH:mm:ss')}}</div>
                             </div>
                             <div class="content-container" v-if="item.flowUpDynamic&&item.flowUpDynamic.msgType === 'meeting_voice_call'">
                                 <div class='line' />
@@ -226,6 +226,8 @@
                                     <template v-if="item.customerBackLogWorks&&item.customerBackLogWorks.length">
                                         <div class="title-tag" >邀请同事协助</div>
                                         <div class="desc" v-for="w in item.customerBackLogWorks" :key="w.id">{{w.assignedUserName}} {{w.assignedUserMobile}}</div>
+                                        <div class="title-tag" v-if="item.customerBackLogWorks[0].remark">需协助内容</div>
+                                        <div class="desc" v-if="item.customerBackLogWorks[0].remark">{{item.customerBackLogWorks[0].remark}}</div>
                                     </template>
                                     <div class="title-tag" v-if="item.content">跟进内容</div>
                                     <div class="desc" v-if="item.content">{{item.content}}</div>
@@ -323,7 +325,7 @@ import OssFileUtils from '@/utils/OssFileUtils'
 import { interfaceUrl, ccpBaseUrl } from '@/api/config'
 import downloadFileAddToken from '@/components/downloadFileAddToken'
 import { USER_DEFAULT } from '@/views/crm/projectList2_0/const/index'
-import { getCompanyUserList, getFlowUp, getCompanyContactList, addFlowUp } from '@/views/crm/projectList2_0/api/index'
+import { getFlowUp, addFlowUp, getFlowUpCount } from '@/views/crm/projectList2_0/api/index'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
 
 const _flowUpRequest = {
@@ -623,6 +625,10 @@ export default {
         onCloneRecordDialog () {
             this.radio = '审批记录'
             this.dialogVisible = false
+            this.flowUpCount = {
+                directCount: '',
+                total: ''
+            }
             this.recordsQuery = {
                 bizId: this.projectId,
                 pageNumber: 1,
@@ -683,8 +689,10 @@ export default {
                 this.getRecords()
             }
         },
-        onTabRadio (val) {
+        async onTabRadio (val) {
             console.log('🚀 --- onTabRadio --- val', val)
+            const { data: flowUpCount } = await getFlowUpCount({ bizId: this.projectId })
+            this.flowUpCount = flowUpCount
             if (this.radio === '跟进记录') {
                 this.recordsQuery = {
                     bizId: this.projectId,
@@ -913,6 +921,14 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.flowup-count{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #ff7a45;
+            box-sizing: border-box;
+            padding-right: 25px;
+        }
 .file-icon {
         font-size: 18px;
         margin: 0 3px 0 0  !important;

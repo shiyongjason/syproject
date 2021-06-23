@@ -58,7 +58,7 @@
                     <div class="query-col__label">销售阶段：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.flowUpProcess" placeholder="请选择" clearable>
-                            <el-option :label="item.value" :value="item.key" :key='item.value' v-for="item in [{key: '',value: '全部'},...projectStep]"></el-option>
+                            <el-option :label="item.value" :value="item.key" :key='item.value' v-for="item in [{key: '',value: '全部'},...flowUpProcess]"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -246,12 +246,12 @@
                     <div class="flex-item">
                         <div class="form-item">
                             <el-form-item  prop='firstPartName' label="甲方名称：">
-                                <el-input  placeholder="请输入甲方名称" v-model='reqProjectSupply.firstPartName' maxlength="200"></el-input>
+                                <el-input  placeholder="请输入甲方名称" v-model='reqProjectSupply.firstPartName' maxlength="25"></el-input>
                             </el-form-item>
                         </div>
                         <div class="form-item">
                             <el-form-item  prop='projectName' label="项目名称：">
-                                <el-input  placeholder="请输入项目名称" v-model='reqProjectSupply.projectName' maxlength="200"></el-input>
+                                <el-input  placeholder="请输入项目名称" v-model='reqProjectSupply.projectName' maxlength="25"></el-input>
                             </el-form-item>
                         </div>
                     </div>
@@ -513,7 +513,7 @@ export default class ProjectList2 extends Vue {
                     validator: (rule, value, callback) => {
                         console.log('🚀 --- getformRulesReqBossProjectRefund --- value', value)
                         if (value && value == 0) {
-                            return callback(new Error('不能为 0'))
+                            return callback(new Error('项目预估签约额不能为0'))
                         }
                         if (value > 10000000000000) {
                             return callback(new Error('最大不能超过10万亿'))
@@ -539,7 +539,7 @@ export default class ProjectList2 extends Vue {
                     validator: (rule, value, callback) => {
                         console.log('🚀 --- getformRulesReqBossProjectRefund --- value', value)
                         if (value && value == 0) {
-                            return callback(new Error('不能为 0'))
+                            return callback(new Error('签约回款额不能为0'))
                         }
                         if (value > 10000000000000) {
                             return callback(new Error('最大不能超过10万亿'))
