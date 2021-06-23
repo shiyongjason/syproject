@@ -162,7 +162,7 @@
             </div>
             <div class="bottom-line" v-if="radio=='客户信息'"></div>
             <div class="fixed-btn" v-if="radio=='客户信息'">
-                <h-button type="primary" @click="onUpDateProjectDetail">保存</h-button>
+                <h-button type="primary" @click="onUpDateThreadDetail">保存</h-button>
             </div>
             <!-- 添加跟进记录 -->
             <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px">
@@ -368,27 +368,8 @@ export default class ThreadDetail extends Vue {
         fileList.splice(index, 1)
     }
 
-    handleSelect (item) {
-        console.log('🚀 --- handleSelect --- item', item)
-        this.stateN = item.psnname
-        console.log('🚀 --- handleSelect --- this.stateN ', this.stateN)
-        // if (this.dialogVisible) {
-        //     this.stateN = item.psnname
-        //     this.stateItem = item
-        //     this.ruleForm.assignedUserId = item.psncode
-        // } else {
-        //     this.stateUser = item.psnname
-        //     this.stateItem = item
-        //     this.queryParams.assignedUserId = item.psncode
-        // }
-    }
-
-    findOrganizationEmployee () {
-        console.log(' 🚗 🚕 🚙 🚌 🚎 findOrganizationEmployee')
-    }
-
     @validateForm('threadDetailForm')
-    async onUpDateProjectDetail () {
+    async onUpDateThreadDetail () {
         console.log(this.threadDetail)
         // await upDateProjectDetail(this.threadDetail)
         // this.$message.success('保存成功')
