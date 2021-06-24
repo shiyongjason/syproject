@@ -27,6 +27,10 @@ export const getFlowUp: (params: any) => AxiosPromise<any> = (params) => {
     return axios.get('memeber/api/flow-up/boss', { params })
 }
 
+// 获取线索列表统计
+export const getThreadListCount: (params: any) => AxiosPromise<any> = (params) => {
+    return axios.get('memeber/api/clue/boss/page/counts', { params })
+}
 // 获取线索记录统计
 export const getFlowUpCount: (params: any) => AxiosPromise<any> = (params) => {
     return axios.get('memeber/api/flow-up/count/boss', { params })

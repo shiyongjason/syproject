@@ -433,7 +433,7 @@ export default class FinalApproval extends Vue {
             predictLoanAmount: [{ required: true, message: '申请代付金额(元)必填', trigger: 'blur' }],
             advancePaymentRate: [{ required: true, message: '首付款比例必选', trigger: 'blur' }],
             deviceAmount: [{ required: true, message: '设备款总额必填', trigger: 'blur' }],
-            remainPaymentCycle: [{ required: true, message: '剩余代采购额度必填', trigger: 'blur' }],
+            remainPaymentCycle: [{ required: true, message: '剩余货款支付周期', trigger: 'blur' }],
             acceptBankRate: [{ required: true, message: '银行承兑执行费率必填', trigger: 'blur' }],
             transferBankRate: [{ required: true, message: '银行转账执行费率必填', trigger: 'blur' }]
         }

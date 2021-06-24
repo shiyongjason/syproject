@@ -30,7 +30,7 @@
                         <div class="process-item pos8" v-if="process[6]" :class="process[6].nodeStatus==1?'isActive':''">{{process[6].nodeName}}</div>
                     </div>
                     <div class="flowup-count">
-                        <h-button type='assist' @click='add'> + 新增跟进记录</h-button>
+                        <h-button type='assist' @click='add' v-if="!projectDetail.hasRefund"> + 新增跟进记录</h-button>
                         <span>
                             累计跟进{{flowUpCount.total}}次，当面拜访{{flowUpCount.directCount}}次
                         </span>
@@ -80,7 +80,9 @@
                             <div class="content-container">
                                 <div class="line"></div>
                                 <div class="content">
-                                    <div class="title-tag" style="margin-top:20px">{{item.type ==1?'当面拜访':'电话/微信沟通/邮件等'}}</div>
+                                    <div class="title-tag" style="margin-top:20px">{{flowUpTypes[item.type]}}</div>
+                                    <div class="title-tag" v-if="flowUpTypes[item.type]==='已拒绝协助申请'">拒绝原因</div>
+                                    <div class='desc' v-if="flowUpTypes[item.type]==='已拒绝协助申请'">{{item.remark}}</div>
                                     <div class="audio-player-container">
                                        <template v-if="item.picUrls&&item.picUrls.length">{{item.type ==1?'现场图片：':'附件：'}}</template>
                                         <div class="crm-audio-player" style="margin-top:-15px">
@@ -188,18 +190,18 @@
             <div class="fixed-btn" v-if="radio=='项目信息'"><h-button type="primary" @click="onUpDateProjectDetail">保存</h-button></div>
             <!-- 添加跟进记录 -->
             <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px" :before-close="()=>closeAddRecord()" :close-on-click-modal='false' >
-                <div class="record-layout">
+                <div class="record-layout" style="height:600px">
                     <div class="header-title">
                         <el-radio v-model="flowUpRequest.type" :label="1">当面拜访</el-radio>
                         <el-radio v-model="flowUpRequest.type" :label="2">电话/微信沟通/邮件等</el-radio>
                         <p class="tips">温馨提示：推荐使用企业微信与客户聊天，自动更新记录，更方便。</p>
                     </div>
                     <div style="margin-top:-10px">
-                        <el-form :rules="addFlowUpRules" :model="flowUpRequest" ref="addFlowUp" :validate-on-rule-change='false'>
+                        <el-form :rules="addFlowUpRules" :model="flowUpRequest" ref="addFlowUp" :validate-on-rule-change='false' v-if="reCreate">
                             <div class="record-dialog-item" v-if="flowUpRequest.type == 1">
                                 <el-form-item  prop='picUrls' label="上传现场图片："></el-form-item>
                                 <div>
-                                    <OssFileHosjoyUpload :showPreView='true'  v-model="flowUpRequest.picUrls" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png">
+                                    <OssFileHosjoyUpload :showPreView='true'  v-model="flowUpRequest.picUrls" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png" @successCb='onSuccessCb'>
                                     <div class="a-line">
                                         <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                                     </div>
@@ -214,7 +216,7 @@
                             <div class="record-dialog-item" style="display:flex">
                                 <el-form-item  prop='flowUpProcess' label="跟进节点 ：  "  class="textarea">
                                     <el-select v-model="flowUpRequest.flowUpProcess" placeholder="请选择" @change="changeProcess">
-                                        <el-option v-for="item in salesphase" :key="item.value" :label="item.value" :value="item.key"></el-option>
+                                        <el-option v-for="item in flowUpProcess" :key="item.value" :label="item.value" :value="item.key"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item  prop='noNeedFlowReason' label=" "  class="textarea" style="margin:0 10px 0 25px">
@@ -352,7 +354,13 @@
                 </div>
             </el-dialog>
         </div>
-
+        <el-dialog title="删除确认" :visible.sync="deleteVisible" append-to-body width="500px" class="deldialog" >
+            <span>删除后该员工将无法恢复，不影响已添加过的跟进记录，是否继续删除？</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="deleteVisible = false">取 消</el-button>
+                <el-button type="primary" @click="doRemove">确认删除</el-button>
+            </span>
+        </el-dialog>
     </el-drawer>
 </template>
 <script lang="ts">
@@ -381,7 +389,7 @@ const _flowUpRequest = {
     assistants: [], // (2.0项目)协助人员列表
     bizId: '',
     bizType: 4,
-    contactMobile: '',
+    contactMobile: null,
     contactName: '',
     content: '',
     createBy: '',
@@ -417,7 +425,8 @@ export default class ProjectList2Detail extends Vue {
     @Getter('projectStore/flowUpProcess') flowUpProcess: DictionaryList
 
     @State('userInfo') userInfo: any
-
+    // 为了解决切换的时候校验的不正常bug
+    reCreate:boolean = true
     userDefault = USER_DEFAULT
     salesphase = SALESPHASE
     role = ROLE
@@ -440,6 +449,7 @@ export default class ProjectList2Detail extends Vue {
     // 邀请同事协助 弹窗
     innerHelpVisible:boolean = false
     radioContact:boolean = false
+    deleteVisible:boolean = false
     flowUpCount:any = {
         directCount: '',
         total: ''
@@ -460,8 +470,16 @@ export default class ProjectList2Detail extends Vue {
     }
     recordsData:any[] = []
     recordsPagination = ''
-
+    delContactItem:any = ''
+    delContactIndex:any = ''
     flowUpRequest:FlowUpRequest & {assistantRemark: string, assistants:any[], createCorpUserId:any} = JSON.parse(JSON.stringify(_flowUpRequest))
+
+    flowUpTypes = {
+        1: '当面拜访',
+        2: '电话/微信沟通/邮件等',
+        5: '已接受协助申请',
+        6: '已拒绝协助申请'
+    }
 
     get rulesContact () {
         let rules = {
@@ -481,6 +499,15 @@ export default class ProjectList2Detail extends Vue {
         return rules
     }
 
+    onSuccessCb () {
+        // @ts-ignore
+        this.$refs['addFlowUp'].fields.map(i => {
+            if (i.prop === 'picUrls') {
+                i.clearValidate()
+            }
+        })
+    }
+
     isActive (key) {
         if (this.process.length == 0) {
             return ''
@@ -492,14 +519,18 @@ export default class ProjectList2Detail extends Vue {
         return ''
     }
     // 未直接联系客户，已与客户经理沟通
-    onChageRadioContact () {
-        console.log(' 🚗 🚕 🚙 🚌 🚎 客户经理', this.projectDetail)
+    onChageRadioContact (val) {
+        console.log(' 🚗 🚕 🚙 🚌 🚎 客户经理', this.projectDetail, val)
         this.employeeList.map((item:any) => {
             item.checked = false
         })
         this.companyContactList.map(item => {
             item.checked = false
         })
+        if (!val) {
+            this.flowUpRequest.contactMobile = null
+            this.flowUpRequest.contactName = ''
+        }
 
         this.$forceUpdate()
     }
@@ -560,8 +591,11 @@ export default class ProjectList2Detail extends Vue {
     // 点击确定选择客户联系人
     onChooseUser () {
         if (this.radioContact) {
-            this.flowUpRequest.contactName = this.projectDetail.customerName
-            this.flowUpRequest.contactMobile = this.projectDetail.customerMobile
+            // 客户经理
+            this.flowUpRequest.contactName = '客户经理'
+            this.flowUpRequest.contactMobile = ''
+            // this.flowUpRequest.contactName = this.projectDetail.customerName
+            // this.flowUpRequest.contactMobile = this.projectDetail.customerMobile
         }
         let item = this.employeeList.find((item:any) => {
             return item.checked
@@ -580,7 +614,7 @@ export default class ProjectList2Detail extends Vue {
 
         this.companyContactList = JSON.parse(JSON.stringify(this.companyContactListBak))
         this.innerContactVisible = false
-        if (this.flowUpRequest.contactName && this.flowUpRequest.contactMobile) {
+        if (this.flowUpRequest.contactName) {
             // @ts-ignore
             this.$refs['addFlowUp'].fields.map(i => {
                 if (i.prop === 'contactName') {
@@ -633,28 +667,39 @@ export default class ProjectList2Detail extends Vue {
         })
     }
 
-    // 删除联系人
-    async onDelCompanyContact (item, index) {
-        console.log('🚀 --- onDelCompanyContact --- index', index)
-        if (!item.contactMobile || !item.contactName || !item.roleCodes.length) {
-            this.companyContactList.splice(index, 1)
+    async doRemove () {
+        if (!this.delContactItem.contactMobile || !this.delContactItem.contactName || !this.delContactItem.roleCodes.length) {
+            this.companyContactList.splice(this.delContactIndex, 1)
             console.log('🚀 --- onDelCompanyContact --- this.companyContactList', this.companyContactList)
 
             return
         }
-        console.log('🚀 --- onDelCompanyContact --- item', item)
-        await delCompanyContact(item.id)
+        console.log(' 🚗 🚕 🚙 🚌 🚎 this.delContactItem', this.delContactItem)
+        console.log(' 🚗 🚕 🚙 🚌 🚎 this.delContactItem', this.delContactIndex)
+        // await delCompanyContact(this.delContactItem.id)
         this.$message.success('删除成功')
         this.onGetCompanyContactList()
+    }
+    // 删除联系人
+    onDelCompanyContact (item, index) {
+        this.deleteVisible = true
+        this.delContactItem = item
+        this.delContactIndex = index
     }
 
     @Watch('flowUpRequest.type')
     resetFields (val) {
+        let temp = this.flowUpRequest.flowUpProcess
         this.$nextTick(() => {
             this.flowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
             this.flowUpRequest.type = val
+            this.flowUpRequest.flowUpProcess = temp
             // @ts-ignore
-            this.$refs['addFlowUp'].resetFields()
+            this.$refs['addFlowUp'].clearValidate()
+            this.reCreate = false
+            setTimeout(() => {
+                this.reCreate = true
+            }, 0)
         })
     }
 
@@ -725,9 +770,9 @@ export default class ProjectList2Detail extends Vue {
             return item.nodeStatus
         })
         if (res.length) {
-            this.flowUpRequest.flowUpProcess = res[res.length - 1].nodeKey
+            this.flowUpRequest.flowUpProcess = res[res.length - 1].nodeKey + ''
         } else {
-            this.flowUpRequest.flowUpProcess = 1
+            this.flowUpRequest.flowUpProcess = '1'
         }
     }
 
@@ -740,8 +785,8 @@ export default class ProjectList2Detail extends Vue {
         this.companyContactList.map((item, index) => {
             item.checked = false
         })
-
-        if (this.flowUpRequest.contactMobile == this.projectDetail.customerMobile) {
+        // 客户经理
+        if (this.flowUpRequest.contactMobile === '') {
             this.radioContact = true
         }
         this.employeeList.map((item:any) => {
@@ -901,6 +946,7 @@ export default class ProjectList2Detail extends Vue {
         await this.onInitGetDate()
         this.$emit('getDetail', this.projectDetail.id)
         this.$message.success('保存成功')
+        this.$emit('getList')
     }
 
     async onInitGetDate () {

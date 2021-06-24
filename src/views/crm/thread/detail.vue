@@ -69,6 +69,12 @@
                                     </div>
                                     <div class="title-tag" v-if="item.nextFlowTime">下次跟进时间</div>
                                     <div class="desc" v-if="item.nextFlowTime">{{item.nextFlowTime | formatDate('YYYY年MM月DD日 HH:mm:ss')}}</div>
+                                    <template v-if="item.customerBackLogWorks&&item.customerBackLogWorks.length">
+                                        <div class="title-tag">邀请同事协助</div>
+                                        <div class="desc" v-for="w in item.customerBackLogWorks" :key="w.id">{{w.assignedUserName}} {{w.assignedUserMobile}}</div>
+                                        <div class="title-tag" v-if="item.customerBackLogWorks[0].remark">需协助内容</div>
+                                        <div class="desc" v-if="item.customerBackLogWorks[0].remark">{{item.customerBackLogWorks[0].remark}}</div>
+                                    </template>
                                     <div class="title-tag" v-if="item.content">跟进内容</div>
                                     <div class="desc" v-if="item.content">{{item.content}}</div>
                                     <div class="title-tag" v-if="item.remark">其他备注</div>
