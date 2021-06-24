@@ -161,7 +161,7 @@
                         <!-- 长度为50位以内字母或数字。 -->
                         <el-input placeholder="请输入中登网质押编号" v-model="reviewResolutionForm.pledgeNo" maxlength="50"></el-input>
                     </el-form-item>
-                        <div class="reviewResolutionForm-title">
+                        <!-- <div class="reviewResolutionForm-title">
                             评审决议流程：
                         </div>
                         <div class="reviewResolutionForm-reviewResolutionNo" style="margin-left: 32px;">
@@ -171,7 +171,7 @@
                             <el-select v-model="reviewResolutionForm.reviewResolutionStatus" placeholder="请选择">
                                 <el-option label="已完结" :value="1"></el-option>
                             </el-select>
-                        </el-form-item>
+                        </el-form-item> -->
                         <div class="reviewResolutionForm-title">
                             货款支付流程：
                         </div>
