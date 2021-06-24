@@ -1,5 +1,5 @@
 .add-cont__row {
-    margin: 10px 0;
+    margin: 20px 0;
 }
 
 /deep/ .city-select .el-input {
@@ -8,4 +8,8 @@
 
 /deep/ .city-select .el-select {
     width: 184px !important;
+}
+
+.eltagtop {
+    margin-bottom: 15px;
 }

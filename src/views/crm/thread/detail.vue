@@ -10,66 +10,74 @@
             <div class="ThreadDetail-ctx" :style="radio=='跟进记录'?'bottom:0':'bottom:60px'">
                 <div v-if="radio=='跟进记录'">
                     <h-button type='assist' @click='add'> + 新增跟进记录</h-button>
+                    <span v-if="flowUpCount.total">
+                        累计跟进{{flowUpCount.total}}次，当面拜访{{flowUpCount.directCount}}次
+                    </span>
                     <div style="margin-top:20px">
                         <b>跟进动态</b>
                     </div>
-                    <div class="follow-records">
-                        <div class="follow-cell">
-                            <div class="info"><img src="" class="avatar">
+                    <div v-if="!recordsData.length" style="width: 600px;margin: 10px auto;">
+                        <el-divider>暂无跟进动态</el-divider>
+                    </div>
+                    <div v-else class="follow-records" ref='records'>
+                        <div class="follow-cell" v-for="item in recordsData" :key="item.id">
+                            <div class="info"><img :src="userDefault" class="avatar">
                                 <div class="name-container">
                                     <div class="follow-tag">跟进人</div>
-                                    <div class="name">王小二xxxxxxxx</div>
+                                    <div class="name">{{item.createBy||'-'}} {{item.createPhone}}</div>
                                 </div>
-                                <div class="time">2021/06/10 11:20</div>
+                                <div class="time">{{item.createTime|formatDate('YYYY/MM/DD HH:mm:ss')}}</div>
                             </div>
-                            <div class="content-container">
-                                <div class="line"></div>
-                                <div class="content">
-                                    <div class="title-tag">语音通话</div>
-                                    <div class="audio-player-container">
+                            <div class="content-container" v-if="item.flowUpDynamic&&item.flowUpDynamic.msgType === 'meeting_voice_call'">
+                                <div class='line' />
+                                <div class='content'>
+                                    <div class='title-tag'>语音通话</div>
+                                    <div class='audio-player-container'>
                                         <div class="crm-audio-player">
                                             <audio controls>
-                                                <source src="https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/temp/2021-06-17/14288512729326857274_1623833656365_external5072153392980475027.amr" type="audio/mpeg">
+                                                <source :src="item.flowUpDynamic.msgContent.osspath" type="audio/mpeg">
                                                 您的浏览器不支持 音频 插件，请使用谷歌浏览器。
                                             </audio>
                                         </div>
                                     </div>
-                                    <div class="watch-audio-text">查看语音文本</div>
-                                    <div class="desc">xxxxxxxx您收到我们的样品箱了，使用中有什么问题呢？您收到我们的样品箱了，使用中有什么问题呢？</div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="follow-cell">
-                            <div class="info"><img src="" class="avatar">
-                                <div class="name-container">
-                                    <div class="follow-tag">跟进人2</div>
-                                    <div class="name">王小二xxxxxxxx</div>
+                            <div class='content-container' v-if="item.flowUpDynamic&&item.flowUpDynamic.msgType === 'link'">
+                                <div class='line' />
+                                <div class='content'>
+                                    <div class='title-tag'>发送链接</div>
+                                    <div class='desc-link'>《{{item.flowUpDynamic.msgContent.title ? item.flowUpDynamic.msgContent.title : '查看链接'}}》</div>
                                 </div>
-                                <div class="time">2021/06/10 11:20</div>
                             </div>
+                            <div class='content-container' v-if="item.flowUpDynamic&&item.flowUpDynamic.msgType === 'weapp'">
+                                <div class='line' />
+                                <div class='content'>
+                                    <div class='title-tag'>发送小程序</div>
+                                    <div class='desc-weapp'>《{{item.flowUpDynamic.msgContent.displayname ? item.flowUpDynamic.msgContent.displayname : ''}}》</div>
+                                </div>
+                            </div>
+                            <!--  -->
                             <div class="content-container">
                                 <div class="line"></div>
                                 <div class="content">
-                                    <div class="title-tag">当面拜访</div>
+                                    <div class="title-tag" style="margin-top:20px">{{item.type ==1?'当面拜访':'电话/微信沟通/邮件等'}}</div>
                                     <div class="audio-player-container">
-                                        <div class="crm-audio-player">
-                                            <el-image style="width: 100px; height: 100px;margin-right:5px" :src="url" :preview-src-list="srcList"></el-image>
-                                            <el-image style="width: 100px; height: 100px;margin-right:5px" :src="url" :preview-src-list="srcList"></el-image>
-                                            <el-image style="width: 100px; height: 100px;margin-right:5px" :src="url" :preview-src-list="srcList"></el-image>
-                                            <el-image style="width: 100px; height: 100px;margin-right:5px" :src="url" :preview-src-list="srcList"></el-image>
-                                            <el-image style="width: 100px; height: 100px;margin-right:5px" :src="url" :preview-src-list="srcList"></el-image>
-                                            <el-image style="width: 100px; height: 100px;margin-right:5px" :src="url" :preview-src-list="srcList"></el-image>
-                                            <el-image style="width: 100px; height: 100px;margin-right:5px" :src="url" :preview-src-list="srcList"></el-image>
-                                            <el-image style="width: 100px; height: 100px;margin-right:5px" :src="url" :preview-src-list="srcList"></el-image>
+                                        <template v-if="item.picUrls&&item.picUrls.length">{{item.type ==1?'现场图片：':'附件：'}}</template>
+                                        <div class="crm-audio-player" style="margin-top:-15px">
+                                            <OssFileHosjoyUpload :showUpload='false' :showPreView='true' v-model="item.picUrls" :fileNum=8 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" />
                                         </div>
                                     </div>
-                                    <div style="margin-top:10px">跟进节点<font style="margin-left:52px;">提供方案/报价</font>
-                                    </div>
-                                    <div style="margin-top:10px;display: flex;">
-                                        <font style="flex:0 0 58px">跟进内容</font><span style="margin-left:50px;">上门拜访，并进行产品演示，需带样品箱上门拜访，并进行产品演示，需带样品箱上门拜访，并进行产品演示，需带样品箱上门拜访，并进行产品演示，需带样品箱</span>
-                                    </div>
+                                    <div class="title-tag" v-if="item.nextFlowTime">下次跟进时间</div>
+                                    <div class="desc" v-if="item.nextFlowTime">{{item.nextFlowTime | formatDate('YYYY年MM月DD日 HH:mm:ss')}}</div>
+                                    <div class="title-tag" v-if="item.content">跟进内容</div>
+                                    <div class="desc" v-if="item.content">{{item.content}}</div>
+                                    <div class="title-tag" v-if="item.remark">其他备注</div>
+                                    <div class="desc" v-if="item.remark">{{item.remark}}</div>
                                 </div>
                             </div>
+                        </div>
+                        <div v-if="isNoMore" style="width: 570px;margin: 10px auto;">
+                            <el-divider>没有更多</el-divider>
                         </div>
                     </div>
                 </div>
@@ -165,21 +173,39 @@
                 <h-button type="primary" @click="onUpDateThreadDetail">保存</h-button>
             </div>
             <!-- 添加跟进记录 -->
-            <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px">
+            <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px" :before-close="()=>closeAddRecord()" :close-on-click-modal='false'>
                 <div class="record-layout">
                     <div class="header-title">
-                        <el-radio-group v-model="radioRecord">
-                            <el-radio label="当面拜访">当面拜访</el-radio>
-                            <el-radio label="电话/微信沟通/邮件等">电话/微信沟通/邮件等</el-radio>
-                        </el-radio-group>
+                        <el-radio v-model="flowUpRequest.type" :label="1">当面拜访</el-radio>
+                        <el-radio v-model="flowUpRequest.type" :label="2">电话/微信沟通/邮件等</el-radio>
                         <p class="tips">温馨提示：推荐使用企业微信与客户聊天，自动更新记录，更方便。</p>
                     </div>
                     <div style="margin-top:-10px">
-                        <el-form :rules="formRules">
-                            <div class="record-dialog-item" v-if="radioRecord==='当面拜访'">
-                                <el-form-item prop='name' label="上传现场图片："></el-form-item>
-                                <div style="margin-top:-20px">
-                                    <OssFileHosjoyUpload :showPreView=true v-model="threadDetail.upload" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png">
+                        <el-form :rules="addFlowUpRules" :model="flowUpRequest" ref="addFlowUp" :validate-on-rule-change='false'>
+                            <div class="record-dialog-item" v-if="flowUpRequest.type == 1">
+                                <el-form-item prop='picUrls' label="上传现场图片："></el-form-item>
+                                <div>
+                                    <OssFileHosjoyUpload :showPreView='true' v-model="flowUpRequest.picUrls" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png">
+                                        <div class="a-line">
+                                            <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
+                                        </div>
+                                    </OssFileHosjoyUpload>
+                                </div>
+                            </div>
+                            <div class="record-dialog-item" style="margin-top:10px">
+                                <el-form-item prop='content' label="跟进内容：" class="textarea">
+                                    <el-input v-model="flowUpRequest.content" placeholder="请输入此次跟进结果/下次跟进事项" style="width:380px;" type="textarea" maxlength="200" show-word-limit rows='2'></el-input>
+                                </el-form-item>
+                            </div>
+                            <div class="record-dialog-item">
+                                <el-form-item prop="nextFlowTime" label="下次跟进时间：" class="textarea">
+                                    <el-date-picker v-model="flowUpRequest.nextFlowTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="选择日期"></el-date-picker>
+                                </el-form-item>
+                            </div>
+                            <div class="record-dialog-item" v-if="flowUpRequest.type != 1">
+                                <el-form-item label="附件（不超过8个）："></el-form-item>
+                                <div>
+                                    <OssFileHosjoyUpload :showPreView='true' v-model="flowUpRequest.picUrls" :fileNum=8 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px">
                                         <div class="a-line">
                                             <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                                         </div>
@@ -187,48 +213,16 @@
                                 </div>
                             </div>
                             <div class="record-dialog-item">
-                                <el-form-item prop='name' label="客户联系人：" class="textarea">
-                                    <el-input placeholder="请选择客户联系人" suffix-icon="el-icon-arrow-right" @focus="onOpenContactVisible"></el-input>
-                                </el-form-item>
-                            </div>
-                            <div class="record-dialog-item">
-                                <el-form-item prop='name' label="跟进内容：" class="textarea">
-                                    <el-input v-model="threadDetail.name" placeholder="请输入此次跟进结果/下次跟进事项" style="width:380px;" type="textarea" maxlength="200" show-word-limit rows='2'></el-input>
-                                </el-form-item>
-                            </div>
-                            <div class="record-dialog-item">
-                                <el-form-item label="下次跟进时间：" class="textarea">
-                                    <el-date-picker v-model="threadDetail.name" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="选择日期"></el-date-picker>
-                                </el-form-item>
-                            </div>
-                            <div class="record-dialog-item">
-                                <el-form-item label="邀请同事协助：" class="textarea">
-                                    <el-input placeholder="请选择同事协助" suffix-icon="el-icon-arrow-right" @focus="onOpenHelp"></el-input>
-                                </el-form-item>
-                                <p class="tips" style="margin-top:-10px;margin-left:120px">同事将协助你解决客户的问题，更快促成交。</p>
-                            </div>
-                            <div class="record-dialog-item">
-                                <el-form-item label="需协助内容：" class="textarea">
-                                    <el-input placeholder="请输入需协助内容" type="textarea" maxlength="200" show-word-limit rows='2'></el-input>
-                                </el-form-item>
-                            </div>
-                            <div class="record-dialog-item" v-if="radioRecord!=='当面拜访'">
-                                <el-form-item prop='name' label="附件（不超过8个）："></el-form-item>
-                                <div style="margin-top:-20px">
-                                    <OssFileHosjoyUpload :showPreView=true v-model="projectDetail.upload" :fileNum=8 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png">
-                                        <div class="a-line">
-                                            <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
-                                        </div>
-                                    </OssFileHosjoyUpload>
-                                </div>
-                            </div>
-                            <div class="record-dialog-item">
-                                <el-form-item label="其他备注：" class="textarea">
-                                    <el-input placeholder="其他需特殊说明事项可添加" type="textarea" maxlength="200" show-word-limit rows='2'></el-input>
+                                <el-form-item prop='remark' label="其他备注：" class="textarea">
+                                    <el-input v-model="flowUpRequest.remark" placeholder="其他需特殊说明事项可添加" type="textarea" maxlength="200" show-word-limit rows='2'></el-input>
                                 </el-form-item>
                             </div>
                         </el-form>
                     </div>
+                </div>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="closeAddRecord">取 消</el-button>
+                    <el-button type="primary" @click="onSubmitAddRecord">确定</el-button>
                 </div>
             </el-dialog>
         </div>
@@ -239,12 +233,32 @@
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
 import { ccpBaseUrl, ossAliyun, ossOldBucket } from '@/api/config'
-import { getChiness } from './api/index'
+import { getChiness, getFlowUp, getFlowUpCount, addFlowUp, updateThreadDetail } from './api/index'
 import OssFileUtils from '@/utils/OssFileUtils'
 import { State, namespace, Action, Getter } from 'vuex-class'
-import { Clue } from '@/interface/hbp-member'
-import { validateForm } from '@/decorator'
-import { THREAD_ORIGIN, DEVICE_CATEGORY } from './const/index'
+import { Clue, FlowUpRequest } from '@/interface/hbp-member'
+import { validateForm, handleSubmit } from '@/decorator'
+import { THREAD_ORIGIN, DEVICE_CATEGORY, USER_DEFAULT } from './const/index'
+
+const _flowUpRequest = {
+    assistantRemark: '', // 协助内容
+    assistants: [], // (2.0项目)协助人员列表
+    bizId: '',
+    bizType: 1,
+    contactMobile: '',
+    contactName: '',
+    content: '',
+    createBy: '',
+    createCorpUserId: '', // 创建人企业微信id
+    createPhone: '',
+    flowUpProcess: '',
+    id: '',
+    nextFlowTime: '',
+    noNeedFlowReason: '',
+    picUrls: [],
+    remark: '',
+    type: 2 // 跟进类型 1：当面拜访 2：电话/微信沟通/邮件等
+}
 
 @Component({
     name: 'ThreadDetail',
@@ -281,27 +295,42 @@ export default class ThreadDetail extends Vue {
     radioRecord: string = '当面拜访';
     // 添加跟进记录 弹窗
     addRecord: boolean = false
-    // 选择联系人 弹窗
-    innerContactVisible: boolean = false
-    // 邀请同事协助 弹窗
-    innerHelpVisible: boolean = false
+    isNoMore: boolean = false
     radioContact: string = ''
     provinceList: any[] = []
     cityList: any[] = []
     countryList: any[] = []
     categorys = DEVICE_CATEGORY
+    userDefault = USER_DEFAULT
     stateN = ''
-    url = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-    srcList = [
-        'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-        'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg'
-    ]
 
     queryParams = {
         keyWord: ''
     }
+
+    flowUpCount: any = {
+        directCount: '',
+        total: ''
+    }
+
     timeout = null
 
+    recordsQuery = {
+        bizId: '',
+        pageNumber: 1,
+        pageSize: 5
+    }
+    recordsData: any[] = []
+    recordsPagination = ''
+    flowUpRequest: FlowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
+
+    get addFlowUpRules () {
+        let rules = {
+            picUrls: { required: true, message: '必填项不能为空' },
+            content: { required: true, message: '必填项不能为空', trigger: 'blur' }
+        }
+        return rules
+    }
     get origin () {
         switch (this.threadDetail.origin) {
             case 1:
@@ -334,10 +363,6 @@ export default class ThreadDetail extends Vue {
         return []
     }
 
-    change (val) {
-        console.log('🚀 --- change --- val', val)
-    }
-
     handleClose () {
         let threadDetailForm: any = this.$refs['threadDetailForm']
         if (threadDetailForm) {
@@ -348,32 +373,13 @@ export default class ThreadDetail extends Vue {
     add () {
         this.addRecord = true
     }
-    onOpenContactVisible () {
-        this.innerContactVisible = true
-    }
-    onOpenHelp () {
-        this.innerHelpVisible = true
-    }
-
-    // 预览文件
-    async handleLink (fileUrl) {
-        let tokenUrl = await OssFileUtils.getUrl(fileUrl)
-        if (tokenUrl.indexOf(ossOldBucket + '.') === -1) {
-            tokenUrl = ossAliyun + tokenUrl.replace(OssFileUtils.hostReg, '')
-        }
-        window.open(tokenUrl)
-    }
-
-    handleDelFile (index, fileList) {
-        fileList.splice(index, 1)
-    }
 
     @validateForm('threadDetailForm')
     async onUpDateThreadDetail () {
         console.log(this.threadDetail)
-        // await upDateProjectDetail(this.threadDetail)
-        // this.$message.success('保存成功')
-        // this.$emit('getDetail', this.threadDetail.id)
+        await updateThreadDetail(this.threadDetail)
+        this.$message.success('保存成功')
+        this.$emit('getDetail', this.threadDetail.id)
     }
 
     onProvince (key) {
@@ -431,9 +437,111 @@ export default class ThreadDetail extends Vue {
         console.log(this.branchArr)
     }
 
+    // 跟进记录
+    async getRecords () {
+        if (this.recordsPagination && Number(this.recordsQuery.pageNumber) > Number(this.recordsPagination)) {
+            this.isNoMore = true
+            return
+        }
+        const { data: flowUp } = await getFlowUp(this.recordsQuery)
+        this.recordsPagination = flowUp.pages
+        this.recordsData = [...this.recordsData, ...flowUp.records]
+        this.recordsData.map(async (item, index) => {
+            if (item.picUrls) {
+                let api: any = []
+                let url = ''
+                item.picUrls.map(jtem => {
+                    url = jtem
+                    api.push(OssFileUtils.getUrl(jtem))
+                })
+                const res = await Promise.all(api)
+                // console.log('🚀 --- this.recordsData.map --- res', res[0])
+                let obj = []
+                res.map(o => {
+                    obj.push({
+                        fileUrl: url,
+                        fileName: o,
+                        tokenUrl: o
+                    })
+                })
+                item.picUrls = obj
+            }
+        })
+        console.log(' 🚗 🚕 🚙 🚌 🚎 recordsData', this.recordsData)
+    }
+
+    recordsScroll (event) {
+        if (this.radio === '项目信息') {
+            return
+        }
+        // 滚动距离scrollTop+元素的高clientHeight=文档的高scrollHeight
+        const { scrollTop, clientHeight, scrollHeight } = event.target
+        // console.log('%O', event.target)
+        console.log(event.target.scrollTop)
+        if (scrollHeight - scrollTop - clientHeight <= 80) {
+            console.log(' 🚗 🚕 🚙 🚌 🚎 加载')
+            this.recordsQuery.pageNumber += 1
+            this.getRecords()
+        }
+    }
+
+    // 关闭新增跟进记录
+    closeAddRecord () {
+        this.flowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
+
+        this.$nextTick(() => {
+            // @ts-ignore
+            this.$refs['addFlowUp'].clearValidate()
+            this.addRecord = false
+        })
+    }
+
+    // 提交新增跟进记录
+    @validateForm('addFlowUp')
+    @handleSubmit()
+    async onSubmitAddRecord () {
+        this.flowUpRequest.createBy = this.userInfo.employeeName
+        this.flowUpRequest.createPhone = this.userInfo.phoneNumber
+        let query = JSON.parse(JSON.stringify(this.flowUpRequest))
+        if (this.flowUpRequest.picUrls) {
+            let picUrls = []
+            this.flowUpRequest.picUrls.map((item: any) => {
+                picUrls.push(item.fileUrl)
+            })
+            query.picUrls = picUrls
+        }
+        query.bizId = this.threadDetail.id.toString()
+        console.log(query, 'query')
+        await addFlowUp(query)
+        this.$message.success('新增成功')
+        this.recordsQuery = {
+            bizId: this.threadDetail.id.toString(),
+            pageNumber: 1,
+            pageSize: 5
+        }
+        this.recordsData = []
+        await this.onInitGetDate()
+        this.closeAddRecord()
+    }
+
+    async onInitGetDate () {
+        this.recordsQuery = {
+            bizId: this.threadDetail.id.toString(),
+            pageNumber: 1,
+            pageSize: 5
+        }
+        this.recordsData = []
+        this.getRecords()
+        const { data: flowUpCount } = await getFlowUpCount({ bizId: this.threadDetail.id.toString() })
+        if (flowUpCount.total) {
+            this.flowUpCount = flowUpCount
+        }
+    }
+
     mounted () {
         this.getAreacode()
         this.onGetbranch()
+        this.onInitGetDate()
         console.log(' 🚗 🚕 🚙 🚌 🚎 xiaoqiche ', this.threadDetail)
     }
 }

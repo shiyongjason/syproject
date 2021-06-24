@@ -18,3 +18,5 @@ export const DEVICE_CATEGORY: { label: string; value: string; }[] = [
     { label: '电梯', value: '7' },
     { label: '其他', value: '8' }
 ]
+
+export const USER_DEFAULT = 'https://hosjoy-hbp.oss-cn-hangzhou.aliyuncs.com/application/crm_wxapp/user-default.png'

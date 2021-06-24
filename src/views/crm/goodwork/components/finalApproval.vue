@@ -10,7 +10,7 @@
                 <div class="status-description">（{{resStatus[resolutionDetail.resolutionStatus]&&resStatus[resolutionDetail.resolutionStatus].txt}}）</div>
                 <div class="tab-layout-title">
                     <span></span>
-                    <div class="tab-layout-title-box">客户基本信息<h-button table @click="onEditCustomer"  v-if="resolutionDetail.resolutionStatus==1&&hosAuthCheck(Auths.CRM_WORK_FINAL_EDITCUS)">编辑</h-button>
+                    <div class="tab-layout-title-box">客户基本信息<h-button table @click="onEditCustomer"  v-if="(resolutionDetail.resolutionStatus==1||resolutionDetail.resolutionStatus==3)&&hosAuthCheck(Auths.CRM_WORK_FINAL_EDITCUS)">编辑</h-button>
                     </div>
                 </div>
                 <div class="item">
@@ -66,7 +66,7 @@
                 <!--  -->
                 <div class="tab-layout-title">
                     <span></span>
-                    <div class="tab-layout-title-box">采购结论<h-button table @click="onEditPur" v-if="resolutionDetail.resolutionStatus==1&&hosAuthCheck(Auths.CRM_WORK_FINAL_EDITPUR)">编辑</h-button>
+                    <div class="tab-layout-title-box">采购结论<h-button table @click="onEditPur" v-if="(resolutionDetail.resolutionStatus==1||resolutionDetail.resolutionStatus==3)&&hosAuthCheck(Auths.CRM_WORK_FINAL_EDITPUR)">编辑</h-button>
                     </div>
                 </div>
                 <div class="item">
@@ -146,6 +146,9 @@
                     <div class="dialogbaseinfo-item">可代采购额度(元)：{{resolutionDetail.purchaseQuota|fundMoneyHasTail}}</div>
                     <div class="dialogbaseinfo-item">剩余代采购额度(元)：{{resolutionDetail.purchaseBalance|fundMoneyHasTail}}</div>
                 </div>
+                 <div class="dialogbaseinfo">
+                    <div class="dialogbaseinfo-item">经销商评级：{{resolutionDetail.companyLevel}}</div>
+                </div>
                 <el-form id='elform' :model="baseInfoForm" :rules="formRules" label-width="180px" label-position='right' ref="reviewResolutionForm">
                     <div class="reviewResolutionForm-title" style="marginTop:0px">
                         项目信息：
@@ -188,7 +191,7 @@
                         </el-form-item>
                         <!-- 0-100,最多保留2位小数 -->
                         <el-form-item label="经销商首付款比例" prop='advancePaymentRate'>
-                            <el-input placeholder="请输入" v-model="purForm.advancePaymentRate" maxlength="50">
+                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='100'  v-model="purForm.advancePaymentRate" maxlength="50">
                                 <template slot="append">%</template>
                             </el-input>
                         </el-form-item>
@@ -202,7 +205,7 @@
                             </el-input>
                         </el-form-item>
                         <!--  -->
-                        <el-form-item label="剩余货款支付周期：" prop='remainPaymentCycle' style="marginLeft:-9px;marginTop:10px">
+                        <el-form-item label="剩余货款支付周期：" prop='remainPaymentCycle' style="marginLeft:-9px;">
                             <el-select v-model="purForm.remainPaymentCycle" placeholder="请选择">
                                 <el-option label="1个月" :value="1"></el-option>
                                 <el-option label="2个月" :value="2"></el-option>
@@ -224,7 +227,7 @@
                             </el-input>
                         </el-form-item>
                         <!-- 仅可输入数字，区间为（0，100），最多保留2位小数 -->
-                        <el-form-item label="银行承兑：" prop='acceptBankRate' style="marginLeft:-9px;marginTop:10px">
+                        <el-form-item label="银行承兑：" prop='acceptBankRate' style="marginLeft:-9px">
                             <el-input v-isNum:2 v-inputMAX='100' placeholder="请输入" v-model="purForm.acceptBankRate">
                                 <template slot="append">%</template>
                             </el-input>
@@ -236,7 +239,7 @@
                     <div class="form-table">
                         <hosJoyTable ref="hosjoyTable" align="center" border stripe :showPagination='false' :column="formTableLabel" :data="tableForm" actionWidth='50' prevLocalName="V3.*" localName="V3.*.26" isAction>
                             <template #action="slotProps">
-                                <h-button table @click="del(slotProps.data)">删除</h-button>
+                                <h-button table @click="del(slotProps.data)" v-if="tableForm.length>1">删除</h-button>
                             </template>
                         </hosJoyTable>
                         <span style='color: #1890FF;text-decoration: underline;marginTop:-10px;cursor: pointer;' @click="onAddItem"> + 添加采购信息</span>
@@ -251,7 +254,7 @@
         <!-- 1  -->
         <div class="tab-layout" v-if="radio1=='决议修改记录'">
             <div class="tab-layout-flex" v-for="(item,index) in Lists" :key="index">
-                <div class="flex-top">
+                <div class="flex-top" v-if="!item.dingId">
                     <span><i>{{item.createBy}}</i>{{item.recordTitle}}</span>
                     <span>{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</span>
                 </div>
@@ -311,7 +314,7 @@ import moment from 'moment'
 export default class FinalApproval extends Vue {
     @Prop({ default: '' }) readonly finalFormID!:any
     moment:Function= moment;
-    Auths:any;
+    Auths = Auths;
     radio1: string = '评审决议内容';
     tableData: any[] = [];
     Lists:any[] = [];
@@ -716,6 +719,7 @@ export default class FinalApproval extends Vue {
                 if (this.onValidTable(this.tableForm)) {
                     await resPurchase(this.purForm)
                     this.onFindRes()
+                    this.purchaseConclusionVisible = false
                 }
             }
         })
@@ -725,6 +729,7 @@ export default class FinalApproval extends Vue {
     changeGroup (value) {
         this.$forceUpdate()
         if (value == '决议修改记录') {
+            this.$emit('onHideFoot')
             this.onFindRecords()
         } else {
             this.onFindRes()
