@@ -508,7 +508,6 @@ export default class Thread extends Vue {
 
     async distributorSubmit () {
         this.distributorForm.clueId = this.canDispatchList
-        console.log(this.distributorForm)
         this.isloading = true
         this.distributorRef.validate(async (valid) => {
             if (valid) {
@@ -561,22 +560,18 @@ export default class Thread extends Vue {
     }
 
     clearthreadFormData () {
-        this.$nextTick(() => {
-            this.threadFormRef.clearValidate()
-        })
-        this.threadVisible = false
         this.threadForm = {
             provinceId: '',
             cityId: '',
             countryId: ''
         }
+        this.$nextTick(() => {
+            this.threadFormRef.clearValidate()
+        })
+        this.threadVisible = false
     }
 
     clearDispatchFormData () {
-        this.$nextTick(() => {
-            this.distributorRef.clearValidate()
-        })
-        this.distributorVisible = false
         this.stateN = ''
         this.distributorForm = {
             customerName: '',
@@ -584,6 +579,10 @@ export default class Thread extends Vue {
             clueId: [],
             customerDeptName: ''
         }
+        this.$nextTick(() => {
+            this.distributorRef.clearValidate()
+        })
+        this.distributorVisible = false
     }
 
     getDetail () {
