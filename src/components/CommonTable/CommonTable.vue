@@ -13,12 +13,13 @@
             </div>
         </el-collapse-transition>
         <!-- 列表 -->
-        <el-table v-bind="tableAttr" :data="tableData" :stripe='stripe' border :lazy="true" :max-height="maxHeight" @sort-change="handleSortChange" @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="rowKey" :load="load" :indent="4"
-            :row-class-name="rowClassName">
+        <el-table ref="basicTable" v-bind="tableAttr" :data="tableData" :stripe='stripe' border :lazy="true" :max-height="maxHeight" @sort-change="handleSortChange" @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="rowKey" :load="load" :indent="4"
+            :row-class-name="rowClassName" :span-method="spanMethod">
             <el-table-column v-if="isMultiple" type="selection" align="center" :selectable="selectable"></el-table-column>
             <el-table-column v-if="isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
             <template v-for="item in tableLabel">
-                <el-table-column v-if="selectTh.indexOf(item.label)>-1 && !item.isHidden" :key="columnKey(item)" :label="item.label" :prop="item.prop" :sortable="item.sortable" :align="item.align?item.align:'center'" :min-width="item.width?item.width:''" :show-overflow-tooltip="true" v-bind="item">
+                <el-table-column v-if="selectTh.indexOf(item.label)>-1 && !item.isHidden" :key="columnKey(item)" :label="item.label" :prop="item.prop" :sortable="item.sortable" :align="item.align?item.align:'center'" :min-width="item.width?item.width:'160'" :show-overflow-tooltip="true"
+                    v-bind="item">
                     <template slot-scope="scope">
                         <slot v-if="item.formatters === 'money'" :name="item.prop" :data="scope">{{scope.row[item.prop] | money}}</slot>
                         <slot v-else-if="item.formatters === 'moneyShow'" :name="item.prop" :data="scope">{{scope.row[item.prop] | moneyShow}}</slot>
@@ -134,6 +135,10 @@ export default {
             type: Object,
             default: () => ({})
         },
+        spanMethod: {
+            type: Function,
+            defalut: () => { }
+        },
         rowKey: {
             type: String,
             default: ''
@@ -228,6 +233,10 @@ export default {
         handleCurrentChange (val) {
             this.paginationInfo.pageNumber = val
             this.$emit('onCurrentChange', this.paginationInfo)
+        },
+        doLayout () {
+            console.log('重新布局', this.$refs.basicTable)
+            this.$refs.basicTable && this.$refs.basicTable.doLayout()
         },
         handleSizeChange (val) {
             this.$emit('onSizeChange', val)
