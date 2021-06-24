@@ -172,7 +172,7 @@
                                     <div class="follow-tag">跟进人</div>
                                     <div class="name">{{item.createBy||'-'}} {{item.createPhone}}</div>
                                 </div>
-                                <div class="time">{{item.createTime|formatDate('YYYY/MM/DD a HH:mm:ss')}}</div>
+                                <div class="time">{{item.createTime|formatDate('YYYY/MM/DD a hh:mm:ss')}}</div>
                             </div>
                             <div class="content-container" v-if="item.flowUpDynamic&&item.flowUpDynamic.msgType === 'meeting_voice_call'">
                                 <div class='line' />
@@ -206,7 +206,9 @@
                             <div class="content-container">
                                 <div class="line"></div>
                                 <div class="content">
-                                    <div class="title-tag" style="margin-top:20px">{{item.type ==1?'当面拜访':'电话/微信沟通/邮件等'}}</div>
+                                    <div class="title-tag" style="margin-top:20px">{{flowUpTypes[item.type]}}</div>
+                                    <div class="title-tag" v-if="flowUpTypes[item.type]==='已拒绝协助申请'">拒绝原因</div>
+                                    <div class='desc' v-if="flowUpTypes[item.type]==='已拒绝协助申请'">{{item.remark}}</div>
                                     <div class="audio-player-container">
                                        <template v-if="item.picUrls&&item.picUrls.length">{{item.type ==1?'现场图片：':'附件：'}}</template>
                                         <div class="crm-audio-player" style="margin-top:-15px">
@@ -257,18 +259,18 @@
         </el-dialog>
         <!-- 添加跟进记录 -->
             <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px" :before-close="()=>closeAddRecord()" :close-on-click-modal='false' >
-                <div class="record-layout">
+                <div class="record-layout" style="height:444px">
                     <div class="header-title">
                         <el-radio v-model="flowUpRequest.type" :label="1">当面拜访</el-radio>
                         <el-radio v-model="flowUpRequest.type" :label="2">电话/微信沟通/邮件等</el-radio>
                         <p class="tips">温馨提示：推荐使用企业微信与客户聊天，自动更新记录，更方便。</p>
                     </div>
                     <div style="margin-top:-10px">
-                        <el-form :rules="addFlowUpRules" :model="flowUpRequest" ref="addFlowUp" :validate-on-rule-change='false'>
+                        <el-form :rules="addFlowUpRules" :model="flowUpRequest" ref="addFlowUp" :validate-on-rule-change='false' v-if="reCreate">
                             <div class="record-dialog-item" v-if="flowUpRequest.type == 1">
                                 <el-form-item  prop='picUrls' label="上传现场图片："></el-form-item>
                                 <div>
-                                    <OssFileHosjoyUpload :showPreView='true'  v-model="flowUpRequest.picUrls" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png">
+                                    <OssFileHosjoyUpload :showPreView='true'  v-model="flowUpRequest.picUrls" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png" @successCb='onSuccessCb'>
                                     <div class="a-line">
                                         <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                                     </div>
@@ -332,7 +334,7 @@ const _flowUpRequest = {
     assistantRemark: '', // 协助内容
     assistants: [], // (2.0项目)协助人员列表
     bizId: '',
-    bizType: 3,
+    bizType: 3, // 事件类型 1：线索 2：客户 3：1.0项目 4: 2.0项目
     contactMobile: '',
     contactName: '',
     content: '',
@@ -351,6 +353,13 @@ export default {
     name: 'projectlist',
     data () {
         return {
+            flowUpTypes: {
+                1: '当面拜访',
+                2: '电话/微信沟通/邮件等',
+                5: '已接受协助申请',
+                6: '已拒绝协助申请'
+            },
+            reCreate: true,
             process: [],
             companyId: '',
             companyCode: '',
@@ -514,22 +523,18 @@ export default {
         'flowUpRequest.type' (val) {
             this.flowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
             this.flowUpRequest.type = val
-            if (this.process.length == 0) {
-                this.flowUpRequest.flowUpProcess = 1
-            } else {
-                this.flowUpRequest.flowUpProcess = this.process[this.process.length - 1]
-            }
-            this.$refs['addFlowUp'] && this.$refs['addFlowUp'].resetFields()
+            this.$refs['addFlowUp'] && this.$refs['addFlowUp'].clearValidate()
+            this.reCreate = false
+            setTimeout(() => {
+                this.reCreate = true
+            }, 0)
         }
     },
     computed: {
         addFlowUpRules () {
             let rules = {
-                picUrls: { required: true, message: '必填项不能为空' },
-                contactName: { required: true, message: '必填项不能为空', trigger: 'blur' },
-                content: { required: true, message: '必填项不能为空', trigger: 'blur' },
-                flowUpProcess: { required: true, message: '必填项不能为空', trigger: 'blur' },
-                noNeedFlowReason: { required: this.flowUpRequest.flowUpProcess == 7, message: '必填项不能为空', trigger: 'blur' }
+                picUrls: [{ required: !!this.flowUpRequest.type == 1, message: '必填项不能为空' }],
+                content: [{ required: true, message: '必填项不能为空' }]
             }
             return rules
         },
@@ -589,8 +594,17 @@ export default {
             findProjectrecord: 'crmmanage/findProjectrecord',
             findPunchlist: 'crmmanage/findPunchlist'
         }),
+        onSuccessCb () {
+            this.$refs['addFlowUp'].fields.map(i => {
+                if (i.prop === 'picUrls') {
+                    i.clearValidate()
+                }
+            })
+        },
         async onSubmitAddRecord () {
             this.$refs['addFlowUp'].validate(async (value, r) => {
+                console.log(' 🚗 🚕 🚙 🚌 🚎 ，value', value)
+
                 if (value) {
                     this.flowUpRequest.createBy = this.userInfo.employeeName
                     this.flowUpRequest.createPhone = this.userInfo.phoneNumber
@@ -603,6 +617,8 @@ export default {
                         query.picUrls = picUrls
                     }
                     query.bizId = this.projectId
+                    console.log(' 🚗 🚕 🚙 🚌 🚎 xx', query)
+
                     await addFlowUp(query)
                     this.$message.success('新增成功')
                     this.recordsQuery = {
@@ -1037,7 +1053,7 @@ export default {
 
                 .content {
                     flex: 1;
-
+                    padding-bottom: 18px;
                     .title-tag {
                         height: 21px;
                         font-size: 14px;

@@ -62,9 +62,9 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">创建时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.startTime" type="date" placeholder="开始时间" value-format="yyyy-MM-dd"></el-date-picker>
+                        <el-date-picker v-model="queryParams.startTime" type="date" placeholder="开始时间" format="yyyy-MM-dd"></el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker v-model="queryParams.endTime" type="date" placeholder="结束时间" value-format="yyyy-MM-dd"></el-date-picker>
+                        <el-date-picker v-model="queryParams.endTime" type="date" placeholder="结束时间" format="yyyy-MM-dd"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -89,6 +89,9 @@
                     </h-button>
                 </div>
             </div>
+            <el-tag size="medium" class="eltagtop" style="margin-right:10px">
+                已经筛选{{page.total}}个，累计线索数{{page.currentTotal}}个
+            </el-tag>
             <el-tag size="medium" class="eltagtop">
                 已经选中{{selectThread.length}}个，可进行批量操作
                 <h-button table :disabled='selectThread.length === 0' style="margin-left:10px" @click="distributor()">批量分配销售</h-button>
@@ -229,7 +232,7 @@
 <script lang='tsx'>
 import { Vue, Component, Prop, Watch, Ref } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
-import { getChiness, getThreadList, assignmentCustomer, getThreadDetail, createThread } from './api/index'
+import { getChiness, getThreadList, assignmentCustomer, getThreadDetail, createThread, getThreadListCount } from './api/index'
 import detail from './detail.vue'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { ThreadQeuryModel } from './const/model'
@@ -321,6 +324,7 @@ export default class Thread extends Vue {
     }
     page = {
         sizes: [10, 20, 50, 100],
+        currentTotal: 0,
         total: 0
     }
     origins = THREAD_ORIGIN
@@ -482,6 +486,8 @@ export default class Thread extends Vue {
         const { data } = await getThreadList(this.queryParams)
         this.tableData = data.records
         this.page.total = data.total
+        const { data: count } = await getThreadListCount({})
+        this.page.currentTotal = count
     }
 
     addThread () {
@@ -502,7 +508,6 @@ export default class Thread extends Vue {
 
     async distributorSubmit () {
         this.distributorForm.clueId = this.canDispatchList
-        console.log(this.distributorForm)
         this.isloading = true
         this.distributorRef.validate(async (valid) => {
             if (valid) {
@@ -555,22 +560,18 @@ export default class Thread extends Vue {
     }
 
     clearthreadFormData () {
-        this.$nextTick(() => {
-            this.threadFormRef.clearValidate()
-        })
-        this.threadVisible = false
         this.threadForm = {
             provinceId: '',
             cityId: '',
             countryId: ''
         }
+        this.$nextTick(() => {
+            this.threadFormRef.clearValidate()
+        })
+        this.threadVisible = false
     }
 
     clearDispatchFormData () {
-        this.$nextTick(() => {
-            this.distributorRef.clearValidate()
-        })
-        this.distributorVisible = false
         this.stateN = ''
         this.distributorForm = {
             customerName: '',
@@ -578,6 +579,10 @@ export default class Thread extends Vue {
             clueId: [],
             customerDeptName: ''
         }
+        this.$nextTick(() => {
+            this.distributorRef.clearValidate()
+        })
+        this.distributorVisible = false
     }
 
     getDetail () {
