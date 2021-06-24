@@ -389,7 +389,7 @@ const _flowUpRequest = {
     assistants: [], // (2.0项目)协助人员列表
     bizId: '',
     bizType: 4,
-    contactMobile: '',
+    contactMobile: null,
     contactName: '',
     content: '',
     createBy: '',
@@ -519,14 +519,18 @@ export default class ProjectList2Detail extends Vue {
         return ''
     }
     // 未直接联系客户，已与客户经理沟通
-    onChageRadioContact () {
-        console.log(' 🚗 🚕 🚙 🚌 🚎 客户经理', this.projectDetail)
+    onChageRadioContact (val) {
+        console.log(' 🚗 🚕 🚙 🚌 🚎 客户经理', this.projectDetail, val)
         this.employeeList.map((item:any) => {
             item.checked = false
         })
         this.companyContactList.map(item => {
             item.checked = false
         })
+        if (!val) {
+            this.flowUpRequest.contactMobile = null
+            this.flowUpRequest.contactName = ''
+        }
 
         this.$forceUpdate()
     }
@@ -587,8 +591,11 @@ export default class ProjectList2Detail extends Vue {
     // 点击确定选择客户联系人
     onChooseUser () {
         if (this.radioContact) {
-            this.flowUpRequest.contactName = this.projectDetail.customerName
-            this.flowUpRequest.contactMobile = this.projectDetail.customerMobile
+            // 客户经理
+            this.flowUpRequest.contactName = '客户经理'
+            this.flowUpRequest.contactMobile = ''
+            // this.flowUpRequest.contactName = this.projectDetail.customerName
+            // this.flowUpRequest.contactMobile = this.projectDetail.customerMobile
         }
         let item = this.employeeList.find((item:any) => {
             return item.checked
@@ -607,7 +614,7 @@ export default class ProjectList2Detail extends Vue {
 
         this.companyContactList = JSON.parse(JSON.stringify(this.companyContactListBak))
         this.innerContactVisible = false
-        if (this.flowUpRequest.contactName && this.flowUpRequest.contactMobile) {
+        if (this.flowUpRequest.contactName) {
             // @ts-ignore
             this.$refs['addFlowUp'].fields.map(i => {
                 if (i.prop === 'contactName') {
@@ -778,8 +785,8 @@ export default class ProjectList2Detail extends Vue {
         this.companyContactList.map((item, index) => {
             item.checked = false
         })
-
-        if (this.flowUpRequest.contactMobile == this.projectDetail.customerMobile) {
+        // 客户经理
+        if (this.flowUpRequest.contactMobile === '') {
             this.radioContact = true
         }
         this.employeeList.map((item:any) => {
