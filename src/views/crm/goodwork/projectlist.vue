@@ -172,7 +172,7 @@
                                     <div class="follow-tag">跟进人</div>
                                     <div class="name">{{item.createBy||'-'}} {{item.createPhone}}</div>
                                 </div>
-                                <div class="time">{{item.createTime|formatDate('YYYY/MM/DD a HH:mm:ss')}}</div>
+                                <div class="time">{{item.createTime|formatDate('YYYY/MM/DD a hh:mm:ss')}}</div>
                             </div>
                             <div class="content-container" v-if="item.flowUpDynamic&&item.flowUpDynamic.msgType === 'meeting_voice_call'">
                                 <div class='line' />
@@ -206,7 +206,9 @@
                             <div class="content-container">
                                 <div class="line"></div>
                                 <div class="content">
-                                    <div class="title-tag" style="margin-top:20px">{{item.type ==1?'当面拜访':'电话/微信沟通/邮件等'}}</div>
+                                    <div class="title-tag" style="margin-top:20px">{{flowUpTypes[item.type]}}</div>
+                                    <div class="title-tag" v-if="flowUpTypes[item.type]==='已拒绝协助申请'">拒绝原因</div>
+                                    <div class='desc' v-if="flowUpTypes[item.type]==='已拒绝协助申请'">{{item.remark}}</div>
                                     <div class="audio-player-container">
                                        <template v-if="item.picUrls&&item.picUrls.length">{{item.type ==1?'现场图片：':'附件：'}}</template>
                                         <div class="crm-audio-player" style="margin-top:-15px">
@@ -351,6 +353,12 @@ export default {
     name: 'projectlist',
     data () {
         return {
+            flowUpTypes: {
+                1: '当面拜访',
+                2: '电话/微信沟通/邮件等',
+                5: '已接受协助申请',
+                6: '已拒绝协助申请'
+            },
             reCreate: true,
             process: [],
             companyId: '',
@@ -1045,7 +1053,7 @@ export default {
 
                 .content {
                     flex: 1;
-
+                    padding-bottom: 18px;
                     .title-tag {
                         height: 21px;
                         font-size: 14px;

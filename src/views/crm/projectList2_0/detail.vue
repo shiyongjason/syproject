@@ -80,7 +80,9 @@
                             <div class="content-container">
                                 <div class="line"></div>
                                 <div class="content">
-                                    <div class="title-tag" style="margin-top:20px">{{item.type ==1?'当面拜访':'电话/微信沟通/邮件等'}}</div>
+                                    <div class="title-tag" style="margin-top:20px">{{flowUpTypes[item.type]}}</div>
+                                    <div class="title-tag" v-if="flowUpTypes[item.type]==='已拒绝协助申请'">拒绝原因</div>
+                                    <div class='desc' v-if="flowUpTypes[item.type]==='已拒绝协助申请'">{{item.remark}}</div>
                                     <div class="audio-player-container">
                                        <template v-if="item.picUrls&&item.picUrls.length">{{item.type ==1?'现场图片：':'附件：'}}</template>
                                         <div class="crm-audio-player" style="margin-top:-15px">
@@ -463,6 +465,13 @@ export default class ProjectList2Detail extends Vue {
     recordsPagination = ''
 
     flowUpRequest:FlowUpRequest & {assistantRemark: string, assistants:any[], createCorpUserId:any} = JSON.parse(JSON.stringify(_flowUpRequest))
+
+    flowUpTypes = {
+        1: '当面拜访',
+        2: '电话/微信沟通/邮件等',
+        5: '已接受协助申请',
+        6: '已拒绝协助申请'
+    }
 
     get rulesContact () {
         let rules = {
