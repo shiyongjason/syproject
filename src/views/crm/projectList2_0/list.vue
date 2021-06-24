@@ -86,7 +86,7 @@
             </hosJoyTable>
         </div>
         <!-- 签约确认 -->
-        <el-dialog title="签约确认" :close-on-click-modal='false' v-if="showSign" :visible.sync="showSign" width="720px" :before-close="() => closereqProjectSupply()" :modal='false'>
+        <el-dialog title="签约确认" :close-on-click-modal='false' v-if="showSign" :visible.sync="showSign" width="720px" :before-close="() => closereqProjectSupply()" >
             <div class="list2_0 itemflex">
                 <el-form id='elform' :model="reqBossProjectRefund" :rules="formRulesReqBossProjectRefund"  label-position='left' ref="reqProjectSupply" class="purchaseConclusion" :validate-on-rule-change='false'>
                     <div class="form-item">
@@ -160,7 +160,7 @@
             </div>
         </el-dialog>
         <!-- 回款确认 -->
-        <el-dialog title="回款确认" :close-on-click-modal='false' v-if="showPayback" :visible.sync="showPayback" width="720px" :before-close="()=>closePayback()" :modal='false'>
+        <el-dialog title="回款确认" :close-on-click-modal='false' v-if="showPayback" :visible.sync="showPayback" width="720px" :before-close="()=>closePayback()" >
             <div class="list2_0 itemflex">
                 <el-form id='elform' :model="reqBossProjectRefund" :rules="formRulesReqBossProjectRefund"  label-position='left' ref="paybackForm" class="purchaseConclusion" :validate-on-rule-change='false'>
                     <div class="form-item">
@@ -204,7 +204,7 @@
             </div>
         </el-dialog>
         <!-- 新增2.0项目 -->
-        <el-dialog title="新增2.0项目" :close-on-click-modal='false' :visible.sync="showAddProject" width="1080px" :before-close="()=>closeAddProject()" :modal='false'>
+        <el-dialog title="新增2.0项目" :close-on-click-modal='false' :visible.sync="showAddProject" width="1080px" :before-close="()=>closeAddProject()" >
             <div class="list2_0">
                 <el-form id='elform' :model="reqProjectSupply" :rules="formRules"  label-width="150px"  label-position='right' ref="addForm" class="list2">
                     <div class="flex-item">
