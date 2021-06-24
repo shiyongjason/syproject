@@ -106,7 +106,7 @@
                                     <em @click="()=>handleDelFile(index,reqBossProjectRefund.contractAttachments)">删除</em>
                                 </div>
                             </div>
-                            <OssFileHosjoyUpload :showPreView='false' v-model="reqBossProjectRefund.contractAttachments" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:0 0 0 5px" accept=".pdf">
+                            <OssFileHosjoyUpload :showPreView='false' v-model="reqBossProjectRefund.contractAttachments" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:0 0 0 5px" accept=".pdf" @successCb='onSuccessCbSign'>
                             <div class="a-line">
                                 <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                             </div>
@@ -145,7 +145,7 @@
                                     <em @click="()=>handleDelFile(index,reqBossProjectRefund.refundPics)">删除</em>
                                 </div>
                             </div>
-                            <OssFileHosjoyUpload :showPreView='false' v-model="reqBossProjectRefund.refundPics" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:0 0 0 5px" accept=".jpg,.jpeg,.png">
+                            <OssFileHosjoyUpload :showPreView='false' v-model="reqBossProjectRefund.refundPics" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:0 0 0 5px" accept=".jpg,.jpeg,.png" @successCb='onSuccessCbSign'>
                             <div class="a-line">
                                 <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                             </div>
@@ -189,7 +189,7 @@
                                     <em @click="()=>handleDelFile(index,reqBossProjectRefund.refundPics)">删除</em>
                                 </div>
                             </div>
-                            <OssFileHosjoyUpload :showPreView='false' v-model="reqBossProjectRefund.refundPics" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:0 0 0 5px" accept=".jpg,.jpeg,.png">
+                            <OssFileHosjoyUpload :showPreView='false' v-model="reqBossProjectRefund.refundPics" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:0 0 0 5px" accept=".jpg,.jpeg,.png" @successCb='onSuccessCb'>
                             <div class="a-line">
                                 <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                             </div>
@@ -350,7 +350,7 @@
                 <h-button type="primary" @click="submitAddForm">确定</h-button>
             </div>
         </el-dialog>
-        <detail :drawer='drawer' :projectDetail = 'projectDetail' :formRules='formRules' :projectId='projectId' @getDetail = 'viewDetail' @handleClose="()=>drawer = false" v-if="drawer" />
+        <detail :drawer='drawer' :projectDetail = 'projectDetail' :formRules='formRules' :projectId='projectId' @getDetail = 'viewDetail' @getList='getList' @handleClose="()=>drawer = false" v-if="drawer" />
     </div>
 </template>
 <script lang='tsx'>
@@ -761,6 +761,33 @@ export default class ProjectList2 extends Vue {
         this.getList()
         this.$message.success('签约成功')
         this.closereqProjectSupply()
+    }
+
+    onSuccessCb () {
+        // @ts-ignore
+        this.$refs['paybackForm'].fields.map(i => {
+            if (i.prop === 'refundPics') {
+                i.clearValidate()
+            }
+        })
+        console.log(' 🚗 🚕 🚙 🚌 🚎 ', 111)
+    }
+
+    onSuccessCbSign () {
+        let key = ''
+        if (this.reqBossProjectRefund.contractAttachments && this.reqBossProjectRefund.contractAttachments.length > 0) {
+            key = 'contractAttachments'
+        }
+        if (this.reqBossProjectRefund.refundPics && this.reqBossProjectRefund.refundPics.length > 0) {
+            key = 'refundPics'
+        }
+        // @ts-ignore
+        this.$refs['reqProjectSupply'].fields.map(i => {
+            if (i.prop === key) {
+                i.clearValidate()
+            }
+        })
+        console.log(' 🚗 🚕 🚙 🚌 🚎 ', 111)
     }
 
     // 回款

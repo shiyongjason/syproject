@@ -30,7 +30,7 @@
                         <div class="process-item pos8" v-if="process[6]" :class="process[6].nodeStatus==1?'isActive':''">{{process[6].nodeName}}</div>
                     </div>
                     <div class="flowup-count">
-                        <h-button type='assist' @click='add'> + 新增跟进记录</h-button>
+                        <h-button type='assist' @click='add' v-if="!projectDetail.hasRefund"> + 新增跟进记录</h-button>
                         <span>
                             累计跟进{{flowUpCount.total}}次，当面拜访{{flowUpCount.directCount}}次
                         </span>
@@ -188,18 +188,18 @@
             <div class="fixed-btn" v-if="radio=='项目信息'"><h-button type="primary" @click="onUpDateProjectDetail">保存</h-button></div>
             <!-- 添加跟进记录 -->
             <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px" :before-close="()=>closeAddRecord()" :close-on-click-modal='false' >
-                <div class="record-layout">
+                <div class="record-layout" style="height:600px">
                     <div class="header-title">
                         <el-radio v-model="flowUpRequest.type" :label="1">当面拜访</el-radio>
                         <el-radio v-model="flowUpRequest.type" :label="2">电话/微信沟通/邮件等</el-radio>
                         <p class="tips">温馨提示：推荐使用企业微信与客户聊天，自动更新记录，更方便。</p>
                     </div>
                     <div style="margin-top:-10px">
-                        <el-form :rules="addFlowUpRules" :model="flowUpRequest" ref="addFlowUp" :validate-on-rule-change='false'>
+                        <el-form :rules="addFlowUpRules" :model="flowUpRequest" ref="addFlowUp" :validate-on-rule-change='false' v-if="reCreate">
                             <div class="record-dialog-item" v-if="flowUpRequest.type == 1">
                                 <el-form-item  prop='picUrls' label="上传现场图片："></el-form-item>
                                 <div>
-                                    <OssFileHosjoyUpload :showPreView='true'  v-model="flowUpRequest.picUrls" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png">
+                                    <OssFileHosjoyUpload :showPreView='true'  v-model="flowUpRequest.picUrls" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png" @successCb='onSuccessCb'>
                                     <div class="a-line">
                                         <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                                     </div>
@@ -214,7 +214,7 @@
                             <div class="record-dialog-item" style="display:flex">
                                 <el-form-item  prop='flowUpProcess' label="跟进节点 ：  "  class="textarea">
                                     <el-select v-model="flowUpRequest.flowUpProcess" placeholder="请选择" @change="changeProcess">
-                                        <el-option v-for="item in salesphase" :key="item.value" :label="item.value" :value="item.key"></el-option>
+                                        <el-option v-for="item in flowUpProcess" :key="item.value" :label="item.value" :value="item.key"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item  prop='noNeedFlowReason' label=" "  class="textarea" style="margin:0 10px 0 25px">
@@ -417,7 +417,8 @@ export default class ProjectList2Detail extends Vue {
     @Getter('projectStore/flowUpProcess') flowUpProcess: DictionaryList
 
     @State('userInfo') userInfo: any
-
+    // 为了解决切换的时候校验的不正常bug
+    reCreate:boolean = true
     userDefault = USER_DEFAULT
     salesphase = SALESPHASE
     role = ROLE
@@ -479,6 +480,15 @@ export default class ProjectList2Detail extends Vue {
             noNeedFlowReason: { required: this.flowUpRequest.flowUpProcess == 7, message: '必填项不能为空', trigger: 'blur' }
         }
         return rules
+    }
+
+    onSuccessCb () {
+        // @ts-ignore
+        this.$refs['addFlowUp'].fields.map(i => {
+            if (i.prop === 'picUrls') {
+                i.clearValidate()
+            }
+        })
     }
 
     isActive (key) {
@@ -650,11 +660,17 @@ export default class ProjectList2Detail extends Vue {
 
     @Watch('flowUpRequest.type')
     resetFields (val) {
+        let temp = this.flowUpRequest.flowUpProcess
         this.$nextTick(() => {
             this.flowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
             this.flowUpRequest.type = val
+            this.flowUpRequest.flowUpProcess = temp
             // @ts-ignore
-            this.$refs['addFlowUp'].resetFields()
+            this.$refs['addFlowUp'].clearValidate()
+            this.reCreate = false
+            setTimeout(() => {
+                this.reCreate = true
+            }, 0)
         })
     }
 
@@ -725,9 +741,9 @@ export default class ProjectList2Detail extends Vue {
             return item.nodeStatus
         })
         if (res.length) {
-            this.flowUpRequest.flowUpProcess = res[res.length - 1].nodeKey
+            this.flowUpRequest.flowUpProcess = res[res.length - 1].nodeKey + ''
         } else {
-            this.flowUpRequest.flowUpProcess = 1
+            this.flowUpRequest.flowUpProcess = '1'
         }
     }
 
@@ -901,6 +917,7 @@ export default class ProjectList2Detail extends Vue {
         await this.onInitGetDate()
         this.$emit('getDetail', this.projectDetail.id)
         this.$message.success('保存成功')
+        this.$emit('getList')
     }
 
     async onInitGetDate () {

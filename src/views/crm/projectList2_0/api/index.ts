@@ -68,7 +68,7 @@ export const projectSign: (params: ReqBossProjectRefund) => AxiosPromise<any> = 
 
 /** BOSS-2.0项目回款 */
 export const projectRefund: (params: ReqBossProjectRefund) => AxiosPromise<any> = (params) => {
-    return axios.put('memeber/api/project-supply/sign', params)
+    return axios.put('memeber/api/project-supply/refund', params)
 }
 
 /** BOSS-2.0跟进记录 */
