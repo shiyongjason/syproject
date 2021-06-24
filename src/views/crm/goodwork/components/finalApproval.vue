@@ -38,7 +38,7 @@
                     <div class="info-layout">
                         <div class="info-layout-item">
                             <font style="flex:0 0 135px">经销商评级：</font>
-                            <span>{{resolutionDetail.companyLevel}}</span>
+                            <span>{{resolutionDetail.companyLevel||'-'}}</span>
                         </div>
 
                     </div>
@@ -77,7 +77,7 @@
                         </div>
                         <div class="info-layout-item">
                             <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>经销商首付款比例(%)：</font>
-                            <span>{{resolutionDetail.advancePaymentRate}}%</span>
+                            <span>{{resolutionDetail.advancePaymentRate||'-'}}%</span>
                         </div>
                     </div>
                     <div class="info-layout">
@@ -87,7 +87,7 @@
                         </div>
                         <div class="info-layout-item">
                             <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>剩余货款支付周期：</font>
-                            <span>{{resolutionDetail.remainPaymentCycle}}个月</span>
+                            <span>{{resolutionDetail.remainPaymentCycle||'-'}}个月</span>
                         </div>
                     </div>
                     <div class="info-layout">
@@ -98,11 +98,11 @@
                     <div class="info-layout" style="margin-left:50px">
                         <div class="info-layout-item">
                             <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>银行承兑：</font>
-                            <span>{{resolutionDetail.acceptBankRate}}</span>
+                            <span>{{resolutionDetail.acceptBankRate||'-'}}</span>
                         </div>
                         <div class="info-layout-item">
                             <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>银行转账：</font>
-                            <span>{{resolutionDetail.transferBankRate}}</span>
+                            <span>{{resolutionDetail.transferBankRate||'-'}}</span>
                         </div>
                     </div>
                     <div class="info-layout">
@@ -147,7 +147,7 @@
                     <div class="dialogbaseinfo-item">剩余代采购额度(元)：{{resolutionDetail.purchaseBalance|fundMoneyHasTail}}</div>
                 </div>
                  <div class="dialogbaseinfo">
-                    <div class="dialogbaseinfo-item">经销商评级：{{resolutionDetail.companyLevel}}</div>
+                    <div class="dialogbaseinfo-item">经销商评级：{{resolutionDetail.companyLevel||'-'}}</div>
                 </div>
                 <el-form id='elform' :model="baseInfoForm" :rules="formRules" label-width="180px" label-position='right' ref="reviewResolutionForm">
                     <div class="reviewResolutionForm-title" style="marginTop:0px">
@@ -790,6 +790,7 @@ export default class FinalApproval extends Vue {
 
     async _finalApprove (val) {
         this.lastDialog = true
+        this.lastForm.remark = this.baseInfoForm.remark
         this.type = val
     }
     // 保存结果
