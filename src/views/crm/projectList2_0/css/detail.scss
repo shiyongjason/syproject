@@ -407,3 +407,10 @@
     display: flex;
     justify-content: space-between;
 }
+.deldialog{
+    /deep/.el-dialog__body {
+        min-height: 100px;
+        font-size: 16px;
+        padding-top: 20px;
+    }
+}
