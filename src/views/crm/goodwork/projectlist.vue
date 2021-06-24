@@ -8,20 +8,9 @@
                         <el-input v-model="queryParams.projectName" placeholder="请输入项目名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <!-- <div class="query-cont__col">
-                    <div class="query-col__label">项目编号1：</div>
-                    <div class="query-col__input">
-                        <el-input v-model="queryParams.projectNo" placeholder="请输入项目编号" maxlength="50"></el-input>
-                    </div>
-                </div> -->
                 <div class="query-cont__col">
                     <div class="query-col__label">项目提交时间：</div>
                     <div class="query-col__input">
-                        <!-- <el-date-picker v-model="queryParams.minSubmitTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxSubmitTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker> -->
                         <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
                         </HDatePicker>
                     </div>
@@ -38,25 +27,6 @@
                         <el-input v-model="queryParams.firstPartName" placeholder="请输入甲方名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <!-- <div class="query-cont__col">
-                    <div class="query-col__label">更新时间：</div>
-                    <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.minUpdateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsMax(queryParams.maxUpdateTime)">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxUpdateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsMin(queryParams.minUpdateTime)">
-                        </el-date-picker>
-                    </div>
-                </div> -->
-                <!-- <div class="query-cont__col">
-                    <div class="query-col__label">项目类别：</div>
-                    <div class="query-col__input">
-                        <el-select v-model="typeArr" multiple collapse-tags placeholder="请选择">
-                            <el-option v-for="item in typeList" :key="item.key" :label="item.value" :value="item.key">
-                            </el-option>
-                        </el-select>
-                    </div>
-                </div> -->
                 <div class="query-cont__col">
                     <div class="query-col__label">合作进度：</div>
                     <div class="query-col__input">
@@ -95,13 +65,6 @@
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">预估借款时间：</div>
-                    <!-- <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.minEstimatedLoanTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax(queryParams.maxEstimatedLoanTime)">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxEstimatedLoanTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsMin(queryParams.minEstimatedLoanTime)">
-                        </el-date-picker>
-                    </div> -->
                     <div class="query-col__input">
                         <HDatePicker :start-change="onStartBorrow" :end-change="onEndBorrow" :options="borrowOptions">
                         </HDatePicker>
@@ -110,17 +73,17 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">预估签约时间：</div>
                     <div class="query-col__input">
-                        <!-- <el-date-picker v-model="queryParams.minEstimateSignTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax(queryParams.maxEstimateSignTime)">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxEstimateSignTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsMin(queryParams.minEstimateSignTime)">
-                        </el-date-picker> -->
                         <HDatePicker :start-change="onStarSign" :end-change="onEndSign" :options="signOptions">
                         </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont__col">
-
+                    <div class="query-col__label">项目提交人：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.projectSubmitName" placeholder="请输入项目提交人" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
                     <h-button type="primary" @click="searchList()">
                         查询
                     </h-button>
@@ -130,13 +93,12 @@
                     <h-button @click="onExport" v-if="hosAuthCheck(Auths.CRM_GOODWORK_IMPORT)">
                         导出
                     </h-button>
-
                 </div>
             </div>
 
             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):0}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):0}} 元 </el-tag>
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" @pagination="searchList"
-                actionWidth='375' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' prevLocalName="V3.*" localName="V3.*.1">
+                actionWidth='375' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' prevLocalName="V4.*" localName="V3.*.18">
                 <!--
                     Versions: V3.*.1
                     Time: 2020/10/22
@@ -147,6 +109,10 @@
                 </template>
                 <template slot="progress" slot-scope="scope">
                     {{onFiterStates(scope.data.row.status).length>0?onFiterStates(scope.data.row.status)[0].value:'-'}}
+                </template>
+                <template slot="projectSubmitName" slot-scope="scope">
+                    <p>{{scope.data.row.projectSubmitName}}</p>
+                    <p>{{scope.data.row.projectSubmitPhone}}</p>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <!-- 1：待提交2：初审中 3：资料收集中 12：资料待审核 4：待立项 5：审核未通过 11：待终审 6：待签约 7：待放款 8：贷中 9：合作完成 10:信息待完善 -->
@@ -165,9 +131,15 @@
 
         </div>
         <projectDrawer :drawer=drawer :status=projectstatus @backEvent='restDrawer' ref="drawercom"></projectDrawer>
-        <el-dialog :title="title" ref='recordDialog' :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" v-if="dialogVisible">
-            <div class="project-record" v-if="title=='项目审批记录'">
-                <el-timeline>
+        <el-dialog :title="title" ref='recordDialog' :visible.sync="dialogVisible" width="30%" :before-close="()=>onCloneRecordDialog()" v-if="dialogVisible">
+            <div class="project-record" v-if="title=='项目审批记录'"  @scroll="recordsScroll">
+                <div class="radio-group" style="margin-bottom:20px">
+                    <el-radio-group v-model="radio" @change="()=>onTabRadio()">
+                        <el-radio-button label="审批记录"></el-radio-button>
+                        <el-radio-button label="跟进记录"></el-radio-button>
+                    </el-radio-group>
+                </div>
+                <el-timeline v-if="radio==='审批记录'">
                     <el-timeline-item :timestamp="item.createTime" placement="top" v-for="item in dialogRecord" :key=item.id>
                         <el-card>
                             <p><span>操作人：</span> {{item.createBy}}{{item.createByMobile?'('+item.createByMobile+')':''}}</p>
@@ -182,6 +154,91 @@
                         </el-card>
                     </el-timeline-item>
                 </el-timeline>
+                <div v-if="radio==='跟进记录'">
+                    <div class="flowup-count">
+                        <h-button type='assist' @click='add'> + 新增跟进记录</h-button>
+                        <span>
+                            累计跟进{{flowUpCount.total}}次，当面拜访{{flowUpCount.directCount}}次
+                        </span>
+                    </div>
+                    <div style="margin-top:20px">
+                        <b>跟进动态</b>
+                    </div>
+                    <div v-if="!recordsData.length" style="width: 600px;margin: 10px auto;"><el-divider>暂无跟进记录</el-divider></div>
+                    <div v-else class="follow-records" ref='records'>
+                        <div class="follow-cell" v-for="(item,index) in recordsData" :key="index">
+                            <div class="info"><img :src="userDefault" class="avatar">
+                                <div class="name-container">
+                                    <div class="follow-tag">跟进人</div>
+                                    <div class="name">{{item.createBy||'-'}} {{item.createPhone}}</div>
+                                </div>
+                                <div class="time">{{item.createTime|formatDate('YYYY/MM/DD a HH:mm:ss')}}</div>
+                            </div>
+                            <div class="content-container" v-if="item.flowUpDynamic&&item.flowUpDynamic.msgType === 'meeting_voice_call'">
+                                <div class='line' />
+                                <div class='content'>
+                                    <div class='title-tag'>语音通话</div>
+                                    <div class='audio-player-container'>
+                                        <div class="crm-audio-player" >
+                                            <audio controls>
+                                                <source :src="item.flowUpDynamic.msgContent.osspath" type="audio/mpeg">
+                                                您的浏览器不支持 音频 插件，请使用谷歌浏览器。
+                                            </audio>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='content-container' v-if="item.flowUpDynamic&&item.flowUpDynamic.msgType === 'link'">
+                                <div class='line' />
+                                <div class='content'>
+                                    <div class='title-tag'>发送链接</div>
+                                    <div class='desc-link' >《{{item.flowUpDynamic.msgContent.title ? item.flowUpDynamic.msgContent.title : '查看链接'}}》</div>
+                                </div>
+                            </div>
+                            <div class='content-container' v-if="item.flowUpDynamic&&item.flowUpDynamic.msgType === 'weapp'">
+                                <div class='line' />
+                                <div class='content'>
+                                    <div class='title-tag'>发送小程序</div>
+                                    <div class='desc-weapp'>《{{item.flowUpDynamic.msgContent.displayname ? item.flowUpDynamic.msgContent.displayname : ''}}》</div>
+                                </div>
+                            </div>
+                            <!--  -->
+                            <div class="content-container">
+                                <div class="line"></div>
+                                <div class="content">
+                                    <div class="title-tag" style="margin-top:20px">{{item.type ==1?'当面拜访':'电话/微信沟通/邮件等'}}</div>
+                                    <div class="audio-player-container">
+                                       <template v-if="item.picUrls&&item.picUrls.length">{{item.type ==1?'现场图片：':'附件：'}}</template>
+                                        <div class="crm-audio-player" style="margin-top:-15px">
+                                            <OssFileHosjoyUpload :showUpload='false' :showPreView='true'  v-model="item.picUrls" :fileNum=8 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px"/>
+                                        </div>
+                                    </div>
+                                    <template v-if="item.projectSupplyFlowUp">
+                                        <div class='title-tag'>客户联系人</div>
+                                        <div class='desc'>{{item.projectSupplyFlowUp.contactName}} {{item.projectSupplyFlowUp.contactMobile}}</div>
+                                        <div class='title-tag'>跟进节点</div>
+                                        <div class='desc'>{{item.projectSupplyFlowUp.flowUpProcess?getProject2FollowUpProcess(item.projectSupplyFlowUp.flowUpProcess).value:'-'}}</div>
+                                        <div class='title-tag' v-if="item.projectSupplyFlowUp.noNeedFlowReason">无需跟进原因</div>
+                                        <div class='desc'  v-if="item.projectSupplyFlowUp.noNeedFlowReason">{{item.projectSupplyFlowUp.noNeedFlowReason||'-'}}</div>
+                                    </template>
+                                    <div class="title-tag" v-if="item.nextFlowTime">下次跟进时间</div>
+                                    <div class="desc" v-if="item.nextFlowTime">{{item.nextFlowTime | formatDate('YYYY年MM月DD日 HH:mm')}}</div>
+                                    <template v-if="item.customerBackLogWorks&&item.customerBackLogWorks.length">
+                                        <div class="title-tag" >邀请同事协助</div>
+                                        <div class="desc" v-for="w in item.customerBackLogWorks" :key="w.id">{{w.assignedUserName}} {{w.assignedUserMobile}}</div>
+                                        <div class="title-tag" v-if="item.customerBackLogWorks[0].remark">需协助内容</div>
+                                        <div class="desc" v-if="item.customerBackLogWorks[0].remark">{{item.customerBackLogWorks[0].remark}}</div>
+                                    </template>
+                                    <div class="title-tag" v-if="item.content">跟进内容</div>
+                                    <div class="desc" v-if="item.content">{{item.content}}</div>
+                                    <div class="title-tag" v-if="item.remark">其他备注</div>
+                                    <div class="desc" v-if="item.remark">{{item.remark}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="isNoMore" style="width: 570px;margin: 10px auto;"><el-divider>没有更多</el-divider></div>
+                    </div>
+                </div>
             </div>
             <div class="project-plant" v-if="title=='工地打卡记录'">
                 <div class="plantimg" @click="onHandlePictureCardPreview(item)" v-for="(item,index) in plantList" :key="index">
@@ -190,7 +247,7 @@
 
             </div>
             <span slot="footer" class="dialog-footer">
-                <h-button @click="dialogVisible = false">取消</h-button>
+                <h-button @click="()=>onCloneRecordDialog()">取消</h-button>
             </span>
         </el-dialog>
         <el-dialog title="预览" :visible.sync="imgVisible">
@@ -198,8 +255,64 @@
                 <img :src="dialogImageUrl" alt="">
             </div>
         </el-dialog>
+        <!-- 添加跟进记录 -->
+            <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px" :before-close="()=>closeAddRecord()" :close-on-click-modal='false' >
+                <div class="record-layout">
+                    <div class="header-title">
+                        <el-radio v-model="flowUpRequest.type" :label="1">当面拜访</el-radio>
+                        <el-radio v-model="flowUpRequest.type" :label="2">电话/微信沟通/邮件等</el-radio>
+                        <p class="tips">温馨提示：推荐使用企业微信与客户聊天，自动更新记录，更方便。</p>
+                    </div>
+                    <div style="margin-top:-10px">
+                        <el-form :rules="addFlowUpRules" :model="flowUpRequest" ref="addFlowUp" :validate-on-rule-change='false'>
+                            <div class="record-dialog-item" v-if="flowUpRequest.type == 1">
+                                <el-form-item  prop='picUrls' label="上传现场图片："></el-form-item>
+                                <div>
+                                    <OssFileHosjoyUpload :showPreView='true'  v-model="flowUpRequest.picUrls" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png">
+                                    <div class="a-line">
+                                        <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
+                                    </div>
+                                    </OssFileHosjoyUpload>
+                                </div>
+                            </div>
+
+                            <div class="record-dialog-item" style="margin-top:10px">
+                                <el-form-item  prop='content' label="跟进内容："  class="textarea">
+                                    <el-input v-model="flowUpRequest.content" placeholder="请输入此次跟进结果/下次跟进事项" style="width:380px;" type="textarea" maxlength="200" show-word-limit rows='2'></el-input>
+                                </el-form-item>
+                            </div>
+                            <div class="record-dialog-item">
+                                <el-form-item prop="nextFlowTime"  label="下次跟进时间："  class="textarea">
+                                    <el-date-picker v-model="flowUpRequest.nextFlowTime" type="datetime" value-format='yyyy-MM-ddTHH:mm' format='yyyy-MM-dd HH:mm'  placeholder="选择日期"></el-date-picker>
+                                </el-form-item>
+                            </div>
+
+                            <div class="record-dialog-item" v-if="flowUpRequest.type != 1">
+                                <el-form-item label="附件（不超过8个）："></el-form-item>
+                                <div>
+                                    <OssFileHosjoyUpload :showPreView='true'  v-model="flowUpRequest.picUrls" :fileNum=8 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px">
+                                    <div class="a-line">
+                                        <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
+                                    </div>
+                                    </OssFileHosjoyUpload>
+                                </div>
+                            </div>
+                            <div class="record-dialog-item">
+                                <el-form-item prop='remark' label="其他备注：" class="textarea">
+                                    <el-input v-model="flowUpRequest.remark" placeholder="其他需特殊说明事项可添加" type="textarea" maxlength="200" show-word-limit rows='2'></el-input>
+                                </el-form-item>
+                            </div>
+                        </el-form>
+                    </div>
+                </div>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="closeAddRecord">取 消</el-button>
+                    <el-button type="primary" @click="onSubmitAddRecord">确定</el-button>
+                </div>
+            </el-dialog>
     </div>
 </template>
+
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { deepCopy } from '@/utils/utils'
@@ -208,13 +321,69 @@ import projectDrawer from './components/projectDrawer'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { TYPE_LIST, PROCESS_LIST, STATUS_LIST, DEVICE_LIST, UPSTREAM_LIST } from '../const'
 import * as Auths from '@/utils/auth_const'
-import { interfaceUrl } from '@/api/config'
+import OssFileUtils from '@/utils/OssFileUtils'
+import { interfaceUrl, ccpBaseUrl } from '@/api/config'
 import downloadFileAddToken from '@/components/downloadFileAddToken'
+import { USER_DEFAULT } from '@/views/crm/projectList2_0/const/index'
+import { getFlowUp, addFlowUp, getFlowUpCount } from '@/views/crm/projectList2_0/api/index'
+import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
+
+const _flowUpRequest = {
+    assistantRemark: '', // 协助内容
+    assistants: [], // (2.0项目)协助人员列表
+    bizId: '',
+    bizType: 3,
+    contactMobile: '',
+    contactName: '',
+    content: '',
+    createBy: '',
+    createCorpUserId: '', // 创建人企业微信id
+    createPhone: '',
+    flowUpProcess: '',
+    id: '',
+    nextFlowTime: '',
+    noNeedFlowReason: '',
+    picUrls: [],
+    remark: '',
+    type: 2 // 跟进类型 1：当面拜访 2：电话/微信沟通/邮件等
+}
 export default {
     name: 'projectlist',
     data () {
         return {
-
+            process: [],
+            companyId: '',
+            companyCode: '',
+            action: ccpBaseUrl + 'common/files/upload-old',
+            projectId: '',
+            companyContactList: [],
+            companyContactListBak: [],
+            employeeList: [],
+            userDefault: USER_DEFAULT,
+            isNoMore: false,
+            addRecord: false,
+            // 选择联系人 弹窗
+            innerContactVisible: false,
+            // 邀请同事协助 弹窗
+            innerHelpVisible: false,
+            radioContact: false,
+            flowUpCount: {
+                directCount: '',
+                total: ''
+            },
+            recordsQuery: {
+                bizId: '',
+                pageNumber: 1,
+                pageSize: 5
+            },
+            uploadParameters: {
+                updateUid: '',
+                reservedName: false
+            },
+            flowUpRequest: JSON.parse(JSON.stringify(_flowUpRequest)),
+            recordsData: [],
+            recordsPagination: '',
+            radio: '审批记录',
             Auths,
             projectstatus: 0, // 项目状态字段
             categoryIdArr: [],
@@ -244,8 +413,11 @@ export default {
                 deptDoc: '',
                 jobNumber: '',
                 authCode: '',
-                field: '', // 排序字段 赊销总额：predict_loan_amount 项目合同总额：contract_amount 设备总额：device_amount 预估借款时间：estimated_loan_time 提交时间：submit_time 更新时间：update_time
-                isAsc: ''// 排序方式 是否升序 true：是 false：否
+                'sort.direction': null,
+                'sort.property': null,
+                projectSubmitName: ''
+                // field: '', // 排序字段 赊销总额：predict_loan_amount 项目合同总额：contract_amount 设备总额：device_amount 预估借款时间：estimated_loan_time 提交时间：submit_time 更新时间：update_time
+                // isAsc: ''// 排序方式 是否升序 true：是 false：否
             },
             status: [],
             typeArr: [],
@@ -258,7 +430,7 @@ export default {
                 { label: '项目地址', prop: 'address', width: '150', showOverflowTooltip: true },
                 { label: '项目编号', prop: 'projectNo', width: '150', showOverflowTooltip: true },
                 { label: '所属分部', prop: 'deptName', width: '150', showOverflowTooltip: true },
-
+                { label: '项目提交人', prop: 'projectSubmitName', width: '150' },
                 { label: '经销商', prop: 'companyName', width: '180', showOverflowTooltip: true },
                 { label: '甲方名称', prop: 'firstPartName', width: '180', showOverflowTooltip: true },
                 { label: '预估签约时间', prop: 'estimateSignTime', width: '150', displayAs: 'YYYY-MM-DD', showOverflowTooltip: true },
@@ -336,9 +508,31 @@ export default {
         }
     },
     components: {
-        projectDrawer, hosJoyTable, downloadFileAddToken
+        projectDrawer, hosJoyTable, downloadFileAddToken, OssFileHosjoyUpload
+    },
+    watch: {
+        'flowUpRequest.type' (val) {
+            this.flowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
+            this.flowUpRequest.type = val
+            if (this.process.length == 0) {
+                this.flowUpRequest.flowUpProcess = 1
+            } else {
+                this.flowUpRequest.flowUpProcess = this.process[this.process.length - 1]
+            }
+            this.$refs['addFlowUp'] && this.$refs['addFlowUp'].resetFields()
+        }
     },
     computed: {
+        addFlowUpRules () {
+            let rules = {
+                picUrls: { required: true, message: '必填项不能为空' },
+                contactName: { required: true, message: '必填项不能为空', trigger: 'blur' },
+                content: { required: true, message: '必填项不能为空', trigger: 'blur' },
+                flowUpProcess: { required: true, message: '必填项不能为空', trigger: 'blur' },
+                noNeedFlowReason: { required: this.flowUpRequest.flowUpProcess == 7, message: '必填项不能为空', trigger: 'blur' }
+            }
+            return rules
+        },
         options () {
             return {
                 valueFormat: 'yyyy-MM-dd HH:mm',
@@ -366,26 +560,6 @@ export default {
                 endTime: this.queryParams.maxEstimateSignTime
             }
         },
-        // pickerOptionsStart () {
-        //     return {
-        //         disabledDate: (time) => {
-        //             let beginDateVal = this.queryParams.maxSubmitTime
-        //             if (beginDateVal) {
-        //                 return time.getTime() > new Date(beginDateVal).getTime()
-        //             }
-        //         }
-        //     }
-        // },
-        // pickerOptionsEnd () {
-        //     return {
-        //         disabledDate: (time) => {
-        //             let beginDateVal = this.queryParams.minSubmitTime
-        //             if (beginDateVal) {
-        //                 return time.getTime() < new Date(beginDateVal).getTime()
-        //             }
-        //         }
-        //     }
-        // },
         ...mapState({
             userInfo: state => state.userInfo
         }),
@@ -415,6 +589,132 @@ export default {
             findProjectrecord: 'crmmanage/findProjectrecord',
             findPunchlist: 'crmmanage/findPunchlist'
         }),
+        async onSubmitAddRecord () {
+            this.$refs['addFlowUp'].validate(async (value, r) => {
+                if (value) {
+                    this.flowUpRequest.createBy = this.userInfo.employeeName
+                    this.flowUpRequest.createPhone = this.userInfo.phoneNumber
+                    let query = JSON.parse(JSON.stringify(this.flowUpRequest))
+                    if (this.flowUpRequest.picUrls) {
+                        let picUrls = []
+                        this.flowUpRequest.picUrls.map(item => {
+                            picUrls.push(item.fileUrl)
+                        })
+                        query.picUrls = picUrls
+                    }
+                    query.bizId = this.projectId
+                    await addFlowUp(query)
+                    this.$message.success('新增成功')
+                    this.recordsQuery = {
+                        bizId: this.projectId,
+                        pageNumber: 1,
+                        pageSize: 5
+                    }
+                    this.recordsData = []
+                    await this.getRecords()
+                    this.closeAddRecord()
+                } else {
+                    this.$nextTick(() => {
+                        const dom = document.querySelector('.is-error')
+                        dom.scrollIntoView()
+                    })
+                }
+            }
+            )
+        },
+        onCloneRecordDialog () {
+            this.radio = '审批记录'
+            this.dialogVisible = false
+            this.flowUpCount = {
+                directCount: '',
+                total: ''
+            }
+            this.recordsQuery = {
+                bizId: this.projectId,
+                pageNumber: 1,
+                pageSize: 5
+            }
+            this.recordsData = []
+        },
+        // 关闭新增跟进记录
+        closeAddRecord () {
+            this.flowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
+            // @ts-ignore
+            this.$refs['addFlowUp'].resetFields()
+            this.addRecord = false
+        },
+        // 跟进记录
+        async getRecords () {
+            if (this.recordsPagination && Number(this.recordsQuery.pageNumber) > Number(this.recordsPagination)) {
+                this.isNoMore = true
+                return
+            }
+            this.recordsQuery.bizId = this.projectId
+            const { data: flowUp } = await getFlowUp(this.recordsQuery)
+            this.recordsPagination = flowUp.pages
+            this.recordsData = [...this.recordsData, ...flowUp.records]
+            this.recordsData.map(async (item, index) => {
+                if (item.picUrls) {
+                    let api = []
+                    let url = ''
+                    item.picUrls.map(jtem => {
+                        url = jtem
+                        api.push(OssFileUtils.getUrl(jtem))
+                    })
+                    const res = await Promise.all(api)
+                    let obj = []
+                    res.map(o => {
+                        obj.push({
+                            fileUrl: url,
+                            fileName: o,
+                            tokenUrl: o
+                        })
+                    })
+                    item.picUrls = obj
+                }
+            })
+            console.log(' 🚗 🚕 🚙 🚌 🚎 recordsData', this.recordsData)
+        },
+        recordsScroll (event) {
+            if (this.radio === '项目信息') {
+                return
+            }
+            // 滚动距离scrollTop+元素的高clientHeight=文档的高scrollHeight
+            const { scrollTop, clientHeight, scrollHeight } = event.target
+            // console.log('%O', event.target)
+            console.log(event.target.scrollTop)
+            if (scrollHeight - scrollTop - clientHeight <= 80) {
+                console.log(' 🚗 🚕 🚙 🚌 🚎 加载')
+                this.recordsQuery.pageNumber += 1
+                this.getRecords()
+            }
+        },
+        async onTabRadio (val) {
+            console.log('🚀 --- onTabRadio --- val', val)
+            const { data: flowUpCount } = await getFlowUpCount({ bizId: this.projectId })
+            this.flowUpCount = flowUpCount
+            if (this.radio === '跟进记录') {
+                this.recordsQuery = {
+                    bizId: this.projectId,
+                    pageNumber: 1,
+                    pageSize: 5
+                }
+                this.recordsData = []
+                this.getRecords()
+            }
+        },
+        async add () {
+            this.addRecord = true
+        },
+        getProject2FollowUpProcess (status) {
+            for (let key in this.flowUpProcess) {
+                const statusInfo = this.flowUpProcess[key]
+                if (statusInfo.key == status) {
+                    return statusInfo // {key: "7" value: "无需跟进"}
+                }
+            }
+            return { value: '', key: '' }
+        },
         onStartChange (val) {
             this.queryParams.minSubmitTime = val
         },
@@ -476,70 +776,59 @@ export default {
                 this.queryParams.upstreamSupplierTypeList = this.upstreamSupplierTypeChange.toString()
                 let url = ''
                 for (const key in this.queryParams) {
-                    if (this.queryParams[key] !== '') {
+                    if (this.queryParams[key]) {
                         url += (`${key}=${this.queryParams[key]}&`)
                     }
                 }
+                console.log(url)
                 window.location = interfaceUrl + 'memeber/openapi/project/export?' + url
             }
         },
-        // pickerOptionsMax (val) {
-        //     return {
-        //         disabledDate: (time) => {
-        //             let beginDateVal = val
-        //             if (beginDateVal) {
-        //                 return time.getTime() > new Date(beginDateVal).getTime()
-        //             }
-        //         }
-        //     }
-        // },
-        // pickerOptionsMin (val) {
-        //     return {
-        //         disabledDate: (time) => {
-        //             let beginDateVal = val
-        //             if (beginDateVal) {
-        //                 return time.getTime() < new Date(beginDateVal).getTime()
-        //             }
-        //         }
-        //     }
-        // },
         getStatusList (key, docProgress) {
             const map = STATUS_LIST.reduce((res, item) => {
                 res[item.key] = item
                 return res
             }, {})
             if (key == 3) {
-                // let label = docProgress == null ? map[key].value : `${map[key].value}进度：${docProgress * 100}%`
                 let label = docProgress == null ? map[key].value : `${map[key].value}进度：${this.$multipliedBy(docProgress, 100)}%`
                 return { value: label }
             } else {
                 return map[key] || { value: '-' }
             }
         },
-        sortChange (e) {
-            console.log('e: ', e)
-            if (e.order == null) {
-                this.queryParams.field = ''
-                this.queryParams.isAsc = null
-                console.log('this.queryParams: ', this.queryParams)
-            } else if (e.prop == 'predictLoanAmount') {
-                this.queryParams.field = 'predict_loan_amount'
-                this.queryParams.isAsc = e.order === 'ascending'
-            } else if (e.prop == 'contractAmount') {
-                this.queryParams.field = 'contract_amount'
-                this.queryParams.isAsc = e.order === 'ascending'
-            } else if (e.prop == 'deviceAmount') {
-                this.queryParams.field = 'device_amount'
-                this.queryParams.isAsc = e.order === 'ascending'
-            } else if (e.prop == 'estimatedLoanTime') {
-                this.queryParams.field = 'estimated_loan_time'
-                this.queryParams.isAsc = e.order === 'ascending'
-            } else if (e.prop == 'submitTime') {
-                this.queryParams.field = 'submit_time'
-                this.queryParams.isAsc = e.order === 'ascending'
-            } else if (e.prop == 'updateTime') {
-                this.queryParams.field = 'update_time'
-                this.queryParams.isAsc = e.order === 'ascending'
+        onSortChange (val) {
+
+        },
+        sortChange (val) {
+            // if (e.order == null) {
+            //     this.queryParams.field = ''
+            //     this.queryParams.isAsc = null
+            //     console.log('this.queryParams: ', this.queryParams)
+            // } else if (e.prop == 'predictLoanAmount') {
+            //     this.queryParams.field = 'predict_loan_amount'
+            //     this.queryParams.isAsc = e.order === 'ascending'
+            // } else if (e.prop == 'contractAmount') {
+            //     this.queryParams.field = 'contract_amount'
+            //     this.queryParams.isAsc = e.order === 'ascending'
+            // } else if (e.prop == 'deviceAmount') {
+            //     this.queryParams.field = 'device_amount'
+            //     this.queryParams.isAsc = e.order === 'ascending'
+            // } else if (e.prop == 'estimatedLoanTime') {
+            //     this.queryParams.field = 'estimated_loan_time'
+            //     this.queryParams.isAsc = e.order === 'ascending'
+            // } else if (e.prop == 'submitTime') {
+            //     this.queryParams.field = 'submit_time'
+            //     this.queryParams.isAsc = e.order === 'ascending'
+            // } else if (e.prop == 'updateTime') {
+            //     this.queryParams.field = 'update_time'
+            //     this.queryParams.isAsc = e.order === 'ascending'
+            // }
+            if (val.order) {
+                this.queryParams['sort.direction'] = val.order === 'descending' ? 'DESC' : 'ASC'
+                this.queryParams['sort.property'] = val.prop
+            } else {
+                delete this.queryParams['sort.direction']
+                delete this.queryParams['sort.property']
             }
             this.searchList()
         },
@@ -578,11 +867,13 @@ export default {
             this.queryParams.categoryId = val
         },
         async searchList () {
+            console.log(this.queryParams)
             this.queryParams.statusList = this.status.toString()
             this.queryParams.typeList = this.typeArr.toString()
             this.queryParams.deviceCategoryList = this.deviceCategoryChange.toString()
             this.queryParams.upstreamSupplierTypeList = this.upstreamSupplierTypeChange.toString()
             const { ...params } = this.queryParams
+            console.log(params)
             await this.findProjetpage(params)
             this.tableData = this.projectData.records || []
             this.paginationInfo = {
@@ -604,6 +895,10 @@ export default {
             this.searchList()
         },
         async onLookrecord (val, type) {
+            console.log('🚀 --- onLookrecord --- val', val)
+            this.companyCode = val.companyCode
+            this.projectId = val.id
+            this.companyId = val.companyId
             if (type == 1) {
                 this.title = '项目审批记录'
                 await this.findProjectrecord(val.id)
@@ -629,6 +924,153 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.flowup-count{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #ff7a45;
+            box-sizing: border-box;
+            padding-right: 25px;
+        }
+.file-icon {
+        font-size: 18px;
+        margin: 0 3px 0 0  !important;
+        line-height: 24px !important;
+        color: #fff;
+    }
+    .file_box {
+        margin: 10px 0 0 0;
+        display: flex;
+        i {
+            font-size: 18px;
+            margin: 0 !important;
+            color: #ff6600;
+            padding-right: 5px;
+        }
+        span {
+            width: 450px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            color: #ff6600;
+
+        }
+        em {
+            display: block;
+            font-style: normal;
+            margin-left: 10px;
+            color: #169bd5;
+            cursor: pointer;
+
+        }
+    }
+.record-dialog-item{
+        margin-bottom: 20px;
+        .el-input:not(:first-child){
+            margin-left: 0;
+        }
+        .textarea{
+            .el-form-item__content{
+                display: flex;
+            }
+        }
+    }
+.follow-records{
+            margin-top: 10px;
+        }
+        .follow-cell {
+
+            .info {
+                display: flex;
+                flex-direction: row;
+
+                .avatar {
+                    width: 36px;
+                    height: 36px;
+                    margin: 0px 10px 0 16px;
+
+                }
+
+                .name-container {
+                    flex: 1;
+
+                    .follow-tag {
+                        height: 21px;
+                        font-size: 16px;
+                        font-weight: 400;
+                        color: #000000;
+                        line-height: 22px;
+                    }
+
+                    .name {
+                        margin-top: 2px;
+                        width: 120px;
+                        height: 16px;
+                        font-size: 12px;
+                        font-weight: 400;
+                        color: #666666;
+                        line-height: 17px;
+                    }
+                }
+
+                .time {
+                    align-self: flex-start;
+                    height: 16px;
+                    font-size: 12px;
+                    font-weight: 400;
+                    color: #666666;
+                    line-height: 17px;
+                    margin-right: 16px;
+                }
+            }
+
+            .content-container {
+                display: flex;
+                flex-direction: row;
+                margin: 11px 16px;
+
+                .line {
+                    width: 1px;
+                    background: #E1E1E3;
+                    margin: 0 50px 0 18px;
+                }
+
+                .content {
+                    flex: 1;
+
+                    .title-tag {
+                        height: 21px;
+                        font-size: 14px;
+                        font-weight: 400;
+                        color: #000000;
+                        line-height: 20px;
+                        margin-top: 10px;
+                    }
+
+                    .audio-player-container {
+                        margin: 8px 0;
+                    }
+
+                    .watch-audio-text {
+                        margin: 8px 0;
+                        height: 16px;
+                        font-size: 13px;
+                        font-weight: 500;
+                        color: #FF7A45;
+                        line-height: 18px;
+                    }
+
+                    .desc {
+                        font-size: 13px;
+                        font-weight: 400;
+                        color: #666666;
+                        line-height: 18px;
+                        padding: 4px 0;
+                    }
+                }
+            }
+
+        }
 .posrtv {
     position: relative;
     margin-right: 15px;
