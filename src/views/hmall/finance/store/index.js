@@ -1,6 +1,6 @@
 
 import * as types from './mutation-types'
-import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo, findFreightOrders, findFreightInfo, findFreightList, findFreightBankAccountInfo, findFreightWithdrawal, findFreightBankCardInfo, findOnlinefreightList } from '../api'
+import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo, findFreightOrders, findFreightInfo, findFreightList, findFreightBankAccountInfo, findFreightWithdrawal, findFreightBankCardInfo, findOnlinefreightList, findBankInfo } from '../api'
 
 const state = {
     // 服务费收取明细
@@ -32,7 +32,9 @@ const state = {
     // 运费资金管理提现银行卡信息
     freightBankCardInfo: {},
     // 线上运费明细
-    onlinefreightList: {}
+    onlinefreightList: {},
+    // 资金代采账户明细
+    bankInfo: {}
 }
 
 const getters = {
@@ -49,7 +51,8 @@ const getters = {
     freightBankAccountInfo: state => state.freightBankAccountInfo,
     freightWithdrawalInfo: state => state.freightWithdrawalInfo,
     freightBankCardInfo: state => state.freightBankCardInfo,
-    onlinefreightList: state => state.onlinefreightList
+    onlinefreightList: state => state.onlinefreightList,
+    bankInfo: state => state.bankInfo
 }
 
 const mutations = {
@@ -94,6 +97,9 @@ const mutations = {
     },
     [types.ONLINE_FREIGHT_LIST] (state, payload) {
         state.onlinefreightList = payload
+    },
+    [types.BANK_INFO] (state, payload) {
+        state.bankInfo = payload
     }
 }
 
@@ -153,6 +159,10 @@ const actions = {
     async findOnlinefreightList ({ commit }, params) {
         const { data } = await findOnlinefreightList(params)
         commit(types.ONLINE_FREIGHT_LIST, data)
+    },
+    async findBankInfo ({ commit }, params) {
+        const { data } = await findBankInfo(params)
+        commit(types.BANK_INFO, data)
     }
 }
 
