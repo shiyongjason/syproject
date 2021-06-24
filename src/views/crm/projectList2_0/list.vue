@@ -80,8 +80,8 @@
                 <template #action="slotProps">
                     <h-button table  @click="viewDetail(slotProps.data.row.projectId)">查看详情</h-button>
                     <!-- // 0不展示 ，1签约，2回款 -->
-                    <h-button table v-if="slotProps.data.row.flowUpProcess==1"  @click="signAContract(slotProps.data.row.projectId)">签约</h-button>
-                    <h-button table v-if="slotProps.data.row.flowUpProcess==2"  @click="onShowPayback(slotProps.data.row.projectId)">回款</h-button>
+                    <h-button table v-if="slotProps.data.row.buttonShowType==1"  @click="signAContract(slotProps.data.row.projectId)">签约</h-button>
+                    <h-button table v-if="slotProps.data.row.buttonShowType==2"  @click="onShowPayback(slotProps.data.row.projectId)">回款</h-button>
                 </template>
             </hosJoyTable>
         </div>
