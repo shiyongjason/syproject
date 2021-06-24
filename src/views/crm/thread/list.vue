@@ -62,9 +62,9 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">创建时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.startTime" type="date" placeholder="开始时间" value-format="yyyy-MM-dd"></el-date-picker>
+                        <el-date-picker v-model="queryParams.startTime" type="date" placeholder="开始时间" format="yyyy-MM-dd"></el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker v-model="queryParams.endTime" type="date" placeholder="结束时间" value-format="yyyy-MM-dd"></el-date-picker>
+                        <el-date-picker v-model="queryParams.endTime" type="date" placeholder="结束时间" format="yyyy-MM-dd"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
