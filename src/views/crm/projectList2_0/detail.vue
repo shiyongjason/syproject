@@ -354,7 +354,13 @@
                 </div>
             </el-dialog>
         </div>
-
+        <el-dialog title="删除确认" :visible.sync="deleteVisible" append-to-body width="500px" class="deldialog" >
+            <span>删除后该员工将无法恢复，不影响已添加过的跟进记录，是否继续删除？</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="deleteVisible = false">取 消</el-button>
+                <el-button type="primary" @click="doRemove">确认删除</el-button>
+            </span>
+        </el-dialog>
     </el-drawer>
 </template>
 <script lang="ts">
@@ -443,6 +449,7 @@ export default class ProjectList2Detail extends Vue {
     // 邀请同事协助 弹窗
     innerHelpVisible:boolean = false
     radioContact:boolean = false
+    deleteVisible:boolean = false
     flowUpCount:any = {
         directCount: '',
         total: ''
@@ -463,7 +470,8 @@ export default class ProjectList2Detail extends Vue {
     }
     recordsData:any[] = []
     recordsPagination = ''
-
+    delContactItem:any = ''
+    delContactIndex:any = ''
     flowUpRequest:FlowUpRequest & {assistantRemark: string, assistants:any[], createCorpUserId:any} = JSON.parse(JSON.stringify(_flowUpRequest))
 
     flowUpTypes = {
@@ -652,19 +660,24 @@ export default class ProjectList2Detail extends Vue {
         })
     }
 
-    // 删除联系人
-    async onDelCompanyContact (item, index) {
-        console.log('🚀 --- onDelCompanyContact --- index', index)
-        if (!item.contactMobile || !item.contactName || !item.roleCodes.length) {
-            this.companyContactList.splice(index, 1)
+    async doRemove () {
+        if (!this.delContactItem.contactMobile || !this.delContactItem.contactName || !this.delContactItem.roleCodes.length) {
+            this.companyContactList.splice(this.delContactIndex, 1)
             console.log('🚀 --- onDelCompanyContact --- this.companyContactList', this.companyContactList)
 
             return
         }
-        console.log('🚀 --- onDelCompanyContact --- item', item)
-        await delCompanyContact(item.id)
+        console.log(' 🚗 🚕 🚙 🚌 🚎 this.delContactItem', this.delContactItem)
+        console.log(' 🚗 🚕 🚙 🚌 🚎 this.delContactItem', this.delContactIndex)
+        // await delCompanyContact(this.delContactItem.id)
         this.$message.success('删除成功')
         this.onGetCompanyContactList()
+    }
+    // 删除联系人
+    onDelCompanyContact (item, index) {
+        this.deleteVisible = true
+        this.delContactItem = item
+        this.delContactIndex = index
     }
 
     @Watch('flowUpRequest.type')
