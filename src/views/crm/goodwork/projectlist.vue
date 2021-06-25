@@ -816,29 +816,6 @@ export default {
 
         },
         sortChange (val) {
-            // if (e.order == null) {
-            //     this.queryParams.field = ''
-            //     this.queryParams.isAsc = null
-            //     console.log('this.queryParams: ', this.queryParams)
-            // } else if (e.prop == 'predictLoanAmount') {
-            //     this.queryParams.field = 'predict_loan_amount'
-            //     this.queryParams.isAsc = e.order === 'ascending'
-            // } else if (e.prop == 'contractAmount') {
-            //     this.queryParams.field = 'contract_amount'
-            //     this.queryParams.isAsc = e.order === 'ascending'
-            // } else if (e.prop == 'deviceAmount') {
-            //     this.queryParams.field = 'device_amount'
-            //     this.queryParams.isAsc = e.order === 'ascending'
-            // } else if (e.prop == 'estimatedLoanTime') {
-            //     this.queryParams.field = 'estimated_loan_time'
-            //     this.queryParams.isAsc = e.order === 'ascending'
-            // } else if (e.prop == 'submitTime') {
-            //     this.queryParams.field = 'submit_time'
-            //     this.queryParams.isAsc = e.order === 'ascending'
-            // } else if (e.prop == 'updateTime') {
-            //     this.queryParams.field = 'update_time'
-            //     this.queryParams.isAsc = e.order === 'ascending'
-            // }
             if (val.order) {
                 this.queryParams['sort.direction'] = val.order === 'descending' ? 'DESC' : 'ASC'
                 this.queryParams['sort.property'] = val.prop

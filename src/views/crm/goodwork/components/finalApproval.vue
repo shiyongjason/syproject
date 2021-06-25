@@ -767,7 +767,7 @@ export default class FinalApproval extends Vue {
         this.purchaseConclusionVisible = true
         const { data } = await getResolutions(this.finalFormID)
         this.purForm = { ...this.purForm, ...data }
-        this.tableForm = data.resolutionPurchaseList
+        this.tableForm = data.resolutionPurchaseList || []
     }
 
     handleClose () {
