@@ -737,13 +737,10 @@ export default class ProjectList2Detail extends Vue {
     }
     // 关闭新增跟进记录
     closeAddRecord () {
+        // @ts-ignore
+        this.$refs['addFlowUp'].resetFields()
+        this.addRecord = false
         this.flowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
-
-        this.$nextTick(() => {
-            // @ts-ignore
-            this.$refs['addFlowUp'].resetFields()
-            this.addRecord = false
-        })
     }
 
     change (val) {
@@ -845,21 +842,22 @@ export default class ProjectList2Detail extends Vue {
         this.recordsData.map(async (item, index) => {
             if (item.picUrls) {
                 let api:any = []
-                let url = ''
+                let url = []
                 item.picUrls.map(jtem => {
-                    url = jtem
+                    url.push(jtem)
                     api.push(OssFileUtils.getUrl(jtem))
                 })
                 const res = await Promise.all(api)
-                // console.log('🚀 --- this.recordsData.map --- res', res[0])
                 let obj = []
-                res.map(o => {
+                res.map((o, i) => {
                     obj.push({
-                        fileUrl: url,
+                        fileUrl: url[i],
                         fileName: o,
                         tokenUrl: o
                     })
                 })
+                console.log('🚀 --- this.recordsData.map --- obj', obj)
+
                 item.picUrls = obj
             }
         })
