@@ -99,12 +99,12 @@
                         </div>
                         <div class="project-detail-item">
                             <el-form-item prop='userName' label="客户姓名：">
-                                <el-input placeholder="请输入客户姓名" v-model='threadDetail.userName'></el-input>
+                                <el-input placeholder="请输入客户姓名" maxlength="20" v-model='threadDetail.userName'></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
                             <el-form-item label="企业名称：">
-                                <el-input placeholder="请输入企业名称" v-model='threadDetail.companyName'></el-input>
+                                <el-input placeholder="请输入企业名称" maxlength="50" v-model='threadDetail.companyName'></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item area-select">
@@ -129,7 +129,7 @@
                         </div>
                         <div class="project-detail-item">
                             <el-form-item label="">
-                                <el-input v-model="threadDetail.address" placeholder="请输入详细地址"></el-input>
+                                <el-input v-model="threadDetail.address" maxlength="100" placeholder="请输入详细地址"></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
@@ -142,20 +142,23 @@
                         </div>
                         <div class="project-detail-item">
                             <el-form-item label="主营品牌：">
-                                <el-input placeholder="请输入企业名称" v-model='threadDetail.deviceBrand'></el-input>
-                            </el-form-item>
-                        </div>
-                        <div class="project-detail-item">
-                            <el-form-item label="">
-                                <div slot="label">所属分部：</div>
-                                <el-select v-model="threadDetail.customerDeptName" placeholder="请选择">
-                                    <el-option v-for="item in branchArr" :key="item.crmDeptCode" :label="item.deptName" :value="item.crmDeptCode"></el-option>
-                                </el-select>
+                                <el-input placeholder="请输入主营品牌" v-model='threadDetail.deviceBrand'></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
                             <el-form-item label="客户经理：">
-                                <el-input placeholder="请输入企业名称" v-model='threadDetail.customerName'></el-input>
+                                <el-autocomplete v-model="stateN" :fetch-suggestions="querySearchAsync" placeholder="请选择客户经理" @blur="onBlurItem" :trigger-on-focus="false" @select="handleThreadSelect">
+                                    <template slot-scope="{ item }">
+                                        <div class="autoflex">
+                                            <div class="name">{{ item.psnname }}</div>
+                                        </div>
+                                    </template>
+                                </el-autocomplete>
+                            </el-form-item>
+                        </div>
+                        <div class="project-detail-item">
+                            <el-form-item label="所属部门：">
+                                <el-input placeholder="请输入客户经理所属部门" disabled v-model='threadDetail.customerDeptName'></el-input>
                             </el-form-item>
                         </div>
                     </el-form>
@@ -245,6 +248,7 @@ import { State, namespace, Action, Getter } from 'vuex-class'
 import { Clue, FlowUpRequest } from '@/interface/hbp-member'
 import { validateForm, handleSubmit } from '@/decorator'
 import { THREAD_ORIGIN, DEVICE_CATEGORY, USER_DEFAULT } from './const/index'
+import { Phone } from '@/utils/rules'
 
 const _flowUpRequest = {
     assistantRemark: '', // 协助内容
@@ -274,10 +278,8 @@ export default class ThreadDetail extends Vue {
     @State('userInfo') userInfo: any
     @Prop({ type: Boolean, required: true, default: false }) drawer: boolean;
     @Prop({ type: Object, required: true }) threadDetail: Clue;
-    @Action('crmmanage/findCrmdeplist') findCrmdeplist: Function
     @Action('vipApply/findContract') findContract: Function
     @Getter('vipApply/contracts') contracts: any
-    @Getter('crmmanage/crmdepList') branchArr: any
     @Watch('getCity')
     onCityChange (newVal) {
         this.cityList = newVal
@@ -290,7 +292,8 @@ export default class ThreadDetail extends Vue {
 
     formRules = {
         userMobile: [
-            { required: true, message: '请输入客户手机', trigger: 'blur' }
+            { required: true, message: '请输入客户手机', trigger: 'blur' },
+            { validator: Phone, message: '请输入正确手机号', trigger: 'blur' }
         ],
         userName: [
             { required: true, message: '请输入客户姓名', trigger: 'blur' }
@@ -369,6 +372,32 @@ export default class ThreadDetail extends Vue {
         return []
     }
 
+    async querySearchAsync (queryString, cb) {
+        if (queryString) {
+            await this.findContract(queryString)
+            var restaurants = this.contracts
+            var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants
+            clearTimeout(this.timeout)
+            this.timeout = setTimeout(() => {
+                cb(results)
+            }, 3000 * Math.random())
+        }
+    }
+    createStateFilter (queryString) {
+        return (state) => {
+            return (state.psnname.indexOf(queryString) === 0)
+        }
+    }
+    onBlurItem () {
+
+    }
+    handleThreadSelect (item) {
+        this.stateN = item.psnname
+        this.threadDetail.customerMobile = item.mobile
+        this.threadDetail.customerName = item.psnname
+        this.threadDetail.customerDeptName = item.deptName
+    }
+
     handleClose () {
         let threadDetailForm: any = this.$refs['threadDetailForm']
         if (threadDetailForm) {
@@ -438,10 +467,10 @@ export default class ThreadDetail extends Vue {
         this.provinceList = data || []
     }
 
-    async onGetbranch () {
-        await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
-        console.log(this.branchArr)
-    }
+    // async onGetbranch () {
+    //     await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
+    //     console.log(this.branchArr)
+    // }
 
     // 跟进记录
     async getRecords () {
@@ -546,7 +575,7 @@ export default class ThreadDetail extends Vue {
 
     mounted () {
         this.getAreacode()
-        this.onGetbranch()
+        // this.onGetbranch()
         this.onInitGetDate()
         console.log(' 🚗 🚕 🚙 🚌 🚎 xiaoqiche ', this.threadDetail)
     }
