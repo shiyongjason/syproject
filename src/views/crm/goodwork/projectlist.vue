@@ -603,8 +603,6 @@ export default {
         },
         async onSubmitAddRecord () {
             this.$refs['addFlowUp'].validate(async (value, r) => {
-                console.log(' 🚗 🚕 🚙 🚌 🚎 ，value', value)
-
                 if (value) {
                     this.flowUpRequest.createBy = this.userInfo.employeeName
                     this.flowUpRequest.createPhone = this.userInfo.phoneNumber
@@ -617,8 +615,6 @@ export default {
                         query.picUrls = picUrls
                     }
                     query.bizId = this.projectId
-                    console.log(' 🚗 🚕 🚙 🚌 🚎 xx', query)
-
                     await addFlowUp(query)
                     this.$message.success('新增成功')
                     this.recordsQuery = {
@@ -628,6 +624,8 @@ export default {
                     }
                     this.recordsData = []
                     await this.getRecords()
+                    const { data: flowUpCount } = await getFlowUpCount({ bizId: this.projectId })
+                    this.flowUpCount = flowUpCount
                     this.closeAddRecord()
                 } else {
                     this.$nextTick(() => {
