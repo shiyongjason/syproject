@@ -82,13 +82,19 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">关联/认证时间：</div>
                     <div class="query-col__input">
-                        <!-- <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.authenticationEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker> -->
                         <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="authOptions">
                         </HDatePicker>
+                    </div>
+                </div>
+                 <div class="query-cont-col">
+                    <div class="query-col__label">橙工采会员：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.memberTag">
+                            <el-option label="全部" value="">
+                            </el-option>
+                            <el-option v-for="item in memberTagArr" :key="item.key" :label="item.value" :value="item.key">
+                            </el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -177,6 +183,7 @@ export default {
                 { label: '客户分类', prop: 'customerType', width: '100', sortable: 'custom' },
                 { label: '认证状态', prop: 'isAuthentication' },
                 { label: '会员标签', prop: 'memberTag' },
+                { label: '橙工采会员', prop: 'memberTags' },
                 { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: 'custom' },
                 { label: '关联认证时间', prop: 'authenticationTime', width: '150', formatters: 'dateTimes' }
             ],
