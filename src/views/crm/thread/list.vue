@@ -367,7 +367,7 @@ export default class Thread extends Vue {
 
     get getCityString () {
         return (row: Clue) => {
-            if (row) {
+            if (row.provinceName && row.cityName) {
                 return row.provinceName + row.cityName
             }
             return '-'
