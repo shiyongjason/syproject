@@ -12,6 +12,11 @@ export const getThreadList: (params: any) => AxiosPromise<any> = (params) => {
     return axios.get('memeber/api/clue/boss/page', { params })
 }
 
+// 检验当前手机号是否存在
+export const checkThreadIsRight: (params: any) => AxiosPromise<any> = (params) => {
+    return axios.get(`memeber/api/clue/member-validate/${params}`)
+}
+
 // 新建线索
 export const createThread: (params: any) => AxiosPromise<any> = (params) => {
     return axios.post('memeber/api/clue/boss', params)

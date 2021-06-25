@@ -140,7 +140,7 @@
                 <el-form :model="threadForm" :rules="rules" ref="threadForm" label-width="130px">
                     <div class="add-cont__row">
                         <el-form-item prop='userMobile' label="客户手机号：">
-                            <el-input placeholder="请输入客户手机号" maxlength="11" v-model='threadForm.userMobile'></el-input>
+                            <el-input placeholder="请输入客户手机号" @blur='phoneBlur' maxlength="11" v-model='threadForm.userMobile'></el-input>
                         </el-form-item>
                     </div>
                     <div class="add-cont__row">
@@ -230,7 +230,7 @@
 <script lang='tsx'>
 import { Vue, Component, Prop, Watch, Ref } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
-import { getChiness, getThreadList, assignmentCustomer, getThreadDetail, createThread, getThreadListCount } from './api/index'
+import { getChiness, getThreadList, assignmentCustomer, getThreadDetail, createThread, getThreadListCount, checkThreadIsRight } from './api/index'
 import detail from './detail.vue'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { ThreadQeuryModel } from './const/model'
@@ -443,6 +443,21 @@ export default class Thread extends Vue {
 
     onBlurItem () {
 
+    }
+
+    phoneBlur (e) {
+        console.log(this.threadForm.userMobile)
+        Phone('', this.threadForm.userMobile, async e => {
+            if (!e) {
+                const { data } = await checkThreadIsRight(this.threadForm.userMobile)
+                if (data) {
+                    // 表示已经注册过
+                    this.threadForm.userMobile = ''
+                    this.$message.error('CRM中已有该客户，无需重复添加')
+                }
+                console.log(data)
+            }
+        })
     }
 
     // async onGetbranch () {
