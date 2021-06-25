@@ -102,7 +102,8 @@
                     {{deviceCategoryString(slotProps.data.row.deviceCategory)}}
                 </template>
                 <template #customerName="slotProps">
-                    <div>{{slotProps.data.row.customerName}}</div>
+
+                    <div>{{slotProps.data.row.customerName&&slotProps.data.row.customerName.length > 0 ? slotProps.data.row.customerName :'-'}}</div>
                     <div>{{slotProps.data.row.customerMobile}}</div>
                 </template>
                 <template #cityName="slotProps">
@@ -126,10 +127,8 @@
                             </template>
                         </el-autocomplete>
                     </el-form-item>
-                    <el-form-item label="所属分部" prop="customerDeptName">
-                        <el-select v-model="distributorForm.customerDeptName" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.deptName" :value="item.deptName" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
-                        </el-select>
+                    <el-form-item label="所属部门" prop="customerDeptName">
+                        <el-input placeholder="所属部门" disabled v-model='distributorForm.customerDeptName'></el-input>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -301,7 +300,7 @@ export default class Thread extends Vue {
         { label: '客户姓名', prop: 'userName', width: '120' },
         { label: '企业名称', prop: 'companyName', width: '200' },
         { label: '创建人', prop: 'createBy', width: '120' },
-        { label: '创建时间', prop: 'createTime', width: '120', displayAs: 'YYYY-MM-DD' },
+        { label: '创建时间', prop: 'createTime', width: '130', displayAs: 'YYYY-MM-DD HH:mm' },
         { label: '所在城市', prop: 'cityName', slot: 'cityName', width: '120' },
         { label: '所属分部', prop: 'customerDeptName', width: '120' },
         { label: '主营品牌', prop: 'deviceBrand', width: '120' },
@@ -369,7 +368,7 @@ export default class Thread extends Vue {
 
     get getCityString () {
         return (row: Clue) => {
-            if (row) {
+            if (row.provinceName && row.cityName) {
                 return row.provinceName + row.cityName
             }
             return '-'
@@ -470,6 +469,7 @@ export default class Thread extends Vue {
         this.stateN = item.psnname
         this.distributorForm.customerMobile = item.mobile
         this.distributorForm.customerName = item.psnname
+        this.distributorForm.customerDeptName = item.deptName
     }
 
     handleThreadSelect (item) {

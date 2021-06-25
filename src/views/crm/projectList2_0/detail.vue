@@ -1,5 +1,5 @@
 <template>
-    <el-drawer title="项目详情" :visible.sync="drawer" :before-close="handleClose" :modal-append-to-body='false' :close-on-click-modal='false' size='680px' v-if="projectDetail.companyId" >
+    <el-drawer title="项目详情" :visible.sync="drawer" :before-close="handleClose" :wrapperClosable='false' :modal-append-to-body='false' :close-on-click-modal='false' size='680px' v-if="projectDetail.companyId" >
         <div class="ProjectList2Detail">
             <div class="radio-group">
                 <el-radio-group v-model="radio" @change="()=>onTabRadio()">
@@ -263,7 +263,7 @@
                     </div>
                 </div>
                 <!-- 内嵌弹窗-选择联系人 -->
-                <el-dialog width="800px" title="选择联系人" :visible.sync="innerContactVisible" append-to-body :before-close="()=>onBeforeCloseChooseUser()">
+                <el-dialog width="800px" title="选择联系人" :visible.sync="innerContactVisible" :close-on-click-modal='false' append-to-body :before-close="()=>onBeforeCloseChooseUser()">
                     <div class="contact">
                         <div class="contact-item">
                             <el-checkbox v-model="radioContact" @change="onChageRadioContact"></el-checkbox>
@@ -322,7 +322,7 @@
                     </div>
                 </el-dialog>
                 <!-- 内嵌弹窗-邀请同事协助 -->
-                <el-dialog width="450px" title="邀请同事协助" :visible.sync="innerHelpVisible" append-to-body :before-close="()=>closeInnerHelp()">
+                <el-dialog width="450px" title="邀请同事协助" :visible.sync="innerHelpVisible" append-to-body :close-on-click-modal='false' :before-close="()=>closeInnerHelp()">
                     <div class="innerHelp-layout">
                         <div class="search-input">
                             <el-autocomplete v-model="stateN" suffix-icon='el-icon-search' :fetch-suggestions="querySearchAsync" placeholder="请输入同事姓名查询" :trigger-on-focus="false" @select="handleSelect"  @keyup.enter.native="findOrganizationEmployee" >
@@ -354,7 +354,7 @@
                 </div>
             </el-dialog>
         </div>
-        <el-dialog title="删除确认" :visible.sync="deleteVisible" append-to-body width="500px" class="deldialog" >
+        <el-dialog title="删除确认" :visible.sync="deleteVisible" append-to-body width="500px" class="deldialog" :close-on-click-modal='false'>
             <span>删除后该员工将无法恢复，不影响已添加过的跟进记录，是否继续删除？</span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="deleteVisible = false">取 消</el-button>
@@ -610,6 +610,11 @@ export default class ProjectList2Detail extends Vue {
         if (temp) {
             this.flowUpRequest.contactName = temp.contactName
             this.flowUpRequest.contactMobile = temp.contactMobile
+        }
+
+        if (!this.radioContact && !item && !temp) {
+            this.$message.error('请选择客户联系人')
+            return
         }
 
         this.companyContactList = JSON.parse(JSON.stringify(this.companyContactListBak))
