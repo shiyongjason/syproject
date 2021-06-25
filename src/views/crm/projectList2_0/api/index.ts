@@ -32,7 +32,7 @@ export const getDictionary: (params: SearchByItem) => AxiosPromise<DictionaryLis
 
 /** BOSS-2.0项目列表 */
 export const getProjectList: (params: any) => AxiosPromise<any> = (params) => {
-    return axios.get('memeber/api/project-supply', { params })
+    return axios.get(`memeber/api/project-supply?${params}`, {})
 }
 
 /** BOSS-2.0项目导出 */
