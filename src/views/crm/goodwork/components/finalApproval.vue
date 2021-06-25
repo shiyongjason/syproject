@@ -167,7 +167,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="项目合同总额(元)：" prop='contractAmount' style="marginLeft:-9px;marginTop:10px">
-                        <el-input placeholder="请输入" @input="(val)=>inputChage(val,baseInfoForm,'contractAmount')" :value="money(baseInfoForm.contractAmount)">
+                        <el-input placeholder="请输入" v-isNum:2  maxlength="50" @input="(val)=>inputChage(val,baseInfoForm,'contractAmount')" :value="money(baseInfoForm.contractAmount)">
                             <template slot="append">元</template>
                         </el-input>
                     </el-form-item>
@@ -423,7 +423,18 @@ export default class FinalApproval extends Vue {
             // ],
             projectName: [{ required: true, message: '项目名称必填', trigger: 'blur' }],
             levels: [{ required: true, message: '项目评级必选' }],
-            contractAmount: [{ required: true, message: '项目合同总额必填', trigger: 'blur' }]
+            contractAmount: [{ required: true, message: '项目合同总额必填', trigger: 'blur' },
+                {
+                    validator: (rule, value, callback) => {
+                        if (value <= 0 || value >= 100000000) {
+                            return callback(new Error('项目合同总额(元)区间为（0，100000000）'))
+                        } else {
+                            callback()
+                        }
+                    },
+                    trigger: 'blur'
+                }
+            ]
         }
         return rules
     }
