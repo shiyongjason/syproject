@@ -138,7 +138,7 @@ export default {
             ],
             tableData: [],
             copyParams: {},
-            closeOrderDialog: true,
+            closeOrderDialog: false,
             createform: {
                 id: '',
                 merchantType: '',

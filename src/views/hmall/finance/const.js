@@ -76,3 +76,31 @@ export const CASH_WITHDRAWAL_MAP = new Map([
     [30, '成功'],
     [40, '失败']
 ])
+// 资金代采商家明细类型
+export const BUSINESS_DETAIL_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '销售回款', value: '1' },
+    { label: '提现', value: '2' }
+]
+export const BUSINESS_DETAIL_MAP = new Map([
+    [1, '销售回款'],
+    [2, '提现']
+])
+// 资金代采商家明细状态
+export const STAUTS_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '未处理', value: '1' },
+    { label: '处理中', value: '2' },
+    { label: '成功', value: '3' },
+    { label: '失败', value: '4' },
+    { label: '关闭', value: '5' },
+    { label: '冻结中', value: '6' }
+]
+export const STAUTS_MAP = new Map([
+    [1, '未处理'],
+    [2, '处理中'],
+    [3, '成功'],
+    [4, '失败'],
+    [5, '关闭'],
+    [6, '冻结中']
+])
