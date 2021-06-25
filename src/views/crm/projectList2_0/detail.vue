@@ -107,8 +107,8 @@
                                     </template>
                                     <div class="title-tag" v-if="item.content">跟进内容</div>
                                     <div class="desc" v-if="item.content">{{item.content}}</div>
-                                    <div class="title-tag" v-if="item.remark">其他备注</div>
-                                    <div class="desc" v-if="item.remark">{{item.remark}}</div>
+                                    <div class="title-tag" v-if="item.remark&&(item.type==1||item.type==2)">其他备注</div>
+                                    <div class="desc" v-if="item.remark&&(item.type==1||item.type==2)">{{item.remark}}</div>
                                 </div>
                             </div>
                         </div>
