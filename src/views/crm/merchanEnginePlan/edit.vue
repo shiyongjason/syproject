@@ -58,11 +58,10 @@
 
 <script>
 import { interfaceUrl } from '@/api/config'
-import { addCloudMerchantProjectScheme } from '../api'
-import { mapState, mapGetters, mapActions } from 'vuex'
-
+import { addCrmPlanDetail, getCrmPlanDetail } from './api'
+import { mapState } from 'vuex'
 export default {
-    name: 'merchantEnginePlanEdit',
+    name: 'crmedit',
     data () {
         return {
             form: {
@@ -125,9 +124,6 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo
         }),
-        ...mapGetters({
-            cloudMerchantProjectSchemeDetail: 'cloudMerchantProjectSchemeDetail'
-        }),
         videoUpload () {
             return {
                 action: interfaceUrl + 'tms/files/upload',
@@ -171,14 +167,9 @@ export default {
         }
     },
     methods: {
-        ...mapActions({
-            setNewTags: 'setNewTags',
-            findCloudMerchanProjectSchemeDetail: 'findCloudMerchanProjectSchemeDetail'
-        }),
-
         async getDetail (id) {
-            await this.findCloudMerchanProjectSchemeDetail({ id })
-            this.form = { ...this.cloudMerchantProjectSchemeDetail }
+            const { data } = await getCrmPlanDetail({ id })
+            this.form = { ...data }
             if (this.form.schemeVideo) {
                 this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
             }
@@ -197,7 +188,7 @@ export default {
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     try {
-                        await addCloudMerchantProjectScheme(this.form)
+                        await addCrmPlanDetail(this.form)
                         if (this.$route.query.id) {
                             this.$message.success('修改成功')
                         } else {

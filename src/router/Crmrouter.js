@@ -450,6 +450,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/crm/merchanEnginePlan/index.vue')
+                    },
+                    {
+                        path: 'crmengineedit',
+                        name: 'crmengineedit',
+                        meta: {
+                            title: '工程方案编辑',
+                            tagName: '工程方案编辑',
+                            parentName: '工程方案',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/crm/merchanEnginePlan/edit.vue')
                     }
                 ]
             }

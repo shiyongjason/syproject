@@ -22,7 +22,7 @@
                     <h-button type="primary" class="ml20" @click="onCreatePlan">新建方案</h-button>
                 </div>
             </div>
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isShowIndex="true" :pagination="pagination" :isAction="true" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'>
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isShowIndex="true" :pagination="paginationInfo" :isAction="true" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :actionMinWidth=120>
                 <template slot="schemeTitle" slot-scope="scope">
                     <p @click="onPreviewClick(scope.data.row)" class="colred">{{scope.data.row.schemeTitle}}</p>
                 </template>
@@ -69,7 +69,7 @@ export default {
                 { label: '生效时间', prop: 'effectiveTime', formatters: 'dateTime' },
                 { label: '状态', prop: 'status' }],
             tableData: [],
-            pagination: {},
+            paginationInfo: {},
             H5Preview: '',
             loading: false
         }
@@ -78,23 +78,21 @@ export default {
         this.queryList()
     },
     computed: {
-        // ...mapGetters({
-        //     cloudMerchantProjectSchemeList: 'cloudMerchantProjectSchemeList',
-        //     cloudMerchantProjectSchemeListPagination: 'cloudMerchantProjectSchemeListPagination'
-        // }),
         ...mapState({
             userInfo: state => state.userInfo
         })
 
     },
     methods: {
-        // ...mapActions({
-        //     findCloudMerchanProjectSchemeList: 'findCloudMerchanProjectSchemeList'
-        // }),
         async queryList () {
             // this.findCloudMerchanProjectSchemeList(this.queryParams)
-            await getCrmPlanList(this.queryParams)
+            const { data } = await getCrmPlanList(this.queryParams)
             this.tableData = data.records
+            this.paginationInfo = {
+                pageNumber: data.current,
+                pageSize: data.size,
+                total: data.total
+            }
         },
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
@@ -108,10 +106,10 @@ export default {
             this.queryList()
         },
         onCreatePlan () {
-            this.$router.push({ path: '/comfortCloudMerchant/merchantEngine/merchantEnginePlanEdit' })
+            this.$router.push({ path: '/goodwork/crmengineplan/crmengineedit' })
         },
         onEdit (data) {
-            this.$router.push({ path: '/comfortCloudMerchant/merchantEngine/merchantEnginePlanEdit', query: { id: data.id } })
+            this.$router.push({ path: '/goodwork/crmengineplan/crmengineedit', query: { id: data.id } })
         },
         onPreviewClick (val) {
             this.H5Preview = iotUrl + '/iot/merchantEnginePlanPreview?id=' + val.id
