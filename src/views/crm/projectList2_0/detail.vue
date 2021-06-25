@@ -194,7 +194,7 @@
                     <div class="header-title">
                         <el-radio v-model="flowUpRequest.type" :label="1">当面拜访</el-radio>
                         <el-radio v-model="flowUpRequest.type" :label="2">电话/微信沟通/邮件等</el-radio>
-                        <p class="tips">温馨提示：推荐使用企业微信与客户聊天，自动更新记录，更方便。</p>
+                        <p class="tips" v-if="flowUpRequest.type==2">温馨提示：推荐使用企业微信与客户聊天，自动更新记录，更方便。</p>
                     </div>
                     <div style="margin-top:-10px">
                         <el-form :rules="addFlowUpRules" :model="flowUpRequest" ref="addFlowUp" :validate-on-rule-change='false' v-if="reCreate">
