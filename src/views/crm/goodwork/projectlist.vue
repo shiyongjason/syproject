@@ -178,7 +178,7 @@
                                 <div class='line' />
                                 <div class='content'>
                                     <div class='title-tag'>语音通话</div>
-                                    <div class='audio-player-container'>
+                                    <div class='audio-player-container' v-if="item.flowUpDynamic.msgContent&&item.flowUpDynamic.msgContent.osspath">
                                         <div class="crm-audio-player" >
                                             <audio controls>
                                                 <source :src="item.flowUpDynamic.msgContent.osspath" type="audio/mpeg">
