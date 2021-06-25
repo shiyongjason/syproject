@@ -76,7 +76,7 @@ export default [
                             isMenu: false,
                             icon: ''
                         },
-                        component: () => import('@/views/hmall/productManage/productList/index.vue')
+                        component: () => import('@/views/hmall/productManage/productList/createProduct.vue')
                     },
                     {
                         path: 'brandAudit',

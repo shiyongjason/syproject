@@ -3,7 +3,7 @@
         <table border>
             <thead>
                 <tr>
-                    <td v-for="(item,index) in specTemplateFilter" :key="index" style="min-width:100px;">{{item.k}}</td>
+                    <td v-for="(item,index) in optionTypeListFilter" :key="index" style="min-width:100px;">{{item.name}}</td>
                     <td class="fixed-width">
                         <span class="tr-label">图片</span>
                         <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="params.skuImgurl" @back-event="backPicUrl" />
@@ -12,120 +12,78 @@
                                 <i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="imgUrls">应用全部</el-dropdown-item>
+                                <el-dropdown-item command="imageUrls">应用全部</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </td>
                     <td>
-                        <span class="tr-label">tiao'touma</span>
-                        <el-input v-model="params.sellPrice" maxlength="16"><template slot="suffix">元</template></el-input>
-                        <el-dropdown placement="bottom-end" @command="handleCommand">
-                            <span class="el-dropdown-link">
-                                <i class="el-icon-arrow-down el-icon--right"></i>
-                            </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="sellPrice">应用全部</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
+                        <span class="tr-label">条头码</span>
                     </td>
                     <td>
-                        <span class="tr-label">零售价</span>
-                        <el-input v-model="params.retailPrice" maxlength="16"><template slot="suffix">元</template></el-input>
-                        <el-dropdown placement="bottom-end" @command="handleCommand">
-                            <span class="el-dropdown-link">
-                                <i class="el-icon-arrow-down el-icon--right"></i>
-                            </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="retailPrice">应用全部</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
+                        <span class="tr-label">长宽高/mm</span>
                     </td>
                     <td>
-                        <span class="tr-label">销售库存</span>
-                        <el-input v-model="params.saleableStock" maxlength="8" disabled></el-input>
-                        <el-dropdown placement="bottom-end" @command="handleCommand">
-                            <span class="el-dropdown-link">
-                                <i class="el-icon-arrow-down el-icon--right"></i>
-                            </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="saleableStock">应用全部</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
+                        <span class="tr-label">毛重/KG</span>
                     </td>
                     <td>
-                        <span class="tr-label">总库存</span>
+                        <span class="tr-label">体积/m³</span>
                     </td>
                     <td>
-                        <span class="tr-label">佣金</span>
-                        <el-input v-model="params.commission" maxlength="6"><template slot="suffix">%</template></el-input>
-                        <el-dropdown placement="bottom-end" @command="handleCommand">
-                            <span class="el-dropdown-link">
-                                <i class="el-icon-arrow-down el-icon--right"></i>
-                            </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="commission">应用全部</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
+                        <span class="tr-label">状态</span>
                     </td>
                     <td>
-                        <span class="tr-label">成本价</span>
-                        <el-input v-model="params.costPrice" maxlength="16"><template slot="suffix">元</template></el-input>
-                        <el-dropdown placement="bottom-end" @command="handleCommand">
-                            <span class="el-dropdown-link">
-                                <i class="el-icon-arrow-down el-icon--right"></i>
-                            </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="costPrice">应用全部</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                    </td>
-                    <td>
-                        <span class="tr-label">上下架状态</span>
+                        <span class="tr-label">操作</span>
                     </td>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item,index) in form.skuList" :key="index">
-                    <template v-for="(sItem,sIndex) in item.specifications">
-                        <td :key="sIndex">{{sItem.v}}</td>
+                <tr v-for="(item,index) in form.mainSkus" :key="index">
+                    <template v-for="(sItem,sIndex) in item.optionValues">
+                        <td :key="sIndex">
+                            <el-select v-model="sItem.id" @change="onChangeValue(index,sIndex)" clearable>
+                                <el-option v-for="i in optionValuesFilter(sItem.optionTypeId)" :key="i.id" :label="i.name" :value="i.id"></el-option>
+                            </el-select>
+                        </td>
                     </template>
                     <td class="fixed-width">
-                        <el-form-item label-width='0' :prop="`skuList[${index}].imgUrls`" :rules="rules.imgUrls">
-                            <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imgUrls" @back-event="backPicUrlSku($event, index)" />
+                        <el-form-item label-width='0'>
+                            <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" />
                         </el-form-item>
                     </td>
                     <td>
-                        <el-form-item label-width='0' :prop="`skuList[${index}].sellPrice`" :rules="rules.sellPrice">
-                            <el-input v-model="item.sellPrice" maxlength="16"><template slot="suffix">元</template></el-input>
+                        <el-form-item label-width='0'>
+                            <el-input v-model="item.serialNumber" maxlength="16"></el-input>
+                        </el-form-item>
+                    </td>
+                    <td class="log-width">
+                        <el-form-item label-width='0'>
+                            <el-input v-model="item.length" maxlength="16"></el-input>
+                            <el-input v-model="item.width" maxlength="16"></el-input>
+                            <el-input v-model="item.height" maxlength="16"></el-input>
                         </el-form-item>
                     </td>
                     <td>
-                        <el-form-item label-width='0' :prop="`skuList[${index}].retailPrice`" :rules="rules.retailPrice">
-                            <el-input v-model="item.retailPrice" maxlength="16"><template slot="suffix">元</template></el-input>
+                        <el-form-item label-width='0'>
+                            <el-input v-model="item.grossWeight" maxlength="8"></el-input>
                         </el-form-item>
                     </td>
                     <td>
-                        <el-form-item label-width='0' :prop="`skuList[${index}].saleableStock`" :rules="rules.saleableStock">
-                            <el-input v-model="item.saleableStock" maxlength="8" disabled @input="onChangeStock(item, index)"></el-input>
+                        <el-form-item label-width='0'>
+                            <el-input v-model="item.volume" maxlength="8"></el-input>
                         </el-form-item>
                     </td>
                     <td>
-                        <el-form-item label-width='0' :prop="`skuList[${index}].availableStock`" :rules="rules.availableStock">
-                            <el-input v-model="item.availableStock" maxlength="8" disabled></el-input>
+                        <el-form-item label-width='0'>
+                            <span>{{checkStatus(item.enabled,item.auditStatus)}}</span>
                         </el-form-item>
                     </td>
                     <td>
-                        <el-form-item label-width='0' :prop="`skuList[${index}].commission`" :rules="rules.commission">
-                            <el-input v-model="item.commission" maxlength="6"><template slot="suffix">%</template></el-input>
+                        <el-form-item label-width='0'>
+                            <h-button table v-if="item.auditStatus && !item.enabled">生效</h-button>
+                            <h-button table v-if="item.enabled">失效</h-button>
+                            <h-button table v-if="!item.enabled">编辑</h-button>
+                            <h-button table @click="onDelSKU(index)">删除</h-button>
                         </el-form-item>
-                    </td>
-                    <td>
-                        <el-form-item label-width='0' :prop="`skuList[${index}].costPrice`" :rules="rules.costPrice">
-                            <el-input v-model="item.costPrice" maxlength="16"><template slot="suffix">元</template></el-input>
-                        </el-form-item>
-                    </td>
-                    <td>
-                        <span>{{item.isOnShelf == 0 ? '下架':item.isOnShelf == 1?'上架':'下架'}}</span>
                     </td>
                 </tr>
             </tbody>
@@ -155,17 +113,17 @@ export default {
                 costPrice: ''
             },
             form: {
-                skuList: [
+                mainSkus: [
                     {
                         name: '',
-                        imgUrls: '',
-                        sellPrice: 0,
-                        retailPrice: '',
-                        commission: 0,
-                        costPrice: '',
-                        orderMinCount: '',
-                        saleableStock: 0,
-                        availableStock: 0
+                        imageUrls: '',
+                        serialNumber: '',
+                        length: '',
+                        width: '',
+                        height: '',
+                        grossWeight: '',
+                        volume: '',
+                        netWeight: ''
                     }
                 ]
             },
@@ -250,8 +208,8 @@ export default {
                 accept: 'image/jpeg, image/jpg, image/png'
             }
         },
-        specTemplateFilter () {
-            return this.form.specTemplate.filter(item => item.k && item.v.length)
+        optionTypeListFilter () {
+            return this.form.optionTypeList.filter(item => item.name && item.optionValues.length)
         }
     },
     watch: {
@@ -259,38 +217,48 @@ export default {
             immediate: true,
             handler (val) {
                 this.form = val
-                this.form.skuList = this.form.skuList.map(item => {
-                    item.difference = item.availableStock - item.saleableStock
-                    return item
-                })
             }
         }
     },
     methods: {
+        optionValuesFilter (id) {
+            const result = this.optionTypeListFilter.filter(item => item.id == id)
+            return result[0].optionValues || []
+        },
         backPicUrl (file) {
             this.params.skuImgurl = file.imageUrl
         },
         backPicUrlSku (file, index) {
-            this.form.skuList[index].imgUrls = file.imageUrl
+            this.form.mainSkus[index].imageUrls = file.imageUrl
         },
         handleCommand (command) {
-            this.form.skuList.map((item, index) => {
-                if (command == 'imgUrls') {
-                    this.$set(this.form.skuList[index], 'imgUrls', this.params.skuImgurl)
+            this.form.mainSkus.map((item, index) => {
+                if (command == 'imageUrls') {
+                    this.$set(this.form.mainSkus[index], 'imageUrls', this.params.skuImgurl)
                 } else {
-                    this.$set(this.form.skuList[index], command, this.params[command])
+                    this.$set(this.form.mainSkus[index], command, this.params[command])
                 }
             })
-            this.onChangeStock()
         },
-        onChangeStock () {
-            this.form.skuList.map(item => {
-                if (item.difference) {
-                    this.$set(item, 'availableStock', item.saleableStock - 0 + item.difference - 0)
-                } else {
-                    this.$set(item, 'availableStock', item.saleableStock - 0)
-                }
-            })
+        checkStatus (enabled, auditStatus) {
+            if (auditStatus == 0) {
+                return '待审核'
+            } else if (auditStatus == 1) {
+                return enabled ? '生效' : '失效'
+            } else if (auditStatus == 2) {
+                return '未通过'
+            } else {
+                return '-'
+            }
+        },
+        onDelSKU (index) {
+            this.form.mainSkus.splice(index, 1)
+        },
+        onChangeValue (index, sIndex) {
+            this.form.mainSkus[index].optionValues[sIndex].name = this.changeValue(this.form.mainSkus[index].optionValues[sIndex].optionTypeId, this.form.mainSkus[index].optionValues[sIndex].id).name
+        },
+        changeValue (optionTypeId, id) {
+            return this.form.optionTypeList.filter(item => item.id == optionTypeId)[0].optionValues.filter(item => item.id == id)[0]
         }
     },
     mounted () {
@@ -319,7 +287,7 @@ export default {
             td {
                 padding: 2px 10px;
                 min-width: 270px;
-                line-height: 40px;
+                // line-height: 40px;
                 text-align: center;
                 font-size: 12px;
                 border-right: 1px solid #e5e5ea;
@@ -363,6 +331,13 @@ export default {
                     padding: 2px 5px;
                     min-width: 150px;
                 }
+                .el-select {
+                    width: 150px;
+
+                    /deep/.el-input {
+                        width: 150px;
+                    }
+                }
 
                 .el-input {
                     width: 150px;
@@ -392,5 +367,18 @@ export default {
     display: inline-block;
     width: 60px;
     text-align: right;
+}
+
+.sku-cont_table {
+    .el-form-item {
+        margin-bottom: 0;
+    }
+    /deep/ .el-input__icon {
+        line-height: 20px;
+    }
+}
+
+.log-width {
+    min-width: 500px !important;
 }
 </style>

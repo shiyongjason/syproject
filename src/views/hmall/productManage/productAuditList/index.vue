@@ -73,6 +73,9 @@
                     <h-button type='assist' @click="onTabProductType('SPU')" class="flr mb10" v-if="tabName == 'onShelf' || tabName == 'offShelf'">切换SPU</h-button>
                 </template>
             </div>
+            <basicTable>
+
+            </basicTable>
             <basicTable :tableData="tableDataSpu" :tableLabel="tableLabelSpu" :actionMinWidth="340" :pagination="paginationDataSpu" :multiSelection.sync="multiSelection" @onCurrentChange="onCurrentChangeSpu" :isMultiple="true" :isAction="true" v-if="productType=='SPU'">
                 <template slot="spuName" slot-scope="scope">
                     <span>{{scope.data.row.spuName}}</span>
@@ -125,6 +128,7 @@
 import { mapState, mapActions } from 'vuex'
 import { clearCache, newCache } from '@/utils/index'
 import { PRODUCT_AUDIT_STATUS, EFFECTIVE, EFFICACY, AUDIT } from '../const/index'
+import { getProductsArr } from '@/views/jinyunplatform/api'
 // import { batchOperator } from '../utils/index'
 export default {
     name: 'productAuditList',
@@ -148,7 +152,7 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
-            resetParams: {}
+            resetParams: {},
             //             isSharedOption: IS_SHARED_OPTIONS,
             //             tableLabelSpu: [],
             //             tableDataSpu: [],
@@ -166,25 +170,17 @@ export default {
             //             beforeList: [],
             //             successList: [],
             //             uploadSpuId: '',
-            //             tabName: 'onShelf'
+            tabName: 'onShelf'
         }
     },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo.principal,
-            spuList: state => state.goodsModules.spuList,
-            skuList: state => state.goodsModules.skuList,
-            spuAttachments: state => state.goodsModules.spuAttachments,
-            brandData: state => state.goodsModules.brandData
+            brandData: state => state.goodsModules.brandData,
+            productSpuData: state => state.hmall.productManage.productSpuData,
+            productSkuData: state => state.hmall.productManage.productSkuData
         })
     },
-    //     watch: {
-    //         'queryParams.brandName' (value) {
-    //             if (value == '') {
-    //                 this.queryParams.brandId = ''
-    //             }
-    //         }
-    //     },
     methods: {
         // 回车搜索
         onQueryEnter (e) {
@@ -240,7 +236,7 @@ export default {
         // 跳转到新增商品页面
         onCreateProduct () {
             this.$router.push('/b2b/product/createProduct')
-        }
+        },
         //         // 跳转到修改商品页面
         //         async onToEditProduct (row) {
         //             // await this.findValidateSpike({ spuId: row.spuId })
@@ -472,13 +468,13 @@ export default {
         //                 this.queryParams.isOnShelf = '0'
         //             }
         //         },
-        //         ...mapActions('goodsModules', [
-        //             'findSpuList',
-        //             'findSkuList',
-        //             'findSpuAttachments',
-        //             'findAllBrands',
-        //             'findValidateSpike'
-        //         ]),
+        ...mapActions({
+            findProductSpuList: 'productManage/findProductSpuList',
+            findProductSkuList: 'productManage/findProductSkuList'
+        }),
+        async getProductList () {
+            await this.findProductSpuList(this.queryParams)
+        }
         //         async getSPUProuducts () {
         //             await this.findSpuList(this.queryParams)
         //             if (this.tabName == 'onShelf') {

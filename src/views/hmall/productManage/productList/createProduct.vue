@@ -2,16 +2,16 @@
     <div class="page-body B2b">
         <div class="page-body-cont">
             <el-form ref="form" :model="form" :rules="rules" label-width="auto">
-                <p class="mb20" v-if='form.auditOpinion'>审核不通过原因: <span class="red-word">{{form.auditOpinion}}</span></p>
+                <!-- <p class="mb20" v-if='form.auditOpinion'>审核不通过原因: <span class="red-word">{{form.auditOpinion}}</span></p> -->
                 <div class="title-cont">
                     <span class="title-cont__label">商品基本信息</span>
                 </div>
                 <el-form-item label="商品品牌：" prop="brandName">
-                    <el-autocomplete class="form-input_big" v-model="form.brandName" :fetch-suggestions="querySearchAsyncBrand" @select="handleSelectBrand" @blur="handleBlurBrand" :debounce="500" :maxlength="30" :disabled="showMore" placeholder="请输入商品品牌"></el-autocomplete>
-                    <span class="ml10 isGrayColor">如若没有所需品牌，请联系运营添加!</span>
+                    <el-autocomplete class="form-input_big" v-model="form.brandName" :fetch-suggestions="querySearchAsyncBrand" @select="handleSelectBrand" @blur="handleBlurBrand" :debounce="500" :maxlength="30" placeholder="请输入商品品牌" :disabled="showMore"></el-autocomplete>
+                    <span class="ml10 isGrayColor">如果没有对应的品牌，请联系运营人员添加!</span>
                 </el-form-item>
                 <el-form-item label="商品型号：" prop="model">
-                    <el-autocomplete class="form-input_big autocomplete" v-model="form.model" :fetch-suggestions="querySearchAsyncTemplate" @select="handleSelectTemplate" :debounce="500" :maxlength="50" :disabled="showMore" placeholder="请输入商品型号">
+                    <el-autocomplete class="form-input_big autocomplete" v-model="form.model" :fetch-suggestions="querySearchAsyncModel" @select="handleSelectModel" :debounce="500" :maxlength="50" placeholder="请输入商品型号" :disabled="showMore">
                         <template slot-scope="{item}">
                             <el-tooltip effect="dark" :content="item.value" placement="top">
                                 <span class="autocomplete-select_item">{{item.value}}</span>
@@ -29,8 +29,8 @@
                     </el-autocomplete>
                 </el-form-item>
                 <el-form-item label="商品类目：" prop="categoryId">
-                    <el-cascader :append-to-body="false" class="form-input_medium" v-model="form.categoryId" :options="categoryOption" :props="props" clearable @expand-change="onExpandChangeCategory" :disabled="showMore" placeholder="请选择商品类目"></el-cascader>
-                    <h-button type='primary' class="ml10" @click="onFindTemplate" :disabled="showMore">确定</h-button>
+                    <el-cascader class="form-input_medium" v-model="form.categoryId" :options="categoryOption" :props="props" clearable @expand-change="onExpandChangeCategory" placeholder="请选择商品类目" :disabled="showMore"></el-cascader>
+                    <h-button type='primary' class="ml10" @click="onFindProduct" :disabled="showMore">确定</h-button>
                 </el-form-item>
                 <div v-if="showMore">
                     <el-form-item label="商品名称：" prop="name">
@@ -45,13 +45,14 @@
                     <div class="title-cont">
                         <span class="title-cont__label">销售信息</span>
                     </div>
-                    <el-form-item label="商品图片：" prop="imgUrls" ref="imgUrls">
-                        <el-upload :action="uploadInfo.action" :data="uploadInfo.data" :name="uploadAttr.name" :list-type="uploadAttr.listType" :show-file-list="uploadAttr.showFileList" :on-success="handleSuccess" :accept="uploadAttr.accept" :before-upload="beforeUpload" v-if="imgUrls.length !==5">
+                    <el-form-item label="商品图片：" prop="imageUrls" ref="imageUrls">
+                        <el-upload :action="uploadInfo.action" :data="uploadInfo.data" :name="uploadAttr.name" :list-type="uploadAttr.listType" :show-file-list="uploadAttr.showFileList" :on-success="handleSuccess" :accept="uploadAttr.accept" :before-upload="beforeUpload"
+                            v-if="imageUrls.length !==5">
                             <i class="el-icon-plus"></i>
                         </el-upload>
                         <div class="picture-content">
                             <ul>
-                                <li v-for="(item, index) in imgUrls" :key="index">
+                                <li v-for="(item, index) in imageUrls" :key="index">
                                     <div class="mask-btn">
                                         <span :class="index==0?'isDisabled':''" @click="onSettingTop(index)">设为主图</span>
                                         <span @click="onRemove(index)">删除图片</span>
@@ -65,32 +66,33 @@
                             <p>最多支持上传5张750*750，大小不超过2M，仅支持jpeg，jpg，png格式</p>
                         </div>
                     </el-form-item>
-                    <el-form-item label="规格图片：" v-if="form.specTemplate.length < 1" prop="imgUrlsSku">
-                        <SingleUpload :upload="uploadInfo" :imgW="104" :imgH="104" :imageUrl="form.skuList[0].imgUrls" @back-event="backPicUrl" />
+                    <el-form-item label="规格图片：" v-if="form.optionTypeList.length < 1">
+                        <SingleUpload :upload="uploadInfo" :imgW="104" :imgH="104" :imageUrl="form.mainSkus[0].imageUrls" @back-event="backPicUrl" />
                         <div class="picture-prompt ml20">
                             <p>上传750*750，大小不超过2M，仅支持jpeg，jpg，png格式</p>
                         </div>
-                        <input type="hidden" v-model="form.skuList[0].imgUrls">
+                        <input type="hidden" v-model="form.mainSkus[0].imageUrls">
                     </el-form-item>
                     <div class="sku-cont">
-                        <div class="sku-cont_group mb20" v-for="(item,index) in form.specTemplate" :key="index">
+                        <div class="sku-cont_group mb20" v-for="(item,index) in form.optionTypeList" :key="index">
                             <div class="group-spec_label">
-                                <el-form-item label="规格名：" :prop="`specTemplate[${index}].k`" :rules="rules.k">
-                                    <el-input v-model="item.k" :disabled="form.isOnShelf" maxlength="20" placeholder="请输入规格名"></el-input>
+                                <el-form-item label="规格名：">
+                                    <el-input v-model="item.name" @change="onAddOption(item.name,index)" maxlength="20" placeholder="请输入规格名"></el-input>
                                 </el-form-item>
                             </div>
                             <div class="group-spec_tags mt20">
-                                <el-form-item label="规格值：" :prop="`specTemplate[${index}].k`" :rules="rules.v">
-                                    <el-tag class="mr10" v-for="(sItem,sIndex) in item.v" :key="sIndex" @close="onDelOption(index,sIndex)" :closable="form.auditStatus != 1 && item.v.length>1">{{sItem}}</el-tag>
-                                    <el-input v-model="addValues[index]" maxlength="50" @keyup.native.enter="onAddOption(index)" @blur="onAddOption(index)" suffix-icon="el-icon-plus" :disabled="form.isOnShelf" placeholder="多个属性值以空格隔开"></el-input>
+                                <el-form-item label="规格值：">
+                                    <el-tag class="mr10" v-for="(sItem,sIndex) in item.optionValues" :key="sIndex" @close="onDelOptionValue(index,sIndex)" :closable="item.optionValues.length>1">{{sItem.name}}</el-tag>
+                                    <el-input v-model="addValues[index]" @change="onAddOptionVlaue(index)" suffix-icon="el-icon-plus" maxlength="50" placeholder="多个属性值以空格隔开"></el-input>
                                 </el-form-item>
                             </div>
-                            <span class="group-spec_close" @click="onDelSpec(index)" v-if="!form.isOnShelf"><i class="el-icon-close"></i></span>
+                            <span class="group-spec_close" @click="onDelOptionTemplate(index)"><i class="el-icon-close"></i></span>
                         </div>
-                        <h-button type="create" class="mb20" @click="onAddSpec" :disabled="disabled || form.isOnShelf">添加规格</h-button>
+                        <h-button type="create" class="mb20" @click="onAddOptionTemplate">添加规格</h-button>
                     </div>
-                    <skuTable ref="skuTable" :formData.sync="form" v-if="form.specTemplate.length > 0"></skuTable>
-                    <div class="title-cont" v-if="specifications.length != 0">
+                    <skuTable ref="skuTable" :formData.sync="form" v-if="form.optionTypeList.length>1"></skuTable>
+                    <h-button type="create" class="mb20" @click="onAddSKU">+</h-button>
+                    <div class="title-cont" v-if="specData.length != 0">
                         <span class="title-cont__label">参数信息</span>
                     </div>
                     <div class="form-cont-row parameter">
@@ -105,8 +107,27 @@
                             </el-form-item>
                         </div>
                     </div>
-                    <div class="title-cont">
-                        <span class="title-cont__label">商品销售信息</span>
+                    <div class="title-cont" v-if="form.optionTypeList.length < 1">
+                        <span class="title-cont__label">仓库信息</span>
+                    </div>
+                    <div v-if="form.optionTypeList.length < 1">
+                        <el-form-item label="SN码：" prop="retailPrice">
+                            <el-input v-model="form.mainSkus[0].serialNumber" maxlength="16"></el-input>
+                        </el-form-item>
+                        <el-form-item label="长宽高/mm：" prop="commission">
+                            <el-input v-model="form.mainSkus[0].length" maxlength="6"></el-input>
+                            <el-input v-model="form.mainSkus[0].width" maxlength="6"></el-input>
+                            <el-input v-model="form.mainSkus[0].height" maxlength="6"></el-input>
+                        </el-form-item>
+                        <el-form-item label="毛重/KG：" prop="costPrice">
+                            <el-input v-model="form.mainSkus[0].grossWeight" maxlength="16"></el-input>
+                        </el-form-item>
+                        <el-form-item label="体积/m³：" prop="costPrice">
+                            <el-input v-model="form.mainSkus[0].volume" maxlength="16"></el-input>
+                        </el-form-item>
+                        <el-form-item label="净重/KG：" prop="costPrice">
+                            <el-input v-model="form.mainSkus[0].netWeight" maxlength="16"></el-input>
+                        </el-form-item>
                     </div>
                     <div class="title-cont mt10">
                         <span class="title-cont__label">商品详情信息</span>
@@ -128,12 +149,11 @@
     </div>
 </template>
 <script>
+import { mapActions, mapGetters, mapState } from 'vuex'
 import skuTable from './skuTable'
-import { mapActions, mapState } from 'vuex'
-import { addProduct, editProduct } from '../api/index'
 import { interfaceUrl } from '@/api/config'
 import { RICH_EDITOR_MENUS, PUTAWAY_RULES } from '../const/common'
-// import { uniqueArr, flatten } from '@/utils/sku'
+import { flatten } from '@/views/hmall/utils/sku'
 import { deepCopy } from '@/utils/utils'
 import { clearCache } from '@/utils/index'
 export default {
@@ -143,18 +163,11 @@ export default {
     },
     data () {
         return {
-            showMore: true,
+            showMore: false,
             btnLoading: false,
-            brandOption: [],
-            templateOption: [],
-            categoryOption: [],
             specifications: [],
-            provinceData: [],
             addValues: [],
-            salesAreaList: [],
-            imgUrls: [],
-            priceDrawerSync: false,
-            priceList: [],
+            imageUrls: [],
             form: {
                 brandId: '',
                 brandName: '',
@@ -162,31 +175,26 @@ export default {
                 categoryId: '',
                 name: '',
                 showName: '',
+                imageUrls: '',
                 specifications: [],
-                salesAreaList: [],
-                imgUrls: '',
-                skuList: [
+                optionTypeIds: [],
+                mainSkus: [
                     {
                         name: '',
-                        imgUrls: '',
-                        sellPrice: 0,
-                        retailPrice: '',
-                        commission: 0,
-                        costPrice: '',
-                        orderMinCount: '',
-                        buyLimit: false,
-                        orderMaxCount: '',
-                        saleableStock: 0
+                        imageUrls: '',
+                        serialNumber: '',
+                        length: '',
+                        width: '',
+                        height: '',
+                        grossWeight: '',
+                        volume: '',
+                        netWeight: ''
                     }
                 ],
-                specTemplate: [
-
-                ],
-                detail: ''
+                detail: '',
+                operator: '',
+                optionTypeList: []
             },
-            orderMinCount: 1,
-            buyLimit: false,
-            orderMaxCount: '',
             rules: {
                 brandName: [
                     { required: true, message: '请选择商品品牌', trigger: 'change' }
@@ -203,9 +211,6 @@ export default {
                 showName: [
                     { required: true, message: '请输入商品销售名称', trigger: 'blur' }
                 ],
-                salesAreaList: [
-                    { required: true, message: '请选择可售卖区域', trigger: 'blur' }
-                ],
                 imgUrls: [
                     { required: true, message: '请上传商品图片', trigger: 'change' }
                 ],
@@ -216,7 +221,7 @@ export default {
                     {
                         required: true,
                         validator: (rule, value, callback) => {
-                            this.form.specTemplate.map(item => {
+                            this.form.optionTypeList.map(item => {
                                 if (!item.v || item.v.length == 0) {
                                     return callback(new Error('请输入规格值'))
                                 }
@@ -239,138 +244,6 @@ export default {
                         },
                         trigger: 'change'
                     }
-                ],
-                sellPrice: [
-                    {
-                        required: true,
-                        validator: (rule, value, callback) => {
-                            const reg = /(^[1-9]([0-9]{1,12})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
-                            this.form.skuList.map(item => {
-                                if (!item.sellPrice || item.sellPrice == '') {
-                                    return callback(new Error('请输入销售价'))
-                                }
-                                if (!reg.test(item.sellPrice)) {
-                                    return callback(new Error('销售价格式为小数点前十三位，小数点后两位'))
-                                }
-                            })
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                retailPrice: [
-                    {
-                        required: true,
-                        validator: (rule, value, callback) => {
-                            const reg = /(^[1-9]([0-9]{1,12})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
-                            this.form.skuList.map(item => {
-                                if (!item.retailPrice || item.retailPrice == '') {
-                                    return callback(new Error('请输入建议零售价'))
-                                }
-                                if (!reg.test(item.retailPrice)) {
-                                    return callback(new Error('建议零售价格式为小数点前十三位，小数点后两位'))
-                                }
-                            })
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                commission: [
-                    {
-                        required: true,
-                        validator: (rule, value, callback) => {
-                            const reg = /(?!^0\.0?0$)^[0-9][0-9]?(\.[0-9]{1,2})?$|^100$/
-                            this.form.skuList.map(item => {
-                                if (item.commission != 0 && item.commission == '') {
-                                    return callback(new Error('请输入佣金'))
-                                }
-                                if (!reg.test(item.commission)) {
-                                    return callback(new Error('佣金为小于100的2位小数或整数'))
-                                }
-                            })
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                costPrice: [
-                    {
-                        validator: (rule, value, callback) => {
-                            const reg = /(^[1-9]([0-9]{1,12})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
-                            this.form.skuList.map(item => {
-                                if (item.costPrice && !reg.test(item.costPrice)) {
-                                    return callback(new Error('成本价格式为小数点前十三位，小数点后两位'))
-                                }
-                            })
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                orderMinCount: [
-                    {
-                        required: true,
-                        validator: (rule, value, callback) => {
-                            const reg = /^[1-9]\d*$/
-                            if (!this.orderMinCount || this.orderMinCount == '') {
-                                return callback(new Error('请输入起售数量'))
-                            }
-                            if (this.buyLimit && (Number(this.orderMaxCount) < Number(this.orderMinCount))) {
-                                return callback(new Error('起售数量不大于限购数量'))
-                            }
-                            if (!reg.test(this.orderMinCount)) {
-                                return callback(new Error('起卖数量为正整数'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                buyLimit: [
-                    {
-                        required: true,
-                        validator: (rule, value, callback) => {
-                            return callback()
-                        },
-                        trigger: 'change'
-                    }
-                ],
-                orderMaxCount: [
-                    {
-                        required: true,
-                        validator: (rule, value, callback) => {
-                            const reg = /^[1-9]\d*$/
-                            if (!this.orderMaxCount || this.orderMaxCount == '') {
-                                return callback(new Error('请输入限购数量'))
-                            }
-                            if (Number(this.orderMaxCount) < Number(this.orderMinCount)) {
-                                return callback(new Error('限购数量不小于起售数量'))
-                            }
-                            if (!reg.test(this.orderMaxCount)) {
-                                return callback(new Error('限购数量为正整数'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                saleableStock: [
-                    {
-                        required: true,
-                        validator: (rule, value, callback) => {
-                            this.form.skuList.map(item => {
-                                const reg = /^[0-9]\d*$/
-                                if (item.saleableStock === '') {
-                                    return callback(new Error('请输入库存'))
-                                } else if (item.saleableStock < 0 || !reg.test(item.saleableStock)) {
-                                    return callback(new Error('库存为大于等于0的数字'))
-                                }
-                            })
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
                 ]
             },
             timer: null,
@@ -379,9 +252,6 @@ export default {
                 value: 'id',
                 label: 'name',
                 children: 'subCategoryList'
-            },
-            provinceProps: {
-                multiple: true
             },
             uploadAttr: {
                 name: 'multiFile',
@@ -403,17 +273,17 @@ export default {
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo.principal,
-            provinceOptions: state => state.provinceOptions
+            userInfo: state => state.userInfo,
+            productUnique: state => state.hmall.productManage.productUnique,
+            productSpuInfo: state => state.hmall.productManage.productSpuInfo,
+            optionId: state => state.hmall.productManage.optionId,
+            optionValueData: state => state.hmall.productManage.optionValueData
         }),
-        ...mapState({
-            brandData: 'productManage/brandData',
-            templateData: 'templateData',
-            categoryData: 'categoryData',
-            specData: 'specData',
-            templateInfo: 'templateInfo',
-            brandAuthValue: 'brandAuthValue',
-            productInfo: 'productInfo'
+        ...mapGetters({
+            brandOption: 'productManage/brandOption',
+            modelOption: 'productManage/modelOption',
+            categoryOption: 'productManage/categoryOption',
+            specData: 'productManage/specData'
         }),
         uploadInfo () {
             return {
@@ -425,21 +295,8 @@ export default {
             }
         },
         disabled () {
-            return this.form.isOnShelf || this.form.specTemplate.some(item => !item.k || item.v.length == 0)
-        },
-        sumSaleableStock () {
-            let sum = 0
-            this.form.skuList.map(item => {
-                sum += item.saleableStock ? item.saleableStock - 0 : 0
-            })
-            return sum
-        },
-        sumAvailableStock () {
-            let sum = 0
-            this.form.skuList.map(item => {
-                sum += item.availableStock ? item.availableStock - 0 : 0
-            })
-            return sum
+            // return this.form.isOnShelf || this.form.optionTypeList.some(item => !item.k || item.v.length == 0)
+            return false
         }
     },
     watch: {
@@ -453,39 +310,76 @@ export default {
                 this.$refs.imgUrls.clearValidate()
             }
         },
-        'form.specTemplate' (val) {
-            // const specTemplate = flatten(val.filter(item => item.k && item.v.length))
-            const skuList = specTemplate.map((item, index) => {
-                item.indexes = item.specifications.map(sItem => sItem.i).join('_')
-                const skuInfo = this.form.skuList.filter(sku => sku.indexes == item.indexes)[0]
-                item = { ...item, ...skuInfo }
-                item.sellPrice = item.sellPrice ? item.sellPrice : 0
-                item.saleableStock = item.saleableStock ? item.saleableStock : 0
+        'form.optionTypeList' (value) {
+            const optionTypeList = flatten(value.filter(item => item.name && item.optionValues.length))
+            this.form.mainSkus.map(item => {
+                let optionValues = []
+                this.productSpuInfo.optionTypeList.forEach(i => {
+                    let arr = item.optionValues.filter(j => j.optionTypeId == i.id)
+                    console.log(arr)
+                    if (arr.length > 0) {
+                        optionValues = optionValues.concat(arr)
+                    } else {
+                        optionValues.push({
+                            id: '',
+                            name: '',
+                            optionTypeId: i.id,
+                            optionTypeName: i.name
+                        })
+                    }
+                })
+                item.optionValues = optionValues
                 return item
             })
-            if (!skuList.length) {
-                this.form.skuList = this.form.skuList
-                return
-            }
-            if (this.form.skuList.length == skuList.length) {
-                this.form.skuList = skuList.map((item, index) => ({
-                    ...this.form.skuList[index],
-                    ...item
-                }))
-            } else {
-                this.form.skuList = skuList
-            }
+            // const mainSkus = optionTypeList.map(item => {
+            //     const skuInfo = this.form.mainSkus.filter(sku => sku.optionValues[0].optionTypeId == item.optionValues[0].optionTypeId)[0]
+            //     item = { ...item, ...skuInfo }
+            //     return item
+            // })
+
+            // const mainSkus = optionTypeList.map(item => {
+            //     const skuInfo = this.form.mainSkus.filter(sku => {
+            //         // if (item.optionValues.length == sku.optionValues.length) {
+            //         sku.optionValues.map((i, index) => {
+            //             if (i.optionTypeId == item.optionValues[index].optionTypeId) {
+            //                 return i.id ? i : { optionTypeId: i.optionTypeId, optionTypeName: i.optionTypeName, id: '', name: '' }
+            //             }
+            //         })
+
+            //         //         // } else {
+            //         //         //     return item.optionValues.map((i, index) => {
+            //         //         //         if (i.optionTypeId == sku.optionValues[index].optionTypeId) {
+            //         //         //             return i.id ? i : { optionTypeId: i.optionTypeId, optionTypeName: i.optionTypeName, id: '', name: '' }
+            //         //         //         }
+            //         //         //     })
+            //         //         // }
+            //     })[0]
+            //     item = { ...item, ...skuInfo }
+            //     return item
+            // })
+            console.log(mainSkus)
+            // if (!mainSkus.length) {
+            //     this.form.mainSkus = this.form.mainSkus
+            //     return
+            // }
+            // if (this.form.mainSkus.length == mainSkus.length) {
+            //     this.form.mainSkus = mainSkus.map((item, index) => ({
+            //         ...this.form.mainSkus[index],
+            //         ...item
+            //     }))
+            // } else {
+            // this.form.mainSkus = mainSkus
+            // }
         }
     },
     methods: {
         async init () {
-            // this.getAllBrands()
-            // this.getTemplateByValue()
-            // this.getCategory()
-            // await this.getProvinceOptions()
+            this.getBrandOptions()
+            this.getCategoryOptions()
+            this.getModelOptions()
             if (this.$route.query.id) {
                 this.showMore = true
-                this.getProductInfo()
+                this.getProductInfo(this.$route.query.id)
             }
         },
         async querySearchAsyncBrand (queryString, cb) {
@@ -497,26 +391,24 @@ export default {
             this.form.brandId = item.id
         },
         handleBlurBrand () {
-            const data = this.brandData.filter(item => item.name.toLowerCase() == this.form.brandName.toLowerCase())
+            const data = this.brandOption.filter(item => item.name.toLowerCase() == this.form.brandName.toLowerCase())
             if (!(data.length > 0 && data[0].id === this.form.brandId)) {
                 this.form.brandName = ''
                 this.form.brandId = ''
             }
         },
-        async querySearchAsyncTemplate (queryString, cb) {
-            this.templateOption = []
-            await this.getTemplateByValue()
-            const templateOption = this.templateOption
-            const results = queryString ? templateOption.filter(this.createStateFilter(queryString)) : templateOption
+        async querySearchAsyncModel (queryString, cb) {
+            await this.getModelOptions()
+            const modelOption = this.modelOption
+            const results = queryString ? modelOption.filter(this.createStateFilter(queryString)) : modelOption
             clearTimeout(this.timer)
             this.timer = setTimeout(() => {
                 cb(results)
             }, 1000)
         },
-        async handleSelectTemplate (item) {
+        async handleSelectModel (item) {
+            await this.getProductInfo(item.mainSpuId)
             this.showMore = true
-            await this.getTemplateInfoById(item.spuTemplateId)
-            await this.getBrandAuthByValue()
         },
         createStateFilter (queryString) {
             return (state) => {
@@ -528,21 +420,20 @@ export default {
                 this.getSpecByCategory(value[1])
             }
         },
-        onFindTemplate () {
+        onFindProduct () {
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
+                    await this.getProductUnique()
                     this.showMore = true
-                    await this.getTemplateByValue()
-                    await this.getBrandAuthByValue()
+                    if (this.productUnique) {
+                        await this.getProductInfo(this.productUnique)
+                    }
                     this.form.name = this.form.brandName + this.form.model + this.form.name
                 }
             })
         },
-        onChangeProvince (value) {
-            this.form.salesAreaList = this.objArrToDyadicArr(value)
-        },
         handleSuccess (file) {
-            this.imgUrls.push(file.data.accessUrl)
+            this.imageUrls.push(file.data.accessUrl)
         },
         beforeUpload (file) {
             if (this.uploadAttr.accept.indexOf(file.type) > -1) {
@@ -558,126 +449,142 @@ export default {
             return fileSize
         },
         backPicUrl (file) {
-            this.form.skuList[0].imgUrls = file.imageUrl
+            this.form.mainSkus[0].imageUrls = file.imageUrl
         },
-        onAddSpec () {
-            this.form.specTemplate.push({ k: '', v: [] })
+        onAddOptionTemplate () {
+            this.form.optionTypeList.push({ id: '', name: '', optionValues: [] })
         },
-        onDelSpec (index) {
-            this.form.specTemplate.splice(index, 1)
-            if (!this.form.specTemplate.length) {
-                this.form.skuList = [{
-                    name: '',
-                    imgUrls: '',
-                    sellPrice: 0,
-                    retailPrice: '',
-                    commission: 0,
-                    costPrice: '',
-                    orderMinCount: '',
-                    buyLimit: 0,
-                    orderMaxCount: '',
-                    saleableStock: 0
-                }]
+        onDelOptionTemplate (index) {
+            this.form.optionTypeList.splice(index, 1)
+            // if (!this.form.optionTypeList.length) {
+            //     this.form.skuList = [{
+            //         name: '',
+            //         imgUrls: '',
+            //         sellPrice: 0,
+            //         retailPrice: '',
+            //         commission: 0,
+            //         costPrice: '',
+            //         orderMinCount: '',
+            //         buyLimit: 0,
+            //         orderMaxCount: '',
+            //         saleableStock: 0
+            //     }]
+            // }
+        },
+        async onAddOption (name, index) {
+            await this.addOption({ name: name })
+            if (this.form.optionTypeList[index].name == name) {
+                this.form.optionTypeList[index].id = this.optionId
             }
         },
-        onAddOption (index) {
+        async onAddOptionVlaue (index) {
             let str = this.addValues[index] || ''
             str = str.trim()
             if (!str) return
-            const oldArr = this.form.specTemplate[index].v
+            const oldArr = this.form.optionTypeList[index].optionValues
             const arr = str.split(/\s+/)
-                .filter(item => !oldArr.some(value => value == item))
+                .filter(item => !oldArr.some(value => value.name == item))
                 .map(item => (item))
-            this.form.specTemplate = this.form.specTemplate.map((item, i) => {
-                if (index === i) {
-                    // item.v = uniqueArr([...oldArr, ...arr])
-                }
-                return item
-            })
+            if (arr.length > 0) {
+                await this.addOptionValue({ id: this.form.optionTypeList[index].id, name: this.addValues.join('') })
+                this.form.optionTypeList = this.form.optionTypeList.map((item, i) => {
+                    if (index === i) {
+                        item.optionValues = this.form.optionTypeList[i].optionValues.concat(this.optionValueData)
+                    }
+                    return item
+                })
+            }
             this.$set(this.addValues, index, '')
         },
-        onDelOption (index, sIndex) {
-            this.form.specTemplate = this.form.specTemplate.map((item, i) => {
+        onDelOptionValue (index, sIndex) {
+            this.form.optionTypeList = this.form.optionTypeList.map((item, i) => {
                 if (index === i) {
-                    item.v.splice(sIndex, 1)
+                    item.optionValues.splice(sIndex, 1)
                 }
                 return item
             })
-            this.form.skuList = this.form.skuList.filter((item) => {
-                const arr = item.indexes.split('_')
-                return !(arr[index] === sIndex)
-            })
-            this.form.skuList = this.form.skuList.map((item) => {
-                const arr = item.indexes.split('_')
-                arr[index] = arr[index] >= sIndex ? arr[index] - 1 : arr[index]
-                item.indexes = arr.join('_')
-                return item
-            })
+            //     this.form.skuList = this.form.skuList.filter((item) => {
+            //         const arr = item.indexes.split('_')
+            //         return !(arr[index] === sIndex)
+            //     })
+            //     this.form.skuList = this.form.skuList.map((item) => {
+            //         const arr = item.indexes.split('_')
+            //         arr[index] = arr[index] >= sIndex ? arr[index] - 1 : arr[index]
+            //         item.indexes = arr.join('_')
+            //         return item
+            //     })
             this.addValues.splice(sIndex, 1)
         },
         onSettingTop (index) {
-            this.imgUrls.unshift((this.imgUrls.splice(index, 1))[0])
+            this.imageUrls.unshift((this.imageUrls.splice(index, 1))[0])
         },
         onRemove (index) {
-            this.imgUrls.splice(index, 1)
+            this.imageUrls.splice(index, 1)
         },
-        onChangeStock () {
-            if (this.form.skuList[0].difference) {
-                this.form.skuList[0].availableStock = this.form.skuList[0].saleableStock - 0 + this.form.skuList[0].difference - 0
-            } else {
-                this.form.skuList[0].availableStock = this.form.skuList[0].saleableStock - 0
-            }
+        onAddSKU () {
+            let optionValues = []
+            this.form.optionTypeList.forEach(item => {
+                console.log(item)
+                optionValues.push({
+                    id: '',
+                    name: '',
+                    optionTypeId: item.id,
+                    optionTypeName: item.name
+                })
+            })
+            this.form.mainSkus = this.form.mainSkus.concat({ optionValues: optionValues })
         },
         onSave () {
-            this.form.merchantCode = this.userInfo.merchantCode
-            this.form.merchantName = this.userInfo.merchantName
-            this.form.imgUrls = this.imgUrls.join(',')
             let form = {}
-            if (this.form.specTemplate.length > 0) {
+            if (this.form.optionTypeList.length > 0) {
                 form = {
                     ...this.form,
-                    skuList: deepCopy(this.form.skuList).map(item => {
-                        item.name = this.form.name + item.specifications.map(sItem => sItem.v).join('')
-                        item.specifications = JSON.stringify(item.specifications)
-                        item.buyLimit = this.buyLimit
-                        item.orderMinCount = this.orderMinCount
-                        item.orderMaxCount = this.orderMaxCount
+                    imageUrls: this.imageUrls,
+                    optionTypeIds: this.form.optionTypeList.map(item => item.id),
+                    mainSkus: deepCopy(this.form.mainSkus).map(item => {
+                        item.name = this.form.name + item.optionValues.map(sItem => sItem.name).join('')
+                        item.imageUrls = item.imageUrls.split(',')
+                        item.optionValueIds = item.optionValues.map(sItem => sItem.id).filter(sItem => sItem)
                         return item
                     }),
-                    specTemplate: JSON.stringify(this.form.specTemplate),
-                    specifications: this.form.specifications.filter(item => item.v)
+                    specifications: this.form.specifications.filter(item => item.v),
+                    operator: this.userInfo.employeeName
                 }
             } else {
                 form = {
                     ...this.form,
-                    skuList: deepCopy(this.form.skuList).map(item => {
+                    imageUrls: this.imageUrls,
+                    mainSkus: deepCopy(this.form.mainSkus).map(item => {
                         item.name = this.form.name
-                        item.orderMinCount = this.orderMinCount
-                        item.buyLimit = this.buyLimit
-                        item.orderMaxCount = this.orderMaxCount
-                        item.ladderPriceList = this.priceList
-                        item.specifications = ''
+                        // item.orderMinCount = this.orderMinCount
+                        // item.buyLimit = this.buyLimit
+                        // item.orderMaxCount = this.orderMaxCount
+                        // item.specifications = ''
                         return item
                     }),
-                    specTemplate: '',
-                    specifications: this.form.specifications.filter(item => item.v)
+                    specifications: this.form.specifications.filter(item => item.v),
+                    operator: this.userInfo.employeeName
                 }
+                delete form.optionTypeIds
+                delete form.optionTypeList
             }
+            console.log(form)
             this.btnLoading = true
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
                     try {
                         if (this.$route.query.id) {
-                            await editProduct(form)
-                            if (this.$route.query.from == 'stepPrice') {
-                                this.$router.push('/price/stepPrice')
-                            } else {
-                                this.$router.push('/goods/productList')
-                            }
+                            await this.editProduct(form)
+                            // if (this.$route.query.from == 'stepPrice') {
+                            //     this.$router.push('/price/stepPrice')
+                            // } else {
+                            //     this.$router.push('/goods/productList')
+                            // }
                         } else {
                             form.id = ''
-                            await addProduct(form)
-                            this.$router.push('/goods/productList')
+                            await this.createProduct(form)
+                            this.$router.push('/b2b/product/productList')
+                            this.setNewTags((this.$route.fullPath).split('?')[0])
                         }
                         this.btnLoading = false
                     } catch (error) {
@@ -689,11 +596,7 @@ export default {
             })
         },
         onCancel () {
-            if (this.$route.query.from == 'stepPrice') {
-                this.$router.push('/price/stepPrice')
-            } else {
-                this.$router.push('/goods/productList')
-            }
+            this.$router.push('/b2b/product/productList')
         },
         onReset () {
             this.reload()
@@ -704,129 +607,52 @@ export default {
                 dangerouslyUseHTMLString: true
             })
         },
-        objArrToDyadicArr (value) {
-            const filterResult = []
-            this.provinceData.filter(item => value.some(i => item.children.some(j => j.value == i[1])))
-                .map(item => ({ label: item.label, value: item.value, children: item.children.filter(i => value.some(j => i.value == j[1])) }))
-                .map(item => {
-                    item.children.map(i => {
-                        filterResult.push({ provinceId: item.value, provinceName: item.label, cityId: i.value, cityName: i.label })
-                    })
-                })
-            return filterResult
-        },
-        dyadicArrToObjArr (value) {
-            let result = []
-            const provinceObj = {}
-            const cityArr = this.provinceData.map(item => {
-                provinceObj[item.value] = item.children.map(cItem => [item.value, cItem.value])
-                return item.children.map(cItem => [item.value, cItem.value])
-            })
-            value.forEach(item => {
-                if (item.provinceId == '0') {
-                    result = result.concat(cityArr.flat())
-                } else if (item.cityId == '0') {
-                    result = result.concat(provinceObj[item.provinceId])
-                } else {
-                    result.push([item.provinceId, item.cityId])
-                }
-            })
-            return result
-        },
         ...mapActions({
-            // 'findProvinceOptions',
-            getBrandOptions: 'productManage/findBrandOptions'
+            setNewTags: 'setNewTags',
+            findBrandOptions: 'productManage/findBrandOptions',
+            findCategoryOptions: 'productManage/findCategoryOptions',
+            findModelOptions: 'productManage/findModelOptions',
+            findSpecByCategory: 'productManage/findSpecByCategory',
+            checkProductUnique: 'productManage/checkProductUnique',
+            findProductSpuInfo: 'productManage/findProductSpuInfo',
+            addOption: 'productManage/addOption',
+            addOptionValue: 'productManage/addOptionValue',
+            createProduct: 'productManage/createProduct',
+            editProduct: 'productManage/editProduct'
         }),
-        ...mapActions('productManage', [
-            'findAllBrands',
-            'findTemplateByValue',
-            'findCategory',
-            'findSpecByCategory',
-            'findTemplateInfoById',
-            'findBrandAuthByValue',
-            'findProductInfo'
-        ]),
-        async getAllBrands () {
-            await this.findAllBrands()
-            this.brandOption = this.brandData.map(item => {
-                item.value = item.name
-                return item
-            })
+        async getBrandOptions () {
+            await this.findBrandOptions()
         },
-        async getTemplateByValue () {
-            await this.findTemplateByValue({ brandId: this.form.brandId, categoryId: this.form.categoryId })
-            this.templateOption = this.templateData.map(item => {
-                item.value = item.model
-                return item
-            })
+        async getCategoryOptions () {
+            await this.findCategoryOptions()
         },
-        async getCategory () {
-            await this.findCategory()
-            this.categoryOption = this.categoryData
+        async getModelOptions () {
+            await this.findModelOptions({ brandId: this.form.brandId, categoryId: this.form.categoryId })
         },
         async getSpecByCategory (categoryId) {
             await this.findSpecByCategory({ categoryId: categoryId })
-            this.specifications = this.specData.specifications || []
+            this.specifications = this.specData
             this.form.specifications = deepCopy(this.specifications).map(item => {
                 return { k: item.k, v: '' }
             })
         },
-        async getTemplateInfoById (spuTemplateId) {
-            await this.findTemplateInfoById({ spuTemplateId: spuTemplateId })
-            await this.getSpecByCategory(this.templateInfo.twoCategoryId)
+        async getProductUnique () {
+            await this.checkProductUnique({ brandId: this.form.brandId, categoryId: this.form.categoryId, model: this.form.model })
+        },
+        async getProductInfo (id) {
+            await this.findProductSpuInfo({ id: id })
+            await this.getSpecByCategory(this.productSpuInfo.twoCategoryId)
+            console.log(this.productSpuInfo)
             this.form = {
-                ...this.form,
-                ...this.templateInfo,
-                name: this.templateInfo.brandName + this.templateInfo.model + this.templateInfo.name
-            }
-            this.imgUrls = this.templateInfo.imgUrls.split(',')
-            const specifications = this.form.specifications || []
-            this.form.specifications = deepCopy(this.specifications).map((item, index) => {
-                const itemArr = specifications.filter(sItem => sItem.k == item.k)
-                if (itemArr.length > 0) {
-                    item.v = itemArr[0].v
-                }
-                return item
-            })
-        },
-        async getBrandAuthByValue () {
-            await this.findBrandAuthByValue({ brandId: this.form.brandId, categoryId: this.form.categoryId, merchantCode: this.userInfo.merchantCode })
-            this.salesAreaList = this.dyadicArrToObjArr(this.brandAuthValue)
-            this.form.salesAreaList = this.objArrToDyadicArr(this.salesAreaList)
-        },
-        async getProvinceOptions () {
-            await this.findProvinceOptions()
-            this.provinceData = this.provinceOptions.map(i => {
-                return {
-                    label: i.name,
-                    value: i.provinceId,
-                    children: i.cities.map(j => {
-                        return {
-                            label: j.name,
-                            value: j.cityId
-                        }
-                    })
-                }
-            })
-        },
-        async getProductInfo () {
-            await this.findProductInfo({ spuId: this.$route.query.id })
-            await this.getSpecByCategory(this.productInfo.twoCategoryId)
-            this.form = {
-                ...this.productInfo,
-                skuList: this.productInfo.skuList.map(item => {
-                    item.specifications = JSON.parse(item.specifications)
-                    this.priceList = item.ladderPriceList ? item.ladderPriceList : []
-                    this.orderMinCount = item.orderMinCount
-                    this.buyLimit = item.buyLimit
-                    this.orderMaxCount = item.orderMaxCount
-                    item.difference = item.availableStock - item.saleableStock
+                ...this.productSpuInfo,
+                mainSkus: this.productSpuInfo.mainSkus.map(item => {
+                    item.imageUrls = item.imageUrls.join(',')
                     return item
                 }),
-                specTemplate: this.productInfo.specTemplate ? JSON.parse(this.productInfo.specTemplate) : []
+                optionTypeList: this.productSpuInfo.optionTypeList ? this.productSpuInfo.optionTypeList : []
             }
             // TODO: 处理老数据
-            const specifications = this.productInfo.specifications || []
+            const specifications = this.productSpuInfo.specifications || []
             this.form.specifications = deepCopy(this.specifications).map((item, index) => {
                 const itemArr = specifications.filter(sItem => sItem.k == item.k)
                 if (itemArr.length > 0) {
@@ -834,9 +660,7 @@ export default {
                 }
                 return item
             })
-            this.salesAreaList = this.dyadicArrToObjArr(this.productInfo.salesAreaList)
-            this.form.salesAreaList = this.objArrToDyadicArr(this.salesAreaList)
-            this.imgUrls = this.productInfo.imgUrls.split(',')
+            this.imageUrls = this.productSpuInfo.imageUrls
         }
     },
     mounted () {
@@ -929,7 +753,7 @@ export default {
     line-height: 20px;
     color: $grayColor;
     text-align: center;
-    margin-top: 104px;
+    // margin-top: 104px;
 }
 
 .isDisabled {
@@ -996,6 +820,21 @@ export default {
     }
     /deep/ .el-input {
         width: 600px;
+    }
+}
+
+.el-tag {
+    background-color: #ecf5ff;
+    border-color: #d9ecff;
+    color: #409eff;
+
+    /deep/ .el-tag__close {
+        color: #409eff;
+
+        &:hover {
+            color: #fff;
+            background-color: #409eff;
+        }
     }
 }
 </style>

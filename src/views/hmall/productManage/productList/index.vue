@@ -134,7 +134,7 @@ export default {
                 { label: '商品名称', prop: 'name' },
                 { label: '品牌', prop: 'brandName' },
                 { label: '型号', prop: 'model' },
-                { label: '规格', prop: 'optionValue' }
+                { label: '规格', prop: 'optionValues' }
             ]
         },
         tableData () {
@@ -214,10 +214,10 @@ export default {
         },
         // 跳转到修改商品页面
         onEditProduct (row) {
-            if (this.productType === 'SPU') {
-                this.$router.push({ path: '/b2b/product/editProduct', query: { id: row.spuId } })
-            } else if (this.productType === 'SKU') {
-                this.$router.push({ path: '/b2b/product/editProduct', query: { id: row.skuId } })
+            if (this.productType == 'SPU') {
+                this.$router.push({ path: '/b2b/product/editProduct', query: { id: row.id } })
+            } else if (this.productType == 'SKU') {
+                this.$router.push({ path: '/b2b/product/editProduct', query: { id: row.id } })
             }
         },
         // 批量生效

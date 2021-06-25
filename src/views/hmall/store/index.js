@@ -12,6 +12,14 @@ import marketManage from '@/views/hmall/marketManage/store/index'
 import productManage from '@/views/hmall/productManage/store/index'
 import warehouseManage from '@/views/hmall/warehouseManage/store/index'
 
+const state = {
+    userInfo: {},
+    categoryList: []
+}
+const getters = {
+
+}
+
 export default {
     state,
     getters,
