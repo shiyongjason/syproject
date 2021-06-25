@@ -411,10 +411,13 @@ export default class ThreadDetail extends Vue {
 
     @validateForm('threadDetailForm')
     async onUpDateThreadDetail () {
-        console.log(this.threadDetail)
-        await updateThreadDetail(this.threadDetail)
+        const parms = { ...this.threadDetail }
+
+        parms.updateBy = this.userInfo.employeeName
+        parms.createTime = null
+        await updateThreadDetail(parms)
         this.$message.success('保存成功')
-        this.$emit('getDetail', this.threadDetail.id)
+        this.$emit('getDetail', parms.id)
     }
 
     onProvince (key) {
