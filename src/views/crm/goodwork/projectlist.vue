@@ -238,7 +238,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div v-if="isNoMore" style="width: 570px;margin: 10px auto;"><el-divider>没有更多</el-divider></div>
+                        <div v-if="isNoMore" style="width: 80%;margin: 10px auto;"><el-divider>没有更多</el-divider></div>
                     </div>
                 </div>
             </div>
@@ -259,7 +259,7 @@
         </el-dialog>
         <!-- 添加跟进记录 -->
             <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px" :before-close="()=>closeAddRecord()" :close-on-click-modal='false' >
-                <div class="record-layout" style="height:444px">
+                <div class="record-layout" style="height:444px;overflow-y: scroll;">
                     <div class="header-title">
                         <el-radio v-model="flowUpRequest.type" :label="1">当面拜访</el-radio>
                         <el-radio v-model="flowUpRequest.type" :label="2">电话/微信沟通/邮件等</el-radio>
@@ -654,10 +654,10 @@ export default {
         },
         // 关闭新增跟进记录
         closeAddRecord () {
-            this.flowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
             // @ts-ignore
             this.$refs['addFlowUp'].resetFields()
             this.addRecord = false
+            this.flowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
         },
         // 跟进记录
         async getRecords () {
@@ -917,6 +917,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+/deep/::-webkit-scrollbar-thumb {
+    background-color: #d6d1d1 !important;
+}
 .flowup-count{
             display: flex;
             align-items: center;

@@ -38,7 +38,7 @@
                     <div style="margin-top:20px">
                         <b>跟进动态</b>
                     </div>
-                    <div v-if="!recordsData.length" style="width: 600px;margin: 10px auto;"><el-divider>暂无跟进记录</el-divider></div>
+                    <div v-if="!recordsData.length" style="width: 80%;margin: 10px auto;"><el-divider>暂无跟进记录</el-divider></div>
                     <div v-else class="follow-records" ref='records'>
                         <div class="follow-cell" v-for="item in recordsData" :key="item.id">
                             <div class="info"><img :src="userDefault" class="avatar">
@@ -112,7 +112,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div v-if="isNoMore" style="width: 570px;margin: 10px auto;"><el-divider>没有更多</el-divider></div>
+                        <div v-if="isNoMore" style="width: 80%;margin: 10px auto;"><el-divider>没有更多</el-divider></div>
                     </div>
                 </div>
                 <div v-if="radio=='项目信息'" class="project-information">
@@ -190,7 +190,7 @@
             <div class="fixed-btn" v-if="radio=='项目信息'"><h-button type="primary" @click="onUpDateProjectDetail">保存</h-button></div>
             <!-- 添加跟进记录 -->
             <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px" :before-close="()=>closeAddRecord()" :close-on-click-modal='false' >
-                <div class="record-layout" style="height:600px">
+                <div class="record-layout" style="height:600px;overflow-y: scroll">
                     <div class="header-title">
                         <el-radio v-model="flowUpRequest.type" :label="1">当面拜访</el-radio>
                         <el-radio v-model="flowUpRequest.type" :label="2">电话/微信沟通/邮件等</el-radio>
@@ -737,13 +737,10 @@ export default class ProjectList2Detail extends Vue {
     }
     // 关闭新增跟进记录
     closeAddRecord () {
+        // @ts-ignore
+        this.$refs['addFlowUp'].resetFields()
+        this.addRecord = false
         this.flowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
-
-        this.$nextTick(() => {
-            // @ts-ignore
-            this.$refs['addFlowUp'].resetFields()
-            this.addRecord = false
-        })
     }
 
     change (val) {
@@ -845,21 +842,22 @@ export default class ProjectList2Detail extends Vue {
         this.recordsData.map(async (item, index) => {
             if (item.picUrls) {
                 let api:any = []
-                let url = ''
+                let url = []
                 item.picUrls.map(jtem => {
-                    url = jtem
+                    url.push(jtem)
                     api.push(OssFileUtils.getUrl(jtem))
                 })
                 const res = await Promise.all(api)
-                // console.log('🚀 --- this.recordsData.map --- res', res[0])
                 let obj = []
-                res.map(o => {
+                res.map((o, i) => {
                     obj.push({
-                        fileUrl: url,
+                        fileUrl: url[i],
                         fileName: o,
                         tokenUrl: o
                     })
                 })
+                console.log('🚀 --- this.recordsData.map --- obj', obj)
+
                 item.picUrls = obj
             }
         })
