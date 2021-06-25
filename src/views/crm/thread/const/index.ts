@@ -1,8 +1,8 @@
 /** 线索来源 */
 export const THREAD_ORIGIN: { label: string; value: number; }[] = [
-    { label: '好橙工', value: 1 },
-    { label: '享钱', value: 2 },
-    { label: '单分享', value: 3 },
+    // { label: '好橙工', value: 1 },
+    // { label: '享钱', value: 2 },
+    // { label: '单分享', value: 3 },
     { label: 'CRM', value: 4 },
     { label: '第三方渠道', value: 5 }
 ]

@@ -455,7 +455,6 @@ export default class Thread extends Vue {
                     this.threadForm.userMobile = ''
                     this.$message.error('CRM中已有该客户，无需重复添加')
                 }
-                console.log(data)
             }
         })
     }

@@ -187,7 +187,7 @@
                     <div class="header-title">
                         <el-radio v-model="flowUpRequest.type" :label="1">当面拜访</el-radio>
                         <el-radio v-model="flowUpRequest.type" :label="2">电话/微信沟通/邮件等</el-radio>
-                        <p class="tips">温馨提示：推荐使用企业微信与客户聊天，自动更新记录，更方便。</p>
+                        <p v-show="flowUpRequest.type === 2" class="tips">温馨提示：推荐使用企业微信与客户聊天，自动更新记录，更方便。</p>
                     </div>
                     <div style="margin-top:-10px">
                         <el-form :rules="addFlowUpRules" :model="flowUpRequest" ref="addFlowUp" :validate-on-rule-change='false'>
@@ -411,10 +411,13 @@ export default class ThreadDetail extends Vue {
 
     @validateForm('threadDetailForm')
     async onUpDateThreadDetail () {
-        console.log(this.threadDetail)
-        await updateThreadDetail(this.threadDetail)
+        const parms = { ...this.threadDetail }
+
+        parms.updateBy = this.userInfo.employeeName
+        parms.createTime = null
+        await updateThreadDetail(parms)
         this.$message.success('保存成功')
-        this.$emit('getDetail', this.threadDetail.id)
+        this.$emit('getDetail', parms.id)
     }
 
     onProvince (key) {
@@ -484,25 +487,25 @@ export default class ThreadDetail extends Vue {
         this.recordsData.map(async (item, index) => {
             if (item.picUrls) {
                 let api: any = []
-                let url = ''
+                let url = []
                 item.picUrls.map(jtem => {
-                    url = jtem
+                    url.push(jtem)
                     api.push(OssFileUtils.getUrl(jtem))
                 })
                 const res = await Promise.all(api)
-                // console.log('🚀 --- this.recordsData.map --- res', res[0])
                 let obj = []
-                res.map(o => {
+                res.map((o, i) => {
                     obj.push({
-                        fileUrl: url,
+                        fileUrl: url[i],
                         fileName: o,
                         tokenUrl: o
                     })
                 })
+                console.log('🚀 --- this.recordsData.map --- obj', obj)
+
                 item.picUrls = obj
             }
         })
-        console.log(' 🚗 🚕 🚙 🚌 🚎 recordsData', this.recordsData)
     }
 
     recordsScroll (event) {
@@ -545,6 +548,8 @@ export default class ThreadDetail extends Vue {
             })
             query.picUrls = picUrls
         }
+        console.log(this.flowUpRequest.picUrls, 'this.flowUpRequest.picUrls')
+        console.log(query.picUrls, 'query.picUrls')
         query.bizId = this.threadDetail.id.toString()
         console.log(query, 'query')
         await addFlowUp(query)
