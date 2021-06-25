@@ -150,7 +150,7 @@
                     </div>
                     <div class="add-cont__row">
                         <el-form-item label="企业名称：">
-                            <el-input placeholder="请输入企业名称" v-model='threadForm.companyName'></el-input>
+                            <el-input placeholder="请输入企业名称" maxlength="50" v-model='threadForm.companyName'></el-input>
                         </el-form-item>
                     </div>
                     <div class="add-cont__row city-select">
@@ -175,7 +175,7 @@
                     </div>
                     <div class="add-cont__row">
                         <el-form-item label="">
-                            <el-input v-model="threadForm.address" placeholder="请输入详细地址"></el-input>
+                            <el-input v-model="threadForm.address" maxlength="100" placeholder="请输入详细地址"></el-input>
                         </el-form-item>
                     </div>
                     <div class="add-cont__row">
@@ -188,15 +188,7 @@
                     </div>
                     <div class="add-cont__row">
                         <el-form-item label="主营品牌：">
-                            <el-input placeholder="请输入企业名称" v-model='threadForm.deviceBrand'></el-input>
-                        </el-form-item>
-                    </div>
-                    <div class="add-cont__row">
-                        <el-form-item label="">
-                            <div slot="label">所属分部：</div>
-                            <el-select v-model="threadForm.customerDeptName" placeholder="请选择">
-                                <el-option v-for="item in branchArr" :key="item.crmDeptCode" :label="item.deptName" :value="item.deptName"></el-option>
-                            </el-select>
+                            <el-input placeholder="请输入主营品牌" v-model='threadForm.deviceBrand'></el-input>
                         </el-form-item>
                     </div>
                     <div class="add-cont__row">
@@ -215,6 +207,13 @@
                         <div class="query-cont__col">
                             <el-form-item label="客户经理手机号：">
                                 <el-input placeholder="请输入客户经理手机号" v-model='threadForm.customerMobile'></el-input>
+                            </el-form-item>
+                        </div>
+                    </div>
+                    <div class="add-cont__row">
+                        <div class="query-cont__col">
+                            <el-form-item label="所属部门：">
+                                <el-input placeholder="请输入客户经理所属部门" disabled v-model='threadForm.customerDeptName'></el-input>
                             </el-form-item>
                         </div>
                     </div>
@@ -250,7 +249,7 @@ export default class Thread extends Vue {
     @Action('crmmanage/findCrmdeplist') findCrmdeplist: Function
     @Action('vipApply/findContract') findContract: Function
     @Getter('vipApply/contracts') contracts: any
-    @Getter('crmmanage/crmdepList') branchArr: any
+    // @Getter('crmmanage/crmdepList') branchArr: any
     @Ref('distributorForm') readonly distributorRef!: HTMLFormElement;
     @Ref('customerMobile') readonly customerMobileRef!: HTMLFormElement;
     @Ref('threadForm') readonly threadFormRef!: HTMLFormElement;
@@ -446,9 +445,9 @@ export default class Thread extends Vue {
 
     }
 
-    async onGetbranch () {
-        await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
-    }
+    // async onGetbranch () {
+    //     await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
+    // }
 
     async querySearchAsync (queryString, cb) {
         if (queryString) {
@@ -478,6 +477,7 @@ export default class Thread extends Vue {
         this.stateN = item.psnname
         this.threadForm.customerMobile = item.mobile
         this.threadForm.customerName = item.psnname
+        this.threadForm.customerDeptName = item.deptName
     }
 
     dialogCheckChange (item) {
@@ -602,7 +602,7 @@ export default class Thread extends Vue {
 
     async mounted () {
         this.getAreacode()
-        this.onGetbranch()
+        // this.onGetbranch()
         this.findThreadList()
     }
 }
