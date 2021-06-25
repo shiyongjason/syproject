@@ -654,10 +654,10 @@ export default {
         },
         // 关闭新增跟进记录
         closeAddRecord () {
-            this.flowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
             // @ts-ignore
             this.$refs['addFlowUp'].resetFields()
             this.addRecord = false
+            this.flowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
         },
         // 跟进记录
         async getRecords () {
