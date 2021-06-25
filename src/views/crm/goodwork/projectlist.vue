@@ -690,7 +690,7 @@ export default {
             console.log(' 🚗 🚕 🚙 🚌 🚎 recordsData', this.recordsData)
         },
         recordsScroll (event) {
-            if (this.radio === '项目信息') {
+            if (this.radio === '审批记录') {
                 return
             }
             // 滚动距离scrollTop+元素的高clientHeight=文档的高scrollHeight
