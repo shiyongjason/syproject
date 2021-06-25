@@ -41,7 +41,7 @@
                     <div v-if="!recordsData.length" style="width: 80%;margin: 10px auto;"><el-divider>暂无跟进记录</el-divider></div>
                     <div v-else class="follow-records" ref='records'>
                         <div class="follow-cell" v-for="item in recordsData" :key="item.id">
-                            <div class="info"><img :src="userDefault" class="avatar">
+                            <div class="info"><img :src="item.createAvatar||userDefault" class="avatar">
                                 <div class="name-container">
                                     <div class="follow-tag">跟进人</div>
                                     <div class="name">{{item.createBy||'-'}} {{item.createPhone}}</div>
@@ -52,7 +52,7 @@
                                 <div class='line' />
                                 <div class='content'>
                                     <div class='title-tag'>语音通话</div>
-                                    <div class='audio-player-container'>
+                                    <div class='audio-player-container' v-if="item.flowUpDynamic.msgContent&&item.flowUpDynamic.msgContent.osspath">
                                         <div class="crm-audio-player" >
                                             <audio controls>
                                                 <source :src="item.flowUpDynamic.msgContent.osspath" type="audio/mpeg">
@@ -839,6 +839,9 @@ export default class ProjectList2Detail extends Vue {
         const { data: flowUp } = await getFlowUp(this.recordsQuery)
         this.recordsPagination = flowUp.pages
         this.recordsData = [...this.recordsData, ...flowUp.records]
+        if (flowUp.total < this.recordsQuery.pageSize) {
+            this.isNoMore = true
+        }
         this.recordsData.map(async (item, index) => {
             if (item.picUrls) {
                 let api:any = []
