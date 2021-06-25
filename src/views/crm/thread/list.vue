@@ -102,7 +102,8 @@
                     {{deviceCategoryString(slotProps.data.row.deviceCategory)}}
                 </template>
                 <template #customerName="slotProps">
-                    <div>{{slotProps.data.row.customerName}}</div>
+
+                    <div>{{slotProps.data.row.customerName&&slotProps.data.row.customerName.length > 0 ? slotProps.data.row.customerName :'-'}}</div>
                     <div>{{slotProps.data.row.customerMobile}}</div>
                 </template>
                 <template #cityName="slotProps">
@@ -126,10 +127,8 @@
                             </template>
                         </el-autocomplete>
                     </el-form-item>
-                    <el-form-item label="所属分部" prop="customerDeptName">
-                        <el-select v-model="distributorForm.customerDeptName" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.deptName" :value="item.deptName" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
-                        </el-select>
+                    <el-form-item label="所属部门" prop="customerDeptName">
+                        <el-input placeholder="所属部门" disabled v-model='distributorForm.customerDeptName'></el-input>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -141,17 +140,17 @@
                 <el-form :model="threadForm" :rules="rules" ref="threadForm" label-width="130px">
                     <div class="add-cont__row">
                         <el-form-item prop='userMobile' label="客户手机号：">
-                            <el-input placeholder="请输入客户手机号" v-model='threadForm.userMobile'></el-input>
+                            <el-input placeholder="请输入客户手机号" maxlength="11" v-model='threadForm.userMobile'></el-input>
                         </el-form-item>
                     </div>
                     <div class="add-cont__row">
                         <el-form-item prop='userName' label="客户姓名：">
-                            <el-input placeholder="请输入客户姓名" v-model='threadForm.userName'></el-input>
+                            <el-input placeholder="请输入客户姓名" maxlength="20" v-model='threadForm.userName'></el-input>
                         </el-form-item>
                     </div>
                     <div class="add-cont__row">
                         <el-form-item label="企业名称：">
-                            <el-input placeholder="请输入企业名称" v-model='threadForm.companyName'></el-input>
+                            <el-input placeholder="请输入企业名称" maxlength="50" v-model='threadForm.companyName'></el-input>
                         </el-form-item>
                     </div>
                     <div class="add-cont__row city-select">
@@ -176,7 +175,7 @@
                     </div>
                     <div class="add-cont__row">
                         <el-form-item label="">
-                            <el-input v-model="threadForm.address" placeholder="请输入详细地址"></el-input>
+                            <el-input v-model="threadForm.address" maxlength="100" placeholder="请输入详细地址"></el-input>
                         </el-form-item>
                     </div>
                     <div class="add-cont__row">
@@ -189,15 +188,7 @@
                     </div>
                     <div class="add-cont__row">
                         <el-form-item label="主营品牌：">
-                            <el-input placeholder="请输入企业名称" v-model='threadForm.deviceBrand'></el-input>
-                        </el-form-item>
-                    </div>
-                    <div class="add-cont__row">
-                        <el-form-item label="">
-                            <div slot="label">所属分部：</div>
-                            <el-select v-model="threadForm.customerDeptName" placeholder="请选择">
-                                <el-option v-for="item in branchArr" :key="item.crmDeptCode" :label="item.deptName" :value="item.deptName"></el-option>
-                            </el-select>
+                            <el-input placeholder="请输入主营品牌" v-model='threadForm.deviceBrand'></el-input>
                         </el-form-item>
                     </div>
                     <div class="add-cont__row">
@@ -216,6 +207,13 @@
                         <div class="query-cont__col">
                             <el-form-item label="客户经理手机号：">
                                 <el-input placeholder="请输入客户经理手机号" v-model='threadForm.customerMobile'></el-input>
+                            </el-form-item>
+                        </div>
+                    </div>
+                    <div class="add-cont__row">
+                        <div class="query-cont__col">
+                            <el-form-item label="所属部门：">
+                                <el-input placeholder="请输入客户经理所属部门" disabled v-model='threadForm.customerDeptName'></el-input>
                             </el-form-item>
                         </div>
                     </div>
@@ -238,6 +236,7 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { ThreadQeuryModel } from './const/model'
 import { THREAD_ORIGIN, DEVICE_CATEGORY } from './const/index'
 import { Clue, RespBossCluePage } from '@/interface/hbp-member'
+import { Phone } from '@/utils/rules'
 
 @Component({
     name: 'Thread',
@@ -250,7 +249,7 @@ export default class Thread extends Vue {
     @Action('crmmanage/findCrmdeplist') findCrmdeplist: Function
     @Action('vipApply/findContract') findContract: Function
     @Getter('vipApply/contracts') contracts: any
-    @Getter('crmmanage/crmdepList') branchArr: any
+    // @Getter('crmmanage/crmdepList') branchArr: any
     @Ref('distributorForm') readonly distributorRef!: HTMLFormElement;
     @Ref('customerMobile') readonly customerMobileRef!: HTMLFormElement;
     @Ref('threadForm') readonly threadFormRef!: HTMLFormElement;
@@ -301,7 +300,7 @@ export default class Thread extends Vue {
         { label: '客户姓名', prop: 'userName', width: '120' },
         { label: '企业名称', prop: 'companyName', width: '200' },
         { label: '创建人', prop: 'createBy', width: '120' },
-        { label: '创建时间', prop: 'createTime', width: '120', displayAs: 'YYYY-MM-DD' },
+        { label: '创建时间', prop: 'createTime', width: '130', displayAs: 'YYYY-MM-DD HH:mm' },
         { label: '所在城市', prop: 'cityName', slot: 'cityName', width: '120' },
         { label: '所属分部', prop: 'customerDeptName', width: '120' },
         { label: '主营品牌', prop: 'deviceBrand', width: '120' },
@@ -316,7 +315,8 @@ export default class Thread extends Vue {
             { required: true, message: '请选择分部', trigger: 'change' }
         ],
         userMobile: [
-            { required: true, message: '请输入客户手机', trigger: 'blur' }
+            { required: true, message: '请输入客户手机', trigger: 'blur' },
+            { validator: Phone, message: '请输入正确手机号', trigger: 'blur' }
         ],
         userName: [
             { required: true, message: '请输入客户姓名', trigger: 'blur' }
@@ -369,7 +369,7 @@ export default class Thread extends Vue {
 
     get getCityString () {
         return (row: Clue) => {
-            if (row) {
+            if (row.provinceName && row.cityName) {
                 return row.provinceName + row.cityName
             }
             return '-'
@@ -445,9 +445,9 @@ export default class Thread extends Vue {
 
     }
 
-    async onGetbranch () {
-        await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
-    }
+    // async onGetbranch () {
+    //     await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
+    // }
 
     async querySearchAsync (queryString, cb) {
         if (queryString) {
@@ -470,12 +470,14 @@ export default class Thread extends Vue {
         this.stateN = item.psnname
         this.distributorForm.customerMobile = item.mobile
         this.distributorForm.customerName = item.psnname
+        this.distributorForm.customerDeptName = item.deptName
     }
 
     handleThreadSelect (item) {
         this.stateN = item.psnname
         this.threadForm.customerMobile = item.mobile
         this.threadForm.customerName = item.psnname
+        this.threadForm.customerDeptName = item.deptName
     }
 
     dialogCheckChange (item) {
@@ -546,7 +548,7 @@ export default class Thread extends Vue {
                     this.clearthreadFormData()
                     this.isloading = false
                     this.$message({
-                        message: `销售分配成功`,
+                        message: `保存线索成功`,
                         type: 'success'
                     })
                     this.findThreadList()
@@ -600,7 +602,7 @@ export default class Thread extends Vue {
 
     async mounted () {
         this.getAreacode()
-        this.onGetbranch()
+        // this.onGetbranch()
         this.findThreadList()
     }
 }
