@@ -167,7 +167,7 @@
                     <div v-if="!recordsData.length" style="width: 600px;margin: 10px auto;"><el-divider>暂无跟进记录</el-divider></div>
                     <div v-else class="follow-records" ref='records'>
                         <div class="follow-cell" v-for="(item,index) in recordsData" :key="index">
-                            <div class="info"><img :src="userDefault" class="avatar">
+                            <div class="info"><img :src="item.createAvatar||userDefault" class="avatar">
                                 <div class="name-container">
                                     <div class="follow-tag">跟进人</div>
                                     <div class="name">{{item.createBy||'-'}} {{item.createPhone}}</div>
