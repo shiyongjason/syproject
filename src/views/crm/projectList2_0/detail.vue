@@ -839,6 +839,9 @@ export default class ProjectList2Detail extends Vue {
         const { data: flowUp } = await getFlowUp(this.recordsQuery)
         this.recordsPagination = flowUp.pages
         this.recordsData = [...this.recordsData, ...flowUp.records]
+        if (flowUp.total < this.recordsQuery.pageSize) {
+            this.isNoMore = true
+        }
         this.recordsData.map(async (item, index) => {
             if (item.picUrls) {
                 let api:any = []
