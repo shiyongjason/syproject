@@ -207,7 +207,7 @@
 
                         <div class="query-cont__col">
                             <el-form-item label="客户经理手机号：">
-                                <el-input placeholder="请输入客户经理手机号" v-model='threadForm.customerMobile'></el-input>
+                                <el-input placeholder="请输入客户经理手机号" disabled v-model='threadForm.customerMobile'></el-input>
                             </el-form-item>
                         </div>
                     </div>
