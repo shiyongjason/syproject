@@ -133,7 +133,7 @@
                 </div>
             </template>
         </div>
-        <el-dialog title="客户基本信息" :close-on-click-modal='false' :visible.sync="editBaseInfoVisible" width="750px" :before-close="handleHidden" :modal='false'>
+        <el-dialog v-if="editBaseInfoVisible" title="客户基本信息" :close-on-click-modal='false' :visible.sync="editBaseInfoVisible" width="750px" :before-close="handleHidden" :modal='false'>
             <div class="dialog-ctx reviewResolution">
                 <div class="reviewResolutionForm-title" style="marginTop:0px">
                     企业信息：
