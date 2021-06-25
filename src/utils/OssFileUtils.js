@@ -115,7 +115,6 @@ export default {
      * @returns {Promise<string>}
      */
     async getUrl (url) {
-        console.log('🚀 --- getUrl --- url', url)
         if (url && url.indexOf(ossOldBucket + '.') > -1) {
             return url
         }
