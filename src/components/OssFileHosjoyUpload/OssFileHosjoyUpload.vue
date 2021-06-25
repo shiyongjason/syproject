@@ -227,11 +227,13 @@ export default {
                     let tokenUrl = await OssFileUtils.getUrl(item.fileUrl)
                     this.previewSrcList.push(tokenUrl)
                 })
-                const pre = this.$refs[`preview_${index}`]
-                if (pre && pre[0]) {
-                    console.log(pre[0])
-                    pre[0].clickHandler()
-                }
+                setTimeout(() => {
+                    const pre = this.$refs[`preview_${index}`]
+                    if (pre && pre[0]) {
+                        console.log(pre[0])
+                        pre[0].clickHandler()
+                    }
+                }, 0)
             } else {
                 let url = await OssFileUtils.getUrl(item.fileUrl)
                 window.open(url)
