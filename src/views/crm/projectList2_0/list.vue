@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <div class="query-cont__row">
                 <div class="query-cont__col">
-                    <div class="query-col__label">管理员机号：</div>
+                    <div class="query-col__label">管理员手机：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.adminPhoneNumber" placeholder="请输入管理员手机号" maxlength="13" clearable></el-input>
                     </div>
@@ -74,7 +74,7 @@
                     </h-button>
                 </div>
             </div>
-            <el-tag size="medium" class="eltagtop">已筛选 {{statistics.totalProjectNum||'-'}} 项, 项目数 {{statistics.totalProjectNum||'-'}} 个；已签约 {{statistics.totalSignedNum||'-'}} 个；已回款 {{statistics.totalRefundNum||'-'}} 个， 已回款金额 {{fundMoneys(statistics.totalRefundAmount)}} 元 </el-tag>
+            <el-tag size="medium" class="eltagtop">已筛选 {{statistics.totalProjectNum}} 项, 项目数 {{statistics.totalProjectNum}} 个；已签约 {{statistics.totalSignedNum}} 个；已回款 {{statistics.totalRefundNum}} 个， 已回款金额 {{fundMoneys(statistics.totalRefundAmount)}} 元 </el-tag>
             <hosJoyTable ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList"
                 actionWidth='200' isAction :isActionFixed='tableData&&tableData.length>0' >
                 <template #action="slotProps">
