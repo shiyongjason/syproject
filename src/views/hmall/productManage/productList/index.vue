@@ -84,8 +84,7 @@
     </div>
 </template>
 <script>
-// import requestDownload from '@/utils/download'
-// import { interfaceUrl, uploadUrl } from '@/api/config'
+import { B2bUrl } from '@/api/config'
 import { mapState, mapActions } from 'vuex'
 import { clearCache, newCache } from '@/utils/index'
 import { PRODUCT_STATUS } from '../const/index'
@@ -215,9 +214,9 @@ export default {
         // 跳转到修改商品页面
         onEditProduct (row) {
             if (this.productType == 'SPU') {
-                this.$router.push({ path: '/b2b/product/editProduct', query: { id: row.id } })
+                this.$router.push({ path: '/b2b/product/createProduct', query: { id: row.id } })
             } else if (this.productType == 'SKU') {
-                this.$router.push({ path: '/b2b/product/editProduct', query: { id: row.id } })
+                this.$router.push({ path: '/b2b/product/createProduct', query: { id: row.id } })
             }
         },
         // 批量生效
@@ -225,7 +224,7 @@ export default {
             batchOperator(multiSelection || this.multiSelection, async (multiSelection) => {
                 try {
                     await this.batchEfficacy(multiSelection)
-                    this.$message.success('商品设置失效成功！')
+                    this.$message.success('商品设置生效成功！')
                     this.getProductSpuList()
                 } catch (error) {
                     this.getProductSpuList()
@@ -239,7 +238,7 @@ export default {
         // 生效sku
         async onEffectiveSku (row) {
             await this.effectiveSKU({ id: row.id })
-            this.$message.success('商品设置失效成功！')
+            this.$message.success('商品设置生效成功！')
             this.getProductSkuList()
         },
         // 批量失效
@@ -247,7 +246,7 @@ export default {
             batchOperator(multiSelection || this.multiSelection, async (multiSelection) => {
                 try {
                     await this.batchEfficacy(multiSelection)
-                    this.$message.success('商品设置生效成功！')
+                    this.$message.success('商品设置失效成功！')
                     this.getProductSpuList()
                 } catch (error) {
                     this.getProductSpuList()
@@ -261,7 +260,7 @@ export default {
         // 失效sku
         async onEfficacySku (row) {
             await this.efficacySKU({ id: row.id })
-            this.$message.success('商品设置生效成功！')
+            this.$message.success('商品设置失效成功！')
             this.getProductSkuList()
         },
         // 批量删除
@@ -292,7 +291,7 @@ export default {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消'
             }).then(async () => {
-                await this.deleteSKU([{ id: row.id }])
+                await this.deleteSKU({ id: row.id })
                 this.$message.success('商品删除成功！')
                 this.getProductSkuList()
             }).catch(() => { })
@@ -317,29 +316,21 @@ export default {
             this.productType == 'SPU' ? this.getProductSpuList() : this.getProductSkuList()
         },
         onExport () {
-            if (this.productType == 'SPU') {
-                if (this.tableDataSpu.length <= 0) {
-                    this.$message.warning('无商品可导出！')
-                } else {
-                    requestDownload({
-                        url: interfaceUrl + 'product/api/spu/page/export',
-                        method: 'get',
-                        data: {
-                            ...this.queryParams
-                        }
-                    })
-                }
+            if (this.tableData.length <= 0) {
+                this.$message.warning('无商品可导出！')
             } else {
-                if (this.tableDataSku.length <= 0) {
-                    this.$message.warning('无商品可导出！')
+                if (this.productType == 'SPU') {
+                    let url = ''
+                    for (let key in this.queryParams) {
+                        url += (key + '=' + this.queryParams[key] + '&')
+                    }
+                    location.href = B2bUrl + 'product/boss/main-spu/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
                 } else {
-                    requestDownload({
-                        url: interfaceUrl + 'product/api/sku/page/export',
-                        method: 'get',
-                        data: {
-                            ...this.queryParams
-                        }
-                    })
+                    let url = ''
+                    for (let key in this.queryParams) {
+                        url += (key + '=' + this.queryParams[key] + '&')
+                    }
+                    location.href = B2bUrl + 'product/boss/main-sku/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
                 }
             }
         },
@@ -385,7 +376,7 @@ export default {
         next()
     },
     beforeRouteLeave (to, from, next) {
-        if (!(to.name == 'editProduct' || to.name == 'editSku')) {
+        if (!(to.name == 'createProduct')) {
             clearCache('productList')
         }
         next()

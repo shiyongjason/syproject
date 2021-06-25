@@ -126,7 +126,7 @@ const actions = {
         await instance.patch('/product/boss/main-spu/batch-disable', params)
     },
     async batchDelete ({ commit }, params) {
-        await instance.delete('/product/boss/main-spu', params)
+        await instance.delete('/product/boss/main-spu', { data: params })
     },
     async effectiveSKU ({ commit }, params) {
         await instance.patch(`/product/boss/main-sku/${params.id}/enable`, params)

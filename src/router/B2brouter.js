@@ -63,18 +63,8 @@ export default [
                             title: '商品创建/修改',
                             tagName: '商品创建/修改',
                             isMenu: false,
-                            icon: ''
-                        },
-                        component: () => import('@/views/hmall/productManage/productList/createProduct.vue')
-                    },
-                    {
-                        path: 'editProduct',
-                        name: 'editProduct',
-                        meta: {
-                            title: '商品创建/修改',
-                            tagName: '商品创建/修改',
-                            isMenu: false,
-                            icon: ''
+                            icon: '',
+                            showMenuAs: '/b2b/product/productList'
                         },
                         component: () => import('@/views/hmall/productManage/productList/createProduct.vue')
                     },

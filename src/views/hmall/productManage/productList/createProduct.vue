@@ -1,7 +1,7 @@
 <template>
     <div class="page-body B2b">
         <div class="page-body-cont">
-            <el-form ref="form" :model="form" :rules="rules" label-width="auto">
+            <el-form ref="form" :model="form" :rules="rules" label-width="150px">
                 <!-- <p class="mb20" v-if='form.auditOpinion'>审核不通过原因: <span class="red-word">{{form.auditOpinion}}</span></p> -->
                 <div class="title-cont">
                     <span class="title-cont__label">商品基本信息</span>
@@ -77,7 +77,7 @@
                         <div class="sku-cont_group mb20" v-for="(item,index) in form.optionTypeList" :key="index">
                             <div class="group-spec_label">
                                 <el-form-item label="规格名：">
-                                    <el-input v-model="item.name" @change="onAddOption(item.name,index)" maxlength="20" placeholder="请输入规格名"></el-input>
+                                    <el-input v-model="item.name" @change="onAddOption(item.name,index)" maxlength="10" placeholder="请输入规格名"></el-input>
                                 </el-form-item>
                             </div>
                             <div class="group-spec_tags mt20">
@@ -300,11 +300,6 @@ export default {
         }
     },
     watch: {
-        'form.brandName' (value) {
-            if (value == '') {
-                this.form.brandId = ''
-            }
-        },
         'form.imgUrls' (value) {
             if (value > 0) {
                 this.$refs.imgUrls.clearValidate()
@@ -354,7 +349,7 @@ export default {
         }
     },
     methods: {
-        async init () {
+        init () {
             this.getBrandOptions()
             this.getCategoryOptions()
             this.getModelOptions()
@@ -409,7 +404,7 @@ export default {
                     if (this.productUnique) {
                         await this.getProductInfo(this.productUnique)
                     }
-                    this.form.name = this.form.brandName + this.form.model + this.form.name
+                    this.form.name = this.form.name
                 }
             })
         },
@@ -434,6 +429,10 @@ export default {
         },
         onAddOptionTemplate () {
             this.form.optionTypeList.push({ id: '', name: '', optionValues: [] })
+            if (!this.form.optionTypeList.length) {
+                this.form.mainSkus = [{}]
+            }
+            console.log(this.form.mainSkus)
         },
         onDelOptionTemplate (index) {
             this.form.optionTypeList.splice(index, 1)
@@ -527,11 +526,8 @@ export default {
                     try {
                         if (this.$route.query.id) {
                             await this.editProduct(form)
-                            // if (this.$route.query.from == 'stepPrice') {
-                            //     this.$router.push('/price/stepPrice')
-                            // } else {
-                            //     this.$router.push('/goods/productList')
-                            // }
+                            this.$router.push('/b2b/product/productList')
+                            this.setNewTags((this.$route.fullPath).split('?')[0])
                         } else {
                             form.id = ''
                             await this.createProduct(form)
@@ -597,6 +593,7 @@ export default {
             this.form = {
                 ...this.productSpuInfo,
                 mainSkus: this.productSpuInfo.mainSkus.map(item => {
+                    console.log(item.imageUrls.join(','))
                     item.imageUrls = item.imageUrls.join(',')
                     return item
                 }),
@@ -620,9 +617,6 @@ export default {
     beforeRouteLeave (to, from, next) {
         if (to.name != 'productList') {
             clearCache('productList')
-        }
-        if (to.name != 'stepPrice') {
-            clearCache('stepPrice')
         }
         next()
     }
@@ -695,6 +689,10 @@ export default {
             background: $hosjoyColorActive;
         }
     }
+}
+
+.picture-content {
+    line-height: 20px;
 }
 
 .isDefault {

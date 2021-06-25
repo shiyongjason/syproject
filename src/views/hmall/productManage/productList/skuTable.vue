@@ -29,6 +29,9 @@
                         <span class="tr-label">体积/m³</span>
                     </td>
                     <td>
+                        <span class="tr-label">SKU编码</span>
+                    </td>
+                    <td v-if="$route.query.id">
                         <span class="tr-label">状态</span>
                     </td>
                     <td>
@@ -40,7 +43,7 @@
                 <tr v-for="(item,index) in form.mainSkus" :key="index">
                     <template v-for="(sItem,sIndex) in item.optionValues">
                         <td :key="sIndex">
-                            <el-select v-model="sItem.id" @change="onChangeValue(index,sIndex)" clearable>
+                            <el-select v-model="sItem.id" @change="onChangeValue(index,sIndex)" clearable :disabled="item.disabled">
                                 <el-option v-for="i in optionValuesFilter(sItem.optionTypeId)" :key="i.id" :label="i.name" :value="i.id"></el-option>
                             </el-select>
                         </td>
@@ -52,37 +55,43 @@
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.serialNumber" maxlength="16"></el-input>
+                            <el-input v-model="item.serialNumber" maxlength="16" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
                     <td class="log-width">
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.length" maxlength="16"></el-input>
-                            <el-input v-model="item.width" maxlength="16"></el-input>
-                            <el-input v-model="item.height" maxlength="16"></el-input>
+                            <el-input v-model="item.length" maxlength="16" :disabled="item.disabled"></el-input>
+                            <el-input v-model="item.width" maxlength="16" :disabled="item.disabled"></el-input>
+                            <el-input v-model="item.height" maxlength="16" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.grossWeight" maxlength="8"></el-input>
+                            <el-input v-model="item.grossWeight" maxlength="8" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.volume" maxlength="8"></el-input>
+                            <el-input v-model="item.volume" maxlength="8" :disabled="item.disabled"></el-input>
                         </el-form-item>
+                    </td>
+                    <td v-if="$route.query.id">
+                        <span>{{item.mainSkuCode || '-' }}</span>
+                    </td>
+                    <td>
+                        <span>{{checkStatus(item.enabled,item.auditStatus)}}</span>
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-                            <span>{{checkStatus(item.enabled,item.auditStatus)}}</span>
-                        </el-form-item>
-                    </td>
-                    <td>
-                        <el-form-item label-width='0'>
-                            <h-button table v-if="item.auditStatus && !item.enabled">生效</h-button>
-                            <h-button table v-if="item.enabled">失效</h-button>
-                            <h-button table v-if="!item.enabled">编辑</h-button>
-                            <h-button table @click="onDelSKU(index)">删除</h-button>
+                            <template v-if="item.auditStatus == 1">
+                                <h-button table @click="onEfficacySku(item)" v-if="item.enabled">失效</h-button>
+                                <h-button table @click="onEffectiveSku(item)" v-if="!item.enabled">生效</h-button>
+                                <h-button table @click="onEditSku(index)" v-if="!item.enabled">编辑</h-button>
+                            </template>
+                            <template v-else>
+                                <h-button table @click="onEditSku(index)">编辑</h-button>
+                                <h-button table @click="onDelSku(index)">删除</h-button>
+                            </template>
                         </el-form-item>
                     </td>
                 </tr>
@@ -92,6 +101,7 @@
 </template>
 <script>
 import { interfaceUrl } from '@/api/config'
+import { mapActions } from 'vuex'
 export default {
     name: 'skuTable',
     props: {
@@ -128,7 +138,7 @@ export default {
                 ]
             },
             rules: {
-                imgUrls: [
+                imageUrls: [
                     { required: true, message: '请上传图片', trigger: 'change' }
                 ],
                 sellPrice: [
@@ -217,6 +227,10 @@ export default {
             immediate: true,
             handler (val) {
                 this.form = val
+                this.form.mainSkus.map(item => {
+                    item.disabled = !!(item.auditStatus == 0 || item.auditStatus == 1 || item.auditStatus == 2)
+                    return item
+                })
             }
         }
     },
@@ -239,8 +253,6 @@ export default {
             this.form.mainSkus.map((item, index) => {
                 if (command == 'imageUrls') {
                     this.$set(this.form.mainSkus[index], 'imageUrls', this.params.skuImgurl)
-                } else {
-                    this.$set(this.form.mainSkus[index], command, this.params[command])
                 }
             })
         },
@@ -255,8 +267,26 @@ export default {
                 return '-'
             }
         },
-        onDelSKU (index) {
-            this.form.mainSkus.splice(index, 1)
+        // 生效sku
+        async onEffectiveSku (row) {
+            await this.effectiveSKU({ id: row.mainSkuId })
+            this.$message.success('商品设置生效成功！')
+        },
+        // 失效sku
+        async onEfficacySku (row) {
+            await this.efficacySKU({ id: row.mainSkuId })
+            this.$message.success('商品设置失效成功！')
+        },
+        onEditSku (index) {
+            this.form.mainSkus[index].disabled = !this.form.mainSkus[index].disabled
+        },
+        onDelSku (index) {
+            this.$confirm('是否确认删除该SKU?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消'
+            }).then(async () => {
+                this.form.mainSkus.splice(index, 1)
+            }).catch(() => { })
         },
         onChangeValue (index, sIndex) {
             this.form.mainSkus[index].optionValues[sIndex].name = this.changeValue(this.form.mainSkus[index].optionValues[sIndex].optionTypeId, this.form.mainSkus[index].optionValues[sIndex].id)
@@ -264,7 +294,12 @@ export default {
         changeValue (optionTypeId, id) {
             const result = this.form.optionTypeList.filter(item => item.id == optionTypeId)[0].optionValues.filter(item => item.id == id)
             return result.length > 0 ? result[0].name : {}
-        }
+        },
+        ...mapActions({
+            effectiveSKU: 'productManage/effectiveSKU',
+            efficacySKU: 'productManage/efficacySKU'
+        })
+
     },
     mounted () {
         this.$emit('update:formData', this.form)
