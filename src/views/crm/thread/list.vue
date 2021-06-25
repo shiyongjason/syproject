@@ -126,10 +126,8 @@
                             </template>
                         </el-autocomplete>
                     </el-form-item>
-                    <el-form-item label="所属分部" prop="customerDeptName">
-                        <el-select v-model="distributorForm.customerDeptName" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.deptName" :value="item.deptName" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
-                        </el-select>
+                    <el-form-item label="所属部门" prop="customerDeptName">
+                        <el-input placeholder="所属部门" disabled v-model='distributorForm.customerDeptName'></el-input>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -470,6 +468,7 @@ export default class Thread extends Vue {
         this.stateN = item.psnname
         this.distributorForm.customerMobile = item.mobile
         this.distributorForm.customerName = item.psnname
+        this.distributorForm.customerDeptName = item.deptName
     }
 
     handleThreadSelect (item) {
