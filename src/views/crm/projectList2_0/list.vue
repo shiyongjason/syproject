@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <div class="query-cont__row">
                 <div class="query-cont__col">
-                    <div class="query-col__label">管理员机号：</div>
+                    <div class="query-col__label">管理员手机：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.adminPhoneNumber" placeholder="请输入管理员手机号" maxlength="13" clearable></el-input>
                     </div>
