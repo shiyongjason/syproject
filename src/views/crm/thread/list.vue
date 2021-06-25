@@ -102,7 +102,8 @@
                     {{deviceCategoryString(slotProps.data.row.deviceCategory)}}
                 </template>
                 <template #customerName="slotProps">
-                    <div>{{slotProps.data.row.customerName}}</div>
+
+                    <div>{{slotProps.data.row.customerName&&slotProps.data.row.customerName.length > 0 ? slotProps.data.row.customerName :'-'}}</div>
                     <div>{{slotProps.data.row.customerMobile}}</div>
                 </template>
                 <template #cityName="slotProps">
@@ -299,7 +300,7 @@ export default class Thread extends Vue {
         { label: '客户姓名', prop: 'userName', width: '120' },
         { label: '企业名称', prop: 'companyName', width: '200' },
         { label: '创建人', prop: 'createBy', width: '120' },
-        { label: '创建时间', prop: 'createTime', width: '120', displayAs: 'YYYY-MM-DD' },
+        { label: '创建时间', prop: 'createTime', width: '130', displayAs: 'YYYY-MM-DD HH:mm' },
         { label: '所在城市', prop: 'cityName', slot: 'cityName', width: '120' },
         { label: '所属分部', prop: 'customerDeptName', width: '120' },
         { label: '主营品牌', prop: 'deviceBrand', width: '120' },
