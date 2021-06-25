@@ -140,12 +140,12 @@
                 <el-form :model="threadForm" :rules="rules" ref="threadForm" label-width="130px">
                     <div class="add-cont__row">
                         <el-form-item prop='userMobile' label="客户手机号：">
-                            <el-input placeholder="请输入客户手机号" v-model='threadForm.userMobile'></el-input>
+                            <el-input placeholder="请输入客户手机号" maxlength="11" v-model='threadForm.userMobile'></el-input>
                         </el-form-item>
                     </div>
                     <div class="add-cont__row">
                         <el-form-item prop='userName' label="客户姓名：">
-                            <el-input placeholder="请输入客户姓名" v-model='threadForm.userName'></el-input>
+                            <el-input placeholder="请输入客户姓名" maxlength="20" v-model='threadForm.userName'></el-input>
                         </el-form-item>
                     </div>
                     <div class="add-cont__row">
@@ -237,6 +237,7 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { ThreadQeuryModel } from './const/model'
 import { THREAD_ORIGIN, DEVICE_CATEGORY } from './const/index'
 import { Clue, RespBossCluePage } from '@/interface/hbp-member'
+import { Phone } from '@/utils/rules'
 
 @Component({
     name: 'Thread',
@@ -315,7 +316,8 @@ export default class Thread extends Vue {
             { required: true, message: '请选择分部', trigger: 'change' }
         ],
         userMobile: [
-            { required: true, message: '请输入客户手机', trigger: 'blur' }
+            { required: true, message: '请输入客户手机', trigger: 'blur' },
+            { validator: Phone, message: '请输入正确手机号', trigger: 'blur' }
         ],
         userName: [
             { required: true, message: '请输入客户姓名', trigger: 'blur' }
@@ -546,7 +548,7 @@ export default class Thread extends Vue {
                     this.clearthreadFormData()
                     this.isloading = false
                     this.$message({
-                        message: `销售分配成功`,
+                        message: `保存线索成功`,
                         type: 'success'
                     })
                     this.findThreadList()
