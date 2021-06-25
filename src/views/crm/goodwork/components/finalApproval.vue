@@ -133,7 +133,7 @@
                 </div>
             </template>
         </div>
-        <el-dialog title="客户基本信息" :close-on-click-modal='false' :visible.sync="editBaseInfoVisible" width="750px" :before-close="handleHidden" :modal='false'>
+        <el-dialog v-if="editBaseInfoVisible" title="客户基本信息" :close-on-click-modal='false' :visible.sync="editBaseInfoVisible" width="750px" :before-close="handleHidden" :modal='false'>
             <div class="dialog-ctx reviewResolution">
                 <div class="reviewResolutionForm-title" style="marginTop:0px">
                     企业信息：
@@ -767,7 +767,7 @@ export default class FinalApproval extends Vue {
         this.purchaseConclusionVisible = true
         const { data } = await getResolutions(this.finalFormID)
         this.purForm = { ...this.purForm, ...data }
-        this.tableForm = data.resolutionPurchaseList
+        this.tableForm = data.resolutionPurchaseList || []
     }
 
     handleClose () {
