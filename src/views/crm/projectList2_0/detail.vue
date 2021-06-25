@@ -38,7 +38,7 @@
                     <div style="margin-top:20px">
                         <b>跟进动态</b>
                     </div>
-                    <div v-if="!recordsData.length" style="width: 600px;margin: 10px auto;"><el-divider>暂无跟进记录</el-divider></div>
+                    <div v-if="!recordsData.length" style="width: 80%;margin: 10px auto;"><el-divider>暂无跟进记录</el-divider></div>
                     <div v-else class="follow-records" ref='records'>
                         <div class="follow-cell" v-for="item in recordsData" :key="item.id">
                             <div class="info"><img :src="userDefault" class="avatar">
@@ -46,7 +46,7 @@
                                     <div class="follow-tag">跟进人</div>
                                     <div class="name">{{item.createBy||'-'}} {{item.createPhone}}</div>
                                 </div>
-                                <div class="time">{{item.createTime|formatDate('YYYY/MM/DD a h:mm:ss')}}</div>
+                                <div class="time">{{item.createTime|formatDate('YYYY/MM/DD HH:mm:ss')}}</div>
                             </div>
                             <div class="content-container" v-if="item.flowUpDynamic&&item.flowUpDynamic.msgType === 'meeting_voice_call'">
                                 <div class='line' />
@@ -98,7 +98,7 @@
                                         <div class='desc'  v-if="item.projectSupplyFlowUp.noNeedFlowReason">{{item.projectSupplyFlowUp.noNeedFlowReason||'-'}}</div>
                                     </template>
                                     <div class="title-tag" v-if="item.nextFlowTime">下次跟进时间</div>
-                                    <div class="desc" v-if="item.nextFlowTime">{{item.nextFlowTime | formatDate('YYYY年MM月DD日 HH:mm')}}</div>
+                                    <div class="desc" v-if="item.nextFlowTime">{{item.nextFlowTime | formatDate('YYYY/MM/DD HH:mm')}}</div>
                                     <template v-if="item.customerBackLogWorks&&item.customerBackLogWorks.length">
                                         <div class="title-tag" >邀请同事协助</div>
                                         <div class="desc" v-for="w in item.customerBackLogWorks" :key="w.id">{{w.assignedUserName}} {{w.assignedUserMobile}}</div>
@@ -112,7 +112,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div v-if="isNoMore" style="width: 570px;margin: 10px auto;"><el-divider>没有更多</el-divider></div>
+                        <div v-if="isNoMore" style="width: 80%;margin: 10px auto;"><el-divider>没有更多</el-divider></div>
                     </div>
                 </div>
                 <div v-if="radio=='项目信息'" class="project-information">
@@ -190,11 +190,11 @@
             <div class="fixed-btn" v-if="radio=='项目信息'"><h-button type="primary" @click="onUpDateProjectDetail">保存</h-button></div>
             <!-- 添加跟进记录 -->
             <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px" :before-close="()=>closeAddRecord()" :close-on-click-modal='false' >
-                <div class="record-layout" style="height:600px">
+                <div class="record-layout" style="height:600px;overflow-y: scroll">
                     <div class="header-title">
                         <el-radio v-model="flowUpRequest.type" :label="1">当面拜访</el-radio>
                         <el-radio v-model="flowUpRequest.type" :label="2">电话/微信沟通/邮件等</el-radio>
-                        <p class="tips">温馨提示：推荐使用企业微信与客户聊天，自动更新记录，更方便。</p>
+                        <p class="tips" v-if="flowUpRequest.type==2">温馨提示：推荐使用企业微信与客户聊天，自动更新记录，更方便。</p>
                     </div>
                     <div style="margin-top:-10px">
                         <el-form :rules="addFlowUpRules" :model="flowUpRequest" ref="addFlowUp" :validate-on-rule-change='false' v-if="reCreate">
@@ -737,13 +737,10 @@ export default class ProjectList2Detail extends Vue {
     }
     // 关闭新增跟进记录
     closeAddRecord () {
+        // @ts-ignore
+        this.$refs['addFlowUp'].resetFields()
+        this.addRecord = false
         this.flowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
-
-        this.$nextTick(() => {
-            // @ts-ignore
-            this.$refs['addFlowUp'].resetFields()
-            this.addRecord = false
-        })
     }
 
     change (val) {

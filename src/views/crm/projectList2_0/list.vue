@@ -472,7 +472,7 @@ export default class ProjectList2 extends Vue {
             width: '200',
             render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
                 return (
-                    <span onClick={() => this.onClickLink(scope)} style="color:skyBlue">{scope.row.companyName}</span>
+                    <span onClick={() => this.onClickLink(scope)} style="color:skyBlue;cursor: pointer;">{scope.row.companyName}</span>
                 )
             }
         },

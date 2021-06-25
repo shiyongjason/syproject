@@ -172,7 +172,7 @@
                                     <div class="follow-tag">跟进人</div>
                                     <div class="name">{{item.createBy||'-'}} {{item.createPhone}}</div>
                                 </div>
-                                <div class="time">{{item.createTime|formatDate('YYYY/MM/DD a hh:mm:ss')}}</div>
+                                <div class="time">{{item.createTime|formatDate('YYYY/MM/DD HH:mm:ss')}}</div>
                             </div>
                             <div class="content-container" v-if="item.flowUpDynamic&&item.flowUpDynamic.msgType === 'meeting_voice_call'">
                                 <div class='line' />
@@ -224,7 +224,7 @@
                                         <div class='desc'  v-if="item.projectSupplyFlowUp.noNeedFlowReason">{{item.projectSupplyFlowUp.noNeedFlowReason||'-'}}</div>
                                     </template>
                                     <div class="title-tag" v-if="item.nextFlowTime">下次跟进时间</div>
-                                    <div class="desc" v-if="item.nextFlowTime">{{item.nextFlowTime | formatDate('YYYY年MM月DD日 HH:mm')}}</div>
+                                    <div class="desc" v-if="item.nextFlowTime">{{item.nextFlowTime | formatDate('YYYY/MM/DD HH:mm')}}</div>
                                     <template v-if="item.customerBackLogWorks&&item.customerBackLogWorks.length">
                                         <div class="title-tag" >邀请同事协助</div>
                                         <div class="desc" v-for="w in item.customerBackLogWorks" :key="w.id">{{w.assignedUserName}} {{w.assignedUserMobile}}</div>
@@ -238,7 +238,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div v-if="isNoMore" style="width: 570px;margin: 10px auto;"><el-divider>没有更多</el-divider></div>
+                        <div v-if="isNoMore" style="width: 80%;margin: 10px auto;"><el-divider>没有更多</el-divider></div>
                     </div>
                 </div>
             </div>
@@ -259,11 +259,11 @@
         </el-dialog>
         <!-- 添加跟进记录 -->
             <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px" :before-close="()=>closeAddRecord()" :close-on-click-modal='false' >
-                <div class="record-layout" style="height:444px">
+                <div class="record-layout" style="height:444px;overflow-y: scroll;">
                     <div class="header-title">
                         <el-radio v-model="flowUpRequest.type" :label="1">当面拜访</el-radio>
                         <el-radio v-model="flowUpRequest.type" :label="2">电话/微信沟通/邮件等</el-radio>
-                        <p class="tips">温馨提示：推荐使用企业微信与客户聊天，自动更新记录，更方便。</p>
+                        <p class="tips" v-if="flowUpRequest.type==2">温馨提示：推荐使用企业微信与客户聊天，自动更新记录，更方便。</p>
                     </div>
                     <div style="margin-top:-10px">
                         <el-form :rules="addFlowUpRules" :model="flowUpRequest" ref="addFlowUp" :validate-on-rule-change='false' v-if="reCreate">
@@ -603,8 +603,6 @@ export default {
         },
         async onSubmitAddRecord () {
             this.$refs['addFlowUp'].validate(async (value, r) => {
-                console.log(' 🚗 🚕 🚙 🚌 🚎 ，value', value)
-
                 if (value) {
                     this.flowUpRequest.createBy = this.userInfo.employeeName
                     this.flowUpRequest.createPhone = this.userInfo.phoneNumber
@@ -617,8 +615,6 @@ export default {
                         query.picUrls = picUrls
                     }
                     query.bizId = this.projectId
-                    console.log(' 🚗 🚕 🚙 🚌 🚎 xx', query)
-
                     await addFlowUp(query)
                     this.$message.success('新增成功')
                     this.recordsQuery = {
@@ -628,6 +624,8 @@ export default {
                     }
                     this.recordsData = []
                     await this.getRecords()
+                    const { data: flowUpCount } = await getFlowUpCount({ bizId: this.projectId })
+                    this.flowUpCount = flowUpCount
                     this.closeAddRecord()
                 } else {
                     this.$nextTick(() => {
@@ -654,10 +652,10 @@ export default {
         },
         // 关闭新增跟进记录
         closeAddRecord () {
-            this.flowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
             // @ts-ignore
             this.$refs['addFlowUp'].resetFields()
             this.addRecord = false
+            this.flowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
         },
         // 跟进记录
         async getRecords () {
@@ -816,29 +814,6 @@ export default {
 
         },
         sortChange (val) {
-            // if (e.order == null) {
-            //     this.queryParams.field = ''
-            //     this.queryParams.isAsc = null
-            //     console.log('this.queryParams: ', this.queryParams)
-            // } else if (e.prop == 'predictLoanAmount') {
-            //     this.queryParams.field = 'predict_loan_amount'
-            //     this.queryParams.isAsc = e.order === 'ascending'
-            // } else if (e.prop == 'contractAmount') {
-            //     this.queryParams.field = 'contract_amount'
-            //     this.queryParams.isAsc = e.order === 'ascending'
-            // } else if (e.prop == 'deviceAmount') {
-            //     this.queryParams.field = 'device_amount'
-            //     this.queryParams.isAsc = e.order === 'ascending'
-            // } else if (e.prop == 'estimatedLoanTime') {
-            //     this.queryParams.field = 'estimated_loan_time'
-            //     this.queryParams.isAsc = e.order === 'ascending'
-            // } else if (e.prop == 'submitTime') {
-            //     this.queryParams.field = 'submit_time'
-            //     this.queryParams.isAsc = e.order === 'ascending'
-            // } else if (e.prop == 'updateTime') {
-            //     this.queryParams.field = 'update_time'
-            //     this.queryParams.isAsc = e.order === 'ascending'
-            // }
             if (val.order) {
                 this.queryParams['sort.direction'] = val.order === 'descending' ? 'DESC' : 'ASC'
                 this.queryParams['sort.property'] = val.prop
@@ -940,6 +915,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+/deep/::-webkit-scrollbar-thumb {
+    background-color: #d6d1d1 !important;
+}
 .flowup-count{
             display: flex;
             align-items: center;

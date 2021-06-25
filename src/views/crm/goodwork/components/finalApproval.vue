@@ -133,7 +133,7 @@
                 </div>
             </template>
         </div>
-        <el-dialog title="客户基本信息" :close-on-click-modal='false' :visible.sync="editBaseInfoVisible" width="750px" :before-close="handleHidden" :modal='false'>
+        <el-dialog v-if="editBaseInfoVisible" title="客户基本信息" :close-on-click-modal='false' :visible.sync="editBaseInfoVisible" width="750px" :before-close="handleHidden" :modal='false'>
             <div class="dialog-ctx reviewResolution">
                 <div class="reviewResolutionForm-title" style="marginTop:0px">
                     企业信息：
@@ -430,12 +430,68 @@ export default class FinalApproval extends Vue {
 
     get purFormRules () {
         let rules = {
-            predictLoanAmount: [{ required: true, message: '申请代付金额(元)必填', trigger: 'blur' }],
-            advancePaymentRate: [{ required: true, message: '首付款比例必选', trigger: 'blur' }],
-            deviceAmount: [{ required: true, message: '设备款总额必填', trigger: 'blur' }],
+            predictLoanAmount: [
+                { required: true, message: '申请代付金额(元)必填', trigger: 'blur' },
+                {
+                    validator: (rule, value, callback) => {
+                        if (value <= 0 || value >= 100000000) {
+                            return callback(new Error('申请代付金额(元)区间为（0，100000000）'))
+                        } else {
+                            callback()
+                        }
+                    },
+                    trigger: 'blur'
+                }
+            ],
+            advancePaymentRate: [{ required: true, message: '首付款比例必选', trigger: 'blur' },
+                {
+                    validator: (rule, value, callback) => {
+                        if (value <= 0 || value >= 100) {
+                            return callback(new Error('首付款比例区间为（0，100）'))
+                        } else {
+                            callback()
+                        }
+                    },
+                    trigger: 'blur'
+                }
+            ],
+            deviceAmount: [{ required: true, message: '设备款总额必填', trigger: 'blur' },
+                {
+                    validator: (rule, value, callback) => {
+                        if (value <= 0 || value >= 100000000) {
+                            return callback(new Error('设备款总额区间为（0，100000000）'))
+                        } else {
+                            callback()
+                        }
+                    },
+                    trigger: 'blur'
+                }
+            ],
             remainPaymentCycle: [{ required: true, message: '剩余货款支付周期', trigger: 'blur' }],
-            acceptBankRate: [{ required: true, message: '银行承兑执行费率必填', trigger: 'blur' }],
-            transferBankRate: [{ required: true, message: '银行转账执行费率必填', trigger: 'blur' }]
+            acceptBankRate: [{ required: true, message: '银行承兑执行费率必填', trigger: 'blur' },
+                {
+                    validator: (rule, value, callback) => {
+                        if (value <= 0 || value >= 100) {
+                            return callback(new Error('银行承兑执行费率区间为（0，100）'))
+                        } else {
+                            callback()
+                        }
+                    },
+                    trigger: 'blur'
+                }
+            ],
+            transferBankRate: [{ required: true, message: '银行转账执行费率必填', trigger: 'blur' },
+                {
+                    validator: (rule, value, callback) => {
+                        if (value <= 0 || value >= 100) {
+                            return callback(new Error('银行转账执行费率区间为（0，100）'))
+                        } else {
+                            callback()
+                        }
+                    },
+                    trigger: 'blur'
+                }
+            ]
         }
         return rules
     }
@@ -767,7 +823,7 @@ export default class FinalApproval extends Vue {
         this.purchaseConclusionVisible = true
         const { data } = await getResolutions(this.finalFormID)
         this.purForm = { ...this.purForm, ...data }
-        this.tableForm = data.resolutionPurchaseList
+        this.tableForm = data.resolutionPurchaseList || []
     }
 
     handleClose () {
