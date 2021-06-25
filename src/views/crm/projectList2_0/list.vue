@@ -619,7 +619,21 @@ export default class ProjectList2 extends Vue {
     }
 
     async getList () {
-        const { data: { projectPage, ...restStatistics } } = await getProjectList(this.queryParams)
+        let q = ''
+        for (const key in this.queryParams) {
+            if (this.queryParams[key] !== '') {
+                if (key !== 'deviceCategories') {
+                    q += (`${key}=${this.queryParams[key]}&`)
+                } else {
+                    this.queryParams[key].map(item => {
+                        q += (`${key}=${item}&`)
+                    })
+                }
+            }
+        }
+        q = q.substring(0, q.length - 1)
+
+        const { data: { projectPage, ...restStatistics } } = await getProjectList(q)
         this.tableData = projectPage.records
         this.statistics = {
             /** 已筛选&项目数 */
