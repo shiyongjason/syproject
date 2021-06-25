@@ -612,6 +612,11 @@ export default class ProjectList2Detail extends Vue {
             this.flowUpRequest.contactMobile = temp.contactMobile
         }
 
+        if (!this.radioContact && !item && !temp) {
+            this.$message.error('请选择客户联系人')
+            return
+        }
+
         this.companyContactList = JSON.parse(JSON.stringify(this.companyContactListBak))
         this.innerContactVisible = false
         if (this.flowUpRequest.contactName) {
