@@ -223,7 +223,11 @@ export default {
     methods: {
         optionValuesFilter (id) {
             const result = this.optionTypeListFilter.filter(item => item.id == id)
-            return result[0].optionValues || []
+            if (result.length > 0) {
+                return result[0].optionValues
+            } else {
+                return []
+            }
         },
         backPicUrl (file) {
             this.params.skuImgurl = file.imageUrl
@@ -255,10 +259,11 @@ export default {
             this.form.mainSkus.splice(index, 1)
         },
         onChangeValue (index, sIndex) {
-            this.form.mainSkus[index].optionValues[sIndex].name = this.changeValue(this.form.mainSkus[index].optionValues[sIndex].optionTypeId, this.form.mainSkus[index].optionValues[sIndex].id).name
+            this.form.mainSkus[index].optionValues[sIndex].name = this.changeValue(this.form.mainSkus[index].optionValues[sIndex].optionTypeId, this.form.mainSkus[index].optionValues[sIndex].id)
         },
         changeValue (optionTypeId, id) {
-            return this.form.optionTypeList.filter(item => item.id == optionTypeId)[0].optionValues.filter(item => item.id == id)[0]
+            const result = this.form.optionTypeList.filter(item => item.id == optionTypeId)[0].optionValues.filter(item => item.id == id)
+            return result.length > 0 ? result[0].name : {}
         }
     },
     mounted () {

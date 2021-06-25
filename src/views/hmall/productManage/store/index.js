@@ -99,7 +99,6 @@ const actions = {
     },
     async checkProductUnique ({ commit }, params) {
         const { data } = await instance.get(`/product/boss/main-spu/unique-check`, { params })
-        console.log(data)
         commit(types.PRODUCT_UNIQUE, data)
     },
     async findProductSpuInfo ({ commit }, params) {

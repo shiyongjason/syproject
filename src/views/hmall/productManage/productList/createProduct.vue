@@ -90,8 +90,8 @@
                         </div>
                         <h-button type="create" class="mb20" @click="onAddOptionTemplate">添加规格</h-button>
                     </div>
-                    <skuTable ref="skuTable" :formData.sync="form" v-if="form.optionTypeList.length>1"></skuTable>
-                    <h-button type="create" class="mb20" @click="onAddSKU">+</h-button>
+                    <skuTable ref="skuTable" :formData.sync="form" v-if="form.optionTypeList.length>0"></skuTable>
+                    <h-button type="create" class="mb20" v-if="form.optionTypeList.length>0" @click="onAddSKU">+</h-button>
                     <div class="title-cont" v-if="specData.length != 0">
                         <span class="title-cont__label">参数信息</span>
                     </div>
@@ -312,64 +312,45 @@ export default {
         },
         'form.optionTypeList' (value) {
             const optionTypeList = flatten(value.filter(item => item.name && item.optionValues.length))
-            this.form.mainSkus.map(item => {
-                let optionValues = []
-                this.productSpuInfo.optionTypeList.forEach(i => {
-                    let arr = item.optionValues.filter(j => j.optionTypeId == i.id)
-                    console.log(arr)
-                    if (arr.length > 0) {
-                        optionValues = optionValues.concat(arr)
-                    } else {
-                        optionValues.push({
-                            id: '',
-                            name: '',
-                            optionTypeId: i.id,
-                            optionTypeName: i.name
-                        })
-                    }
+            if (this.$route.query.id) {
+                this.form.mainSkus.map(item => {
+                    let optionValues = []
+                    this.productSpuInfo.optionTypeList.forEach(i => {
+                        let arr = item.optionValues.filter(j => j.optionTypeId == i.id)
+                        if (arr.length > 0) {
+                            optionValues = optionValues.concat(arr)
+                        } else {
+                            optionValues.push({
+                                id: '',
+                                name: '',
+                                optionTypeId: i.id,
+                                optionTypeName: i.name
+                            })
+                        }
+                    })
+                    item.optionValues = optionValues
+                    return item
                 })
-                item.optionValues = optionValues
-                return item
-            })
-            // const mainSkus = optionTypeList.map(item => {
-            //     const skuInfo = this.form.mainSkus.filter(sku => sku.optionValues[0].optionTypeId == item.optionValues[0].optionTypeId)[0]
-            //     item = { ...item, ...skuInfo }
-            //     return item
-            // })
-
-            // const mainSkus = optionTypeList.map(item => {
-            //     const skuInfo = this.form.mainSkus.filter(sku => {
-            //         // if (item.optionValues.length == sku.optionValues.length) {
-            //         sku.optionValues.map((i, index) => {
-            //             if (i.optionTypeId == item.optionValues[index].optionTypeId) {
-            //                 return i.id ? i : { optionTypeId: i.optionTypeId, optionTypeName: i.optionTypeName, id: '', name: '' }
-            //             }
-            //         })
-
-            //         //         // } else {
-            //         //         //     return item.optionValues.map((i, index) => {
-            //         //         //         if (i.optionTypeId == sku.optionValues[index].optionTypeId) {
-            //         //         //             return i.id ? i : { optionTypeId: i.optionTypeId, optionTypeName: i.optionTypeName, id: '', name: '' }
-            //         //         //         }
-            //         //         //     })
-            //         //         // }
-            //     })[0]
-            //     item = { ...item, ...skuInfo }
-            //     return item
-            // })
-            console.log(mainSkus)
-            // if (!mainSkus.length) {
-            //     this.form.mainSkus = this.form.mainSkus
-            //     return
-            // }
-            // if (this.form.mainSkus.length == mainSkus.length) {
-            //     this.form.mainSkus = mainSkus.map((item, index) => ({
-            //         ...this.form.mainSkus[index],
-            //         ...item
-            //     }))
-            // } else {
-            // this.form.mainSkus = mainSkus
-            // }
+            } else {
+                const mainSkus = optionTypeList.map(item => {
+                    // const skuInfo = this.form.mainSkus.filter(sku => sku.optionValues && sku.optionValues[0].optionTypeId == item.optionValues[0].optionTypeId)[0]
+                    // item = { ...item, ...skuInfo }
+                    return item
+                })
+                console.log(mainSkus)
+                // if (!mainSkus.length) {
+                //     this.form.mainSkus = this.form.mainSkus
+                //     return
+                // }
+                // if (this.form.mainSkus.length == mainSkus.length) {
+                this.form.mainSkus = mainSkus.map((item, index) => ({
+                    ...this.form.mainSkus[index],
+                    ...item
+                }))
+                // } else {
+                //     this.form.mainSkus = mainSkus
+                // }
+            }
         }
     },
     methods: {
@@ -456,20 +437,6 @@ export default {
         },
         onDelOptionTemplate (index) {
             this.form.optionTypeList.splice(index, 1)
-            // if (!this.form.optionTypeList.length) {
-            //     this.form.skuList = [{
-            //         name: '',
-            //         imgUrls: '',
-            //         sellPrice: 0,
-            //         retailPrice: '',
-            //         commission: 0,
-            //         costPrice: '',
-            //         orderMinCount: '',
-            //         buyLimit: 0,
-            //         orderMaxCount: '',
-            //         saleableStock: 0
-            //     }]
-            // }
         },
         async onAddOption (name, index) {
             await this.addOption({ name: name })
@@ -503,16 +470,6 @@ export default {
                 }
                 return item
             })
-            //     this.form.skuList = this.form.skuList.filter((item) => {
-            //         const arr = item.indexes.split('_')
-            //         return !(arr[index] === sIndex)
-            //     })
-            //     this.form.skuList = this.form.skuList.map((item) => {
-            //         const arr = item.indexes.split('_')
-            //         arr[index] = arr[index] >= sIndex ? arr[index] - 1 : arr[index]
-            //         item.indexes = arr.join('_')
-            //         return item
-            //     })
             this.addValues.splice(sIndex, 1)
         },
         onSettingTop (index) {
@@ -524,7 +481,6 @@ export default {
         onAddSKU () {
             let optionValues = []
             this.form.optionTypeList.forEach(item => {
-                console.log(item)
                 optionValues.push({
                     id: '',
                     name: '',
@@ -542,6 +498,7 @@ export default {
                     imageUrls: this.imageUrls,
                     optionTypeIds: this.form.optionTypeList.map(item => item.id),
                     mainSkus: deepCopy(this.form.mainSkus).map(item => {
+                        item.id = item.mainSkuId ? item.mainSkuId : ''
                         item.name = this.form.name + item.optionValues.map(sItem => sItem.name).join('')
                         item.imageUrls = item.imageUrls.split(',')
                         item.optionValueIds = item.optionValues.map(sItem => sItem.id).filter(sItem => sItem)
@@ -556,17 +513,12 @@ export default {
                     imageUrls: this.imageUrls,
                     mainSkus: deepCopy(this.form.mainSkus).map(item => {
                         item.name = this.form.name
-                        // item.orderMinCount = this.orderMinCount
-                        // item.buyLimit = this.buyLimit
-                        // item.orderMaxCount = this.orderMaxCount
-                        // item.specifications = ''
+                        item.imageUrls = item.imageUrls.split(',')
                         return item
                     }),
                     specifications: this.form.specifications.filter(item => item.v),
                     operator: this.userInfo.employeeName
                 }
-                delete form.optionTypeIds
-                delete form.optionTypeList
             }
             console.log(form)
             this.btnLoading = true
@@ -642,7 +594,6 @@ export default {
         async getProductInfo (id) {
             await this.findProductSpuInfo({ id: id })
             await this.getSpecByCategory(this.productSpuInfo.twoCategoryId)
-            console.log(this.productSpuInfo)
             this.form = {
                 ...this.productSpuInfo,
                 mainSkus: this.productSpuInfo.mainSkus.map(item => {
@@ -747,7 +698,7 @@ export default {
 }
 
 .isDefault {
-    display: inline-flex;
+    display: inline-block;
     width: 104px;
     height: 20px;
     line-height: 20px;
@@ -784,43 +735,6 @@ export default {
 
 /deep/ .editor-wrap {
     width: 100% !important;
-}
-
-.stepPrcieBox {
-    box-sizing: border-box;
-    padding: 20px 0;
-    margin-bottom: 20px;
-    display: flex;
-    border: 1px solid #e5e5ea;
-    .stepLabel {
-        text-align: right;
-        width: 108px;
-        padding-right: 12px;
-        color: #ff7a45;
-    }
-    .stepItem {
-        width: 180px;
-        .stepTitle {
-            color: #ff7a45;
-            margin-bottom: 10px;
-        }
-        .stepPrice,
-        .stepRange {
-            color: #333333;
-        }
-    }
-}
-.area-cascader {
-    /deep/ .el-cascader__tags {
-        max-height: 100px;
-        overflow-y: auto;
-    }
-    /deep/ .el-cascader {
-        max-height: 100px;
-    }
-    /deep/ .el-input {
-        width: 600px;
-    }
 }
 
 .el-tag {
