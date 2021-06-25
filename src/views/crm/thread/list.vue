@@ -62,9 +62,9 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">创建时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.startTime" type="date" placeholder="开始时间" format="yyyy-MM-dd"></el-date-picker>
+                        <el-date-picker v-model="queryParams.startTime" type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm" :picker-options="pickerOptionsStart"></el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker v-model="queryParams.endTime" type="date" placeholder="结束时间" format="yyyy-MM-dd"></el-date-picker>
+                        <el-date-picker v-model="queryParams.endTime" type="datetime" placeholder="结束时间" format="yyyy-MM-dd HH:mm" :picker-options="pickerOptionsEnd"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -116,8 +116,9 @@
             </hosJoyTable>
 
             <el-dialog title="分配销售" :visible.sync="distributorVisible" width="30%" :before-close="clearDispatchFormData">
+                <span>分配后，该线索将分配给该客户经理</span>
                 <el-form :model="distributorForm" :rules="rules" ref="distributorForm" label-width="130px" class="demo-ruleForm">
-                    <el-form-item label="分配给（员工）" prop="customerMobile" ref='customerMobile'>
+                    <el-form-item label="分配给客户经理" prop="customerMobile" ref='customerMobile'>
                         <el-autocomplete v-model="stateN" :fetch-suggestions="querySearchAsync" placeholder="请输入员工" @blur="onBlurItem" :trigger-on-focus="false" @select="handleSelect">
                             <template slot-scope="{ item }">
                                 <div class="autoflex">
@@ -354,6 +355,31 @@ export default class Thread extends Vue {
     selectThread: Clue[] = []
     timeout = null
     stateN: string = ''
+
+    get pickerOptionsStart () {
+        return {
+            disabledDate: time => {
+                let beginDateVal = this.queryParams.endTime
+                if (beginDateVal) {
+                    return (
+                        time.getTime() > new Date(beginDateVal).getTime()
+                    )
+                }
+            }
+        }
+    }
+    get pickerOptionsEnd () {
+        return {
+            disabledDate: time => {
+                let beginDateVal = this.queryParams.startTime
+                if (beginDateVal) {
+                    return (
+                        time.getTime() < new Date(beginDateVal).getTime()
+                    )
+                }
+            }
+        }
+    }
 
     get deviceCategoryString () {
         return deviceCategory => {
