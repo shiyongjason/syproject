@@ -50,8 +50,8 @@
                     </template>
                     <td class="fixed-width">
                         <el-form-item label-width='0'>
-                            <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" v-if="!seeTask" />
-                            <img :src="item.imgUrls" v-if="seeTask" />
+                            <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" v-if="seeTask" />
+                            <img :src="item.imageUrls" v-if="!seeTask" style="width:44px;height:44px" />
                         </el-form-item>
                     </td>
                     <td>
