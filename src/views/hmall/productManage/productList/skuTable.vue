@@ -6,8 +6,8 @@
                     <td v-for="(item,index) in optionTypeListFilter" :key="index" style="min-width:100px;">{{item.name}}</td>
                     <td class="fixed-width">
                         <span class="tr-label">图片</span>
-                        <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="params.skuImgurl" v-if="seeTask" @back-event="backPicUrl" />
-                        <el-dropdown placement="bottom-end" @command="handleCommand" v-if="seeTask">
+                        <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="params.skuImgurl" @back-event="backPicUrl" />
+                        <el-dropdown placement="bottom-end" @command="handleCommand">
                             <span class="el-dropdown-link">
                                 <i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
@@ -28,13 +28,13 @@
                     <td>
                         <span class="tr-label">体积/m³</span>
                     </td>
-                    <td>
-                        <span class="tr-label" v-if="edite">SKU编码</span>
+                    <td v-if="$route.query.id">
+                        <span class="tr-label">SKU编码</span>
                     </td>
                     <td>
                         <span class="tr-label">状态</span>
                     </td>
-                    <td v-if="!edite">
+                    <td>
                         <span class="tr-label">操作</span>
                     </td>
                 </tr>
@@ -75,7 +75,7 @@
                             <el-input v-model="item.volume" maxlength="16" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
-                    <td>
+                    <td v-if="$route.query.id">
                         <el-form-item label-width='0'>
                             <span>{{item.mainSkuId}}</span>
                         </el-form-item>
@@ -87,10 +87,15 @@
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-                            <h-button table v-if="item.auditStatus && !item.enabled">生效</h-button>
-                            <h-button table v-if="item.enabled">失效</h-button>
-                            <h-button table v-if="!item.enabled">编辑</h-button>
-                            <h-button table @click="onDelSku(index)">删除</h-button>
+                            <template v-if="item.auditStatus == 1">
+                                <h-button table @click="onEfficacySku(item)" v-if="item.enabled">失效</h-button>
+                                <h-button table @click="onEffectiveSku(item)" v-if="!item.enabled">生效</h-button>
+                                <h-button table @click="onEditSku(index)" v-if="!item.enabled">编辑</h-button>
+                            </template>
+                            <template v-else>
+                                <h-button table @click="onEditSku(index)">编辑</h-button>
+                                <h-button table @click="onDelSku(index)">删除</h-button>
+                            </template>
                         </el-form-item>
                     </td>
                 </tr>
@@ -99,6 +104,7 @@
     </div>
 </template>
 <script>
+import { mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 export default {
     name: 'skuTable',
@@ -108,12 +114,6 @@ export default {
             default: () => {
                 return {}
             }
-        },
-        seeTask: {
-            type: Boolean
-        },
-        edite: {
-            type: Boolean
         }
     },
     data () {
@@ -162,6 +162,10 @@ export default {
             immediate: true,
             handler (val) {
                 this.form = val
+                this.form.mainSkus.map(item => {
+                    item.disabled = !!(item.auditStatus == 0 || item.auditStatus == 1 || item.auditStatus == 2)
+                    return item
+                })
             }
         }
     },
@@ -223,13 +227,13 @@ export default {
             this.form.mainSkus[index].optionValues[sIndex].name = this.changeValue(this.form.mainSkus[index].optionValues[sIndex].optionTypeId, this.form.mainSkus[index].optionValues[sIndex].id)
         },
         changeValue (optionTypeId, id) {
-            const optionValues = this.form.optionTypeList.filter(item => item.id == optionTypeId)[0].optionValues.filter(item => item.id == id)[0].name
-            if (optionValues.length > 0) {
-                return optionValues.filter(item => item.id == id)[0].name
-            } else {
-                return optionValues
-            }
-        }
+            const result = this.form.optionTypeList.filter(item => item.id == optionTypeId)[0].optionValues.filter(item => item.id == id)[0]
+            return result.length > 0 ? result[0].name : {}
+        },
+        ...mapActions({
+            effectiveSKU: 'productManage/effectiveSKU',
+            efficacySKU: 'productManage/efficacySKU'
+        })
     },
     mounted () {
         this.$emit('update:formData', this.form)
