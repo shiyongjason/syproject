@@ -530,7 +530,7 @@ export default class ProjectList2 extends Vue {
         let rules = {
             contractNo: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
             contractAttachments: [{ required: true, message: '必填项不能为空' }],
-            refundPayType: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+            refundPayType: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
             refundPics: [{ required: true, message: '必填项不能为空' }],
             refundAmount: [
                 {
