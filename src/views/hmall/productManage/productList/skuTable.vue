@@ -233,7 +233,7 @@ export default {
         },
         changeValue (optionTypeId, id) {
             const result = this.form.optionTypeList.filter(item => item.id == optionTypeId)[0].optionValues.filter(item => item.id == id)[0]
-            return result && result.length > 0 ? result[0].name : {}
+            return result && result.length > 0 ? result[0].name : ''
         },
         ...mapActions({
             effectiveSKU: 'productManage/effectiveSKU',
