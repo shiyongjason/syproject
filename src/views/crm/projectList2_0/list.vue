@@ -91,7 +91,7 @@
                 <el-form id='elform' :model="reqBossProjectRefund" :rules="formRulesReqBossProjectRefund"  label-position='left' ref="reqProjectSupply" class="purchaseConclusion" :validate-on-rule-change='false'>
                     <div class="form-item">
                         <el-form-item  prop='contractNo' label="合同编号：">
-                            <el-input  placeholder="请输入工程合同编号" v-model="reqBossProjectRefund.contractNo" maxlength="200"></el-input>
+                            <el-input  placeholder="请输入工程合同编号" v-model="reqBossProjectRefund.contractNo" maxlength="50"></el-input>
                         </el-form-item>
                     </div>
                     <div class="form-item noctx">
