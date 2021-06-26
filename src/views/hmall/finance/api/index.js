@@ -81,3 +81,7 @@ export const getFreightSmsCode = () => {
 export const findOnlinefreightList = (params) => {
     return axios.get(`${B2bUrl}order/boss/freight-orders/detail`, { params })
 }
+// 账户信息
+export const findBankInfo = (params) => {
+    return axios.get(`${B2bUrl}payment/boss/purchasing-agent-funds/user-info`, { params })
+}
