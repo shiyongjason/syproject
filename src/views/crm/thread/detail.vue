@@ -157,6 +157,11 @@
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
+                            <el-form-item label="客户经理手机号：">
+                                <el-input placeholder="请输入客户经理手机号" disabled v-model='threadDetail.customerMobile'></el-input>
+                            </el-form-item>
+                        </div>
+                        <div class="project-detail-item">
                             <el-form-item label="所属部门：">
                                 <el-input placeholder="请输入客户经理所属部门" disabled v-model='threadDetail.customerDeptName'></el-input>
                             </el-form-item>
