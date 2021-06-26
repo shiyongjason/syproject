@@ -349,11 +349,6 @@ export default {
             } else if (tabName == '2') {
                 this.queryParams.auditStatus = 2
             }
-            this.productStatus.map(item => {
-                if (tabName == item.value) {
-                    this.queryParams.auditStatus = item.value
-                }
-            })
         },
         ...mapActions({
             getBrandOptions: 'productManage/findBrandOptions',

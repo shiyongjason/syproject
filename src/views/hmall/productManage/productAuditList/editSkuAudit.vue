@@ -442,7 +442,10 @@ export default {
         },
         async getProductskuInfo (id) {
             await this.findProductSkuInfo({ id: id })
-            this.getProductInfo(this.productSkuInfo.mainSpuId)
+            console.log(this.productSkuInfo.mainSpuId)
+            if (this.productSkuInfo.mainSpuId) {
+                this.getProductInfo(this.productSkuInfo.mainSpuId)
+            }
         }
     },
     mounted () {
