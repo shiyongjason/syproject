@@ -256,7 +256,7 @@
                             </el-form-item>
                         </div>
                     </div>
-                    <div class="flex-item">
+                    <div class="flex-item" style="margin-top:5px">
                         <el-form-item  label="项目地址：">
                             <div class="query-cont-col-area">
                                 <el-select v-model="reqProjectSupply.provinceId" @change="onProvince" placeholder="省" clearable>
