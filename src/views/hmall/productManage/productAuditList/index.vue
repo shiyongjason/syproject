@@ -340,7 +340,6 @@ export default {
         tabParams (tabName) {
             if (tabName == '4') {
                 this.queryParams.auditStatus = ''
-                this.queryParams.enabled = true
             } else if (tabName == '0') {
                 this.queryParams.auditStatus = 0
                 // this.queryParams.enabled = false
