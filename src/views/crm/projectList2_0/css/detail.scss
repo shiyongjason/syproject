@@ -309,6 +309,16 @@
     /deep/.el-input__inner{
         width: 400px;
     }
+    /deep/ .estimatedSignAmount{
+        .el-input {
+            width: 347px !important;
+        }
+    }
+    /deep/ .estimatedSignAmount{
+        .el-input__inner {
+            width: 347px !important;
+        }
+    }
 }
 .contact{
     max-height: 600px;

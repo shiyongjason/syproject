@@ -194,6 +194,13 @@
                             </el-form-item>
                         </div>
                         <div class="form-item">
+                            <el-form-item prop="estimatedSignAmount" label="项目预估签约额：">
+                                <el-input  class="estimatedSignAmount" placeholder="请输入项目预估签约额" @input="(val)=>inputChage(val,projectDetail,'estimatedSignAmount')" :value="fundMoneys(projectDetail.estimatedSignAmount)">
+                                    <template slot="append">元</template>
+                                </el-input>
+                            </el-form-item>
+                        </div>
+                        <div class="form-item">
                             <el-form-item  label="项目预计交付时间：">
                                 <el-date-picker v-model="projectDetail.estimatedDeliverTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd"></el-date-picker>
                             </el-form-item>
@@ -399,6 +406,8 @@ import { CompanyContactRequest, CompanyContactResponse, FlowUpRequest, ReqProjec
 import { DictionaryList, getFlowUp, upDateProjectDetail, addFlowUp, getCompanyContactList, createCompanyContact, getCompanyUserList, getProcess, putCompanyContact, getChiness, getFlowUpCount } from './api'
 import { handleSubmit, validateForm } from '@/decorator'
 import { ROLE, SALESPHASE, USER_DEFAULT } from './const'
+import filters from '@/utils/filters'
+import { isNum } from '@/utils/validate/format'
 
 // 默认头像
 
@@ -593,6 +602,22 @@ export default class ProjectList2Detail extends Vue {
             return item.countryId === key
         })
         this.projectDetail.countryName = res[0].name
+    }
+
+    fundMoneys (val) {
+        if (val === null) {
+            return ''
+        }
+        return filters.money(val)
+    }
+
+    inputChage (val, item, key) {
+        let num = isNum(val, 2)
+        if (num == '.' || !num) {
+            num = ''
+        }
+
+        item[key] = num
     }
 
     onSuccessCb () {
