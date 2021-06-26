@@ -235,7 +235,8 @@
                     <div class="flex-item">
                         <div class="form-item">
                             <el-form-item  label="客户经理：">
-                                <el-input  placeholder="请输入客户经理" v-model='reqProjectSupply.customerName' maxlength="200"></el-input>
+                                <!-- <el-input  placeholder="请输入客户经理" v-model='reqProjectSupply.customerName' maxlength="200"></el-input> -->
+                                {{reqProjectSupply.customerName||'-'}}
                             </el-form-item>
                         </div>
                         <div class="form-item">
