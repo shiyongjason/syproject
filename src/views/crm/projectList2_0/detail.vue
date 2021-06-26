@@ -325,7 +325,7 @@
                                         <el-checkbox v-model="item.checked" style="margin-right:3px" @change="()=>onChageRadioContactItem(index)"></el-checkbox>
                                         <div class="contact-table-item">
                                             <el-form-item label="客户姓名：" prop="contactName" >
-                                                <el-input placeholder="请输入" v-model='item.contactName' size="mini" class="contact-table-item-input" style="flex:0 0 80px" @blur="()=>onBlurSave(item,index)"></el-input>
+                                                <el-input placeholder="请输入" v-model='item.contactName' maxlength="24" size="mini" class="contact-table-item-input" style="flex:0 0 80px" @blur="()=>onBlurSave(item,index)"></el-input>
                                             </el-form-item>
                                         </div>
                                         <div class="contact-table-item" style="margin-left:-50px">
