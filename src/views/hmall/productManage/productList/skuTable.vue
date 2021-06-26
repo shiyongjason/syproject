@@ -88,8 +88,8 @@
                     <td>
                         <el-form-item label-width='0'>
                             <template v-if="item.auditStatus == 1">
-                                <h-button table @click="onEfficacySku(item)" v-if="item.enabled">失效</h-button>
-                                <h-button table @click="onEffectiveSku(item)" v-if="!item.enabled">生效</h-button>
+                                <h-button table @click="onEfficacySku(item,index)" v-if="item.enabled">失效</h-button>
+                                <h-button table @click="onEffectiveSku(item,index)" v-if="!item.enabled">生效</h-button>
                                 <h-button table @click="onEditSku(index)" v-if="!item.enabled">编辑</h-button>
                             </template>
                             <template v-else>
@@ -204,13 +204,15 @@ export default {
             }
         },
         // 生效sku
-        async onEffectiveSku (row) {
+        async onEffectiveSku (row, index) {
             await this.effectiveSKU({ id: row.mainSkuId })
+            this.$set(this.form.mainSkus[index], 'enabled', !this.form.mainSkus[index].enabled)
             this.$message.success('商品设置生效成功！')
         },
         // 失效sku
-        async onEfficacySku (row) {
+        async onEfficacySku (row, index) {
             await this.efficacySKU({ id: row.mainSkuId })
+            this.$set(this.form.mainSkus[index], 'enabled', !this.form.mainSkus[index].enabled)
             this.$message.success('商品设置失效成功！')
         },
         onEditSku (index) {
