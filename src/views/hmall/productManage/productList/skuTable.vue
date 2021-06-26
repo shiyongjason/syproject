@@ -42,8 +42,8 @@
             <tbody>
                 <tr v-for="(item,index) in form.mainSkus" :key="index">
                     <template v-for="(sItem,sIndex) in item.optionValues">
-                        <td :key="sIndex">
-                            <el-select v-model="sItem.id" @change="onChangeValue(index,sIndex)" clearable :disabled="!seeTask">
+                        <td :key="sIndex" v-if="item.optionValues.length">
+                            <el-select v-model="sItem.id" @change="onChangeValue(index,sIndex)" clearable :disabled="item.disabled">
                                 <el-option v-for="i in optionValuesFilter(sItem.optionTypeId)" :key="i.id" :label="i.name" :value="i.id"></el-option>
                             </el-select>
                         </td>
@@ -55,14 +55,14 @@
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.serialNumber" maxlength="16" :disabled="!seeTask"></el-input>
+                            <el-input v-model="item.serialNumber" maxlength="16" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
                     <td class="log-width">
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.length" maxlength="16" :disabled="!seeTask"></el-input>
-                            <el-input v-model="item.width" maxlength="16" :disabled="!seeTask"></el-input>
-                            <el-input v-model="item.height" maxlength="16" :disabled="!seeTask"></el-input>
+                            <el-input v-model="item.length" maxlength="16" :disabled="item.disabled"></el-input>
+                            <el-input v-model="item.width" maxlength="16" :disabled="item.disabled"></el-input>
+                            <el-input v-model="item.height" maxlength="16" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
                     <td>
@@ -75,7 +75,7 @@
                             <el-input v-model="item.volume" maxlength="16" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
-                    <td v-if="edite">
+                    <td>
                         <el-form-item label-width='0'>
                             <span>{{item.mainSkuId}}</span>
                         </el-form-item>
@@ -85,12 +85,12 @@
                             <span>{{checkStatus(item.enabled,item.auditStatus)}}</span>
                         </el-form-item>
                     </td>
-                    <td v-if="!edite">
+                    <td>
                         <el-form-item label-width='0'>
                             <h-button table v-if="item.auditStatus && !item.enabled">生效</h-button>
                             <h-button table v-if="item.enabled">失效</h-button>
                             <h-button table v-if="!item.enabled">编辑</h-button>
-                            <h-button table @click="onDelSKU(index)">删除</h-button>
+                            <h-button table @click="onDelSku(index)">删除</h-button>
                         </el-form-item>
                     </td>
                 </tr>
@@ -119,12 +119,7 @@ export default {
     data () {
         return {
             params: {
-                skuImgurl: '',
-                sellPrice: '',
-                retailPrice: '',
-                saleableStock: '',
-                commission: '',
-                costPrice: ''
+                skuImgurl: ''
             },
             form: {
                 mainSkus: [
@@ -142,72 +137,8 @@ export default {
                 ]
             },
             rules: {
-                imgUrls: [
+                imageUrls: [
                     { required: true, message: '请上传图片', trigger: 'change' }
-                ],
-                sellPrice: [
-                    { required: true, message: '请输入销售价', trigger: 'blur' },
-                    {
-                        validator: (rule, value, callback) => {
-                            const reg = /(^[1-9]([0-9]{1,12})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
-                            if (!reg.test(value)) {
-                                return callback(new Error('销售价格式为小数点前十三位，小数点后两位'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                retailPrice: [
-                    { required: true, message: '请输入零售价', trigger: 'blur' },
-                    {
-                        validator: (rule, value, callback) => {
-                            const reg = /(^[1-9]([0-9]{1,12})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
-                            if (!reg.test(value)) {
-                                return callback(new Error('零售价格式为小数点前十三位，小数点后两位'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                saleableStock: [
-                    { required: false, message: '请输入库存', trigger: 'blur' },
-                    {
-                        validator: (rule, value, callback) => {
-                            const reg = /^[0-9]\d*$/
-                            if (value < 0 || !reg.test(value)) {
-                                return callback(new Error('库存为大于等于0的数字'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                commission: [
-                    { required: true, message: '请输入佣金', trigger: 'blur' },
-                    {
-                        validator: (rule, value, callback) => {
-                            const reg = /(?!^0\.0?0$)^[0-9][0-9]?(\.[0-9]{1,2})?$|^100$/
-                            if (!reg.test(value)) {
-                                return callback(new Error('佣金为小于100的2位小数或整数'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                costPrice: [
-                    {
-                        validator: (rule, value, callback) => {
-                            const reg = /(^[1-9]([0-9]{1,12})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
-                            if (value && !reg.test(value)) {
-                                return callback(new Error('成本价格式为小数点前十三位，小数点后两位'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
                 ]
             }
         }
@@ -237,7 +168,11 @@ export default {
     methods: {
         optionValuesFilter (id) {
             const result = this.optionTypeListFilter.filter(item => item.id == id)
-            return result[0].optionValues || []
+            if (result.length > 0) {
+                return result[0].optionValues
+            } else {
+                return []
+            }
         },
         backPicUrl (file) {
             this.params.skuImgurl = file.imageUrl
@@ -249,8 +184,6 @@ export default {
             this.form.mainSkus.map((item, index) => {
                 if (command == 'imageUrls') {
                     this.$set(this.form.mainSkus[index], 'imageUrls', this.params.skuImgurl)
-                } else {
-                    this.$set(this.form.mainSkus[index], command, this.params[command])
                 }
             })
         },
@@ -287,10 +220,15 @@ export default {
             }).catch(() => { })
         },
         onChangeValue (index, sIndex) {
-            this.form.mainSkus[index].optionValues[sIndex].name = this.changeValue(this.form.mainSkus[index].optionValues[sIndex].optionTypeId, this.form.mainSkus[index].optionValues[sIndex].id).name
+            this.form.mainSkus[index].optionValues[sIndex].name = this.changeValue(this.form.mainSkus[index].optionValues[sIndex].optionTypeId, this.form.mainSkus[index].optionValues[sIndex].id)
         },
         changeValue (optionTypeId, id) {
-            return this.form.optionTypeList.filter(item => item.id == optionTypeId)[0].optionValues.filter(item => item.id == id)[0]
+            const optionValues = this.form.optionTypeList.filter(item => item.id == optionTypeId)[0].optionValues.filter(item => item.id == id)[0].name
+            if (optionValues.length > 0) {
+                return optionValues.filter(item => item.id == id)[0].name
+            } else {
+                return optionValues
+            }
         }
     },
     mounted () {

@@ -156,6 +156,7 @@ import { RICH_EDITOR_MENUS, PUTAWAY_RULES } from '../const/common'
 import { flatten } from '@/views/hmall/utils/sku'
 import { deepCopy } from '@/utils/utils'
 import { clearCache } from '@/utils/index'
+import transactionInfoVue from '../../dataBoard/transactionInfo.vue'
 export default {
     name: 'createProduct',
     components: {
@@ -295,6 +296,9 @@ export default {
         },
         disabled () {
             return this.form.optionTypeList.some(item => !item.name || item.optionValues.length == 0)
+        },
+        mainSkus () {
+            return deepCopy(this.form.mainSkus)
         }
     },
     watch: {
@@ -304,6 +308,28 @@ export default {
             }
         },
         'form.optionTypeList' (value) {
+            // 当sku被编辑的时候
+            if (this.isEdit || this.isEditSku) {
+                // 当mainSkus的列比规格的列小的时候，说明规格名增加了
+                if (this.form.mainSkus[0].optionValues.length < value.length) {
+                    if (value[value.length - 1].optionValues.length > 0) {
+                        this.form.mainSkus = this.form.mainSkus.map(item => {
+                            item.optionValues.push(value[value.length - 1].optionValues[0])
+                            return item
+                        })
+                    }
+                }
+                return
+            }
+            let changeSku = true
+            value.forEach(item => {
+                if (item.optionValues.length <= 0) {
+                    changeSku = false
+                }
+            })
+            if (!changeSku) {
+                return
+            }
             const optionTypeList = flatten(value.filter(item => item.name && item.optionValues.length))
             if (this.$route.query.id) {
                 this.form.mainSkus.map(item => {
@@ -321,13 +347,6 @@ export default {
                 })
             } else {
                 const mainSkus = optionTypeList.map(item => {
-                    const skuInfo = this.form.mainSkus.map(i => {
-                        const result = i.optionValues.filter((j, index) => j.optionTypeId == item.optionValues[index].optionTypeId)
-                        i.optionValues = i.optionValues.concat(result)
-                        return i
-                    })
-                    console.log(skuInfo)
-                    item = { ...item, ...skuInfo }
                     return item
                 })
                 if (this.form.mainSkus.length == mainSkus.length) {
@@ -339,7 +358,14 @@ export default {
                     this.form.mainSkus = mainSkus
                 }
             }
-            console.log(this.form.mainSkus)
+        },
+        mainSkus: {
+            handler (value, preValue) {
+                if (value.length === preValue.length) {
+                    this.isEditSku = true
+                }
+            },
+            deep: true
         }
     },
     methods: {
@@ -352,6 +378,7 @@ export default {
             this.getCategoryOptions()
             this.getModelOptions()
             if (this.$route.query.id) {
+                this.isEdit = true
                 this.showMore = true
                 this.getProductInfo(this.$route.query.id)
             }
