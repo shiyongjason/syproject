@@ -401,7 +401,7 @@ export default {
     },
     methods: {
         async confirmLoanTransfers () {
-            if (!this.LoanTransferContent.reviewResolutionResponse.pledgeNo || !this.LoanTransferContent.reviewResolutionResponse.reviewResolutionNo || !this.LoanTransferContent.reviewResolutionResponse.oaNo || !this.LoanTransferContent.contractArchiveDocs.length) {
+            if (!this.LoanTransferContent.reviewResolutionResponse.pledgeNo || !this.LoanTransferContent.reviewResolutionResponse.oaNo || !this.LoanTransferContent.contractArchiveDocs.length) {
                 this.$message.error('必填项不得为空哦~')
                 return
             }
