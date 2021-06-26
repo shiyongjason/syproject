@@ -104,6 +104,7 @@
     </div>
 </template>
 <script>
+import { deepCopy } from '@/utils/utils'
 import { mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 export default {
@@ -162,7 +163,7 @@ export default {
             immediate: true,
             handler (val) {
                 this.form = val
-                this.form.mainSkus.map(item => {
+                this.form.mainSkus = deepCopy(this.form.mainSkus).map(item => {
                     item.disabled = !!(item.auditStatus == 0 || item.auditStatus == 1 || item.auditStatus == 2)
                     return item
                 })

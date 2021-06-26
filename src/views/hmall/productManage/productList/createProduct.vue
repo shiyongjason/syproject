@@ -156,7 +156,6 @@ import { RICH_EDITOR_MENUS, PUTAWAY_RULES } from '../const/common'
 import { flatten } from '@/views/hmall/utils/sku'
 import { deepCopy } from '@/utils/utils'
 import { clearCache } from '@/utils/index'
-import transactionInfoVue from '../../dataBoard/transactionInfo.vue'
 export default {
     name: 'createProduct',
     components: {
@@ -302,8 +301,8 @@ export default {
         }
     },
     watch: {
-        imageUrls (value) {
-            if (value.length > 0) {
+        'form.imageUrls' (value) {
+            if (value.length) {
                 this.$refs.imageUrls.clearValidate()
             }
         },
@@ -370,10 +369,10 @@ export default {
     },
     methods: {
         init () {
-            // this.form.brandId = 1
-            // this.form.brandName = '格力'
-            // this.form.categoryId = 47
-            // this.form.model = 'qwertt'
+            this.form.brandId = 1
+            this.form.brandName = '格力'
+            this.form.categoryId = 47
+            this.form.model = 'qwertt'
             this.getBrandOptions()
             this.getCategoryOptions()
             this.getModelOptions()
@@ -511,11 +510,11 @@ export default {
             this.form.mainSkus = this.form.mainSkus.concat({ optionValues: optionValues })
         },
         onSave () {
+            this.form.imageUrls = this.imageUrls
             let form = {}
             if (this.form.optionTypeList.length > 0) {
                 form = {
                     ...this.form,
-                    imageUrls: this.imageUrls,
                     optionTypeIds: this.form.optionTypeList.map(item => item.id),
                     mainSkus: deepCopy(this.form.mainSkus).map(item => {
                         item.id = item.mainSkuId ? item.mainSkuId : ''
@@ -530,7 +529,6 @@ export default {
             } else {
                 form = {
                     ...this.form,
-                    imageUrls: this.imageUrls,
                     mainSkus: deepCopy(this.form.mainSkus).map(item => {
                         item.name = this.form.name
                         item.imageUrls = item.imageUrls.split(',')
