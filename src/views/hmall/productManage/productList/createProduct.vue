@@ -77,7 +77,7 @@
                         <div class="sku-cont_group mb20" v-for="(item,index) in form.optionTypeList" :key="index">
                             <div class="group-spec_label">
                                 <el-form-item label="规格名：" :prop="`optionTypeList[${index}].name`" :rules="rules.option">
-                                    <el-input v-model="item.name" @change="onAddOption(item.name,index)" maxlength="10" placeholder="请输入规格名" :disabled="form.auditStatus || form.auditStatus == 0"></el-input>
+                                    <el-input v-model="item.name" @change="onAddOption(item.name,index)" maxlength="10" placeholder="请输入规格名"></el-input>
                                 </el-form-item>
                             </div>
                             <div class="group-spec_tags mt20">
@@ -309,8 +309,10 @@ export default {
         'form.optionTypeList' (value) {
             // 当sku被编辑的时候
             if (this.isEdit || this.isEditSku) {
+                console.log(11111111)
                 // 当mainSkus的列比规格的列小的时候，说明规格名增加了
                 if (this.form.mainSkus[0].optionValues.length < value.length) {
+                    // 当规格属性增加的时候添加属性相关信息进入mainSku中
                     if (value[value.length - 1].optionValues.length > 0) {
                         this.form.mainSkus = this.form.mainSkus.map(item => {
                             item.optionValues.push(value[value.length - 1].optionValues[0])
@@ -490,10 +492,22 @@ export default {
             this.$set(this.addValues, index, '')
         },
         onDelOptionValue (index, sIndex) {
+            let id = ''
             this.form.optionTypeList = this.form.optionTypeList.map((item, i) => {
                 if (index === i) {
+                    id = item.optionValues[sIndex].id
                     item.optionValues.splice(sIndex, 1)
                 }
+                return item
+            })
+            this.form.mainSkus = this.form.mainSkus.map((item, i) => {
+                item.optionValues = item.optionValues.map(obj => {
+                    if (obj.id === id) {
+                        obj.id = ''
+                        obj.name = ''
+                    }
+                    return obj
+                })
                 return item
             })
             this.addValues.splice(sIndex, 1)
