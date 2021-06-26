@@ -150,7 +150,7 @@
                         </div>
                         <div class="project-detail-item">
                             <el-form-item label="">
-                                <el-input v-model="projectDetail.address" maxlength="100" placeholder="请输入详细地址"></el-input>
+                                <el-input v-model="projectDetail.address" maxlength="200" placeholder="请输入详细地址"></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
