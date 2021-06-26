@@ -29,14 +29,7 @@
                         <span class="tr-label">体积/m³</span>
                     </td>
                     <td>
-<<<<<<< HEAD
                         <span class="tr-label" v-if="edite">SKU编码</span>
-=======
-                        <span class="tr-label">SKU编码</span>
-                    </td>
-                    <td v-if="$route.query.id">
-                        <span class="tr-label">状态</span>
->>>>>>> 992786ece639608f0d153fbdf30ae2a4b14d9aac
                     </td>
                     <td>
                         <span class="tr-label">状态</span>
@@ -49,13 +42,8 @@
             <tbody>
                 <tr v-for="(item,index) in form.mainSkus" :key="index">
                     <template v-for="(sItem,sIndex) in item.optionValues">
-<<<<<<< HEAD
                         <td :key="sIndex">
                             <el-select v-model="sItem.id" @change="onChangeValue(index,sIndex)" clearable :disabled="!seeTask">
-=======
-                        <td :key="sIndex" v-if="sItem.optionTypeName">
-                            <el-select v-model="sItem.id" @change="onChangeValue(index,sIndex)" clearable :disabled="item.disabled">
->>>>>>> 992786ece639608f0d153fbdf30ae2a4b14d9aac
                                 <el-option v-for="i in optionValuesFilter(sItem.optionTypeId)" :key="i.id" :label="i.name" :value="i.id"></el-option>
                             </el-select>
                         </td>
@@ -68,47 +56,29 @@
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-<<<<<<< HEAD
                             <el-input v-model="item.serialNumber" maxlength="16" :disabled="!seeTask"></el-input>
-=======
-                            <el-input v-model="item.serialNumber" maxlength="16" :disabled="item.disabled"></el-input>
->>>>>>> 992786ece639608f0d153fbdf30ae2a4b14d9aac
                         </el-form-item>
                     </td>
                     <td class="log-width">
                         <el-form-item label-width='0'>
-<<<<<<< HEAD
                             <el-input v-model="item.length" maxlength="16" :disabled="!seeTask"></el-input>
                             <el-input v-model="item.width" maxlength="16" :disabled="!seeTask"></el-input>
                             <el-input v-model="item.height" maxlength="16" :disabled="!seeTask"></el-input>
-=======
-                            <el-input v-model="item.length" maxlength="16" :disabled="item.disabled"></el-input>
-                            <el-input v-model="item.width" maxlength="16" :disabled="item.disabled"></el-input>
-                            <el-input v-model="item.height" maxlength="16" :disabled="item.disabled"></el-input>
->>>>>>> 992786ece639608f0d153fbdf30ae2a4b14d9aac
                         </el-form-item>
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-<<<<<<< HEAD
                             <el-input v-model="item.grossWeight" maxlength="8" :disabled="!seeTask"></el-input>
-=======
-                            <el-input v-model="item.grossWeight" maxlength="8" :disabled="item.disabled"></el-input>
->>>>>>> 992786ece639608f0d153fbdf30ae2a4b14d9aac
                         </el-form-item>
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-<<<<<<< HEAD
                             <el-input v-model="item.volume" maxlength="8" :disabled="!seeTask"></el-input>
                         </el-form-item>
                     </td>
                     <td v-if="edite">
                         <el-form-item label-width='0'>
                             <span>{{item.mainSkuId}}</span>
-=======
-                            <el-input v-model="item.volume" maxlength="8" :disabled="item.disabled"></el-input>
->>>>>>> 992786ece639608f0d153fbdf30ae2a4b14d9aac
                         </el-form-item>
                     </td>
                     <td v-if="$route.query.id">
