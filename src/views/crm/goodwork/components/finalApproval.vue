@@ -369,16 +369,16 @@ export default class FinalApproval extends Vue {
     }
 
     category: any[] = [
-        { value: 1, name: '空调' },
-        { value: 2, name: '采暖' },
-        { value: 3, name: '新风' },
-        { value: 4, name: '净水' },
-        { value: 5, name: '智能化' },
-        { value: 6, name: '辅材' },
-        { value: 7, name: '电梯' },
-        { value: 8, name: '其他' },
-        { value: 9, name: '电器' },
-        { value: 10, name: '热水器' }
+        { value: '空调', name: '空调' },
+        { value: '采暖', name: '采暖' },
+        { value: '新风', name: '新风' },
+        { value: '净水', name: '净水' },
+        { value: '智能化', name: '智能化' },
+        { value: '辅材', name: '辅材' },
+        { value: '电梯', name: '电梯' },
+        { value: '其他', name: '其他' },
+        { value: '电器', name: '电器' },
+        { value: '热水器', name: '热水器' }
     ];
 
     resStatus:Object={
@@ -517,7 +517,7 @@ export default class FinalApproval extends Vue {
         { label: '上游供应商', prop: 'upstreamSupplierName', width: '120' },
         { label: '上游供应商类型', prop: 'upstreamSupplierType', width: '150', dicData: [{ value: 1, label: '厂商' }, { value: 2, label: '代理商' }, { value: 3, label: '经销商' }] },
         { label: '上游支付方式', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] },
-        { label: '设备品类', prop: 'deviceCategory', dicData: [{ value: 1, label: '空调' }, { value: 2, label: '采暖' }, { value: 3, label: '新风' }, { value: 4, label: '净水' }, { value: 5, label: '智能化' }, { value: 6, label: '辅材' }, { value: 7, label: '电梯' }, { value: 8, label: '其他' }, { value: 9, label: '电器' }, { value: 10, label: '热水器' }] }
+        { label: '设备品类', prop: 'deviceCategory' }
     ];
 
     formTableLabel: tableLabelProps = [
@@ -664,8 +664,8 @@ export default class FinalApproval extends Vue {
                     return (
                         <el-option
                             key={index + 'option'}
-                            value={item.value}
-                            label={item.name}
+                            value={item.name}
+                            label={item.value}
                         >
                             {item.name}
                         </el-option>
