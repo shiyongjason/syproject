@@ -94,7 +94,7 @@
                         </div>
                         <div class="project-detail-item">
                             <el-form-item prop='userMobile' label="客户手机号：">
-                                <el-input placeholder="请输入客户手机号" v-model='threadDetail.userMobile'></el-input>
+                                <el-input placeholder="请输入客户手机号" @blur='phoneBlur' v-model='threadDetail.userMobile'></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
@@ -247,7 +247,7 @@
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
 import { ccpBaseUrl, ossAliyun, ossOldBucket } from '@/api/config'
-import { getChiness, getFlowUp, getFlowUpCount, addFlowUp, updateThreadDetail } from './api/index'
+import { getChiness, getFlowUp, getFlowUpCount, addFlowUp, updateThreadDetail, checkThreadIsRight } from './api/index'
 import OssFileUtils from '@/utils/OssFileUtils'
 import { State, namespace, Action, Getter } from 'vuex-class'
 import { Clue, FlowUpRequest } from '@/interface/hbp-member'
@@ -395,6 +395,19 @@ export default class ThreadDetail extends Vue {
     }
     onBlurItem () {
 
+    }
+    phoneBlur (e) {
+        console.log(this.threadDetail.userMobile)
+        Phone('', this.threadDetail.userMobile, async e => {
+            if (!e) {
+                const { data } = await checkThreadIsRight(this.threadDetail.userMobile)
+                if (data) {
+                    // 表示已经注册过
+                    this.threadDetail.userMobile = ''
+                    this.$message.error('CRM中已有该客户，无需重复添加')
+                }
+            }
+        })
     }
     handleThreadSelect (item) {
         this.stateN = item.psnname
