@@ -86,19 +86,22 @@
                 </div>
                 <RichEditor style="position:relative;z-index:1" v-model="form.detail" :width="richTextAttr.width" :height="richTextAttr.height" :menus="richTextAttr.menus" :uploadImgServer="richTextAttr.uploadImgServer" :uploadImgParams="richTextAttr.uploadImgParams" :disabled="!seeTask">
                 </RichEditor>
-                <div class="agreement mt30">
-                    <template v-if="seeTask">
-                        <el-form-item label="审核结果：" prop="auditStatus" :rules="rules.auditStatus">
-                            <el-radio-group v-model="form.auditStatus" @change="onChange">
-                                <el-radio label="1">审核通过</el-radio>
-                                <el-radio label="2">审核不通过</el-radio>
-                            </el-radio-group>
-                        </el-form-item>
-                        <el-form-item label="备注原因：" v-if="form.auditStatus == 2" :prop="auditOpinion" :rules="rules.auditOpinion">
-                            <el-input type="textarea" v-model="form.auditOpinion" rows="3" maxlength="200"></el-input>
-                        </el-form-item>
-                    </template>
+                <div class="title-cont pt30" v-if="seeTask">
+                    <el-form-item label="审核结果：" prop="auditStatus">
+                        <el-radio-group v-model="form.auditStatus" @change="onChange">
+                            <el-radio label="1">审核通过</el-radio>
+                            <el-radio label="2">审核不通过</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item style="width: 460px;" v-if="form.auditStatus==2" prop="auditOpinion" class="pt50">
+                        <el-input type="textarea" maxlength="200" :rows="3" placeholder="理由说明" v-model="form.auditOpinion">
+                        </el-input>
+                    </el-form-item>
                 </div>
+                <el-form-item style="text-align: right" class="pt30">
+                    <h-button type='primary' :loading="btnLoading" @click="onSave" v-if="seeTask">确定</h-button>
+                    <h-button @click="onCancel">返回</h-button>
+                </el-form-item>
             </el-form>
         </div>
         <div class="page-body-cont btn-cont" v-if="showMore">
@@ -155,7 +158,9 @@ export default {
                         volume: '',
                         netWeight: ''
                     }
-                ]
+                ],
+                auditStatus: '',
+                auditOpinion: ''
             },
             rules: {
                 imageUrls: [
@@ -362,23 +367,28 @@ export default {
                 mainSkuWarehouseRequest: deepCopy(this.form.mainSkus).map(item => {
                     return item
                 }),
-                operator: this.userInfo.employeeName
+                operator: this.userInfo.employeeName,
+                auditStatus: this.form.auditStatus,
+                auditOpinion: this.form.auditOpinion
             }
             delete form.optionTypeIds
             delete form.optionTypeList
             this.btnLoading = true
-            // this.$refs.form.validate(async (valid) => {
-            //     if (valid) {
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
-                    try {
-                        await this.aduitSpu(form)
+                    if (this.form.auditStatus != '') {
+                        try {
+                            await this.aduitSpu(form)
+                            this.btnLoading = false
+                            this.$message.success('操作成功！')
+                            this.$router.push('/b2b/product/productAuditList')
+                            this.setNewTags((this.$route.fullPath).split('?')[0])
+                        } catch (error) {
+                            this.btnLoading = false
+                        }
+                    } else {
                         this.btnLoading = false
-                        this.$message.success('商品审核通过！')
-                        this.$router.push('/b2b/product/productAuditList')
-                        this.setNewTags((this.$route.fullPath).split('?')[0])
-                    } catch (error) {
-                        this.btnLoading = false
+                        this.$message.error('请审核！')
                     }
                 } else {
                     this.btnLoading = false
