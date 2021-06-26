@@ -70,7 +70,7 @@
                 </div>
             </div>
             <div class="button-cont">
-                <h-button type="create" @click="onBatchAduit()">批量审核</h-button>
+                <h-button type="create" @click="onBatchAduit()" v-if="tabName == '4' || tabName == '0'">批量审核</h-button>
                 <template v-if="productType == 'SPU'">
                     <h-button type='assist' @click="onTabProductType('SKU')" class="margin-left__auto">切换SKU</h-button>
                 </template>
@@ -78,7 +78,8 @@
                     <h-button type='assist' @click="onTabProductType('SPU')" class="margin-left__auto">切换SPU</h-button>
                 </template>
             </div>
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" :multiSelection.sync="multiSelection" :actionMinWidth="200" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isShowCollapse="true" :isMultiple="true" :isAction="true">
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" :multiSelection.sync="multiSelection" :actionMinWidth="200" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isShowCollapse="true"
+                :isMultiple="tabName == '4' || tabName == '0' ? true:false" :isAction="true">
                 <template slot="auditStatus" slot-scope="scope">
                     {{ productMap.get(scope.data.row.auditStatus) || '-' }}
                 </template>
@@ -246,7 +247,7 @@ export default {
             }
         },
         onseeTask (row) {
-            console.log(row)
+            // console.log(row)
             if (this.productType == 'SPU') {
                 this.$router.push({ path: '/b2b/product/editSpuAudit', query: { id: row.id, seeTask: false } })
             } else if (this.productType == 'SKU') {
@@ -366,7 +367,7 @@ export default {
         },
         async getProductSkuList () {
             await this.findProductSkuList(this.queryParams)
-            console.log(this.productSkuData)
+            // console.log(this.productSkuData)
         }
     },
     mounted () {

@@ -359,7 +359,7 @@ export default {
                     detail: this.form.detail,
                     specifications: this.form.specifications.filter(item => item.v)
                 },
-                mainSkuWarehouseRequest: deepCopy(this.form.mainSkus),
+                warehouseRequest: this.form.mainSkus[0],
                 operator: this.userInfo.employeeName,
                 auditStatus: this.form.auditStatus,
                 auditOpinion: this.form.auditOpinion
@@ -403,7 +403,7 @@ export default {
             addOptionValue: 'productManage/addOptionValue',
             createProduct: 'productManage/createProduct',
             editProduct: 'productManage/editProduct',
-            aduitSpu: 'productManage/aduitSpu'
+            aduitSku: 'productManage/aduitSku'
         }),
         async getBrandOptions () {
             await this.findBrandOptions()
@@ -443,7 +443,7 @@ export default {
         },
         async getProductskuInfo (id) {
             await this.findProductSkuInfo({ id: id })
-            console.log(this.productSkuInfo.mainSpuId)
+            // console.log(this.productSkuInfo.mainSpuId)
             if (this.productSkuInfo.mainSpuId) {
                 this.getProductInfo(this.productSkuInfo.mainSpuId)
             }
