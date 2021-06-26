@@ -30,7 +30,7 @@
                         <div class="process-item pos8" v-if="process[6]" :class="process[6].nodeStatus==1?'isActive':''">{{process[6].nodeName}}</div>
                     </div>
                     <div class="flowup-count">
-                        <h-button type='assist' @click='add' v-if="!projectDetail.hasRefund"> + 新增跟进记录</h-button>
+                        <h-button type='assist' @click='add' v-if="!projectDetail.hasRefunded"> + 新增跟进记录</h-button>
                         <span>
                             累计跟进{{flowUpCount.total}}次，当面拜访{{flowUpCount.directCount}}次
                         </span>
@@ -119,12 +119,12 @@
                     <el-form id='elform' :model="projectDetail" :rules="formRules"  label-width="140px"  label-position='right' ref="projectDetailForm" class="list2">
                         <div class="project-detail-item">
                             <el-form-item  prop='firstPartName' label="甲方名称：">
-                                <el-input  placeholder="请输入甲方名称" v-model='projectDetail.firstPartName'></el-input>
+                                <el-input  placeholder="请输入甲方名称" v-model='projectDetail.firstPartName' maxlength="25"></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
                             <el-form-item  prop='projectName' label="项目名称：">
-                                <el-input  placeholder="请输入项目名称" v-model='projectDetail.projectName'></el-input>
+                                <el-input  placeholder="请输入项目名称" v-model='projectDetail.projectName' maxlength="25"></el-input>
                             </el-form-item>
                         </div>
 
@@ -150,7 +150,7 @@
                         </div>
                         <div class="project-detail-item">
                             <el-form-item label="">
-                                <el-input v-model="projectDetail.address" maxlength="100" placeholder="请输入详细地址"></el-input>
+                                <el-input v-model="projectDetail.address" maxlength="200" placeholder="请输入详细地址"></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
