@@ -6,7 +6,7 @@
                     <td v-for="(item,index) in optionTypeListFilter" :key="index" style="min-width:100px;">{{item.name}}</td>
                     <td class="fixed-width">
                         <span class="tr-label">图片</span>
-                        <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="params.skuImgurl" v-if="seeTask" @back-event="backPicUrl" />
+                        <!-- <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="params.skuImgurl" v-if="seeTask" @back-event="backPicUrl" />
                         <el-dropdown placement="bottom-end" @command="handleCommand" v-if="seeTask">
                             <span class="el-dropdown-link">
                                 <i class="el-icon-arrow-down el-icon--right"></i>
@@ -14,7 +14,7 @@
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="imageUrls">应用全部</el-dropdown-item>
                             </el-dropdown-menu>
-                        </el-dropdown>
+                        </el-dropdown> -->
                     </td>
                     <td>
                         <span class="tr-label">条头码</span>
@@ -43,37 +43,37 @@
                 <tr v-for="(item,index) in form.mainSkus" :key="index">
                     <template v-for="(sItem,sIndex) in item.optionValues">
                         <td :key="sIndex">
-                            <el-select v-model="sItem.id" @change="onChangeValue(index,sIndex)" clearable :disabled="!seeTask">
+                            <el-select v-model="sItem.id" @change="onChangeValue(index,sIndex)" clearable disabled>
                                 <el-option v-for="i in optionValuesFilter(sItem.optionTypeId)" :key="i.id" :label="i.name" :value="i.id"></el-option>
                             </el-select>
                         </td>
                     </template>
                     <td class="fixed-width">
                         <el-form-item label-width='0'>
-                            <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" v-if="seeTask" />
-                            <img :src="item.imageUrls" v-if="!seeTask" style="width:44px;height:44px" />
+                            <!-- <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" v-if="seeTask" /> -->
+                            <img :src="item.imageUrls" style="width:44px;height:44px" />
                         </el-form-item>
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.serialNumber" maxlength="16" :disabled="!seeTask"></el-input>
+                            <el-input v-model="item.serialNumber" maxlength="16" disabled></el-input>
                         </el-form-item>
                     </td>
                     <td class="log-width">
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.length" maxlength="16" :disabled="!seeTask"></el-input>
-                            <el-input v-model="item.width" maxlength="16" :disabled="!seeTask"></el-input>
-                            <el-input v-model="item.height" maxlength="16" :disabled="!seeTask"></el-input>
+                            <el-input v-model="item.length" maxlength="16" disabled></el-input>
+                            <el-input v-model="item.width" maxlength="16" disabled></el-input>
+                            <el-input v-model="item.height" maxlength="16" disabled></el-input>
                         </el-form-item>
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.grossWeight" maxlength="8" :disabled="!seeTask"></el-input>
+                            <el-input v-model="item.grossWeight" maxlength="8" disabled></el-input>
                         </el-form-item>
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.volume" maxlength="8" :disabled="!seeTask"></el-input>
+                            <el-input v-model="item.volume" maxlength="8" disabled></el-input>
                         </el-form-item>
                     </td>
                     <td v-if="edite">
