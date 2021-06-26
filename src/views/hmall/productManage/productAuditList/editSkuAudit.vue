@@ -364,17 +364,16 @@ export default {
                 auditStatus: this.form.auditStatus,
                 auditOpinion: this.form.auditOpinion
             }
-            console.log(this.form.auditStatus)
             this.btnLoading = true
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
                     if (this.form.auditStatus != '') {
                         try {
-                            // await this.aduitSku(form)
-                            // this.btnLoading = false
-                            // this.$message.success('操作成功！')
-                            // this.$router.push('/b2b/product/productAuditList')
-                            // this.setNewTags((this.$route.fullPath).split('?')[0])
+                            await this.aduitSku(form)
+                            this.btnLoading = false
+                            this.$message.success('操作成功！')
+                            this.$router.push('/b2b/product/productAuditList')
+                            this.setNewTags((this.$route.fullPath).split('?')[0])
                         } catch (error) {
                             this.btnLoading = false
                         }
