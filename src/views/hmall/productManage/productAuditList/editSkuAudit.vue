@@ -84,7 +84,7 @@
                 <div class="title-cont mt10">
                     <span class="title-cont__label">商品详情信息</span>
                 </div>
-                <RichEditor style="position:relative;z-index:1" v-model="form.detail" :width="richTextAttr.width" :height="richTextAttr.height" :menus="richTextAttr.menus" :uploadImgServer="richTextAttr.uploadImgServer" :uploadImgParams="richTextAttr.uploadImgParams" :disabled="!seeTask">
+                <RichEditor style="position:relative;z-index:1" v-model="form.detail" :width="richTextAttr.width" :height="richTextAttr.height" :menus="richTextAttr.menus" :uploadImgServer="richTextAttr.uploadImgServer" :uploadImgParams="richTextAttr.uploadImgParams" :disabled="seeTask">
                 </RichEditor>
                 <div class="title-cont pt30" v-if="seeTask">
                     <el-form-item label="审核结果：" prop="auditStatus">
@@ -163,7 +163,7 @@ export default {
                 auditOpinion: ''
             },
             rules: {
-                imageUrls: [
+                imgUrls: [
                     { required: true, message: '请上传商品图片', trigger: 'change' }
                 ],
                 k: [
