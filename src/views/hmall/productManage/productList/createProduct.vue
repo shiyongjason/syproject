@@ -34,7 +34,7 @@
                 </el-form-item>
                 <div v-if="showMore">
                     <el-form-item label="商品名称：" prop="name">
-                        <el-input class="form-input_big" v-model="form.name" maxlength="100" placeholder="请输入商品名称"></el-input>
+                        <el-input class="form-input_big" v-model="form.name" maxlength="100" placeholder="请输入商品名称" :disabled="form.auditStatus == 1"></el-input>
                     </el-form-item>
                     <el-form-item label="">
                         <span class="isGrayColor">商品名称用于识别操作上下架编辑，字数最多100字</span>
@@ -77,18 +77,18 @@
                         <div class="sku-cont_group mb20" v-for="(item,index) in form.optionTypeList" :key="index">
                             <div class="group-spec_label">
                                 <el-form-item label="规格名：" :prop="`optionTypeList[${index}].name`" :rules="rules.option">
-                                    <el-input v-model="item.name" @change="onAddOption(item.name,index)" maxlength="10" placeholder="请输入规格名"></el-input>
+                                    <el-input v-model="item.name" @change="onAddOption(item.name,index)" maxlength="10" placeholder="请输入规格名" :disabled="form.auditStatus || form.auditStatus == 0"></el-input>
                                 </el-form-item>
                             </div>
                             <div class="group-spec_tags mt20">
                                 <el-form-item label="规格值：" :prop="`optionTypeList[${index}].optionValues`" :rules="rules.optionValues">
-                                    <el-tag class="mr10" v-for="(sItem,sIndex) in item.optionValues" :key="sIndex" @close="onDelOptionValue(index,sIndex)" :closable="item.optionValues.length>1">{{sItem.name}}</el-tag>
+                                    <el-tag class="mr10" v-for="(sItem,sIndex) in item.optionValues" :key="sIndex" @close="onDelOptionValue(index,sIndex)" :closable="form.auditStatus != 1 && item.optionValues.length > 1">{{sItem.name}}</el-tag>
                                     <el-input v-model="addValues[index]" @change="onAddOptionVlaue(index)" suffix-icon="el-icon-plus" maxlength="50" placeholder="多个属性值以空格隔开"></el-input>
                                 </el-form-item>
                             </div>
-                            <span class="group-spec_close" @click="onDelOptionTemplate(index)"><i class="el-icon-close"></i></span>
+                            <span class="group-spec_close" @click="onDelOptionTemplate(index)" v-if="form.auditStatus != 1"><i class="el-icon-close"></i></span>
                         </div>
-                        <h-button type="create" class="mb20" @click="onAddOptionTemplate" :disabled="disabled">添加规格</h-button>
+                        <h-button type="create" class="mb20" @click="onAddOptionTemplate">添加规格</h-button>
                     </div>
                     <skuTable ref="skuTable" :formData.sync="form" v-if="form.optionTypeList.length>0"></skuTable>
                     <h-button type="create" class="mb20" v-if="form.optionTypeList.length>0" @click="onAddSKU">+</h-button>
@@ -369,10 +369,6 @@ export default {
     },
     methods: {
         init () {
-            this.form.brandId = 1
-            this.form.brandName = '格力'
-            this.form.categoryId = 47
-            this.form.model = 'qwertt'
             this.getBrandOptions()
             this.getCategoryOptions()
             this.getModelOptions()
