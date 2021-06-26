@@ -91,6 +91,50 @@ export default [
                         component: () => import('@/views/hmall/productManage/productAuditList/index.vue')
                     },
                     {
+                        path: 'editSpuAudit',
+                        name: 'editSpuAudit',
+                        meta: {
+                            title: 'SPU商品审核',
+                            tagName: 'SPU商品审核',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/productManage/productAuditList/editSpuAudit.vue')
+                    },
+                    {
+                        path: 'spuAudit',
+                        name: 'spuAudit',
+                        meta: {
+                            title: 'SPU商品查看',
+                            tagName: 'SPU商品查看',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/productManage/productAuditList/editSpuAudit.vue')
+                    },
+                    {
+                        path: 'editSkuAudit',
+                        name: 'editSkuAudit',
+                        meta: {
+                            title: 'SKU商品审核',
+                            tagName: 'SKU商品审核',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/productManage/productAuditList/editSkuAudit.vue')
+                    },
+                    {
+                        path: 'skuAudit',
+                        name: 'skuAudit',
+                        meta: {
+                            title: 'SKU商品查看',
+                            tagName: 'SKU商品查看',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/productManage/productAuditList/editSkuAudit.vue')
+                    },
+                    {
                         path: 'marketStore',
                         name: 'marketStore',
                         meta: {

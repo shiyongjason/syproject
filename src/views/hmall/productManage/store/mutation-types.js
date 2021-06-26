@@ -13,6 +13,7 @@ export const PRODUCT_SKU_DATA = 'PRODUCT_SKU_DATA'
 export const PRODUCT_UNIQUE = 'PRODUCT_UNIQUE'
 
 export const PRODUCT_SPU_INFO = 'PRODUCT_SPU_INFO'
+export const PRODUCT_SKU_INFO = 'PRODUCT_SKU_INFO'
 
 export const OPTION_ID = 'OPTION_ID'
 

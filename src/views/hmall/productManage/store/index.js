@@ -11,6 +11,7 @@ const state = {
     productSkuData: {},
     productUnique: '',
     productSpuInfo: {},
+    productSkuInfo: {},
     optionId: '',
     optionValueData: []
 }
@@ -59,6 +60,9 @@ const mutations = {
     [types.PRODUCT_SPU_INFO] (state, payload) {
         state.productSpuInfo = payload
     },
+    [types.PRODUCT_SKU_INFO] (state, payload) {
+        state.productSkuInfo = payload
+    },
     [types.OPTION_ID] (state, payload) {
         state.optionId = payload
     },
@@ -104,6 +108,10 @@ const actions = {
         const { data } = await instance.get(`/product/boss/main-spu/${params.id}`, { params })
         commit(types.PRODUCT_SPU_INFO, data)
     },
+    async findProductSkuInfo ({ commit }, params) {
+        const { data } = await instance.get(`/product/boss/main-sku/${params.id}`, { params })
+        commit(types.PRODUCT_SKU_INFO, data)
+    },
     async addOption ({ commit }, params) {
         const { data } = await instance.post('/product/boss/main-spu-option-types', params)
         commit(types.OPTION_ID, data)
@@ -135,6 +143,20 @@ const actions = {
     },
     async deleteSKU ({ commit }, params) {
         await instance.delete(`/product/boss/main-sku/${params.id}`, params)
+    },
+    // 批量审核
+    async batchAduitSku ({ commit }, params) {
+        await instance.patch('/product/boss/main-sku/batch-audit', params)
+    },
+    async batchAduitSpu ({ commit }, params) {
+        await instance.patch('/product/boss/main-spu/batch-audit', params)
+    },
+    // 批量审核
+    async aduitSku ({ commit }, params) {
+        await instance.patch('/product/boss/main-sku/audit', params)
+    },
+    async aduitSpu ({ commit }, params) {
+        await instance.patch('/product/boss/main-spu/audit', params)
     }
 }
 

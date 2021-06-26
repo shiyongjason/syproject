@@ -3,24 +3,18 @@
         <div class="page-body-cont">
             <div class="table-cont-tabs">
                 <el-tabs type="card" v-model="tabName" @tab-click="onTab">
-                    <el-tab-pane v-for="item in productAuditStatus" :key="item.value" :label="item.label" :name="item.value"></el-tab-pane>
+                    <el-tab-pane v-for="item in productStatus" :key="item.value" :label="item.label" :name="item.value"></el-tab-pane>
                 </el-tabs>
             </div>
             <div class="query-cont__row">
-                <div class="query-cont__col" v-if="productType == 'SPU'">
+                <div class="query-cont__col">
                     <div class="query-col__lable">商品名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.spuName" maxlength="30" placeholder="请输入" @keyup.enter.native="onQuery"></el-input>
-                    </div>
-                </div>
-                <div class="query-cont__col" v-if="productType == 'SKU'">
-                    <div class="query-col__lable">商品名称：</div>
-                    <div class="query-col__input">
-                        <el-input v-model="queryParams.skuName" maxlength="30" placeholder="请输入" @keyup.enter.native="onQuery"></el-input>
+                        <el-input v-model="queryParams.name" maxlength="30" placeholder="请输入" @keyup.enter.native="onQuery"></el-input>
                     </div>
                 </div>
                 <template v-if="showAllConditions">
-                    <div class="query-cont__col" v-if="productType == 'SPU'">
+                    <div class="query-cont__col">
                         <div class="query-col__lable">SPU编码：</div>
                         <div class="query-col__input">
                             <el-input v-model="queryParams.spuCode" maxlength="30" placeholder="请输入" @keyup.enter.native="onQuery"></el-input>
@@ -39,533 +33,365 @@
                         </div>
                     </div>
                     <div class="query-cont__col">
+                        <div class="query-col__lable">商品类目：</div>
+                        <div class="query-col__input">
+                            <el-input v-model="queryParams.model" maxlength="30" placeholder="请输入" @keyup.enter.native="onQuery"></el-input>
+                        </div>
+                    </div>
+                    <div class="query-cont__col">
                         <div class="query-col__lable">商品型号：</div>
                         <div class="query-col__input">
                             <el-input v-model="queryParams.model" maxlength="30" placeholder="请输入" @keyup.enter.native="onQuery"></el-input>
                         </div>
                     </div>
-                    <div class="query-cont__col" v-if="tabName == 'onShelf'">
-                        <div class="query-col__lable">是否共享：</div>
+                    <div class="query-cont__col" v-if="tabName == '4'">
+                        <div class="query-col__lable">审核状态：</div>
                         <div class="query-col__input">
-                            <el-select v-model="queryParams.isShared" @keyup.enter.native="onQuery">
-                                <el-option v-for="item in isSharedOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            <el-select v-model="queryParams.auditStatus">
+                                <el-option v-for="item in productStatus" :label="item.label" :value="item.value" :key="item.value"></el-option>
                             </el-select>
+                        </div>
+                    </div>
+                    <div class="query-cont__col">
+                        <div class="query-col__lable">提交时间：</div>
+                        <div class="query-col__input">
+                            <el-date-picker v-model="queryParams.createTimeFrom" type="datetime" placeholder="起始" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsStart"></el-date-picker>
+                            <span class="ml10 mr10">-</span>
+                            <el-date-picker v-model="queryParams.createTimeTo" type="datetime" placeholder="截止" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsEnd"></el-date-picker>
                         </div>
                     </div>
                 </template>
                 <div class="query-cont__col">
                     <h-button type='primary' @click="onQuery">查询</h-button>
-                    <h-button @click="onReset" v-if="showAllConditions">重置</h-button>
                     <h-button @click="onExport" v-if="showAllConditions">导出</h-button>
+                    <h-button @click="onReset" v-if="showAllConditions">重置</h-button>
                     <span class="more-condition" @click="showAllConditions = false" v-if="showAllConditions">收起<i class="el-icon-arrow-up"></i></span>
                     <span class="more-condition" @click="showAllConditions = true" v-else>高级搜索<i class="el-icon-arrow-down"></i></span>
                 </div>
             </div>
             <div class="button-cont">
+                <h-button type="create" @click="onBatchAduit()">批量审核</h-button>
                 <template v-if="productType == 'SPU'">
-                    <h-button type='create' @click="onCreateProduct">新建商品</h-button>
-                    <h-button @click="onBatchOnShelf()" v-if="tabName == 'offShelf'">批量生效</h-button>
-                    <h-button @click="onBatchOffShelf()" v-if="tabName == 'onShelf'">批量失效</h-button>
-                    <h-button @click="onBatchDel()" v-if="tabName != 'onShelf'">批量删除</h-button>
-                    <h-button type='assist' @click="onTabProductType('SKU')" class="flr mb10" v-if="tabName == 'onShelf' || tabName == 'offShelf'">切换SKU</h-button>
+                    <h-button type='assist' @click="onTabProductType('SKU')" class="margin-left__auto">切换SKU</h-button>
                 </template>
-                <template v-if="productType == 'SKU'">
-                    <h-button type='assist' @click="onTabProductType('SPU')" class="flr mb10" v-if="tabName == 'onShelf' || tabName == 'offShelf'">切换SPU</h-button>
+                <template v-else-if="productType == 'SKU'">
+                    <h-button type='assist' @click="onTabProductType('SPU')" class="margin-left__auto">切换SPU</h-button>
                 </template>
             </div>
-            <basicTable>
-
-            </basicTable>
-            <basicTable :tableData="tableDataSpu" :tableLabel="tableLabelSpu" :actionMinWidth="340" :pagination="paginationDataSpu" :multiSelection.sync="multiSelection" @onCurrentChange="onCurrentChangeSpu" :isMultiple="true" :isAction="true" v-if="productType=='SPU'">
-                <template slot="spuName" slot-scope="scope">
-                    <span>{{scope.data.row.spuName}}</span>
-                    <span class="isHot"><span v-if="scope.data.row.isSpike">特价</span></span>
-                </template>
-                <template slot="attachmentCount" slot-scope="scope">
-                    <a class="isLink" @click="onGoodInfo(scope.data.row.spuId)">{{scope.data.row.attachmentCount}}</a>
-                </template>
-                <template slot="isShared" slot-scope="scope">
-                    <span v-if="scope.data.row.isShared==0">否</span>
-                    <span v-if="scope.data.row.isShared==1">是</span>
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" :multiSelection.sync="multiSelection" :actionMinWidth="200" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isShowCollapse="true" :isMultiple="true" :isAction="true">
+                <template slot="auditStatus" slot-scope="scope">
+                    {{ productMap.get(scope.data.row.auditStatus) || '-' }}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="onToEditProduct(scope.data.row)" :disabled="scope.data.row.isSpike">编辑</h-button>
-                    <template v-if="tabName == 'onShelf'">
-                        <h-button table @click="onOffShelf(scope.data.row)" :disabled="scope.data.row.isSpike">下架</h-button>
-                        <h-button table @click="onOnMarket(scope.data.row)" v-if="scope.data.row.isShared == '0'">设置共享</h-button>
-                        <h-button table @click="onOffMarket(scope.data.row)" v-else :disabled="scope.data.row.isSpike">取消共享</h-button>
+                    <template v-if="scope.data.row.auditStatus== '0'">
+                        <h-button table @click="onAduit(scope.data.row)">审核</h-button>
                     </template>
-                    <h-button table @click="onOnShelf(scope.data.row)" v-if="tabName == 'offShelf'">上架</h-button>
-                    <h-button table @click="onDelete(scope.data.row)" v-if="tabName == 'checkPending' || tabName == 'reject'">删除</h-button>
-                </template>
-            </basicTable>
-            <basicTable :tableData="tableDataSku" :tableLabel="tableLabelSku" :actionMinWidth="340" :pagination="paginationDataSku" @onCurrentChange="onCurrentChangeSku" :isAction="true" v-if="productType=='SKU'">
-                <template slot="skuName" slot-scope="scope">
-                    <span>{{scope.data.row.skuName}}</span>
-                    <span class="isHot"><span v-if="scope.data.row.isSpike">特价</span></span>
-                </template>
-                <template slot="commission" slot-scope="scope">
-                    <span>{{scope.data.row.commission?scope.data.row.commission+'%':'-'}}</span>
-                </template>
-                <template slot="isShared" slot-scope="scope">
-                    <span v-if="scope.data.row.isShared==0">否</span>
-                    <span v-if="scope.data.row.isShared==1">是</span>
-                </template>
-                <template slot="action" slot-scope="scope">
-                    <h-button table @click="onToEditProduct(scope.data.row)" :disabled="scope.data.row.isSpike">编辑</h-button>
-                    <h-button table @click="onOnShelfSKU(scope.data.row)" v-if="tabName == 'offShelf'">上架</h-button>
-                    <h-button table @click="onOffShelfSKU(scope.data.row)" v-if="tabName == 'onShelf'" :disabled="scope.data.row.isSpike">下架</h-button>
+                    <template v-else-if="scope.data.row.auditStatus== '1' || scope.data.row.auditStatus== '2'">
+                        <h-button table @click="onseeTask(scope.data.row)">查看</h-button>
+                    </template>
                 </template>
             </basicTable>
         </div>
     </div>
 </template>
 <script>
-// import requestDownload from '@/utils/download'
-// import { uploadGoodAffixInfo, delGoodAffixInfo, setShared, cancelShared, onShelf, offShelf, delProduct, onShelfSku } from '../api/index'
-// import { IS_SHARED_OPTIONS } from '../const'
-// import { interfaceUrl, uploadUrl } from '@/api/config'
 import { mapState, mapActions } from 'vuex'
 import { clearCache, newCache } from '@/utils/index'
-import { PRODUCT_AUDIT_STATUS, EFFECTIVE, EFFICACY, AUDIT } from '../const/index'
-import { getProductsArr } from '@/views/jinyunplatform/api'
-// import { batchOperator } from '../utils/index'
+import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_MAP } from '../const/index'
+import { batchOperator } from '../../utils/index'
 export default {
-    name: 'productAuditList',
+    name: 'productList',
     data () {
         return {
-            productAuditStatus: PRODUCT_AUDIT_STATUS,
+            productStatus: PRODUCT_AUDIT_STATUS,
+            productMap: PRODUCT_AUDIT_MAP,
             showAllConditions: false,
+            tabName: '4',
             productType: 'SPU',
             queryParams: {
+                name: '',
                 spuCode: '',
-                spuName: '',
                 skuCode: '',
-                skuName: '',
                 brandName: '',
                 brandId: '',
                 model: '',
-                merchantCode: '',
-                isShared: '',
                 auditStatus: '',
-                isOnShelf: '',
+                enabled: '',
+                createTimeFrom: '',
+                createTimeTo: '',
                 pageNumber: 1,
                 pageSize: 10
             },
             resetParams: {},
-            //             isSharedOption: IS_SHARED_OPTIONS,
-            //             tableLabelSpu: [],
-            //             tableDataSpu: [],
-            //             paginationDataSpu: {},
-            //             multiSelection: [],
-            //             tableLabelSku: [],
-            //             tableDataSku: [],
-            //             paginationDataSku: {},
-            //             visible: false,
-            //             uploadAttr: {
-            //                 name: 'multiFile',
-            //                 showFileList: false
-            //             },
-            //             fileList: [],
-            //             beforeList: [],
-            //             successList: [],
-            //             uploadSpuId: '',
-            tabName: 'onShelf'
+            multiSelection: []
         }
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo.principal,
-            brandData: state => state.goodsModules.brandData,
+            userInfo: state => state.userInfo,
+            brandData: state => state.hmall.productManage.brandData,
             productSpuData: state => state.hmall.productManage.productSpuData,
             productSkuData: state => state.hmall.productManage.productSkuData
-        })
+        }),
+        tableLabel () {
+            return this.productType == 'SPU' ? [
+                { label: 'SPU编码', prop: 'spuCode' },
+                { label: '商品名称', prop: 'name' },
+                { label: '品牌', prop: 'brandName' },
+                { label: '商品类目', prop: 'category' },
+                { label: '型号', prop: 'model' },
+                { label: '审核状态', prop: 'auditStatus' },
+                { label: '提交时间', prop: 'createTime', formatters: 'dateTime' }
+            ] : [
+                { label: 'SPU编码', prop: 'spuCode' },
+                { label: 'SKU编码', prop: 'skuCode' },
+                { label: '商品名称', prop: 'name' },
+                { label: '品牌', prop: 'brandName' },
+                { label: '商品类目', prop: 'category' },
+                { label: '型号', prop: 'model' },
+                { label: '规格', prop: 'optionValues' },
+                { label: '审核状态', prop: 'auditStatus' },
+                { label: '提交时间', prop: 'createTime', formatters: 'dateTime' }
+            ]
+        },
+        tableData () {
+            return this.productType == 'SPU' ? this.productSpuData.records : this.productSkuData.records
+        },
+        pagination () {
+            return this.productType == 'SPU' ? {
+                pageNumber: this.productSpuData.current,
+                pageSize: this.productSpuData.size,
+                total: this.productSpuData.total
+            } : {
+                pageNumber: this.productSkuData.current,
+                pageSize: this.productSkuData.size,
+                total: this.productSkuData.total
+            }
+        },
+        pickerOptionsStart () {
+            return {
+                disabledDate: (time) => {
+                    const beginDateVal = this.queryParams.createTimeTo
+                    if (beginDateVal) {
+                        return time.getTime() > new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerOptionsEnd () {
+            return {
+                disabledDate: (time) => {
+                    const beginDateVal = this.queryParams.createTimeFrom
+                    if (beginDateVal) {
+                        return time.getTime() < new Date(beginDateVal).getTime() - 8.64e7
+                    }
+                }
+            }
+        }
     },
     methods: {
+        init () {
+            this.resetParams = { ...this.queryParams }
+            this.getBrandOptions()
+            this.onQuery()
+        },
         // 回车搜索
         onQueryEnter (e) {
             const keyCode = document.all ? event.keyCode : e.which
             if (keyCode === 13) {
-                if (this.productType == 'SPU') {
-                    this.getSPUProuducts()
-                } else {
-                    this.getSKUProuducts()
-                }
+                this.productType == 'SPU' ? this.getProductSpuList() : this.getProductSkuList()
             }
         },
         // 搜索操作
         onQuery () {
             this.queryParams.pageNumber = 1
-            this.queryParams.merchantCode = this.userInfo.merchantCode
             this.tabParams(this.tabName)
-            if (this.productType == 'SPU') {
-                this.getSPUProuducts()
-            } else {
-                this.getSKUProuducts()
-            }
+            this.productType == 'SPU' ? this.getProductSpuList() : this.getProductSkuList()
         },
         // 重置操作
         onReset () {
             this.queryParams = { ...this.resetParams }
             this.onQuery()
         },
-        //         onTab (value) {
-        //             this.queryParams = { ...this.resetParams }
-        //             console.log(value)
-        //             if (!(value.name == 'onShelf' || value.name == 'offShelf')) {
-        //                 this.productType = 'SPU'
-        //             }
-        //             this.onQuery()
-        //         },
-        //         // 品牌搜索建议处理
-        //         async querySearchAsyncBrand (queryString, cb) {
-        //             const data = !queryString ? this.brandData : this.brandData.filter(item => item.name.toLowerCase().indexOf(queryString.toLowerCase()) != -1)
-        //             cb(data)
-        //         },
-        //         handleSelectBrand (item) {
-        //             this.queryParams.brandName = item.name
-        //             this.queryParams.brandId = item.id
-        //         },
-        //         handleBlurBrand () {
-        //             const data = this.brandData.filter(item => item.name.toLowerCase() == this.queryParams.brandName.toLowerCase())
-        //             if (!(data.length > 0 && data[0].id === this.queryParams.brandId)) {
-        //                 this.queryParams.brandName = ''
-        //                 this.queryParams.brandId = ''
-        //             }
-        //         },
-        // 跳转到新增商品页面
-        onCreateProduct () {
-            this.$router.push('/b2b/product/createProduct')
+        onTab (value) {
+            this.queryParams = { ...this.resetParams }
+            this.onQuery()
         },
-        //         // 跳转到修改商品页面
-        //         async onToEditProduct (row) {
-        //             // await this.findValidateSpike({ spuId: row.spuId })
-        //             if (this.productType === 'SPU') {
-        //                 this.$router.push({ path: '/goods/editProduct', query: { id: row.spuId } })
-        //             } else {
-        //                 this.$router.push({ path: '/goods/editSku', query: { id: row.skuId } })
-        //             }
-        //         },
-        //         // SKU列表显示
-        //         onTabProductType (productType) {
-        //             this.queryParams = { ...this.resetParams }
-        //             this.tabParams(this.tabName)
-        //             if (productType == 'SPU') {
-        //                 this.getSPUProuducts()
-        //                 this.productType = productType
-        //             } else {
-        //                 this.getSKUProuducts()
-        //                 this.productType = productType
-        //             }
-        //         },
-        //         // 批量上集市
-        //         onBatchOnMarket (multiSelection) {
-        //             batchOperator(multiSelection || this.multiSelection, async (multiSelection) => {
-        //                 await setShared({
-        //                     spuIdList: multiSelection
-        //                 })
-        //                 this.$message.success('商品设置共享成功！')
-        //                 this.getSPUProuducts()
-        //             })
-        //         },
-        //         // 上集市
-        //         onOnMarket (val) {
-        //             this.onBatchOnMarket([{ spuId: val.spuId }])
-        //         },
-        //         // 批量下集市
-        //         onBatchOffMarket (multiSelection) {
-        //             batchOperator(multiSelection || this.multiSelection, async (multiSelection) => {
-        //                 try {
-        //                     await cancelShared({
-        //                         spuIdList: multiSelection
-        //                     })
-        //                     this.$message.success('商品取消共享成功！')
-        //                     this.getSPUProuducts()
-        //                 } catch (error) {
-        //                     this.getSPUProuducts()
-        //                 }
-        //             })
-        //         },
-        //         // 下集市
-        //         onOffMarket (val) {
-        //             this.onBatchOffMarket([{ spuId: val.spuId }])
-        //         },
-        //         // 批量上架
-        //         onBatchOnShelf (multiSelection) {
-        //             batchOperator(multiSelection || this.multiSelection, async (multiSelection) => {
-        //                 try {
-        //                     await onShelf({
-        //                         spuIdList: multiSelection
-        //                     })
-        //                     this.$message.success('商品上架成功！')
-        //                     this.getSPUProuducts()
-        //                 } catch (error) {
-        //                     this.getSPUProuducts()
-        //                 }
-        //             })
-        //         },
-        //         // 上架
-        //         onOnShelf (val) {
-        //             this.onBatchOnShelf([{ spuId: val.spuId }])
-        //         },
-        //         // 批量下架
-        //         onBatchOffShelf (multiSelection) {
-        //             batchOperator(multiSelection || this.multiSelection, async (multiSelection) => {
-        //                 try {
-        //                     await offShelf({
-        //                         spuIdList: multiSelection
-        //                     })
-        //                     this.$message.success('商品下架成功！')
-        //                     this.getSPUProuducts()
-        //                 } catch (error) {
-        //                     this.getSPUProuducts()
-        //                 }
-        //             })
-        //         },
-        //         // 下架
-        //         onOffShelf (val) {
-        //             this.onBatchOffShelf([{ spuId: val.spuId }])
-        //         },
-        //         // 批量删除
-        //         onBatchDel (multiSelection) {
-        //             // TODO: 确认批量删除提醒没有
-        //             batchOperator(multiSelection || this.multiSelection, async (multiSelection) => {
-        //                 this.$confirm('是否删除商品?', '提示', {
-        //                     confirmButtonText: '确定',
-        //                     cancelButtonText: '取消'
-        //                 }).then(async () => {
-        //                     await delProduct({
-        //                         spuIdList: multiSelection
-        //                     })
-        //                     this.$message.success('商品删除成功！')
-        //                     this.getSPUProuducts()
-        //                 }).catch(() => { })
-        //             })
-        //         },
-        //         // 删除
-        //         onDelete (val) {
-        //             this.onBatchDel([{ spuId: val.spuId }])
-        //         },
-        //         async onOnShelfSKU ({ skuId }) {
-        //             await onShelfSku({ skuId: skuId, shelfOperation: 1 })
-        //             this.$message.success('商品上架成功！')
-        //             this.getSKUProuducts()
-        //         },
-        //         async onOffShelfSKU ({ skuId }) {
-        //             await onShelfSku({ skuId: skuId, shelfOperation: 0 })
-        //             this.$message.success('商品下架成功！')
-        //             this.getSKUProuducts()
-        //         },
-        //         // 翻页操作
-        //         onCurrentChangeSpu (val) {
-        //             this.queryParams.pageNumber = val.pageNumber
-        //             this.getSPUProuducts()
-        //         },
-        //         // 翻页操作
-        //         onCurrentChangeSku (val) {
-        //             this.queryParams.pageNumber = val.pageNumber
-        //             this.getSKUProuducts()
-        //         },
-        //         onUpload (row) {
-        //             this.uploadSpuId = row.spuId
-        //         },
-        //         onGoodInfo (spuId) {
-        //             this.visible = true
-        //             this.uploadSpuId = spuId
-        //             this.getGoodAffixInfo()
-        //         },
-        //         beforeUpload (file) {
-        //             if (file.type != 'application/pdf') {
-        //                 this.$message.error('上传文件格式不正确!')
-        //                 return false
-        //             }
-        //             const fileSize = file.size / 1024 / 1024 < 20
-        //             if (!fileSize) {
-        //                 this.$message.error('上传图片大小不能超过 20MB!')
-        //                 return false
-        //             }
-        //             this.beforeList.push(file)
-        //             return fileSize
-        //         },
-        //         async handleSuccess (file, fileList) {
-        //             this.successList.push(file)
-        //             const formData = {
-        //                 spuAttachmentBoList: file.data.map(item => {
-        //                     return {
-        //                         name: item.fileName,
-        //                         url: item.accessUrl,
-        //                         spuId: this.uploadSpuId
-        //                     }
-        //                 })
-        //             }
-        //             await uploadGoodAffixInfo(formData)
-        //             if (this.beforeList.length == this.successList.length) {
-        //                 this.$message.success('商品资料上传成功！')
-        //                 await this.getGoodAffixInfo()
-        //                 await this.getSPUProuducts()
-        //             }
-        //         },
-        //         onDelAffix (item) {
-        //             this.$confirm('确定要删除 ' + item.name + ' 吗？', '提示', {
-        //                 confirmButtonText: '确定',
-        //                 cancelButtonText: '取消'
-        //             }).then(async () => {
-        //                 await delGoodAffixInfo({ id: item.id })
-        //                 this.$message.success(item.name + '删除成功！')
-        //                 await this.getGoodAffixInfo()
-        //                 await this.getSPUProuducts()
-        //             }).catch(() => {
-        //                 this.$message.info(item.name + '取消删除！')
-        //             })
-        //         },
-        //         onDownAffix (item) {
-        //             window.open(item.url)
-        //         },
-        //         onExport () {
-        //             if (this.productType == 'SPU') {
-        //                 if (this.tableDataSpu.length <= 0) {
-        //                     this.$message.warning('无商品可导出！')
-        //                 } else {
-        //                     requestDownload({
-        //                         url: interfaceUrl + 'product/api/spu/page/export',
-        //                         method: 'get',
-        //                         data: {
-        //                             ...this.queryParams
-        //                         }
-        //                     })
-        //                 }
-        //             } else {
-        //                 if (this.tableDataSku.length <= 0) {
-        //                     this.$message.warning('无商品可导出！')
-        //                 } else {
-        //                     requestDownload({
-        //                         url: interfaceUrl + 'product/api/sku/page/export',
-        //                         method: 'get',
-        //                         data: {
-        //                             ...this.queryParams
-        //                         }
-        //                     })
-        //                 }
-        //             }
-        //         },
-        //         async getGoodAffixInfo () {
-        //             await this.findSpuAttachments({
-        //                 spuId: this.uploadSpuId
-        //             })
-        //         },
-        //         tabParams (tabName) {
-        //             if (tabName == 'checkPending') {
-        //                 this.queryParams.auditStatus = '0'
-        //                 this.queryParams.isOnShelf = ''
-        //             } else if (tabName == 'reject') {
-        //                 this.queryParams.auditStatus = '2'
-        //                 this.queryParams.isOnShelf = ''
-        //             } else if (tabName == 'onShelf') {
-        //                 this.queryParams.auditStatus = ''
-        //                 this.queryParams.isOnShelf = '1'
-        //             } else if (tabName == 'offShelf') {
-        //                 this.queryParams.auditStatus = '1'
-        //                 this.queryParams.isOnShelf = '0'
-        //             }
-        //         },
+        // SPU or SKU 切换
+        onTabProductType (productType) {
+            this.queryParams = { ...this.resetParams }
+            this.tabParams(this.tabName)
+            if (productType == 'SPU') {
+                this.getProductSpuList()
+                this.productType = productType
+            } else if (productType == 'SKU') {
+                this.getProductSkuList()
+                this.productType = productType
+            }
+        },
+        // 品牌搜索建议处理
+        async querySearchAsyncBrand (queryString, cb) {
+            const data = !queryString ? this.brandData : this.brandData.filter(item => item.name.toLowerCase().indexOf(queryString.toLowerCase()) != -1)
+            cb(data)
+        },
+        handleSelectBrand (item) {
+            this.queryParams.brandName = item.name
+            this.queryParams.brandId = item.id
+        },
+        handleBlurBrand () {
+            const data = this.brandData.filter(item => item.name.toLowerCase() == this.queryParams.brandName.toLowerCase())
+            if (!(data.length > 0 && data[0].id === this.queryParams.brandId)) {
+                this.queryParams.brandName = ''
+                this.queryParams.brandId = ''
+            }
+        },
+        onseeTask (row) {
+            console.log(row)
+            if (this.productType == 'SPU') {
+                this.$router.push({ path: '/b2b/product/editSpuAudit', query: { id: row.id, seeTask: false } })
+            } else if (this.productType == 'SKU') {
+                this.$router.push({ path: '/b2b/product/editSkuAudit', query: { id: row.id, seeTask: false } })
+            }
+        },
+        onAduit (row) {
+            if (this.productType == 'SPU') {
+                this.$router.push({ path: '/b2b/product/editSpuAudit', query: { id: row.id, seeTask: true } })
+            } else if (this.productType == 'SKU') {
+                this.$router.push({ path: '/b2b/product/editSkuAudit', query: { id: row.id, seeTask: true } })
+            }
+        },
+        // 批量审核
+        onBatchAduit (multiSelection) {
+            // TODO: 确认批量删除提醒没有
+            if (this.productType == 'SPU') {
+                batchOperator(multiSelection || this.multiSelection, async (multiSelection) => {
+                    this.$confirm('是否批量审核通过', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消'
+                    }).then(async () => {
+                        try {
+                            await this.batchAduitSpu({
+                                ids: multiSelection,
+                                operator: this.userInfo.employeeName
+                            })
+                            this.$message.success('商品批量审核通过！')
+                            this.getProductSpuList()
+                        } catch (error) {
+                            this.getProductSpuList()
+                        }
+                    }).catch(() => { })
+                })
+            } else {
+                batchOperator(multiSelection || this.multiSelection, async (multiSelection) => {
+                    this.$confirm('是否批量审核通过', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消'
+                    }).then(async () => {
+                        try {
+                            await this.batchAduitSku({
+                                ids: multiSelection,
+                                operator: this.userInfo.employeeName
+                            })
+                            this.$message.success('商品批量审核通过！')
+                            this.getProductSkuList()
+                        } catch (error) {
+                            this.getProductSkuList()
+                        }
+                    }).catch(() => { })
+                })
+            }
+        },
+        // 翻页操作
+        onCurrentChange (val) {
+            this.queryParams.pageNumber = val.pageNumber
+            this.productType == 'SPU' ? this.getProductSpuList() : this.getProductSkuList()
+        },
+        onSizeChange (val) {
+            this.queryParams.pageSize = val
+            this.productType == 'SPU' ? this.getProductSpuList() : this.getProductSkuList()
+        },
+        onExport () {
+            if (this.productType == 'SPU') {
+                if (this.tableDataSpu.length <= 0) {
+                    this.$message.warning('无商品可导出！')
+                } else {
+                    requestDownload({
+                        url: interfaceUrl + 'product/api/spu/page/export',
+                        method: 'get',
+                        data: {
+                            ...this.queryParams
+                        }
+                    })
+                }
+            } else {
+                if (this.tableDataSku.length <= 0) {
+                    this.$message.warning('无商品可导出！')
+                } else {
+                    requestDownload({
+                        url: interfaceUrl + 'product/api/sku/page/export',
+                        method: 'get',
+                        data: {
+                            ...this.queryParams
+                        }
+                    })
+                }
+            }
+        },
+        tabParams (tabName) {
+            if (tabName == '4') {
+                this.queryParams.auditStatus = ''
+                this.queryParams.enabled = true
+            } else if (tabName == '0') {
+                this.queryParams.auditStatus = 0
+                // this.queryParams.enabled = false
+            } else if (tabName == '1') {
+                this.queryParams.auditStatus = 1
+            } else if (tabName == '2') {
+                this.queryParams.auditStatus = 2
+            }
+            this.productStatus.map(item => {
+                if (tabName == item.value) {
+                    this.queryParams.auditStatus = item.value
+                }
+            })
+        },
         ...mapActions({
+            getBrandOptions: 'productManage/findBrandOptions',
             findProductSpuList: 'productManage/findProductSpuList',
-            findProductSkuList: 'productManage/findProductSkuList'
+            findProductSkuList: 'productManage/findProductSkuList',
+            batchEffective: 'productManage/batchEffective',
+            batchEfficacy: 'productManage/batchEfficacy',
+            batchAduitSku: 'productManage/batchAduitSku',
+            batchAduitSpu: 'productManage/batchAduitSpu',
+            effectiveSKU: 'productManage/effectiveSKU',
+            efficacySKU: 'productManage/efficacySKU',
+            deleteSKU: 'productManage/deleteSKU'
         }),
-        async getProductList () {
+        async getProductSpuList () {
             await this.findProductSpuList(this.queryParams)
+        },
+        async getProductSkuList () {
+            await this.findProductSkuList(this.queryParams)
+            console.log(this.productSkuData)
         }
-        //         async getSPUProuducts () {
-        //             await this.findSpuList(this.queryParams)
-        //             if (this.tabName == 'onShelf') {
-        //                 this.tableLabelSpu = [
-        //                     { label: 'SPU编码', prop: 'spuCode' },
-        //                     { label: '商品名称', prop: 'spuName' },
-        //                     { label: '品牌', prop: 'brandName' },
-        //                     { label: '型号', prop: 'model' },
-        //                     { label: '可销售库存', prop: 'saleableStock' },
-        //                     { label: '活动库存', prop: 'activityStock' },
-        //                     { label: '商品资料', prop: 'attachmentCount' },
-        //                     { label: '是否共享', prop: 'isShared' }
-        //                 ]
-        //             } else {
-        //                 this.tableLabelSpu = [
-        //                     { label: 'SPU编码', prop: 'spuCode' },
-        //                     { label: '商品名称', prop: 'spuName' },
-        //                     { label: '品牌', prop: 'brandName' },
-        //                     { label: '型号', prop: 'model' },
-        //                     { label: '可销售库存', prop: 'saleableStock' },
-        //                     { label: '活动库存', prop: 'activityStock' },
-        //                     { label: '商品资料', prop: 'attachmentCount' }
-        //                 ]
-        //             }
-        //             this.tableDataSpu = this.spuList.records
-        //             this.paginationDataSpu = {
-        //                 pageNumber: this.spuList.current,
-        //                 pageSize: this.spuList.size,
-        //                 total: this.spuList.total
-        //             }
-        //         },
-        //         async getSKUProuducts () {
-        //             await this.findSkuList(this.queryParams)
-        //             if (this.tabName == 'onShelf') {
-        //                 this.tableLabelSku = [
-        //                     { label: 'SKU编码', prop: 'skuCode' },
-        //                     { label: '商品名称', prop: 'skuName' },
-        //                     { label: '品牌', prop: 'brandName' },
-        //                     { label: '型号', prop: 'model' },
-        //                     { label: '销售价', prop: 'salesPrice', formatter: 'money' },
-        //                     { label: '建议零售价', prop: 'retailPrice', formatter: 'money' },
-        //                     { label: '库存', prop: 'availableStock' },
-        //                     { label: '销售库存', prop: 'saleableStock' },
-        //                     { label: '佣金', prop: 'commission' },
-        //                     { label: '是否共享', prop: 'isShared' }
-        //                 ]
-        //             } else {
-        //                 this.tableLabelSku = [
-        //                     { label: 'SKU编码', prop: 'skuCode' },
-        //                     { label: '商品名称', prop: 'skuName' },
-        //                     { label: '品牌', prop: 'brandName' },
-        //                     { label: '型号', prop: 'model' },
-        //                     { label: '销售价', prop: 'salesPrice', formatter: 'money' },
-        //                     { label: '建议零售价', prop: 'retailPrice', formatter: 'money' },
-        //                     { label: '库存', prop: 'availableStock' },
-        //                     { label: '销售库存', prop: 'saleableStock' },
-        //                     { label: '佣金', prop: 'commission' }
-        //                 ]
-        //             }
-        //             this.tableDataSku = this.skuList.records
-        //             this.paginationDataSku = {
-        //                 pageNumber: this.skuList.current,
-        //                 pageSize: this.skuList.size,
-        //                 total: this.skuList.total
-        //             }
-        //         }
     },
     mounted () {
-        this.queryParams.merchantCode = this.userInfo.merchantCode
-        this.resetParams = { ...this.queryParams }
-        //         this.queryParams.isOnShelf = '1'
-        this.onQuery()
-        //         this.findAllBrands()
+        this.init()
+    },
+    activated () {
+        this.productType == 'SPU' ? this.getProductSpuList() : this.getProductSkuList()
     }
-    //     activated () {
-    //         if (this.productType == 'SPU') {
-    //             this.getSPUProuducts()
-    //         } else {
-    //             this.getSKUProuducts()
-    //         }
-    //     },
-    //     beforeRouteEnter (to, from, next) {
-    //         newCache('productList')
-    //         next()
-    //     },
-    //     beforeRouteLeave (to, from, next) {
-    //         if (!(to.name == 'editProduct' || to.name == 'editSku')) {
-    //             clearCache('productList')
-    //         }
-    //         next()
+    // ,
+    // beforeRouteEnter (to, from, next) {
+    //     newCache('productList')
+    //     next()
+    // },
+    // beforeRouteLeave (to, from, next) {
+    //     if (!(to.name == 'editProduct' || to.name == 'editSku')) {
+    //         clearCache('productList')
     //     }
+    //     next()
+    // }
 }
 </script>
 <style lang="scss" scoped>
@@ -582,6 +408,14 @@ export default {
     font-size: 14px;
     color: #999;
     cursor: pointer;
+}
+
+.button-cont {
+    display: flex;
+}
+
+.margin-left__auto {
+    margin-left: auto;
 }
 .isHot {
     display: inline-block;

@@ -223,7 +223,8 @@ export default {
         onBatchEffective (multiSelection) {
             batchOperator(multiSelection || this.multiSelection, async (multiSelection) => {
                 try {
-                    await this.batchEfficacy(multiSelection)
+                    await this.batchEffective(multiSelection)
+                    // await this.batchEfficacy(multiSelection)
                     this.$message.success('商品设置生效成功！')
                     this.getProductSpuList()
                 } catch (error) {
