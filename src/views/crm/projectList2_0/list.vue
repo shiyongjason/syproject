@@ -503,10 +503,10 @@ export default class ProjectList2 extends Vue {
             companyId: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
             firstPartName: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
             projectName: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
-            projectBuildingTypeList: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
-            projectRoleList: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
-            projectStep: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
-            generalGoodsList: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+            projectBuildingTypeList: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
+            projectRoleList: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
+            projectStep: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
+            generalGoodsList: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
             estimatedSignAmount: [
                 {
                     required: false,
