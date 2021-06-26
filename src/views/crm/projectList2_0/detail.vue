@@ -30,7 +30,7 @@
                         <div class="process-item pos8" v-if="process[6]" :class="process[6].nodeStatus==1?'isActive':''">{{process[6].nodeName}}</div>
                     </div>
                     <div class="flowup-count">
-                        <h-button type='assist' @click='add' v-if="!projectDetail.hasRefund"> + 新增跟进记录</h-button>
+                        <h-button type='assist' @click='add' v-if="!projectDetail.hasRefunded"> + 新增跟进记录</h-button>
                         <span>
                             累计跟进{{flowUpCount.total}}次，当面拜访{{flowUpCount.directCount}}次
                         </span>
