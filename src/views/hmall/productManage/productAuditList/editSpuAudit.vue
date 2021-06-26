@@ -290,7 +290,7 @@ export default {
         },
         'form.optionTypeList' (value) {
             const optionTypeList = flatten(value.filter(item => item.name && item.optionValues.length))
-            console.log(this.form.mainSkus)
+            // console.log(this.form.mainSkus)
             this.form.mainSkus.map(item => {
                 let optionValues = []
                 this.productSpuInfo.optionTypeList.forEach(i => {
@@ -465,7 +465,7 @@ export default {
         async getProductInfo (id) {
             await this.findProductSpuInfo({ id: id })
             await this.getSpecByCategory(this.productSpuInfo.twoCategoryId)
-            console.log(this.productSpuInfo)
+            // console.log(this.productSpuInfo)
             this.form = {
                 ...this.productSpuInfo,
                 mainSkus: this.productSpuInfo.mainSkus.map(item => {
