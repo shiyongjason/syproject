@@ -104,10 +104,6 @@
                 </el-form-item>
             </el-form>
         </div>
-        <div class="page-body-cont btn-cont" v-if="showMore">
-            <h-button type='primary' :loading="btnLoading" @click="onSave" v-if="seeTask">确定</h-button>
-            <h-button @click="onCancel">返回</h-button>
-        </div>
     </div>
 </template>
 <script>
@@ -351,7 +347,6 @@ export default {
             this.imageUrls.splice(index, 1)
         },
         onChange (val) {
-            this.form.auditOpinion = ''
             this.$refs.form.clearValidate()
         },
         onSave () {
