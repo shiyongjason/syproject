@@ -617,6 +617,10 @@ export default class ProjectList2 extends Vue {
 
     onAddProject () {
         this.showAddProject = true
+        this.$nextTick(() => {
+            let addForm:any = this.$refs['addForm']
+            addForm.clearValidate()
+        })
     }
 
     async getList () {
