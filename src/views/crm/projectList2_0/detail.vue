@@ -127,6 +127,32 @@
                                 <el-input  placeholder="请输入项目名称" v-model='projectDetail.projectName'></el-input>
                             </el-form-item>
                         </div>
+
+                        <div class="flex-item area-select">
+                            <el-form-item  label="项目地址：">
+                                <div class="query-cont-col-area">
+                                    <el-select v-model="projectDetail.provinceId" @change="onProvince" placeholder="省" clearable>
+                                        <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
+                                        </el-option>
+                                    </el-select>
+                                    <span class="ml10 mr10">-</span>
+                                    <el-select v-model="projectDetail.cityId" @change="onCity" placeholder="市" clearable>
+                                        <el-option v-for="item in getCity" :key="item.id" :label="item.name" :value="item.cityId">
+                                        </el-option>
+                                    </el-select>
+                                    <span class="ml10 mr10">-</span>
+                                    <el-select v-model="projectDetail.countryId" placeholder="区"  @change="onArea" clearable>
+                                        <el-option v-for="item in getCountry" :key="item.id" :label="item.name" :value="item.countryId">
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                            </el-form-item>
+                        </div>
+                        <div class="project-detail-item">
+                            <el-form-item label="">
+                                <el-input v-model="projectDetail.address" maxlength="100" placeholder="请输入详细地址"></el-input>
+                            </el-form-item>
+                        </div>
                         <div class="project-detail-item">
                             <el-form-item prop='projectBuildingTypeList' label="">
                                 <div slot="label" style="line-height: 20px;">项目建筑类型<br/>（可多选）：</div>
@@ -370,7 +396,7 @@ import { ccpBaseUrl, ossAliyun, ossOldBucket } from '@/api/config'
 import OssFileUtils from '@/utils/OssFileUtils'
 import { Action, Getter, State } from 'vuex-class'
 import { CompanyContactRequest, CompanyContactResponse, FlowUpRequest, ReqProjectSupply, StaffInfoResponse } from '@/interface/hbp-member'
-import { DictionaryList, getFlowUp, upDateProjectDetail, addFlowUp, getCompanyContactList, createCompanyContact, getCompanyUserList, getProcess, putCompanyContact, delCompanyContact, getFlowUpCount } from './api'
+import { DictionaryList, getFlowUp, upDateProjectDetail, addFlowUp, getCompanyContactList, createCompanyContact, getCompanyUserList, getProcess, putCompanyContact, getChiness, getFlowUpCount } from './api'
 import { handleSubmit, validateForm } from '@/decorator'
 import { ROLE, SALESPHASE, USER_DEFAULT } from './const'
 
@@ -454,7 +480,8 @@ export default class ProjectList2Detail extends Vue {
         directCount: '',
         total: ''
     }
-
+    provinceList:any[] = []
+    cityList:any[] = []
     stateN = ''
     assistantsNames = ''
 
@@ -481,6 +508,31 @@ export default class ProjectList2Detail extends Vue {
         6: '已拒绝协助申请'
     }
 
+    get getCity () {
+        const province = this.provinceList.filter(item => item.provinceId === this.projectDetail.provinceId)
+        if (province.length > 0) {
+            return province[0].cities
+        }
+        return []
+    }
+    get getCountry () {
+        const city = this.cityList.filter(item => item.cityId === this.projectDetail.cityId)
+        if (city.length > 0) {
+            return city[0].countries
+        }
+        return []
+    }
+
+    @Watch('getCity', { immediate: true })
+    onValueChange (newVal) {
+        this.cityList = newVal
+    }
+
+    async getAreacode () {
+        const { data } = await getChiness()
+        this.provinceList = data
+    }
+
     get rulesContact () {
         let rules = {
             contactName: { required: true, validator: validatorIsChinese, message: '姓名只能为2-24个汉字！', trigger: 'blur' }
@@ -497,6 +549,50 @@ export default class ProjectList2Detail extends Vue {
             noNeedFlowReason: { required: this.flowUpRequest.flowUpProcess == 7, message: '必填项不能为空', trigger: 'blur' }
         }
         return rules
+    }
+
+    @Watch('getCity', { immediate: true })
+    onCityChange (newVal) {
+        this.cityList = newVal
+    }
+
+    onProvince (key) {
+        this.projectDetail.provinceId = key || ''
+        this.projectDetail.cityId = ''
+        this.projectDetail.countryId = ''
+        if (!key) {
+            this.projectDetail.provinceName = ''
+            return
+        }
+        const res = this.provinceList.filter(item => {
+            return item.provinceId === key
+        })
+        this.projectDetail.provinceName = res[0].name
+    }
+
+    onCity (key) {
+        this.projectDetail.cityId = key || ''
+        this.projectDetail.countryId = ''
+        if (!key) {
+            this.projectDetail.cityName = ''
+            return
+        }
+        const res = this.getCity.filter(item => {
+            return item.cityId === key
+        })
+        this.projectDetail.cityName = res[0].name
+    }
+
+    onArea (key) {
+        this.projectDetail.countryId = key || ''
+        if (!key) {
+            this.projectDetail.cityName = ''
+            return
+        }
+        const res = this.getCountry.filter(item => {
+            return item.countryId === key
+        })
+        this.projectDetail.countryName = res[0].name
     }
 
     onSuccessCb () {
@@ -971,6 +1067,7 @@ export default class ProjectList2Detail extends Vue {
     }
 
     async mounted () {
+        this.getAreacode()
         console.log(' 🚗 🚕 🚙 🚌 🚎 详情', this.projectDetail)
         this.recordsQuery.bizId = this.projectId
         this.onInitGetDate()
