@@ -178,7 +178,7 @@
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
-                            <el-form-item  label="">
+                            <el-form-item prop='generalGoodsList' label="">
                                 <div slot="label" style="line-height: 20px;"><font>可从总部采购产品</font><br/>（可多选）：</div>
                                 <el-select v-model="projectDetail.generalGoodsList" multiple placeholder="请选择">
                                     <el-option v-for="item in generalGoods" :key="item.value" :label="item.value" :value="Number(item.key)"></el-option>
