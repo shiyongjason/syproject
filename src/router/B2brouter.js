@@ -97,7 +97,8 @@ export default [
                             title: 'SPU商品审核',
                             tagName: 'SPU商品审核',
                             isMenu: false,
-                            icon: ''
+                            icon: '',
+                            showMenuAs: '/b2b/product/productAuditList'
                         },
                         component: () => import('@/views/hmall/productManage/productAuditList/editSpuAudit.vue')
                     },
@@ -108,7 +109,8 @@ export default [
                             title: 'SPU商品查看',
                             tagName: 'SPU商品查看',
                             isMenu: false,
-                            icon: ''
+                            icon: '',
+                            showMenuAs: '/b2b/product/productAuditList'
                         },
                         component: () => import('@/views/hmall/productManage/productAuditList/editSpuAudit.vue')
                     },
@@ -119,7 +121,8 @@ export default [
                             title: 'SKU商品审核',
                             tagName: 'SKU商品审核',
                             isMenu: false,
-                            icon: ''
+                            icon: '',
+                            showMenuAs: '/b2b/product/productAuditList'
                         },
                         component: () => import('@/views/hmall/productManage/productAuditList/editSkuAudit.vue')
                     },
@@ -130,7 +133,8 @@ export default [
                             title: 'SKU商品查看',
                             tagName: 'SKU商品查看',
                             isMenu: false,
-                            icon: ''
+                            icon: '',
+                            showMenuAs: '/b2b/product/productAuditList'
                         },
                         component: () => import('@/views/hmall/productManage/productAuditList/editSkuAudit.vue')
                     },

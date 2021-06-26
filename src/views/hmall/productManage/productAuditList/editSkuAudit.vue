@@ -373,7 +373,7 @@ export default {
                 if (valid) {
                     if (this.form.auditStatus != '') {
                         try {
-                            await this.aduitSpu(form)
+                            await this.aduitSku(form)
                             this.btnLoading = false
                             this.$message.success('操作成功！')
                             this.$router.push('/b2b/product/productAuditList')
