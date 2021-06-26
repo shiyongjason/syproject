@@ -235,7 +235,8 @@
                     <div class="flex-item">
                         <div class="form-item">
                             <el-form-item  label="客户经理：">
-                                <el-input  placeholder="请输入客户经理" v-model='reqProjectSupply.customerName' maxlength="200"></el-input>
+                                <!-- <el-input  placeholder="请输入客户经理" v-model='reqProjectSupply.customerName' maxlength="200"></el-input> -->
+                                {{reqProjectSupply.customerName||'-'}}
                             </el-form-item>
                         </div>
                         <div class="form-item">
@@ -530,7 +531,7 @@ export default class ProjectList2 extends Vue {
         let rules = {
             contractNo: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
             contractAttachments: [{ required: true, message: '必填项不能为空' }],
-            refundPayType: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+            refundPayType: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
             refundPics: [{ required: true, message: '必填项不能为空' }],
             refundAmount: [
                 {
