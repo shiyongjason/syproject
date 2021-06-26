@@ -6,8 +6,8 @@
                     <td v-for="(item,index) in optionTypeListFilter" :key="index" style="min-width:100px;">{{item.name}}</td>
                     <td class="fixed-width">
                         <span class="tr-label">图片</span>
-                        <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="params.skuImgurl" @back-event="backPicUrl" />
-                        <el-dropdown placement="bottom-end" @command="handleCommand">
+                        <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="params.skuImgurl" v-if="seeTask" @back-event="backPicUrl" />
+                        <el-dropdown placement="bottom-end" @command="handleCommand" v-if="seeTask">
                             <span class="el-dropdown-link">
                                 <i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
@@ -29,9 +29,12 @@
                         <span class="tr-label">体积/m³</span>
                     </td>
                     <td>
-                        <span class="tr-label">状态</span>
+                        <span class="tr-label" v-if="edite">SKU编码</span>
                     </td>
                     <td>
+                        <span class="tr-label">状态</span>
+                    </td>
+                    <td v-if="!edite">
                         <span class="tr-label">操作</span>
                     </td>
                 </tr>
@@ -40,36 +43,42 @@
                 <tr v-for="(item,index) in form.mainSkus" :key="index">
                     <template v-for="(sItem,sIndex) in item.optionValues">
                         <td :key="sIndex">
-                            <el-select v-model="sItem.id" @change="onChangeValue(index,sIndex)" clearable>
+                            <el-select v-model="sItem.id" @change="onChangeValue(index,sIndex)" clearable :disabled="!seeTask">
                                 <el-option v-for="i in optionValuesFilter(sItem.optionTypeId)" :key="i.id" :label="i.name" :value="i.id"></el-option>
                             </el-select>
                         </td>
                     </template>
                     <td class="fixed-width">
                         <el-form-item label-width='0'>
-                            <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" />
+                            <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" v-if="!seeTask" />
+                            <img :src="item.imgUrls" v-if="seeTask" />
                         </el-form-item>
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.serialNumber" maxlength="16"></el-input>
+                            <el-input v-model="item.serialNumber" maxlength="16" :disabled="!seeTask"></el-input>
                         </el-form-item>
                     </td>
                     <td class="log-width">
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.length" maxlength="16"></el-input>
-                            <el-input v-model="item.width" maxlength="16"></el-input>
-                            <el-input v-model="item.height" maxlength="16"></el-input>
+                            <el-input v-model="item.length" maxlength="16" :disabled="!seeTask"></el-input>
+                            <el-input v-model="item.width" maxlength="16" :disabled="!seeTask"></el-input>
+                            <el-input v-model="item.height" maxlength="16" :disabled="!seeTask"></el-input>
                         </el-form-item>
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.grossWeight" maxlength="8"></el-input>
+                            <el-input v-model="item.grossWeight" maxlength="8" :disabled="!seeTask"></el-input>
                         </el-form-item>
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.volume" maxlength="8"></el-input>
+                            <el-input v-model="item.volume" maxlength="8" :disabled="!seeTask"></el-input>
+                        </el-form-item>
+                    </td>
+                    <td v-if="edite">
+                        <el-form-item label-width='0'>
+                            <span>{{item.mainSkuId}}</span>
                         </el-form-item>
                     </td>
                     <td>
@@ -77,7 +86,7 @@
                             <span>{{checkStatus(item.enabled,item.auditStatus)}}</span>
                         </el-form-item>
                     </td>
-                    <td>
+                    <td v-if="!edite">
                         <el-form-item label-width='0'>
                             <h-button table v-if="item.auditStatus && !item.enabled">生效</h-button>
                             <h-button table v-if="item.enabled">失效</h-button>
@@ -100,6 +109,12 @@ export default {
             default: () => {
                 return {}
             }
+        },
+        seeTask: {
+            type: Boolean
+        },
+        edite: {
+            type: Boolean
         }
     },
     data () {
@@ -287,7 +302,7 @@ export default {
             td {
                 padding: 2px 10px;
                 min-width: 270px;
-                // line-height: 40px;
+                line-height: 40px;
                 text-align: center;
                 font-size: 12px;
                 border-right: 1px solid #e5e5ea;
