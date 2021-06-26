@@ -91,7 +91,7 @@
                 <el-form id='elform' :model="reqBossProjectRefund" :rules="formRulesReqBossProjectRefund"  label-position='left' ref="reqProjectSupply" class="purchaseConclusion" :validate-on-rule-change='false'>
                     <div class="form-item">
                         <el-form-item  prop='contractNo' label="合同编号：">
-                            <el-input  placeholder="请输入工程合同编号" v-model="reqBossProjectRefund.contractNo" maxlength="200"></el-input>
+                            <el-input  placeholder="请输入工程合同编号" v-model="reqBossProjectRefund.contractNo" maxlength="50"></el-input>
                         </el-form-item>
                     </div>
                     <div class="form-item noctx">
@@ -235,7 +235,8 @@
                     <div class="flex-item">
                         <div class="form-item">
                             <el-form-item  label="客户经理：">
-                                <el-input  placeholder="请输入客户经理" v-model='reqProjectSupply.customerName' maxlength="200"></el-input>
+                                <!-- <el-input  placeholder="请输入客户经理" v-model='reqProjectSupply.customerName' maxlength="200"></el-input> -->
+                                {{reqProjectSupply.customerName||'-'}}
                             </el-form-item>
                         </div>
                         <div class="form-item">
@@ -502,10 +503,10 @@ export default class ProjectList2 extends Vue {
             companyId: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
             firstPartName: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
             projectName: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
-            projectBuildingTypeList: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
-            projectRoleList: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
-            projectStep: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
-            generalGoodsList: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+            projectBuildingTypeList: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
+            projectRoleList: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
+            projectStep: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
+            generalGoodsList: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
             estimatedSignAmount: [
                 {
                     required: false,
@@ -530,7 +531,7 @@ export default class ProjectList2 extends Vue {
         let rules = {
             contractNo: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
             contractAttachments: [{ required: true, message: '必填项不能为空' }],
-            refundPayType: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+            refundPayType: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
             refundPics: [{ required: true, message: '必填项不能为空' }],
             refundAmount: [
                 {
