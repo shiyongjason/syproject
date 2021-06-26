@@ -109,7 +109,7 @@
 </template>
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
-import skuTable from '../productList/skuTable'
+import skuTable from './skuTable'
 import { interfaceUrl } from '@/api/config'
 import { RICH_EDITOR_MENUS, PUTAWAY_RULES } from '../const/common'
 import { flatten } from '@/views/hmall/utils/sku'

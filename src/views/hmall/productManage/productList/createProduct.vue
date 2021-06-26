@@ -1,7 +1,7 @@
 <template>
     <div class="page-body B2b">
         <div class="page-body-cont">
-            <el-form ref="form" :model="form" :rules="rules" label-width="auto">
+            <el-form ref="form" :model="form" :rules="rules" label-width="150px">
                 <!-- <p class="mb20" v-if='form.auditOpinion'>审核不通过原因: <span class="red-word">{{form.auditOpinion}}</span></p> -->
                 <div class="title-cont">
                     <span class="title-cont__label">商品基本信息</span>
@@ -67,17 +67,17 @@
                         </div>
                     </el-form-item>
                     <el-form-item label="规格图片：" v-if="form.optionTypeList.length < 1">
-                        <SingleUpload :upload="uploadInfo" :imgW="104" :imgH="104" :imageUrl="form.mainSkus[0].imageUrls" @back-event="backPicUrl" />
+                        <SingleUpload :upload="uploadInfo" :imgW="104" :imgH="104" :imageUrl="form.mainSkus[0].imageUrls" @back-event="backPicUrl" v-if="form.mainSkus.length>0" />
                         <div class="picture-prompt ml20">
                             <p>上传750*750，大小不超过2M，仅支持jpeg，jpg，png格式</p>
                         </div>
-                        <input type="hidden" v-model="form.mainSkus[0].imageUrls">
+                        <input type="hidden" v-model="form.mainSkus[0].imageUrls" v-if="form.mainSkus.length>0">
                     </el-form-item>
                     <div class="sku-cont">
                         <div class="sku-cont_group mb20" v-for="(item,index) in form.optionTypeList" :key="index">
                             <div class="group-spec_label">
                                 <el-form-item label="规格名：">
-                                    <el-input v-model="item.name" @change="onAddOption(item.name,index)" maxlength="20" placeholder="请输入规格名"></el-input>
+                                    <el-input v-model="item.name" @change="onAddOption(item.name,index)" maxlength="10" placeholder="请输入规格名"></el-input>
                                 </el-form-item>
                             </div>
                             <div class="group-spec_tags mt20">
@@ -88,10 +88,10 @@
                             </div>
                             <span class="group-spec_close" @click="onDelOptionTemplate(index)"><i class="el-icon-close"></i></span>
                         </div>
-                        <h-button type="create" class="mb20" @click="onAddOptionTemplate">添加规格</h-button>
+                        <h-button type="create" class="mb20" @click="onAddOptionTemplate" :disabled="disabled">添加规格</h-button>
                     </div>
-                    <skuTable ref="skuTable" :formData.sync="form" v-if="form.optionTypeList.length>1"></skuTable>
-                    <h-button type="create" class="mb20" @click="onAddSKU">+</h-button>
+                    <skuTable ref="skuTable" :formData.sync="form" v-if="form.optionTypeList.length>0"></skuTable>
+                    <h-button type="create" class="mb20" v-if="form.optionTypeList.length>0" @click="onAddSKU">+</h-button>
                     <div class="title-cont" v-if="specData.length != 0">
                         <span class="title-cont__label">参数信息</span>
                     </div>
@@ -112,21 +112,21 @@
                     </div>
                     <div v-if="form.optionTypeList.length < 1">
                         <el-form-item label="SN码：" prop="retailPrice">
-                            <el-input v-model="form.mainSkus[0].serialNumber" maxlength="16"></el-input>
+                            <el-input v-model="form.mainSkus[0].serialNumber" maxlength="16" v-if="form.mainSkus.length>0"></el-input>
                         </el-form-item>
                         <el-form-item label="长宽高/mm：" prop="commission">
-                            <el-input v-model="form.mainSkus[0].length" maxlength="6"></el-input>
-                            <el-input v-model="form.mainSkus[0].width" maxlength="6"></el-input>
-                            <el-input v-model="form.mainSkus[0].height" maxlength="6"></el-input>
+                            <el-input v-model="form.mainSkus[0].length" maxlength="6" v-if="form.mainSkus.length>0"></el-input>
+                            <el-input v-model="form.mainSkus[0].width" maxlength="6" v-if="form.mainSkus.length>0"></el-input>
+                            <el-input v-model="form.mainSkus[0].height" maxlength="6" v-if="form.mainSkus.length>0"></el-input>
                         </el-form-item>
                         <el-form-item label="毛重/KG：" prop="costPrice">
-                            <el-input v-model="form.mainSkus[0].grossWeight" maxlength="16"></el-input>
+                            <el-input v-model="form.mainSkus[0].grossWeight" maxlength="16" v-if="form.mainSkus.length>0"></el-input>
                         </el-form-item>
                         <el-form-item label="体积/m³：" prop="costPrice">
-                            <el-input v-model="form.mainSkus[0].volume" maxlength="16"></el-input>
+                            <el-input v-model="form.mainSkus[0].volume" maxlength="16" v-if="form.mainSkus.length>0"></el-input>
                         </el-form-item>
                         <el-form-item label="净重/KG：" prop="costPrice">
-                            <el-input v-model="form.mainSkus[0].netWeight" maxlength="16"></el-input>
+                            <el-input v-model="form.mainSkus[0].netWeight" maxlength="16" v-if="form.mainSkus.length>0"></el-input>
                         </el-form-item>
                     </div>
                     <div class="title-cont mt10">
@@ -295,85 +295,85 @@ export default {
             }
         },
         disabled () {
-            // return this.form.isOnShelf || this.form.optionTypeList.some(item => !item.k || item.v.length == 0)
-            return false
+            return this.form.optionTypeList.some(item => !item.name || item.optionValues.length == 0)
         }
     },
     watch: {
-        'form.brandName' (value) {
-            if (value == '') {
-                this.form.brandId = ''
-            }
-        },
-        'form.imgUrls' (value) {
-            if (value > 0) {
-                this.$refs.imgUrls.clearValidate()
-            }
-        },
         'form.optionTypeList' (value) {
             const optionTypeList = flatten(value.filter(item => item.name && item.optionValues.length))
-            this.form.mainSkus.map(item => {
-                let optionValues = []
-                this.productSpuInfo.optionTypeList.forEach(i => {
-                    let arr = item.optionValues.filter(j => j.optionTypeId == i.id)
-                    console.log(arr)
-                    if (arr.length > 0) {
-                        optionValues = optionValues.concat(arr)
-                    } else {
-                        optionValues.push({
-                            id: '',
-                            name: '',
-                            optionTypeId: i.id,
-                            optionTypeName: i.name
-                        })
-                    }
+            if (this.$route.query.id) {
+                this.form.mainSkus.map(item => {
+                    let optionValues = []
+                    this.form.optionTypeList.forEach(i => {
+                        let arr = item.optionValues.filter(j => j.optionTypeId == i.id)
+                        if (arr.length > 0) {
+                            optionValues = optionValues.concat(arr)
+                        } else {
+                            optionValues.push({
+                                id: '',
+                                name: '',
+                                optionTypeId: i.id,
+                                optionTypeName: i.name
+                            })
+                        }
+                    })
+                    item.optionValues = optionValues
+                    return item
                 })
-                item.optionValues = optionValues
-                return item
-            })
-            // const mainSkus = optionTypeList.map(item => {
-            //     const skuInfo = this.form.mainSkus.filter(sku => sku.optionValues[0].optionTypeId == item.optionValues[0].optionTypeId)[0]
-            //     item = { ...item, ...skuInfo }
-            //     return item
-            // })
+            } else {
+                if (this.form.mainSkus.length) {
+                    this.form.mainSkus = optionTypeList.map((item, index) => ({
+                        ...this.form.mainSkus[index],
+                        ...item
+                    }))
+                } else {
 
-            // const mainSkus = optionTypeList.map(item => {
-            //     const skuInfo = this.form.mainSkus.filter(sku => {
-            //         // if (item.optionValues.length == sku.optionValues.length) {
-            //         sku.optionValues.map((i, index) => {
-            //             if (i.optionTypeId == item.optionValues[index].optionTypeId) {
-            //                 return i.id ? i : { optionTypeId: i.optionTypeId, optionTypeName: i.optionTypeName, id: '', name: '' }
+                }
+            }
+            console.log(this.form.mainSkus)
+            // if (this.$route.query.id) {
+            //     this.form.mainSkus.map(item => {
+            //         let optionValues = []
+            //         this.form.optionTypeList.forEach(i => {
+            //             let arr = item.optionValues.filter(j => j.optionTypeId == i.id)
+            //             if (arr.length > 0) {
+            //                 optionValues = optionValues.concat(arr)
+            //             } else {
+            //                 optionValues.push({
+            //                     id: '',
+            //                     name: '',
+            //                     optionTypeId: i.id,
+            //                     optionTypeName: i.name
+            //                 })
             //             }
             //         })
-
-            //         //         // } else {
-            //         //         //     return item.optionValues.map((i, index) => {
-            //         //         //         if (i.optionTypeId == sku.optionValues[index].optionTypeId) {
-            //         //         //             return i.id ? i : { optionTypeId: i.optionTypeId, optionTypeName: i.optionTypeName, id: '', name: '' }
-            //         //         //         }
-            //         //         //     })
-            //         //         // }
-            //     })[0]
-            //     item = { ...item, ...skuInfo }
-            //     return item
-            // })
-            console.log(mainSkus)
-            // if (!mainSkus.length) {
-            //     this.form.mainSkus = this.form.mainSkus
-            //     return
-            // }
-            // if (this.form.mainSkus.length == mainSkus.length) {
+            //         item.optionValues = optionValues
+            //         return item
+            //     })
+            // } else {
+            //     const mainSkus = optionTypeList.map(item => {
+            //         // const skuInfo = this.form.mainSkus.filter(sku => sku.optionValues && sku.optionValues[0].optionTypeId == item.optionValues[0].optionTypeId)[0]
+            //         // item = { ...item, ...skuInfo }
+            //         return item
+            //     })
+            //     console.log(mainSkus)
+            //     // if (!mainSkus.length) {
+            //     //     this.form.mainSkus = this.form.mainSkus
+            //     //     return
+            //     // }
+            //     // if (this.form.mainSkus.length == mainSkus.length) {
             //     this.form.mainSkus = mainSkus.map((item, index) => ({
             //         ...this.form.mainSkus[index],
             //         ...item
             //     }))
-            // } else {
-            // this.form.mainSkus = mainSkus
+            //     // } else {
+            //     //     this.form.mainSkus = mainSkus
+            //     // }
             // }
         }
     },
     methods: {
-        async init () {
+        init () {
             this.getBrandOptions()
             this.getCategoryOptions()
             this.getModelOptions()
@@ -428,7 +428,7 @@ export default {
                     if (this.productUnique) {
                         await this.getProductInfo(this.productUnique)
                     }
-                    this.form.name = this.form.brandName + this.form.model + this.form.name
+                    this.form.name = this.form.name
                 }
             })
         },
@@ -456,20 +456,6 @@ export default {
         },
         onDelOptionTemplate (index) {
             this.form.optionTypeList.splice(index, 1)
-            // if (!this.form.optionTypeList.length) {
-            //     this.form.skuList = [{
-            //         name: '',
-            //         imgUrls: '',
-            //         sellPrice: 0,
-            //         retailPrice: '',
-            //         commission: 0,
-            //         costPrice: '',
-            //         orderMinCount: '',
-            //         buyLimit: 0,
-            //         orderMaxCount: '',
-            //         saleableStock: 0
-            //     }]
-            // }
         },
         async onAddOption (name, index) {
             await this.addOption({ name: name })
@@ -503,16 +489,6 @@ export default {
                 }
                 return item
             })
-            //     this.form.skuList = this.form.skuList.filter((item) => {
-            //         const arr = item.indexes.split('_')
-            //         return !(arr[index] === sIndex)
-            //     })
-            //     this.form.skuList = this.form.skuList.map((item) => {
-            //         const arr = item.indexes.split('_')
-            //         arr[index] = arr[index] >= sIndex ? arr[index] - 1 : arr[index]
-            //         item.indexes = arr.join('_')
-            //         return item
-            //     })
             this.addValues.splice(sIndex, 1)
         },
         onSettingTop (index) {
@@ -524,7 +500,6 @@ export default {
         onAddSKU () {
             let optionValues = []
             this.form.optionTypeList.forEach(item => {
-                console.log(item)
                 optionValues.push({
                     id: '',
                     name: '',
@@ -542,6 +517,7 @@ export default {
                     imageUrls: this.imageUrls,
                     optionTypeIds: this.form.optionTypeList.map(item => item.id),
                     mainSkus: deepCopy(this.form.mainSkus).map(item => {
+                        item.id = item.mainSkuId ? item.mainSkuId : ''
                         item.name = this.form.name + item.optionValues.map(sItem => sItem.name).join('')
                         item.imageUrls = item.imageUrls.split(',')
                         item.optionValueIds = item.optionValues.map(sItem => sItem.id).filter(sItem => sItem)
@@ -556,17 +532,12 @@ export default {
                     imageUrls: this.imageUrls,
                     mainSkus: deepCopy(this.form.mainSkus).map(item => {
                         item.name = this.form.name
-                        // item.orderMinCount = this.orderMinCount
-                        // item.buyLimit = this.buyLimit
-                        // item.orderMaxCount = this.orderMaxCount
-                        // item.specifications = ''
+                        item.imageUrls = item.imageUrls.split(',')
                         return item
                     }),
                     specifications: this.form.specifications.filter(item => item.v),
                     operator: this.userInfo.employeeName
                 }
-                delete form.optionTypeIds
-                delete form.optionTypeList
             }
             console.log(form)
             this.btnLoading = true
@@ -575,11 +546,8 @@ export default {
                     try {
                         if (this.$route.query.id) {
                             await this.editProduct(form)
-                            // if (this.$route.query.from == 'stepPrice') {
-                            //     this.$router.push('/price/stepPrice')
-                            // } else {
-                            //     this.$router.push('/goods/productList')
-                            // }
+                            this.$router.push('/b2b/product/productList')
+                            this.setNewTags((this.$route.fullPath).split('?')[0])
                         } else {
                             form.id = ''
                             await this.createProduct(form)
@@ -642,11 +610,10 @@ export default {
         async getProductInfo (id) {
             await this.findProductSpuInfo({ id: id })
             await this.getSpecByCategory(this.productSpuInfo.twoCategoryId)
-            console.log(this.productSpuInfo)
             this.form = {
                 ...this.productSpuInfo,
                 mainSkus: this.productSpuInfo.mainSkus.map(item => {
-                    item.imageUrls = item.imageUrls.join(',')
+                    item.imageUrls = item.imageUrls ? item.imageUrls.join(',') : []
                     return item
                 }),
                 optionTypeList: this.productSpuInfo.optionTypeList ? this.productSpuInfo.optionTypeList : []
@@ -669,9 +636,6 @@ export default {
     beforeRouteLeave (to, from, next) {
         if (to.name != 'productList') {
             clearCache('productList')
-        }
-        if (to.name != 'stepPrice') {
-            clearCache('stepPrice')
         }
         next()
     }
@@ -746,8 +710,12 @@ export default {
     }
 }
 
+.picture-content {
+    line-height: 20px;
+}
+
 .isDefault {
-    display: inline-flex;
+    display: inline-block;
     width: 104px;
     height: 20px;
     line-height: 20px;
@@ -784,43 +752,6 @@ export default {
 
 /deep/ .editor-wrap {
     width: 100% !important;
-}
-
-.stepPrcieBox {
-    box-sizing: border-box;
-    padding: 20px 0;
-    margin-bottom: 20px;
-    display: flex;
-    border: 1px solid #e5e5ea;
-    .stepLabel {
-        text-align: right;
-        width: 108px;
-        padding-right: 12px;
-        color: #ff7a45;
-    }
-    .stepItem {
-        width: 180px;
-        .stepTitle {
-            color: #ff7a45;
-            margin-bottom: 10px;
-        }
-        .stepPrice,
-        .stepRange {
-            color: #333333;
-        }
-    }
-}
-.area-cascader {
-    /deep/ .el-cascader__tags {
-        max-height: 100px;
-        overflow-y: auto;
-    }
-    /deep/ .el-cascader {
-        max-height: 100px;
-    }
-    /deep/ .el-input {
-        width: 600px;
-    }
 }
 
 .el-tag {

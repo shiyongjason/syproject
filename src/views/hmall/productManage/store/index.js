@@ -64,7 +64,6 @@ const mutations = {
         state.productSkuInfo = payload
     },
     [types.OPTION_ID] (state, payload) {
-        console.log(payload)
         state.optionId = payload
     },
     [types.OPTION_VALUE_DATA] (state, payload) {
@@ -103,7 +102,6 @@ const actions = {
     },
     async checkProductUnique ({ commit }, params) {
         const { data } = await instance.get(`/product/boss/main-spu/unique-check`, { params })
-        console.log(data)
         commit(types.PRODUCT_UNIQUE, data)
     },
     async findProductSpuInfo ({ commit }, params) {
@@ -135,7 +133,7 @@ const actions = {
         await instance.patch('/product/boss/main-spu/batch-disable', params)
     },
     async batchDelete ({ commit }, params) {
-        await instance.delete('/product/boss/main-spu', params)
+        await instance.delete('/product/boss/main-spu', { data: params })
     },
     async effectiveSKU ({ commit }, params) {
         await instance.patch(`/product/boss/main-sku/${params.id}/enable`, params)

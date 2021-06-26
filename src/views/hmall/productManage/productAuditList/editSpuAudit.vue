@@ -122,7 +122,7 @@
                 </div>
                 <RichEditor style="position:relative;z-index:1" v-model="form.detail" :width="richTextAttr.width" :height="richTextAttr.height" :menus="richTextAttr.menus" :uploadImgServer="richTextAttr.uploadImgServer" :uploadImgParams="richTextAttr.uploadImgParams" :disabled="!seeTask">
                 </RichEditor>
-                <el-form ref="auditForm" :model="auditForm" :rules="auditrules"  style="display:flex mt30">
+                <el-form ref="auditForm" :model="auditForm" :rules="auditrules" style="display:flex mt30">
                     <template v-if="seeTask">
                         <el-form-item prop="auditStatus">
                             <el-radio v-model="auditForm.auditStatus" label="1">审核通过</el-radio>
@@ -171,7 +171,7 @@
 </template>
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
-import skuTable from '../productList/skuTable'
+import skuTable from './skuTable'
 import { interfaceUrl } from '@/api/config'
 import { RICH_EDITOR_MENUS, PUTAWAY_RULES } from '../const/common'
 import { flatten } from '@/views/hmall/utils/sku'
