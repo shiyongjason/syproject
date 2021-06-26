@@ -481,7 +481,7 @@ export default class ProjectList2 extends Vue {
         { label: '主营品类', prop: 'deviceCategoryName', width: '120' },
         { label: '主营品牌', prop: 'deviceBrand', width: '120' },
         { label: '所属分部', prop: 'subsectionName', width: '120' },
-        { label: '客户经理', prop: 'customerName', width: '120' },
+        { label: '客户经理', prop: 'customerName', width: '140' },
         { label: '甲方名称', prop: 'firstPartName', width: '200' },
         { label: '项目名称', prop: 'projectName', width: '230' },
         { label: '项目地址', prop: 'address', width: '300' },
