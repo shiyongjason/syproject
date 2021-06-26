@@ -66,7 +66,7 @@
                             <p>最多支持上传5张750*750，大小不超过2M，仅支持jpeg，jpg，png格式</p>
                         </div>
                     </el-form-item>
-                    <el-form-item label="规格图片：" v-if="form.optionTypeList.length < 1">
+                    <el-form-item label="规格图片：" prop="imgUrlsSku" v-if="form.optionTypeList.length < 1">
                         <SingleUpload :upload="uploadInfo" :imgW="104" :imgH="104" :imageUrl="form.mainSkus[0].imageUrls" @back-event="backPicUrl" v-if="form.mainSkus.length>0" />
                         <div class="picture-prompt ml20">
                             <p>上传750*750，大小不超过2M，仅支持jpeg，jpg，png格式</p>
@@ -76,12 +76,12 @@
                     <div class="sku-cont">
                         <div class="sku-cont_group mb20" v-for="(item,index) in form.optionTypeList" :key="index">
                             <div class="group-spec_label">
-                                <el-form-item label="规格名：">
+                                <el-form-item label="规格名：" :prop="`optionTypeList[${index}].name`" :rules="rules.option">
                                     <el-input v-model="item.name" @change="onAddOption(item.name,index)" maxlength="10" placeholder="请输入规格名"></el-input>
                                 </el-form-item>
                             </div>
                             <div class="group-spec_tags mt20">
-                                <el-form-item label="规格值：">
+                                <el-form-item label="规格值：" :prop="`optionTypeList[${index}].optionValues`" :rules="rules.optionValues">
                                     <el-tag class="mr10" v-for="(sItem,sIndex) in item.optionValues" :key="sIndex" @close="onDelOptionValue(index,sIndex)" :closable="item.optionValues.length>1">{{sItem.name}}</el-tag>
                                     <el-input v-model="addValues[index]" @change="onAddOptionVlaue(index)" suffix-icon="el-icon-plus" maxlength="50" placeholder="多个属性值以空格隔开"></el-input>
                                 </el-form-item>
@@ -211,38 +211,37 @@ export default {
                 showName: [
                     { required: true, message: '请输入商品销售名称', trigger: 'blur' }
                 ],
-                imgUrls: [
+                imageUrls: [
                     { required: true, message: '请上传商品图片', trigger: 'change' }
                 ],
-                k: [
+                option: [
                     { required: true, message: '请输入规格名', trigger: 'blur' }
                 ],
-                v: [
+                optionValues: [
                     {
                         required: true,
                         validator: (rule, value, callback) => {
                             this.form.optionTypeList.map(item => {
-                                if (!item.v || item.v.length == 0) {
+                                console.log(item)
+                                if (!item.optionValues || item.optionValues.length == 0) {
                                     return callback(new Error('请输入规格值'))
                                 }
                             })
                             return callback()
-                        },
-                        trigger: 'blur'
+                        }
                     }
                 ],
                 imgUrlsSku: [
                     {
                         required: true,
                         validator: (rule, value, callback) => {
-                            this.form.skuList.map(item => {
-                                if (!item.imgUrls || item.imgUrls == '') {
+                            this.form.mainSkus.map(item => {
+                                if (!item.imageUrls || item.imageUrls == '') {
                                     return callback(new Error('请上传规格图片'))
                                 }
                             })
                             return callback()
-                        },
-                        trigger: 'change'
+                        }
                     }
                 ]
             },
@@ -299,81 +298,56 @@ export default {
         }
     },
     watch: {
+        imageUrls (value) {
+            if (value.length > 0) {
+                this.$refs.imageUrls.clearValidate()
+            }
+        },
         'form.optionTypeList' (value) {
             const optionTypeList = flatten(value.filter(item => item.name && item.optionValues.length))
             if (this.$route.query.id) {
                 this.form.mainSkus.map(item => {
                     let optionValues = []
-                    this.form.optionTypeList.forEach(i => {
+                    this.productSpuInfo.optionTypeList.forEach(i => {
                         let arr = item.optionValues.filter(j => j.optionTypeId == i.id)
                         if (arr.length > 0) {
                             optionValues = optionValues.concat(arr)
                         } else {
-                            optionValues.push({
-                                id: '',
-                                name: '',
-                                optionTypeId: i.id,
-                                optionTypeName: i.name
-                            })
+                            optionValues.push({ id: '', name: '', optionTypeId: i.id, optionTypeName: i.name })
                         }
                     })
                     item.optionValues = optionValues
                     return item
                 })
             } else {
-                if (this.form.mainSkus.length) {
-                    this.form.mainSkus = optionTypeList.map((item, index) => ({
+                const mainSkus = optionTypeList.map(item => {
+                    const skuInfo = this.form.mainSkus.map(i => {
+                        const result = i.optionValues.filter((j, index) => j.optionTypeId == item.optionValues[index].optionTypeId)
+                        i.optionValues = i.optionValues.concat(result)
+                        return i
+                    })
+                    console.log(skuInfo)
+                    item = { ...item, ...skuInfo }
+                    return item
+                })
+                if (this.form.mainSkus.length == mainSkus.length) {
+                    this.form.mainSkus = mainSkus.map((item, index) => ({
                         ...this.form.mainSkus[index],
                         ...item
                     }))
                 } else {
-
+                    this.form.mainSkus = mainSkus
                 }
             }
             console.log(this.form.mainSkus)
-            // if (this.$route.query.id) {
-            //     this.form.mainSkus.map(item => {
-            //         let optionValues = []
-            //         this.form.optionTypeList.forEach(i => {
-            //             let arr = item.optionValues.filter(j => j.optionTypeId == i.id)
-            //             if (arr.length > 0) {
-            //                 optionValues = optionValues.concat(arr)
-            //             } else {
-            //                 optionValues.push({
-            //                     id: '',
-            //                     name: '',
-            //                     optionTypeId: i.id,
-            //                     optionTypeName: i.name
-            //                 })
-            //             }
-            //         })
-            //         item.optionValues = optionValues
-            //         return item
-            //     })
-            // } else {
-            //     const mainSkus = optionTypeList.map(item => {
-            //         // const skuInfo = this.form.mainSkus.filter(sku => sku.optionValues && sku.optionValues[0].optionTypeId == item.optionValues[0].optionTypeId)[0]
-            //         // item = { ...item, ...skuInfo }
-            //         return item
-            //     })
-            //     console.log(mainSkus)
-            //     // if (!mainSkus.length) {
-            //     //     this.form.mainSkus = this.form.mainSkus
-            //     //     return
-            //     // }
-            //     // if (this.form.mainSkus.length == mainSkus.length) {
-            //     this.form.mainSkus = mainSkus.map((item, index) => ({
-            //         ...this.form.mainSkus[index],
-            //         ...item
-            //     }))
-            //     // } else {
-            //     //     this.form.mainSkus = mainSkus
-            //     // }
-            // }
         }
     },
     methods: {
         init () {
+            this.form.brandId = 1
+            this.form.brandName = '格力'
+            this.form.categoryId = 47
+            this.form.model = 'qwertt'
             this.getBrandOptions()
             this.getCategoryOptions()
             this.getModelOptions()
@@ -616,7 +590,7 @@ export default {
                     item.imageUrls = item.imageUrls ? item.imageUrls.join(',') : []
                     return item
                 }),
-                optionTypeList: this.productSpuInfo.optionTypeList ? this.productSpuInfo.optionTypeList : []
+                optionTypeList: this.productSpuInfo.optionTypeList.length ? this.productSpuInfo.optionTypeList : []
             }
             // TODO: 处理老数据
             const specifications = this.productSpuInfo.specifications || []

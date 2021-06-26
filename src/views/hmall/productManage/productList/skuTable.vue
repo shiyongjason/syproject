@@ -49,7 +49,7 @@
                         </td>
                     </template>
                     <td class="fixed-width">
-                        <el-form-item label-width='0'>
+                        <el-form-item label-width='0' :prop="`mainSkus[${index}].imageUrls`" :rules="rules.imageUrls">
                             <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" />
                         </el-form-item>
                     </td>
@@ -67,12 +67,12 @@
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.grossWeight" maxlength="8" :disabled="item.disabled"></el-input>
+                            <el-input v-model="item.grossWeight" maxlength="16" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.volume" maxlength="8" :disabled="item.disabled"></el-input>
+                            <el-input v-model="item.volume" maxlength="16" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
                     <td v-if="$route.query.id">
@@ -214,7 +214,7 @@ export default {
             this.$message.success('商品设置失效成功！')
         },
         onEditSku (index) {
-            this.form.mainSkus[index].disabled = !this.form.mainSkus[index].disabled
+            this.$set(this.form.mainSkus[index], 'disabled', !this.form.mainSkus[index].disabled)
         },
         onDelSku (index) {
             this.$confirm('是否确认删除该SKU?', '提示', {
