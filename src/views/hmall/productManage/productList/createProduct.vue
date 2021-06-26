@@ -360,7 +360,18 @@ export default {
         },
         mainSkus: {
             handler (value, preValue) {
-                if (value.length === preValue.length) {
+                // 由于进入到table中会对mainSku进行disabled修改，所以此处调整disabled值之后进行比较，如果相等 ，说明是修改disabled，不予处理
+                const valueNew = value.map(item => {
+                    item.disabled = ''
+                    return item
+                })
+                const preValueNew = preValue.map(item => {
+                    item.disabled = ''
+                    return item
+                })
+                const valueStr = JSON.stringify(valueNew)
+                const preValueStr = JSON.stringify(preValueNew)
+                if (preValueNew[0].optionValues && valueStr != preValueStr && value.length === preValue.length) {
                     this.isEditSku = true
                 }
             },
