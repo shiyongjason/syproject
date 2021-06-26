@@ -60,7 +60,6 @@ const mutations = {
         state.productSpuInfo = payload
     },
     [types.OPTION_ID] (state, payload) {
-        console.log(payload)
         state.optionId = payload
     },
     [types.OPTION_VALUE_DATA] (state, payload) {

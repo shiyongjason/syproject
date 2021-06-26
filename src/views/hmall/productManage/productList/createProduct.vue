@@ -67,11 +67,11 @@
                         </div>
                     </el-form-item>
                     <el-form-item label="规格图片：" v-if="form.optionTypeList.length < 1">
-                        <SingleUpload :upload="uploadInfo" :imgW="104" :imgH="104" :imageUrl="form.mainSkus[0].imageUrls" @back-event="backPicUrl" />
+                        <SingleUpload :upload="uploadInfo" :imgW="104" :imgH="104" :imageUrl="form.mainSkus[0].imageUrls" @back-event="backPicUrl" v-if="form.mainSkus.length>0" />
                         <div class="picture-prompt ml20">
                             <p>上传750*750，大小不超过2M，仅支持jpeg，jpg，png格式</p>
                         </div>
-                        <input type="hidden" v-model="form.mainSkus[0].imageUrls">
+                        <input type="hidden" v-model="form.mainSkus[0].imageUrls" v-if="form.mainSkus.length>0">
                     </el-form-item>
                     <div class="sku-cont">
                         <div class="sku-cont_group mb20" v-for="(item,index) in form.optionTypeList" :key="index">
@@ -88,7 +88,7 @@
                             </div>
                             <span class="group-spec_close" @click="onDelOptionTemplate(index)"><i class="el-icon-close"></i></span>
                         </div>
-                        <h-button type="create" class="mb20" @click="onAddOptionTemplate">添加规格</h-button>
+                        <h-button type="create" class="mb20" @click="onAddOptionTemplate" :disabled="disabled">添加规格</h-button>
                     </div>
                     <skuTable ref="skuTable" :formData.sync="form" v-if="form.optionTypeList.length>0"></skuTable>
                     <h-button type="create" class="mb20" v-if="form.optionTypeList.length>0" @click="onAddSKU">+</h-button>
@@ -112,21 +112,21 @@
                     </div>
                     <div v-if="form.optionTypeList.length < 1">
                         <el-form-item label="SN码：" prop="retailPrice">
-                            <el-input v-model="form.mainSkus[0].serialNumber" maxlength="16"></el-input>
+                            <el-input v-model="form.mainSkus[0].serialNumber" maxlength="16" v-if="form.mainSkus.length>0"></el-input>
                         </el-form-item>
                         <el-form-item label="长宽高/mm：" prop="commission">
-                            <el-input v-model="form.mainSkus[0].length" maxlength="6"></el-input>
-                            <el-input v-model="form.mainSkus[0].width" maxlength="6"></el-input>
-                            <el-input v-model="form.mainSkus[0].height" maxlength="6"></el-input>
+                            <el-input v-model="form.mainSkus[0].length" maxlength="6" v-if="form.mainSkus.length>0"></el-input>
+                            <el-input v-model="form.mainSkus[0].width" maxlength="6" v-if="form.mainSkus.length>0"></el-input>
+                            <el-input v-model="form.mainSkus[0].height" maxlength="6" v-if="form.mainSkus.length>0"></el-input>
                         </el-form-item>
                         <el-form-item label="毛重/KG：" prop="costPrice">
-                            <el-input v-model="form.mainSkus[0].grossWeight" maxlength="16"></el-input>
+                            <el-input v-model="form.mainSkus[0].grossWeight" maxlength="16" v-if="form.mainSkus.length>0"></el-input>
                         </el-form-item>
                         <el-form-item label="体积/m³：" prop="costPrice">
-                            <el-input v-model="form.mainSkus[0].volume" maxlength="16"></el-input>
+                            <el-input v-model="form.mainSkus[0].volume" maxlength="16" v-if="form.mainSkus.length>0"></el-input>
                         </el-form-item>
                         <el-form-item label="净重/KG：" prop="costPrice">
-                            <el-input v-model="form.mainSkus[0].netWeight" maxlength="16"></el-input>
+                            <el-input v-model="form.mainSkus[0].netWeight" maxlength="16" v-if="form.mainSkus.length>0"></el-input>
                         </el-form-item>
                     </div>
                     <div class="title-cont mt10">
@@ -295,22 +295,16 @@ export default {
             }
         },
         disabled () {
-            // return this.form.isOnShelf || this.form.optionTypeList.some(item => !item.k || item.v.length == 0)
-            return false
+            return this.form.optionTypeList.some(item => !item.name || item.optionValues.length == 0)
         }
     },
     watch: {
-        'form.imgUrls' (value) {
-            if (value > 0) {
-                this.$refs.imgUrls.clearValidate()
-            }
-        },
         'form.optionTypeList' (value) {
             const optionTypeList = flatten(value.filter(item => item.name && item.optionValues.length))
             if (this.$route.query.id) {
                 this.form.mainSkus.map(item => {
                     let optionValues = []
-                    this.productSpuInfo.optionTypeList.forEach(i => {
+                    this.form.optionTypeList.forEach(i => {
                         let arr = item.optionValues.filter(j => j.optionTypeId == i.id)
                         if (arr.length > 0) {
                             optionValues = optionValues.concat(arr)
@@ -327,25 +321,55 @@ export default {
                     return item
                 })
             } else {
-                const mainSkus = optionTypeList.map(item => {
-                    // const skuInfo = this.form.mainSkus.filter(sku => sku.optionValues && sku.optionValues[0].optionTypeId == item.optionValues[0].optionTypeId)[0]
-                    // item = { ...item, ...skuInfo }
-                    return item
-                })
-                console.log(mainSkus)
-                // if (!mainSkus.length) {
-                //     this.form.mainSkus = this.form.mainSkus
-                //     return
-                // }
-                // if (this.form.mainSkus.length == mainSkus.length) {
-                this.form.mainSkus = mainSkus.map((item, index) => ({
-                    ...this.form.mainSkus[index],
-                    ...item
-                }))
-                // } else {
-                //     this.form.mainSkus = mainSkus
-                // }
+                if (this.form.mainSkus.length) {
+                    this.form.mainSkus = optionTypeList.map((item, index) => ({
+                        ...this.form.mainSkus[index],
+                        ...item
+                    }))
+                } else {
+
+                }
             }
+            console.log(this.form.mainSkus)
+            // if (this.$route.query.id) {
+            //     this.form.mainSkus.map(item => {
+            //         let optionValues = []
+            //         this.form.optionTypeList.forEach(i => {
+            //             let arr = item.optionValues.filter(j => j.optionTypeId == i.id)
+            //             if (arr.length > 0) {
+            //                 optionValues = optionValues.concat(arr)
+            //             } else {
+            //                 optionValues.push({
+            //                     id: '',
+            //                     name: '',
+            //                     optionTypeId: i.id,
+            //                     optionTypeName: i.name
+            //                 })
+            //             }
+            //         })
+            //         item.optionValues = optionValues
+            //         return item
+            //     })
+            // } else {
+            //     const mainSkus = optionTypeList.map(item => {
+            //         // const skuInfo = this.form.mainSkus.filter(sku => sku.optionValues && sku.optionValues[0].optionTypeId == item.optionValues[0].optionTypeId)[0]
+            //         // item = { ...item, ...skuInfo }
+            //         return item
+            //     })
+            //     console.log(mainSkus)
+            //     // if (!mainSkus.length) {
+            //     //     this.form.mainSkus = this.form.mainSkus
+            //     //     return
+            //     // }
+            //     // if (this.form.mainSkus.length == mainSkus.length) {
+            //     this.form.mainSkus = mainSkus.map((item, index) => ({
+            //         ...this.form.mainSkus[index],
+            //         ...item
+            //     }))
+            //     // } else {
+            //     //     this.form.mainSkus = mainSkus
+            //     // }
+            // }
         }
     },
     methods: {
@@ -429,10 +453,6 @@ export default {
         },
         onAddOptionTemplate () {
             this.form.optionTypeList.push({ id: '', name: '', optionValues: [] })
-            if (!this.form.optionTypeList.length) {
-                this.form.mainSkus = [{}]
-            }
-            console.log(this.form.mainSkus)
         },
         onDelOptionTemplate (index) {
             this.form.optionTypeList.splice(index, 1)
@@ -593,8 +613,7 @@ export default {
             this.form = {
                 ...this.productSpuInfo,
                 mainSkus: this.productSpuInfo.mainSkus.map(item => {
-                    console.log(item.imageUrls.join(','))
-                    item.imageUrls = item.imageUrls.join(',')
+                    item.imageUrls = item.imageUrls ? item.imageUrls.join(',') : []
                     return item
                 }),
                 optionTypeList: this.productSpuInfo.optionTypeList ? this.productSpuInfo.optionTypeList : []

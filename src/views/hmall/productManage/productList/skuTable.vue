@@ -42,7 +42,7 @@
             <tbody>
                 <tr v-for="(item,index) in form.mainSkus" :key="index">
                     <template v-for="(sItem,sIndex) in item.optionValues">
-                        <td :key="sIndex">
+                        <td :key="sIndex" v-if="sItem.optionTypeName">
                             <el-select v-model="sItem.id" @change="onChangeValue(index,sIndex)" clearable :disabled="item.disabled">
                                 <el-option v-for="i in optionValuesFilter(sItem.optionTypeId)" :key="i.id" :label="i.name" :value="i.id"></el-option>
                             </el-select>
@@ -140,70 +140,6 @@ export default {
             rules: {
                 imageUrls: [
                     { required: true, message: '请上传图片', trigger: 'change' }
-                ],
-                sellPrice: [
-                    { required: true, message: '请输入销售价', trigger: 'blur' },
-                    {
-                        validator: (rule, value, callback) => {
-                            const reg = /(^[1-9]([0-9]{1,12})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
-                            if (!reg.test(value)) {
-                                return callback(new Error('销售价格式为小数点前十三位，小数点后两位'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                retailPrice: [
-                    { required: true, message: '请输入零售价', trigger: 'blur' },
-                    {
-                        validator: (rule, value, callback) => {
-                            const reg = /(^[1-9]([0-9]{1,12})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
-                            if (!reg.test(value)) {
-                                return callback(new Error('零售价格式为小数点前十三位，小数点后两位'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                saleableStock: [
-                    { required: false, message: '请输入库存', trigger: 'blur' },
-                    {
-                        validator: (rule, value, callback) => {
-                            const reg = /^[0-9]\d*$/
-                            if (value < 0 || !reg.test(value)) {
-                                return callback(new Error('库存为大于等于0的数字'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                commission: [
-                    { required: true, message: '请输入佣金', trigger: 'blur' },
-                    {
-                        validator: (rule, value, callback) => {
-                            const reg = /(?!^0\.0?0$)^[0-9][0-9]?(\.[0-9]{1,2})?$|^100$/
-                            if (!reg.test(value)) {
-                                return callback(new Error('佣金为小于100的2位小数或整数'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                costPrice: [
-                    {
-                        validator: (rule, value, callback) => {
-                            const reg = /(^[1-9]([0-9]{1,12})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
-                            if (value && !reg.test(value)) {
-                                return callback(new Error('成本价格式为小数点前十三位，小数点后两位'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
                 ]
             }
         }
