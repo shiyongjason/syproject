@@ -417,8 +417,16 @@ export default class ThreadDetail extends Vue {
     @validateForm('threadDetailForm')
     async onUpDateThreadDetail () {
         const parms = { ...this.threadDetail }
-
         parms.updateBy = this.userInfo.employeeName
+        if (!parms.provinceId || parms.provinceId.length === 0) {
+            parms.provinceName = ''
+        }
+        if (!parms.cityId || parms.cityId.length === 0) {
+            parms.cityName = ''
+        }
+        if (!parms.countryId || parms.countryId.length === 0) {
+            parms.countryName = ''
+        }
         parms.createTime = null
         await updateThreadDetail(parms)
         this.$message.success('保存成功')
