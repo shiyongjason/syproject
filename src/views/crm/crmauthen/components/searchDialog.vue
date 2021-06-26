@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-dialog title="修改客户经理" :visible.sync="dialogVisible" width="40%" :before-close="handleClose">
+        <el-dialog title="修改客户经理" :visible.sync="dialogVisible" width="40%" :before-close="handleClose" :close-on-click-modal =false>
             <div class="mb20">
                 <el-input placeholder="请输入" v-model="name">
                     <template slot="append" ><el-button @click="onSearch">搜索</el-button></template>

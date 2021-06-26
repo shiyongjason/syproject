@@ -96,7 +96,7 @@
                 已经选中{{selectThread.length}}个，可进行批量操作
                 <h-button table :disabled='selectThread.length === 0' style="margin-left:10px" @click="distributor()">批量分配销售</h-button>
             </el-tag>
-            <hosJoyTable ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="findThreadList" @selection-change="dialogCheckChange"
+            <hosJoyTable ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="pagination" @selection-change="dialogCheckChange"
                 actionWidth='220' isShowselection isAction :isActionFixed='tableData&&tableData.length>0'>
                 <template #deviceCategory="slotProps">
                     {{deviceCategoryString(slotProps.data.row.deviceCategory)}}
@@ -254,6 +254,7 @@ export default class Thread extends Vue {
     @Ref('distributorForm') readonly distributorRef!: HTMLFormElement;
     @Ref('customerMobile') readonly customerMobileRef!: HTMLFormElement;
     @Ref('threadForm') readonly threadFormRef!: HTMLFormElement;
+    @Ref('hosjoyTable') readonly hosjoyTableRef!: HTMLFormElement;
     @Watch('distributorForm.customerMobile')
     onFormChanged (newValue: string, oldValue: string) {
         this.$nextTick(() => {
@@ -338,6 +339,7 @@ export default class Thread extends Vue {
     canDispatchList: string[] = []
     threadDetail: Clue = {}
     distributorVisible: boolean = false
+    isPagination: boolean = false
     threadVisible: boolean = false
     isloading: boolean = false
     drawer: boolean = false
@@ -374,7 +376,7 @@ export default class Thread extends Vue {
                 let beginDateVal = this.queryParams.startTime
                 if (beginDateVal) {
                     return (
-                        time.getTime() < new Date(beginDateVal).getTime()
+                        time.getTime() < new Date(beginDateVal).getTime() - 8.64e7
                     )
                 }
             }
@@ -521,7 +523,10 @@ export default class Thread extends Vue {
     }
 
     dialogCheckChange (item) {
-        this.selectThread = item
+        if (!this.isPagination) {
+            this.selectThread = item
+        }
+        this.isPagination = false
     }
 
     async findThreadList () {
@@ -530,6 +535,22 @@ export default class Thread extends Vue {
         this.page.total = data.total
         const { data: count } = await getThreadListCount({})
         this.page.currentTotal = count
+        if (this.selectThread && this.selectThread.length > 0) {
+            this.selectThread.forEach(row => {
+                this.tableData.forEach(rowData => {
+                    if (row.id === rowData.id) {
+                        this.hosjoyTableRef.toggleRowSelection(rowData)
+                    }
+                })
+            })
+        } else {
+            this.hosjoyTableRef.clearSelection()
+        }
+    }
+
+    pagination () {
+        this.isPagination = true
+        this.findThreadList()
     }
 
     addThread () {
