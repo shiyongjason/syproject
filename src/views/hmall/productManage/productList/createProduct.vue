@@ -370,10 +370,10 @@ export default {
     },
     methods: {
         init () {
-            this.form.brandId = 1
-            this.form.brandName = '格力'
-            this.form.categoryId = 47
-            this.form.model = 'qwertt'
+            // this.form.brandId = 1
+            // this.form.brandName = '格力'
+            // this.form.categoryId = 47
+            // this.form.model = 'qwertt'
             this.getBrandOptions()
             this.getCategoryOptions()
             this.getModelOptions()
