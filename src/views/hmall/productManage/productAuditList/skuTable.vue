@@ -81,9 +81,6 @@
                             <span>{{item.mainSkuId}}</span>
                         </el-form-item>
                     </td>
-                    <td v-if="$route.query.id">
-                        <span>{{item.mainSkuCode || '-' }}</span>
-                    </td>
                     <td>
                         <span>{{checkStatus(item.enabled,item.auditStatus)}}</span>
                     </td>

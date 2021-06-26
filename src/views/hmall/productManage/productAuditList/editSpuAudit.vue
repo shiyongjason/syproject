@@ -120,36 +120,11 @@
                 <div class="title-cont mt10">
                     <span class="title-cont__label">商品详情信息</span>
                 </div>
-                <RichEditor style="position:relative;z-index:1" v-model="form.detail" :width="richTextAttr.width" :height="richTextAttr.height" :menus="richTextAttr.menus" :uploadImgServer="richTextAttr.uploadImgServer" :uploadImgParams="richTextAttr.uploadImgParams" :disabled="!seeTask">
+                <RichEditor style="position:relative;z-index:1" v-model="form.detail" :width="richTextAttr.width" :height="richTextAttr.height" :menus="richTextAttr.menus" :uploadImgServer="richTextAttr.uploadImgServer" :uploadImgParams="richTextAttr.uploadImgParams" :disabled="seeTask">
                 </RichEditor>
-                <el-form ref="auditForm" :model="auditForm" :rules="auditrules" style="display:flex mt30">
-                    <template v-if="seeTask">
-                        <el-form-item prop="auditStatus">
-                            <el-radio v-model="auditForm.auditStatus" label="1">审核通过</el-radio>
-                            <el-radio v-model="auditForm.auditStatus" label="2">审核不通过</el-radio>
-                        </el-form-item>
-                        <el-form-item style="width: 460px;" v-if="auditForm.auditStatus==2" prop="auditOpinion">
-                            <el-input type="textarea" maxlength="200" :rows="3" placeholder="理由说明" v-model="auditForm.auditOpinion">
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item style="text-align: right">
-                            <h-button type='primary' :loading="btnLoading" @click="onSave" v-if="seeTask">确定</h-button>
-                            <h-button @click="onCancel">返回</h-button>
-                        </el-form-item>
-                    </template>
-                </el-form>
-                <!-- <div class="agreement mt30">
-                    <template v-if="seeTask">
-                        <el-form-item prop="auditStatus">
-                            <el-radio v-model="auditForm.auditStatus" label="1">审核通过</el-radio>
-                            <el-radio v-model="auditForm.auditStatus" label="2">审核不通过</el-radio>
-                        </el-form-item>
-                        <el-form-item style="width: 460px;" v-if="auditForm.auditStatus==2" prop="auditOpinion">
-                            <el-input type="textarea" maxlength="200" :rows="3" placeholder="理由说明" v-model="auditForm.auditOpinion">
-                            </el-input>
-                        </el-form-item> -->
-                <!-- <el-form-item label="审核结果：" prop="auditStatus">
-                            <el-radio-group v-model="form.auditStatus" @change="onChange">
+                <template v-if="seeTask" class="pt40">
+                    <!-- <el-form-item prop="auditStatus">
+                            <el-radio-group v-model="auditForm.auditStatus" @change="onChange">
                                 <el-radio label="1">审核通过</el-radio>
                                 <el-radio label="2">审核不通过</el-radio>
                             </el-radio-group>
@@ -158,11 +133,22 @@
                             <el-input type="textarea" maxlength="200" :rows="3" placeholder="理由说明" v-model="form.auditOpinion">
                             </el-input>
                         </el-form-item> -->
-                <!-- <el-form-item label="备注原因：" v-if="form.auditStatus == 2" :prop="form.auditOpinion">
-                            <el-input type="textarea" v-model="form.auditOpinion" rows="3" maxlength="50"></el-input>
-                        </el-form-item> -->
-                <!-- </template>
-                </div> -->
+                    <el-form-item label="审核结果：" prop="auditStatus">
+                        <el-radio-group v-model="form.auditStatus" @change="onChange">
+                            <el-radio label="1">审核通过</el-radio>
+                            <el-radio label="2">审核不通过</el-radio>
+                        </el-radio-group>
+
+                    </el-form-item>
+                    <el-form-item style="width: 460px;" v-if="form.auditStatus==2" prop="auditOpinion">
+                        <el-input type="textarea" maxlength="200" :rows="3" placeholder="理由说明" v-model="form.auditOpinion">
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item style="text-align: right">
+                        <h-button type='primary' :loading="btnLoading" @click="onSave" v-if="seeTask">确定</h-button>
+                        <h-button @click="onCancel">返回</h-button>
+                    </el-form-item>
+                </template>
             </el-form>
         </div>
         <div class="page-body-cont btn-cont" v-if="showMore">
@@ -191,7 +177,6 @@ export default {
             specifications: [],
             addValues: [],
             imageUrls: [],
-            newId: '',
             form: {
                 brandId: '',
                 brandName: '',
@@ -217,7 +202,9 @@ export default {
                 ],
                 detail: '',
                 operator: '',
-                optionTypeList: []
+                optionTypeList: [],
+                auditStatus: '',
+                auditOpinion: ''
             },
             rules: {
                 imgUrls: [
@@ -240,18 +227,12 @@ export default {
                         trigger: 'blur'
                     }
                 ],
-                imgUrlsSku: [
+                auditStatus: [
+                    { required: true, message: '请选择审核结果', trigger: 'change' }
+                ],
+                auditOpinion: [
                     {
-                        required: true,
-                        validator: (rule, value, callback) => {
-                            this.form.skuList.map(item => {
-                                if (!item.imgUrls || item.imgUrls == '') {
-                                    return callback(new Error('请上传规格图片'))
-                                }
-                            })
-                            return callback()
-                        },
-                        trigger: 'change'
+                        required: true, message: '请填写理由说明', trigger: 'blur'
                     }
                 ]
             },
@@ -277,20 +258,7 @@ export default {
                 uploadImgServer: interfaceUrl + 'tms/files/upload-list',
                 uploadImgParams: { updateUid: 'Hosjoy' }
             },
-            auditForm: {
-                auditStatus: '',
-                auditOpinion: ''
-                // operator: '',
-            },
-            auditStatus: '',
-            auditrules: {
-                auditStatus: [
-                    { required: true, whitespace: true, message: '请选择审核状态' }
-                ],
-                auditOpinion: [
-                    { required: true, whitespace: true, message: '请填写理由说明' }
-                ]
-            }
+            auditStatus: ''
         }
     },
     computed: {
@@ -364,8 +332,7 @@ export default {
             if (this.$route.query.id) {
                 this.showMore = true
                 this.seeTask = JSON.parse(this.$route.query.seeTask)
-                this.newId = this.$route.query.id
-                this.getProductInfo(this.newId)
+                this.getProductInfo(this.$route.query.id)
             }
         },
         async querySearchAsyncBrand (queryString, cb) {
@@ -425,31 +392,6 @@ export default {
         backPicUrl (file) {
             this.form.mainSkus[0].imageUrls = file.imageUrl
         },
-        async onAddOption (name, index) {
-            await this.addOption({ name: name })
-            if (this.form.optionTypeList[index].name == name) {
-                this.form.optionTypeList[index].id = this.optionId
-            }
-        },
-        async onAddOptionVlaue (index) {
-            let str = this.addValues[index] || ''
-            str = str.trim()
-            if (!str) return
-            const oldArr = this.form.optionTypeList[index].optionValues
-            const arr = str.split(/\s+/)
-                .filter(item => !oldArr.some(value => value.name == item))
-                .map(item => (item))
-            if (arr.length > 0) {
-                await this.addOptionValue({ id: this.form.optionTypeList[index].id, name: this.addValues.join('') })
-                this.form.optionTypeList = this.form.optionTypeList.map((item, i) => {
-                    if (index === i) {
-                        item.optionValues = this.form.optionTypeList[i].optionValues.concat(this.optionValueData)
-                    }
-                    return item
-                })
-            }
-            this.$set(this.addValues, index, '')
-        },
         onSettingTop (index) {
             this.imageUrls.unshift((this.imageUrls.splice(index, 1))[0])
         },
@@ -464,7 +406,7 @@ export default {
             let form = {}
             form = {
                 ...this.form,
-                mainSpuId: this.newId,
+                mainSpuId: this.$route.query.id,
                 modifiableInfo: {
                     imageUrls: this.imageUrls,
                     detail: this.form.detail,
@@ -473,7 +415,9 @@ export default {
                 mainSkuWarehouseRequest: deepCopy(this.form.mainSkus).map(item => {
                     return item
                 }),
-                operator: this.userInfo.employeeName
+                operator: this.userInfo.employeeName,
+                auditStatus: this.form.auditStatus,
+                auditOpinion: this.form.auditOpinion
             }
             delete form.optionTypeIds
             delete form.optionTypeList
@@ -482,15 +426,15 @@ export default {
             this.btnLoading = true
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
-                    try {
-                        await this.aduitSpu(form)
-                        this.btnLoading = false
-                        this.$message.success('商品审核通过！')
-                        this.$router.push('/b2b/product/productAuditList')
-                        this.setNewTags((this.$route.fullPath).split('?')[0])
-                    } catch (error) {
-                        this.btnLoading = false
-                    }
+                    // try {
+                    //     await this.aduitSpu(form)
+                    //     this.btnLoading = false
+                    //     this.$message.success('商品审核通过！')
+                    //     this.$router.push('/b2b/product/productAuditList')
+                    //     this.setNewTags((this.$route.fullPath).split('?')[0])
+                    // } catch (error) {
+                    //     this.btnLoading = false
+                    // }
                 } else {
                     this.btnLoading = false
                 }
