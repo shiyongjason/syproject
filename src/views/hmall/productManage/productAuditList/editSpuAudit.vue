@@ -398,17 +398,11 @@ export default {
                     detail: this.form.detail,
                     specifications: this.form.specifications.filter(item => item.v)
                 },
-                mainSkuWarehouseRequest: deepCopy(this.form.mainSkus).map(item => {
-                    return item
-                }),
+                mainSkuWarehouseRequest: deepCopy(this.form.mainSkus),
                 operator: this.userInfo.employeeName,
                 auditStatus: this.form.auditStatus,
                 auditOpinion: this.form.auditOpinion
             }
-            delete form.optionTypeIds
-            delete form.optionTypeList
-
-            console.log(form)
             this.btnLoading = true
             this.$refs.form.validate(async (valid) => {
                 if (valid) {

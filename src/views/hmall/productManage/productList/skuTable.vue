@@ -15,6 +15,7 @@
                                 <el-dropdown-item command="imageUrls">应用全部</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
+                        <div class="image-wrap" v-if="$route.query.id"></div>
                     </td>
                     <td>
                         <span class="tr-label">条头码</span>
@@ -52,6 +53,7 @@
                         <el-form-item label-width='0' :prop="`mainSkus[${index}].imageUrls`" :rules="rules.imageUrls">
                             <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" />
                         </el-form-item>
+                        <div class="image-wrap" v-if="item.disabled"></div>
                     </td>
                     <td>
                         <el-form-item label-width='0'>
@@ -93,7 +95,7 @@
                                 <h-button table @click="onEditSku(index)" v-if="!item.enabled">编辑</h-button>
                             </template>
                             <template v-else>
-                                <h-button table @click="onEditSku(index)">编辑</h-button>
+                                <h-button table @click="onEditSku(index)" :disabled="!item.auditStatus && item.auditStatus != 0">编辑</h-button>
                                 <h-button table @click="onDelSku(index)">删除</h-button>
                             </template>
                         </el-form-item>
@@ -273,6 +275,7 @@ export default {
                 white-space: nowrap;
 
                 &.fixed-width {
+                    position: relative;
                     padding: 2px 5px;
                     min-width: 150px;
                 }
@@ -305,6 +308,7 @@ export default {
                 box-sizing: border-box;
 
                 &.fixed-width {
+                    position: relative;
                     padding: 2px 5px;
                     min-width: 150px;
                 }
@@ -338,6 +342,14 @@ export default {
             vertical-align: middle;
         }
     }
+}
+
+.image-wrap {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 .tr-label {

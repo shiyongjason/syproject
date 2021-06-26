@@ -104,10 +104,6 @@
                 </el-form-item>
             </el-form>
         </div>
-        <div class="page-body-cont btn-cont" v-if="showMore">
-            <h-button type='primary' :loading="btnLoading" @click="onSave" v-if="seeTask">确定</h-button>
-            <h-button @click="onCancel">返回</h-button>
-        </div>
     </div>
 </template>
 <script>
@@ -351,7 +347,6 @@ export default {
             this.imageUrls.splice(index, 1)
         },
         onChange (val) {
-            this.form.auditOpinion = ''
             this.$refs.form.clearValidate()
         },
         onSave () {
@@ -364,21 +359,17 @@ export default {
                     detail: this.form.detail,
                     specifications: this.form.specifications.filter(item => item.v)
                 },
-                mainSkuWarehouseRequest: deepCopy(this.form.mainSkus).map(item => {
-                    return item
-                }),
+                mainSkuWarehouseRequest: deepCopy(this.form.mainSkus),
                 operator: this.userInfo.employeeName,
                 auditStatus: this.form.auditStatus,
                 auditOpinion: this.form.auditOpinion
             }
-            delete form.optionTypeIds
-            delete form.optionTypeList
             this.btnLoading = true
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
                     if (this.form.auditStatus != '') {
                         try {
-                            await this.aduitSpu(form)
+                            await this.aduitSku(form)
                             this.btnLoading = false
                             this.$message.success('操作成功！')
                             this.$router.push('/b2b/product/productAuditList')
