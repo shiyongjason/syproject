@@ -479,29 +479,29 @@ export default class FinalApproval extends Vue {
                 }
             ],
             remainPaymentCycle: [{ required: true, message: '剩余货款支付周期', trigger: 'blur' }],
-            acceptBankRate: [{ required: true, message: '银行承兑执行费率必填', trigger: 'blur' },
-                {
-                    validator: (rule, value, callback) => {
-                        if (value <= 0 || value >= 100) {
-                            return callback(new Error('银行承兑执行费率区间为（0，100）'))
-                        } else {
-                            callback()
-                        }
-                    },
-                    trigger: 'blur'
-                }
+            acceptBankRate: [{ required: true, message: '银行承兑执行费率必填', trigger: 'blur' }
+                // {
+                //     validator: (rule, value, callback) => {
+                //         if (value <= 0 || value >= 100) {
+                //             return callback(new Error('银行承兑执行费率区间为（0，100）'))
+                //         } else {
+                //             callback()
+                //         }
+                //     },
+                //     trigger: 'blur'
+                // }
             ],
-            transferBankRate: [{ required: true, message: '银行转账执行费率必填', trigger: 'blur' },
-                {
-                    validator: (rule, value, callback) => {
-                        if (value <= 0 || value >= 100) {
-                            return callback(new Error('银行转账执行费率区间为（0，100）'))
-                        } else {
-                            callback()
-                        }
-                    },
-                    trigger: 'blur'
-                }
+            transferBankRate: [{ required: true, message: '银行转账执行费率必填', trigger: 'blur' }
+                // {
+                //     validator: (rule, value, callback) => {
+                //         if (value <= 0 || value >= 100) {
+                //             return callback(new Error('银行转账执行费率区间为（0，100）'))
+                //         } else {
+                //             callback()
+                //         }
+                //     },
+                //     trigger: 'blur'
+                // }
             ]
         }
         return rules
@@ -697,7 +697,7 @@ export default class FinalApproval extends Vue {
 
     @useDebounce(1000)
     async querySearch (queryString: string, callback: (arg: any) => void) {
-        console.log('queryString', queryString)
+        // console.log('queryString', queryString)
         // if (!queryString) return
         // 天眼查查询
         const { data } = await getTYCList({ word: queryString })
