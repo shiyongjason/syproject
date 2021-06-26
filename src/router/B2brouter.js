@@ -12,8 +12,8 @@ export default [
         component: Layout,
         children: [
             {
-                path: 'commodity',
-                name: 'commodity',
+                path: 'product',
+                name: 'product',
                 meta: {
                     title: '商品管理',
                     tagName: '商品管理',
@@ -46,6 +46,29 @@ export default [
                         component: () => import('@/views/hmall/brand/brand.vue')
                     },
                     {
+                        path: 'productList',
+                        name: 'productList',
+                        meta: {
+                            title: '商品库管理',
+                            tagName: '商品库管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/productManage/productList/index.vue')
+                    },
+                    {
+                        path: 'createProduct',
+                        name: 'createProduct',
+                        meta: {
+                            title: '商品创建/修改',
+                            tagName: '商品创建/修改',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/product/productList'
+                        },
+                        component: () => import('@/views/hmall/productManage/productList/createProduct.vue')
+                    },
+                    {
                         path: 'brandAudit',
                         name: 'brandAudit',
                         meta: {
@@ -56,71 +79,71 @@ export default [
                         },
                         component: () => import('@/views/hmall/brand/brandAudit.vue')
                     },
-                    // {
-                    //     path: 'attribute',
-                    //     name: 'attribute',
-                    //     meta: {
-                    //         title: '参数属性管理',
-                    //         tagName: '参数属性管理',
-                    //         isMenu: true,
-                    //         icon: ''
-                    //     },
-                    //     component: () => import('@/views/hmall/attribute/attribute.vue')
-                    // },
-                    // {
-                    //     path: 'skuset',
-                    //     name: 'skuset',
-                    //     meta: {
-                    //         title: '商品SKU属性管理',
-                    //         tagName: '商品SKU属性管理',
-                    //         isMenu: true,
-                    //         icon: ''
-                    //     },
-                    //     component: () => import('@/views/hmall/spumanage/skuset')
-                    // },
                     {
-                        path: 'spuauditlist',
-                        name: 'spuauditlist',
+                        path: 'productAuditList',
+                        name: 'productAuditList',
                         meta: {
-                            title: '商品SPU审核',
-                            tagName: '商品SPU审核',
+                            title: '商品审核',
+                            tagName: '商品审核',
                             isMenu: true,
                             icon: ''
                         },
-                        component: () => import('@/views/hmall/spumanage/spuauditlist')
+                        component: () => import('@/views/hmall/productManage/productAuditList/index.vue')
                     },
                     {
-                        path: 'spumange',
-                        name: 'spumange',
+                        path: 'editSpuAudit',
+                        name: 'editSpuAudit',
                         meta: {
-                            title: '商品SPU库',
-                            tagName: '商品SPU库',
-                            isMenu: true,
+                            title: 'SPU商品审核',
+                            tagName: 'SPU商品审核',
+                            isMenu: false,
                             icon: ''
                         },
-                        component: () => import('@/views/hmall/spumanage/index')
+                        component: () => import('@/views/hmall/productManage/productAuditList/editSpuAudit.vue')
+                    },
+                    {
+                        path: 'spuAudit',
+                        name: 'spuAudit',
+                        meta: {
+                            title: 'SPU商品查看',
+                            tagName: 'SPU商品查看',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/productManage/productAuditList/editSpuAudit.vue')
+                    },
+                    {
+                        path: 'editSkuAudit',
+                        name: 'editSkuAudit',
+                        meta: {
+                            title: 'SKU商品审核',
+                            tagName: 'SKU商品审核',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/productManage/productAuditList/editSkuAudit.vue')
+                    },
+                    {
+                        path: 'skuAudit',
+                        name: 'skuAudit',
+                        meta: {
+                            title: 'SKU商品查看',
+                            tagName: 'SKU商品查看',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/productManage/productAuditList/editSkuAudit.vue')
                     },
                     {
                         path: 'marketStore',
                         name: 'marketStore',
                         meta: {
-                            title: '商品管理',
-                            tagName: '商品管理',
+                            title: '商家商品管理',
+                            tagName: '商家商品管理',
                             isMenu: true,
                             icon: ''
                         },
                         component: () => import('@/views/hmall/spumanage/marketStore.vue')
-                    },
-                    {
-                        path: 'spudetail',
-                        name: 'spudetail',
-                        meta: {
-                            title: 'SPU管理',
-                            tagName: 'SPU管理',
-                            isMenu: false,
-                            icon: ''
-                        },
-                        component: () => import('@/views/hmall/spumanage/spudetail')
                     }
                 ]
             },
@@ -280,7 +303,7 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/hmall/finance/withdrawal.vue')
-                    }
+                    },
                     // {
                     //     path: 'orderRecord',
                     //     name: 'orderRecord',
@@ -292,6 +315,72 @@ export default [
                     //     },
                     //     component: () => import('@/views/hmall/order/order.vue')
                     // }
+                    {
+                        path: 'shippingOrder',
+                        name: 'shippingOrder',
+                        meta: {
+                            title: '运费订单',
+                            tagName: '运费订单',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/shippingOrder/index')
+                    },
+                    {
+                        path: 'shippingorderDetail',
+                        name: 'shippingorderDetail',
+                        meta: {
+                            title: '订单查看',
+                            tagName: '订单查看',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/shippingorderDetail/index')
+                    },
+                    {
+                        path: 'onlinefreightDetails',
+                        name: 'onlinefreightDetails',
+                        meta: {
+                            title: '线上运费明细',
+                            tagName: '线上运费明细',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/onlinefreightDetails/index')
+                    },
+                    {
+                        path: 'freightDetails',
+                        name: 'freightDetails',
+                        meta: {
+                            title: '运费资金管理',
+                            tagName: '运费资金管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/freightDetails/index')
+                    },
+                    {
+                        path: 'withdrawalFreight',
+                        name: 'withdrawalFreight',
+                        meta: {
+                            title: '提现',
+                            tagName: '提现',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/withdrawalFreight/index')
+                    },
+                    {
+                        path: 'behalfManage',
+                        name: 'behalfManage',
+                        meta: {
+                            title: '代采资金管理',
+                            tagName: '代采资金管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/behalfManage/index')
+                    }
                 ]
             },
             {
@@ -473,6 +562,65 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/hmall/searchProject/searchSynonym.vue')
+                    }
+                ]
+            },
+            {
+                path: 'warehouse',
+                name: 'warehouse',
+                meta: {
+                    title: '仓配运费管理',
+                    tagName: '仓配运费管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'freightComputeRule',
+                        name: 'freightComputeRule',
+                        meta: {
+                            title: '运费计算规则',
+                            tagName: '运费计算规则',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/warehouseManage/freightComputeRule/index.vue')
+                    },
+                    {
+                        path: 'warehouseProductList',
+                        name: 'warehouseProductList',
+                        meta: {
+                            title: '仓配商品管理',
+                            tagName: '仓配商品管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/warehouseManage/warehouseProduct/index.vue')
+                    },
+                    {
+                        path: 'createWarehouse',
+                        name: 'createWarehouse',
+                        meta: {
+                            title: '批量添加仓配商品',
+                            tagName: '批量添加仓配商品',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/warehouse/warehouseProductList'
+                        },
+                        component: () => import('@/views/hmall/warehouseManage/warehouseProduct/createWarehouse.vue')
+                    },
+                    {
+                        path: 'addWarehouseProducts',
+                        name: 'addWarehouseProducts',
+                        meta: {
+                            title: '选择商品',
+                            tagName: '选择商品',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/warehouse/warehouseProductList'
+                        },
+                        component: () => import('@/views/hmall/warehouseManage/warehouseProduct/addWarehouseProducts.vue')
                     }
                 ]
             }

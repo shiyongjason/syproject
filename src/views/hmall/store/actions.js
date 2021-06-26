@@ -1,5 +1,6 @@
 import { getB2bUserInfo } from '../common/api'
 import { findProductCategory } from '../spumanage/api/index'
+
 export default {
     async getUserInfoMore ({ commit }) {
         const { data } = await getB2bUserInfo({ organizationCode: 'top' })

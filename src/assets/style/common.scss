@@ -458,7 +458,6 @@ a.isLink {
         border-radius: 6px;
         box-sizing: border-box;
         z-index: 4;
-        line-height: 102px;
         text-align: center;
 
         img {
@@ -694,4 +693,11 @@ a.isLink {
 /*******************  资金相关 start *******************************/
 .tox-tinymce {
     top: 203px !important;
+}
+
+.agreement {
+    span {
+        font-size: 12px;
+        color: #666666;
+    }
 }

@@ -225,6 +225,8 @@ export default {
                         return (
                             time.getTime() > new Date(beginDateVal).getTime()
                         )
+                    } else {
+                        return time.getTime() <= Date.now() - 8.64e7
                     }
                 }
             }
