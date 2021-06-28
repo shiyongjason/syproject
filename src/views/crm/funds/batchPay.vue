@@ -71,7 +71,8 @@ export default {
     },
     methods: {
         onSortChange (val) {
-            if (val.schedulePaymentDate) {
+            console.log(val)
+            if (val) {
                 this.queryParams['sort.property'] = val.prop + ''
                 this.queryParams['sort.direction'] = val.order === 'ascending' ? 'ASC' : 'DESC'
             } else {
@@ -81,7 +82,6 @@ export default {
             this.onGetList(this.queryParams)
         },
         handleSelectionChange (row) {
-            console.log(row)
             this.fundId = []
             this.payTotal = 0
             row && row.map(item => {
