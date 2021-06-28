@@ -427,7 +427,7 @@ export default {
     .row-filed {
         display: flex;
         .col-filed {
-            width: 50%;
+            width: 33%;
             box-sizing: border-box;
             padding-right: 20px;
         }
