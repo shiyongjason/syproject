@@ -66,9 +66,12 @@ export default {
             }
             const params = {
                 fundId: this.fundId,
-                attachDocs: this.attachDocs
+                attachDocs: this.attachDocs,
+                companyId: this.companyId
             }
+            this.dialogVisible = false
             await payVoucher(params)
+            this.$emit('onBackSearch')
         }
     }
 }
