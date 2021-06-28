@@ -35,7 +35,7 @@
                     <div class="query-cont__col">
                         <div class="query-col__lable">商品类目：</div>
                         <div class="query-col__input">
-                            <el-input v-model="queryParams.model" maxlength="30" placeholder="请输入" @keyup.enter.native="onQuery"></el-input>
+                            <el-input v-model="queryParams.categoryId" maxlength="30" placeholder="请输入" @keyup.enter.native="onQuery"></el-input>
                         </div>
                     </div>
                     <div class="query-cont__col">
@@ -100,6 +100,7 @@ import { mapState, mapActions } from 'vuex'
 import { clearCache, newCache } from '@/utils/index'
 import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_MAP } from '../const/index'
 import { batchOperator } from '../../utils/index'
+import { B2bUrl } from '@/api/config'
 export default {
     name: 'productList',
     data () {
@@ -312,35 +313,27 @@ export default {
             this.productType == 'SPU' ? this.getProductSpuList() : this.getProductSkuList()
         },
         onExport () {
-            if (this.productType == 'SPU') {
-                if (this.tableDataSpu.length <= 0) {
-                    this.$message.warning('无商品可导出！')
-                } else {
-                    requestDownload({
-                        url: interfaceUrl + 'product/api/spu/page/export',
-                        method: 'get',
-                        data: {
-                            ...this.queryParams
-                        }
-                    })
-                }
+            if (this.tableData.length <= 0) {
+                this.$message.warning('无商品可导出！')
             } else {
-                if (this.tableDataSku.length <= 0) {
-                    this.$message.warning('无商品可导出！')
+                if (this.productType == 'SPU') {
+                    let url = ''
+                    for (let key in this.queryParams) {
+                        url += (key + '=' + this.queryParams[key] + '&')
+                    }
+                    location.href = B2bUrl + 'product/boss/main-spu/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
                 } else {
-                    requestDownload({
-                        url: interfaceUrl + 'product/api/sku/page/export',
-                        method: 'get',
-                        data: {
-                            ...this.queryParams
-                        }
-                    })
+                    let url = ''
+                    for (let key in this.queryParams) {
+                        url += (key + '=' + this.queryParams[key] + '&')
+                    }
+                    location.href = B2bUrl + 'product/boss/main-sku/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
                 }
             }
         },
         tabParams (tabName) {
             if (tabName == '4') {
-                this.queryParams.auditStatus = ''
+                // this.queryParams.auditStatus = ''
             } else if (tabName == '0') {
                 this.queryParams.auditStatus = 0
                 // this.queryParams.enabled = false

@@ -7,39 +7,19 @@
                 </div>
                 <el-form-item label="商品品牌：" prop="brandName">
                     {{form.brandName}}
-                    <!-- <el-autocomplete class="form-input_big" v-model="form.brandName" :fetch-suggestions="querySearchAsyncBrand" @select="handleSelectBrand" @blur="handleBlurBrand" :debounce="500" :maxlength="30" placeholder="请输入商品品牌" :disabled="showMore"></el-autocomplete>
-                    <span class="ml10 isGrayColor" v-if="seeTask">如果没有对应的品牌，请联系运营人员添加!</span> -->
                 </el-form-item>
                 <el-form-item label="商品型号：" prop="model">
                     {{form.model}}
-                    <!-- <el-autocomplete class="form-input_big autocomplete" v-model="form.model" :fetch-suggestions="querySearchAsyncModel" @select="handleSelectModel" :debounce="500" :maxlength="50" placeholder="请输入商品型号" :disabled="showMore">
-                        <template slot-scope="{item}">
-                            <el-tooltip effect="dark" :content="item.value" placement="top">
-                                <span class="autocomplete-select_item">{{item.value}}</span>
-                            </el-tooltip>
-                            <el-tooltip effect="dark" :content="item.brandName" placement="top">
-                                <span class="autocomplete-select_item">{{item.brandName}}</span>
-                            </el-tooltip>
-                            <el-tooltip effect="dark" :content="item.category" placement="top">
-                                <span class="autocomplete-select_item">{{item.category}}</span>
-                            </el-tooltip>
-                            <el-tooltip effect="dark" :content="item.name" placement="top">
-                                <span class="autocomplete-select_item">{{item.name}}</span>
-                            </el-tooltip>
-                        </template>
-                    </el-autocomplete> -->
                 </el-form-item>
                 <el-form-item label="商品类目：" prop="categoryId">
                     {{form.categoryPath}}
-                    <!-- <el-cascader class="form-input_medium" v-model="form.categoryId" :options="categoryOption" :props="props" clearable @expand-change="onExpandChangeCategory" placeholder="请选择商品类目" :disabled="showMore"></el-cascader> -->
                 </el-form-item>
                 <el-form-item label="商品名称：" prop="name">
                     {{form.name}}
-                    <!-- <el-input class="form-input_big" v-model="form.name" maxlength="100" placeholder="请输入商品名称" :disabled="showMore"></el-input> -->
                 </el-form-item>
                 <el-form-item label="商品销售名称：" prop="showName">
-                    {{form.showName}}
-                    <!-- <el-input class="form-input_big" v-model="form.showName" maxlength="100" placeholder="请输入商品销售名称" :disabled="showMore"></el-input> -->
+                    <!-- {{form.showName}} -->
+                    <el-input class="form-input_big" v-model="form.showName" maxlength="100" placeholder="请输入商品销售名称" :disabled="!seeTask"></el-input>
                 </el-form-item>
                 <div class="title-cont">
                     <span class="title-cont__label">销售信息</span>
@@ -120,7 +100,7 @@
                 <div class="title-cont mt10">
                     <span class="title-cont__label">商品详情信息</span>
                 </div>
-                <RichEditor style="position:relative;z-index:1" v-model="form.detail" :width="richTextAttr.width" :height="richTextAttr.height" :menus="richTextAttr.menus" :uploadImgServer="richTextAttr.uploadImgServer" :uploadImgParams="richTextAttr.uploadImgParams" :disabled="seeTask">
+                <RichEditor style="position:relative;z-index:1" v-model="form.detail" :width="richTextAttr.width" :height="richTextAttr.height" :menus="richTextAttr.menus" :uploadImgServer="richTextAttr.uploadImgServer" :uploadImgParams="richTextAttr.uploadImgParams" :disabled="!seeTask">
                 </RichEditor>
                 <div class="title-cont pt30" v-if="seeTask">
                     <el-form-item label="审核结果：" prop="auditStatus">
@@ -196,6 +176,9 @@ export default {
                 auditOpinion: ''
             },
             rules: {
+                showName: [
+                    { required: true, message: '请输入商品销售名称', trigger: 'blur' }
+                ],
                 imgUrls: [
                     { required: true, message: '请上传商品图片', trigger: 'change' }
                 ],
