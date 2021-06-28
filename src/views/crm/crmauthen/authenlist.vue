@@ -89,10 +89,10 @@
                  <div class="query-cont-col">
                     <div class="query-col__label">橙工采会员：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.memberTag">
+                        <el-select v-model="queryParams.chengGongCaiLable">
                             <el-option label="全部" value="">
                             </el-option>
-                            <el-option v-for="item in memberTagArr" :key="item.key" :label="item.value" :value="item.key">
+                            <el-option v-for="item in chengArr" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
@@ -114,6 +114,9 @@
                 </template>
                  <template slot="memberTag" slot-scope="scope">
                      {{memberTagArr[scope.data.row.memberTag-1].value}}
+                </template>
+                  <template slot="chengGongCaiLable" slot-scope="scope">
+                     {{chengLabel[scope.data.row.chengGongCaiLable]}}
                 </template>
                 <template slot="userName" slot-scope="scope">
                     <span class="colblue" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
@@ -150,6 +153,12 @@ export default {
     data () {
         return {
             authen_detail: Auths.CRM_AUTHEN_DETAIL,
+            chengLabel: {
+                0: '橙工采会员(未激活)',
+                1: '橙工采初级会员',
+                2: '橙工采橙级会员'
+            },
+            chengArr: [{ key: 0, value: '橙工采会员(未激活)' }, { key: 1, value: '橙工采初级会员' }, { key: 2, value: '橙工采橙级会员' }],
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -182,7 +191,7 @@ export default {
                 { label: '企业类型', prop: 'companyType', width: '100' },
                 { label: '客户分类', prop: 'customerType', width: '100', sortable: 'custom' },
                 { label: '认证状态', prop: 'isAuthentication' },
-                { label: '会员标签', prop: 'memberTag' },
+                { label: '会员标签', prop: 'chengGongCaiLable' },
                 { label: '橙工采会员', prop: 'memberTags' },
                 { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: 'custom' },
                 { label: '关联认证时间', prop: 'authenticationTime', width: '150', formatters: 'dateTimes' }
