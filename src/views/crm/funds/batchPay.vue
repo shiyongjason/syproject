@@ -86,10 +86,10 @@ export default {
             this.payTotal = 0
             row && row.map(item => {
                 this.fundId.push(item.id)
-                // this.payTotal = item.paymentAmount + this.payTotal
+                this.payTotal = item.paymentAmount + this.payTotal
             })
             // 求和
-            this.payTotal = row.reduce((a, b) => a + b)
+            // this.payTotal = row.reduce((a, b) => a.paymentAmount + b.paymentAmount)
         },
         async onGetList () {
             this.queryParams.companyId = this.$route.query.companyId
