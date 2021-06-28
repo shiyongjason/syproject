@@ -62,9 +62,8 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">创建时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.startTime" type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm" :picker-options="pickerOptionsStart"></el-date-picker>
-                        <span class="ml10 mr10">-</span>
-                        <el-date-picker v-model="queryParams.endTime" type="datetime" placeholder="结束时间" format="yyyy-MM-dd HH:mm" :picker-options="pickerOptionsEnd"></el-date-picker>
+                        <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="authOptions">
+                        </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -358,28 +357,13 @@ export default class Thread extends Vue {
     timeout = null
     stateN: string = ''
 
-    get pickerOptionsStart () {
+    get authOptions () {
         return {
-            disabledDate: time => {
-                let beginDateVal = this.queryParams.endTime
-                if (beginDateVal) {
-                    return (
-                        time.getTime() > new Date(beginDateVal).getTime()
-                    )
-                }
-            }
-        }
-    }
-    get pickerOptionsEnd () {
-        return {
-            disabledDate: time => {
-                let beginDateVal = this.queryParams.startTime
-                if (beginDateVal) {
-                    return (
-                        time.getTime() < new Date(beginDateVal).getTime() - 8.64e7
-                    )
-                }
-            }
+            valueFormat: 'yyyy-MM-ddTHH:mm',
+            format: 'yyyy-MM-dd HH:mm',
+            type: 'datetime',
+            startTime: this.queryParams.startTime,
+            endTime: this.queryParams.endTime
         }
     }
 
@@ -420,6 +404,12 @@ export default class Thread extends Vue {
             }
             return []
         }
+    }
+    onStartChange (val) {
+        this.queryParams.startTime = val
+    }
+    onEndChange (val) {
+        this.queryParams.endTime = val
     }
     onProvince (key) {
         this.queryParams.provinceId = key || ''
