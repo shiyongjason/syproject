@@ -70,8 +70,25 @@ export default {
         }
     },
     methods: {
+        onDelete (item, index) {
+            console.log(item)
+            this.$confirm('此操作将删除该凭证, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.docPos.splice(index, 1)
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                })
+            }).catch(() => {
+                // do nothing
+            })
+        },
         onSortChange (val) {
-            if (val.schedulePaymentDate) {
+            console.log(val)
+            if (val) {
                 this.queryParams['sort.property'] = val.prop + ''
                 this.queryParams['sort.direction'] = val.order === 'ascending' ? 'ASC' : 'DESC'
             } else {
@@ -81,7 +98,6 @@ export default {
             this.onGetList(this.queryParams)
         },
         handleSelectionChange (row) {
-            console.log(row)
             this.fundId = []
             this.payTotal = 0
             row && row.map(item => {
