@@ -403,7 +403,7 @@ import { ccpBaseUrl, ossAliyun, ossOldBucket } from '@/api/config'
 import OssFileUtils from '@/utils/OssFileUtils'
 import { Action, Getter, State } from 'vuex-class'
 import { CompanyContactRequest, CompanyContactResponse, FlowUpRequest, ReqProjectSupply, StaffInfoResponse } from '@/interface/hbp-member'
-import { DictionaryList, getFlowUp, upDateProjectDetail, addFlowUp, getCompanyContactList, createCompanyContact, getCompanyUserList, getProcess, putCompanyContact, getChiness, getFlowUpCount } from './api'
+import { DictionaryList, getFlowUp, upDateProjectDetail, addFlowUp, getCompanyContactList, createCompanyContact, getCompanyUserList, getProcess, putCompanyContact, getChiness, getFlowUpCount, delCompanyContact } from './api'
 import { handleSubmit, validateForm } from '@/decorator'
 import { ROLE, SALESPHASE, USER_DEFAULT } from './const'
 import filters from '@/utils/filters'
@@ -800,11 +800,10 @@ export default class ProjectList2Detail extends Vue {
 
             return
         }
-        console.log(' 🚗 🚕 🚙 🚌 🚎 this.delContactItem', this.delContactItem)
-        console.log(' 🚗 🚕 🚙 🚌 🚎 this.delContactItem', this.delContactIndex)
-        // await delCompanyContact(this.delContactItem.id)
+        await delCompanyContact(this.delContactItem.id)
         this.$message.success('删除成功')
         this.onGetCompanyContactList()
+        this.deleteVisible = false
     }
     // 删除联系人
     onDelCompanyContact (item, index) {
