@@ -377,7 +377,7 @@ export default {
                 ...this.form,
                 mainSpuId: this.$route.query.id,
                 modifiableInfo: {
-                    imageUrls: this.imageUrls,
+                    imgUrls: this.imageUrls,
                     detail: this.form.detail,
                     specifications: this.form.specifications.filter(item => item.v)
                 },
