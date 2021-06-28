@@ -338,10 +338,10 @@ export default class Thread extends Vue {
     canDispatchList: string[] = []
     threadDetail: Clue = {}
     distributorVisible: boolean = false
-    isPagination: boolean = false
     threadVisible: boolean = false
     isloading: boolean = false
     drawer: boolean = false
+    isPatgaion: boolean = false
     distributorForm: { customerMobile: string, customerName: string, clueId: string[], customerDeptName: string } = {
         customerName: '',
         customerMobile: '',
@@ -354,6 +354,7 @@ export default class Thread extends Vue {
         countryId: ''
     }
     selectThread: Clue[] = []
+    numberSelectThread: { [name: number]: Clue[] } = {}
     timeout = null
     stateN: string = ''
 
@@ -512,11 +513,20 @@ export default class Thread extends Vue {
         this.threadForm.customerDeptName = item.deptName
     }
 
-    dialogCheckChange (item) {
-        if (!this.isPagination) {
-            this.selectThread = item
+    dialogCheckChange (item: Clue[]) {
+        const number = this.queryParams.pageNumber
+        if (!this.isPatgaion) {
+            this.numberSelectThread = {
+                ...this.numberSelectThread,
+                [number]: item
+            }
         }
-        this.isPagination = false
+        this.isPatgaion = false
+        this.selectThread = []
+        for (const key in this.numberSelectThread) {
+            this.selectThread = this.selectThread.concat(this.numberSelectThread[key])
+        }
+        console.log(this.selectThread, '????')
     }
 
     async findThreadList () {
@@ -539,7 +549,7 @@ export default class Thread extends Vue {
     }
 
     pagination () {
-        this.isPagination = true
+        this.isPatgaion = true
         this.findThreadList()
     }
 
