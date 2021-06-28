@@ -188,7 +188,8 @@ export default {
                         height: '',
                         grossWeight: '',
                         volume: '',
-                        netWeight: ''
+                        netWeight: '',
+                        optionValues: []
                     }
                 ],
                 detail: '',
@@ -222,7 +223,6 @@ export default {
                         required: true,
                         validator: (rule, value, callback) => {
                             this.form.optionTypeList.map(item => {
-                                console.log(item)
                                 if (!item.optionValues || item.optionValues.length == 0) {
                                     return callback(new Error('请输入规格值'))
                                 }
@@ -307,14 +307,28 @@ export default {
             }
         },
         'form.optionTypeList' (value, preValue) {
-            // 当sku被编辑的时候
+            // 当sku被编辑或者是编辑页面的时候，我们不做笛卡尔积
             if (this.isEdit || this.isEditSku) {
-                // 当mainSkus的列比规格的列小的时候，说明规格名增加了
-                if (preValue.length > 0 && this.form.mainSkus[0].optionValues.length < value.length) {
-                    // 当规格属性增加的时候添加属性相关信息进入mainSku中
-                    if (value[value.length - 1].optionValues.length > 0) {
+                /**
+                 * 当编辑页面时候，页面渲染会触发form.optionTypeList的变更，这个时候我们不需要处理mainSkus
+                 * 所以这里判断preValue.length > 0的时候，真正在调整form.optionTypeList才触发mainSkus的处理
+                 */
+                if (preValue.length > 0) {
+                    // 当增加规格的时候
+                    if (this.form.mainSkus[0].optionValues.length < value.length) {
+                        // 增加一列，且只赋予第一个规格值
+                        if (value[value.length - 1].optionValues.length > 0) {
+                            this.form.mainSkus = this.form.mainSkus.map(item => {
+                                item.optionValues.push(value[value.length - 1].optionValues[0])
+                                return item
+                            })
+                        }
+                    } else if (this.form.mainSkus[0].optionValues.length > value.length) {
+                        // 当删除规格的时候
                         this.form.mainSkus = this.form.mainSkus.map(item => {
-                            item.optionValues.push(value[value.length - 1].optionValues[0])
+                            item.optionValues = value.map(v => {
+                                return item.optionValues.filter(o => o.optionTypeId == v.id)[0]
+                            })
                             return item
                         })
                     }
@@ -362,7 +376,6 @@ export default {
         },
         mainSkus: {
             handler (value, preValue) {
-                // 由于进入到table中会对mainSku进行disabled修改，所以此处调整disabled值之后进行比较，如果相等 ，说明是修改disabled，不予处理
                 const valueNew = value.map(item => {
                     item.disabled = ''
                     return item
@@ -373,7 +386,19 @@ export default {
                 })
                 const valueStr = JSON.stringify(valueNew)
                 const preValueStr = JSON.stringify(preValueNew)
-                if (preValueNew[0].optionValues && valueStr != preValueStr && value.length === preValue.length) {
+                /**
+                 * 判断SKU是否变化的核心判断规则：是否只是optionTypeList引起的变更
+                 * optionTypeList引起的变更有两种情况
+                 * 1. 笛卡尔积造成的mainSkus的长度增加
+                 * 2. 增加了规格名且规格值只有一个，mainSkus的长度不增加，但是mainSkus.optionValues的长度增加了
+                 * 通过上述分析可以判断当两个数据长度都没有变化的时候就说明是SKU值发生变化了：
+                 * value.length === preValue.length && value[0].optionValues.length === preValue[0].optionValues.length
+                 * 》》》》》》》》》》》》》》》》》》》》》》》》》》》》
+                 * 实际遇到一个意外情况：
+                 * 1. mainSkus在进入skuTable进行编辑的时候，增加了一个disabled属性，会触发mainSkus变更，导致判断失效
+                 * 这里将disabled属性置空之后对比两个value的值，如果值没有变化，我们也认为没有SKU变更
+                 */
+                if (valueStr != preValueStr && value.length === preValue.length && value[0].optionValues.length === preValue[0].optionValues.length) {
                     this.isEditSku = true
                 }
             },
