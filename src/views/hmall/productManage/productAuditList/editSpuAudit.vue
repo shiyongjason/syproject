@@ -122,7 +122,7 @@
                 </div>
                 <RichEditor style="position:relative;z-index:1" v-model="form.detail" :width="richTextAttr.width" :height="richTextAttr.height" :menus="richTextAttr.menus" :uploadImgServer="richTextAttr.uploadImgServer" :uploadImgParams="richTextAttr.uploadImgParams" :disabled="seeTask">
                 </RichEditor>
-                <div class="title-cont pt30" v-if="seeTask">
+                <div class="title-cont pt30 seeTask" v-if="seeTask">
                     <el-form-item label="审核结果：" prop="auditStatus">
                         <el-radio-group v-model="form.auditStatus" @change="onChange">
                             <el-radio label="1">审核通过</el-radio>
@@ -589,6 +589,14 @@ export default {
         position: relative;
         padding: 20px 24px;
         border: 1px solid #e5e5ea;
+    }
+}
+
+.seeTask {
+    display: flex;
+    justify-content: flex-start;
+    .el-form-item {
+        margin-right: 20px;
     }
 }
 
