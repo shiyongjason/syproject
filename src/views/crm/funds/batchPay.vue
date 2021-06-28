@@ -71,7 +71,6 @@ export default {
     },
     methods: {
         onDelete (item, index) {
-            console.log(item)
             this.$confirm('此操作将删除该凭证, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
