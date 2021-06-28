@@ -141,7 +141,17 @@ export default {
             },
             rules: {
                 imageUrls: [
-                    { required: true, message: '请上传图片', trigger: 'change' }
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            const reg = /^[A-Za-z0-9]+$/
+                            console.log(value)
+                            if (!value || value == '') {
+                                return callback(new Error('请上传图片'))
+                            }
+                            return callback()
+                        }
+                    }
                 ],
                 serialNumber: [
                     {
@@ -328,7 +338,7 @@ export default {
 
                 &.fixed-width {
                     position: relative;
-                    padding: 2px 5px;
+                    padding: 6px 8px;
                     min-width: 150px;
                 }
 
@@ -361,7 +371,7 @@ export default {
 
                 &.fixed-width {
                     position: relative;
-                    padding: 2px 5px;
+                    padding: 6px 8px;
                     min-width: 150px;
                 }
                 .el-select {
