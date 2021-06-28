@@ -306,11 +306,12 @@ export default {
                 this.$refs.imageUrls.clearValidate()
             }
         },
-        'form.optionTypeList' (value) {
+        'form.optionTypeList' (value, preValue) {
             // 当sku被编辑的时候
             if (this.isEdit || this.isEditSku) {
                 // 当mainSkus的列比规格的列小的时候，说明规格名增加了
-                if (this.form.mainSkus[0].optionValues.length < value.length) {
+                if (preValue.length > 0 && this.form.mainSkus[0].optionValues.length < value.length) {
+                    // 当规格属性增加的时候添加属性相关信息进入mainSku中
                     if (value[value.length - 1].optionValues.length > 0) {
                         this.form.mainSkus = this.form.mainSkus.map(item => {
                             item.optionValues.push(value[value.length - 1].optionValues[0])
@@ -329,6 +330,7 @@ export default {
             if (!changeSku) {
                 return
             }
+            // 下面是笛卡尔积逻辑
             const optionTypeList = flatten(value.filter(item => item.name && item.optionValues.length))
             if (this.$route.query.id) {
                 this.form.mainSkus.map(item => {
@@ -490,10 +492,22 @@ export default {
             this.$set(this.addValues, index, '')
         },
         onDelOptionValue (index, sIndex) {
+            let id = ''
             this.form.optionTypeList = this.form.optionTypeList.map((item, i) => {
                 if (index === i) {
+                    id = item.optionValues[sIndex].id
                     item.optionValues.splice(sIndex, 1)
                 }
+                return item
+            })
+            this.form.mainSkus = this.form.mainSkus.map((item, i) => {
+                item.optionValues = item.optionValues.map(obj => {
+                    if (obj.id === id) {
+                        obj.id = ''
+                        obj.name = ''
+                    }
+                    return obj
+                })
                 return item
             })
             this.addValues.splice(sIndex, 1)
@@ -545,7 +559,6 @@ export default {
                     operator: this.userInfo.employeeName
                 }
             }
-            console.log(form)
             this.btnLoading = true
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
@@ -618,8 +631,19 @@ export default {
             await this.getSpecByCategory(this.productSpuInfo.twoCategoryId)
             this.form = {
                 ...this.productSpuInfo,
-                mainSkus: this.productSpuInfo.mainSkus.map(item => {
+                mainSkus: this.productSpuInfo.mainSkus.map((item, index) => {
                     item.imageUrls = item.imageUrls ? item.imageUrls.join(',') : []
+                    // 编辑页面的调整，如果当前属性值没有选择的时候，后端就不会返回数据，我们需要补足数据
+                    const optionTypeList = this.productSpuInfo.optionTypeList.map(obj => ({
+                        id: '',
+                        name: '',
+                        optionTypeId: obj.id,
+                        optionTypeName: obj.name
+                    }))
+                    item.optionValues = optionTypeList.map((obj, index) => {
+                        const options = item.optionValues.filter(i => i.optionTypeId == obj.optionTypeId)
+                        return options.length > 0 ? options[0] : obj
+                    })
                     return item
                 }),
                 optionTypeList: this.productSpuInfo.optionTypeList.length ? this.productSpuInfo.optionTypeList : []

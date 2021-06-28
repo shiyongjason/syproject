@@ -86,7 +86,7 @@
                 </div>
                 <RichEditor style="position:relative;z-index:1" v-model="form.detail" :width="richTextAttr.width" :height="richTextAttr.height" :menus="richTextAttr.menus" :uploadImgServer="richTextAttr.uploadImgServer" :uploadImgParams="richTextAttr.uploadImgParams" :disabled="seeTask">
                 </RichEditor>
-                <div class="title-cont pt30" v-if="seeTask">
+                <div class="title-cont pt30 seeTask" v-if="seeTask">
                     <el-form-item label="审核结果：" prop="auditStatus">
                         <el-radio-group v-model="form.auditStatus" @change="onChange">
                             <el-radio label="1">审核通过</el-radio>
@@ -359,7 +359,7 @@ export default {
                     detail: this.form.detail,
                     specifications: this.form.specifications.filter(item => item.v)
                 },
-                mainSkuWarehouseRequest: deepCopy(this.form.mainSkus),
+                warehouseRequest: this.form.mainSkus[0],
                 operator: this.userInfo.employeeName,
                 auditStatus: this.form.auditStatus,
                 auditOpinion: this.form.auditOpinion
@@ -403,7 +403,7 @@ export default {
             addOptionValue: 'productManage/addOptionValue',
             createProduct: 'productManage/createProduct',
             editProduct: 'productManage/editProduct',
-            aduitSpu: 'productManage/aduitSpu'
+            aduitSku: 'productManage/aduitSku'
         }),
         async getBrandOptions () {
             await this.findBrandOptions()
@@ -443,7 +443,7 @@ export default {
         },
         async getProductskuInfo (id) {
             await this.findProductSkuInfo({ id: id })
-            console.log(this.productSkuInfo.mainSpuId)
+            // console.log(this.productSkuInfo.mainSpuId)
             if (this.productSkuInfo.mainSpuId) {
                 this.getProductInfo(this.productSkuInfo.mainSpuId)
             }
@@ -529,6 +529,14 @@ export default {
         &:active {
             background: $hosjoyColorActive;
         }
+    }
+}
+
+.seeTask {
+    display: flex;
+    justify-content: flex-start;
+    .el-form-item {
+        margin-right: 20px;
     }
 }
 
