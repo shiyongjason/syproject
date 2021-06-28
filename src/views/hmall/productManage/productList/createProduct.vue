@@ -741,7 +741,7 @@ export default {
     line-height: 20px;
     color: $grayColor;
     text-align: center;
-    // margin-top: 104px;
+    margin-top: 104px;
 }
 
 .isDisabled {
