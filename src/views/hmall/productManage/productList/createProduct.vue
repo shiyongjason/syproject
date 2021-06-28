@@ -641,7 +641,7 @@ export default {
                     optionTypeName: item.name
                 })
             })
-            this.form.mainSkus = this.form.mainSkus.concat({ optionValues: optionValues })
+            this.form.mainSkus = this.form.mainSkus.concat({ imageUrls: '', optionValues: optionValues })
         },
         onSave () {
             this.form.imageUrls = this.imageUrls
