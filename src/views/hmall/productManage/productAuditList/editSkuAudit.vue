@@ -337,7 +337,7 @@ export default {
                 ...this.form,
                 mainSpuId: this.newId,
                 modifiableInfo: {
-                    imageUrls: this.imageUrls,
+                    imgUrls: this.imageUrls,
                     detail: this.form.detail,
                     specifications: this.form.specifications.filter(item => item.v)
                 },
@@ -425,7 +425,6 @@ export default {
         },
         async getProductskuInfo (id) {
             await this.findProductSkuInfo({ id: id })
-            // console.log(this.productSkuInfo.mainSpuId)
             if (this.productSkuInfo.mainSpuId) {
                 this.getProductInfo(this.productSkuInfo.mainSpuId)
             }

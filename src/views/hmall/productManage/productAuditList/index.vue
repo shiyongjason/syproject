@@ -368,18 +368,15 @@ export default {
     },
     activated () {
         this.productType == 'SPU' ? this.getProductSpuList() : this.getProductSkuList()
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('productAuditList')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        newCache('productAuditList')
+        next()
     }
-    // ,
-    // beforeRouteEnter (to, from, next) {
-    //     newCache('productList')
-    //     next()
-    // },
-    // beforeRouteLeave (to, from, next) {
-    //     if (!(to.name == 'editProduct' || to.name == 'editSku')) {
-    //         clearCache('productList')
-    //     }
-    //     next()
-    // }
 }
 </script>
 <style lang="scss" scoped>
