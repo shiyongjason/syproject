@@ -608,6 +608,7 @@ export default class ThreadDetail extends Vue {
         this.getAreacode()
         // this.onGetbranch()
         this.onInitGetDate()
+        this.stateN = this.threadDetail.customerName
         console.log(' 🚗 🚕 🚙 🚌 🚎 xiaoqiche ', this.threadDetail)
     }
 }
