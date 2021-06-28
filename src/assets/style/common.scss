@@ -449,6 +449,7 @@ a.isLink {
     }
 
     li {
+        position: relative;
         float: left;
         margin-right: 20px;
         width: 106px;
@@ -457,14 +458,15 @@ a.isLink {
         border: 1px dashed #c0ccda;
         border-radius: 6px;
         box-sizing: border-box;
-        z-index: 4;
         text-align: center;
 
         img {
-            max-width: 104px;
-            max-height: 104px;
-            z-index: 4;
-            vertical-align: middle;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 100%;
+            max-height: 100%;
         }
 
         &:hover {
