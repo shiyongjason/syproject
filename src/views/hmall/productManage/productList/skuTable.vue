@@ -56,24 +56,24 @@
                         <div class="image-wrap" v-if="item.disabled"></div>
                     </td>
                     <td>
-                        <el-form-item label-width='0'>
+                        <el-form-item label-width='0' :prop="`mainSkus[${index}].serialNumber`" :rules="rules.serialNumber">
                             <el-input v-model="item.serialNumber" maxlength="16" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
                     <td class="log-width">
-                        <el-form-item label-width='0'>
+                        <el-form-item label-width='0' :prop="`mainSkus[${index}].length`" :rules="rules.length">
                             <el-input v-model="item.length" maxlength="16" :disabled="item.disabled"></el-input>
                             <el-input v-model="item.width" maxlength="16" :disabled="item.disabled"></el-input>
                             <el-input v-model="item.height" maxlength="16" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
                     <td>
-                        <el-form-item label-width='0'>
+                        <el-form-item label-width='0' :prop="`mainSkus[${index}].grossWeight`" :rules="rules.grossWeight">
                             <el-input v-model="item.grossWeight" maxlength="16" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
                     <td>
-                        <el-form-item label-width='0'>
+                        <el-form-item label-width='0' :prop="`mainSkus[${index}].volume`" :rules="rules.volume">
                             <el-input v-model="item.volume" maxlength="16" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
@@ -142,6 +142,58 @@ export default {
             rules: {
                 imageUrls: [
                     { required: true, message: '请上传图片', trigger: 'change' }
+                ],
+                serialNumber: [
+                    {
+                        validator: (rule, value, callback) => {
+                            const reg = /^[A-Za-z0-9]+$/
+                            if (value && !reg.test(value)) {
+                                return callback(new Error('条头码仅支持字母和数字'))
+                            }
+                            return callback()
+                        }
+                    }
+                ],
+                length: [
+                    {
+                        validator: (rule, value, callback) => {
+                            const reg = /^[0-9]+$/
+                            this.form.mainSkus.map(item => {
+                                if (item.length && !reg.test(item.length)) {
+                                    return callback(new Error('长宽高仅支持数字'))
+                                }
+                                if (item.width && !reg.test(item.length)) {
+                                    return callback(new Error('长宽高仅支持数字'))
+                                }
+                                if (item.height && !reg.test(item.length)) {
+                                    return callback(new Error('长宽高仅支持数字'))
+                                }
+                            })
+                            return callback()
+                        }
+                    }
+                ],
+                grossWeight: [
+                    {
+                        validator: (rule, value, callback) => {
+                            const reg = /^[0-9]+$/
+                            if (value && !reg.test(value)) {
+                                return callback(new Error('毛重仅支持数字'))
+                            }
+                            return callback()
+                        }
+                    }
+                ],
+                volume: [
+                    {
+                        validator: (rule, value, callback) => {
+                            const reg = /^[0-9]+$/
+                            if (value && !reg.test(value)) {
+                                return callback(new Error('体积仅支持数字'))
+                            }
+                            return callback()
+                        }
+                    }
                 ]
             }
         }

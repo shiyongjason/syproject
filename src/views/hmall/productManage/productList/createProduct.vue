@@ -2,7 +2,7 @@
     <div class="page-body B2b">
         <div class="page-body-cont">
             <el-form ref="form" :model="form" :rules="rules" label-width="150px">
-                <!-- <p class="mb20" v-if='form.auditOpinion'>审核不通过原因: <span class="red-word">{{form.auditOpinion}}</span></p> -->
+                <p class="mb20" v-if='form.auditStatus == 2'>审核不通过原因: <span class="red-word">{{form.auditOpinion}}</span></p>
                 <div class="title-cont">
                     <span class="title-cont__label">商品基本信息</span>
                 </div>
@@ -50,6 +50,7 @@
                             v-if="imageUrls.length !==5">
                             <i class="el-icon-plus"></i>
                         </el-upload>
+                        <input type="hidden" v-model="form.imageUrls">
                         <div class="picture-content">
                             <ul>
                                 <li v-for="(item, index) in imageUrls" :key="index">
@@ -77,12 +78,12 @@
                         <div class="sku-cont_group mb20" v-for="(item,index) in form.optionTypeList" :key="index">
                             <div class="group-spec_label">
                                 <el-form-item label="规格名：" :prop="`optionTypeList[${index}].name`" :rules="rules.option">
-                                    <el-input v-model="item.name" @change="onAddOption(item.name,index)" maxlength="10" placeholder="请输入规格名"></el-input>
+                                    <el-input v-model="item.name" @change="onAddOption(item.name,index)" maxlength="10" placeholder="请输入规格名" :disabled="item.disabled"></el-input>
                                 </el-form-item>
                             </div>
                             <div class="group-spec_tags mt20">
                                 <el-form-item label="规格值：" :prop="`optionTypeList[${index}].optionValues`" :rules="rules.optionValues">
-                                    <el-tag class="mr10" v-for="(sItem,sIndex) in item.optionValues" :key="sIndex" @close="onDelOptionValue(index,sIndex)" :closable="form.auditStatus != 1 && item.optionValues.length > 1">{{sItem.name}}</el-tag>
+                                    <el-tag class="mr10" v-for="(sItem,sIndex) in item.optionValues" :key="sIndex" @close="onDelOptionValue(index,sIndex)" :closable="sItem.disabled && item.optionValues.length > 1">{{sItem.name}}</el-tag>
                                     <el-input v-model="addValues[index]" @change="onAddOptionVlaue(index)" suffix-icon="el-icon-plus" maxlength="50" placeholder="多个属性值以空格隔开"></el-input>
                                 </el-form-item>
                             </div>
@@ -111,18 +112,18 @@
                         <span class="title-cont__label">仓库信息</span>
                     </div>
                     <div v-if="form.optionTypeList.length < 1">
-                        <el-form-item label="SN码：" prop="retailPrice">
-                            <el-input v-model="form.mainSkus[0].serialNumber" maxlength="16" v-if="form.mainSkus.length>0"></el-input>
+                        <el-form-item label="SN码：" prop="serialNumber">
+                            <el-input v-model="form.mainSkus[0].serialNumber" maxlength="16" v-if="form.mainSkus.length"></el-input>
                         </el-form-item>
-                        <el-form-item label="长宽高/mm：" prop="commission">
+                        <el-form-item label="长宽高/mm：" prop="length">
                             <el-input v-model="form.mainSkus[0].length" maxlength="6" v-if="form.mainSkus.length>0"></el-input>
                             <el-input v-model="form.mainSkus[0].width" maxlength="6" v-if="form.mainSkus.length>0"></el-input>
                             <el-input v-model="form.mainSkus[0].height" maxlength="6" v-if="form.mainSkus.length>0"></el-input>
                         </el-form-item>
-                        <el-form-item label="毛重/KG：" prop="costPrice">
+                        <el-form-item label="毛重/KG：" prop="grossWeight">
                             <el-input v-model="form.mainSkus[0].grossWeight" maxlength="16" v-if="form.mainSkus.length>0"></el-input>
                         </el-form-item>
-                        <el-form-item label="体积/m³：" prop="costPrice">
+                        <el-form-item label="体积/m³：" prop="volume">
                             <el-input v-model="form.mainSkus[0].volume" maxlength="16" v-if="form.mainSkus.length>0"></el-input>
                         </el-form-item>
                         <el-form-item label="净重/KG：" prop="costPrice">
@@ -175,7 +176,7 @@ export default {
                 categoryId: '',
                 name: '',
                 showName: '',
-                imageUrls: '',
+                imageUrls: [],
                 specifications: [],
                 optionTypeIds: [],
                 mainSkus: [
@@ -188,7 +189,8 @@ export default {
                         height: '',
                         grossWeight: '',
                         volume: '',
-                        netWeight: ''
+                        netWeight: '',
+                        optionValues: []
                     }
                 ],
                 detail: '',
@@ -212,7 +214,16 @@ export default {
                     { required: true, message: '请输入商品销售名称', trigger: 'blur' }
                 ],
                 imageUrls: [
-                    { required: true, message: '请上传商品图片', trigger: 'change' }
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            if (this.imageUrls.length == 0) {
+                                return callback(new Error('请上传商品图片'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'change'
+                    }
                 ],
                 option: [
                     { required: true, message: '请输入规格名', trigger: 'blur' }
@@ -222,7 +233,6 @@ export default {
                         required: true,
                         validator: (rule, value, callback) => {
                             this.form.optionTypeList.map(item => {
-                                console.log(item)
                                 if (!item.optionValues || item.optionValues.length == 0) {
                                     return callback(new Error('请输入规格值'))
                                 }
@@ -238,6 +248,77 @@ export default {
                             this.form.mainSkus.map(item => {
                                 if (!item.imageUrls || item.imageUrls == '') {
                                     return callback(new Error('请上传规格图片'))
+                                }
+                            })
+                            return callback()
+                        }
+                    }
+                ],
+                serialNumber: [
+                    {
+                        validator: (rule, value, callback) => {
+                            const reg = /^[A-Za-z0-9]+$/
+                            this.form.mainSkus.map(item => {
+                                if (item.serialNumber && !reg.test(item.serialNumber)) {
+                                    return callback(new Error('条头码仅支持字母和数字'))
+                                }
+                            })
+                            return callback()
+                        }
+                    }
+                ],
+                length: [
+                    {
+                        validator: (rule, value, callback) => {
+                            const reg = /^[0-9]+$/
+                            this.form.mainSkus.map(item => {
+                                if (item.length && !reg.test(item.length)) {
+                                    return callback(new Error('长宽高仅支持数字'))
+                                }
+                                if (item.width && !reg.test(item.length)) {
+                                    return callback(new Error('长宽高仅支持数字'))
+                                }
+                                if (item.height && !reg.test(item.length)) {
+                                    return callback(new Error('长宽高仅支持数字'))
+                                }
+                            })
+                            return callback()
+                        }
+                    }
+                ],
+                grossWeight: [
+                    {
+                        validator: (rule, value, callback) => {
+                            const reg = /^[0-9]+$/
+                            this.form.mainSkus.map(item => {
+                                if (item.grossWeight && !reg.test(item.grossWeight)) {
+                                    return callback(new Error('毛重仅支持数字'))
+                                }
+                            })
+                            return callback()
+                        }
+                    }
+                ],
+                volume: [
+                    {
+                        validator: (rule, value, callback) => {
+                            const reg = /^[0-9]+$/
+                            this.form.mainSkus.map(item => {
+                                if (item.volume && !reg.test(item.volume)) {
+                                    return callback(new Error('体积仅支持数字'))
+                                }
+                            })
+                            return callback()
+                        }
+                    }
+                ],
+                netWeight: [
+                    {
+                        validator: (rule, value, callback) => {
+                            const reg = /^[0-9]+$/
+                            this.form.mainSkus.map(item => {
+                                if (item.netWeight && !reg.test(item.netWeight)) {
+                                    return callback(new Error('净重仅支持数字'))
                                 }
                             })
                             return callback()
@@ -301,20 +382,36 @@ export default {
         }
     },
     watch: {
-        'form.imageUrls' (value) {
-            if (value.length) {
-                this.$refs.imageUrls.clearValidate()
+        imageUrls (value) {
+            if (this.$refs.imageUrls) {
+                if (value.length) {
+                    this.$refs.imageUrls.clearValidate()
+                }
             }
         },
         'form.optionTypeList' (value, preValue) {
-            // 当sku被编辑的时候
+            // 当sku被编辑或者是编辑页面的时候，我们不做笛卡尔积
             if (this.isEdit || this.isEditSku) {
-                // 当mainSkus的列比规格的列小的时候，说明规格名增加了
-                if (preValue.length > 0 && this.form.mainSkus[0].optionValues.length < value.length) {
-                    // 当规格属性增加的时候添加属性相关信息进入mainSku中
-                    if (value[value.length - 1].optionValues.length > 0) {
+                /**
+                 * 当编辑页面时候，页面渲染会触发form.optionTypeList的变更，这个时候我们不需要处理mainSkus
+                 * 所以这里判断preValue.length > 0的时候，真正在调整form.optionTypeList才触发mainSkus的处理
+                 */
+                if (preValue.length > 0) {
+                    // 当增加规格的时候
+                    if (this.form.mainSkus[0].optionValues.length < value.length) {
+                        // 增加一列，且只赋予第一个规格值
+                        if (value[value.length - 1].optionValues.length > 0) {
+                            this.form.mainSkus = this.form.mainSkus.map(item => {
+                                item.optionValues.push(value[value.length - 1].optionValues[0])
+                                return item
+                            })
+                        }
+                    } else if (this.form.mainSkus[0].optionValues.length > value.length) {
+                        // 当删除规格的时候
                         this.form.mainSkus = this.form.mainSkus.map(item => {
-                            item.optionValues.push(value[value.length - 1].optionValues[0])
+                            item.optionValues = value.map(v => {
+                                return item.optionValues.filter(o => o.optionTypeId == v.id)[0]
+                            })
                             return item
                         })
                     }
@@ -350,6 +447,10 @@ export default {
                 const mainSkus = optionTypeList.map(item => {
                     return item
                 })
+                if (!mainSkus.length) {
+                    this.form.mainSkus = this.form.mainSkus
+                    return
+                }
                 if (this.form.mainSkus.length == mainSkus.length) {
                     this.form.mainSkus = mainSkus.map((item, index) => ({
                         ...this.form.mainSkus[index],
@@ -362,7 +463,6 @@ export default {
         },
         mainSkus: {
             handler (value, preValue) {
-                // 由于进入到table中会对mainSku进行disabled修改，所以此处调整disabled值之后进行比较，如果相等 ，说明是修改disabled，不予处理
                 const valueNew = value.map(item => {
                     item.disabled = ''
                     return item
@@ -373,7 +473,19 @@ export default {
                 })
                 const valueStr = JSON.stringify(valueNew)
                 const preValueStr = JSON.stringify(preValueNew)
-                if (preValueNew[0].optionValues && valueStr != preValueStr && value.length === preValue.length) {
+                /**
+                 * 判断SKU是否变化的核心判断规则：是否只是optionTypeList引起的变更
+                 * optionTypeList引起的变更有两种情况
+                 * 1. 笛卡尔积造成的mainSkus的长度增加
+                 * 2. 增加了规格名且规格值只有一个，mainSkus的长度不增加，但是mainSkus.optionValues的长度增加了
+                 * 通过上述分析可以判断当两个数据长度都没有变化的时候就说明是SKU值发生变化了：
+                 * value.length === preValue.length && value[0].optionValues.length === preValue[0].optionValues.length
+                 * 》》》》》》》》》》》》》》》》》》》》》》》》》》》》
+                 * 实际遇到一个意外情况：
+                 * 1. mainSkus在进入skuTable进行编辑的时候，增加了一个disabled属性，会触发mainSkus变更，导致判断失效
+                 * 这里将disabled属性置空之后对比两个value的值，如果值没有变化，我们也认为没有SKU变更
+                 */
+                if (valueStr != preValueStr && value.length === preValue.length && value[0].optionValues.length === preValue[0].optionValues.length) {
                     this.isEditSku = true
                 }
             },
@@ -586,7 +698,11 @@ export default {
             this.$router.push('/b2b/product/productList')
         },
         onReset () {
-            this.reload()
+            this.showMore = false
+            this.specifications = []
+            this.addValues = []
+            this.imageUrls = []
+            this.$refs.form.resetFields()
         },
         onPutawayRules () {
             this.$alert(this.agreement, '舒适e购商品上架规则', {
@@ -631,7 +747,7 @@ export default {
             await this.getSpecByCategory(this.productSpuInfo.twoCategoryId)
             this.form = {
                 ...this.productSpuInfo,
-                mainSkus: this.productSpuInfo.mainSkus.map((item, index) => {
+                mainSkus: this.productSpuInfo.mainSkus.length > 0 ? this.productSpuInfo.mainSkus.map((item, index) => {
                     item.imageUrls = item.imageUrls ? item.imageUrls.join(',') : []
                     // 编辑页面的调整，如果当前属性值没有选择的时候，后端就不会返回数据，我们需要补足数据
                     const optionTypeList = this.productSpuInfo.optionTypeList.map(obj => ({
@@ -645,8 +761,26 @@ export default {
                         return options.length > 0 ? options[0] : obj
                     })
                     return item
-                }),
-                optionTypeList: this.productSpuInfo.optionTypeList.length ? this.productSpuInfo.optionTypeList : []
+                }) : [{
+                    name: '',
+                    imageUrls: '',
+                    serialNumber: '',
+                    length: '',
+                    width: '',
+                    height: '',
+                    grossWeight: '',
+                    volume: '',
+                    netWeight: '',
+                    optionValues: []
+                }],
+                optionTypeList: this.productSpuInfo.optionTypeList.length ? this.productSpuInfo.optionTypeList.map(item => {
+                    item.disabled = !!(this.productSpuInfo.auditStatus == 0 || this.productSpuInfo.auditStatus == 1 || this.productSpuInfo.auditStatus == 2)
+                    item.optionValues.map(sItem => {
+                        sItem.disabled = !(this.productSpuInfo.auditStatus == 1)
+                        return sItem
+                    })
+                    return item
+                }) : []
             }
             // TODO: 处理老数据
             const specifications = this.productSpuInfo.specifications || []
@@ -751,7 +885,7 @@ export default {
     line-height: 20px;
     color: $grayColor;
     text-align: center;
-    // margin-top: 104px;
+    margin-top: 104px;
 }
 
 .isDisabled {
