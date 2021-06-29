@@ -34,7 +34,7 @@
                 </el-form-item>
                 <div v-if="showMore">
                     <el-form-item label="商品名称：" prop="name">
-                        <el-input class="form-input_big" v-model="form.name" maxlength="100" placeholder="请输入商品名称" :disabled="form.auditStatus == 1"></el-input>
+                        <el-input class="form-input_big" v-model="form.name" maxlength="100" placeholder="请输入商品名称" :disabled="$route.query.id&&form.auditStatus == 1"></el-input>
                     </el-form-item>
                     <el-form-item label="">
                         <span class="isGrayColor">商品名称用于识别操作上下架编辑，字数最多100字</span>
@@ -67,13 +67,6 @@
                             <p>最多支持上传5张750*750，大小不超过2M，仅支持jpeg，jpg，png格式</p>
                         </div>
                     </el-form-item>
-                    <el-form-item label="规格图片：" prop="imgUrlsSku" v-if="form.optionTypeList.length < 1">
-                        <SingleUpload :upload="uploadInfo" :imgW="104" :imgH="104" :imageUrl="form.mainSkus[0].imageUrls" @back-event="backPicUrl" v-if="form.mainSkus.length>0" />
-                        <div class="picture-prompt ml20">
-                            <p>上传750*750，大小不超过2M，仅支持jpeg，jpg，png格式</p>
-                        </div>
-                        <input type="hidden" v-model="form.mainSkus[0].imageUrls" v-if="form.mainSkus.length>0">
-                    </el-form-item>
                     <div class="sku-cont">
                         <div class="sku-cont_group mb20" v-for="(item,index) in form.optionTypeList" :key="index">
                             <div class="group-spec_label">
@@ -83,7 +76,7 @@
                             </div>
                             <div class="group-spec_tags mt20">
                                 <el-form-item label="规格值：" :prop="`optionTypeList[${index}].optionValues`" :rules="rules.optionValues">
-                                    <el-tag class="mr10" v-for="(sItem,sIndex) in item.optionValues" :key="sIndex" @close="onDelOptionValue(index,sIndex)" :closable="sItem.disabled && item.optionValues.length > 1">{{sItem.name}}</el-tag>
+                                    <el-tag class="mr10" v-for="(sItem,sIndex) in item.optionValues" :key="sIndex" @close="onDelOptionValue(index,sIndex)" :closable="!sItem.disabled">{{sItem.name}}</el-tag>
                                     <el-input v-model="addValues[index]" @change="onAddOptionVlaue(index)" suffix-icon="el-icon-plus" maxlength="50" placeholder="多个属性值以空格隔开"></el-input>
                                 </el-form-item>
                             </div>
@@ -91,7 +84,7 @@
                         </div>
                         <h-button type="create" class="mb20" @click="onAddOptionTemplate">添加规格</h-button>
                     </div>
-                    <skuTable ref="skuTable" :formData.sync="form" v-if="form.optionTypeList.length>0"></skuTable>
+                    <skuTable ref="skuTable" :formData.sync="form"></skuTable>
                     <h-button type="create" class="mb20" v-if="form.optionTypeList.length>0" @click="onAddSKU">+</h-button>
                     <div class="title-cont" v-if="specData.length != 0">
                         <span class="title-cont__label">参数信息</span>
@@ -107,28 +100,6 @@
                                 </el-select>
                             </el-form-item>
                         </div>
-                    </div>
-                    <div class="title-cont" v-if="form.optionTypeList.length < 1">
-                        <span class="title-cont__label">仓库信息</span>
-                    </div>
-                    <div v-if="form.optionTypeList.length < 1">
-                        <el-form-item label="SN码：" prop="serialNumber">
-                            <el-input v-model="form.mainSkus[0].serialNumber" maxlength="16" v-if="form.mainSkus.length"></el-input>
-                        </el-form-item>
-                        <el-form-item label="长宽高/mm：" prop="length">
-                            <el-input v-model="form.mainSkus[0].length" maxlength="6" v-if="form.mainSkus.length>0"></el-input>
-                            <el-input v-model="form.mainSkus[0].width" maxlength="6" v-if="form.mainSkus.length>0"></el-input>
-                            <el-input v-model="form.mainSkus[0].height" maxlength="6" v-if="form.mainSkus.length>0"></el-input>
-                        </el-form-item>
-                        <el-form-item label="毛重/KG：" prop="grossWeight">
-                            <el-input v-model="form.mainSkus[0].grossWeight" maxlength="16" v-if="form.mainSkus.length>0"></el-input>
-                        </el-form-item>
-                        <el-form-item label="体积/m³：" prop="volume">
-                            <el-input v-model="form.mainSkus[0].volume" maxlength="16" v-if="form.mainSkus.length>0"></el-input>
-                        </el-form-item>
-                        <el-form-item label="净重/KG：" prop="costPrice">
-                            <el-input v-model="form.mainSkus[0].netWeight" maxlength="16" v-if="form.mainSkus.length>0"></el-input>
-                        </el-form-item>
                     </div>
                     <div class="title-cont mt10">
                         <span class="title-cont__label">商品详情信息</span>
@@ -197,6 +168,7 @@ export default {
                 operator: '',
                 optionTypeList: []
             },
+            resetForm: {},
             rules: {
                 brandName: [
                     { required: true, message: '请选择商品品牌', trigger: 'change' }
@@ -235,91 +207,6 @@ export default {
                             this.form.optionTypeList.map(item => {
                                 if (!item.optionValues || item.optionValues.length == 0) {
                                     return callback(new Error('请输入规格值'))
-                                }
-                            })
-                            return callback()
-                        }
-                    }
-                ],
-                imgUrlsSku: [
-                    {
-                        required: true,
-                        validator: (rule, value, callback) => {
-                            this.form.mainSkus.map(item => {
-                                if (!item.imageUrls || item.imageUrls == '') {
-                                    return callback(new Error('请上传规格图片'))
-                                }
-                            })
-                            return callback()
-                        },
-                        trigger: 'change'
-                    }
-                ],
-                serialNumber: [
-                    {
-                        validator: (rule, value, callback) => {
-                            const reg = /^[A-Za-z0-9]+$/
-                            this.form.mainSkus.map(item => {
-                                if (item.serialNumber && !reg.test(item.serialNumber)) {
-                                    return callback(new Error('条头码仅支持字母和数字'))
-                                }
-                            })
-                            return callback()
-                        }
-                    }
-                ],
-                length: [
-                    {
-                        validator: (rule, value, callback) => {
-                            const reg = /^[0-9]+$/
-                            this.form.mainSkus.map(item => {
-                                if (item.length && !reg.test(item.length)) {
-                                    return callback(new Error('长宽高仅支持数字'))
-                                }
-                                if (item.width && !reg.test(item.length)) {
-                                    return callback(new Error('长宽高仅支持数字'))
-                                }
-                                if (item.height && !reg.test(item.length)) {
-                                    return callback(new Error('长宽高仅支持数字'))
-                                }
-                            })
-                            return callback()
-                        }
-                    }
-                ],
-                grossWeight: [
-                    {
-                        validator: (rule, value, callback) => {
-                            const reg = /^[0-9]+$/
-                            this.form.mainSkus.map(item => {
-                                if (item.grossWeight && !reg.test(item.grossWeight)) {
-                                    return callback(new Error('毛重仅支持数字'))
-                                }
-                            })
-                            return callback()
-                        }
-                    }
-                ],
-                volume: [
-                    {
-                        validator: (rule, value, callback) => {
-                            const reg = /^[0-9]+$/
-                            this.form.mainSkus.map(item => {
-                                if (item.volume && !reg.test(item.volume)) {
-                                    return callback(new Error('体积仅支持数字'))
-                                }
-                            })
-                            return callback()
-                        }
-                    }
-                ],
-                netWeight: [
-                    {
-                        validator: (rule, value, callback) => {
-                            const reg = /^[0-9]+$/
-                            this.form.mainSkus.map(item => {
-                                if (item.netWeight && !reg.test(item.netWeight)) {
-                                    return callback(new Error('净重仅支持数字'))
                                 }
                             })
                             return callback()
@@ -392,6 +279,8 @@ export default {
         },
         'form.optionTypeList' (value, preValue) {
             // 当sku被编辑或者是编辑页面的时候，我们不做笛卡尔积
+            console.log(this.isEdit)
+            console.log(this.isEditSku)
             if (this.isEdit || this.isEditSku) {
                 /**
                  * 当编辑页面时候，页面渲染会触发form.optionTypeList的变更，这个时候我们不需要处理mainSkus
@@ -495,6 +384,7 @@ export default {
     },
     methods: {
         init () {
+            this.resetForm = { ...this.form }
             this.getBrandOptions()
             this.getCategoryOptions()
             this.getModelOptions()
@@ -570,9 +460,6 @@ export default {
             }
             return fileSize
         },
-        backPicUrl (file) {
-            this.form.mainSkus[0].imageUrls = file.imageUrl
-        },
         onAddOptionTemplate () {
             this.form.optionTypeList.push({ id: '', name: '', optionValues: [] })
         },
@@ -599,6 +486,10 @@ export default {
                     if (index === i) {
                         item.optionValues = this.form.optionTypeList[i].optionValues.concat(this.optionValueData)
                     }
+                    item.optionValues.map(sItem => {
+                        sItem.disabled = item.optionValues.length == 1 || this.productSpuInfo.auditStatus == 1
+                        return sItem
+                    })
                     return item
                 })
             }
@@ -611,6 +502,10 @@ export default {
                     id = item.optionValues[sIndex].id
                     item.optionValues.splice(sIndex, 1)
                 }
+                item.optionValues.map(sItem => {
+                    sItem.disabled = item.optionValues.length == 1 || this.productSpuInfo.auditStatus == 1
+                    return sItem
+                })
                 return item
             })
             this.form.mainSkus = this.form.mainSkus.map((item, i) => {
@@ -646,7 +541,6 @@ export default {
         onSave () {
             this.form.imageUrls = this.imageUrls
             this.btnLoading = true
-            console.log(this.form.mainSkus)
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
                     let form = {}
@@ -698,13 +592,15 @@ export default {
         },
         onCancel () {
             this.$router.push('/b2b/product/productList')
+            this.setNewTags((this.$route.fullPath).split('?')[0])
         },
         onReset () {
             this.showMore = false
+            this.$refs.form.resetFields()
             this.specifications = []
             this.addValues = []
             this.imageUrls = []
-            this.$refs.form.resetFields()
+            this.form = { ...this.resetForm }
         },
         onPutawayRules () {
             this.$alert(this.agreement, '舒适e购商品上架规则', {
@@ -776,9 +672,9 @@ export default {
                     optionValues: []
                 }],
                 optionTypeList: this.productSpuInfo.optionTypeList.length ? this.productSpuInfo.optionTypeList.map(item => {
-                    item.disabled = !!(this.productSpuInfo.auditStatus == 0 || this.productSpuInfo.auditStatus == 1 || this.productSpuInfo.auditStatus == 2)
+                    item.disabled = !!(this.$route.query.id)
                     item.optionValues.map(sItem => {
-                        sItem.disabled = !(this.productSpuInfo.auditStatus == 1)
+                        sItem.disabled = item.optionValues.length == 1 || this.productSpuInfo.auditStatus == 1
                         return sItem
                     })
                     return item

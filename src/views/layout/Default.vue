@@ -15,7 +15,7 @@
                 </div>
                 <div :class="isCollapse?'minLeft':'maxLeft'" class="tabs-container__height hidden-xs-only"></div>
                 <keep-alive :include="cachedInclude" :exclude="cachedExclude">
-                    <router-view></router-view>
+                    <router-view v-if="isRouterAlive"></router-view>
                 </keep-alive>
                 <!-- 这边以前就没加key -->
                 <!-- !!!!!!!加了tags缓存，为了适配三级路由缓存不能加key，如果要加，搞个啥的判断下v-if,v-else，就需要的页面才用这加key!!!!!!! -->
@@ -67,6 +67,11 @@ export default {
         NavMenuAside,
         HTags
     },
+    provide () {
+        return {
+            reload: this.reload
+        }
+    },
     data () {
         const checkPassword = (rule, value, callback) => {
             if (value === '') {
@@ -79,6 +84,7 @@ export default {
         }
 
         return {
+            isRouterAlive: true,
             isCollapse: false,
             editPasswordVisible: false,
             editPassword: {
@@ -210,6 +216,12 @@ export default {
                     } catch (e) {
                     }
                 }
+            })
+        },
+        reload () {
+            this.isRouterAlive = false
+            this.$nextTick(() => {
+                this.isRouterAlive = true
             })
         }
     },

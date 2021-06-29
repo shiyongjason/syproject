@@ -41,8 +41,7 @@
                     <div class="query-cont__col" v-if="productType == 'SPU'">
                         <div class="query-col__lable">商品类目：</div>
                         <div class="query-col__input">
-                            <!-- <el-input v-model="queryParams.categoryId" maxlength="30" placeholder="请输入" @keyup.enter.native="onQuery"></el-input> -->
-                            <el-cascader v-model="queryParams.categoryId" :options="categoryOption" :props="props" clearable placeholder="请选择商品类目"></el-cascader>
+                            <el-cascader v-model="queryParams.categoryId" :options="categoryOption" :props="props" :change-on-select="true" clearable placeholder="请选择商品类目"></el-cascader>
                         </div>
                     </div>
                 </template>
@@ -235,8 +234,7 @@ export default {
             batchOperator(multiSelection || this.multiSelection, async (multiSelection) => {
                 try {
                     await this.batchEffective(multiSelection)
-                    // await this.batchEfficacy(multiSelection)
-                    this.$message.success('商品设置生效成功！')
+                    this.$message.success('生效成功！')
                     this.getProductSpuList()
                 } catch (error) {
                     this.getProductSpuList()
@@ -250,7 +248,7 @@ export default {
         // 生效sku
         async onEffectiveSku (row) {
             await this.effectiveSKU({ id: row.id })
-            this.$message.success('商品设置生效成功！')
+            this.$message.success('生效成功！')
             this.getProductSkuList()
         },
         // 批量失效
@@ -258,7 +256,7 @@ export default {
             batchOperator(multiSelection || this.multiSelection, async (multiSelection) => {
                 try {
                     await this.batchEfficacy(multiSelection)
-                    this.$message.success('商品设置失效成功！')
+                    this.$message.success('失效成功！')
                     this.getProductSpuList()
                 } catch (error) {
                     this.getProductSpuList()
@@ -272,7 +270,7 @@ export default {
         // 失效sku
         async onEfficacySku (row) {
             await this.efficacySKU({ id: row.id })
-            this.$message.success('商品设置失效成功！')
+            this.$message.success('失效成功！')
             this.getProductSkuList()
         },
         // 批量删除
@@ -307,16 +305,6 @@ export default {
                 this.$message.success('商品删除成功！')
                 this.getProductSkuList()
             }).catch(() => { })
-        },
-        async onOnShelfSKU ({ skuId }) {
-            await onShelfSku({ skuId: skuId, shelfOperation: 1 })
-            this.$message.success('商品上架成功！')
-            this.getSKUProuducts()
-        },
-        async onOffShelfSKU ({ skuId }) {
-            await onShelfSku({ skuId: skuId, shelfOperation: 0 })
-            this.$message.success('商品下架成功！')
-            this.getSKUProuducts()
         },
         // 翻页操作
         onCurrentChange (val) {
