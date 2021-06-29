@@ -7,7 +7,7 @@
                     <el-tab-pane label="交易记录" name="record"></el-tab-pane>
                 </el-tabs>
             </div>
-            <div v-if="productType == 'detail'">
+            <div v-if="tabName == 'detail'">
                 <div class="table-cont-title">
                     <span class="table-title-name">资金总览</span>
                 </div>
@@ -79,6 +79,12 @@
                 <div class="table-cont-title">
                     <span class="table-title-name">商家明细</span>
                 </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">商家：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入管理员账号或者企业名称"></el-input>
+                    </div>
+                </div>
                 <div class="query-cont-row mt20">
                     <div class="query-cont-col">
                         <div class="query-col-title">最近回款日期：</div>
@@ -95,7 +101,7 @@
                         </div>
                     </div>
                     <div class="query-cont-col">
-                        <div class="query-col-title">类型：</div>
+                        <div class="query-col-title">逾期否：</div>
                         <div class="query-col-input">
                             <el-select v-model="queryParams.businessType">
                                 <el-option v-for="item in businessDetaulOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -103,29 +109,11 @@
                         </div>
                     </div>
                     <div class="query-cont-col">
-                        <div class="query-col-title">状态：</div>
+                        <div class="query-col-title">资金状态：</div>
                         <div class="query-col-input">
                             <el-select v-model="queryParams.status">
                                 <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
-                        </div>
-                    </div>
-                    <div class="query-cont-col">
-                        <div class="query-col-title">回款订单号：</div>
-                        <div class="query-col-input">
-                            <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入回款订单号"></el-input>
-                        </div>
-                    </div>
-                    <div class="query-cont-col">
-                        <div class="query-col-title">回款代采订单号：</div>
-                        <div class="query-col-input">
-                            <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入回款代采订单号"></el-input>
-                        </div>
-                    </div>
-                    <div class="query-cont-col">
-                        <div class="query-col-title">MIS订单号：</div>
-                        <div class="query-col-input">
-                            <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入MIS订单号"></el-input>
                         </div>
                     </div>
                     <div class="query-cont-col">
@@ -135,7 +123,7 @@
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="pagination" @onCurrentChange="onCurrentChange">
                 </basicTable>
             </div>
-            <div v-if="productType == 'record'">
+            <div v-if="tabName == 'record'">
                 <div class="balance-cont-row">
                     <div class="balance-cont-col">
                         <div class="balance-col-icon">
@@ -324,11 +312,6 @@ export default {
         },
         onTab (value) {
             this.queryParams = { ...this.resetParams }
-            if (value.name == 'detail') {
-                this.productType = 'detail'
-            } else if (value.name == 'record') {
-                this.productType = 'record'
-            }
             // this.onQuery()
         },
         onRecordTab (value) {
