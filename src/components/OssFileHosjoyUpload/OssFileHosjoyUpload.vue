@@ -58,8 +58,8 @@
             </el-upload>
 
         </div>
-        <el-dialog title="提示" :visible.sync="deleteVisible" width="500px" class="deldialog" :modal=false>
-            <span>您确定删除这一条数据吗？</span>
+        <el-dialog title="删除确认" :visible.sync="deleteVisible" width="500px" class="deldialog" :modal=false>
+            <span>{{delTips}}</span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="deleteVisible = false">取 消</el-button>
                 <el-button type="primary" @click="doRemove">确 定</el-button>
@@ -87,7 +87,8 @@ export default {
         showProgress: { type: Boolean, default: false },
         fileNum: { type: Number, default: 100 }, // 限制文件总数
         accept: { type: String, default: '.jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.zip,.rar' }, // 上传的类型
-        showUpload: { type: Boolean, default: true } // 是否显示上传按钮
+        showUpload: { type: Boolean, default: true }, // 是否显示上传按钮
+        delTips: { type: String, default: '您确定删除这一条数据吗？' }
 
     },
     components: { downloadFileAddToken },
