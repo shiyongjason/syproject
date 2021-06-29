@@ -357,6 +357,8 @@ export default class ThreadDetail extends Vue {
                 return 'CRM'
             case 5:
                 return '第三方渠道'
+            case 14:
+                return '舒适云'
             default:
                 return ''
         }
