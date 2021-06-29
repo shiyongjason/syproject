@@ -104,3 +104,24 @@ export const STAUTS_MAP = new Map([
     [5, '关闭'],
     [6, '冻结中']
 ])
+// 逾期否
+export const OVERDUE_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '是', value: '1' },
+    { label: '否', value: '2' }
+]
+export const OVERDUE_MAP = new Map([
+    [1, '是'],
+    [2, '否']
+])
+// 资金状态
+export const CAPITAL_STATUS_OPTIONS = [
+    { label: '未回款', value: '10' },
+    { label: '部分汇款', value: '20' },
+    { label: '已回款', value: '30' }
+]
+export const CAPITAL_STATUS_MAP = new Map([
+    [10, '未回款'],
+    [20, '部分汇款'],
+    [30, '已回款']
+])

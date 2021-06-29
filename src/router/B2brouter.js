@@ -293,13 +293,26 @@ export default [
                         component: () => import('@/views/hmall/finance/miningManage/merchantsDetail.vue')
                     },
                     {
+                        path: 'withdrawalMerchant',
+                        name: 'withdrawalMerchant',
+                        meta: {
+                            title: '提现',
+                            tagName: '提现',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/finance/merchantsDetail'
+                        },
+                        component: () => import('@/views/hmall/finance/miningManage/withdrawalMerchant.vue')
+                    },
+                    {
                         path: 'merchantBehalf',
                         name: 'financeMerchantBehalf',
                         meta: {
                             title: '商家详情',
                             tagName: '商家详情',
                             isMenu: false,
-                            icon: ''
+                            icon: '',
+                            showMenuAs: '/b2b/finance/merchantsDetail'
                         },
                         component: () => import('@/views/hmall/finance/miningManage/merchantBehalf.vue')
                     }
