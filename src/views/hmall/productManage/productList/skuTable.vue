@@ -157,7 +157,7 @@ export default {
                         validator: (rule, value, callback) => {
                             value.every(item => {
                                 if (item.id == '') {
-                                    return callback(new Error('请上传图片'))
+                                    return callback(new Error('请选择属性值'))
                                 }
                             })
                             return callback()
