@@ -320,22 +320,22 @@
                         <!-- user -->
                         <div class="contact-item" style="margin-bottom:0px" v-for="(item,index) in companyContactList" :key="item.id">
                             <div class="checkbox-right">
-                                <el-form :model="item" ref="addUserForm" :rules="rulesContact">
+                                <el-form :model="item" ref="addUserForm" :validate-on-rule-change='false'>
                                     <div class="contact-table">
                                         <el-checkbox v-model="item.checked" style="margin-right:3px" @change="()=>onChageRadioContactItem(index)"></el-checkbox>
                                         <div class="contact-table-item">
-                                            <el-form-item label="客户姓名：" prop="contactName" >
-                                                <el-input placeholder="请输入" v-model='item.contactName' maxlength="24" size="mini" class="contact-table-item-input" style="flex:0 0 80px" @blur="()=>onBlurSave(item,index)"></el-input>
+                                            <el-form-item label="客户姓名：" prop="contactName" :rules="{ required: true, validator: validatorIsChinese, message: '姓名只能为2-24个汉字！', trigger: 'blur' }">
+                                                <el-input placeholder="请输入" v-model='item.contactName' maxlength="24" size="mini" class="contact-table-item-input" style="flex:0 0 80px" @blur="()=>onBlurSave(item,index,'contactName')"></el-input>
                                             </el-form-item>
                                         </div>
                                         <div class="contact-table-item" style="margin-left:-50px">
-                                            <el-form-item  prop='firstPartName' label="手机号：">
-                                                <el-input placeholder="请输入" maxlength="11" v-model='item.contactMobile' size="mini" class="contact-table-item-input" style="flex:0 0 110px" @blur="()=>onBlurSave(item,index)"></el-input>
+                                            <el-form-item  prop='contactMobile' label="手机号：" :rules="{required: true, validator: validatorPHONE, message: '请输入正确的手机号', trigger: 'blur'}">
+                                                <el-input placeholder="请输入" maxlength="11" v-model='item.contactMobile' size="mini" class="contact-table-item-input" style="flex:0 0 110px" @blur="()=>onBlurSave(item,index,'contactMobile')"></el-input>
                                             </el-form-item>
                                         </div>
                                         <div class="contact-table-item" style="display: flex;margin-left:-20px; margin-right:0">
-                                            <el-form-item  prop='firstPartName' label="角色：" >
-                                                <el-select  style="flex:0 0 160px;" v-model="item.roleCodes" multiple placeholder="请选择" class="contact-table-item-input" size="mini" @change="()=>onBlurSave(item,index)">
+                                            <el-form-item  prop='roleCodes' label="角色：" :rules="{required: true, message: '必填项不能为空'}">
+                                                <el-select  style="flex:0 0 160px;" v-model="item.roleCodes" multiple placeholder="请选择" class="contact-table-item-input" size="mini" @change="()=>onBlurSave(item,index,'roleCodes')">
                                                     <el-option v-for="item in role" :key="item.key" :label="item.value" :value="item.key"></el-option>
                                                 </el-select>
                                             </el-form-item>
@@ -408,6 +408,7 @@ import { handleSubmit, validateForm } from '@/decorator'
 import { ROLE, SALESPHASE, USER_DEFAULT } from './const'
 import filters from '@/utils/filters'
 import { isNum } from '@/utils/validate/format'
+import { PHONE } from '@/utils/rules'
 
 // 默认头像
 
@@ -460,6 +461,8 @@ export default class ProjectList2Detail extends Vue {
     @Getter('projectStore/flowUpProcess') flowUpProcess: DictionaryList
 
     @State('userInfo') userInfo: any
+    validatorPHONE = PHONE
+    validatorIsChinese=validatorIsChinese
     // 为了解决切换的时候校验的不正常bug
     reCreate:boolean = true
     userDefault = USER_DEFAULT
@@ -544,7 +547,9 @@ export default class ProjectList2Detail extends Vue {
 
     get rulesContact () {
         let rules = {
-            contactName: { required: true, validator: validatorIsChinese, message: '姓名只能为2-24个汉字！', trigger: 'blur' }
+            // contactName: { required: true, validator: validatorIsChinese, message: '姓名只能为2-24个汉字！', trigger: 'blur' }
+            // contactMobile: { required: true, validator: PHONE, message: '请输入正确的手机号', trigger: 'blur' },
+            // roles: { required: true, message: '必填项不能为空', trigger: 'change' }
         }
         return rules
     }
@@ -671,20 +676,36 @@ export default class ProjectList2Detail extends Vue {
     }
     // 选中联系列表中的一项
     onChageRadioContactItem (i) {
-        this.radioContact = false
-        this.employeeList.map((item:any) => {
-            item.checked = false
-        })
-        this.companyContactList.map((item, index) => {
-            if (index != i) {
-                item.checked = false
+        // 选择之前校验必填项，没填不能选择
+        let addUserForm:any = this.$refs['addUserForm']
+        addUserForm[i].validate((value, r) => {
+            console.log('🚀 --- addUserForm[i].validate --- value', value)
+            if (value) {
+                this.radioContact = false
+                this.employeeList.map((item:any) => {
+                    item.checked = false
+                })
+                this.companyContactList.map((item, index) => {
+                    if (index != i) {
+                        item.checked = false
+                    }
+                })
+                this.$forceUpdate()
+            } else {
+                this.companyContactList[i].checked = false
+                this.$forceUpdate()
             }
         })
-        this.$forceUpdate()
     }
     // 关闭联系人弹窗
     onBeforeCloseChooseUser () {
-        console.log(' 🚗 🚕 🚙 🚌 🚎 取消')
+        console.log(' 🚗 🚕 🚙 🚌 🚎 取消', this.$refs['addUserForm'])
+        let addUserForm:any = this.$refs['addUserForm']
+        if (addUserForm && addUserForm.length > 0) {
+            addUserForm.map(f => {
+                f.clearValidate()
+            })
+        }
         this.innerContactVisible = false
         this.companyContactList = JSON.parse(JSON.stringify(this.companyContactListBak))
     }
@@ -699,6 +720,33 @@ export default class ProjectList2Detail extends Vue {
     }
 
     onAddUser () {
+        let resValidate = []
+        let addUserForm:any = this.$refs['addUserForm']
+        if (addUserForm && addUserForm.length > 0) {
+            for (let i = 0; i < addUserForm.length; i++) {
+                addUserForm[i].validate((value, r) => {
+                    if (!value) {
+                        resValidate.push(value)
+                    } else {
+                        this.$nextTick(() => {
+                            let ds = document.getElementsByClassName('contact')[0]
+                            const dom = ds.querySelector('.is-error')
+                            console.log('🚀 --- this.$nextTick --- dom', dom)
+                            dom && dom.scrollIntoView()
+                        })
+                    }
+                })
+            }
+        }
+        if (resValidate.length > 0) {
+            this.$message.error('请完善联系人信息')
+            return
+        }
+        // if (addUserForm && addUserForm.length > 0) {
+        //     addUserForm.map(f => {
+        //         f.resetFields()
+        //     })
+        // }
         this.companyContactList.push({
             'companyId': this.projectDetail.companyId,
             'contactMobile': '',
@@ -747,6 +795,12 @@ export default class ProjectList2Detail extends Vue {
                     i.clearValidate()
                 }
             })
+            let addUserForm:any = this.$refs['addUserForm']
+            if (addUserForm && addUserForm.length > 0) {
+                addUserForm.map(f => {
+                    f.clearValidate()
+                })
+            }
         }
     }
 
@@ -767,22 +821,29 @@ export default class ProjectList2Detail extends Vue {
         return { value: '', key: '' }
     }
 
-    async onBlurSave (item, index) {
-        this.$refs['addUserForm'][index].validate(async (value, r) => {
-            if (value) {
-                item.operator = this.userInfo.employeeName
-                // 修改
-                if (item.id) {
-                    console.log(' 🚗 🚕 🚙 🚌 🚎 修改', item)
-                    putCompanyContact(item)
-                    return
-                }
-                // 新增
-                item.id = ''
+    async onBlurSave (item, index, prop) {
+        this.$refs['addUserForm'][index].validateField(prop, async (errorMessage) => {
+            if (!errorMessage) {
+                console.log('🚀 --- onBlurSave --- item 校验下面3字段是否有值，有值保存', item)
                 if (item.contactName && item.contactMobile && item.roleCodes.length) {
-                    await createCompanyContact(item)
-                    this.$message.success('添加成功')
-                    this.onGetCompanyContactList()
+                    item.operator = this.userInfo.employeeName
+                    // 修改
+                    if (item.id) {
+                        console.log(' 🚗 🚕 🚙 🚌 🚎 修改', item)
+                        setTimeout(() => {
+                            putCompanyContact(item)
+                        }, 400)
+                        return
+                    }
+                    // 新增
+                    item.id = ''
+                    if (item.contactName && item.contactMobile && item.roleCodes.length) {
+                        setTimeout(async () => {
+                            await createCompanyContact(item)
+                            this.$message.success('添加成功')
+                            this.onGetCompanyContactList()
+                        }, 400)
+                    }
                 }
             } else {
                 this.$nextTick(() => {
@@ -807,6 +868,10 @@ export default class ProjectList2Detail extends Vue {
     }
     // 删除联系人
     onDelCompanyContact (item, index) {
+        if (!item.contactMobile || !item.contactName || !item.roleCodes.length) {
+            this.companyContactList.splice(index, 1)
+            return
+        }
         this.deleteVisible = true
         this.delContactItem = item
         this.delContactIndex = index
