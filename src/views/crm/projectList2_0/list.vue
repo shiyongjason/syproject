@@ -247,12 +247,12 @@
                     <div class="flex-item">
                         <div class="form-item">
                             <el-form-item  prop='firstPartName' label="甲方名称：">
-                                <el-input  placeholder="请输入甲方名称" v-model='reqProjectSupply.firstPartName' maxlength="25"></el-input>
+                                <el-input  placeholder="请输入甲方名称" v-model='reqProjectSupply.firstPartName' maxlength="50"></el-input>
                             </el-form-item>
                         </div>
                         <div class="form-item">
                             <el-form-item  prop='projectName' label="项目名称：">
-                                <el-input  placeholder="请输入项目名称" v-model='reqProjectSupply.projectName' maxlength="25"></el-input>
+                                <el-input  placeholder="请输入项目名称" v-model='reqProjectSupply.projectName' maxlength="50"></el-input>
                             </el-form-item>
                         </div>
                     </div>
