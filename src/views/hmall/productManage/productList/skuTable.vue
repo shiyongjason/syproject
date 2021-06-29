@@ -40,7 +40,7 @@
                     </td>
                 </tr>
             </thead>
-            <tbody>
+            <tbody>index
                 <tr v-for="(item,index) in form.mainSkus" :key="index">
                     <template v-for="(sItem,sIndex) in item.optionValues">
                         <td :key="sIndex" v-if="item.optionValues.length">
@@ -52,6 +52,7 @@
                     <td class="fixed-width">
                         <el-form-item label-width='0' :prop="`mainSkus[${index}].imageUrls`" :rules="rules.imageUrls">
                             <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" />
+                            <input type="hidden" v-model="item.imageUrls">
                         </el-form-item>
                         <div class="image-wrap" v-if="item.disabled"></div>
                     </td>
@@ -144,13 +145,12 @@ export default {
                     {
                         required: true,
                         validator: (rule, value, callback) => {
-                            const reg = /^[A-Za-z0-9]+$/
-                            console.log(value)
                             if (!value || value == '') {
                                 return callback(new Error('请上传图片'))
                             }
                             return callback()
-                        }
+                        },
+                        trigger: 'change'
                     }
                 ],
                 serialNumber: [

@@ -41,7 +41,8 @@
                     <div class="query-cont__col" v-if="productType == 'SPU'">
                         <div class="query-col__lable">商品类目：</div>
                         <div class="query-col__input">
-                            <el-input v-model="queryParams.model" maxlength="30" placeholder="请输入" @keyup.enter.native="onQuery"></el-input>
+                            <!-- <el-input v-model="queryParams.categoryId" maxlength="30" placeholder="请输入" @keyup.enter.native="onQuery"></el-input> -->
+                            <el-cascader v-model="queryParams.categoryId" :options="categoryOption" :props="props" clearable placeholder="请选择商品类目"></el-cascader>
                         </div>
                     </div>
                 </template>
@@ -85,7 +86,7 @@
 </template>
 <script>
 import { B2bUrl } from '@/api/config'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import { clearCache, newCache } from '@/utils/index'
 import { PRODUCT_STATUS } from '../const/index'
 import { batchOperator } from '../../utils/index'
@@ -110,7 +111,13 @@ export default {
                 pageSize: 10
             },
             resetParams: {},
-            multiSelection: []
+            multiSelection: [],
+            props: {
+                emitPath: false,
+                value: 'id',
+                label: 'name',
+                children: 'subCategoryList'
+            }
         }
     },
     computed: {
@@ -119,6 +126,9 @@ export default {
             brandData: state => state.hmall.productManage.brandData,
             productSpuData: state => state.hmall.productManage.productSpuData,
             productSkuData: state => state.hmall.productManage.productSkuData
+        }),
+        ...mapGetters({
+            categoryOption: 'productManage/categoryOption'
         }),
         tableLabel () {
             return this.productType == 'SPU' ? [
@@ -155,6 +165,7 @@ export default {
         init () {
             this.resetParams = { ...this.queryParams }
             this.getBrandOptions()
+            this.getCategoryOptions()
             this.onQuery()
         },
         // 回车搜索
@@ -350,6 +361,7 @@ export default {
         },
         ...mapActions({
             getBrandOptions: 'productManage/findBrandOptions',
+            findCategoryOptions: 'productManage/findCategoryOptions',
             findProductSpuList: 'productManage/findProductSpuList',
             findProductSkuList: 'productManage/findProductSkuList',
             batchEffective: 'productManage/batchEffective',
@@ -359,6 +371,9 @@ export default {
             efficacySKU: 'productManage/efficacySKU',
             deleteSKU: 'productManage/deleteSKU'
         }),
+        async getCategoryOptions () {
+            await this.findCategoryOptions()
+        },
         async getProductSpuList () {
             await this.findProductSpuList(this.queryParams)
         },

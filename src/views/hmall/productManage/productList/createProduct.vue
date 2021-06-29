@@ -251,7 +251,8 @@ export default {
                                 }
                             })
                             return callback()
-                        }
+                        },
+                        trigger: 'change'
                     }
                 ],
                 serialNumber: [
@@ -640,40 +641,41 @@ export default {
                     optionTypeName: item.name
                 })
             })
-            this.form.mainSkus = this.form.mainSkus.concat({ optionValues: optionValues })
+            this.form.mainSkus = this.form.mainSkus.concat({ imageUrls: '', optionValues: optionValues })
         },
         onSave () {
             this.form.imageUrls = this.imageUrls
-            let form = {}
-            if (this.form.optionTypeList.length > 0) {
-                form = {
-                    ...this.form,
-                    optionTypeIds: this.form.optionTypeList.map(item => item.id),
-                    mainSkus: deepCopy(this.form.mainSkus).map(item => {
-                        item.id = item.mainSkuId ? item.mainSkuId : ''
-                        item.name = this.form.name + item.optionValues.map(sItem => sItem.name).join('')
-                        item.imageUrls = item.imageUrls.split(',')
-                        item.optionValueIds = item.optionValues.map(sItem => sItem.id).filter(sItem => sItem)
-                        return item
-                    }),
-                    specifications: this.form.specifications.filter(item => item.v),
-                    operator: this.userInfo.employeeName
-                }
-            } else {
-                form = {
-                    ...this.form,
-                    mainSkus: deepCopy(this.form.mainSkus).map(item => {
-                        item.name = this.form.name
-                        item.imageUrls = item.imageUrls.split(',')
-                        return item
-                    }),
-                    specifications: this.form.specifications.filter(item => item.v),
-                    operator: this.userInfo.employeeName
-                }
-            }
             this.btnLoading = true
+            console.log(this.form.mainSkus)
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
+                    let form = {}
+                    if (this.form.optionTypeList.length > 0) {
+                        form = {
+                            ...this.form,
+                            optionTypeIds: this.form.optionTypeList.map(item => item.id),
+                            mainSkus: deepCopy(this.form.mainSkus).map(item => {
+                                item.id = item.mainSkuId ? item.mainSkuId : ''
+                                item.name = this.form.name + item.optionValues.map(sItem => sItem.name).join('')
+                                item.imageUrls = item.imageUrls ? item.imageUrls.split(',') : ''
+                                item.optionValueIds = item.optionValues.map(sItem => sItem.id).filter(sItem => sItem)
+                                return item
+                            }),
+                            specifications: this.form.specifications.filter(item => item.v),
+                            operator: this.userInfo.employeeName
+                        }
+                    } else {
+                        form = {
+                            ...this.form,
+                            mainSkus: deepCopy(this.form.mainSkus).map(item => {
+                                item.name = this.form.name
+                                item.imageUrls = item.imageUrls ? item.imageUrls.split(',') : ''
+                                return item
+                            }),
+                            specifications: this.form.specifications.filter(item => item.v),
+                            operator: this.userInfo.employeeName
+                        }
+                    }
                     try {
                         if (this.$route.query.id) {
                             await this.editProduct(form)
