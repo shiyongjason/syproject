@@ -822,11 +822,33 @@ export default class ProjectList2Detail extends Vue {
     }
 
     async onBlurSave (item, index, prop) {
-        this.$refs['addUserForm'][index].validateField(prop, async (errorMessage) => {
+        let addUserForm:any = this.$refs['addUserForm']
+        addUserForm[index].validateField(prop, async (errorMessage) => {
             if (!errorMessage) {
                 console.log('🚀 --- onBlurSave --- item 校验下面3字段是否有值，有值保存', item)
                 if (item.contactName && item.contactMobile && item.roleCodes.length) {
                     item.operator = this.userInfo.employeeName
+                    let resValidate = []
+                    if (addUserForm && addUserForm.length > 0) {
+                        for (let i = 0; i < addUserForm.length; i++) {
+                            addUserForm[i].validate((value, r) => {
+                                if (!value) {
+                                    resValidate.push(value)
+                                } else {
+                                    this.$nextTick(() => {
+                                        let ds = document.getElementsByClassName('contact')[0]
+                                        const dom = ds.querySelector('.is-error')
+                                        dom && dom.scrollIntoView()
+                                    })
+                                }
+                            })
+                        }
+                    }
+                    if (resValidate.length > 0) {
+                        console.log('请完善联系人信息')
+                        return
+                    }
+
                     // 修改
                     if (item.id) {
                         console.log(' 🚗 🚕 🚙 🚌 🚎 修改', item)
