@@ -249,7 +249,7 @@
                             <div class="record-dialog-item" style="display:flex">
                                 <el-form-item  prop='flowUpProcess' label="跟进节点 ：  "  class="textarea">
                                     <el-select v-model="flowUpRequest.flowUpProcess" placeholder="请选择" @change="changeProcess">
-                                        <el-option v-for="item in flowUpProcess" :key="item.value" :label="item.value" :value="item.key"></el-option>
+                                        <el-option v-for="item in flowUpProcessFormat" :key="item.value" :label="item.value" :value="item.key"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item  prop='noNeedFlowReason' label=" "  class="textarea" style="margin:0 10px 0 25px">
@@ -519,6 +519,8 @@ export default class ProjectList2Detail extends Vue {
         5: '已接受协助申请',
         6: '已拒绝协助申请'
     }
+
+    flowUpProcessFormat=[]
 
     get getCity () {
         const province = this.provinceList.filter(item => item.provinceId === this.projectDetail.provinceId)
@@ -1182,6 +1184,12 @@ export default class ProjectList2Detail extends Vue {
         console.log(' 🚗 🚕 🚙 🚌 🚎 详情', this.projectDetail)
         this.recordsQuery.bizId = this.projectId
         this.onInitGetDate()
+
+        this.flowUpProcessFormat = this.flowUpProcess.filter(item => {
+            if (item.value != '已签约' && item.value != '已回款') {
+                return item
+            }
+        })
         // let temp = ['1', '3', '5', '7']
         // let filter:any = ''
         // this.flowUpProcess.map((item:any) => {
