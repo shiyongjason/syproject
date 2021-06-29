@@ -179,7 +179,7 @@
             </div>
         </el-dialog>
         <!-- 弹窗 -->
-        <el-dialog title="采购结论" :close-on-click-modal='false' :visible.sync="purchaseConclusionVisible" width="1080px" :before-close="handleClose" :modal='false'>
+        <el-dialog title="采购结论" :close-on-click-modal='false' :visible.sync="purchaseConclusionVisible" width="70%" :before-close="handleClose" :modal='false'>
             <div class="dialog-ctx reviewResolution">
                 <el-form id='elform' :model="purForm" :rules="purFormRules" label-width="180px" label-position='right' ref="purchaseConclusionForm" class="purchaseConclusion">
                     <div class="form-item">
@@ -237,7 +237,7 @@
                         采购信息：
                     </div>
                     <div class="form-table">
-                        <hosJoyTable ref="hosjoyTable" align="center" border stripe :showPagination='false' :column="formTableLabel" :data="tableForm" actionWidth='50' prevLocalName="V3.*" localName="V3.*.26" isAction>
+                        <hosJoyTable ref="hosjoyTable" align="center" border stripe :showPagination='false' :column="formTableLabel" :data="tableForm" actionWidth='30' prevLocalName="V3.*" localName="V3.*.26" isAction>
                             <template #action="slotProps">
                                 <h-button table @click="del(slotProps.data)" v-if="tableForm.length>1">删除</h-button>
                             </template>
@@ -522,8 +522,8 @@ export default class FinalApproval extends Vue {
             render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
                 return (
                     <div>
-                        {scope.row.deviceCategoryType && this.category[scope.row.deviceCategory - 1].vaule}
-                        {scope.row.deviceCategory}
+                        {scope.row.deviceCategoryType && this.category[scope.row.deviceCategoryType - 1]?.name}
+                        {scope.row.deviceCategoryType == 8 ? '(' + scope.row.deviceCategory + ')' : ''}
                     </div>
                 )
             }
@@ -642,7 +642,6 @@ export default class FinalApproval extends Vue {
             className: 'form-table-header',
             showOverflowTooltip: false,
             render: (h: CreateElement, scope: TableRenderParam) => {
-                console.log(scope)
                 return (
                     <div>
                         <el-select
@@ -651,7 +650,9 @@ export default class FinalApproval extends Vue {
                             placeholder="请选择"
                             value={scope.row[scope.column.property]}
                             onInput={(val) => {
-                                console.log(' 🚗 🚕 🚙 🚌 🚎选择 ', val)
+                                if (val == 8) {
+                                    scope.row.deviceCategory = ''
+                                }
                                 scope.row[scope.column.property] = val
                             }}
                         >
@@ -823,11 +824,23 @@ export default class FinalApproval extends Vue {
     onValidTable (tables) {
         let flag = true
         tables.forEach(element => {
-            for (var key in element) {
-                if (element[key] != '0' && !element[key]) {
-                    this.$message.warning('请完善表格的必填项数据!')
-                    flag = false // 终止程序
-                    return
+            console.log('element', element)
+            if (element['deviceCategoryType'] == 8) {
+                for (var key in element) {
+                    if (element[key] != '0' && !element[key]) {
+                        this.$message.warning('请完善表格的必填项数据!')
+                        flag = false // 终止程序
+                        return
+                    }
+                }
+            } else {
+                delete element['deviceCategory']
+                for (var keys in element) {
+                    if (element[keys] != '0' && !element[keys]) {
+                        this.$message.warning('请完善表格的必填项数据!')
+                        flag = false // 终止程序
+                        return
+                    }
                 }
             }
         })
