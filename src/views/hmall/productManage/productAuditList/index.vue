@@ -367,10 +367,12 @@ export default {
         this.init()
     },
     activated () {
-        this.productType == 'SPU' ? this.getProductSpuList() : this.getProductSkuList()
+        this.onQuery()
+        // this.init()
+        // this.productType == 'SPU' ? this.getProductSpuList() : this.getProductSkuList()
     },
     beforeRouteEnter (to, from, next) {
-        newCache('productAuditList')
+        clearCache('productAuditList')
         next()
     },
     beforeRouteLeave (to, from, next) {
