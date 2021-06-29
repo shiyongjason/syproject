@@ -628,33 +628,84 @@ export default class FinalApproval extends Vue {
         {
             label: '设备品类',
             prop: 'deviceCategory',
-            width: '200',
+            width: '280',
             className: 'form-table-header',
             showOverflowTooltip: false,
             render: (h: CreateElement, scope: TableRenderParam) => {
-                let create = this.$createElement // 或者不写箭头函数
                 return (
-                    create('el-select', {
-                        class: 'miniSelectSupplier',
-                        // 组件 prop
-                        props: {
-                            size: 'mini',
-                            placeholder: '请选择',
-                            value: scope.row[scope.column.property]
-                        },
-                        on: {
-                            input: (val) => { console.log(' 🚗 🚕 🚙 🚌 🚎 ', val); scope.row[scope.column.property] = val },
-                            focus: () => { console.log(' 🚗 🚕 🚙 🚌 🚎 focus'); this.otherCategory.value = '' }
-                        },
-                        scopedSlots: {
-                            default: props => this.onRenderChild(create, scope)
-                        },
-                        // Vue jsx 的 ref需要借助createElement的语法生成
-                        ref: 'categoryRef'
-                    })
+                    <div>
+                        <el-select
+                            class="miniSelect"
+                            size="mini"
+                            placeholder="请选择"
+                            value={scope.row[scope.column.property]}
+                            onInput={(val) => {
+                                console.log(' 🚗 🚕 🚙 🚌 🚎选择 ', val)
+                                scope.row[scope.column.property] = val
+                            }}
+                        >
+                            {this.category.map((item, index) => {
+                                return (
+                                    <el-option
+                                        key={index + 'option'}
+                                        value={item.name}
+                                        label={item.value}
+                                    >
+                                        {item.name}
+                                    </el-option>
+                                )
+                            })}
+                        </el-select>
+                        {
+                            scope.row[scope.column.property] == '其他' &&
+                           <el-input
+                               class="categorymini"
+                               size="mini"
+                               placeholder="请输入"
+                               value={this.otherCategory.value}
+                               onInput={(val) => {
+                                   console.log(' 🚗 🚕 🚙 🚌 🚎其它 ', val)
+                                   this.otherCategory.value = val
+                               }}
+                               maxlength={15}
+                               style="width:130px"
+                           ></el-input>
+                        }
+
+                    </div>
                 )
             }
         }
+        // {
+        //     label: '设备品类',
+        //     prop: 'deviceCategory',
+        //     width: '200',
+        //     className: 'form-table-header',
+        //     showOverflowTooltip: false,
+        //     render: (h: CreateElement, scope: TableRenderParam) => {
+        //         let create = this.$createElement // 或者不写箭头函数
+        //         return (
+        //             create('el-select', {
+        //                 class: 'miniSelectSupplier',
+        //                 // 组件 prop
+        //                 props: {
+        //                     size: 'mini',
+        //                     placeholder: '请选择',
+        //                     value: scope.row[scope.column.property]
+        //                 },
+        //                 on: {
+        //                     input: (val) => { console.log(' 🚗 🚕 🚙 🚌 🚎 ', val); scope.row[scope.column.property] = val },
+        //                     focus: () => { console.log(' 🚗 🚕 🚙 🚌 🚎 focus'); this.otherCategory.value = '' }
+        //                 },
+        //                 scopedSlots: {
+        //                     default: props => this.onRenderChild(create, scope)
+        //                 },
+        //                 // Vue jsx 的 ref需要借助createElement的语法生成
+        //                 ref: 'categoryRef'
+        //             })
+        //         )
+        //     }
+        // }
     ];
 
     onRenderChild (h: CreateElement, scope: TableRenderParam) {
@@ -662,35 +713,29 @@ export default class FinalApproval extends Vue {
             <div>
                 {this.category.map((item, index) => {
                     return (
-                        <el-option
-                            key={index + 'option'}
-                            value={item.name}
-                            label={item.value}
-                        >
-                            {item.name}
+                        <el-option disabled={this.disabled} key="其它" value={this.otherCategory.value} label={this.otherCategory.value} class="categoryminioption">
+                            <span style="float: left;color:#606266;margin-right:5px">其它：</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">
+                                <el-input
+                                    class="categorymini"
+                                    size="mini"
+                                    placeholder="请输入"
+                                    value={this.otherCategory.value}
+                                    onInput={(val) => {
+                                        console.log(' 🚗 🚕 🚙 🚌 🚎其它 ', val)
+                                        this.otherCategory.value = val
+                                    }}
+                                    maxlength={15}
+                                    style="width:150px"
+                                ></el-input>
+                                <span class="colorypointer">
+                                    <i class="el-icon-check" style="cursor: pointer;color:#FF7A45;padding:0 5px;font-size: 18px;" onClick={() => this.onAddOption(scope)}></i>
+                                </span>
+                            </span>
                         </el-option>
                     )
                 })}
-                <el-option disabled={this.disabled} key="其它" value={this.otherCategory.value} label={this.otherCategory.value} class="categoryminioption">
-                    <span style="float: left;color:#606266;margin-right:5px">其它：</span>
-                    <span style="float: right; color: #8492a6; font-size: 13px">
-                        <el-input
-                            class="categorymini"
-                            size="mini"
-                            placeholder="请输入"
-                            value={this.otherCategory.value}
-                            onInput={(val) => {
-                                console.log(' 🚗 🚕 🚙 🚌 🚎其它 ', val)
-                                this.otherCategory.value = val
-                            }}
-                            maxlength={15}
-                            style="width:150px"
-                        ></el-input>
-                        <span class="colorypointer">
-                            <i class="el-icon-check" style="cursor: pointer;color:#FF7A45;padding:0 5px;font-size: 18px;" onClick={() => this.onAddOption(scope)}></i>
-                        </span>
-                    </span>
-                </el-option>
+
             </div>
         )
     }
