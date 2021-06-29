@@ -22,7 +22,8 @@
                     <div class="pdfimg" v-else-if="_checkPicType(item,['.doc','.docx','.word'])">
                         <img :src="worldbase">
                     </div>
-                    <el-image v-else-if="item.tokenUrl" :ref="`preview_${index}`" class="default-pre-view-image" fit="contain" :src="item.tokenUrl" :preview-src-list="previewSrcList"></el-image>
+                    <elImageAddToken v-else :ref="`preview_${index}`" :fileUrl="item.fileUrl" fit="contain" :preview-src-list="previewSrcList"></elImageAddToken>
+                    <!-- <el-image v-else-if="item.tokenUrl||item.fileUrl" :ref="`preview_${index}`" class="default-pre-view-image" fit="contain" :src="item.tokenUrl||item.fileUrl" :preview-src-list="previewSrcList"></el-image> -->
                 </div>
             </template>
         </template>
@@ -33,7 +34,7 @@
                     <!--                    <a src="item.fileUrl" target="_blank">-->
                     <!--                        <font>{{item.fileName}}</font>-->
                     <!--                    </a>-->
-                    <downloadFileAddToken :file-name="item.fileName" :file-url="item.fileUrl" :a-link-words="item.fileName"></downloadFileAddToken>
+                    <downloadFileAddToken isType='default' :file-name="item.fileName" :file-url="item.fileUrl" :a-link-words="item.fileName"></downloadFileAddToken>
                     <div class="abs">
                         <i class="el-icon-circle-close" @click="remove(index)"></i>
                     </div>
@@ -71,6 +72,7 @@
 <script>
 import OssFileUtils from '@/utils/OssFileUtils'
 import downloadFileAddToken from '@/components/downloadFileAddToken'
+import elImageAddToken from '@/components/elImageAddToken'
 export default {
     name: 'OssFileHosjoyUpload',
     props: {
@@ -91,7 +93,7 @@ export default {
         delTips: { type: String, default: '您确定删除这一条数据吗？' }
 
     },
-    components: { downloadFileAddToken },
+    components: { downloadFileAddToken, elImageAddToken },
     data () {
         return {
             successFileTemp: {},
@@ -121,9 +123,14 @@ export default {
         }
     },
     methods: {
+        async getOssUrl (fileUrl) {
+            const res = await OssFileUtils.getUrl(fileUrl)
+            console.log('🚀 --- getOssUrl --- res', res)
+            return res
+        },
         handleError (err) {
-            let errMessage = (JSON.parse(err.message)).message || ''
-            this.$message.error(`上传失败：` + errMessage)
+            const errMessage = (JSON.parse(err.message)).message || ''
+            this.$message.error('上传失败：' + errMessage)
             this.progressFlag = false
             this.loading = false
         },
@@ -133,7 +140,7 @@ export default {
             this.uploadPercent = Math.floor(event.percent)
         },
         async handleSuccess (response, file, fileList) {
-            let obj = {
+            const obj = {
                 fileName: this.successFileTemp.name,
                 fileUrl: this.successFileTemp.url
             }
@@ -144,16 +151,16 @@ export default {
                     this.$message.error(`上传数量超出限制！最大个数：${this.fileNum}`)
                 }
                 //
-                this.fileList.map(async (tempArrElement, index) => {
-                    let tempUrl = await OssFileUtils.getUrl(tempArrElement.fileUrl)
-                    this.$set(this.fileList, index, Object.assign(tempArrElement, { tokenUrl: tempUrl }))
-                })
+                // this.fileList.map(async (tempArrElement, index) => {
+                //     const tempUrl = await OssFileUtils.getUrl(tempArrElement.fileUrl)
+                //     this.$set(this.fileList, index, Object.assign(tempArrElement, { tokenUrl: tempUrl }))
+                // })
                 this.uploadPercent = 100
                 this.progressFlag = false
                 this.loading = false
                 this.$emit('successCb')
                 this.$emit('successArg', obj)
-                this.$forceUpdate()
+                // this.$forceUpdate()
             }, 500)
         },
         // 校验大小
@@ -174,7 +181,7 @@ export default {
         },
         handleRemove (file, fileList) {
             if (file.response && file.response.data) {
-                let index = this.fileList.indexOf(file.response.data.accessUrl)
+                const index = this.fileList.indexOf(file.response.data.accessUrl)
                 this.doRemove(index)
             }
         },
@@ -186,20 +193,20 @@ export default {
             this.isBeyond = files.size / (1024 * 1024) >= this.fileSize
         },
         getFileType (file) {
-            let startIndex = file.lastIndexOf('.')
+            const startIndex = file.lastIndexOf('.')
             if (startIndex !== -1) {
                 return file.substring(startIndex + 1, file.length).toLowerCase()
             }
             return ''
         },
         beforeAvatarUpload (file) {
-            let arr = this.accept.split(',')
+            const arr = this.accept.split(',')
             let flag = false
             arr.map(item => {
                 if (item === `.${this.getFileType(file.name)}`) flag = true
             })
             if (!flag) {
-                this.$message.error(`上传错误，暂不支持该文件格式上传`)
+                this.$message.error('上传错误，暂不支持该文件格式上传')
                 return false
             }
             if (this.isBeyond) {
@@ -214,7 +221,7 @@ export default {
         async open (index, item = null) {
             this.previewSrcList = []
             if ((item.fileName).toLowerCase().indexOf('.png') > -1 || (item.fileName).toLowerCase().indexOf('.jpg') > -1 || (item.fileName).toLowerCase().indexOf('.jpeg') > -1) {
-                let temp = this.fileList[index]
+                const temp = this.fileList[index]
                 let tempArr = JSON.parse(JSON.stringify(this.fileList))
                 tempArr.splice(index, 1)
                 tempArr.unshift(temp)
@@ -225,18 +232,20 @@ export default {
                 })
 
                 tempArr.map(async item => {
-                    let tokenUrl = await OssFileUtils.getUrl(item.fileUrl)
+                    const tokenUrl = await OssFileUtils.getUrl(item.fileUrl)
                     this.previewSrcList.push(tokenUrl)
                 })
                 setTimeout(() => {
                     const pre = this.$refs[`preview_${index}`]
                     if (pre && pre[0]) {
                         console.log(pre[0])
+                        console.log(' 🚗 🚕 🚙 🚌 🚎 this.previewSrcList', this.previewSrcList)
                         pre[0].clickHandler()
+                        this.$forceUpdate()
                     }
                 }, 0)
             } else {
-                let url = await OssFileUtils.getUrl(item.fileUrl)
+                const url = await OssFileUtils.getUrl(item.fileUrl)
                 window.open(url)
             }
         },
@@ -249,6 +258,7 @@ export default {
         if (this.$slots.default) {
             this.haveslot = true// 此块为了去掉自定义的默认全局样式
         }
+        console.log(' 🚗 🚕 🚙 🚌 🚎 ')
     }
 }
 </script>
