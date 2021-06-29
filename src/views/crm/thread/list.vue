@@ -515,7 +515,7 @@ export default class Thread extends Vue {
 
     dialogCheckChange (item: Clue[]) {
         const number = this.queryParams.pageNumber
-        if (!this.isPatgaion) {
+        if (!this.isPatgaion || this.selectThread.length === 0) {
             this.numberSelectThread = {
                 ...this.numberSelectThread,
                 [number]: item
@@ -588,6 +588,8 @@ export default class Thread extends Vue {
                         clueId: [],
                         customerDeptName: ''
                     }
+                    this.numberSelectThread = {}
+                    this.selectThread = []
                     this.findThreadList()
                 } catch (error) {
                     this.isloading = false
