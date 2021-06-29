@@ -371,6 +371,17 @@ import { ReqProjectSupply, RespBossProjectSupply } from '@/interface/hbp-member'
 import { ReqBossProjectRefund } from './interface'
 import { CreateElement } from 'vue'
 
+const validatorName = (rule, value, callback) => {
+    if (!value) {
+        return callback(new Error('必填项不能为空'))
+    }
+    if (value && value.length < 2) {
+        console.log(' 🚗 🚕 🚙 🚌 🚎 ', 1)
+        return callback(new Error('不得少于2个字符'))
+    }
+    return callback()
+}
+
 interface companyObj {
         adminUserName: string,
         adminUserPhone: string,
@@ -501,8 +512,8 @@ export default class ProjectList2 extends Vue {
     get formRules () {
         let rules = {
             companyId: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
-            firstPartName: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
-            projectName: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+            firstPartName: [{ required: true, validator: validatorName, trigger: 'blur' }],
+            projectName: [{ required: true, validator: validatorName, trigger: 'blur' }],
             projectBuildingTypeList: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
             projectRoleList: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
             projectStep: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
