@@ -11,8 +11,8 @@ export default {
     props: {
         previewSrcList: Array,
         fileUrl: {
-            type: String,
-            required: true
+            type: String
+            // required: true
         },
         fit: {
             type: String,
