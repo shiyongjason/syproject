@@ -94,6 +94,8 @@
                                         <div class='desc'>{{item.projectSupplyFlowUp.contactName}} {{item.projectSupplyFlowUp.contactMobile}}</div>
                                         <div class='title-tag'>跟进节点</div>
                                         <div class='desc'>{{item.projectSupplyFlowUp.flowUpProcess?getProject2FollowUpProcess(item.projectSupplyFlowUp.flowUpProcess).value:'-'}}</div>
+                                        <div class="title-tag" v-if="item.content">跟进内容</div>
+                                        <div class="desc" v-if="item.content">{{item.content}}</div>
                                         <div class='title-tag' v-if="item.projectSupplyFlowUp.noNeedFlowReason">无需跟进原因</div>
                                         <div class='desc'  v-if="item.projectSupplyFlowUp.noNeedFlowReason">{{item.projectSupplyFlowUp.noNeedFlowReason||'-'}}</div>
                                     </template>
@@ -105,8 +107,6 @@
                                         <div class="title-tag" v-if="item.customerBackLogWorks[0].remark">需协助内容</div>
                                         <div class="desc" v-if="item.customerBackLogWorks[0].remark">{{item.customerBackLogWorks[0].remark}}</div>
                                     </template>
-                                    <div class="title-tag" v-if="item.content">跟进内容</div>
-                                    <div class="desc" v-if="item.content">{{item.content}}</div>
                                     <div class="title-tag" v-if="item.remark&&(item.type==1||item.type==2)">其他备注</div>
                                     <div class="desc" v-if="item.remark&&(item.type==1||item.type==2)">{{item.remark}}</div>
                                 </div>
