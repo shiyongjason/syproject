@@ -125,13 +125,60 @@ export const CAPITAL_STATUS_MAP = new Map([
     [20, '部分汇款'],
     [30, '已回款']
 ])
+// 资金状态
+export const CAPITALS_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '未回款', value: '10' },
+    { label: '部分汇款', value: '20' }
+]
+export const CAPITAL_MAP = new Map([
+    [10, '未回款'],
+    [20, '部分汇款']
+])
 // 商家明细 回款期限
 export const DEADLINE_OPTIONS = [
-    { label: '最近回款日期', value: '' },
+    { label: '最近回款日期', value: '10' },
     { label: '最终回款日期', value: '20' }
 ]
 // 商家详情 审核时间
 export const ADUITLINE_OPTIONS = [
-    { label: '申请日期', value: '' },
+    { label: '申请日期', value: '10' },
     { label: '审核日期', value: '20' }
 ]
+// 商家详情 代采提交日期
+export const MINADUITLINE_OPTIONS = [
+    { label: '代采提交日期', value: '10' },
+    { label: '出款确认日期', value: '20' },
+    { label: '最终回款日期', value: '30' },
+    { label: '最近回款日期', value: '40' }
+]
+// 商家详情 回款代采提交日期
+export const RETAADUITLINE_OPTIONS = [
+    { label: '代采提交日期', value: '10' },
+    { label: '出款确认日期', value: '20' },
+    { label: '回款日期', value: '30' }
+]
+// 回款类型
+export const DEADLINE_TYPE_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '销售订单', value: '20' },
+    { label: '提前还款', value: '30' }
+]
+export const DEADLINE_TYPE_MAP = new Map([
+    [20, '销售订单'],
+    [30, '提前还款']
+])
+// 资金同步状态
+export const STAUTS_TOGER_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '未处理', value: '1' },
+    { label: '处理中', value: '2' },
+    { label: '处理失败', value: '3' },
+    { label: '处理成功', value: '4' }
+]
+export const STAUTS_TOGER_MAP = new Map([
+    [1, '未处理'],
+    [2, '处理中'],
+    [3, '处理失败'],
+    [4, '处理成功']
+])

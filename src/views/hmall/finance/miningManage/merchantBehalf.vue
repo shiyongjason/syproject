@@ -16,16 +16,41 @@
                         <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入管理员账号或者企业名称"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">申请单号：</div>
+                <template v-if="tabName == 'apply'">
+                    <div class="query-cont-col">
+                        <div class="query-col-title">申请单号：</div>
+                        <div class="query-col-input">
+                            <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入申请单号"></el-input>
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="query-col-title">
+                            <el-select v-model="queryParams.time" style="width:140px" class="pr10">
+                                <el-option v-for="item in aduitlineOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                            </el-select>
+                        </div>
+                        <div class="query-col-input">
+                            <el-date-picker v-model="queryParams.updateTimeStart" type="date" placeholder="开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsStart"></el-date-picker>
+                            <el-date-picker v-model="queryParams.updateTimeEnd" type="date" placeholder="结束时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsEnd"></el-date-picker>
+                        </div>
+                    </div>
+                </template>
+                <div class="query-cont-col" v-if="tabName != 'apply'">
+                    <div class="query-col-title">代采订单号：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入申请单号"></el-input>
+                        <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入代采订单号"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont-col" v-if="tabName == 'returned'">
+                    <div class="query-col-title">回款订单号：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入回款订单号"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col" v-if="tabName == 'pay' || tabName == 'occupy'">
                     <div class="query-col-title">
                         <el-select v-model="queryParams.time" style="width:140px" class="pr10">
-                            <el-option v-for="item in aduitlineOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                            <el-option v-for="item in minaduitlineOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
                     <div class="query-col-input">
@@ -33,58 +58,54 @@
                         <el-date-picker v-model="queryParams.updateTimeEnd" type="date" placeholder="结束时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsEnd"></el-date-picker>
                     </div>
                 </div>
-                <template v-if="recordTabName == 'isOnline'">
+                <div class="query-cont-col" v-if="tabName == 'returned'">
+                    <div class="query-col-title">
+                        <el-select v-model="queryParams.time" style="width:140px" class="pr10">
+                            <el-option v-for="item in retaaduitlineOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                        </el-select>
+                    </div>
+                    <div class="query-col-input">
+                        <el-date-picker v-model="queryParams.updateTimeStart" type="date" placeholder="开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsStart"></el-date-picker>
+                        <el-date-picker v-model="queryParams.updateTimeEnd" type="date" placeholder="结束时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsEnd"></el-date-picker>
+                    </div>
+                </div>
+                <template v-if="tabName == 'pay' || tabName == 'occupy'">
                     <div class="query-cont-col">
-                        <div class="query-col-title">类型：</div>
+                        <div class="query-col-title">逾期否：</div>
                         <div class="query-col-input">
-                            <el-select v-model="queryParams.businessType">
-                                <el-option v-for="item in businessDetaulOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            <el-select v-model="queryParams.yuqi">
+                                <el-option v-for="item in overdueOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                             </el-select>
                         </div>
                     </div>
                     <div class="query-cont-col">
-                        <div class="query-col-title">状态：</div>
+                        <div class="query-col-title">资金状态：</div>
                         <div class="query-col-input">
-                            <el-select v-model="queryParams.status">
-                                <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            <el-select v-model="queryParams.zijinzt">
+                                <el-option v-for="item in capitalOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                </template>
+                <template v-if="tabName == 'returned'">
+                    <div class="query-cont-col">
+                        <div class="query-col-title">回款类型：</div>
+                        <div class="query-col-input">
+                            <el-select v-model="queryParams.yuqi">
+                                <el-option v-for="item in deadlineTypeOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                             </el-select>
                         </div>
                     </div>
                     <div class="query-cont-col">
-                        <div class="query-col-title">回款订单号：</div>
+                        <div class="query-col-title">资金同步状态：</div>
                         <div class="query-col-input">
-                            <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入回款订单号"></el-input>
+                            <el-select v-model="queryParams.zijinzt">
+                                <el-option v-for="item in statusTogerOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
                         </div>
                     </div>
                 </template>
-                <div class="query-cont-col" v-if="recordTabName == 'isOffline'">
-                    <div class="query-col-title">回款代采订单号：</div>
-                    <div class="query-col-input">
-                        <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入回款代采订单号"></el-input>
-                    </div>
-                </div>
-                <div class="query-cont-col" v-if="recordTabName == 'isAdvance'">
-                    <div class="query-col-title">代采订单号：</div>
-                    <div class="query-col-input">
-                        <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入回款代采订单号"></el-input>
-                    </div>
-                </div>
-                <template v-if="recordTabName == 'isOffline' || recordTabName=='isAdvance'">
-
-                    <div class="query-cont-col">
-                        <div class="query-col-title">打款账户名称：</div>
-                        <div class="query-col-input">
-                            <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入打款账户名称"></el-input>
-                        </div>
-                    </div>
-                    <div class="query-cont-col">
-                        <div class="query-col-title">打款银行账号：</div>
-                        <div class="query-col-input">
-                            <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入打款银行账号"></el-input>
-                        </div>
-                    </div>
-                </template>
-                <div class="query-cont-col">
+                <div class="query-cont-col" v-if="tabName != 'apply'">
                     <div class="query-col-title">MIS订单号：</div>
                     <div class="query-col-input">
                         <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入MIS订单号"></el-input>
@@ -96,13 +117,16 @@
                     <h-button @click="onExport">导出</h-button>
                 </div>
             </div>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="pagination" @onCurrentChange="onCurrentChange">
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="pagination" @onCurrentChange="onCurrentChange" :isAction="tabName == 'returned'" :isShowSum="true" :getSum="getSum">
+                <template slot="action" slot-scope="scope">
+                    <el-button @click="onFund(scope.data.row)">资金同步</el-button>
+                </template>
             </basicTable>
         </div>
     </div>
 </template>
 <script>
-import { BUSINESS_DETAIL_OPTIONS, BUSINESS_DETAIL_MAP, STAUTS_OPTIONS, STAUTS_MAP, OVERDUE_OPTIONS, OVERDUE_MAP, CAPITAL_STATUS_OPTIONS, CAPITAL_STATUS_MAP, ADUITLINE_OPTIONS } from '../const.js'
+import { BUSINESS_DETAIL_OPTIONS, BUSINESS_DETAIL_MAP, STAUTS_OPTIONS, STAUTS_MAP, OVERDUE_OPTIONS, OVERDUE_MAP, CAPITAL_STATUS_OPTIONS, CAPITAL_STATUS_MAP, ADUITLINE_OPTIONS, MINADUITLINE_OPTIONS, RETAADUITLINE_OPTIONS, DEADLINE_TYPE_OPTIONS, DEADLINE_TYPE_MAP, STAUTS_TOGER_OPTIONS, STAUTS_TOGER_MAP, CAPITALS_OPTIONS, CAPITALS_MAP } from '../const.js'
 import { mapState, mapActions } from 'vuex'
 export default {
     name: 'merchantBehalf',
@@ -118,6 +142,14 @@ export default {
             capitalStatusOptions: CAPITAL_STATUS_OPTIONS,
             capitalStatusMap: CAPITAL_STATUS_MAP,
             aduitlineOptions: ADUITLINE_OPTIONS,
+            minaduitlineOptions: MINADUITLINE_OPTIONS,
+            retaaduitlineOptions: RETAADUITLINE_OPTIONS,
+            deadlineTypeOptions: DEADLINE_TYPE_OPTIONS,
+            deadlineTypeMap: DEADLINE_TYPE_MAP,
+            statusTogerOptions: STAUTS_TOGER_OPTIONS,
+            statusTogerMap: STAUTS_TOGER_MAP,
+            capitalOptions: CAPITALS_OPTIONS,
+            capitalMap: CAPITALS_MAP,
             resetParams: {},
             queryParams: {
                 businessType: '',
@@ -129,32 +161,17 @@ export default {
                 pageSize: 10
             },
             searchParams: {},
-            tableDetailData: [],
-            tableDetailLabel: [
-                { label: '管理员账号', prop: 'updateTime' },
-                { label: '企业名称', prop: 'changeAmount' },
-                { label: '当前额度', prop: 'businessType' },
-                { label: '总代采', prop: 'status' },
-                { label: '总预付', prop: 'clientType' },
-                { label: '总代付', prop: 'clientType' },
-                { label: '总回款', prop: 'clientType' },
-                { label: '当前占用', prop: 'clientType' },
-                { label: '当前逾期未还', prop: 'clientType' },
-                { label: '最终回款期限', prop: 'clientType' },
-                { label: '最近还款日期', prop: 'clientType' },
-                { label: '逾期否', prop: 'clientType' },
-                { label: '资金状态', prop: 'clientType' }
-            ],
-            paginationDetail: {},
             tableData: [],
             tableLabel: [
-                { label: '时间', prop: 'updateTime' },
-                { label: '金额', prop: 'changeAmount' },
-                { label: '类型', prop: 'businessType' },
-                { label: '状态', prop: 'status' },
-                { label: '回款订单号', prop: 'clientType' },
-                { label: '回款代采订单号', prop: 'clientType' },
-                { label: 'MIS订单号', prop: 'clientType' }
+                { label: '管理员账号', prop: 'updateTime' },
+                { label: '企业名称', prop: 'changeAmount' },
+                { label: '申请单号', prop: 'businessType' },
+                { label: '申请日期', prop: 'status' },
+                { label: '审核日期', prop: 'clientType' },
+                { label: '授信额度', prop: 'clientType' },
+                { label: '授信截止日期', prop: 'clientType' },
+                { label: '预付款比例', prop: 'clientType' }
+
             ],
             pagination: {}
         }
@@ -190,44 +207,74 @@ export default {
             this.getRecord()
         },
         onTab (value) {
-            this.queryParams = { ...this.resetParams }
-            // this.onQuery()
-        },
-        onRecordTab (value) {
             this.onQuery()
-            if (this.recordTabName == 'isOnline') {
+            if (this.tabName == 'apply') {
                 this.tableLabel = [
-                    { label: '时间', prop: 'updateTime' },
-                    { label: '金额', prop: 'changeAmount' },
-                    { label: '类型', prop: 'businessType' },
-                    { label: '状态', prop: 'status' },
-                    { label: '回款订单号', prop: 'clientType' },
-                    { label: '回款代采订单号', prop: 'clientType' },
-                    { label: 'MIS订单号', prop: 'clientType' }
+                    { label: '管理员账号', prop: 'updateTime' },
+                    { label: '企业名称', prop: 'changeAmount' },
+                    { label: '申请单号', prop: 'businessType' },
+                    { label: '申请日期', prop: 'status' },
+                    { label: '审核日期', prop: 'clientType' },
+                    { label: '授信额度', prop: 'clientType' },
+                    { label: '授信截止日期', prop: 'clientType' },
+                    { label: '预付款比例', prop: 'clientType' }
                 ]
-            } else if (this.recordTabName == 'isOffline') {
+            } else if (this.tabName == 'pay') {
                 this.tableLabel = [
-                    { label: '时间', prop: 'updateTime' },
-                    { label: '金额', prop: 'changeAmount' },
-                    { label: '类型', prop: 'businessType' },
-                    { label: '打款账户名称', prop: 'status' },
-                    { label: '打款银行账号', prop: 'status' },
-                    { label: '企业名称', prop: 'status' },
-                    { label: '管理员账号', prop: 'status' },
-                    { label: '回款代采订单号', prop: 'clientType' },
-                    { label: 'MIS订单号', prop: 'clientType' }
+                    { label: '管理员账号', prop: 'updateTime' },
+                    { label: '企业名称', prop: 'changeAmount' },
+                    { label: '代采订单号', prop: 'businessType' },
+                    { label: 'MIS订单号', prop: 'status' },
+                    { label: '代采提交日期', prop: 'clientType' },
+                    { label: '出款确认日期', prop: 'clientType' },
+                    { label: '代采金额', prop: 'clientType' },
+                    { label: '预付款', prop: 'clientType' },
+                    { label: '代付金额', prop: 'updateTime' },
+                    { label: '回款金额', prop: 'changeAmount' },
+                    { label: '占用金额', prop: 'businessType' },
+                    { label: '逾期未还金额', prop: 'status' },
+                    { label: '最终回款期限', prop: 'status' },
+                    { label: '最近回款日期', prop: 'status' },
+                    { label: '逾期否', prop: 'status' },
+                    { label: '资金状态', prop: 'clientType' }
                 ]
-            } else if (this.recordTabName == 'isAdvance') {
+            } else if (this.tabName == 'returned') {
                 this.tableLabel = [
-                    { label: '时间', prop: 'updateTime' },
-                    { label: '金额', prop: 'changeAmount' },
-                    { label: '类型', prop: 'businessType' },
-                    { label: '打款账户名称', prop: 'status' },
-                    { label: '打款银行账号', prop: 'status' },
-                    { label: '企业名称', prop: 'status' },
-                    { label: '管理员账号', prop: 'status' },
-                    { label: '代采订单号', prop: 'clientType' },
-                    { label: 'MIS订单号', prop: 'clientType' }
+                    { label: '管理员账号', prop: 'updateTime' },
+                    { label: '企业名称', prop: 'changeAmount' },
+                    { label: '代采订单号', prop: 'businessType' },
+                    { label: 'MIS订单号', prop: 'status' },
+                    { label: '代采提交日期', prop: 'clientType' },
+                    { label: '出款确认日期', prop: 'clientType' },
+                    { label: '代采金额', prop: 'clientType' },
+                    { label: '预付款', prop: 'clientType' },
+                    { label: '代付金额', prop: 'updateTime' },
+                    { label: '回款类型', prop: 'changeAmount' },
+                    { label: '回款订单号', prop: 'changeAmount' },
+                    { label: '最终回款期限', prop: 'status' },
+                    { label: '回款日期', prop: 'status' },
+                    { label: '回款金额', prop: 'businessType' },
+                    { label: '资金同步状态', prop: 'clientType' },
+                    { label: '同步备注', prop: 'clientType' }
+                ]
+            } else if (this.tabName == 'occupy') {
+                this.tableLabel = [
+                    { label: '管理员账号', prop: 'updateTime' },
+                    { label: '企业名称', prop: 'changeAmount' },
+                    { label: '代采订单号', prop: 'businessType' },
+                    { label: 'MIS订单号', prop: 'status' },
+                    { label: '代采提交日期', prop: 'clientType' },
+                    { label: '出款确认日期', prop: 'clientType' },
+                    { label: '代采金额', prop: 'clientType' },
+                    { label: '预付款', prop: 'clientType' },
+                    { label: '代付金额', prop: 'updateTime' },
+                    { label: '回款金额', prop: 'changeAmount' },
+                    { label: '占用金额', prop: 'changeAmount' },
+                    { label: '逾期未还金额', prop: 'status' },
+                    { label: '最终回款期限', prop: 'status' },
+                    { label: '最近回款日期', prop: 'status' },
+                    { label: '逾期否', prop: 'status' },
+                    { label: '资金状态', prop: 'clientType' }
                 ]
             }
         },
@@ -270,6 +317,59 @@ export default {
         // 跳转商家详情
         onInfo (val) {
             this.$router.push({ path: '/b2b/finance/merchantBehalf', query: { id: val } })
+        },
+        // 资金同步
+        onFund (val) {
+        },
+        // 合计
+        getSum (param) {
+            const { columns, data } = param
+            const sums = []
+            if (this.tabName == 'apply') {
+                columns.forEach((column, index) => {
+                    if (index == 0) {
+                        sums[index] = '合计'
+                    }
+                    // 授信额度
+                    if (column.property == 'totalAmount') {
+                        sums[index] = this.childOrderStatistics.totalAmount
+                    }
+                })
+                return sums
+            } else if (this.tabName == 'pay') {
+                columns.forEach((column, index) => {
+                    if (index == 0) {
+                        sums[index] = '合计'
+                    }
+                    // 代采金额 预付款 代付金额 回款金额 占用金额 逾期未还金额
+                    if (column.property == 'totalAmount') {
+                        sums[index] = this.childOrderStatistics.totalAmount
+                    }
+                })
+                return sums
+            } else if (this.tabName == 'returned') {
+                columns.forEach((column, index) => {
+                    if (index == 0) {
+                        sums[index] = '合计'
+                    }
+                    // 代付金额 回款金额
+                    if (column.property == 'totalAmount') {
+                        sums[index] = this.childOrderStatistics.totalAmount
+                    }
+                })
+                return sums
+            } else if (this.tabName == 'occupy') {
+                columns.forEach((column, index) => {
+                    if (index == 0) {
+                        sums[index] = '合计'
+                    }
+                    // 代采金额 预付款 代付金额 回款金额 占用金额 逾期未还金额
+                    if (column.property == 'totalAmount') {
+                        sums[index] = this.childOrderStatistics.totalAmount
+                    }
+                })
+                return sums
+            }
         },
         ...mapActions([])
     },

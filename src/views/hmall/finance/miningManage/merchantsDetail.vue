@@ -119,7 +119,7 @@
                         <h-button @click="onExport">导出</h-button>
                     </div>
                 </div>
-                <basicTable :tableData="tableDetailData" :tableLabel="tableDetailLabel" :pagination="paginationDetail" @onCurrentChange="onCurrentChange">
+                <basicTable :tableData="tableDetailData" :tableLabel="tableDetailLabel" :pagination="paginationDetail" @onCurrentChange="onCurrentChange" :isShowSum="true" :getSum="getSum">
                     <!-- 当前额度 -->
                     <template slot="attachmentCount" slot-scope="scope">
                         <a class="isLink" @click="onInfo(scope.data.row.spuId)">{{scope.data.row.attachmentCount}}</a>
@@ -269,7 +269,7 @@
                         <h-button @click="onExport">导出</h-button>
                     </div>
                 </div>
-                <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="pagination" @onCurrentChange="onCurrentChange">
+                <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="pagination" @onCurrentChange="onCurrentChange" :isShowSum="true" :getSum="getSum">
                 </basicTable>
             </div>
         </div>
@@ -445,6 +445,34 @@ export default {
         // 跳转商家详情
         onInfo (val) {
             this.$router.push({ path: '/b2b/finance/merchantBehalf', query: { id: val } })
+        },
+        // 商家明细合计
+        getSum (param) {
+            const { columns, data } = param
+            const sums = []
+            if (this.tabName == 'detail') {
+                columns.forEach((column, index) => {
+                    if (index == 0) {
+                        sums[index] = '合计'
+                    }
+                    // 当前额度 总预付 总代采 总回款 当前占用 当前逾期未还
+                    if (column.property == 'totalAmount') {
+                        sums[index] = this.childOrderStatistics.totalAmount
+                    }
+                })
+                return sums
+            } else if (this.tabName == 'record') {
+                columns.forEach((column, index) => {
+                    if (index == 0) {
+                        sums[index] = '合计'
+                    }
+                    // 金额
+                    if (column.property == 'totalAmount') {
+                        sums[index] = this.childOrderStatistics.totalAmount
+                    }
+                })
+                return sums
+            }
         },
         ...mapActions([])
     },
