@@ -6,15 +6,15 @@
                     <td v-for="(item,index) in optionTypeListFilter" :key="index" style="min-width:100px;">{{item.name}}</td>
                     <td class="fixed-width">
                         <span class="tr-label">图片</span>
-                        <!-- <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="params.skuImgurl" v-if="seeTask" @back-event="backPicUrl" />
-                        <el-dropdown placement="bottom-end" @command="handleCommand" v-if="seeTask">
+                        <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="params.skuImgurl" v-if="seeTask==''" @back-event="backPicUrl" />
+                        <el-dropdown placement="bottom-end" @command="handleCommand" v-if="seeTask==''">
                             <span class="el-dropdown-link">
                                 <i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="imageUrls">应用全部</el-dropdown-item>
                             </el-dropdown-menu>
-                        </el-dropdown> -->
+                        </el-dropdown>
                     </td>
                     <td>
                         <span class="tr-label">条头码</span>
@@ -50,8 +50,8 @@
                     </template>
                     <td class="fixed-width">
                         <el-form-item label-width='0'>
-                            <!-- <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" v-if="seeTask" /> -->
-                            <img :src="item.imageUrls" style="width:44px;height:44px" />
+                            <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" v-if="seeTask==''" />
+                            <img :src="item.imageUrls" style="width:44px;height:44px" v-if="seeTask=='seeTask'" />
                         </el-form-item>
                     </td>
                     <td>
@@ -115,7 +115,7 @@ export default {
             }
         },
         seeTask: {
-            type: Boolean
+            type: String
         },
         edite: {
             type: Boolean

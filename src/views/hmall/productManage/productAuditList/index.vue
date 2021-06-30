@@ -35,7 +35,7 @@
                     <div class="query-cont__col">
                         <div class="query-col__lable">商品类目：</div>
                         <div class="query-col__input">
-                            <el-input v-model="queryParams.categoryId" maxlength="30" placeholder="请输入" @keyup.enter.native="onQuery"></el-input>
+                            <el-cascader v-model="queryParams.categoryId" :options="categoryOption" :props="{value: 'id', label: 'name', children: 'subCategoryList', emitPath: false}" :change-on-select="true" clearable placeholder="请选择商品类目"></el-cascader>
                         </div>
                     </div>
                     <div class="query-cont__col">
@@ -48,7 +48,7 @@
                         <div class="query-col__lable">审核状态：</div>
                         <div class="query-col__input">
                             <el-select v-model="queryParams.auditStatus">
-                                <el-option v-for="item in productStatus" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                                <el-option v-for="item in prodOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                             </el-select>
                         </div>
                     </div>
@@ -96,9 +96,9 @@
     </div>
 </template>
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import { clearCache, newCache } from '@/utils/index'
-import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_MAP } from '../const/index'
+import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_MAP, PROD_STATUS } from '../const/index'
 import { batchOperator } from '../../utils/index'
 import { B2bUrl } from '@/api/config'
 export default {
@@ -107,6 +107,7 @@ export default {
         return {
             productStatus: PRODUCT_AUDIT_STATUS,
             productMap: PRODUCT_AUDIT_MAP,
+            prodOptions: PROD_STATUS,
             showAllConditions: false,
             tabName: '4',
             productType: 'SPU',
@@ -134,6 +135,9 @@ export default {
             brandData: state => state.hmall.productManage.brandData,
             productSpuData: state => state.hmall.productManage.productSpuData,
             productSkuData: state => state.hmall.productManage.productSkuData
+        }),
+        ...mapGetters({
+            categoryOption: 'productManage/categoryOption'
         }),
         tableLabel () {
             return this.productType == 'SPU' ? [
@@ -195,6 +199,7 @@ export default {
         init () {
             this.resetParams = { ...this.queryParams }
             this.getBrandOptions()
+            this.getCategoryOptions()
             this.onQuery()
         },
         // 回车搜索
@@ -248,18 +253,17 @@ export default {
             }
         },
         onseeTask (row) {
-            // console.log(row)
             if (this.productType == 'SPU') {
-                this.$router.push({ path: '/b2b/product/editSpuAudit', query: { id: row.id, seeTask: false } })
+                this.$router.push({ path: '/b2b/product/editSpuAudit', query: { id: row.id, seeTask: 'seeTask' } })
             } else if (this.productType == 'SKU') {
-                this.$router.push({ path: '/b2b/product/editSkuAudit', query: { id: row.id, seeTask: false } })
+                this.$router.push({ path: '/b2b/product/editSkuAudit', query: { id: row.id, seeTask: 'seeTask' } })
             }
         },
         onAduit (row) {
             if (this.productType == 'SPU') {
-                this.$router.push({ path: '/b2b/product/editSpuAudit', query: { id: row.id, seeTask: true } })
+                this.$router.push({ path: '/b2b/product/editSpuAudit', query: { id: row.id } })
             } else if (this.productType == 'SKU') {
-                this.$router.push({ path: '/b2b/product/editSkuAudit', query: { id: row.id, seeTask: true } })
+                this.$router.push({ path: '/b2b/product/editSkuAudit', query: { id: row.id } })
             }
         },
         // 批量审核
@@ -322,7 +326,7 @@ export default {
                         url += (key + '=' + this.queryParams[key] + '&')
                     }
                     location.href = B2bUrl + 'product/boss/main-spu/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
-                } else {
+                } else if (this.productType == 'SKU') {
                     let url = ''
                     for (let key in this.queryParams) {
                         url += (key + '=' + this.queryParams[key] + '&')
@@ -353,7 +357,8 @@ export default {
             batchAduitSpu: 'productManage/batchAduitSpu',
             effectiveSKU: 'productManage/effectiveSKU',
             efficacySKU: 'productManage/efficacySKU',
-            deleteSKU: 'productManage/deleteSKU'
+            deleteSKU: 'productManage/deleteSKU',
+            findCategoryOptions: 'productManage/findCategoryOptions'
         }),
         async getProductSpuList () {
             await this.findProductSpuList(this.queryParams)
@@ -361,6 +366,9 @@ export default {
         async getProductSkuList () {
             await this.findProductSkuList(this.queryParams)
             // console.log(this.productSkuData)
+        },
+        async getCategoryOptions () {
+            await this.findCategoryOptions()
         }
     },
     mounted () {
