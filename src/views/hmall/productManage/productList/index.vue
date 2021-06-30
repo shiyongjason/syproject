@@ -38,10 +38,10 @@
                             <el-input v-model="queryParams.model" maxlength="30" placeholder="请输入" @keyup.enter.native="onQuery"></el-input>
                         </div>
                     </div>
-                    <div class="query-cont__col" v-if="productType == 'SPU'">
+                    <div class="query-cont__col">
                         <div class="query-col__lable">商品类目：</div>
                         <div class="query-col__input">
-                            <el-cascader v-model="queryParams.categoryId" :options="categoryOption" :props="props" :change-on-select="true" clearable placeholder="请选择商品类目"></el-cascader>
+                            <el-cascader v-model="queryParams.categoryId" :key="cascaderKey" :options="categoryOption" :props="props" :change-on-select="true" clearable placeholder="请选择商品类目"></el-cascader>
                         </div>
                     </div>
                 </template>
@@ -110,6 +110,7 @@ export default {
                 pageSize: 10
             },
             resetParams: {},
+            cascaderKey: 0,
             multiSelection: [],
             props: {
                 emitPath: false,
@@ -142,6 +143,7 @@ export default {
                 { label: '商品名称', prop: 'name' },
                 { label: '品牌', prop: 'brandName' },
                 { label: '型号', prop: 'model' },
+                { label: '商品类目', prop: 'category' },
                 { label: '规格', prop: 'optionValues' }
             ]
         },
@@ -192,11 +194,13 @@ export default {
         // SPU or SKU 切换
         onTabProductType (productType) {
             this.queryParams = { ...this.resetParams }
+            this.cascaderKey++
             this.tabParams(this.tabName)
             if (productType == 'SPU') {
                 this.getProductSpuList()
                 this.productType = productType
             } else if (productType == 'SKU') {
+                console.log(this.queryParams)
                 this.getProductSkuList()
                 this.productType = productType
             }
