@@ -56,24 +56,24 @@
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.serialNumber" maxlength="16" disabled></el-input>
+                            <el-input v-model="item.serialNumber" maxlength="16" :disabled="seeTask == true"></el-input>
                         </el-form-item>
                     </td>
                     <td class="log-width">
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.length" maxlength="16" disabled></el-input>
-                            <el-input v-model="item.width" maxlength="16" disabled></el-input>
-                            <el-input v-model="item.height" maxlength="16" disabled></el-input>
+                            <el-input v-model="item.length" maxlength="16" :disabled="seeTask == true"></el-input>
+                            <el-input v-model="item.width" maxlength="16" :disabled="seeTask == true"></el-input>
+                            <el-input v-model="item.height" maxlength="16" :disabled="seeTask == true"></el-input>
                         </el-form-item>
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.grossWeight" maxlength="8" disabled></el-input>
+                            <el-input v-model="item.grossWeight" maxlength="8" :disabled="seeTask == true"></el-input>
                         </el-form-item>
                     </td>
                     <td>
                         <el-form-item label-width='0'>
-                            <el-input v-model="item.volume" maxlength="8" disabled></el-input>
+                            <el-input v-model="item.volume" maxlength="8" :disabled="seeTask == true"></el-input>
                         </el-form-item>
                     </td>
                     <td v-if="edite">
