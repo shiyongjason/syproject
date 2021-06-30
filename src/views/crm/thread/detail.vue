@@ -1,5 +1,5 @@
 <template>
-    <el-drawer title="线索详情" :visible.sync="drawer" :before-close="handleClose" :modal-append-to-body='false' size='680px'>
+    <el-drawer title="线索详情" :visible.sync="drawer" :wrapperClosable='false' :close-on-click-modal='false' :before-close="handleClose" :modal-append-to-body='false' size='680px'>
         <div class="ThreadDetail">
             <div class="radio-group">
                 <el-radio-group v-model="radio">
