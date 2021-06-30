@@ -18,9 +18,9 @@ export const PROD_STATUS = [
     { label: '审核未通过', value: '2' }
 ]
 export const PRODUCT_AUDIT_MAP = new Map([
-    ['0', '待审核'],
-    ['1', '审核通过'],
-    ['2', '审核未通过']
+    [0, '待审核'],
+    [1, '审核通过'],
+    [2, '审核未通过']
 ])
 
 /**
