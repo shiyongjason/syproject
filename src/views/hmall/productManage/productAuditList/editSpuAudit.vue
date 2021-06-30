@@ -1,7 +1,7 @@
 <template>
     <div class="page-body B2b">
         <div class="page-body-cont">
-            <el-form ref="form" :model="form" :rules="seeTask == true ? rules : {} ">
+            <el-form ref="form" :model="form" :rules="rules">
                 <div class="title-cont">
                     <span class="title-cont__label">基本信息</span>
                 </div>
@@ -18,21 +18,21 @@
                     {{form.name}}
                 </el-form-item>
                 <el-form-item label="商品销售名称：" prop="showName">
-                    <!-- {{form.showName}} -->
-                    <el-input class="form-input_big" v-model="form.showName" maxlength="100" placeholder="请输入商品销售名称" :disabled="!seeTask"></el-input>
+                    {{form.showName}}
+                    <!-- <el-input class="form-input_big" v-model="form.showName" maxlength="100" placeholder="请输入商品销售名称"></el-input> -->
                 </el-form-item>
                 <div class="title-cont">
                     <span class="title-cont__label">销售信息</span>
                 </div>
                 <el-form-item label="商品图片：" prop="imageUrls" ref="imageUrls">
                     <el-upload :action="uploadInfo.action" :data="uploadInfo.data" :name="uploadAttr.name" :list-type="uploadAttr.listType" :show-file-list="uploadAttr.showFileList" :on-success="handleSuccess" :accept="uploadAttr.accept" :before-upload="beforeUpload"
-                        v-if="imageUrls.length !==5 && seeTask">
+                        v-if="imageUrls.length !==5 && seeTask == false">
                         <i class="el-icon-plus"></i>
                     </el-upload>
                     <div class="picture-content">
                         <ul>
                             <li v-for="(item, index) in imageUrls" :key="index">
-                                <div class="mask-btn" v-show="seeTask">
+                                <div class="mask-btn" v-show="seeTask == false">
                                     <span :class="index==0?'isDisabled':''" @click="onSettingTop(index)">设为主图</span>
                                     <span @click="onRemove(index)">删除图片</span>
                                 </div>
@@ -41,35 +41,35 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="picture-prompt" v-show="seeTask">
+                    <div class="picture-prompt" v-show="seeTask == false">
                         <p>最多支持上传5张750*750，大小不超过2M，仅支持jpeg，jpg，png格式</p>
                     </div>
                 </el-form-item>
                 <el-form-item label="规格图片：" v-if="form.optionTypeList.length < 1">
-                    <SingleUpload :upload="uploadInfo" :imgW="104" :imgH="104" :imageUrl="form.mainSkus[0].imageUrls" @back-event="backPicUrl" v-show="seeTask" />
-                    <div class="picture-content" v-show="!seeTask">
+                    <SingleUpload :upload="uploadInfo" :imgW="104" :imgH="104" :imageUrl="form.mainSkus[0].imageUrls" @back-event="backPicUrl" v-show="seeTask == false" />
+                    <div class="picture-content" v-if="seeTask == true">
                         <ul>
                             <li>
                                 <img :src="form.mainSkus[0].imageUrls" />
                             </li>
                         </ul>
                     </div>
-                    <div class="picture-prompt ml20" v-show="seeTask">
+                    <div class="picture-prompt ml20" v-show="seeTask == true">
                         <p>上传750*750，大小不超过2M，仅支持jpeg，jpg，png格式</p>
                     </div>
                     <input type="hidden" v-model="form.mainSkus[0].imageUrls">
                 </el-form-item>
-                <skuTable ref="skuTable" :formData.sync="form" :seeTask.sync="seeTask" :edite.sync="edite" v-if="form.optionTypeList.length>1"></skuTable>
+                <skuTable ref="skuTable" :formData.sync="form" :seeTask.sync="seeTask" :edite.sync="edite" v-if="form.optionTypeList.length>0"></skuTable>
                 <div class="title-cont" v-if="specData.length != 0">
                     <span class="title-cont__label">参数信息</span>
                 </div>
                 <div class="form-cont-row parameter">
                     <div class="form-cont-col mb20" v-for="(item,index) in specifications" :key="index">
-                        <el-form-item :label="item.k + '：'" :prop="`specifications[${index}].v`" :rules="seeTask === true ?{required:item.isRequired == 1 ? true : false, message: item.isCombobox == 1 ? '请选择' + item.k : '请输入' + item.k }: {}">
-                            <el-input v-model="form.specifications[index].v" v-if="item.isCombobox == 0" maxlength="20" :disabled="!seeTask">
+                        <el-form-item :label="item.k + '：'" :prop="`specifications[${index}].v`" :rules="seeTask == false ?{required:item.isRequired == 1 ? true : false, message: item.isCombobox == 1 ? '请选择' + item.k : '请输入' + item.k }: {}">
+                            <el-input v-model="form.specifications[index].v" v-if="item.isCombobox == 0" maxlength="20" :disabled="seeTask == true">
                                 <template slot="suffix">{{item.unit}}</template>
                             </el-input>
-                            <el-select v-model="form.specifications[index].v" v-if="item.isCombobox == 1" clearable :disabled="!seeTask">
+                            <el-select v-model="form.specifications[index].v" v-if="item.isCombobox == 1" clearable :disabled="seeTask == true">
                                 <el-option v-for="i in item.options" :key="i" :value="i" :label="i"></el-option>
                             </el-select>
                         </el-form-item>
@@ -80,29 +80,29 @@
                 </div>
                 <div v-if="form.optionTypeList.length < 1">
                     <el-form-item label="SN码：" prop="retailPrice">
-                        <el-input v-model="form.mainSkus[0].serialNumber" maxlength="16" :disabled="!seeTask"></el-input>
+                        <el-input v-model="form.mainSkus[0].serialNumber" maxlength="16" :disabled="seeTask == true"></el-input>
                     </el-form-item>
                     <el-form-item label="长宽高/mm：" prop="commission">
-                        <el-input v-model="form.mainSkus[0].length" maxlength="6" :disabled="!seeTask"></el-input>
-                        <el-input v-model="form.mainSkus[0].width" maxlength="6" :disabled="!seeTask"></el-input>
-                        <el-input v-model="form.mainSkus[0].height" maxlength="6" :disabled="!seeTask"></el-input>
+                        <el-input v-model="form.mainSkus[0].length" maxlength="6" :disabled="seeTask == true"></el-input>
+                        <el-input v-model="form.mainSkus[0].width" maxlength="6" :disabled="seeTask == true"></el-input>
+                        <el-input v-model="form.mainSkus[0].height" maxlength="6" :disabled="seeTask == true"></el-input>
                     </el-form-item>
                     <el-form-item label="毛重/KG：" prop="costPrice">
-                        <el-input v-model="form.mainSkus[0].grossWeight" maxlength="16" :disabled="!seeTask"></el-input>
+                        <el-input v-model="form.mainSkus[0].grossWeight" maxlength="16" :disabled="seeTask == true"></el-input>
                     </el-form-item>
                     <el-form-item label="体积/m³：" prop="costPrice">
-                        <el-input v-model="form.mainSkus[0].volume" maxlength="16" :disabled="!seeTask"></el-input>
+                        <el-input v-model="form.mainSkus[0].volume" maxlength="16" :disabled="seeTask == true"></el-input>
                     </el-form-item>
                     <el-form-item label="净重/KG：" prop="costPrice">
-                        <el-input v-model="form.mainSkus[0].netWeight" maxlength="16" :disabled="!seeTask"></el-input>
+                        <el-input v-model="form.mainSkus[0].netWeight" maxlength="16" :disabled="seeTask == true"></el-input>
                     </el-form-item>
                 </div>
                 <div class="title-cont mt10">
                     <span class="title-cont__label">商品详情信息</span>
                 </div>
-                <RichEditor style="position:relative;z-index:1" v-model="form.detail" :width="richTextAttr.width" :height="richTextAttr.height" :menus="richTextAttr.menus" :uploadImgServer="richTextAttr.uploadImgServer" :uploadImgParams="richTextAttr.uploadImgParams" :disabled="!seeTask">
+                <RichEditor style="position:relative;z-index:1" v-model="form.detail" :width="richTextAttr.width" :height="richTextAttr.height" :menus="richTextAttr.menus" :uploadImgServer="richTextAttr.uploadImgServer" :uploadImgParams="richTextAttr.uploadImgParams" :disabled="disabled">
                 </RichEditor>
-                <div class="title-cont pt30 seeTask" v-if="seeTask">
+                <div class="title-cont pt30 seeTask" v-if="seeTask == false">
                     <el-form-item label="审核结果：" prop="auditStatus">
                         <el-radio-group v-model="form.auditStatus" @change="onChange">
                             <el-radio label="1">审核通过</el-radio>
@@ -115,7 +115,7 @@
                     </el-form-item>
                 </div>
                 <el-form-item style="text-align: right" class="pt30">
-                    <h-button type='primary' :loading="btnLoading" @click="onSave" v-if="seeTask">确定</h-button>
+                    <h-button type='primary' :loading="btnLoading" @click="onSave" v-if="seeTask == false">确定</h-button>
                     <h-button @click="onCancel">返回</h-button>
                 </el-form-item>
             </el-form>
@@ -176,12 +176,12 @@ export default {
                 auditOpinion: ''
             },
             rules: {
-                showName: [
-                    { required: true, message: '请输入商品销售名称', trigger: 'blur' }
-                ],
                 imgUrls: [
                     { required: true, message: '请上传商品图片', trigger: 'change' }
                 ],
+                // showName: [
+                //     { required: true, message: '请输入商品销售名称', trigger: 'blur' }
+                // ],
                 k: [
                     { required: true, message: '请输入规格名', trigger: 'blur' }
                 ],
@@ -255,12 +255,10 @@ export default {
             }
         },
         disabled () {
-            // return this.form.isOnShelf || this.form.optionTypeList.some(item => !item.k || item.v.length == 0)
-            return false
+            return !!this.$route.query.seeTask
         }
     },
     watch: {
-        '$route': 'init',
         'form.brandName' (value) {
             if (value == '') {
                 this.form.brandId = ''
@@ -301,8 +299,12 @@ export default {
             this.getModelOptions()
             if (this.$route.query.id) {
                 this.showMore = true
-                this.seeTask = JSON.parse(this.$route.query.seeTask)
                 this.getProductInfo(this.$route.query.id)
+            }
+            if (this.$route.query.seeTask) {
+                this.seeTask = true
+            } else {
+                this.seeTask = false
             }
         },
         async querySearchAsyncBrand (queryString, cb) {
