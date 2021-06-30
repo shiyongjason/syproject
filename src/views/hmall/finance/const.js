@@ -130,3 +130,8 @@ export const DEADLINE_OPTIONS = [
     { label: '最近回款日期', value: '' },
     { label: '最终回款日期', value: '20' }
 ]
+// 商家详情 审核时间
+export const ADUITLINE_OPTIONS = [
+    { label: '申请日期', value: '' },
+    { label: '审核日期', value: '20' }
+]
