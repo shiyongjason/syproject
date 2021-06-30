@@ -45,43 +45,45 @@
             <tbody>
                 <tr v-for="(item,index) in form.mainSkus" :key="index">
                     <template v-for="(sItem,sIndex) in item.optionValues">
-                        <td :key="sIndex">
-                            <el-select v-model="sItem.id" @change="onChangeValue(index,sIndex)" clearable disabled>
-                                <el-option v-for="i in optionValuesFilter(sItem.optionTypeId)" :key="i.id" :label="i.name" :value="i.id"></el-option>
-                            </el-select>
+                        <td :key="sIndex" v-if="item.optionValues.length">
+                            <el-form-item label-width='0' :prop="`mainSkus[${index}].optionValues`" :rules="rules.optionValues">
+                                <el-select v-model="sItem.id" @change="onChangeValue(index,sIndex)" clearable disabled>
+                                    <el-option v-for="i in optionValuesFilter(sItem.optionTypeId)" :key="i.id" :label="i.name" :value="i.id"></el-option>
+                                </el-select>
+                            </el-form-item>
                         </td>
                     </template>
                     <td class="fixed-width">
-                        <el-form-item label-width='0'>
+                        <el-form-item label-width='0' :prop="`mainSkus[${index}].imageUrls`" :rules="rules.imageUrls">
                             <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" v-if="seeTask==false" />
                             <img :src="item.imageUrls" style="width:44px;height:44px" v-if="seeTask==true" />
                         </el-form-item>
                     </td>
                     <td>
-                        <el-form-item label-width='0'>
-                            <el-input v-model="item.serialNumber" maxlength="16" :disabled="seeTask == true"></el-input>
+                        <el-form-item label-width='0' :prop="`mainSkus[${index}].serialNumber`" :rules="rules.serialNumber">
+                            <el-input v-model="item.serialNumber" maxlength="20" :disabled="seeTask == true"></el-input>
                         </el-form-item>
                     </td>
                     <td class="log-width">
-                        <el-form-item label-width='0'>
-                            <el-input v-model="item.length" maxlength="16" :disabled="seeTask == true"></el-input>
-                            <el-input v-model="item.width" maxlength="16" :disabled="seeTask == true"></el-input>
-                            <el-input v-model="item.height" maxlength="16" :disabled="seeTask == true"></el-input>
+                        <el-form-item label-width='0' :prop="`mainSkus[${index}].length`" :rules="rules.length">
+                            <el-input v-model="item.length" maxlength="15" :disabled="seeTask == true"></el-input>
+                            <el-input v-model="item.width" maxlength="15" :disabled="seeTask == true"></el-input>
+                            <el-input v-model="item.height" maxlength="15" :disabled="seeTask == true"></el-input>
                         </el-form-item>
                     </td>
                     <td>
-                        <el-form-item label-width='0'>
-                            <el-input v-model="item.grossWeight" maxlength="8" :disabled="seeTask == true"></el-input>
+                        <el-form-item label-width='0' :prop="`mainSkus[${index}].grossWeight`" :rules="rules.grossWeight">
+                            <el-input v-model="item.grossWeight" maxlength="15" :disabled="seeTask == true"></el-input>
                         </el-form-item>
                     </td>
                     <td>
-                        <el-form-item label-width='0'>
-                            <el-input v-model="item.netWeight" maxlength="8" :disabled="seeTask == true"></el-input>
+                        <el-form-item label-width='0' :prop="`mainSkus[${index}].netWeight`" :rules="rules.netWeight">
+                            <el-input v-model="item.netWeight" maxlength="15" :disabled="seeTask == true"></el-input>
                         </el-form-item>
                     </td>
                     <td>
-                        <el-form-item label-width='0'>
-                            <el-input v-model="item.volume" maxlength="8" :disabled="seeTask == true"></el-input>
+                        <el-form-item label-width='0' :prop="`mainSkus[${index}].volume`" :rules="rules.volume">
+                            <el-input v-model="item.volume" maxlength="15" :disabled="seeTask == true"></el-input>
                         </el-form-item>
                     </td>
                     <td v-if="edite">
@@ -155,8 +157,94 @@ export default {
                 ]
             },
             rules: {
+                optionValues: [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            value.every(item => {
+                                if (item.id == '') {
+                                    return callback(new Error('请选择属性值'))
+                                }
+                            })
+                            return callback()
+                        },
+                        trigger: 'change'
+                    }
+                ],
                 imageUrls: [
-                    { required: true, message: '请上传图片', trigger: 'change' }
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            if (!value || value == '') {
+                                return callback(new Error('请上传图片'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'change'
+                    }
+                ],
+                serialNumber: [
+                    {
+                        validator: (rule, value, callback) => {
+                            const reg = /^[A-Za-z0-9]+$/
+                            if (value && !reg.test(value)) {
+                                return callback(new Error('条头码仅支持字母和数字'))
+                            }
+                            return callback()
+                        }
+                    }
+                ],
+                length: [
+                    {
+                        validator: (rule, value, callback) => {
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
+                            this.form.mainSkus.map(item => {
+                                if (item.length && !reg.test(item.length)) {
+                                    return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
+                                }
+                                if (item.width && !reg.test(item.length)) {
+                                    return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
+                                }
+                                if (item.height && !reg.test(item.length)) {
+                                    return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
+                                }
+                            })
+                            return callback()
+                        }
+                    }
+                ],
+                grossWeight: [
+                    {
+                        validator: (rule, value, callback) => {
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
+                            if (value && !reg.test(value)) {
+                                return callback(new Error('毛重格式为小数点前十位，小数点后两位'))
+                            }
+                            return callback()
+                        }
+                    }
+                ],
+                volume: [
+                    {
+                        validator: (rule, value, callback) => {
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
+                            if (value && !reg.test(value)) {
+                                return callback(new Error('体积格式为小数点前十位，小数点后两位'))
+                            }
+                            return callback()
+                        }
+                    }
+                ],
+                netWeight: [
+                    {
+                        validator: (rule, value, callback) => {
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
+                            if (value && !reg.test(value)) {
+                                return callback(new Error('净重格式为小数点前十位，小数点后两位'))
+                            }
+                            return callback()
+                        }
+                    }
                 ]
             }
         }

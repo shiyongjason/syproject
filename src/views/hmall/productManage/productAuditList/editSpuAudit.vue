@@ -79,22 +79,22 @@
                     <span class="title-cont__label">仓库信息</span>
                 </div>
                 <div v-if="form.optionTypeList.length < 1">
-                    <el-form-item label="SN码：" prop="retailPrice">
-                        <el-input v-model="form.mainSkus[0].serialNumber" maxlength="16" :disabled="seeTask == true"></el-input>
+                    <el-form-item label="SN码：" prop="serialNumber">
+                        <el-input v-model="form.mainSkus[0].serialNumber" maxlength="20" :disabled="seeTask == true"></el-input>
                     </el-form-item>
-                    <el-form-item label="长宽高/mm：" prop="commission">
-                        <el-input v-model="form.mainSkus[0].length" maxlength="6" :disabled="seeTask == true"></el-input>
-                        <el-input v-model="form.mainSkus[0].width" maxlength="6" :disabled="seeTask == true"></el-input>
-                        <el-input v-model="form.mainSkus[0].height" maxlength="6" :disabled="seeTask == true"></el-input>
+                    <el-form-item label="长宽高/mm：" prop="length">
+                        <el-input v-model="form.mainSkus[0].length" maxlength="15" :disabled="seeTask == true"></el-input>
+                        <el-input v-model="form.mainSkus[0].width" maxlength="15" :disabled="seeTask == true"></el-input>
+                        <el-input v-model="form.mainSkus[0].height" maxlength="15" :disabled="seeTask == true"></el-input>
                     </el-form-item>
-                    <el-form-item label="毛重/KG：" prop="costPrice">
-                        <el-input v-model="form.mainSkus[0].grossWeight" maxlength="16" :disabled="seeTask == true"></el-input>
+                    <el-form-item label="毛重/KG：" prop="grossWeight">
+                        <el-input v-model="form.mainSkus[0].grossWeight" maxlength="15" :disabled="seeTask == true"></el-input>
                     </el-form-item>
-                    <el-form-item label="体积/m³：" prop="costPrice">
-                        <el-input v-model="form.mainSkus[0].volume" maxlength="16" :disabled="seeTask == true"></el-input>
+                    <el-form-item label="体积/m³：" prop="volume">
+                        <el-input v-model="form.mainSkus[0].volume" maxlength="15" :disabled="seeTask == true"></el-input>
                     </el-form-item>
-                    <el-form-item label="净重/KG：" prop="costPrice">
-                        <el-input v-model="form.mainSkus[0].netWeight" maxlength="16" :disabled="seeTask == true"></el-input>
+                    <el-form-item label="净重/KG：" prop="netWeight">
+                        <el-input v-model="form.mainSkus[0].netWeight" maxlength="15" :disabled="seeTask == true"></el-input>
                     </el-form-item>
                 </div>
                 <div class="title-cont mt10">
@@ -179,9 +179,6 @@ export default {
                 imgUrls: [
                     { required: true, message: '请上传商品图片', trigger: 'change' }
                 ],
-                // showName: [
-                //     { required: true, message: '请输入商品销售名称', trigger: 'blur' }
-                // ],
                 k: [
                     { required: true, message: '请输入规格名', trigger: 'blur' }
                 ],
@@ -204,6 +201,77 @@ export default {
                 ],
                 auditOpinion: [
                     { required: true, message: '请填写理由说明', trigger: 'blur' }
+                ],
+                serialNumber: [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            const reg = /^[A-Za-z0-9]+$/
+                            if (this.form.mainSkus[0].serialNumber && !reg.test(this.form.mainSkus[0].serialNumber)) {
+                                return callback(new Error('条头码仅支持字母和数字'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                length: [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
+                            if (this.form.mainSkus[0].length && !reg.test(this.form.mainSkus[0].length)) {
+                                return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
+                            }
+                            if (this.form.mainSkus[0].width && !reg.test(this.form.mainSkus[0].width)) {
+                                return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
+                            }
+                            if (this.form.mainSkus[0].height && !reg.test(this.form.mainSkus[0].height)) {
+                                return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                grossWeight: [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
+                            if (this.form.mainSkus[0].grossWeight && !reg.test(this.form.mainSkus[0].grossWeight)) {
+                                return callback(new Error('毛重格式为小数点前十位，小数点后两位'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                volume: [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
+                            if (this.form.mainSkus[0].volume && !reg.test(this.form.mainSkus[0].volume)) {
+                                return callback(new Error('体积格式为小数点前十位，小数点后两位'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                netWeight: [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
+                            if (this.form.mainSkus[0].netWeight && !reg.test(this.form.mainSkus[0].netWeight)) {
+                                return callback(new Error('净重格式为小数点前十位，小数点后两位'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
                 ]
             },
             timer: null,

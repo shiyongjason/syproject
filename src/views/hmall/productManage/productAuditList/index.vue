@@ -325,13 +325,13 @@ export default {
                     for (let key in this.queryParams) {
                         url += (key + '=' + this.queryParams[key] + '&')
                     }
-                    location.href = B2bUrl + 'product/boss/main-spu/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
+                    location.href = B2bUrl + 'product/boss/main-spu/export/audit?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
                 } else if (this.productType == 'SKU') {
                     let url = ''
                     for (let key in this.queryParams) {
                         url += (key + '=' + this.queryParams[key] + '&')
                     }
-                    location.href = B2bUrl + 'product/boss/main-sku/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
+                    location.href = B2bUrl + 'product/boss/main-sku/export/audit?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
                 }
             }
         },
