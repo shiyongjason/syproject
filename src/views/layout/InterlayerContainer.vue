@@ -9,6 +9,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { clearCache } from '@/utils'
 export default {
     name: 'interlayerContainer',
     provide () {
@@ -28,7 +29,8 @@ export default {
         })
     },
     methods: {
-        reload () {
+        reload (name) {
+            name && clearCache(name)
             this.isRouterAlive = false
             this.$nextTick(() => {
                 this.isRouterAlive = true

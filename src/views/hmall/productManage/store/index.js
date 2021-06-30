@@ -123,6 +123,12 @@ const actions = {
     async createProduct ({ commit }, params) {
         await instance.post('/product/boss/main-spu', params)
     },
+    async effective ({ commit }, params) {
+        await instance.patch(`/product/boss/main-spu/${params.id}/enable`, params)
+    },
+    async efficacy ({ commit }, params) {
+        await instance.patch(`/product/boss/main-spu/${params.id}/disable`, params)
+    },
     async editProduct ({ commit }, params) {
         await instance.put('/product/boss/main-spu', params)
     },
@@ -131,6 +137,9 @@ const actions = {
     },
     async batchEfficacy ({ commit }, params) {
         await instance.patch('/product/boss/main-spu/batch-disable', params)
+    },
+    async delete ({ commit }, params) {
+        await instance.delete(`/product/boss/main-spu/${params.id}`, { data: params })
     },
     async batchDelete ({ commit }, params) {
         await instance.delete('/product/boss/main-spu', { data: params })
