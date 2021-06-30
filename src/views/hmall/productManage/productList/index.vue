@@ -230,8 +230,12 @@ export default {
             }
         },
         // 批量生效
-        onBatchEffective (multiSelection) {
-            batchOperator(multiSelection || this.multiSelection, async (multiSelection) => {
+        async onBatchEffective () {
+            const multiSelection = this.multiSelection.map(item => item.id)
+            if (multiSelection.length < 1) {
+                this.$message.warning('请选择！')
+                return false
+            } else {
                 try {
                     await this.batchEffective(multiSelection)
                     this.$message.success('生效成功！')
@@ -239,11 +243,17 @@ export default {
                 } catch (error) {
                     this.getProductSpuList()
                 }
-            })
+            }
         },
         // 生效spu
-        onEffective (row) {
-            this.onBatchEffective([{ id: row.id }])
+        async onEffective (row) {
+            try {
+                await this.effective({ id: row.id })
+                this.$message.success('生效成功！')
+                this.getProductSpuList()
+            } catch (error) {
+                this.getProductSpuList()
+            }
         },
         // 生效sku
         async onEffectiveSku (row) {
@@ -252,8 +262,12 @@ export default {
             this.getProductSkuList()
         },
         // 批量失效
-        onBatchEfficacy (multiSelection) {
-            batchOperator(multiSelection || this.multiSelection, async (multiSelection) => {
+        async onBatchEfficacy () {
+            const multiSelection = this.multiSelection.map(item => item.id)
+            if (multiSelection.length < 1) {
+                this.$message.warning('请选择！')
+                return false
+            } else {
                 try {
                     await this.batchEfficacy(multiSelection)
                     this.$message.success('失效成功！')
@@ -261,11 +275,17 @@ export default {
                 } catch (error) {
                     this.getProductSpuList()
                 }
-            })
+            }
         },
         // 失效spu
-        onEfficacy (row) {
-            this.onBatchEfficacy([{ id: row.id }])
+        async onEfficacy (row) {
+            try {
+                await this.efficacy({ id: row.id })
+                this.$message.success('失效成功！')
+                this.getProductSpuList()
+            } catch (error) {
+                this.getProductSpuList()
+            }
         },
         // 失效sku
         async onEfficacySku (row) {
@@ -274,9 +294,12 @@ export default {
             this.getProductSkuList()
         },
         // 批量删除
-        onBatchDelete (multiSelection) {
-            // TODO: 确认批量删除提醒没有
-            batchOperator(multiSelection || this.multiSelection, async (multiSelection) => {
+        onBatchDelete () {
+            const multiSelection = this.multiSelection.map(item => item.id)
+            if (multiSelection.length < 1) {
+                this.$message.warning('请选择！')
+                return false
+            } else {
                 this.$confirm('是否删除商品?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消'
@@ -289,11 +312,22 @@ export default {
                         this.getProductSpuList()
                     }
                 }).catch(() => { })
-            })
+            }
         },
         // 删除spu
         onDelete (row) {
-            this.onBatchDelete([{ id: row.id }])
+            this.$confirm('是否删除商品?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消'
+            }).then(async () => {
+                try {
+                    await this.delete({ id: row.id })
+                    this.$message.success('商品删除成功！')
+                    this.getProductSpuList()
+                } catch (error) {
+                    this.getProductSpuList()
+                }
+            }).catch(() => { })
         },
         // 删除sku
         onDeleteSku (row) {
@@ -352,8 +386,11 @@ export default {
             findCategoryOptions: 'productManage/findCategoryOptions',
             findProductSpuList: 'productManage/findProductSpuList',
             findProductSkuList: 'productManage/findProductSkuList',
+            effective: 'productManage/effective',
+            efficacy: 'productManage/efficacy',
             batchEffective: 'productManage/batchEffective',
             batchEfficacy: 'productManage/batchEfficacy',
+            delete: 'productManage/delete',
             batchDelete: 'productManage/batchDelete',
             effectiveSKU: 'productManage/effectiveSKU',
             efficacySKU: 'productManage/efficacySKU',
