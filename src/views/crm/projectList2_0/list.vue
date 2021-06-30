@@ -511,7 +511,7 @@ export default class ProjectList2 extends Vue {
 
     get formRules () {
         let rules = {
-            companyId: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+            companyId: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
             firstPartName: [{ required: true, validator: validatorName, trigger: 'blur' }],
             projectName: [{ required: true, validator: validatorName, trigger: 'blur' }],
             projectBuildingTypeList: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
