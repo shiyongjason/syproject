@@ -836,6 +836,7 @@ export default class ProjectList2 extends Vue {
         query.refundPics = refundPics
         query.contractAttachments = contractAttachments
         query.projectId = this.projectId
+        query.hasRefunded = 1
         await projectRefund(query)
         this.getList()
         this.$message.success('回款成功')
@@ -879,8 +880,8 @@ export default class ProjectList2 extends Vue {
             contractAttachments: [],
             contractNo: '',
             hasRefunded: 0,
-            operatorName: '',
-            operatorPhone: '',
+            operatorName: this.userInfo.employeeName,
+            operatorPhone: this.userInfo.phoneNumber,
             projectId: '',
             refundAmount: '',
             refundPayType: '',
