@@ -82,7 +82,7 @@
                             </div>
                             <span class="group-spec_close" @click="onDelOptionTemplate(index)" v-if="form.auditStatus != 1"><i class="el-icon-close"></i></span>
                         </div>
-                        <h-button type="create" class="mb20" @click="onAddOptionTemplate">添加规格</h-button>
+                        <h-button type="create" class="mb20" @click="onAddOptionTemplate" :disabled="disabled">添加规格</h-button>
                     </div>
                     <skuTable ref="skuTable" :formData.sync="form"></skuTable>
                     <h-button type="create" class="mb20" v-if="form.optionTypeList.length>0" @click="onAddSKU">+</h-button>
@@ -508,7 +508,7 @@ export default {
                         item.optionValues = this.form.optionTypeList[i].optionValues.concat(this.optionValueData)
                     }
                     item.optionValues.map(sItem => {
-                        sItem.disabled = item.optionValues.length == 1 || this.productSpuInfo.auditStatus == 1
+                        sItem.disabled = item.optionValues.length == 1 || this.$route.id || this.productSpuInfo.auditStatus == 1
                         return sItem
                     })
                     return item
@@ -524,7 +524,7 @@ export default {
                     item.optionValues.splice(sIndex, 1)
                 }
                 item.optionValues.map(sItem => {
-                    sItem.disabled = item.optionValues.length == 1 || this.productSpuInfo.auditStatus == 1
+                    sItem.disabled = item.optionValues.length == 1 || this.$route.id || this.productSpuInfo.auditStatus == 1
                     return sItem
                 })
                 return item
@@ -690,7 +690,7 @@ export default {
                 optionTypeList: this.productSpuInfo.optionTypeList.length ? this.productSpuInfo.optionTypeList.map(item => {
                     item.disabled = !!(this.$route.query.id)
                     item.optionValues.map(sItem => {
-                        sItem.disabled = item.optionValues.length == 1 || this.productSpuInfo.auditStatus == 1
+                        sItem.disabled = item.optionValues.length == 1 || this.$route.id || this.productSpuInfo.auditStatus == 1
                         return sItem
                     })
                     return item
