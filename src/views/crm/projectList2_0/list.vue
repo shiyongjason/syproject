@@ -837,11 +837,10 @@ export default class ProjectList2 extends Vue {
         query.contractAttachments = contractAttachments
         query.projectId = this.projectId
         query.hasRefunded = 1
-        console.log(' 🚗 🚕 🚙 🚌 🚎 query', query)
-        // await projectRefund(query)
-        // this.getList()
-        // this.$message.success('回款成功')
-        // this.closePayback()
+        await projectRefund(query)
+        this.getList()
+        this.$message.success('回款成功')
+        this.closePayback()
     }
     // 关闭新增2.0项目
     closeAddProject () {
