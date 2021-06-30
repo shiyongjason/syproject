@@ -105,7 +105,7 @@ const actions = {
         commit(types.PRODUCT_UNIQUE, data)
     },
     async findProductSpuInfo ({ commit }, params) {
-        const { data } = await instance.get(`/product/boss/main-spu/${params.id}`, { params })
+        const { data } = await instance.get(`/product/boss/main-spu/${params.id}`)
         commit(types.PRODUCT_SPU_INFO, data)
     },
     async findProductSkuInfo ({ commit }, params) {

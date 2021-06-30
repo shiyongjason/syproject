@@ -29,6 +29,9 @@
                     <td>
                         <span class="tr-label">体积/m³</span>
                     </td>
+                    <td>
+                        <span class="tr-label">净重/KG</span>
+                    </td>
                     <td v-if="$route.query.id">
                         <span class="tr-label">SKU编码</span>
                     </td>
@@ -40,13 +43,15 @@
                     </td>
                 </tr>
             </thead>
-            <tbody>index
+            <tbody>
                 <tr v-for="(item,index) in form.mainSkus" :key="index">
                     <template v-for="(sItem,sIndex) in item.optionValues">
                         <td :key="sIndex" v-if="item.optionValues.length">
-                            <el-select v-model="sItem.id" @change="onChangeValue(index,sIndex)" clearable :disabled="item.disabled">
-                                <el-option v-for="i in optionValuesFilter(sItem.optionTypeId)" :key="i.id" :label="i.name" :value="i.id"></el-option>
-                            </el-select>
+                            <el-form-item label-width='0' :prop="`mainSkus[${index}].optionValues`" :rules="rules.optionValues">
+                                <el-select v-model="sItem.id" @change="onChangeValue(index,sIndex)" clearable :disabled="item.disabled">
+                                    <el-option v-for="i in optionValuesFilter(sItem.optionTypeId)" :key="i.id" :label="i.name" :value="i.id"></el-option>
+                                </el-select>
+                            </el-form-item>
                         </td>
                     </template>
                     <td class="fixed-width">
@@ -58,24 +63,29 @@
                     </td>
                     <td>
                         <el-form-item label-width='0' :prop="`mainSkus[${index}].serialNumber`" :rules="rules.serialNumber">
-                            <el-input v-model="item.serialNumber" maxlength="16" :disabled="item.disabled"></el-input>
+                            <el-input v-model="item.serialNumber" maxlength="20" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
                     <td class="log-width">
                         <el-form-item label-width='0' :prop="`mainSkus[${index}].length`" :rules="rules.length">
-                            <el-input v-model="item.length" maxlength="16" :disabled="item.disabled"></el-input>
-                            <el-input v-model="item.width" maxlength="16" :disabled="item.disabled"></el-input>
-                            <el-input v-model="item.height" maxlength="16" :disabled="item.disabled"></el-input>
+                            <el-input v-model="item.length" maxlength="15" :disabled="item.disabled"></el-input>
+                            <el-input v-model="item.width" maxlength="15" :disabled="item.disabled"></el-input>
+                            <el-input v-model="item.height" maxlength="15" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
                     <td>
                         <el-form-item label-width='0' :prop="`mainSkus[${index}].grossWeight`" :rules="rules.grossWeight">
-                            <el-input v-model="item.grossWeight" maxlength="16" :disabled="item.disabled"></el-input>
+                            <el-input v-model="item.grossWeight" maxlength="15" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
                     <td>
                         <el-form-item label-width='0' :prop="`mainSkus[${index}].volume`" :rules="rules.volume">
-                            <el-input v-model="item.volume" maxlength="16" :disabled="item.disabled"></el-input>
+                            <el-input v-model="item.volume" maxlength="15" :disabled="item.disabled"></el-input>
+                        </el-form-item>
+                    </td>
+                    <td>
+                        <el-form-item label-width='0' :prop="`mainSkus[${index}].netWeight`" :rules="rules.netWeight">
+                            <el-input v-model="item.netWeight" maxlength="15" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
                     <td v-if="$route.query.id">
@@ -141,6 +151,20 @@ export default {
                 ]
             },
             rules: {
+                optionValues: [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            value.every(item => {
+                                if (item.id == '') {
+                                    return callback(new Error('请选择属性值'))
+                                }
+                            })
+                            return callback()
+                        },
+                        trigger: 'change'
+                    }
+                ],
                 imageUrls: [
                     {
                         required: true,
@@ -200,6 +224,17 @@ export default {
                             const reg = /^[0-9]+$/
                             if (value && !reg.test(value)) {
                                 return callback(new Error('体积仅支持数字'))
+                            }
+                            return callback()
+                        }
+                    }
+                ],
+                netWeight: [
+                    {
+                        validator: (rule, value, callback) => {
+                            const reg = /^[0-9]+$/
+                            if (value && !reg.test(value)) {
+                                return callback(new Error('净重仅支持数字'))
                             }
                             return callback()
                         }
@@ -271,13 +306,13 @@ export default {
         async onEffectiveSku (row, index) {
             await this.effectiveSKU({ id: row.mainSkuId })
             this.$set(this.form.mainSkus[index], 'enabled', !this.form.mainSkus[index].enabled)
-            this.$message.success('商品设置生效成功！')
+            this.$message.success('生效成功！')
         },
         // 失效sku
         async onEfficacySku (row, index) {
             await this.efficacySKU({ id: row.mainSkuId })
             this.$set(this.form.mainSkus[index], 'enabled', !this.form.mainSkus[index].enabled)
-            this.$message.success('商品设置失效成功！')
+            this.$message.success('失效成功！')
         },
         onEditSku (index) {
             this.$set(this.form.mainSkus[index], 'disabled', !this.form.mainSkus[index].disabled)
@@ -338,7 +373,7 @@ export default {
 
                 &.fixed-width {
                     position: relative;
-                    padding: 6px 8px;
+                    padding: 10px 12px;
                     min-width: 150px;
                 }
 
@@ -371,7 +406,7 @@ export default {
 
                 &.fixed-width {
                     position: relative;
-                    padding: 6px 8px;
+                    padding: 10px 12px;
                     min-width: 150px;
                 }
                 .el-select {
