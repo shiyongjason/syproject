@@ -125,3 +125,8 @@ export const CAPITAL_STATUS_MAP = new Map([
     [20, '部分汇款'],
     [30, '已回款']
 ])
+// 商家明细 回款期限
+export const DEADLINE_OPTIONS = [
+    { label: '最近回款日期', value: '' },
+    { label: '最终回款日期', value: '20' }
+]

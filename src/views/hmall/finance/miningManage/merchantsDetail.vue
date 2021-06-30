@@ -87,14 +87,11 @@
                         </div>
                     </div>
                     <div class="query-cont-col">
-                        <div class="query-col-title">最近回款日期：</div>
-                        <div class="query-col-input">
-                            <el-date-picker v-model="queryParams.updateTimeStart" type="date" placeholder="开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsStart"></el-date-picker>
-                            <el-date-picker v-model="queryParams.updateTimeEnd" type="date" placeholder="结束时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsEnd"></el-date-picker>
+                        <div class="query-col-title">
+                            <el-select v-model="queryParams.time" style="width:140px" class="pr10">
+                                <el-option v-for="item in deadlineOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                            </el-select>
                         </div>
-                    </div>
-                    <div class="query-cont-col">
-                        <div class="query-col-title">最终回款日期：</div>
                         <div class="query-col-input">
                             <el-date-picker v-model="queryParams.updateTimeStart" type="date" placeholder="开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsStart"></el-date-picker>
                             <el-date-picker v-model="queryParams.updateTimeEnd" type="date" placeholder="结束时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsEnd"></el-date-picker>
@@ -123,6 +120,10 @@
                     </div>
                 </div>
                 <basicTable :tableData="tableDetailData" :tableLabel="tableDetailLabel" :pagination="paginationDetail" @onCurrentChange="onCurrentChange">
+                    <!-- 当前额度 -->
+                    <template slot="attachmentCount" slot-scope="scope">
+                        <a class="isLink" @click="onInfo(scope.data.row.spuId)">{{scope.data.row.attachmentCount}}</a>
+                    </template>
                 </basicTable>
             </div>
             <div v-if="tabName == 'record'">
@@ -275,7 +276,7 @@
     </div>
 </template>
 <script>
-import { BUSINESS_DETAIL_OPTIONS, BUSINESS_DETAIL_MAP, STAUTS_OPTIONS, STAUTS_MAP, OVERDUE_OPTIONS, OVERDUE_MAP, CAPITAL_STATUS_OPTIONS, CAPITAL_STATUS_MAP } from '../const.js'
+import { BUSINESS_DETAIL_OPTIONS, BUSINESS_DETAIL_MAP, STAUTS_OPTIONS, STAUTS_MAP, OVERDUE_OPTIONS, OVERDUE_MAP, CAPITAL_STATUS_OPTIONS, CAPITAL_STATUS_MAP, DEADLINE_OPTIONS } from '../const.js'
 import { mapState, mapActions } from 'vuex'
 export default {
     name: 'merchantsDetail',
@@ -290,6 +291,7 @@ export default {
             overdueMap: OVERDUE_MAP,
             capitalStatusOptions: CAPITAL_STATUS_OPTIONS,
             capitalStatusMap: CAPITAL_STATUS_MAP,
+            deadlineOptions: DEADLINE_OPTIONS,
             resetParams: {},
             queryParams: {
                 businessType: '',
@@ -439,6 +441,10 @@ export default {
         // 提现
         onWithdrawal () {
             this.$router.push('/b2b/finance/withdrawalMerchant')
+        },
+        // 跳转商家详情
+        onInfo (val) {
+            this.$router.push({ path: '/b2b/finance/merchantBehalf', query: { id: val } })
         },
         ...mapActions([])
     },
