@@ -836,10 +836,12 @@ export default class ProjectList2 extends Vue {
         query.refundPics = refundPics
         query.contractAttachments = contractAttachments
         query.projectId = this.projectId
-        await projectRefund(query)
-        this.getList()
-        this.$message.success('回款成功')
-        this.closePayback()
+        query.hasRefunded = 1
+        console.log(' 🚗 🚕 🚙 🚌 🚎 query', query)
+        // await projectRefund(query)
+        // this.getList()
+        // this.$message.success('回款成功')
+        // this.closePayback()
     }
     // 关闭新增2.0项目
     closeAddProject () {
@@ -879,8 +881,8 @@ export default class ProjectList2 extends Vue {
             contractAttachments: [],
             contractNo: '',
             hasRefunded: 0,
-            operatorName: '',
-            operatorPhone: '',
+            operatorName: this.userInfo.employeeName,
+            operatorPhone: this.userInfo.phoneNumber,
             projectId: '',
             refundAmount: '',
             refundPayType: '',
