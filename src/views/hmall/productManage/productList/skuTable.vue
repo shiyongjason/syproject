@@ -90,7 +90,7 @@
                     </td>
                     <td v-if="$route.query.id">
                         <el-form-item label-width='0'>
-                            <span>{{item.mainSkuId}}</span>
+                            <span>{{item.mainSkuCode}}</span>
                         </el-form-item>
                     </td>
                     <td>

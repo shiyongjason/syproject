@@ -308,6 +308,7 @@ export default {
                 }
                 return
             }
+            console.log(this.form.mainSkus)
             let changeSku = true
             value.forEach(item => {
                 if (item.optionValues.length <= 0) {
@@ -350,6 +351,7 @@ export default {
                     this.form.mainSkus = mainSkus
                 }
             }
+            console.log(this.form.mainSkus)
         },
         mainSkus: {
             handler (value, preValue) {
@@ -419,8 +421,7 @@ export default {
             }, 1000)
         },
         async handleSelectModel (item) {
-            await this.getProductInfo(item.mainSpuId)
-            this.showMore = true
+            this.$router.push({ path: '/b2b/product/createProduct', query: { id: item.mainSpuId } })
         },
         createStateFilter (queryString) {
             return (state) => {
@@ -436,11 +437,11 @@ export default {
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
                     await this.getProductUnique()
-                    this.showMore = true
                     if (this.productUnique) {
-                        await this.getProductInfo(this.productUnique)
+                        this.$router.push({ path: '/b2b/product/createProduct', query: { id: this.productUnique } })
+                    } else {
+                        this.showMore = true
                     }
-                    this.form.name = this.form.name
                 }
             })
         },
@@ -465,6 +466,22 @@ export default {
         },
         onDelOptionTemplate (index) {
             this.form.optionTypeList.splice(index, 1)
+            console.log(this.form.optionTypeList)
+            if (this.form.optionTypeList.length == 0) {
+                this.form.mainSkus = [{
+                    name: '',
+                    imageUrls: '',
+                    serialNumber: '',
+                    length: '',
+                    width: '',
+                    height: '',
+                    grossWeight: '',
+                    volume: '',
+                    netWeight: '',
+                    optionValues: []
+                }]
+            }
+            console.log(this.form.mainSkus)
         },
         async onAddOption (name, index) {
             await this.addOption({ name: name })
