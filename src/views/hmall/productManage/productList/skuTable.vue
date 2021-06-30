@@ -191,16 +191,16 @@ export default {
                 length: [
                     {
                         validator: (rule, value, callback) => {
-                            const reg = /^[0-9]+$/
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
                             this.form.mainSkus.map(item => {
                                 if (item.length && !reg.test(item.length)) {
-                                    return callback(new Error('长宽高仅支持数字'))
+                                    return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
                                 }
                                 if (item.width && !reg.test(item.length)) {
-                                    return callback(new Error('长宽高仅支持数字'))
+                                    return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
                                 }
                                 if (item.height && !reg.test(item.length)) {
-                                    return callback(new Error('长宽高仅支持数字'))
+                                    return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
                                 }
                             })
                             return callback()
@@ -210,9 +210,9 @@ export default {
                 grossWeight: [
                     {
                         validator: (rule, value, callback) => {
-                            const reg = /^[0-9]+$/
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
                             if (value && !reg.test(value)) {
-                                return callback(new Error('毛重仅支持数字'))
+                                return callback(new Error('毛重格式为小数点前十位，小数点后两位'))
                             }
                             return callback()
                         }
@@ -221,9 +221,9 @@ export default {
                 volume: [
                     {
                         validator: (rule, value, callback) => {
-                            const reg = /^[0-9]+$/
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
                             if (value && !reg.test(value)) {
-                                return callback(new Error('体积仅支持数字'))
+                                return callback(new Error('体积格式为小数点前十位，小数点后两位'))
                             }
                             return callback()
                         }
@@ -232,9 +232,9 @@ export default {
                 netWeight: [
                     {
                         validator: (rule, value, callback) => {
-                            const reg = /^[0-9]+$/
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
                             if (value && !reg.test(value)) {
-                                return callback(new Error('净重仅支持数字'))
+                                return callback(new Error('净重格式为小数点前十位，小数点后两位'))
                             }
                             return callback()
                         }

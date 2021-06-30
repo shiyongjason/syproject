@@ -466,7 +466,6 @@ export default {
         },
         onDelOptionTemplate (index) {
             this.form.optionTypeList.splice(index, 1)
-            console.log(this.form.optionTypeList)
             if (this.form.optionTypeList.length == 0) {
                 this.form.mainSkus = [{
                     name: '',
