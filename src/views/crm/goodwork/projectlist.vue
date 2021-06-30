@@ -674,16 +674,16 @@ export default {
             this.recordsData.map(async (item, index) => {
                 if (item.picUrls) {
                     let api = []
-                    let url = ''
+                    let url = []
                     item.picUrls.map(jtem => {
-                        url = jtem
+                        url.push(jtem)
                         api.push(OssFileUtils.getUrl(jtem))
                     })
                     const res = await Promise.all(api)
                     let obj = []
-                    res.map(o => {
+                    res.map((o, i) => {
                         obj.push({
-                            fileUrl: url,
+                            fileUrl: url[i],
                             fileName: o,
                             tokenUrl: o
                         })
