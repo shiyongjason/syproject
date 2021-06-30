@@ -117,7 +117,6 @@
             <h-button type='primary' :loading="btnLoading" @click="onSave">提交</h-button>
             <h-button @click="onReset">重置</h-button>
         </div>
-        <el-backtop target=".page-body-cont .el-scrollbar__wrap"></el-backtop>
     </div>
 </template>
 <script>
@@ -127,9 +126,10 @@ import { interfaceUrl } from '@/api/config'
 import { RICH_EDITOR_MENUS, PUTAWAY_RULES } from '../const/common'
 import { flatten } from '@/views/hmall/utils/sku'
 import { deepCopy } from '@/utils/utils'
-import { clearCache } from '@/utils/index'
+import { clearCache, newCache } from '@/utils/index'
 export default {
     name: 'createProduct',
+    inject: ['reload'],
     components: {
         skuTable
     },
@@ -279,8 +279,8 @@ export default {
         },
         'form.optionTypeList' (value, preValue) {
             // 当sku被编辑或者是编辑页面的时候，我们不做笛卡尔积
-            console.log(this.isEdit)
-            console.log(this.isEditSku)
+            // console.log(this.isEdit)
+            // console.log(this.isEditSku)
             if (this.isEdit || this.isEditSku) {
                 /**
                  * 当编辑页面时候，页面渲染会触发form.optionTypeList的变更，这个时候我们不需要处理mainSkus
@@ -365,6 +365,10 @@ export default {
                 })
                 const valueStr = JSON.stringify(valueNew)
                 const preValueStr = JSON.stringify(preValueNew)
+                // console.log(valueStr)
+                // console.log(preValueStr)
+                // console.log(value[0].optionValues.length)
+                // console.log(preValue[0].optionValues.length)
                 /**
                  * 判断SKU是否变化的核心判断规则：是否只是optionTypeList引起的变更
                  * optionTypeList引起的变更有两种情况
@@ -386,6 +390,7 @@ export default {
     },
     methods: {
         init () {
+            console.log(!!this.$route.query.id)
             this.resetForm = { ...this.form }
             this.getBrandOptions()
             this.getCategoryOptions()
@@ -611,12 +616,7 @@ export default {
             this.setNewTags((this.$route.fullPath).split('?')[0])
         },
         onReset () {
-            this.showMore = false
-            this.$refs.form.resetFields()
-            this.specifications = []
-            this.addValues = []
-            this.imageUrls = []
-            this.form = { ...this.resetForm }
+            this.reload('createProduct')
         },
         onPutawayRules () {
             this.$alert(this.agreement, '舒适e购商品上架规则', {
@@ -710,6 +710,10 @@ export default {
     },
     mounted () {
         this.init()
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('createProduct')
+        next()
     },
     beforeRouteLeave (to, from, next) {
         if (to.name != 'productList') {

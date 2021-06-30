@@ -282,10 +282,10 @@ export default {
             this.params.skuImgurl = file.imageUrl
         },
         backPicUrlSku (file, index) {
-            this.form.mainSkus[index].imageUrls = file.imageUrl
+            this.$set(this.form.mainSkus[index], 'imageUrls', file.imageUrl)
         },
         handleCommand (command) {
-            this.form.mainSkus.map((item, index) => {
+            deepCopy(this.form.mainSkus).map((item, index) => {
                 if (command == 'imageUrls') {
                     this.$set(this.form.mainSkus[index], 'imageUrls', this.params.skuImgurl)
                 }
