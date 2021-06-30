@@ -534,13 +534,26 @@ export default [
                         component: () => import('@/views/hmall/fundAudit/auditFundList.vue')
                     },
                     {
-                        path: 'fundInfo',
+                        path: 'listFundInfo',
                         name: 'fundInfo',
                         meta: {
                             title: '查看',
                             tagName: '查看',
                             isMenu: false,
-                            icon: ''
+                            icon: '',
+                            showMenuAs: '/b2b/fundAudit/auditFundList'
+                        },
+                        component: () => import('@/views/hmall/fundAudit/fundInfo.vue')
+                    },
+                    {
+                        path: 'aduitFundInfo',
+                        name: 'fundInfo',
+                        meta: {
+                            title: '审核',
+                            tagName: '审核',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/fundAudit/auditFundList'
                         },
                         component: () => import('@/views/hmall/fundAudit/fundInfo.vue')
                     },
@@ -556,6 +569,18 @@ export default [
                         component: () => import('@/views/hmall/fundAudit/advancePayment.vue')
                     },
                     {
+                        path: 'advanceFundInfo',
+                        name: 'fundInfo',
+                        meta: {
+                            title: '查看',
+                            tagName: '查看',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/fundAudit/advancePayment'
+                        },
+                        component: () => import('@/views/hmall/fundAudit/fundInfo.vue')
+                    },
+                    {
                         path: 'auditFundStatus',
                         name: 'auditFundStatus',
                         meta: {
@@ -565,6 +590,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/hmall/fundAudit/auditFundStatus.vue')
+                    },
+                    {
+                        path: 'statusFundInfo',
+                        name: 'fundInfo',
+                        meta: {
+                            title: '查看',
+                            tagName: '查看',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/fundAudit/auditFundStatus'
+                        },
+                        component: () => import('@/views/hmall/fundAudit/fundInfo.vue')
                     },
                     {
                         path: 'prepayment',

@@ -164,7 +164,7 @@ export const DEADLINE_TYPE_OPTIONS = [
     { label: '销售订单', value: '20' },
     { label: '提前还款', value: '30' }
 ]
-export const DEADLINE_TYPE_MAP = new Map([
+export const DEADLINE_MAP = new Map([
     [20, '销售订单'],
     [30, '提前还款']
 ])

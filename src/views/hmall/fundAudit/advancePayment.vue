@@ -245,7 +245,7 @@ export default {
             // this.branchArr = this.branchList
         },
         onseeTask (val) {
-            this.$router.push({ path: '/fundAudit/fundInfo', query: { id: val, pageType: advancePayment } })
+            this.$router.push({ path: '/fundAudit/advanceFundInfo', query: { id: val, pageType: advancePayment } })
         },
         onAudit () { },
         onSure () { },

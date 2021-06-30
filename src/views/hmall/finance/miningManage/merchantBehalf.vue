@@ -118,6 +118,15 @@
                 </div>
             </div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="pagination" @onCurrentChange="onCurrentChange" :isAction="tabName == 'returned'" :isShowSum="true" :getSum="getSum">
+                <!-- 代采订单号 -->
+                <template slot="attachmentCount" slot-scope="scope">
+                    <a class="isLink" @click="onInfo(scope.data.row.attachmentCount)">{{scope.data.row.attachmentCount}}</a>
+                </template>
+                <!-- 占用金额 -->
+                <template slot="status" slot-scope="scope">
+                    <span v-if="Number(scope.data.row.status)<0" style="color:red">{{scope.data.row.status}}</span>
+                    <span v-else>{{scope.data.row.status}}</span>
+                </template>
                 <template slot="action" slot-scope="scope">
                     <el-button @click="onFund(scope.data.row)">资金同步</el-button>
                 </template>
@@ -126,21 +135,17 @@
     </div>
 </template>
 <script>
-import { BUSINESS_DETAIL_OPTIONS, BUSINESS_DETAIL_MAP, STAUTS_OPTIONS, STAUTS_MAP, OVERDUE_OPTIONS, OVERDUE_MAP, CAPITAL_STATUS_OPTIONS, CAPITAL_STATUS_MAP, ADUITLINE_OPTIONS, MINADUITLINE_OPTIONS, RETAADUITLINE_OPTIONS, DEADLINE_TYPE_OPTIONS, DEADLINE_TYPE_MAP, STAUTS_TOGER_OPTIONS, STAUTS_TOGER_MAP, CAPITALS_OPTIONS, CAPITALS_MAP } from '../const.js'
+import { STAUTS_OPTIONS, STAUTS_MAP, OVERDUE_OPTIONS, OVERDUE_MAP, ADUITLINE_OPTIONS, MINADUITLINE_OPTIONS, RETAADUITLINE_OPTIONS, DEADLINE_TYPE_OPTIONS, DEADLINE_TYPE_MAP, STAUTS_TOGER_OPTIONS, STAUTS_TOGER_MAP, CAPITALS_OPTIONS, CAPITALS_MAP } from '../const.js'
 import { mapState, mapActions } from 'vuex'
 export default {
     name: 'merchantBehalf',
     data () {
         return {
             tabName: 'apply',
-            businessDetaulOptions: BUSINESS_DETAIL_OPTIONS,
-            businessDetaulMap: BUSINESS_DETAIL_MAP,
             statusOptions: STAUTS_OPTIONS,
             statusMap: STAUTS_MAP,
             overdueOptions: OVERDUE_OPTIONS,
             overdueMap: OVERDUE_MAP,
-            capitalStatusOptions: CAPITAL_STATUS_OPTIONS,
-            capitalStatusMap: CAPITAL_STATUS_MAP,
             aduitlineOptions: ADUITLINE_OPTIONS,
             minaduitlineOptions: MINADUITLINE_OPTIONS,
             retaaduitlineOptions: RETAADUITLINE_OPTIONS,
@@ -204,7 +209,6 @@ export default {
     methods: {
         async init () {
             this.resetParams = { ...this.queryParams }
-            this.getRecord()
         },
         onTab (value) {
             this.onQuery()
@@ -288,9 +292,6 @@ export default {
             this.searchParams.pageNumber = val.pageNumber
             // this.getisOnlineAccountBillInfo()
         },
-        getRecord () {
-
-        },
         // 重置
         onReset () {
             this.queryParams = { ...this.resetParams }
@@ -314,9 +315,9 @@ export default {
         onWithdrawal () {
             this.$router.push('/b2b/finance/withdrawalMerchant')
         },
-        // 跳转商家详情
+        // 跳转boss代采订单详情
         onInfo (val) {
-            this.$router.push({ path: '/b2b/finance/merchantBehalf', query: { id: val } })
+            this.$router.push({ path: '/b2b/fundAudit/fundInfo', query: { id: val } })
         },
         // 资金同步
         onFund (val) {
