@@ -1,21 +1,39 @@
 <template>
-    <!-- <keep-alive :include="cachedInclude" :exclude="cachedExclude"> -->
-        <!-- <router-view :key='$route.fullPath'></router-view> -->
-    <!-- </keep-alive> -->
-     <keep-alive :include="cachedInclude" :exclude="cachedExclude">
+    <keep-alive :include="cachedInclude" :exclude="cachedExclude">
+        <router-view :key='$route.fullPath' v-if="isRouterAlive"></router-view>
+    </keep-alive>
+    <!-- <keep-alive :include="cachedInclude" :exclude="cachedExclude">
         <router-view></router-view>
-     </keep-alive>
+    </keep-alive> -->
 </template>
 
 <script>
 import { mapState } from 'vuex'
 export default {
     name: 'interlayerContainer',
+    provide () {
+        return {
+            reload: this.reload
+        }
+    },
+    data () {
+        return {
+            isRouterAlive: true
+        }
+    },
     computed: {
         ...mapState({
             cachedInclude: state => state.cachedInclude,
             cachedExclude: state => state.cachedExclude
         })
+    },
+    methods: {
+        reload () {
+            this.isRouterAlive = false
+            this.$nextTick(() => {
+                this.isRouterAlive = true
+            })
+        }
     }
 }
 </script>
