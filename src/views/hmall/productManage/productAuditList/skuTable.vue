@@ -26,6 +26,9 @@
                         <span class="tr-label">毛重/KG</span>
                     </td>
                     <td>
+                        <span class="tr-label">净重/KG</span>
+                    </td>
+                    <td>
                         <span class="tr-label">体积/m³</span>
                     </td>
                     <td>
@@ -69,6 +72,11 @@
                     <td>
                         <el-form-item label-width='0'>
                             <el-input v-model="item.grossWeight" maxlength="8" :disabled="seeTask == true"></el-input>
+                        </el-form-item>
+                    </td>
+                    <td>
+                        <el-form-item label-width='0'>
+                            <el-input v-model="item.netWeight" maxlength="8" :disabled="seeTask == true"></el-input>
                         </el-form-item>
                     </td>
                     <td>
