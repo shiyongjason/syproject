@@ -226,7 +226,7 @@ export default {
             if (this.productType == 'SPU') {
                 this.$router.push({ path: '/b2b/product/createProduct', query: { id: row.id } })
             } else if (this.productType == 'SKU') {
-                this.$router.push({ path: '/b2b/product/createProduct', query: { id: row.id } })
+                this.$router.push({ path: '/b2b/product/createProduct', query: { id: row.mainSpuId } })
             }
         },
         // 批量生效
