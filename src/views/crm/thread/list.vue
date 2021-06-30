@@ -80,7 +80,7 @@
                 </div>
 
                 <div class="query-cont__col">
-                    <h-button type="primary" @click="findThreadList">
+                    <h-button type="primary" @click="queryList">
                         查询
                     </h-button>
                     <h-button type="primary" @click="addThread">
@@ -614,7 +614,7 @@ export default class Thread extends Vue {
                         message: `保存线索成功`,
                         type: 'success'
                     })
-                    this.findThreadList()
+                    this.queryList()
                 } catch (error) {
                     this.isloading = false
                 }
@@ -653,6 +653,14 @@ export default class Thread extends Vue {
     getDetail () {
         this.findThreadList()
         this.drawer = false
+    }
+
+    queryList () {
+        this.queryParams = {
+            ...this.queryParams,
+            pageNumber: 1
+        }
+        this.findThreadList()
     }
 
     async viewDetail (val: RespBossCluePage) {
