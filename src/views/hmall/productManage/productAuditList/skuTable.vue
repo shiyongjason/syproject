@@ -6,8 +6,8 @@
                     <td v-for="(item,index) in optionTypeListFilter" :key="index" style="min-width:100px;">{{item.name}}</td>
                     <td class="fixed-width">
                         <span class="tr-label">图片</span>
-                        <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="params.skuImgurl" v-if="seeTask==''" @back-event="backPicUrl" />
-                        <el-dropdown placement="bottom-end" @command="handleCommand" v-if="seeTask==''">
+                        <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="params.skuImgurl" v-if="seeTask==false" @back-event="backPicUrl" />
+                        <el-dropdown placement="bottom-end" @command="handleCommand" v-if="seeTask==false">
                             <span class="el-dropdown-link">
                                 <i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
@@ -50,8 +50,8 @@
                     </template>
                     <td class="fixed-width">
                         <el-form-item label-width='0'>
-                            <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" v-if="seeTask==''" />
-                            <img :src="item.imageUrls" style="width:44px;height:44px" v-if="seeTask=='seeTask'" />
+                            <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" v-if="seeTask==false" />
+                            <img :src="item.imageUrls" style="width:44px;height:44px" v-if="seeTask==true" />
                         </el-form-item>
                     </td>
                     <td>
@@ -115,7 +115,7 @@ export default {
             }
         },
         seeTask: {
-            type: String
+            type: Boolean
         },
         edite: {
             type: Boolean

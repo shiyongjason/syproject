@@ -26,13 +26,13 @@
                 </div>
                 <el-form-item label="商品图片：" prop="imageUrls" ref="imageUrls">
                     <el-upload :action="uploadInfo.action" :data="uploadInfo.data" :name="uploadAttr.name" :list-type="uploadAttr.listType" :show-file-list="uploadAttr.showFileList" :on-success="handleSuccess" :accept="uploadAttr.accept" :before-upload="beforeUpload"
-                        v-if="imageUrls.length !==5 && !disabled">
+                        v-if="imageUrls.length !==5 && seeTask == false">
                         <i class="el-icon-plus"></i>
                     </el-upload>
                     <div class="picture-content">
                         <ul>
                             <li v-for="(item, index) in imageUrls" :key="index">
-                                <div class="mask-btn" v-show="!disabled">
+                                <div class="mask-btn" v-show="seeTask == false">
                                     <span :class="index==0?'isDisabled':''" @click="onSettingTop(index)">设为主图</span>
                                     <span @click="onRemove(index)">删除图片</span>
                                 </div>
@@ -41,21 +41,21 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="picture-prompt" v-show="!disabled">
+                    <div class="picture-prompt" v-show="seeTask == false">
                         <p>最多支持上传5张750*750，大小不超过2M，仅支持jpeg，jpg，png格式</p>
                     </div>
                 </el-form-item>
-                <skuTable ref="skuTable" :formData.sync="form" :seeTask.sync="seeTask" :edite.sync="edite" v-if="form.optionTypeList.length>=1"></skuTable>
+                <skuTable ref="skuTable" :formData.sync="form" :seeTask.sync="seeTask" :edite.sync="edite"></skuTable>
                 <div class="title-cont" v-if="specData.length != 0">
                     <span class="title-cont__label">参数信息</span>
                 </div>
                 <div class="form-cont-row parameter">
                     <div class="form-cont-col mb20" v-for="(item,index) in specifications" :key="index">
-                        <el-form-item :label="item.k + '：'" :prop="`specifications[${index}].v`" :rules="!disabled ?{required:item.isRequired == 1 ? true : false, message: item.isCombobox == 1 ? '请选择' + item.k : '请输入' + item.k }: {}">
-                            <el-input v-model="form.specifications[index].v" v-if="item.isCombobox == 0" maxlength="20" :disabled="disabled">
+                        <el-form-item :label="item.k + '：'" :prop="`specifications[${index}].v`" :rules="seeTask == true ?{required:item.isRequired == 1 ? true : false, message: item.isCombobox == 1 ? '请选择' + item.k : '请输入' + item.k }: {}">
+                            <el-input v-model="form.specifications[index].v" v-if="item.isCombobox == 0" maxlength="20" :disabled="seeTask == true">
                                 <template slot="suffix">{{item.unit}}</template>
                             </el-input>
-                            <el-select v-model="form.specifications[index].v" v-if="item.isCombobox == 1" clearable :disabled="disabled">
+                            <el-select v-model="form.specifications[index].v" v-if="item.isCombobox == 1" clearable :disabled="seeTask == true">
                                 <el-option v-for="i in item.options" :key="i" :value="i" :label="i"></el-option>
                             </el-select>
                         </el-form-item>
@@ -66,7 +66,7 @@
                 </div>
                 <RichEditor style="position:relative;z-index:1" v-model="form.detail" :width="richTextAttr.width" :height="richTextAttr.height" :menus="richTextAttr.menus" :uploadImgServer="richTextAttr.uploadImgServer" :uploadImgParams="richTextAttr.uploadImgParams" :disabled="disabled">
                 </RichEditor>
-                <div class="title-cont pt30 seeTask" v-if="!disabled">
+                <div class="title-cont pt30 seeTask" v-if="seeTask == false">
                     <el-form-item label="审核结果：" prop="auditStatus">
                         <el-radio-group v-model="form.auditStatus" @change="onChange">
                             <el-radio label="1">审核通过</el-radio>
@@ -79,7 +79,7 @@
                     </el-form-item>
                 </div>
                 <el-form-item style="text-align: right" class="pt30">
-                    <h-button type='primary' :loading="btnLoading" @click="onSave" v-if="!disabled">确定</h-button>
+                    <h-button type='primary' :loading="btnLoading" @click="onSave" v-if="seeTask == false">确定</h-button>
                     <h-button @click="onCancel">返回</h-button>
                 </el-form-item>
             </el-form>
@@ -101,7 +101,7 @@ export default {
     },
     data () {
         return {
-            seeTask: 'seeTask',
+            seeTask: false,
             edite: true,
             showMore: false,
             btnLoading: false,
@@ -216,7 +216,7 @@ export default {
             }
         },
         disabled () {
-            return this.$route.query.seeTask
+            return !!this.$route.query.seeTask
         }
     },
     watch: {
@@ -268,9 +268,9 @@ export default {
                 this.getProductskuInfo(this.newId)
             }
             if (this.$route.query.seeTask) {
-                this.seeTask = 'seeTask'
+                this.seeTask = true
             } else {
-                this.seeTask = ''
+                this.seeTask = false
             }
         },
         async querySearchAsyncBrand (queryString, cb) {
@@ -413,10 +413,17 @@ export default {
             await this.getSpecByCategory(this.productSpuInfo.twoCategoryId)
             this.form = {
                 ...this.productSpuInfo,
-                mainSkus: [],
+                mainSkus: [{ ...this.productSkuInfo }].map(item => {
+                    item.imageUrls = item.imageUrls.join(',')
+                    return item
+                }),
                 optionTypeList: this.productSpuInfo.optionTypeList ? this.productSpuInfo.optionTypeList : []
             }
-            this.form.mainSkus = [{ ...this.productSkuInfo }]
+            // this.form.mainSkus = [{ ...this.productSkuInfo }].map(item => {
+            //     item.imageUrls = item.imageUrls.join(',')
+            //     return item
+            // }),
+            console.log(this.form.mainSkus)
             // TODO: 处理老数据
             const specifications = this.productSpuInfo.specifications || []
             this.form.specifications = deepCopy(this.specifications).map((item, index) => {
