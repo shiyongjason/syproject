@@ -289,6 +289,15 @@ export default class ThreadDetail extends Vue {
     onCityChange (newVal) {
         this.cityList = newVal
     }
+    @Watch('flowUpRequest.type')
+    flowUpRequestChange (newVal, oldVal) {
+        console.log(newVal, oldVal)
+        this.flowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
+        this.flowUpRequest = {
+            ...this.flowUpRequest,
+            type: newVal
+        }
+    }
     action = ccpBaseUrl + 'common/files/upload-old'
     uploadParameters = {
         updateUid: '',
