@@ -11,14 +11,15 @@ export const BUSINESS_TYPE_MAP = new Map([
 // 审核状态
 export const AUDIT_STATUS_OPTIONS = [
     { label: '全部', value: '' },
-    { label: '未审核', value: '1' },
-    { label: '通过', value: '2' },
-    { label: '失败', value: '3' }
+    { label: '未审核', value: '10' },
+    { label: '通过', value: '20' },
+    { label: '失败', value: '30' }
 ]
 export const AUDIT_STATUS_MAP = new Map([
-    [1, '未审核'],
-    [2, '通过'],
-    [3, '失败']
+    [10, '未审核'],
+    [20, '通过'],
+    [30, '失败'],
+    [40, '已失效']
 ])
 // 期限
 export const DEADLINE_OPTIONS = [
@@ -137,4 +138,9 @@ export const PLATFORM_STATUS_MAP = new Map([
     [1, '已确认'],
     [2, '未确认'],
     [3, '确认不通过']
+])
+// 额度状态
+export const LIMIT_STATUS_MAP = new Map([
+    [1, '生效'],
+    [0, '失效']
 ])
