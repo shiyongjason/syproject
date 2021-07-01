@@ -116,6 +116,10 @@ const actions = {
         const { data } = await instance.post('/product/boss/main-spu-option-types', params)
         commit(types.OPTION_ID, data)
     },
+    async editOption ({ commit }, params) {
+        const { data } = await instance.put(`/product/boss/main-spu-option-types/${params.id}`, params)
+        commit(types.OPTION_ID, data)
+    },
     async addOptionValue ({ commit }, params) {
         const { data } = await instance.post(`/product/boss/main-spu-option-types/${params.id}/option-values`, params.name, { headers: { 'Content-Type': 'application/json' } })
         commit(types.OPTION_VALUE_DATA, data)
@@ -123,14 +127,14 @@ const actions = {
     async createProduct ({ commit }, params) {
         await instance.post('/product/boss/main-spu', params)
     },
+    async editProduct ({ commit }, params) {
+        await instance.put(`/product/boss/main-spu/${params.id}`, params)
+    },
     async effective ({ commit }, params) {
         await instance.patch(`/product/boss/main-spu/${params.id}/enable`, params)
     },
     async efficacy ({ commit }, params) {
         await instance.patch(`/product/boss/main-spu/${params.id}/disable`, params)
-    },
-    async editProduct ({ commit }, params) {
-        await instance.put('/product/boss/main-spu', params)
     },
     async batchEffective ({ commit }, params) {
         await instance.patch('/product/boss/main-spu/batch-enable', params)

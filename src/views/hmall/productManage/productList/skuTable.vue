@@ -48,7 +48,7 @@
                     <template v-for="(sItem,sIndex) in item.optionValues">
                         <td :key="sIndex" v-if="item.optionValues.length">
                             <el-form-item label-width='0' :prop="`mainSkus[${index}].optionValues`" :rules="rules.optionValues">
-                                <el-select v-model="item.optionValues[sIndex].id" clearable :disabled="item.disabled">
+                                <el-select v-model="item.optionValues[sIndex].id" @change="onChangeValue(index,sIndex)" clearable :disabled="item.disabled">
                                     <el-option v-for="(i,ssIndex) in optionValuesFilter(sItem.optionTypeId).optionValues" :key="ssIndex" :label="i.name" :value="i.id"></el-option>
                                 </el-select>
                             </el-form-item>
@@ -155,11 +155,9 @@ export default {
                     {
                         required: true,
                         validator: (rule, value, callback) => {
-                            value.every(item => {
-                                if (item.id == '') {
-                                    return callback(new Error('请选择属性值'))
-                                }
-                            })
+                            if (value.every(item => item.id == '')) {
+                                return callback(new Error('请选择属性值'))
+                            }
                             return callback()
                         },
                         trigger: 'change'
@@ -196,10 +194,10 @@ export default {
                                 if (item.length && !reg.test(item.length)) {
                                     return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
                                 }
-                                if (item.width && !reg.test(item.length)) {
+                                if (item.width && !reg.test(item.width)) {
                                     return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
                                 }
-                                if (item.height && !reg.test(item.length)) {
+                                if (item.height && !reg.test(item.height)) {
                                     return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
                                 }
                             })
@@ -271,13 +269,7 @@ export default {
     },
     methods: {
         optionValuesFilter (id) {
-            const result = this.form.optionTypeList.filter(item => item.id == id)
-            console.log(result)
-            if (result.length > 0) {
-                return result[0]
-            } else {
-                return []
-            }
+            return this.form.optionTypeList.find(item => item.id == id)
         },
         backPicUrl (file) {
             this.params.skuImgurl = file.imageUrl
@@ -328,6 +320,9 @@ export default {
         },
         onChangeValue (index, sIndex) {
             this.form.mainSkus[index].optionValues[sIndex].name = this.changeValue(this.form.mainSkus[index].optionValues[sIndex].optionTypeId, this.form.mainSkus[index].optionValues[sIndex].id)
+            this.$nextTick(() => {
+                this.$parent.clearValidate()
+            })
         },
         changeValue (optionTypeId, id) {
             const result = this.form.optionTypeList.filter(item => item.id == optionTypeId)[0].optionValues.filter(item => item.id == id)
