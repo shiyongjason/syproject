@@ -71,7 +71,7 @@
                         <div class="sku-cont_group mb20" v-for="(item,index) in form.optionTypeList" :key="index">
                             <div class="group-spec_label">
                                 <el-form-item label="规格名：" :prop="`optionTypeList[${index}].name`" :rules="rules.option">
-                                    <el-input v-model="item.name" @change="onAddOption(item.name,index)" maxlength="10" placeholder="请输入规格名" :disabled="item.disabled"></el-input>
+                                    <el-input v-model="item.name" @change="onAddOption(item.id,item.name,index)" maxlength="10" placeholder="请输入规格名" :disabled="item.disabled"></el-input>
                                 </el-form-item>
                             </div>
                             <div class="group-spec_tags mt20">
@@ -475,11 +475,13 @@ export default {
                 }]
             }
         },
-        async onAddOption (name, index) {
-            await this.addOption({ name: name })
-            if (this.form.optionTypeList[index].name == name) {
-                this.form.optionTypeList[index].id = this.optionId
+        async onAddOption (id, name, index) {
+            if (id) {
+                await this.editOption({ id: id, name: name })
+            } else {
+                await this.addOption({ name: name })
             }
+            this.form.optionTypeList[index].id = this.optionId
         },
         async onAddOptionVlaue (index) {
             let str = this.addValues[index] || ''
@@ -528,6 +530,9 @@ export default {
                 return item
             })
             this.addValues.splice(sIndex, 1)
+            this.$nextTick(() => {
+                this.$refs.form.clearValidate()
+            })
         },
         onSettingTop (index) {
             this.imageUrls.unshift((this.imageUrls.splice(index, 1))[0])
@@ -621,6 +626,7 @@ export default {
             checkProductUnique: 'productManage/checkProductUnique',
             findProductSpuInfo: 'productManage/findProductSpuInfo',
             addOption: 'productManage/addOption',
+            editOption: 'productManage/editOption',
             addOptionValue: 'productManage/addOptionValue',
             createProduct: 'productManage/createProduct',
             editProduct: 'productManage/editProduct'
