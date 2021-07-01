@@ -1,5 +1,5 @@
 <template>
-    <el-drawer title="线索详情" :visible.sync="drawer" :before-close="handleClose" :modal-append-to-body='false' size='680px'>
+    <el-drawer title="线索详情" :visible.sync="drawer" :wrapperClosable='false' :close-on-click-modal='false' :before-close="handleClose" :modal-append-to-body='false' size='680px'>
         <div class="ThreadDetail">
             <div class="radio-group">
                 <el-radio-group v-model="radio">
@@ -68,7 +68,7 @@
                                         </div>
                                     </div>
                                     <div class="title-tag" v-if="item.nextFlowTime">下次跟进时间</div>
-                                    <div class="desc" v-if="item.nextFlowTime">{{item.nextFlowTime | formatDate('YYYY年MM月DD日 HH:mm:ss')}}</div>
+                                    <div class="desc" v-if="item.nextFlowTime">{{item.nextFlowTime | formatDate('YYYY年MM月DD日 HH:mm')}}</div>
                                     <template v-if="item.customerBackLogWorks&&item.customerBackLogWorks.length">
                                         <div class="title-tag">邀请同事协助</div>
                                         <div class="desc" v-for="w in item.customerBackLogWorks" :key="w.id">{{w.assignedUserName}} {{w.assignedUserMobile}}</div>
@@ -213,7 +213,7 @@
                             </div>
                             <div class="record-dialog-item">
                                 <el-form-item prop="nextFlowTime" label="下次跟进时间：" class="textarea">
-                                    <el-date-picker v-model="flowUpRequest.nextFlowTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="选择日期"></el-date-picker>
+                                    <el-date-picker v-model="flowUpRequest.nextFlowTime" type="datetime" format="yyyy-MM-dd HH:mm" value-format='yyyy-MM-ddTHH:mm' placeholder="选择日期"></el-date-picker>
                                 </el-form-item>
                             </div>
                             <div class="record-dialog-item" v-if="flowUpRequest.type != 1">
@@ -289,6 +289,15 @@ export default class ThreadDetail extends Vue {
     onCityChange (newVal) {
         this.cityList = newVal
     }
+    @Watch('flowUpRequest.type')
+    flowUpRequestChange (newVal, oldVal) {
+        console.log(newVal, oldVal)
+        this.flowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
+        this.flowUpRequest = {
+            ...this.flowUpRequest,
+            type: newVal
+        }
+    }
     action = ccpBaseUrl + 'common/files/upload-old'
     uploadParameters = {
         updateUid: '',
@@ -357,6 +366,8 @@ export default class ThreadDetail extends Vue {
                 return 'CRM'
             case 5:
                 return '第三方渠道'
+            case 14:
+                return '舒适云'
             default:
                 return ''
         }

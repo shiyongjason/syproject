@@ -247,12 +247,12 @@
                     <div class="flex-item">
                         <div class="form-item">
                             <el-form-item  prop='firstPartName' label="甲方名称：">
-                                <el-input  placeholder="请输入甲方名称" v-model='reqProjectSupply.firstPartName' maxlength="25"></el-input>
+                                <el-input  placeholder="请输入甲方名称" v-model='reqProjectSupply.firstPartName' maxlength="50"></el-input>
                             </el-form-item>
                         </div>
                         <div class="form-item">
                             <el-form-item  prop='projectName' label="项目名称：">
-                                <el-input  placeholder="请输入项目名称" v-model='reqProjectSupply.projectName' maxlength="25"></el-input>
+                                <el-input  placeholder="请输入项目名称" v-model='reqProjectSupply.projectName' maxlength="50"></el-input>
                             </el-form-item>
                         </div>
                     </div>
@@ -371,6 +371,17 @@ import { ReqProjectSupply, RespBossProjectSupply } from '@/interface/hbp-member'
 import { ReqBossProjectRefund } from './interface'
 import { CreateElement } from 'vue'
 
+const validatorName = (rule, value, callback) => {
+    if (!value) {
+        return callback(new Error('必填项不能为空'))
+    }
+    if (value && value.length < 2) {
+        console.log(' 🚗 🚕 🚙 🚌 🚎 ', 1)
+        return callback(new Error('不得少于2个字符'))
+    }
+    return callback()
+}
+
 interface companyObj {
         adminUserName: string,
         adminUserPhone: string,
@@ -459,7 +470,8 @@ export default class ProjectList2 extends Vue {
         provinceId: '',
         cityId: '',
         countryId: '',
-        estimatedSignAmount: ''
+        estimatedSignAmount: '',
+        deptName: ''
     }
      uploadParameters = {
          updateUid: '',
@@ -500,9 +512,9 @@ export default class ProjectList2 extends Vue {
 
     get formRules () {
         let rules = {
-            companyId: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
-            firstPartName: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
-            projectName: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+            companyId: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
+            firstPartName: [{ required: true, validator: validatorName, trigger: 'blur' }],
+            projectName: [{ required: true, validator: validatorName, trigger: 'blur' }],
             projectBuildingTypeList: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
             projectRoleList: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
             projectStep: [{ required: true, message: '必填项不能为空', trigger: 'change' }],
@@ -825,6 +837,7 @@ export default class ProjectList2 extends Vue {
         query.refundPics = refundPics
         query.contractAttachments = contractAttachments
         query.projectId = this.projectId
+        query.hasRefunded = 1
         await projectRefund(query)
         this.getList()
         this.$message.success('回款成功')
@@ -868,8 +881,8 @@ export default class ProjectList2 extends Vue {
             contractAttachments: [],
             contractNo: '',
             hasRefunded: 0,
-            operatorName: '',
-            operatorPhone: '',
+            operatorName: this.userInfo.employeeName,
+            operatorPhone: this.userInfo.phoneNumber,
             projectId: '',
             refundAmount: '',
             refundPayType: '',

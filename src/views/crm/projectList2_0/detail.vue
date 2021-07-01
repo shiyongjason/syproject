@@ -94,6 +94,8 @@
                                         <div class='desc'>{{item.projectSupplyFlowUp.contactName}} {{item.projectSupplyFlowUp.contactMobile}}</div>
                                         <div class='title-tag'>跟进节点</div>
                                         <div class='desc'>{{item.projectSupplyFlowUp.flowUpProcess?getProject2FollowUpProcess(item.projectSupplyFlowUp.flowUpProcess).value:'-'}}</div>
+                                        <div class="title-tag" v-if="item.content">跟进内容</div>
+                                        <div class="desc" v-if="item.content">{{item.content}}</div>
                                         <div class='title-tag' v-if="item.projectSupplyFlowUp.noNeedFlowReason">无需跟进原因</div>
                                         <div class='desc'  v-if="item.projectSupplyFlowUp.noNeedFlowReason">{{item.projectSupplyFlowUp.noNeedFlowReason||'-'}}</div>
                                     </template>
@@ -105,8 +107,6 @@
                                         <div class="title-tag" v-if="item.customerBackLogWorks[0].remark">需协助内容</div>
                                         <div class="desc" v-if="item.customerBackLogWorks[0].remark">{{item.customerBackLogWorks[0].remark}}</div>
                                     </template>
-                                    <div class="title-tag" v-if="item.content">跟进内容</div>
-                                    <div class="desc" v-if="item.content">{{item.content}}</div>
                                     <div class="title-tag" v-if="item.remark&&(item.type==1||item.type==2)">其他备注</div>
                                     <div class="desc" v-if="item.remark&&(item.type==1||item.type==2)">{{item.remark}}</div>
                                 </div>
@@ -119,12 +119,12 @@
                     <el-form id='elform' :model="projectDetail" :rules="formRules"  label-width="140px"  label-position='right' ref="projectDetailForm" class="list2">
                         <div class="project-detail-item">
                             <el-form-item  prop='firstPartName' label="甲方名称：">
-                                <el-input  placeholder="请输入甲方名称" v-model='projectDetail.firstPartName' maxlength="25"></el-input>
+                                <el-input  placeholder="请输入甲方名称" v-model='projectDetail.firstPartName' maxlength="50"></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
                             <el-form-item  prop='projectName' label="项目名称：">
-                                <el-input  placeholder="请输入项目名称" v-model='projectDetail.projectName' maxlength="25"></el-input>
+                                <el-input  placeholder="请输入项目名称" v-model='projectDetail.projectName' maxlength="50"></el-input>
                             </el-form-item>
                         </div>
 
@@ -234,7 +234,7 @@
                             <div class="record-dialog-item" v-if="flowUpRequest.type == 1">
                                 <el-form-item  prop='picUrls' label="上传现场图片："></el-form-item>
                                 <div>
-                                    <OssFileHosjoyUpload :showPreView='true'  v-model="flowUpRequest.picUrls" :fileNum=20 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png" @successCb='onSuccessCb'>
+                                    <OssFileHosjoyUpload :showPreView='true'  v-model="flowUpRequest.picUrls" :fileNum=20 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png" @successCb='onSuccessCb' delTips='是否确认删除现场照片，删除后无法恢复'>
                                     <div class="a-line">
                                         <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                                     </div>
@@ -249,7 +249,7 @@
                             <div class="record-dialog-item" style="display:flex">
                                 <el-form-item  prop='flowUpProcess' label="跟进节点 ：  "  class="textarea">
                                     <el-select v-model="flowUpRequest.flowUpProcess" placeholder="请选择" @change="changeProcess">
-                                        <el-option v-for="item in flowUpProcess" :key="item.value" :label="item.value" :value="item.key"></el-option>
+                                        <el-option v-for="item in flowUpProcessFormat" :key="item.value" :label="item.value" :value="item.key"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item  prop='noNeedFlowReason' label=" "  class="textarea" style="margin:0 10px 0 25px">
@@ -519,6 +519,8 @@ export default class ProjectList2Detail extends Vue {
         5: '已接受协助申请',
         6: '已拒绝协助申请'
     }
+
+    flowUpProcessFormat=[]
 
     get getCity () {
         const province = this.provinceList.filter(item => item.provinceId === this.projectDetail.provinceId)
@@ -822,11 +824,33 @@ export default class ProjectList2Detail extends Vue {
     }
 
     async onBlurSave (item, index, prop) {
-        this.$refs['addUserForm'][index].validateField(prop, async (errorMessage) => {
+        let addUserForm:any = this.$refs['addUserForm']
+        addUserForm[index].validateField(prop, async (errorMessage) => {
             if (!errorMessage) {
                 console.log('🚀 --- onBlurSave --- item 校验下面3字段是否有值，有值保存', item)
                 if (item.contactName && item.contactMobile && item.roleCodes.length) {
                     item.operator = this.userInfo.employeeName
+                    let resValidate = []
+                    if (addUserForm && addUserForm.length > 0) {
+                        for (let i = 0; i < addUserForm.length; i++) {
+                            addUserForm[i].validate((value, r) => {
+                                if (!value) {
+                                    resValidate.push(value)
+                                } else {
+                                    this.$nextTick(() => {
+                                        let ds = document.getElementsByClassName('contact')[0]
+                                        const dom = ds.querySelector('.is-error')
+                                        dom && dom.scrollIntoView()
+                                    })
+                                }
+                            })
+                        }
+                    }
+                    if (resValidate.length > 0) {
+                        console.log('请完善联系人信息')
+                        return
+                    }
+
                     // 修改
                     if (item.id) {
                         console.log(' 🚗 🚕 🚙 🚌 🚎 修改', item)
@@ -1160,6 +1184,12 @@ export default class ProjectList2Detail extends Vue {
         console.log(' 🚗 🚕 🚙 🚌 🚎 详情', this.projectDetail)
         this.recordsQuery.bizId = this.projectId
         this.onInitGetDate()
+
+        this.flowUpProcessFormat = this.flowUpProcess.filter(item => {
+            if (item.value != '已签约' && item.value != '已回款') {
+                return item
+            }
+        })
         // let temp = ['1', '3', '5', '7']
         // let filter:any = ''
         // this.flowUpProcess.map((item:any) => {

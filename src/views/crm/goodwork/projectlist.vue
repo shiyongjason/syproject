@@ -220,6 +220,8 @@
                                         <div class='desc'>{{item.projectSupplyFlowUp.contactName}} {{item.projectSupplyFlowUp.contactMobile}}</div>
                                         <div class='title-tag'>跟进节点</div>
                                         <div class='desc'>{{item.projectSupplyFlowUp.flowUpProcess?getProject2FollowUpProcess(item.projectSupplyFlowUp.flowUpProcess).value:'-'}}</div>
+                                        <div class="title-tag" v-if="item.content">跟进内容</div>
+                                        <div class="desc" v-if="item.content">{{item.content}}</div>
                                         <div class='title-tag' v-if="item.projectSupplyFlowUp.noNeedFlowReason">无需跟进原因</div>
                                         <div class='desc'  v-if="item.projectSupplyFlowUp.noNeedFlowReason">{{item.projectSupplyFlowUp.noNeedFlowReason||'-'}}</div>
                                     </template>
@@ -231,8 +233,7 @@
                                         <div class="title-tag" v-if="item.customerBackLogWorks[0].remark">需协助内容</div>
                                         <div class="desc" v-if="item.customerBackLogWorks[0].remark">{{item.customerBackLogWorks[0].remark}}</div>
                                     </template>
-                                    <div class="title-tag" v-if="item.content">跟进内容</div>
-                                    <div class="desc" v-if="item.content">{{item.content}}</div>
+
                                     <div class="title-tag" v-if="item.remark&&(item.type==1||item.type==2)">其他备注</div>
                                     <div class="desc" v-if="item.remark&&(item.type==1||item.type==2)">{{item.remark}}</div>
                                 </div>
@@ -270,7 +271,7 @@
                             <div class="record-dialog-item" v-if="flowUpRequest.type == 1">
                                 <el-form-item  prop='picUrls' label="上传现场图片："></el-form-item>
                                 <div>
-                                    <OssFileHosjoyUpload :showPreView='true'  v-model="flowUpRequest.picUrls" :fileNum=20 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png" @successCb='onSuccessCb'>
+                                    <OssFileHosjoyUpload :showPreView='true'  v-model="flowUpRequest.picUrls" :fileNum=20 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png" @successCb='onSuccessCb' delTips='是否确认删除现场照片，删除后无法恢复'>
                                     <div class="a-line">
                                         <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                                     </div>
@@ -673,16 +674,16 @@ export default {
             this.recordsData.map(async (item, index) => {
                 if (item.picUrls) {
                     let api = []
-                    let url = ''
+                    let url = []
                     item.picUrls.map(jtem => {
-                        url = jtem
+                        url.push(jtem)
                         api.push(OssFileUtils.getUrl(jtem))
                     })
                     const res = await Promise.all(api)
                     let obj = []
-                    res.map(o => {
+                    res.map((o, i) => {
                         obj.push({
-                            fileUrl: url,
+                            fileUrl: url[i],
                             fileName: o,
                             tokenUrl: o
                         })
