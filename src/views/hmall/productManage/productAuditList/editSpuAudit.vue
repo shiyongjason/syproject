@@ -204,7 +204,7 @@ export default {
                 ],
                 serialNumber: [
                     {
-                        required: true,
+                        required: false,
                         validator: (rule, value, callback) => {
                             const reg = /^[A-Za-z0-9]+$/
                             if (this.form.mainSkus[0].serialNumber && !reg.test(this.form.mainSkus[0].serialNumber)) {
@@ -217,7 +217,7 @@ export default {
                 ],
                 length: [
                     {
-                        required: true,
+                        required: false,
                         validator: (rule, value, callback) => {
                             const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
                             if (this.form.mainSkus[0].length && !reg.test(this.form.mainSkus[0].length)) {
@@ -236,7 +236,7 @@ export default {
                 ],
                 grossWeight: [
                     {
-                        required: true,
+                        required: false,
                         validator: (rule, value, callback) => {
                             const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
                             if (this.form.mainSkus[0].grossWeight && !reg.test(this.form.mainSkus[0].grossWeight)) {
@@ -249,7 +249,7 @@ export default {
                 ],
                 volume: [
                     {
-                        required: true,
+                        required: false,
                         validator: (rule, value, callback) => {
                             const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
                             if (this.form.mainSkus[0].volume && !reg.test(this.form.mainSkus[0].volume)) {
@@ -262,7 +262,7 @@ export default {
                 ],
                 netWeight: [
                     {
-                        required: true,
+                        required: false,
                         validator: (rule, value, callback) => {
                             const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
                             if (this.form.mainSkus[0].netWeight && !reg.test(this.form.mainSkus[0].netWeight)) {
