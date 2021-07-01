@@ -38,10 +38,10 @@
                             <el-input v-model="queryParams.model" maxlength="30" placeholder="请输入" @keyup.enter.native="onQuery"></el-input>
                         </div>
                     </div>
-                    <div class="query-cont__col" v-if="productType == 'SPU'">
+                    <div class="query-cont__col">
                         <div class="query-col__lable">商品类目：</div>
                         <div class="query-col__input">
-                            <el-cascader v-model="queryParams.categoryId" :options="categoryOption" :props="props" :change-on-select="true" clearable placeholder="请选择商品类目"></el-cascader>
+                            <el-cascader v-model="queryParams.categoryId" :key="cascaderKey" :options="categoryOption" :props="props" :change-on-select="true" clearable placeholder="请选择商品类目"></el-cascader>
                         </div>
                     </div>
                 </template>
@@ -110,6 +110,7 @@ export default {
                 pageSize: 10
             },
             resetParams: {},
+            cascaderKey: 0,
             multiSelection: [],
             props: {
                 emitPath: false,
@@ -142,6 +143,7 @@ export default {
                 { label: '商品名称', prop: 'name' },
                 { label: '品牌', prop: 'brandName' },
                 { label: '型号', prop: 'model' },
+                { label: '商品类目', prop: 'category' },
                 { label: '规格', prop: 'optionValues' }
             ]
         },
@@ -192,11 +194,13 @@ export default {
         // SPU or SKU 切换
         onTabProductType (productType) {
             this.queryParams = { ...this.resetParams }
+            this.cascaderKey++
             this.tabParams(this.tabName)
             if (productType == 'SPU') {
                 this.getProductSpuList()
                 this.productType = productType
             } else if (productType == 'SKU') {
+                console.log(this.queryParams)
                 this.getProductSkuList()
                 this.productType = productType
             }
@@ -226,12 +230,16 @@ export default {
             if (this.productType == 'SPU') {
                 this.$router.push({ path: '/b2b/product/createProduct', query: { id: row.id } })
             } else if (this.productType == 'SKU') {
-                this.$router.push({ path: '/b2b/product/createProduct', query: { id: row.id } })
+                this.$router.push({ path: '/b2b/product/createProduct', query: { id: row.mainSpuId } })
             }
         },
         // 批量生效
-        onBatchEffective (multiSelection) {
-            batchOperator(multiSelection || this.multiSelection, async (multiSelection) => {
+        async onBatchEffective () {
+            const multiSelection = this.multiSelection.map(item => item.id)
+            if (multiSelection.length < 1) {
+                this.$message.warning('请选择！')
+                return false
+            } else {
                 try {
                     await this.batchEffective(multiSelection)
                     this.$message.success('生效成功！')
@@ -239,11 +247,17 @@ export default {
                 } catch (error) {
                     this.getProductSpuList()
                 }
-            })
+            }
         },
         // 生效spu
-        onEffective (row) {
-            this.onBatchEffective([{ id: row.id }])
+        async onEffective (row) {
+            try {
+                await this.effective({ id: row.id })
+                this.$message.success('生效成功！')
+                this.getProductSpuList()
+            } catch (error) {
+                this.getProductSpuList()
+            }
         },
         // 生效sku
         async onEffectiveSku (row) {
@@ -252,8 +266,12 @@ export default {
             this.getProductSkuList()
         },
         // 批量失效
-        onBatchEfficacy (multiSelection) {
-            batchOperator(multiSelection || this.multiSelection, async (multiSelection) => {
+        async onBatchEfficacy () {
+            const multiSelection = this.multiSelection.map(item => item.id)
+            if (multiSelection.length < 1) {
+                this.$message.warning('请选择！')
+                return false
+            } else {
                 try {
                     await this.batchEfficacy(multiSelection)
                     this.$message.success('失效成功！')
@@ -261,11 +279,17 @@ export default {
                 } catch (error) {
                     this.getProductSpuList()
                 }
-            })
+            }
         },
         // 失效spu
-        onEfficacy (row) {
-            this.onBatchEfficacy([{ id: row.id }])
+        async onEfficacy (row) {
+            try {
+                await this.efficacy({ id: row.id })
+                this.$message.success('失效成功！')
+                this.getProductSpuList()
+            } catch (error) {
+                this.getProductSpuList()
+            }
         },
         // 失效sku
         async onEfficacySku (row) {
@@ -274,9 +298,12 @@ export default {
             this.getProductSkuList()
         },
         // 批量删除
-        onBatchDelete (multiSelection) {
-            // TODO: 确认批量删除提醒没有
-            batchOperator(multiSelection || this.multiSelection, async (multiSelection) => {
+        onBatchDelete () {
+            const multiSelection = this.multiSelection.map(item => item.id)
+            if (multiSelection.length < 1) {
+                this.$message.warning('请选择！')
+                return false
+            } else {
                 this.$confirm('是否删除商品?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消'
@@ -289,11 +316,22 @@ export default {
                         this.getProductSpuList()
                     }
                 }).catch(() => { })
-            })
+            }
         },
         // 删除spu
         onDelete (row) {
-            this.onBatchDelete([{ id: row.id }])
+            this.$confirm('是否删除商品?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消'
+            }).then(async () => {
+                try {
+                    await this.delete({ id: row.id })
+                    this.$message.success('商品删除成功！')
+                    this.getProductSpuList()
+                } catch (error) {
+                    this.getProductSpuList()
+                }
+            }).catch(() => { })
         },
         // 删除sku
         onDeleteSku (row) {
@@ -352,8 +390,11 @@ export default {
             findCategoryOptions: 'productManage/findCategoryOptions',
             findProductSpuList: 'productManage/findProductSpuList',
             findProductSkuList: 'productManage/findProductSkuList',
+            effective: 'productManage/effective',
+            efficacy: 'productManage/efficacy',
             batchEffective: 'productManage/batchEffective',
             batchEfficacy: 'productManage/batchEfficacy',
+            delete: 'productManage/delete',
             batchDelete: 'productManage/batchDelete',
             effectiveSKU: 'productManage/effectiveSKU',
             efficacySKU: 'productManage/efficacySKU',

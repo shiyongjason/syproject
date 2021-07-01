@@ -68,12 +68,12 @@
                 </RichEditor>
                 <div class="title-cont pt30 seeTask" v-if="seeTask == false">
                     <el-form-item label="审核结果：" prop="auditStatus">
-                        <el-radio-group v-model="form.auditStatus" @change="onChange">
+                        <el-radio-group v-model="auditStatus" @change="onChange">
                             <el-radio label="1">审核通过</el-radio>
                             <el-radio label="2">审核不通过</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item style="width: 460px;" v-if="form.auditStatus==2" prop="auditOpinion" class="pt50">
+                    <el-form-item style="width: 460px;" v-if="auditStatus==2" prop="auditOpinion" class="pt50">
                         <el-input type="textarea" maxlength="200" :rows="3" placeholder="理由说明" v-model="form.auditOpinion">
                         </el-input>
                     </el-form-item>
@@ -188,7 +188,8 @@ export default {
                 uploadImgServer: interfaceUrl + 'tms/files/upload-list',
                 uploadImgParams: { updateUid: 'Hosjoy' }
             },
-            agreement: PUTAWAY_RULES
+            agreement: PUTAWAY_RULES,
+            auditStatus: ''
         }
     },
     computed: {
@@ -348,13 +349,13 @@ export default {
                 },
                 warehouseRequest: this.form.mainSkus[0],
                 operator: this.userInfo.employeeName,
-                auditStatus: this.form.auditStatus,
+                auditStatus: this.auditStatus,
                 auditOpinion: this.form.auditOpinion
             }
             this.btnLoading = true
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
-                    if (this.form.auditStatus != '') {
+                    if (this.auditStatus != '') {
                         try {
                             await this.aduitSku(form)
                             this.btnLoading = false

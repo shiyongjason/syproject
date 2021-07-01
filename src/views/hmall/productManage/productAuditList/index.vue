@@ -35,7 +35,7 @@
                     <div class="query-cont__col">
                         <div class="query-col__lable">商品类目：</div>
                         <div class="query-col__input">
-                            <el-cascader v-model="queryParams.categoryId" :options="categoryOption" :props="{value: 'id', label: 'name', children: 'subCategoryList', emitPath: false}" :change-on-select="true" clearable placeholder="请选择商品类目"></el-cascader>
+                            <el-cascader v-model="queryParams.categoryId" :options="categoryOption" :props="{value: 'id', label: 'name', children: 'subCategoryList', emitPath: false}" :key="cateKey" :change-on-select="true" clearable placeholder="请选择商品类目"></el-cascader>
                         </div>
                     </div>
                     <div class="query-cont__col">
@@ -105,6 +105,7 @@ export default {
     name: 'productList',
     data () {
         return {
+            cateKey: 0,
             productStatus: PRODUCT_AUDIT_STATUS,
             productMap: PRODUCT_AUDIT_MAP,
             prodOptions: PROD_STATUS,
@@ -232,6 +233,7 @@ export default {
                 this.getProductSpuList()
                 this.productType = productType
             } else if (productType == 'SKU') {
+                this.cateKey++
                 this.getProductSkuList()
                 this.productType = productType
             }
@@ -325,13 +327,13 @@ export default {
                     for (let key in this.queryParams) {
                         url += (key + '=' + this.queryParams[key] + '&')
                     }
-                    location.href = B2bUrl + 'product/boss/main-spu/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
+                    location.href = B2bUrl + 'product/boss/main-spu/export/audit?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
                 } else if (this.productType == 'SKU') {
                     let url = ''
                     for (let key in this.queryParams) {
                         url += (key + '=' + this.queryParams[key] + '&')
                     }
-                    location.href = B2bUrl + 'product/boss/main-sku/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
+                    location.href = B2bUrl + 'product/boss/main-sku/export/audit?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
                 }
             }
         },

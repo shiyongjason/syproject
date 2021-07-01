@@ -48,8 +48,8 @@
                     <template v-for="(sItem,sIndex) in item.optionValues">
                         <td :key="sIndex" v-if="item.optionValues.length">
                             <el-form-item label-width='0' :prop="`mainSkus[${index}].optionValues`" :rules="rules.optionValues">
-                                <el-select v-model="sItem.id" @change="onChangeValue(index,sIndex)" clearable :disabled="item.disabled">
-                                    <el-option v-for="i in optionValuesFilter(sItem.optionTypeId)" :key="i.id" :label="i.name" :value="i.id"></el-option>
+                                <el-select v-model="item.optionValues[sIndex].id" @change="onChangeValue(index,sIndex)" clearable :disabled="item.disabled">
+                                    <el-option v-for="(i,ssIndex) in optionValuesFilter(sItem.optionTypeId).optionValues" :key="ssIndex" :label="i.name" :value="i.id"></el-option>
                                 </el-select>
                             </el-form-item>
                         </td>
@@ -90,7 +90,7 @@
                     </td>
                     <td v-if="$route.query.id">
                         <el-form-item label-width='0'>
-                            <span>{{item.mainSkuId}}</span>
+                            <span>{{item.mainSkuCode}}</span>
                         </el-form-item>
                     </td>
                     <td>
@@ -155,11 +155,9 @@ export default {
                     {
                         required: true,
                         validator: (rule, value, callback) => {
-                            value.every(item => {
-                                if (item.id == '') {
-                                    return callback(new Error('请选择属性值'))
-                                }
-                            })
+                            if (value.every(item => item.id == '')) {
+                                return callback(new Error('请选择属性值'))
+                            }
                             return callback()
                         },
                         trigger: 'change'
@@ -191,16 +189,16 @@ export default {
                 length: [
                     {
                         validator: (rule, value, callback) => {
-                            const reg = /^[0-9]+$/
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
                             this.form.mainSkus.map(item => {
                                 if (item.length && !reg.test(item.length)) {
-                                    return callback(new Error('长宽高仅支持数字'))
+                                    return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
                                 }
-                                if (item.width && !reg.test(item.length)) {
-                                    return callback(new Error('长宽高仅支持数字'))
+                                if (item.width && !reg.test(item.width)) {
+                                    return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
                                 }
-                                if (item.height && !reg.test(item.length)) {
-                                    return callback(new Error('长宽高仅支持数字'))
+                                if (item.height && !reg.test(item.height)) {
+                                    return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
                                 }
                             })
                             return callback()
@@ -210,9 +208,9 @@ export default {
                 grossWeight: [
                     {
                         validator: (rule, value, callback) => {
-                            const reg = /^[0-9]+$/
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
                             if (value && !reg.test(value)) {
-                                return callback(new Error('毛重仅支持数字'))
+                                return callback(new Error('毛重格式为小数点前十位，小数点后两位'))
                             }
                             return callback()
                         }
@@ -221,9 +219,9 @@ export default {
                 volume: [
                     {
                         validator: (rule, value, callback) => {
-                            const reg = /^[0-9]+$/
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
                             if (value && !reg.test(value)) {
-                                return callback(new Error('体积仅支持数字'))
+                                return callback(new Error('体积格式为小数点前十位，小数点后两位'))
                             }
                             return callback()
                         }
@@ -232,9 +230,9 @@ export default {
                 netWeight: [
                     {
                         validator: (rule, value, callback) => {
-                            const reg = /^[0-9]+$/
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
                             if (value && !reg.test(value)) {
-                                return callback(new Error('净重仅支持数字'))
+                                return callback(new Error('净重格式为小数点前十位，小数点后两位'))
                             }
                             return callback()
                         }
@@ -271,21 +269,16 @@ export default {
     },
     methods: {
         optionValuesFilter (id) {
-            const result = this.optionTypeListFilter.filter(item => item.id == id)
-            if (result.length > 0) {
-                return result[0].optionValues
-            } else {
-                return []
-            }
+            return this.form.optionTypeList.find(item => item.id == id)
         },
         backPicUrl (file) {
             this.params.skuImgurl = file.imageUrl
         },
         backPicUrlSku (file, index) {
-            this.form.mainSkus[index].imageUrls = file.imageUrl
+            this.$set(this.form.mainSkus[index], 'imageUrls', file.imageUrl)
         },
         handleCommand (command) {
-            this.form.mainSkus.map((item, index) => {
+            deepCopy(this.form.mainSkus).map((item, index) => {
                 if (command == 'imageUrls') {
                     this.$set(this.form.mainSkus[index], 'imageUrls', this.params.skuImgurl)
                 }
@@ -327,9 +320,12 @@ export default {
         },
         onChangeValue (index, sIndex) {
             this.form.mainSkus[index].optionValues[sIndex].name = this.changeValue(this.form.mainSkus[index].optionValues[sIndex].optionTypeId, this.form.mainSkus[index].optionValues[sIndex].id)
+            this.$nextTick(() => {
+                this.$parent.clearValidate()
+            })
         },
         changeValue (optionTypeId, id) {
-            const result = this.form.optionTypeList.filter(item => item.id == optionTypeId)[0].optionValues.filter(item => item.id == id)[0]
+            const result = this.form.optionTypeList.filter(item => item.id == optionTypeId)[0].optionValues.filter(item => item.id == id)
             return result && result.length > 0 ? result[0].name : ''
         },
         ...mapActions({

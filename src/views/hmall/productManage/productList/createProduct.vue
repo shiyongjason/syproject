@@ -71,7 +71,7 @@
                         <div class="sku-cont_group mb20" v-for="(item,index) in form.optionTypeList" :key="index">
                             <div class="group-spec_label">
                                 <el-form-item label="规格名：" :prop="`optionTypeList[${index}].name`" :rules="rules.option">
-                                    <el-input v-model="item.name" @change="onAddOption(item.name,index)" maxlength="10" placeholder="请输入规格名" :disabled="item.disabled"></el-input>
+                                    <el-input v-model="item.name" @change="onAddOption(item.id,item.name,index)" maxlength="10" placeholder="请输入规格名" :disabled="item.disabled"></el-input>
                                 </el-form-item>
                             </div>
                             <div class="group-spec_tags mt20">
@@ -82,7 +82,7 @@
                             </div>
                             <span class="group-spec_close" @click="onDelOptionTemplate(index)" v-if="form.auditStatus != 1"><i class="el-icon-close"></i></span>
                         </div>
-                        <h-button type="create" class="mb20" @click="onAddOptionTemplate">添加规格</h-button>
+                        <h-button type="create" class="mb20" @click="onAddOptionTemplate" :disabled="disabled">添加规格</h-button>
                     </div>
                     <skuTable ref="skuTable" :formData.sync="form"></skuTable>
                     <h-button type="create" class="mb20" v-if="form.optionTypeList.length>0" @click="onAddSKU">+</h-button>
@@ -117,7 +117,6 @@
             <h-button type='primary' :loading="btnLoading" @click="onSave">提交</h-button>
             <h-button @click="onReset">重置</h-button>
         </div>
-        <el-backtop target=".page-body-cont .el-scrollbar__wrap"></el-backtop>
     </div>
 </template>
 <script>
@@ -127,9 +126,10 @@ import { interfaceUrl } from '@/api/config'
 import { RICH_EDITOR_MENUS, PUTAWAY_RULES } from '../const/common'
 import { flatten } from '@/views/hmall/utils/sku'
 import { deepCopy } from '@/utils/utils'
-import { clearCache } from '@/utils/index'
+import { clearCache, newCache } from '@/utils/index'
 export default {
     name: 'createProduct',
+    inject: ['reload'],
     components: {
         skuTable
     },
@@ -168,7 +168,6 @@ export default {
                 operator: '',
                 optionTypeList: []
             },
-            resetForm: {},
             rules: {
                 brandName: [
                     { required: true, message: '请选择商品品牌', trigger: 'change' }
@@ -279,8 +278,6 @@ export default {
         },
         'form.optionTypeList' (value, preValue) {
             // 当sku被编辑或者是编辑页面的时候，我们不做笛卡尔积
-            console.log(this.isEdit)
-            console.log(this.isEditSku)
             if (this.isEdit || this.isEditSku) {
                 /**
                  * 当编辑页面时候，页面渲染会触发form.optionTypeList的变更，这个时候我们不需要处理mainSkus
@@ -384,7 +381,6 @@ export default {
     },
     methods: {
         init () {
-            this.resetForm = { ...this.form }
             this.getBrandOptions()
             this.getCategoryOptions()
             this.getModelOptions()
@@ -419,8 +415,7 @@ export default {
             }, 1000)
         },
         async handleSelectModel (item) {
-            await this.getProductInfo(item.mainSpuId)
-            this.showMore = true
+            this.$router.push({ path: '/b2b/product/createProduct', query: { id: item.mainSpuId } })
         },
         createStateFilter (queryString) {
             return (state) => {
@@ -436,11 +431,11 @@ export default {
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
                     await this.getProductUnique()
-                    this.showMore = true
                     if (this.productUnique) {
-                        await this.getProductInfo(this.productUnique)
+                        this.$router.push({ path: '/b2b/product/createProduct', query: { id: this.productUnique } })
+                    } else {
+                        this.showMore = true
                     }
-                    this.form.name = this.form.name
                 }
             })
         },
@@ -465,12 +460,28 @@ export default {
         },
         onDelOptionTemplate (index) {
             this.form.optionTypeList.splice(index, 1)
-        },
-        async onAddOption (name, index) {
-            await this.addOption({ name: name })
-            if (this.form.optionTypeList[index].name == name) {
-                this.form.optionTypeList[index].id = this.optionId
+            if (this.form.optionTypeList.length == 0) {
+                this.form.mainSkus = [{
+                    name: '',
+                    imageUrls: '',
+                    serialNumber: '',
+                    length: '',
+                    width: '',
+                    height: '',
+                    grossWeight: '',
+                    volume: '',
+                    netWeight: '',
+                    optionValues: []
+                }]
             }
+        },
+        async onAddOption (id, name, index) {
+            if (id) {
+                await this.editOption({ id: id, name: name })
+            } else {
+                await this.addOption({ name: name })
+            }
+            this.form.optionTypeList[index].id = this.optionId
         },
         async onAddOptionVlaue (index) {
             let str = this.addValues[index] || ''
@@ -487,7 +498,7 @@ export default {
                         item.optionValues = this.form.optionTypeList[i].optionValues.concat(this.optionValueData)
                     }
                     item.optionValues.map(sItem => {
-                        sItem.disabled = item.optionValues.length == 1 || this.productSpuInfo.auditStatus == 1
+                        sItem.disabled = item.optionValues.length == 1 || this.$route.id || this.productSpuInfo.auditStatus == 1
                         return sItem
                     })
                     return item
@@ -503,7 +514,7 @@ export default {
                     item.optionValues.splice(sIndex, 1)
                 }
                 item.optionValues.map(sItem => {
-                    sItem.disabled = item.optionValues.length == 1 || this.productSpuInfo.auditStatus == 1
+                    sItem.disabled = item.optionValues.length == 1 || this.$route.id || this.productSpuInfo.auditStatus == 1
                     return sItem
                 })
                 return item
@@ -519,6 +530,9 @@ export default {
                 return item
             })
             this.addValues.splice(sIndex, 1)
+            this.$nextTick(() => {
+                this.$refs.form.clearValidate()
+            })
         },
         onSettingTop (index) {
             this.imageUrls.unshift((this.imageUrls.splice(index, 1))[0])
@@ -595,12 +609,7 @@ export default {
             this.setNewTags((this.$route.fullPath).split('?')[0])
         },
         onReset () {
-            this.showMore = false
-            this.$refs.form.resetFields()
-            this.specifications = []
-            this.addValues = []
-            this.imageUrls = []
-            this.form = { ...this.resetForm }
+            this.reload('createProduct')
         },
         onPutawayRules () {
             this.$alert(this.agreement, '舒适e购商品上架规则', {
@@ -617,6 +626,7 @@ export default {
             checkProductUnique: 'productManage/checkProductUnique',
             findProductSpuInfo: 'productManage/findProductSpuInfo',
             addOption: 'productManage/addOption',
+            editOption: 'productManage/editOption',
             addOptionValue: 'productManage/addOptionValue',
             createProduct: 'productManage/createProduct',
             editProduct: 'productManage/editProduct'
@@ -674,7 +684,7 @@ export default {
                 optionTypeList: this.productSpuInfo.optionTypeList.length ? this.productSpuInfo.optionTypeList.map(item => {
                     item.disabled = !!(this.$route.query.id)
                     item.optionValues.map(sItem => {
-                        sItem.disabled = item.optionValues.length == 1 || this.productSpuInfo.auditStatus == 1
+                        sItem.disabled = item.optionValues.length == 1 || this.$route.id || this.productSpuInfo.auditStatus == 1
                         return sItem
                     })
                     return item
@@ -694,6 +704,10 @@ export default {
     },
     mounted () {
         this.init()
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('createProduct')
+        next()
     },
     beforeRouteLeave (to, from, next) {
         if (to.name != 'productList') {
