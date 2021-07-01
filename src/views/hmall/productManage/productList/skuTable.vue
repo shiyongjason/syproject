@@ -48,8 +48,8 @@
                     <template v-for="(sItem,sIndex) in item.optionValues">
                         <td :key="sIndex" v-if="item.optionValues.length">
                             <el-form-item label-width='0' :prop="`mainSkus[${index}].optionValues`" :rules="rules.optionValues">
-                                <el-select v-model="sItem.id" @change="onChangeValue(index,sIndex)" clearable :disabled="item.disabled">
-                                    <el-option v-for="i in optionValuesFilter(sItem.optionTypeId)" :key="i.id" :label="i.name" :value="i.id"></el-option>
+                                <el-select v-model="item.optionValues[sIndex].id" clearable :disabled="item.disabled">
+                                    <el-option v-for="(i,ssIndex) in optionValuesFilter(sItem.optionTypeId).optionValues" :key="ssIndex" :label="i.name" :value="i.id"></el-option>
                                 </el-select>
                             </el-form-item>
                         </td>
@@ -271,9 +271,10 @@ export default {
     },
     methods: {
         optionValuesFilter (id) {
-            const result = this.optionTypeListFilter.filter(item => item.id == id)
+            const result = this.form.optionTypeList.filter(item => item.id == id)
+            console.log(result)
             if (result.length > 0) {
-                return result[0].optionValues
+                return result[0]
             } else {
                 return []
             }
@@ -329,7 +330,7 @@ export default {
             this.form.mainSkus[index].optionValues[sIndex].name = this.changeValue(this.form.mainSkus[index].optionValues[sIndex].optionTypeId, this.form.mainSkus[index].optionValues[sIndex].id)
         },
         changeValue (optionTypeId, id) {
-            const result = this.form.optionTypeList.filter(item => item.id == optionTypeId)[0].optionValues.filter(item => item.id == id)[0]
+            const result = this.form.optionTypeList.filter(item => item.id == optionTypeId)[0].optionValues.filter(item => item.id == id)
             return result && result.length > 0 ? result[0].name : ''
         },
         ...mapActions({

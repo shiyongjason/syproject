@@ -168,7 +168,6 @@ export default {
                 operator: '',
                 optionTypeList: []
             },
-            resetForm: {},
             rules: {
                 brandName: [
                     { required: true, message: '请选择商品品牌', trigger: 'change' }
@@ -279,8 +278,6 @@ export default {
         },
         'form.optionTypeList' (value, preValue) {
             // 当sku被编辑或者是编辑页面的时候，我们不做笛卡尔积
-            // console.log(this.isEdit)
-            // console.log(this.isEditSku)
             if (this.isEdit || this.isEditSku) {
                 /**
                  * 当编辑页面时候，页面渲染会触发form.optionTypeList的变更，这个时候我们不需要处理mainSkus
@@ -308,7 +305,6 @@ export default {
                 }
                 return
             }
-            console.log(this.form.mainSkus)
             let changeSku = true
             value.forEach(item => {
                 if (item.optionValues.length <= 0) {
@@ -351,7 +347,6 @@ export default {
                     this.form.mainSkus = mainSkus
                 }
             }
-            console.log(this.form.mainSkus)
         },
         mainSkus: {
             handler (value, preValue) {
@@ -365,10 +360,6 @@ export default {
                 })
                 const valueStr = JSON.stringify(valueNew)
                 const preValueStr = JSON.stringify(preValueNew)
-                // console.log(valueStr)
-                // console.log(preValueStr)
-                // console.log(value[0].optionValues.length)
-                // console.log(preValue[0].optionValues.length)
                 /**
                  * 判断SKU是否变化的核心判断规则：是否只是optionTypeList引起的变更
                  * optionTypeList引起的变更有两种情况
@@ -390,8 +381,6 @@ export default {
     },
     methods: {
         init () {
-            console.log(!!this.$route.query.id)
-            this.resetForm = { ...this.form }
             this.getBrandOptions()
             this.getCategoryOptions()
             this.getModelOptions()
@@ -485,7 +474,6 @@ export default {
                     optionValues: []
                 }]
             }
-            console.log(this.form.mainSkus)
         },
         async onAddOption (name, index) {
             await this.addOption({ name: name })
