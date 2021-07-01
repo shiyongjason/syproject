@@ -135,7 +135,7 @@
                     </div>
                     <div class="form-item noctx" v-if="!!reqBossProjectRefund.hasRefunded">
                         <el-form-item  prop='refundPics' label="请上传支付凭证：">
-                            <span class="txt">（上传1-2张经销商的付款截图或银行到账截图，支持jpeg,png和jpg格式）</span>
+                            <span class="txt">（上传付款截图或银行到账截图，支持jpeg,png和jpg格式）</span>
                         </el-form-item>
                         <div>
                             <div>
