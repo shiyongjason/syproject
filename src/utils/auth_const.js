@@ -227,7 +227,7 @@ export const CRM_PREV_PAYMENT_DETAIL = 109512 // 查看上游支付明细
 export const CRM_ARREAR_FUND_CONFIRM = 109513 // 尾款账单-支付确认
 export const CRM_REVIEW_RECEIPT_DETAIL = 109514 // 查看收货明细
 export const CRM_PAYMENT_REVIEW_DOWN = 109524
-export const CRM_PAYMENT_UPLOADPAY = 1097001
+export const CRM_PAYMENT_UPLOADPAY = 1097001 // 上传凭证
 
 // 好程工 资金
 export const CRM_FUNDS_DOWN_PAYMENT_FUND_CONFIRM = 109515 // 首付款账单-支付确认
