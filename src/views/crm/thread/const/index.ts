@@ -16,6 +16,8 @@ export const DEVICE_CATEGORY: { label: string; value: string; }[] = [
     { label: '智能化', value: '5' },
     { label: '辅材', value: '6' },
     { label: '电梯', value: '7' },
+    { label: '电器', value: '9' },
+    { label: '热水器', value: '10' },
     { label: '其他', value: '8' }
 ]
 
