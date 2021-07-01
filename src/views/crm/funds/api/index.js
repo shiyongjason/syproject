@@ -20,6 +20,9 @@ export const updateFinalUnPay = (params) => axios.patch('/project/api/payment-or
 
 // 支付凭证保存
 export const payVoucher = (params) => axios.post('/project/api/batch-funds/boss/pay-voucher', params)
+// 支付单保存
+export const payOrderVoucher = (params) => axios.post('/project/api/batch-funds/boss/payment-order-voucher', params)
+
 // 失败 待支付的 数量
 export const getBnumber = (params) => axios.get('/project/api/batch-funds/boss/pay-batch-number', { params })
 // 查询未支付的账单列表
