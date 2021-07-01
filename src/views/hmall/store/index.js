@@ -9,6 +9,7 @@ import spumanage from '@/views/hmall/spumanage/store/index'
 import dataBoard from '@/views/hmall/dataBoard/store/index'
 import searchProject from '@/views/hmall/searchProject/store/index'
 import marketManage from '@/views/hmall/marketManage/store/index'
+import fundAudit from '@/views/hmall/fundAudit/store/index'
 
 export default {
     state,
@@ -21,6 +22,7 @@ export default {
         category,
         spumanage,
         dataBoard,
-        searchProject
+        searchProject,
+        fundAudit
     }
 }

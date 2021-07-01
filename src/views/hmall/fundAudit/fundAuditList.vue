@@ -205,11 +205,13 @@ export default {
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            fundList: state => state.fundList
         }),
-        ...mapGetters({
+        ...mapGetters('fundAudit', {
             merchantData: 'merchantData',
-            branchList: 'branchList'
+            branchList: 'branchList',
+            findFundList: 'findFundList'
         }),
         pickerOptionsStart () {
             return {
@@ -261,7 +263,7 @@ export default {
             // }
         },
         onSave () { },
-        ...mapActions({
+        ...mapActions('fundAudit', {
             // findMerchantList: 'findMerchantList',
             findBranch: 'findBranch'
         }),
