@@ -338,3 +338,6 @@ export const CRM_WORK_FINAL_PASS = 100704
 export const CRM_WORK_FINAL_ADDPUR = 100705
 // 好橙工项目 删除采购单
 export const CRM_WORK_FINAL_DELETEPUR = 100706
+
+// 好橙工项目 导出客户列表
+export const CRM_WORK_CUSTOMER_EXPORT = 100707
