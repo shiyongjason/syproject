@@ -983,8 +983,14 @@ export default class ProjectList2Detail extends Vue {
         let res = this.process.filter(item => {
             return item.nodeStatus
         })
+        console.log('🚀 --- add --- res', res)
         if (res.length) {
-            this.flowUpRequest.flowUpProcess = res[res.length - 1].nodeKey + ''
+            if (res[res.length - 1].nodeKey == 5) {
+                // 5为已签约，不能展示
+                this.flowUpRequest.flowUpProcess = ''
+            } else {
+                this.flowUpRequest.flowUpProcess = res[res.length - 1].nodeKey + ''
+            }
         } else {
             this.flowUpRequest.flowUpProcess = '1'
         }
