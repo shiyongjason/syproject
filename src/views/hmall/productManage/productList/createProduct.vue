@@ -289,7 +289,7 @@ export default {
                         // 增加一列，且只赋予第一个规格值
                         if (value[value.length - 1].optionValues.length > 0) {
                             this.form.mainSkus = this.form.mainSkus.map(item => {
-                                item.optionValues.push(value[value.length - 1].optionValues[0])
+                                item.optionValues.push(deepCopy(value[value.length - 1].optionValues[0]))
                                 return item
                             })
                         }
