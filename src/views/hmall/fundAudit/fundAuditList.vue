@@ -98,42 +98,41 @@
                         {{bossDetail.companyName?bossDetail.companyName:'-'}}
                     </el-form-item>
                     <el-form-item label="商家账号：" :label-width="formLabelWidth">
-                        {{bossDetail.companyName?bossDetail.companyName:'-'}}
+                        {{bossDetail.username?bossDetail.username:'-'}}
                     </el-form-item>
                     <el-form-item label="所属分部：" :label-width="formLabelWidth">
-                        {{bossDetail.subsectionCode||'-'}}
+                        {{bossDetail.subsectionName||'-'}}
                     </el-form-item>
                     <el-form-item label="店铺名称：" :label-width="formLabelWidth">
                         {{bossDetail.shopName||'-'}}
                     </el-form-item>
-                    <el-form-item label="额度：" :label-width="formLabelWidth">
-                        <el-input v-model="bossDetail.shopName" maxLength="60" prop='' placeholder="请输入额度"></el-input>
-                        <span class="ml20">0-100000000的整数</span>
+                    <el-form-item label="额度：" :label-width="formLabelWidth" :rules="rules.creditLimit">
+                        <el-input v-model="creditLimit" maxLength="10" prop='' placeholder="请输入额度"></el-input>
                     </el-form-item>
                     <el-form-item label="比例：" :label-width="formLabelWidth">
-                        <el-input v-model="bossDetail.shopName" maxLength="60" prop='' placeholder="请输入比例"></el-input>
-                        <span class="ml20">%</span>
-                        <span class="ml20">0-100的整数</span>
+                        <el-input v-model="prepayPercentage" maxLength="60" prop='' placeholder="请输入比例">
+                            <template slot="suffix">%</template>
+                        </el-input>
                     </el-form-item>
                     <el-form-item label="额度有效时间：" :label-width="formLabelWidth">
-                        <el-date-picker v-model="queryParams.registrationStartTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="额度有效时间">
+                        <el-date-picker v-model="expireTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="额度有效时间">
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="审核：" prop="type" :label-width="formLabelWidth">
-                        <el-radio-group v-model="bossDetail.merchantType">
-                            <el-radio :label="1">通过</el-radio>
-                            <el-radio :label="2">不通过</el-radio>
+                        <el-radio-group v-model="auditStatus">
+                            <el-radio :label="20">通过</el-radio>
+                            <el-radio :label="30">不通过</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="原因：" :label-width="formLabelWidth">
-                        <el-input v-model="bossDetail.shopName" maxLength="60" prop='' placeholder="请输入原因"></el-input>
+                    <el-form-item label="原因：" v-if="auditStatus == 30" :label-width="formLabelWidth">
+                        <el-input v-model="note" maxLength="60" prop='' placeholder="请输入原因"></el-input>
                     </el-form-item>
                 </el-form>
-            </div>
-            <div class="drawer-footer">
-                <div class="drawer-footer-btn flr">
-                    <h-button type='primary' @click="onSave">确定</h-button>
-                    <h-button @click="brandDrawer = false">取消</h-button>
+                <div class="drawer-footer">
+                    <div class="drawer-footer-btn flr">
+                        <h-button type='primary' @click="onSave">确定</h-button>
+                        <h-button @click="brandDrawer = false">取消</h-button>
+                    </div>
                 </div>
             </div>
         </el-drawer>
@@ -189,7 +188,26 @@ export default {
             bossDetail: {},
             brandDrawer: true,
             formLabelWidth: '140px',
-            rules: {}
+            rules: {
+                creditLimit: [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            const reg = /^(([0-9])|([1-9][0-9]{1,7})|100000000)$/
+                            if (!value && !reg.test(value)) {
+                                return callback(new Error('额度格式为0-100000000的整数'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
+                ]
+            },
+            creditLimit: '',
+            prepayPercentage: '',
+            expireTime: '',
+            auditStatus: '',
+            note: ''
         }
     },
     computed: {
@@ -234,8 +252,8 @@ export default {
     },
     methods: {
         async init () {
-            await this.onGetbranch()
-            await this.findFundList()
+            this.onGetbranch()
+            this.findFundList()
         },
         onQuery () {
             this.queryParams.pageNumber = 1
@@ -246,20 +264,22 @@ export default {
             this.findFundList()
         },
         handleClose () {
-            // if (JSON.stringify(this.bossDetail) != JSON.stringify(this.copyDetail)) {
-            //     this.$confirm('取消则不会保存修改的内容，你还要继续吗？', '是否确认取消修改？', {
-            //         confirmButtonText: '确认取消',
-            //         cancelButtonText: '返回',
-            //         type: 'warning'
-            //     }).then(async () => {
-            //         this.$emit('backEvent')
-            //     })
-            // } else {
-            //     // this.activeName = 'first'
-            //     this.$emit('backEvent')
-            // }
+            if (JSON.stringify(this.bossDetail) != JSON.stringify(this.copyDetail)) {
+                this.$confirm('取消则不会保存修改的内容，你还要继续吗？', '是否确认取消修改？', {
+                    confirmButtonText: '确认取消',
+                    cancelButtonText: '返回',
+                    type: 'warning'
+                }).then(async () => {
+                    this.$emit('backEvent')
+                })
+            } else {
+                // this.activeName = 'first'
+                this.$emit('backEvent')
+            }
         },
-        onSave () { },
+        onSave () {
+            this.brandDrawer = false
+        },
         ...mapActions({
             // findMerchantList: 'findMerchantList',
             findBranch: 'findBranch',
@@ -281,6 +301,8 @@ export default {
         },
         async onFindInfo (val, type) {
             await this.findFundInfo({ id: val })
+            this.bossDetail = this.fundInfo
+            console.log(this.bossDetail)
             this.brandDrawer = true
         }
     }
@@ -320,10 +342,6 @@ export default {
         // border-bottom: 1px solid #e5e5e5;
     }
     .drawer-footer {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
         padding: 12px 24px;
         border-top: 1px solid #e5e5ea;
         background: #fff;
