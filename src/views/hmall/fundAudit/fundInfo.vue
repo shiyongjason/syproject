@@ -33,7 +33,7 @@
                 <div class="table-cont-title">
                     <span class="table-title-name">采购商品清单</span>
                 </div>
-                <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isShowIndex='true' :isfiexd="'right'" show-summary class="mt20 mb20">
+                <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isShowIndex='true' :isfiexd="'right'" :isShowSum="true" :getSum="getSum" class="mt20 mb20">
                 </basicTable>
                 <el-form-item label="代采订单总金额：" prop="remark">
                     <el-input class="form-input_big" v-model="form.parameter2" maxlength="100" disabled></el-input>
@@ -52,8 +52,8 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item v-if="pageType == 'auditFundList'" label="订单最终回款日期：" prop="authenticationStartTime">
-                    <el-date-picker v-model="form.authenticationStartTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="订单最终回款日期">
-                    </el-date-picker>
+                    <el-input class="form-input_big" v-model="form.auditFundList" maxlength="50">
+                    </el-input>
                 </el-form-item>
                 <div style="display:flex;" v-if="pageType == 'auditFundList'">
                     <el-form-item label="审核：" prop="type">
@@ -139,6 +139,21 @@ export default {
         async getSkuInfo () {
         },
         onChangeProvince (value) {
+        },
+        // 商家明细合计
+        getSum (param) {
+            const { columns, data } = param
+            const sums = []
+            columns.forEach((column, index) => {
+                if (index == 0) {
+                    sums[index] = '合计'
+                }
+                // 含税金额
+                if (column.property == 'totalAmount') {
+                    sums[index] = this.childOrderStatistics.totalAmount
+                }
+            })
+            return sums
         }
     },
     mounted () {
