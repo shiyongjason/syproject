@@ -74,6 +74,8 @@ export const MAINCATEGORY: { key: string; value: string | ''; }[] = [
     { value: '智能化', key: '5' },
     { value: '辅材', key: '6' },
     { value: '电梯', key: '7' },
+    { value: '电器', key: '9' },
+    { value: '热水器', key: '10' },
     { value: '其他', key: '8' }
 ]
 /** 角色 1：老板 2：操盘手 3：业务 4：财务 5：仓管 6：普通员工 */
