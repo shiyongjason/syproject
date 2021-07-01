@@ -578,6 +578,8 @@ export default class ProjectList2Detail extends Vue {
         this.projectDetail.countryId = ''
         if (!key) {
             this.projectDetail.provinceName = ''
+            this.projectDetail.cityName = ''
+            this.projectDetail.countryName = ''
             return
         }
         const res = this.provinceList.filter(item => {
@@ -591,6 +593,7 @@ export default class ProjectList2Detail extends Vue {
         this.projectDetail.countryId = ''
         if (!key) {
             this.projectDetail.cityName = ''
+            this.projectDetail.countryName = ''
             return
         }
         const res = this.getCity.filter(item => {
@@ -602,7 +605,7 @@ export default class ProjectList2Detail extends Vue {
     onArea (key) {
         this.projectDetail.countryId = key || ''
         if (!key) {
-            this.projectDetail.cityName = ''
+            this.projectDetail.countryName = ''
             return
         }
         const res = this.getCountry.filter(item => {
@@ -1157,11 +1160,12 @@ export default class ProjectList2Detail extends Vue {
     async onUpDateProjectDetail () {
         this.projectDetail.operateUserName = this.userInfo.employeeName
         this.projectDetail.operateUserPhone = this.userInfo.phoneNumber
-        await upDateProjectDetail(this.projectDetail)
-        await this.onInitGetDate()
-        this.$emit('getDetail', this.projectDetail.id)
-        this.$message.success('保存成功')
-        this.$emit('getList')
+        console.log(' 🚗 🚕 🚙 🚌 🚎 this.projectDetail', this.projectDetail)
+        // await upDateProjectDetail(this.projectDetail)
+        // await this.onInitGetDate()
+        // this.$emit('getDetail', this.projectDetail.id)
+        // this.$message.success('保存成功')
+        // this.$emit('getList')
     }
 
     async onInitGetDate () {
