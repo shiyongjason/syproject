@@ -95,8 +95,8 @@
                 已经选中{{selectThread.length}}个，可进行批量操作
                 <h-button table :disabled='selectThread.length === 0' style="margin-left:10px" @click="distributor()">批量分配销售</h-button>
             </el-tag>
-            <hosJoyTable ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="pagination" @selection-change="dialogCheckChange"
-                actionWidth='220' isShowselection isAction :isActionFixed='tableData&&tableData.length>0'>
+            <hosJoyTable localName="V3.*" ref="hosjoyTable" collapseShow align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="pagination"
+                @selection-change="dialogCheckChange" actionWidth='220' isShowselection isAction :isActionFixed='tableData&&tableData.length>0'>
                 <template #deviceCategory="slotProps">
                     {{deviceCategoryString(slotProps.data.row.deviceCategory)}}
                 </template>
