@@ -470,7 +470,8 @@ export default class ProjectList2 extends Vue {
         provinceId: '',
         cityId: '',
         countryId: '',
-        estimatedSignAmount: ''
+        estimatedSignAmount: '',
+        deptName: ''
     }
      uploadParameters = {
          updateUid: '',
