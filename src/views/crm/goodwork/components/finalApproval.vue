@@ -287,7 +287,7 @@
         <el-dialog title="终审" :close-on-click-modal='false' :visible.sync="lastDialog" width="25%" :before-close="handleCloseLast" :modal='false'>
             <el-form :model="lastForm" :rules="lastFormRules" ref="lastForm" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="备注信息：" prop="remark">
-                    <el-input type='textarea' v-model="lastForm.remark" maxlength="500"></el-input>
+                    <el-input   type="textarea"  :autosize="{ minRows: 5, maxRows: 10}" v-model="lastForm.remark" maxlength="500"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -931,8 +931,12 @@ export default class FinalApproval extends Vue {
 
     async _finalApprove (val) {
         this.lastDialog = true
+
         this.lastForm.remark = this.baseInfoForm.remark
         this.type = val
+        this.$nextTick(() => {
+            this.$refs['lastForm'].clearValidate()
+        })
     }
     // 保存结果
     async onSubmitLast () {
