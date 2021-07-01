@@ -190,7 +190,7 @@ export default {
     },
     mounted () {
         // this.onFindMlist()
-        // this.onGetbranch()
+        this.onGetbranch()
         this.copyParams = { ...this.queryParams }
     },
     methods: {
@@ -215,7 +215,7 @@ export default {
         },
         ...mapActions({
             // findMerchantList: 'findMerchantList',
-            // findBranch: 'findBranch'
+            findBranch: 'findBranch'
         }),
         onRest () {
             this.queryParams = { ...this.copyParams }
@@ -240,8 +240,8 @@ export default {
             // }
         },
         async onGetbranch () {
-            // await this.findBranch()
-            // this.branchArr = this.branchList
+            await this.findBranch()
+            this.branchArr = this.branchList
         },
         onseeTask (val) {
             this.$router.push({ path: '/fundAudit/listFundInfo', query: { id: val, audit: false, pageType: auditFundList } })

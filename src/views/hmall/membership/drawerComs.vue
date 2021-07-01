@@ -2,11 +2,7 @@
     <div class="drawer-wrap">
         <h-drawer :title="type==='merchant'?'商家详情':'会员详情'" :visible.sync="drawer" direction='rtl' size='50%' :beforeClose="handleClose">
             <template #connect>
-                <el-tabs v-model="activeName">
-                    <el-tab-pane label="功能管理" name="first"></el-tab-pane>
-                    <el-tab-pane label="开户信息" name="second"></el-tab-pane>
-                </el-tabs>
-                <el-form v-if="activeName=='first'" :model="bossDetail" :rules="rules" ref="ruleForm">
+                <el-form :model="bossDetail" :rules="rules" ref="ruleForm">
                     <el-form-item :label="type==='merchant'?'商家账号：':'会员账号：'" :label-width="formLabelWidth">
                         <span v-if="type==='merchant'">{{bossDetail.merchantAccount?bossDetail.merchantAccount:'-'}}</span>
                         <span v-if="type==='member'">{{bossDetail.memberAccount?bossDetail.memberAccount:'-'}}</span>
@@ -65,19 +61,19 @@
                                 <el-radio :label="2">体系外</el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <el-form-item label="自动推送至店铺：" prop="resource" :label-width="formLabelWidth">
-                            <el-switch v-model="bossDetail.isAutoDispatch" :active-value=1 :inactive-value=0></el-switch>
-                        </el-form-item>
+                        <div style="display:flex">
+                            <el-form-item label="自动推送至店铺：" prop="resource" :label-width="formLabelWidth">
+                                <el-switch v-model="bossDetail.isAutoDispatch" :active-value=1 :inactive-value=0></el-switch>
+                            </el-form-item>
+                            <el-form-item label="资金业务：" prop="resource" :label-width="formLabelWidth">
+                                <el-switch v-model="bossDetail.isAutoDispatch" :active-value=1 :inactive-value=0></el-switch>
+                            </el-form-item>
+                        </div>
                         <el-form-item label="商家角色：" prop="type" :label-width="formLabelWidth">
                             <el-checkbox label="商品型" name="type" v-model="bossDetail.isCommodity" :true-label=1 :false-label=0></el-checkbox>
                             <el-checkbox label="运营型" name="type" v-model="bossDetail.isOperational" :true-label=1 :false-label=0></el-checkbox>
                         </el-form-item>
                     </template>
-                    <!-- <template v-if="type==='member'">
-                        <el-form-item label="会员来源：" :label-width="formLabelWidth">
-                            {{memberSource[bossDetail.source]}}
-                        </el-form-item>
-                    </template> -->
                     <el-form-item label="认证状态：" :label-width="formLabelWidth">
                         {{bossDetail.isAuthentication==true?'已认证':'未认证'}}
                         <template v-if="bossDetail.authenticationTime">
@@ -103,161 +99,11 @@
                         {{bossDetail.updateBy?bossDetail.updateBy:'-'}} {{bossDetail.updatePhone}}
                     </el-form-item>
                 </el-form>
-                <div class="drawer-footer" v-if="activeName=='first'">
+                <div class="drawer-footer">
                     <div class="drawer-button">
                         <h-button @click="cancelForm">取 消</h-button>
                         <h-button type="primary" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</h-button>
                     </div>
-                </div>
-                <div class="" v-if="activeName=='second'&&!bossDetail.isAuthentication&&!bossDetail.authenticationTime">
-                    暂无认证信息
-                </div>
-                <div class="" v-if="activeName=='second'&&bossDetail.authenticationTime">
-                    <el-form :model="bossDetail">
-                        <el-form-item label="企业名称：" :label-width="formLabelWidth">
-                            {{bossDetail.companyName||'-'}}
-                        </el-form-item>
-                        <el-form-item label="企业类型：" :label-width="formLabelWidth">
-                            <!-- 11=个人，12=企业，13=个体工商户 -->
-                            {{bossDetail.userType?userType[bossDetail.userType]:'-'}}
-                        </el-form-item>
-                        <el-form-item label="统一社会信用代码：" :label-width="formLabelWidth">
-                            {{
-                                bossDetail.corporation
-                                ?
-                                bossDetail.corporation.unifiedSocialCreditCode?bossDetail.corporation.unifiedSocialCreditCode:'-'
-                                :'-'
-                            }}
-                        </el-form-item>
-                        <el-form-item label="营业执照照片：" :label-width="formLabelWidth">
-                            <div v-if="bossDetail.corporation&&bossDetail.corporation.businessLicensePhoto">
-                                <el-image class="yyzzpic" fit="contain" style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;" :src="bossDetail.corporation.businessLicensePhoto" :preview-src-list="[`${bossDetail.corporation.businessLicensePhoto}`]">
-                                </el-image>
-                            </div>
-                            <div v-else>-</div>
-                        </el-form-item>
-
-                        <el-form-item v-if="bossDetail.userType==12" label="法人姓名：" :label-width="formLabelWidth">
-                            {{
-                                bossDetail.corporation
-                                ?
-                                bossDetail.corporation.legalPersonName?bossDetail.corporation.legalPersonName:'-'
-                                :'-'
-                            }}
-                        </el-form-item>
-                        <el-form-item v-if="bossDetail.userType==11" label="法人姓名：" :label-width="formLabelWidth">
-                            {{
-                                bossDetail.individual
-                                ?
-                                bossDetail.individual.userName?bossDetail.individual.userName:'-'
-                                :'-'
-                            }}
-                        </el-form-item>
-
-                        <el-form-item v-if="bossDetail.userType==12" label="法人身份证号：" :label-width="formLabelWidth">
-                            {{
-                                bossDetail.corporation
-                                ?
-                                bossDetail.corporation.legalCredentialNumber?bossDetail.corporation.legalCredentialNumber:'-'
-                                :'-'
-                            }}
-                        </el-form-item>
-                        <el-form-item v-if="bossDetail.userType==11" label="法人身份证号：" :label-width="formLabelWidth">
-                            {{
-                                bossDetail.individual
-                                ?
-                                bossDetail.individual.credentialNumber?bossDetail.individual.credentialNumber:'-'
-                                :'-'
-                            }}
-                        </el-form-item>
-
-                        <el-form-item v-if="bossDetail.userType==12" label="法人身份证照片：" :label-width="formLabelWidth">
-                            <div style="float:left">
-                                <el-image v-if="bossDetail.corporation&&bossDetail.corporation.certPhotoA" class="yyzzpic" fit="contain" style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;" :src="bossDetail.corporation.certPhotoA"
-                                    :preview-src-list="[`${bossDetail.corporation.certPhotoA}`]">
-                                </el-image>
-                                <font v-else>-</font>
-                            </div>
-                            <div style="float:left;margin-left:10px">
-                                <el-image v-if="bossDetail.corporation&&bossDetail.corporation.certPhotoB" class="yyzzpic" fit="contain" style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;" :src="bossDetail.corporation.certPhotoB"
-                                    :preview-src-list="[`${bossDetail.corporation.certPhotoB}`]">
-                                </el-image>
-                                <font v-else>-</font>
-                            </div>
-                        </el-form-item>
-                        <el-form-item v-if="bossDetail.userType==11" label="法人身份证照片：" :label-width="formLabelWidth">
-                            <div style="float:left">
-                                <el-image v-if="bossDetail.individual&&bossDetail.individual.certPhotoA" class="yyzzpic" fit="contain" style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;" :src="bossDetail.individual.certPhotoA"
-                                    :preview-src-list="[`${bossDetail.individual.certPhotoA}`]">
-                                </el-image>
-                                <font v-else>-</font>
-                            </div>
-                            <div style="float:left;margin-left:10px">
-                                <el-image v-if="bossDetail.individual&&bossDetail.individual.certPhotoB" class="yyzzpic" fit="contain" style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;" :src="bossDetail.individual.certPhotoB"
-                                    :preview-src-list="[`${bossDetail.individual.certPhotoB}`]">
-                                </el-image>
-                                <font v-else>-</font>
-                            </div>
-                        </el-form-item>
-
-                        <el-form-item label="开户许可证核准号：" :label-width="formLabelWidth">
-                            {{
-                                bossDetail.corporation
-                                ?
-                                bossDetail.corporation.approvalNo?bossDetail.corporation.approvalNo:'-'
-                                :'-'
-                            }}
-                        </el-form-item>
-                        <el-form-item label="开户银行ID：" :label-width="formLabelWidth">
-                            {{
-                                bossDetail.bankAccount
-                                ?
-                                bossDetail.bankAccount.bankId?bossDetail.bankAccount.bankId:'-'
-                                :'-'
-                            }}
-                        </el-form-item>
-                        <el-form-item label="开户银行卡号：" :label-width="formLabelWidth">
-                            {{
-                                bossDetail.bankAccount
-                                ?
-                                bossDetail.bankAccount.bankAccountNumber?bossDetail.bankAccount.bankAccountNumber:'-'
-                                :'-'
-                            }}
-                        </el-form-item>
-                        <el-form-item label="开户银行支行名称：" :label-width="formLabelWidth">
-                            {{
-                                bossDetail.bankAccount
-                                ?
-                                bossDetail.bankAccount.branchName?bossDetail.bankAccount.branchName:'-'
-                                :'-'
-                            }}
-                        </el-form-item>
-                        <el-form-item label="认证状态：" :label-width="formLabelWidth">
-                            <!-- 0：未认证 1：已认证 -->
-                            {{
-                                bossDetail.isAuthentication==0?'未认证':bossDetail.isAuthentication==1?"已认证":'-'
-                            }}
-                            <span v-if="bossDetail.authenticationFailureReason&&bossDetail.isAuthentication!=1">（{{bossDetail.authenticationFailureReason}}）</span>
-                        </el-form-item>
-                        <el-form-item label="认证方式：" :label-width="formLabelWidth">
-                            <!-- 1：e签宝-企业四要素/e签宝-个人二要素 2：中金-开户 -->
-                            {{
-                                bossDetail.authenticationType==1?'e签宝':bossDetail.authenticationType==2?"中金":'-'
-                            }}
-                        </el-form-item>
-                        <el-form-item label="认证时间：" :label-width="formLabelWidth">
-                            {{formatTime(bossDetail.authenticationTime)}}
-                        </el-form-item>
-                        <el-form-item label="开户状态：" :label-width="formLabelWidth">
-                            {{
-                                bossDetail.openStatus==1?'未开户':bossDetail.openStatus==2?'开户中':bossDetail.openStatus==3?'开户成功':bossDetail.openStatus==4?'开户失败':'-'
-                            }}
-                            <span v-if="bossDetail.openStatus==4">（{{bossDetail.openFailureReason}}）</span>
-                        </el-form-item>
-                        <el-form-item label="开户时间：" :label-width="formLabelWidth">
-                            {{formatTime(bossDetail.openTime)}}
-                        </el-form-item>
-                    </el-form>
                 </div>
             </template>
         </h-drawer>
@@ -287,7 +133,6 @@ export default {
             type: '',
             removeValue: true,
             merchantArr: [],
-            activeName: 'first',
             branchArr: [],
             formLabelWidth: '140px',
             loading: false,
@@ -396,7 +241,7 @@ export default {
                     this.$emit('backEvent')
                 })
             } else {
-                this.activeName = 'first'
+                // this.activeName = 'first'
                 this.$emit('backEvent')
             }
         },

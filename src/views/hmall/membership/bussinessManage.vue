@@ -138,7 +138,7 @@
     </div>
 </template>
 <script>
-import drawerCom from './drawerCom'
+import drawerCom from './drawerComs'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import { changeState } from './api/index'

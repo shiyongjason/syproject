@@ -187,7 +187,6 @@ export default {
                 { label: '申请时间', prop: 'registrationTime', formatters: 'dateTimes', width: '150px' },
                 { label: '额度', prop: 'openingStatus' },
                 { label: '比例', prop: 'openingStatus' },
-                { label: '期限', prop: 'openingStatus' },
                 { label: '额度状态', prop: 'openingStatus' },
                 { label: '额度有效期', prop: 'registrationTime', formatters: 'dateTimes', width: '150px' },
                 { label: '审核状态', prop: 'isAuthentication' },
@@ -199,14 +198,14 @@ export default {
             branchArr: [],
             companyCode: '',
             bossDetail: {},
-            brandDrawer: false,
+            brandDrawer: true,
             formLabelWidth: '140px',
             rules: {}
         }
     },
     computed: {
         ...mapState({
-            // userInfo: state => state.userInfo
+            userInfo: state => state.userInfo
         }),
         ...mapGetters({
             merchantData: 'merchantData',
@@ -235,7 +234,7 @@ export default {
     },
     mounted () {
         // this.onFindMlist()
-        // this.onGetbranch()
+        this.onGetbranch()
         this.copyParams = { ...this.queryParams }
     },
     methods: {
@@ -264,7 +263,7 @@ export default {
         onSave () { },
         ...mapActions({
             // findMerchantList: 'findMerchantList',
-            // findBranch: 'findBranch'
+            findBranch: 'findBranch'
         }),
         onRest () {
             this.queryParams = { ...this.copyParams }
@@ -289,8 +288,8 @@ export default {
             // }
         },
         async onGetbranch () {
-            // await this.findBranch()
-            // this.branchArr = this.branchList
+            await this.findBranch()
+            this.branchArr = this.branchList
         },
         onFindInfo (val, type) {
             this.companyCode = val
