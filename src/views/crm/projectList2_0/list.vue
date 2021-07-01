@@ -75,27 +75,27 @@
                 </div>
             </div>
             <el-tag size="medium" class="eltagtop">已筛选 {{statistics.totalProjectNum}} 项, 项目数 {{statistics.totalProjectNum}} 个；已签约 {{statistics.totalSignedNum}} 个；已回款 {{statistics.totalRefundNum}} 个， 已回款金额 {{fundMoneys(statistics.totalRefundAmount)}} 元 </el-tag>
-            <hosJoyTable ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList"
-                actionWidth='200' isAction :isActionFixed='tableData&&tableData.length>0' >
+            <hosJoyTable localName="V3.*" ref="hosjoyTable" collapseShow align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='200'
+                isAction :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <h-button table  @click="viewDetail(slotProps.data.row.projectId)">查看详情</h-button>
+                    <h-button table @click="viewDetail(slotProps.data.row.projectId)">查看详情</h-button>
                     <!-- // 0不展示 ，1签约，2回款 -->
-                    <h-button table v-if="slotProps.data.row.buttonShowType==1"  @click="signAContract(slotProps.data.row.projectId)">签约</h-button>
-                    <h-button table v-if="slotProps.data.row.buttonShowType==2"  @click="onShowPayback(slotProps.data.row.projectId)">回款</h-button>
+                    <h-button table v-if="slotProps.data.row.buttonShowType==1" @click="signAContract(slotProps.data.row.projectId)">签约</h-button>
+                    <h-button table v-if="slotProps.data.row.buttonShowType==2" @click="onShowPayback(slotProps.data.row.projectId)">回款</h-button>
                 </template>
             </hosJoyTable>
         </div>
         <!-- 签约确认 -->
-        <el-dialog title="签约确认" :close-on-click-modal='false' v-if="showSign" :visible.sync="showSign" width="720px" :before-close="() => closereqProjectSupply()" >
+        <el-dialog title="签约确认" :close-on-click-modal='false' v-if="showSign" :visible.sync="showSign" width="720px" :before-close="() => closereqProjectSupply()">
             <div class="list2_0 itemflex">
-                <el-form id='elform' :model="reqBossProjectRefund" :rules="formRulesReqBossProjectRefund"  label-position='left' ref="reqProjectSupply" class="purchaseConclusion" :validate-on-rule-change='false'>
+                <el-form id='elform' :model="reqBossProjectRefund" :rules="formRulesReqBossProjectRefund" label-position='left' ref="reqProjectSupply" class="purchaseConclusion" :validate-on-rule-change='false'>
                     <div class="form-item">
-                        <el-form-item  prop='contractNo' label="合同编号：">
-                            <el-input  placeholder="请输入工程合同编号" v-model="reqBossProjectRefund.contractNo" maxlength="50"></el-input>
+                        <el-form-item prop='contractNo' label="合同编号：">
+                            <el-input placeholder="请输入工程合同编号" v-model="reqBossProjectRefund.contractNo" maxlength="50"></el-input>
                         </el-form-item>
                     </div>
                     <div class="form-item noctx">
-                        <el-form-item  prop='contractAttachments' label="请上传签约合同附件：">
+                        <el-form-item prop='contractAttachments' label="请上传签约合同附件：">
                             <span class="txt">（上传合同附件，支持PDF格式，单个文件最大允许20M）</span>
                         </el-form-item>
                         <div>
@@ -107,34 +107,34 @@
                                 </div>
                             </div>
                             <OssFileHosjoyUpload :showPreView='false' v-model="reqBossProjectRefund.contractAttachments" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:0 0 0 5px" accept=".pdf" @successCb='onSuccessCbSign'>
-                            <div class="a-line">
-                                <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
-                            </div>
+                                <div class="a-line">
+                                    <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
+                                </div>
                             </OssFileHosjoyUpload>
                         </div>
                     </div>
                     <div class="form-item">
-                        <el-checkbox v-model="reqBossProjectRefund.hasRefunded" :true-label='1' :false-label='0' >
+                        <el-checkbox v-model="reqBossProjectRefund.hasRefunded" :true-label='1' :false-label='0'>
                             <span>已回款：</span>
                             <span class="txt" style="font-size:15px;">如已收到签约回款额，请输入回款信息</span>
                         </el-checkbox>
                     </div>
                     <div class="form-item" v-if="!!reqBossProjectRefund.hasRefunded">
-                        <el-form-item  prop='refundAmount' label="签约回款额：">
-                            <el-input  placeholder="请输入签约回款额" @input="(val)=>inputChage(val,reqBossProjectRefund,'refundAmount')" :value="fundMoneys(reqBossProjectRefund.refundAmount)" >
+                        <el-form-item prop='refundAmount' label="签约回款额：">
+                            <el-input placeholder="请输入签约回款额" @input="(val)=>inputChage(val,reqBossProjectRefund,'refundAmount')" :value="fundMoneys(reqBossProjectRefund.refundAmount)">
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
                     </div>
                     <div class="form-item" v-if="!!reqBossProjectRefund.hasRefunded">
-                        <el-form-item  prop='refundPayType' label="支付方式：">
+                        <el-form-item prop='refundPayType' label="支付方式：">
                             <el-select v-model="reqBossProjectRefund.refundPayType" placeholder="请选择">
                                 <el-option :label="item.value" :value="item.key" :key='item.value' v-for="item in refundPayType"></el-option>
                             </el-select>
                         </el-form-item>
                     </div>
                     <div class="form-item noctx" v-if="!!reqBossProjectRefund.hasRefunded">
-                        <el-form-item  prop='refundPics' label="请上传支付凭证：">
+                        <el-form-item prop='refundPics' label="请上传支付凭证：">
                             <span class="txt">（上传付款截图或银行到账截图，支持jpeg,png和jpg格式）</span>
                         </el-form-item>
                         <div>
@@ -146,9 +146,9 @@
                                 </div>
                             </div>
                             <OssFileHosjoyUpload :showPreView='false' v-model="reqBossProjectRefund.refundPics" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:0 0 0 5px" accept=".jpg,.jpeg,.png" @successCb='onSuccessCbSign'>
-                            <div class="a-line">
-                                <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
-                            </div>
+                                <div class="a-line">
+                                    <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
+                                </div>
                             </OssFileHosjoyUpload>
                         </div>
                     </div>
@@ -160,25 +160,25 @@
             </div>
         </el-dialog>
         <!-- 回款确认 -->
-        <el-dialog title="回款确认" :close-on-click-modal='false' v-if="showPayback" :visible.sync="showPayback" width="720px" :before-close="()=>closePayback()" >
+        <el-dialog title="回款确认" :close-on-click-modal='false' v-if="showPayback" :visible.sync="showPayback" width="720px" :before-close="()=>closePayback()">
             <div class="list2_0 itemflex">
-                <el-form id='elform' :model="reqBossProjectRefund" :rules="formRulesReqBossProjectRefund"  label-position='left' ref="paybackForm" class="purchaseConclusion" :validate-on-rule-change='false'>
+                <el-form id='elform' :model="reqBossProjectRefund" :rules="formRulesReqBossProjectRefund" label-position='left' ref="paybackForm" class="purchaseConclusion" :validate-on-rule-change='false'>
                     <div class="form-item">
-                        <el-form-item  prop='refundAmount' label="签约回款额：">
-                            <el-input  placeholder="请输入签约回款额" @input="(val)=>inputChage(val,reqBossProjectRefund,'refundAmount')" :value="fundMoneys(reqBossProjectRefund.refundAmount)">
+                        <el-form-item prop='refundAmount' label="签约回款额：">
+                            <el-input placeholder="请输入签约回款额" @input="(val)=>inputChage(val,reqBossProjectRefund,'refundAmount')" :value="fundMoneys(reqBossProjectRefund.refundAmount)">
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
                     </div>
                     <div class="form-item">
-                        <el-form-item  prop='refundPayType' label="支付方式：">
+                        <el-form-item prop='refundPayType' label="支付方式：">
                             <el-select v-model="reqBossProjectRefund.refundPayType" placeholder="请选择">
                                 <el-option :label="item.value" :value="item.key" :key='item.value' v-for="item in refundPayType"></el-option>
                             </el-select>
                         </el-form-item>
                     </div>
                     <div class="form-item noctx">
-                        <el-form-item  prop='refundPics' label="请上传支付凭证：">
+                        <el-form-item prop='refundPics' label="请上传支付凭证：">
                             <span class="txt">（上传付款截图或银行到账截图，支持jpeg,png和jpg格式）</span>
                         </el-form-item>
                         <div>
@@ -190,9 +190,9 @@
                                 </div>
                             </div>
                             <OssFileHosjoyUpload :showPreView='false' v-model="reqBossProjectRefund.refundPics" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:0 0 0 5px" accept=".jpg,.jpeg,.png" @successCb='onSuccessCb'>
-                            <div class="a-line">
-                                <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
-                            </div>
+                                <div class="a-line">
+                                    <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
+                                </div>
                             </OssFileHosjoyUpload>
                         </div>
                     </div>
@@ -204,28 +204,28 @@
             </div>
         </el-dialog>
         <!-- 新增2.0项目 -->
-        <el-dialog title="新增2.0项目" :close-on-click-modal='false' :visible.sync="showAddProject" width="1080px" :before-close="()=>closeAddProject()" >
+        <el-dialog title="新增2.0项目" :close-on-click-modal='false' :visible.sync="showAddProject" width="1080px" :before-close="()=>closeAddProject()">
             <div class="list2_0">
-                <el-form id='elform' :model="reqProjectSupply" :rules="formRules"  label-width="150px"  label-position='right' ref="addForm" class="list2">
+                <el-form id='elform' :model="reqProjectSupply" :rules="formRules" label-width="150px" label-position='right' ref="addForm" class="list2">
                     <div class="flex-item">
                         <div class="form-item">
-                            <el-form-item  prop='companyId' label="企业名称：">
-                                <el-select v-model="reqProjectSupply.companyId" @change='selectItem' placeholder="请输入企业名称查询" filterable remote :remote-method="remoteMethod" >
+                            <el-form-item prop='companyId' label="企业名称：">
+                                <el-select v-model="reqProjectSupply.companyId" @change='selectItem' placeholder="请输入企业名称查询" filterable remote :remote-method="remoteMethod">
                                     <el-option v-for="items in optionsCompany" :key="items.companyId" :label="items.companyName" :value="items.companyId">
                                     </el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="form-item">
-                            <el-form-item  label="管理员手机号：">{{reqProjectSupply.adminUserPhone||'-'}}</el-form-item>
+                            <el-form-item label="管理员手机号：">{{reqProjectSupply.adminUserPhone||'-'}}</el-form-item>
                         </div>
                     </div>
                     <div class="flex-item">
                         <div class="form-item">
-                            <el-form-item  label="管理员姓名：">{{reqProjectSupply.adminUserName||'-'}}</el-form-item>
+                            <el-form-item label="管理员姓名：">{{reqProjectSupply.adminUserName||'-'}}</el-form-item>
                         </div>
                         <div class="form-item">
-                            <el-form-item  label="所属分部：">
+                            <el-form-item label="所属分部：">
                                 <el-select v-model="reqProjectSupply.deptName" placeholder="请选择" clearable>
                                     <el-option :label="item.deptName" :value="item.deptName" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
                                 </el-select>
@@ -234,30 +234,30 @@
                     </div>
                     <div class="flex-item">
                         <div class="form-item">
-                            <el-form-item  label="客户经理：">
+                            <el-form-item label="客户经理：">
                                 <!-- <el-input  placeholder="请输入客户经理" v-model='reqProjectSupply.customerName' maxlength="200"></el-input> -->
                                 {{reqProjectSupply.customerName||'-'}}
                             </el-form-item>
                         </div>
                         <div class="form-item">
-                            <el-form-item  label="客户经理手机号：">{{reqProjectSupply.customerMobile||'-'}}</el-form-item>
+                            <el-form-item label="客户经理手机号：">{{reqProjectSupply.customerMobile||'-'}}</el-form-item>
                         </div>
                     </div>
                     <!-- 项目信息 -->
                     <div class="flex-item">
                         <div class="form-item">
-                            <el-form-item  prop='firstPartName' label="甲方名称：">
-                                <el-input  placeholder="请输入甲方名称" v-model='reqProjectSupply.firstPartName' maxlength="50"></el-input>
+                            <el-form-item prop='firstPartName' label="甲方名称：">
+                                <el-input placeholder="请输入甲方名称" v-model='reqProjectSupply.firstPartName' maxlength="50"></el-input>
                             </el-form-item>
                         </div>
                         <div class="form-item">
-                            <el-form-item  prop='projectName' label="项目名称：">
-                                <el-input  placeholder="请输入项目名称" v-model='reqProjectSupply.projectName' maxlength="50"></el-input>
+                            <el-form-item prop='projectName' label="项目名称：">
+                                <el-input placeholder="请输入项目名称" v-model='reqProjectSupply.projectName' maxlength="50"></el-input>
                             </el-form-item>
                         </div>
                     </div>
                     <div class="flex-item" style="margin-top:5px">
-                        <el-form-item  label="项目地址：">
+                        <el-form-item label="项目地址：">
                             <div class="query-cont-col-area">
                                 <el-select v-model="reqProjectSupply.provinceId" @change="onProvince" placeholder="省" clearable>
                                     <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
@@ -269,7 +269,7 @@
                                     </el-option>
                                 </el-select>
                                 <span class="ml10 mr10">-</span>
-                                <el-select v-model="reqProjectSupply.countryId" placeholder="区"  @change="onArea" clearable>
+                                <el-select v-model="reqProjectSupply.countryId" placeholder="区" @change="onArea" clearable>
                                     <el-option v-for="item in getCountry" :key="item.id" :label="item.name" :value="item.countryId">
                                     </el-option>
                                 </el-select>
@@ -278,7 +278,7 @@
                     </div>
                     <div class="flex-item" style="margin-top:15px">
                         <div class="form-item">
-                            <el-form-item  label="详细地址：">
+                            <el-form-item label="详细地址：">
                                 <el-input :rows="2" type="textarea" show-word-limit maxlength="200" placeholder="请输入详细地址" v-model='reqProjectSupply.address'></el-input>
                             </el-form-item>
                         </div>
@@ -286,7 +286,7 @@
                     <div class="flex-item" style="margin-top:15px">
                         <div class="form-item">
                             <el-form-item prop='projectBuildingTypeList' label="">
-                                <div slot="label" style="line-height: 20px;">项目建筑类型<br/>（可多选）：</div>
+                                <div slot="label" style="line-height: 20px;">项目建筑类型<br />（可多选）：</div>
                                 <el-select v-model="reqProjectSupply.projectBuildingTypeList" multiple placeholder="请选择">
                                     <el-option v-for="item in projectBuildingType" :key="item.value" :label="item.value" :value="Number(item.key)"></el-option>
                                 </el-select>
@@ -294,7 +294,9 @@
                         </div>
                         <div class="form-item">
                             <el-form-item prop='projectRoleList' label="">
-                                <div slot="label" style="line-height: 20px;"><font style="padding-right:10px">项目角色</font><br/>（可多选）：</div>
+                                <div slot="label" style="line-height: 20px;">
+                                    <font style="padding-right:10px">项目角色</font><br />（可多选）：
+                                </div>
                                 <el-select v-model="reqProjectSupply.projectRoleList" multiple placeholder="请选择">
                                     <el-option v-for="item in projectRole" :key="item.value" :label="item.value" :value="Number(item.key)"></el-option>
                                 </el-select>
@@ -312,7 +314,9 @@
                         </div>
                         <div class="form-item">
                             <el-form-item prop='generalGoodsList' label="">
-                                <div slot="label" style="line-height: 20px;"><font>可从总部采购产品</font><br/>（可多选）：</div>
+                                <div slot="label" style="line-height: 20px;">
+                                    <font>可从总部采购产品</font><br />（可多选）：
+                                </div>
                                 <el-select v-model="reqProjectSupply.generalGoodsList" multiple placeholder="请选择">
                                     <el-option v-for="item in generalGoods" :key="item.value" :label="item.value" :value="Number(item.key)"></el-option>
                                 </el-select>
@@ -321,16 +325,18 @@
                     </div>
                     <div class="flex-item" style="margin-top:15px">
                         <div class="form-item">
-                            <el-form-item  label="">
-                                <div slot="label" style="line-height: 20px;"><font>工程项目智能化需求</font><br/>（可多选）：</div>
+                            <el-form-item label="">
+                                <div slot="label" style="line-height: 20px;">
+                                    <font>工程项目智能化需求</font><br />（可多选）：
+                                </div>
                                 <el-select v-model="reqProjectSupply.projectIntelligentNeedsList" multiple placeholder="请选择">
                                     <el-option v-for="item in projectIntelligentNeeds" :key="item.value" :label="item.value" :value="Number(item.key)"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="form-item">
-                            <el-form-item prop="estimatedSignAmount"  label="项目预估签约额：">
-                                <el-input  placeholder="请输入项目预估签约额" @input="(val)=>inputChage(val,reqProjectSupply,'estimatedSignAmount')" :value="fundMoneys(reqProjectSupply.estimatedSignAmount)">
+                            <el-form-item prop="estimatedSignAmount" label="项目预估签约额：">
+                                <el-input placeholder="请输入项目预估签约额" @input="(val)=>inputChage(val,reqProjectSupply,'estimatedSignAmount')" :value="fundMoneys(reqProjectSupply.estimatedSignAmount)">
                                     <template slot="append">元</template>
                                 </el-input>
                             </el-form-item>
@@ -338,7 +344,7 @@
                     </div>
                     <div class="flex-item" style="margin-top:15px">
                         <div class="form-item">
-                            <el-form-item  label="项目预计交付时间：">
+                            <el-form-item label="项目预计交付时间：">
                                 <el-date-picker v-model="reqProjectSupply.estimatedDeliverTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd"></el-date-picker>
                             </el-form-item>
                         </div>
@@ -351,7 +357,7 @@
                 <h-button type="primary" @click="submitAddForm">确定</h-button>
             </div>
         </el-dialog>
-        <detail :drawer='drawer' :projectDetail = 'projectDetail' :formRules='formRules' :projectId='projectId' @getDetail = 'viewDetail' @getList='getList' @handleClose="()=>drawer = false" v-if="drawer" />
+        <detail :drawer='drawer' :projectDetail='projectDetail' :formRules='formRules' :projectId='projectId' @getDetail='viewDetail' @getList='getList' @handleClose="()=>drawer = false" v-if="drawer" />
     </div>
 </template>
 <script lang='tsx'>
@@ -383,16 +389,16 @@ const validatorName = (rule, value, callback) => {
 }
 
 interface companyObj {
-        adminUserName: string,
-        adminUserPhone: string,
-        companyCode: string,
-        companyId: string,
-        companyName: string,
-        customerName: string,
-        customerPhone: string,
-        subsectionCode: string,
-        subsectionName: string,
-    }
+    adminUserName: string,
+    adminUserPhone: string,
+    companyCode: string,
+    companyId: string,
+    companyName: string,
+    customerName: string,
+    customerPhone: string,
+    subsectionCode: string,
+    subsectionName: string,
+}
 @Component({
     name: 'ProjectList2',
     components: {
@@ -410,19 +416,19 @@ export default class ProjectList2 extends Vue {
     @Getter('projectStore/refundPayType') refundPayType: DictionaryList
     @Getter('projectStore/flowUpProcess') flowUpProcess: DictionaryList
     @Action('crmmanage/findCrmdeplist') findCrmdeplist: Function
-    @Action('projectStore/findDictionaryList') findDictionaryList:(p:SearchByItem) => Promise<any>
-    projectId:any = ''
-    showAddProject:boolean = false
-    showSign:boolean = false
-    showPayback:boolean = false
-    checkboxChecked:boolean = false
-    drawer:boolean = false
-    provinceList:any[] = []
-    cityList:any[] = []
+    @Action('projectStore/findDictionaryList') findDictionaryList: (p: SearchByItem) => Promise<any>
+    projectId: any = ''
+    showAddProject: boolean = false
+    showSign: boolean = false
+    showPayback: boolean = false
+    checkboxChecked: boolean = false
+    drawer: boolean = false
+    provinceList: any[] = []
+    cityList: any[] = []
     // 表格上放统计
-    statistics:any = ''
-    optionsCompany:any[] = []
-    projectDetail:ReqProjectSupply = {}
+    statistics: any = ''
+    optionsCompany: any[] = []
+    projectDetail: ReqProjectSupply = {}
 
     maincategory = MAINCATEGORY
 
@@ -432,8 +438,8 @@ export default class ProjectList2 extends Vue {
         sizes: [10, 20, 50, 100],
         total: 0
     }
-    tableData:RespBossProjectSupply[] = []
-    reqBossProjectRefund:ReqBossProjectRefund = {
+    tableData: RespBossProjectSupply[] = []
+    reqBossProjectRefund: ReqBossProjectRefund = {
         contractAttachments: [],
         contractNo: '',
         hasRefunded: 0,
@@ -457,7 +463,7 @@ export default class ProjectList2 extends Vue {
         pageNumber: 1,
         pageSize: 10
     }
-    reqProjectSupply:ReqProjectSupply & companyObj = {
+    reqProjectSupply: ReqProjectSupply & companyObj = {
         adminUserName: '',
         adminUserPhone: '',
         companyCode: '',
@@ -473,14 +479,15 @@ export default class ProjectList2 extends Vue {
         estimatedSignAmount: '',
         deptName: ''
     }
-     uploadParameters = {
-         updateUid: '',
-         reservedName: false
-     }
+    uploadParameters = {
+        updateUid: '',
+        reservedName: false
+    }
 
-    tableLabel:tableLabelProps = [
+    tableLabel: tableLabelProps = [
         // 点击公司跳转到好橙工——【企业管理】已输入该企业名称的查询结果
-        { label: '公司全称',
+        {
+            label: '公司全称',
             prop: 'companyName',
             width: '200',
             render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
@@ -630,7 +637,7 @@ export default class ProjectList2 extends Vue {
     onAddProject () {
         this.showAddProject = true
         this.$nextTick(() => {
-            let addForm:any = this.$refs['addForm']
+            let addForm: any = this.$refs['addForm']
             addForm.clearValidate()
         })
     }
@@ -848,7 +855,7 @@ export default class ProjectList2 extends Vue {
     }
     // 关闭新增2.0项目
     closeAddProject () {
-        let addForm:any = this.$refs['addForm']
+        let addForm: any = this.$refs['addForm']
         addForm.resetFields()
         this.reqProjectSupply = {
             adminUserName: '',
@@ -869,7 +876,7 @@ export default class ProjectList2 extends Vue {
     }
     // 关闭确认签约
     closereqProjectSupply () {
-        const reqProjectSupply:any = this.$refs['reqProjectSupply']
+        const reqProjectSupply: any = this.$refs['reqProjectSupply']
         reqProjectSupply.resetFields()
         this.showSign = false
 
@@ -891,7 +898,7 @@ export default class ProjectList2 extends Vue {
             refundPayType: '',
             refundPics: []
         }
-        const reqProjectSupply:any = this.$refs['paybackForm']
+        const reqProjectSupply: any = this.$refs['paybackForm']
         reqProjectSupply.resetFields()
     }
 
@@ -901,7 +908,7 @@ export default class ProjectList2 extends Vue {
 
         let p = []
         const api = ['project_intelligent_needs', 'project_building_type', 'project_step', 'project_role', 'general_goods', 'refund_pay_type', 'flow_up_process']
-        api.map((i:any) => {
+        api.map((i: any) => {
             p.push(
                 this.findDictionaryList({ item: i })
             )
