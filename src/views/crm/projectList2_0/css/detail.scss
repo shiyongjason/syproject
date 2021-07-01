@@ -219,6 +219,12 @@
     
         }
     }
+    .a-line{
+        span{
+            display: flex;
+            align-items: center;
+        }
+    }
     .bottom-line{
         position: fixed;
         bottom: 63px;
