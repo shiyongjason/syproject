@@ -77,7 +77,7 @@
                         </div>
                         <div class="info-layout-item">
                             <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>经销商首付款比例(%)：</font>
-                            <span>{{resolutionDetail.advancePaymentRate||'-'}}%</span>
+                            <span>{{resolutionDetail.advancePaymentRate||'-'}}</span>
                         </div>
                     </div>
                     <div class="info-layout">
@@ -267,7 +267,7 @@
                     <!-- 操作 -->
                     <div v-if="item.projectResolutionRecordDetailList&&item.projectResolutionRecordDetailList.length>0" class="flex-operate">
                         <p v-for="(jtem,jndex) in item.projectResolutionRecordDetailList" :key="jndex">
-                            <span>{{jtem.changeName}}</span>由“<i>{{jtem.contentBeforeChange}}</i>”变更为“<i>{{jtem.contentAfterChange}}</i>”
+                            <span>{{jtem.changeName}}</span>由“<i v-if="jtem.contentBeforeChange">{{jtem.contentBeforeChange}}</i>”变更为“<i>{{jtem.contentAfterChange}}</i>”
                         </p>
                     </div>
                     <div v-if="item.dingId"  class="mt20">
