@@ -358,13 +358,14 @@ export default {
                     this.loading = false
                 }
             } else if (val == 4) {
+                this.$emit('backEvent')
                 // 终审详情保存
-                try {
-                    this.$refs.finalCom.onSaveapproveOrfinal(1)
-                    // this.$emit('backEvent')
-                } catch (error) {
-                    this.loading = false
-                }
+                // try {
+                //     this.$refs.finalCom.onSaveapproveOrfinal(1)
+                //     // this.$emit('backEvent')
+                // } catch (error) {
+                //     this.loading = false
+                // }
             }
         },
         cancelForm () {
