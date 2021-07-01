@@ -479,7 +479,7 @@ export default class ProjectList2 extends Vue {
      }
 
     tableLabel:tableLabelProps = [
-        // 点击公司跳转到好橙工——【企业管理】已输入该企业名称的查询结果 
+        // 点击公司跳转到好橙工——【企业管理】已输入该企业名称的查询结果
         { label: '公司全称',
             prop: 'companyName',
             width: '200',

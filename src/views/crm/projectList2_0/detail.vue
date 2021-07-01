@@ -1160,12 +1160,11 @@ export default class ProjectList2Detail extends Vue {
     async onUpDateProjectDetail () {
         this.projectDetail.operateUserName = this.userInfo.employeeName
         this.projectDetail.operateUserPhone = this.userInfo.phoneNumber
-        console.log(' 🚗 🚕 🚙 🚌 🚎 this.projectDetail', this.projectDetail)
-        // await upDateProjectDetail(this.projectDetail)
-        // await this.onInitGetDate()
-        // this.$emit('getDetail', this.projectDetail.id)
-        // this.$message.success('保存成功')
-        // this.$emit('getList')
+        await upDateProjectDetail(this.projectDetail)
+        await this.onInitGetDate()
+        this.$emit('getDetail', this.projectDetail.id)
+        this.$message.success('保存成功')
+        this.$emit('getList')
     }
 
     async onInitGetDate () {
