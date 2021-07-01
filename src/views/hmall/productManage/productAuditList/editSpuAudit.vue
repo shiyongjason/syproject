@@ -45,21 +45,7 @@
                         <p>最多支持上传5张750*750，大小不超过2M，仅支持jpeg，jpg，png格式</p>
                     </div>
                 </el-form-item>
-                <el-form-item label="规格图片：" v-if="form.optionTypeList.length < 1">
-                    <SingleUpload :upload="uploadInfo" :imgW="104" :imgH="104" :imageUrl="form.mainSkus[0].imageUrls" @back-event="backPicUrl" v-show="seeTask == false" />
-                    <div class="picture-content" v-if="seeTask == true">
-                        <ul>
-                            <li>
-                                <img :src="form.mainSkus[0].imageUrls" />
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="picture-prompt ml20" v-show="seeTask == true">
-                        <p>上传750*750，大小不超过2M，仅支持jpeg，jpg，png格式</p>
-                    </div>
-                    <input type="hidden" v-model="form.mainSkus[0].imageUrls">
-                </el-form-item>
-                <skuTable ref="skuTable" :formData.sync="form" :seeTask.sync="seeTask" :edite.sync="edite" v-if="form.optionTypeList.length>0"></skuTable>
+                <skuTable ref="skuTable" :formData.sync="form" :seeTask.sync="seeTask" :edite.sync="edite"></skuTable>
                 <div class="title-cont" v-if="specData.length != 0">
                     <span class="title-cont__label">参数信息</span>
                 </div>
@@ -74,28 +60,6 @@
                             </el-select>
                         </el-form-item>
                     </div>
-                </div>
-                <div class="title-cont" v-if="form.optionTypeList.length < 1">
-                    <span class="title-cont__label">仓库信息</span>
-                </div>
-                <div v-if="form.optionTypeList.length < 1">
-                    <el-form-item label="SN码：" prop="serialNumber">
-                        <el-input v-model="form.mainSkus[0].serialNumber" maxlength="20" :disabled="seeTask == true"></el-input>
-                    </el-form-item>
-                    <el-form-item label="长宽高/mm：" prop="length">
-                        <el-input v-model="form.mainSkus[0].length" maxlength="15" :disabled="seeTask == true"></el-input>
-                        <el-input v-model="form.mainSkus[0].width" maxlength="15" :disabled="seeTask == true"></el-input>
-                        <el-input v-model="form.mainSkus[0].height" maxlength="15" :disabled="seeTask == true"></el-input>
-                    </el-form-item>
-                    <el-form-item label="毛重/KG：" prop="grossWeight">
-                        <el-input v-model="form.mainSkus[0].grossWeight" maxlength="15" :disabled="seeTask == true"></el-input>
-                    </el-form-item>
-                    <el-form-item label="体积/m³：" prop="volume">
-                        <el-input v-model="form.mainSkus[0].volume" maxlength="15" :disabled="seeTask == true"></el-input>
-                    </el-form-item>
-                    <el-form-item label="净重/KG：" prop="netWeight">
-                        <el-input v-model="form.mainSkus[0].netWeight" maxlength="15" :disabled="seeTask == true"></el-input>
-                    </el-form-item>
                 </div>
                 <div class="title-cont mt10">
                     <span class="title-cont__label">商品详情信息</span>
