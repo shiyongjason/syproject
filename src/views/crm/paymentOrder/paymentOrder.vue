@@ -405,7 +405,7 @@ export default {
             // this.drawer && this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
         },
         onUploadPay (val) {
-            this.$refs.uploadpaydialog.onDialogClick(val)
+            this.$refs.uploadpaydialog.onDialogClick(val, 1)
         },
         ...mapActions({
             findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList',
