@@ -578,6 +578,8 @@ export default class ProjectList2Detail extends Vue {
         this.projectDetail.countryId = ''
         if (!key) {
             this.projectDetail.provinceName = ''
+            this.projectDetail.cityName = ''
+            this.projectDetail.countryName = ''
             return
         }
         const res = this.provinceList.filter(item => {
@@ -591,6 +593,7 @@ export default class ProjectList2Detail extends Vue {
         this.projectDetail.countryId = ''
         if (!key) {
             this.projectDetail.cityName = ''
+            this.projectDetail.countryName = ''
             return
         }
         const res = this.getCity.filter(item => {
@@ -602,7 +605,7 @@ export default class ProjectList2Detail extends Vue {
     onArea (key) {
         this.projectDetail.countryId = key || ''
         if (!key) {
-            this.projectDetail.cityName = ''
+            this.projectDetail.countryName = ''
             return
         }
         const res = this.getCountry.filter(item => {
