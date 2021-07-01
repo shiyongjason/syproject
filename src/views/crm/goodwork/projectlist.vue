@@ -905,6 +905,9 @@ export default {
 /deep/::-webkit-scrollbar-thumb {
     background-color: #d6d1d1 !important;
 }
+.tips{
+    margin-top:5px;
+}
 .flowup-count{
             display: flex;
             align-items: center;
@@ -913,6 +916,12 @@ export default {
             box-sizing: border-box;
             padding-right: 25px;
         }
+/deep/.a-line{
+    span{
+        display: flex;
+        align-items: center;
+    }
+}
 .file-icon {
         font-size: 18px;
         margin: 0 3px 0 0  !important;
