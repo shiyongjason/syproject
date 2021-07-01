@@ -20,7 +20,7 @@
 <script>
 import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import { ccpBaseUrl } from '@/api/config'
-import { payVoucher, getBnumber } from '../api/index'
+import { payVoucher, getBnumber, payOrderVoucher } from '../api/index'
 export default {
     name: 'uploadPay',
     components: { HosJoyUpload },
@@ -36,18 +36,21 @@ export default {
             fundId: '',
             companyId: '',
             batchNumber: '',
-            payMoney: 0
+            payMoney: 0,
+            type: 2
         }
     },
     methods: {
-        async onDialogClick (val) {
+        async onDialogClick (val, source) {
             console.log(val)
+            this.attachDocs = []
             const { data } = await getBnumber({ companyId: val.companyId })
             this.batchNumber = data
             this.dialogVisible = true
             this.fundId = val.id
             this.companyId = val.companyId
             this.payMoney = val.applyAmount ? val.applyAmount : val.paymentAmount
+            this.type = source || this.type
         },
         handleClose () {
             this.dialogVisible = false
@@ -64,14 +67,28 @@ export default {
                 this.$message.warning('请上传支付凭证！')
                 return
             }
-            const params = {
-                fundId: this.fundId,
-                attachDocs: this.attachDocs,
-                companyId: this.companyId
-            }
+
             this.dialogVisible = false
-            await payVoucher(params)
-            this.$emit('onBackSearch')
+            console.log(this.type)
+            if (this.type == 2) {
+                const params = {
+                    fundId: this.fundId,
+                    attachDocs: this.attachDocs,
+                    companyId: this.companyId
+                }
+                await payVoucher(params)
+                this.$message.success('上传成功')
+                this.$emit('onBackSearch')
+            } else {
+                const params = {
+                    paymentOrderId: this.fundId,
+                    attachDocs: this.attachDocs,
+                    companyId: this.companyId
+                }
+                await payOrderVoucher(params)
+                this.$message.success('上传成功')
+                this.$emit('onBackSearch')
+            }
         }
     }
 }
