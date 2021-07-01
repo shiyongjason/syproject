@@ -10,7 +10,7 @@
                 <div class="status-description">（{{resStatus[resolutionDetail.resolutionStatus]&&resStatus[resolutionDetail.resolutionStatus].txt}}）</div>
                 <div class="tab-layout-title">
                     <span></span>
-                    <div class="tab-layout-title-box">客户基本信息<h-button table @click="onEditCustomer"  v-if="(resolutionDetail.resolutionStatus==1||resolutionDetail.resolutionStatus==3)&&hosAuthCheck(Auths.CRM_WORK_FINAL_EDITCUS)">编辑</h-button>
+                    <div class="tab-layout-title-box">客户基本信息<h-button table @click="onEditCustomer" v-if="(resolutionDetail.resolutionStatus==1||resolutionDetail.resolutionStatus==3)&&hosAuthCheck(Auths.CRM_WORK_FINAL_EDITCUS)">编辑</h-button>
                     </div>
                 </div>
                 <div class="item">
@@ -77,7 +77,7 @@
                         </div>
                         <div class="info-layout-item">
                             <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>经销商首付款比例(%)：</font>
-                            <span>{{resolutionDetail.advancePaymentRate||'-'}}</span>
+                            <span>{{resolutionDetail.advancePaymentRate||'-'}}%</span>
                         </div>
                     </div>
                     <div class="info-layout">
@@ -146,7 +146,7 @@
                     <div class="dialogbaseinfo-item">可代采购额度(元)：{{resolutionDetail.purchaseQuota|fundMoneyHasTail}}</div>
                     <div class="dialogbaseinfo-item">剩余代采购额度(元)：{{resolutionDetail.purchaseBalance|fundMoneyHasTail}}</div>
                 </div>
-                 <div class="dialogbaseinfo">
+                <div class="dialogbaseinfo">
                     <div class="dialogbaseinfo-item">经销商评级：{{resolutionDetail.companyLevel||'-'}}</div>
                 </div>
                 <el-form id='elform' :model="baseInfoForm" :rules="formRules" label-width="180px" label-position='right' ref="reviewResolutionForm">
@@ -167,7 +167,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="项目合同总额(元)：" prop='contractAmount' style="marginLeft:-9px;marginTop:10px">
-                        <el-input placeholder="请输入" v-isNum:2  maxlength="50" @input="(val)=>inputChage(val,baseInfoForm,'contractAmount')" :value="money(baseInfoForm.contractAmount)">
+                        <el-input placeholder="请输入" v-isNum:2 maxlength="50" @input="(val)=>inputChage(val,baseInfoForm,'contractAmount')" :value="money(baseInfoForm.contractAmount)">
                             <template slot="append">元</template>
                         </el-input>
                     </el-form-item>
@@ -191,7 +191,7 @@
                         </el-form-item>
                         <!-- 0-100,最多保留2位小数 -->
                         <el-form-item label="经销商首付款比例" prop='advancePaymentRate'>
-                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='100'  v-model="purForm.advancePaymentRate" maxlength="50">
+                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='100' v-model="purForm.advancePaymentRate" maxlength="50">
                                 <template slot="append">%</template>
                             </el-input>
                         </el-form-item>
@@ -254,13 +254,17 @@
         <!-- 1  -->
         <div class="tab-layout" v-if="radio1=='决议修改记录'">
             <div class="tab-layout-flex" v-for="(item,index) in Lists" :key="index">
-                <div class="flex-top" v-if="!item.dingId">
+                <div class="flex-top" v-if="item.recordType!=4&&item.recordType!=7">
                     <span><i>{{item.createBy}}</i>{{item.recordTitle}}</span>
                     <span>{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</span>
                 </div>
+
                 <div class="flex-cont">
+                    <div class="flex-operate" v-if="item.recordType==2||item.recordType==5">
+                        <p>钉钉审批流程ID：{{item.dingId}}</p>
+                    </div>
                     <!-- 采购单 -->
-                    <div v-if="item.projectPurchaseList" class="mt20">
+                    <div v-if="item.projectPurchaseList" class="mt10">
                         <hosJoyTable ref="hosjoyTable" align="center" border stripe :column="tableLabel" :data="item.projectPurchaseList" actionWidth='375' prevLocalName="V3.*" localName="V3.*.18">
                         </hosJoyTable>
                     </div>
@@ -270,11 +274,11 @@
                             <span>{{jtem.changeName}}</span>由“<i v-if="jtem.contentBeforeChange">{{jtem.contentBeforeChange}}</i>”变更为“<i>{{jtem.contentAfterChange}}</i>”
                         </p>
                     </div>
-                    <div v-if="item.dingId"  class="mt20">
-                        <span v-if="item.recordType==2||item.recordType==5">{{dingStatus[item.recordType]}}：{{item.dingId}}</span>
-                        <div class="dingBg" v-if="item.recordType==4||item.recordType==7">
-                            {{dingStatus[item.recordType]}}
-                        </div>
+                    <!-- <div v-if="item.recordType==2||item.recordType==5"  class="mt20">
+                        <span ><i>{{item.createBy}}</i></span>
+                    </div> -->
+                    <div class="dingBg mt20" v-if="item.recordType==4||item.recordType==7">
+                        {{dingStatus[item.recordType]}}:{{item.recordTitle}}
                     </div>
                 </div>
             </div>
