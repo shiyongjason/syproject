@@ -66,7 +66,7 @@
                     <h-button type="primary" @click="()=>getList()">
                         查询
                     </h-button>
-                    <h-button @click="onExport">
+                    <h-button v-if="hosAuthCheck(Auths.CRM_WORK_CUSTOMER_EXPORT)" @click="onExport">
                         导出
                     </h-button>
                     <h-button @click="onAddProject">
@@ -368,6 +368,7 @@ import filters from '@/utils/filters'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
 import { ccpBaseUrl, interfaceUrl, ossAliyun, ossOldBucket } from '@/api/config'
 import OssFileUtils from '@/utils/OssFileUtils'
+import * as Auths from '@/utils/auth_const'
 import { isNum } from '@/utils/validate/format'
 import { MAINCATEGORY } from './const/index'
 import { DictionaryList, getChiness, SearchByItem, getProjectList, addProject, getcompanyByName, getCompanyUserById, getProjectDetail, projectSign, projectRefund, getFlowUp } from './api/index'
@@ -418,6 +419,7 @@ export default class ProjectList2 extends Vue {
     @Action('crmmanage/findCrmdeplist') findCrmdeplist: Function
     @Action('projectStore/findDictionaryList') findDictionaryList: (p: SearchByItem) => Promise<any>
     projectId: any = ''
+    Auths = Auths
     showAddProject: boolean = false
     showSign: boolean = false
     showPayback: boolean = false
