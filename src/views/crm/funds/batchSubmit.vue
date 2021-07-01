@@ -86,7 +86,7 @@ export default {
             this.tableData.map(item => {
                 fundId.push(item.id)
             })
-            this.$confirm('确定后，当前页面所有账单的状态将置为「已支付」，重新上传', '提示', {
+            this.$confirm('确定后，当前页面所有账单的状态将置为「已支付」', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'

@@ -207,33 +207,16 @@
                                 <div class="line"></div>
                                 <div class="content">
                                     <div class="title-tag" style="margin-top:20px">{{flowUpTypes[item.type]}}</div>
-                                    <div class="title-tag" v-if="flowUpTypes[item.type]==='已拒绝协助申请'">拒绝原因</div>
-                                    <div class='desc' v-if="flowUpTypes[item.type]==='已拒绝协助申请'">{{item.remark}}</div>
                                     <div class="audio-player-container">
                                        <template v-if="item.picUrls&&item.picUrls.length">{{item.type ==1?'现场图片：':'附件：'}}</template>
                                         <div class="crm-audio-player" style="margin-top:-15px">
                                             <OssFileHosjoyUpload :showUpload='false' :showPreView='true'  v-model="item.picUrls" :fileNum=8 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px"/>
                                         </div>
                                     </div>
-                                    <template v-if="item.projectSupplyFlowUp">
-                                        <div class='title-tag'>客户联系人</div>
-                                        <div class='desc'>{{item.projectSupplyFlowUp.contactName}} {{item.projectSupplyFlowUp.contactMobile}}</div>
-                                        <div class='title-tag'>跟进节点</div>
-                                        <div class='desc'>{{item.projectSupplyFlowUp.flowUpProcess?getProject2FollowUpProcess(item.projectSupplyFlowUp.flowUpProcess).value:'-'}}</div>
-                                        <div class="title-tag" v-if="item.content">跟进内容</div>
-                                        <div class="desc" v-if="item.content">{{item.content}}</div>
-                                        <div class='title-tag' v-if="item.projectSupplyFlowUp.noNeedFlowReason">无需跟进原因</div>
-                                        <div class='desc'  v-if="item.projectSupplyFlowUp.noNeedFlowReason">{{item.projectSupplyFlowUp.noNeedFlowReason||'-'}}</div>
-                                    </template>
+                                    <div class="title-tag" v-if="item.content">跟进内容</div>
+                                    <div class="desc" v-if="item.content">{{item.content}}</div>
                                     <div class="title-tag" v-if="item.nextFlowTime">下次跟进时间</div>
                                     <div class="desc" v-if="item.nextFlowTime">{{item.nextFlowTime | formatDate('YYYY/MM/DD HH:mm')}}</div>
-                                    <template v-if="item.customerBackLogWorks&&item.customerBackLogWorks.length">
-                                        <div class="title-tag" >邀请同事协助</div>
-                                        <div class="desc" v-for="w in item.customerBackLogWorks" :key="w.id">{{w.assignedUserName}} {{w.assignedUserMobile}}</div>
-                                        <div class="title-tag" v-if="item.customerBackLogWorks[0].remark">需协助内容</div>
-                                        <div class="desc" v-if="item.customerBackLogWorks[0].remark">{{item.customerBackLogWorks[0].remark}}</div>
-                                    </template>
-
                                     <div class="title-tag" v-if="item.remark&&(item.type==1||item.type==2)">其他备注</div>
                                     <div class="desc" v-if="item.remark&&(item.type==1||item.type==2)">{{item.remark}}</div>
                                 </div>
