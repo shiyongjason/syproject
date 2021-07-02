@@ -51,7 +51,7 @@
                 </div>
                 <div class="form-cont-row parameter">
                     <div class="form-cont-col mb20" v-for="(item,index) in specifications" :key="index">
-                        <el-form-item :label="item.k + '：'" :prop="`specifications[${index}].v`" :rules="seeTask == true ?{required:item.isRequired == 1 ? true : false, message: item.isCombobox == 1 ? '请选择' + item.k : '请输入' + item.k }: {}">
+                        <el-form-item :label="item.k + '：'" :prop="`specifications[${index}].v`" :rules="disabled ? {}:{required:item.isRequired == 1 ? true : false, message: item.isCombobox == 1 ? '请选择' + item.k : '请输入' + item.k }">
                             <el-input v-model="form.specifications[index].v" v-if="item.isCombobox == 0" maxlength="20" :disabled="seeTask == true">
                                 <template slot="suffix">{{item.unit}}</template>
                             </el-input>
