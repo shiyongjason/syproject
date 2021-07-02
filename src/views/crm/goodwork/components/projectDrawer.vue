@@ -213,6 +213,7 @@ export default {
             })
         },
         async onFindProjectCom (val) {
+            this.isShowFoot = true
             this.activeName = '1'
             // 调用初审详情
             this.projectId = val
