@@ -870,9 +870,10 @@ export default class FinalApproval extends Vue {
     changeGroup (value) {
         this.$forceUpdate()
         if (value == '决议修改记录') {
-            this.$emit('onHideFoot')
+            this.$emit('onHideFoot', false)
             this.onFindRecords()
         } else {
+            this.$emit('onHideFoot', true)
             this.onFindRes()
         }
     }
