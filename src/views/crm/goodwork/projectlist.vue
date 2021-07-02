@@ -423,7 +423,12 @@ export default {
                 { label: '项目地址', prop: 'address', width: '150', showOverflowTooltip: true },
                 { label: '项目编号', prop: 'projectNo', width: '150', showOverflowTooltip: true },
                 { label: '所属分部', prop: 'deptName', width: '150', showOverflowTooltip: true },
-                { label: '项目提交人', prop: 'projectSubmitName', width: '150' },
+                { label: '项目提交人',
+                    prop: 'projectSubmitName',
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.projectSubmitName}<br/>{scope.row.projectSubmitPhone}</span>
+                    } },
                 { label: '经销商', prop: 'companyName', width: '180', showOverflowTooltip: true },
                 { label: '甲方名称', prop: 'firstPartName', width: '180', showOverflowTooltip: true },
                 { label: '预估签约时间', prop: 'estimateSignTime', width: '150', displayAs: 'YYYY-MM-DD', showOverflowTooltip: true },
