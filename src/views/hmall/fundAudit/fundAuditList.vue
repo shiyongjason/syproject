@@ -106,11 +106,11 @@
                     <el-form-item label="店铺名称：" :label-width="formLabelWidth">
                         {{bossDetail.shopName||'-'}}
                     </el-form-item>
-                    <el-form-item label="额度：" :label-width="formLabelWidth" :rules="rules.creditLimit">
-                        <el-input v-model="creditLimit" maxLength="10" prop='' placeholder="请输入额度"></el-input>
+                    <el-form-item label="额度：" :label-width="formLabelWidth" prop='creditLimit'>
+                        <el-input v-model="creditLimit" maxLength="10" placeholder="请输入额度"></el-input>
                     </el-form-item>
-                    <el-form-item label="比例：" :label-width="formLabelWidth">
-                        <el-input v-model="prepayPercentage" maxLength="60" prop='' placeholder="请输入比例">
+                    <el-form-item label="比例：" :label-width="formLabelWidth" prop='prepayPercentage'>
+                        <el-input v-model="prepayPercentage" maxLength="60" placeholder="请输入比例">
                             <template slot="suffix">%</template>
                         </el-input>
                     </el-form-item>
@@ -194,8 +194,23 @@ export default {
                         required: true,
                         validator: (rule, value, callback) => {
                             const reg = /^(([0-9])|([1-9][0-9]{1,7})|100000000)$/
-                            if (!value && !reg.test(value)) {
+                            if (!reg.test(this.creditLimit)) {
+                                console.log(this.creditLimit)
                                 return callback(new Error('额度格式为0-100000000的整数'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                prepayPercentage: [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            const reg = /^(([0-9])|([1-9][0-9]{1,2})|100)$/
+                            if (!reg.test(this.creditLimit)) {
+                                console.log(this.prepayPercentage)
+                                return callback(new Error('比例格式为0-100的整数'))
                             }
                             return callback()
                         },
