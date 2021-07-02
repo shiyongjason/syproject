@@ -590,20 +590,26 @@ export default {
                             operator: this.userInfo.employeeName
                         }
                     }
-                    try {
-                        if (this.$route.query.id) {
-                            await this.editProduct(form)
-                            this.$router.push('/b2b/product/productList')
-                            this.setNewTags((this.$route.fullPath).split('?')[0])
-                        } else {
-                            form.id = ''
-                            await this.createProduct(form)
-                            this.$router.push('/b2b/product/productList')
-                            this.setNewTags((this.$route.fullPath).split('?')[0])
+                    if (form.mainSkus.length <= 0) {
+                        this.$message.warning('请添加商品！')
+                        this.btnLoading = false
+                        return false
+                    } else {
+                        try {
+                            if (this.$route.query.id) {
+                                await this.editProduct(form)
+                                this.$router.push('/b2b/product/productList')
+                                this.setNewTags((this.$route.fullPath).split('?')[0])
+                            } else {
+                                form.id = ''
+                                await this.createProduct(form)
+                                this.$router.push('/b2b/product/productList')
+                                this.setNewTags((this.$route.fullPath).split('?')[0])
+                            }
+                            this.btnLoading = false
+                        } catch (error) {
+                            this.btnLoading = false
                         }
-                        this.btnLoading = false
-                    } catch (error) {
-                        this.btnLoading = false
                     }
                 } else {
                     this.btnLoading = false
