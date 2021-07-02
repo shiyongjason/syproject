@@ -289,7 +289,12 @@ export default {
                         // 增加一列，且只赋予第一个规格值
                         if (value[value.length - 1].optionValues.length > 0) {
                             this.form.mainSkus = this.form.mainSkus.map(item => {
-                                item.optionValues.push(deepCopy(value[value.length - 1].optionValues[0]))
+                                item.optionValues.push({
+                                    id: '',
+                                    name: '',
+                                    optionTypeId: deepCopy(value[value.length - 1].optionValues[0]).optionTypeId,
+                                    optionTypeName: deepCopy(value[value.length - 1].optionValues[0]).optionTypeName
+                                })
                                 return item
                             })
                         }
@@ -576,6 +581,7 @@ export default {
                         form = {
                             ...this.form,
                             mainSkus: deepCopy(this.form.mainSkus).map(item => {
+                                item.id = item.mainSkuId ? item.mainSkuId : ''
                                 item.name = this.form.name
                                 item.imageUrls = item.imageUrls ? item.imageUrls.split(',') : ''
                                 return item

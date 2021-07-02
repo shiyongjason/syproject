@@ -15,7 +15,7 @@
                                 <el-dropdown-item command="imageUrls">应用全部</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
-                        <div class="image-wrap" v-if="$route.query.id"></div>
+                        <!-- <div class="image-wrap" v-if="$route.query.id"></div> -->
                     </td>
                     <td>
                         <span class="tr-label">条头码</span>
@@ -59,7 +59,7 @@
                             <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" />
                             <input type="hidden" v-model="item.imageUrls">
                         </el-form-item>
-                        <div class="image-wrap" v-if="item.disabled"></div>
+                        <!-- <div class="image-wrap" v-if="item.disabled"></div> -->
                     </td>
                     <td>
                         <el-form-item label-width='0' :prop="`mainSkus[${index}].serialNumber`" :rules="rules.serialNumber">
