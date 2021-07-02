@@ -119,7 +119,7 @@
                             <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>备注信息：</font>
                         </div>
                     </div>
-                    <div class="tab-textarea" style="margin:15px 0 0 15px">
+                    <div class="tab-textarea" style="margin:15px 0 0 15px;word-break: break-all">
                         <!-- <el-input  type="textarea" placeholder="可在此填写放款交接中的注意事项等" v-model="loanTransfersConfirm.remark" maxlength="500" rows="5" show-word-limit>
                     </el-input> -->
                         <p>{{resolutionDetail.remark}}</p>
