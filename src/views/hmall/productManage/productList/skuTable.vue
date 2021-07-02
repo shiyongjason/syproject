@@ -38,7 +38,7 @@
                     <td>
                         <span class="tr-label">状态</span>
                     </td>
-                    <td>
+                    <td v-if="form.optionTypeList.length>0">
                         <span class="tr-label">操作</span>
                     </td>
                 </tr>
@@ -98,7 +98,7 @@
                             <span>{{checkStatus(item.enabled,item.auditStatus)}}</span>
                         </el-form-item>
                     </td>
-                    <td>
+                    <td v-if="form.optionTypeList.length>0">
                         <el-form-item label-width='0'>
                             <template v-if="item.auditStatus == 1">
                                 <h-button table @click="onEfficacySku(item,index)" v-if="item.enabled">失效</h-button>
