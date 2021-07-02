@@ -157,7 +157,7 @@
                 </el-tabs>
             </div>
         </el-drawer>
-        <UploadPayDialog ref="uploadpaydialog" />
+        <UploadPayDialog ref="uploadpaydialog" @onBackSearch="findPaymentOrderList"/>
     </div>
 </template>
 
