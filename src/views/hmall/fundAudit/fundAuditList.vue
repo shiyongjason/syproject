@@ -57,10 +57,10 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">审核时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.auditStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.auditStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.auditEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.auditEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerEnd">
                         </el-date-picker>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
         </div>
         <el-drawer title="资金审核" :visible.sync="brandDrawer" :wrapperClosable="false" size="640px" @close="handleClose">
             <div class="drawer-content">
-                <el-form ref="form" :model="bossDetail" :rules="rules" label-width="100px">
+                <el-form ref="bossDetail" :model="bossDetail" :rules="auditStatus == 30?{}:rules" label-width="100px">
                     <el-form-item label="企业名称：" :label-width="formLabelWidth">
                         {{bossDetail.companyName?bossDetail.companyName:'-'}}
                     </el-form-item>
@@ -110,22 +110,22 @@
                         <el-input v-model="creditLimit" maxLength="10" placeholder="请输入额度"></el-input>
                     </el-form-item>
                     <el-form-item label="比例：" :label-width="formLabelWidth" prop='prepayPercentage'>
-                        <el-input v-model="prepayPercentage" maxLength="60" placeholder="请输入比例">
+                        <el-input v-model="prepayPercentage" maxLength="10" placeholder="请输入比例">
                             <template slot="suffix">%</template>
                         </el-input>
                     </el-form-item>
-                    <el-form-item label="额度有效时间：" :label-width="formLabelWidth">
+                    <el-form-item label="额度有效时间：" :label-width="formLabelWidth" prop="expireTime">
                         <el-date-picker v-model="expireTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="额度有效时间">
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="审核：" prop="type" :label-width="formLabelWidth">
-                        <el-radio-group v-model="auditStatus">
+                        <el-radio-group v-model="auditStatus" @change="onChange">
                             <el-radio :label="20">通过</el-radio>
                             <el-radio :label="30">不通过</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="原因：" v-if="auditStatus == 30" :label-width="formLabelWidth">
-                        <el-input v-model="note" maxLength="60" prop='' placeholder="请输入原因"></el-input>
+                    <el-form-item label="原因：" v-if="auditStatus == 30" :label-width="formLabelWidth" prop='note' :rules="rules.note">
+                        <el-input v-model="note" maxLength="60" placeholder="请输入原因"></el-input>
                     </el-form-item>
                 </el-form>
                 <div class="drawer-footer">
@@ -141,6 +141,7 @@
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { BUSINESS_TYPE_OPTIONS, BUSINESS_TYPE_MAP, AUDIT_STATUS_OPTIONS, AUDIT_STATUS_MAP, DEADLINE_OPTIONS, DEADLINE_MAP, LIMIT_STATUS_MAP } from './const'
+import { findFund } from './api/index.js'
 export default {
     name: 'fundAuditList',
     data () {
@@ -186,7 +187,8 @@ export default {
             branchArr: [],
             companyCode: '',
             bossDetail: {},
-            brandDrawer: true,
+            copyDetail: {},
+            brandDrawer: false,
             formLabelWidth: '140px',
             rules: {
                 creditLimit: [
@@ -195,7 +197,6 @@ export default {
                         validator: (rule, value, callback) => {
                             const reg = /^(([0-9])|([1-9][0-9]{1,7})|100000000)$/
                             if (!reg.test(this.creditLimit)) {
-                                console.log(this.creditLimit)
                                 return callback(new Error('额度格式为0-100000000的整数'))
                             }
                             return callback()
@@ -208,9 +209,32 @@ export default {
                         required: true,
                         validator: (rule, value, callback) => {
                             const reg = /^(([0-9])|([1-9][0-9]{1,2})|100)$/
-                            if (!reg.test(this.creditLimit)) {
-                                console.log(this.prepayPercentage)
+                            if (!reg.test(this.prepayPercentage)) {
                                 return callback(new Error('比例格式为0-100的整数'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                expireTime: [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            if (this.expireTime == '') {
+                                return callback(new Error('请输入额度有效时间'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                note: [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            if (this.note == '') {
+                                return callback(new Error('请输入原因'))
                             }
                             return callback()
                         },
@@ -222,7 +246,8 @@ export default {
             prepayPercentage: '',
             expireTime: '',
             auditStatus: '',
-            note: ''
+            note: '',
+            infoId: ''
         }
     },
     computed: {
@@ -242,7 +267,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endTime
+                    let beginDateVal = this.queryParams.applyEndTime
                     if (beginDateVal) {
                         return time.getTime() > beginDateVal
                     }
@@ -252,7 +277,27 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startTime
+                    let beginDateVal = this.queryParams.applyStartTime
+                    if (beginDateVal) {
+                        return time.getTime() < beginDateVal
+                    }
+                }
+            }
+        },
+        pickerStart () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.auditEndTime
+                    if (beginDateVal) {
+                        return time.getTime() > beginDateVal
+                    }
+                }
+            }
+        },
+        pickerEnd () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.auditStartTime
                     if (beginDateVal) {
                         return time.getTime() < beginDateVal
                     }
@@ -261,7 +306,6 @@ export default {
         }
     },
     mounted () {
-        // this.onFindMlist()
         this.init()
         this.copyParams = { ...this.queryParams }
     },
@@ -288,12 +332,48 @@ export default {
                     this.$emit('backEvent')
                 })
             } else {
-                // this.activeName = 'first'
                 this.$emit('backEvent')
             }
         },
-        onSave () {
-            this.brandDrawer = false
+        onChange () {
+            this.$nextTick(() => {
+                this.$refs['bossDetail'].clearValidate()
+            })
+        },
+        async onSave () {
+            this.$refs.bossDetail.validate(async (valid) => {
+                if (valid) {
+                    console.log(valid)
+                    const form = {
+                        id: this.infoId,
+                        creditLimit: this.creditLimit,
+                        prepayPercentage: this.prepayPercentage,
+                        expireTime: this.expireTime,
+                        auditStatus: this.auditStatus,
+                        note: this.note
+                    }
+                    await findFund(form)
+                    this.brandDrawer = false
+                    this.$message.success('审核成功')
+                    this.findFundList()
+                } else {
+                    if (this.auditStatus == 20) {
+                        if (this.creditLimit) {
+                            this.$message.warning('请输入额度')
+                        }
+                        if (this.prepayPercentage) {
+                            this.$message.warning('请输入比例')
+                        }
+                        if (this.expireTime) {
+                            this.$message.warning('请输入额度有效时间')
+                        }
+                    } else if (this.auditStatus == 30) {
+                        if (this.note) {
+                            this.$message.warning('请输入原因')
+                        }
+                    }
+                }
+            })
         },
         ...mapActions({
             // findMerchantList: 'findMerchantList',
@@ -314,10 +394,11 @@ export default {
             await this.findBranch()
             this.branchArr = this.branchList
         },
-        async onFindInfo (val, type) {
+        async onFindInfo (val) {
             await this.findFundInfo({ id: val })
+            this.infoId = val
             this.bossDetail = this.fundInfo
-            console.log(this.bossDetail)
+            this.copyDetail = deepCopy(this.businessDetail)
             this.brandDrawer = true
         }
     }

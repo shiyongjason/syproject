@@ -10,3 +10,19 @@ export const findFundList = (params) => {
 export const findFundInfo = (params) => {
     return axios.get(`${B2bUrl}fund/boss/fund/apply/${params.id}`, { params })
 }
+// 资金审核
+export const findFund = (params) => {
+    return axios.post(`${B2bUrl}fund/boss/fund/apply/verify`, { params })
+}
+// 代采订单审核列表
+export const findAuditFundList = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/agent/order/audit-page`, { params })
+}
+// 代采订单审核
+export const AuditFund = (params) => {
+    return axios.patch(`${B2bUrl}fund/boss/agent/order/audit`, { params })
+}
+// 代采订单详情
+export const findAuditFundInfo = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/agent/order/${params.id}`, { params })
+}

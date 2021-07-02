@@ -85,7 +85,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">资金业务开通状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.openingStatus">
+                        <el-select v-model="queryParams.fundAuthorization">
                             <el-option v-for="item in openingStatusOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
@@ -125,8 +125,8 @@
                 <template slot="authenticationTime" slot-scope="scope">
                     {{scope.data.row.authenticationTime | formatDate}}
                 </template>
-                <template slot="openingStatus" slot-scope="scope">
-                    {{openingStatusMap.get(scope.data.row.openingStatus)}}
+                <template slot="fundAuthorization" slot-scope="scope">
+                    {{openingStatusMap.get(scope.data.row.fundAuthorization)}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</h-button>
@@ -196,7 +196,7 @@ export default {
                 { label: '认证时间', prop: 'authenticationTime', sortable: true, width: '150px' },
                 { label: '商家角色权限', prop: 'merchantRolePermission', width: '120px' },
                 { label: '自动推送至店铺', prop: 'isAutoDispatch', width: '120px' },
-                { label: '资金业务', prop: 'openingStatus' },
+                { label: '资金业务', prop: 'fundAuthorization' },
                 { label: '状态', prop: 'isEnabled' }
             ],
             tableData: [],
