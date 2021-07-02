@@ -403,9 +403,9 @@ export default {
         onFinalApprove (val) {
             this.$refs.finalApproval._finalApprove(val)
         },
-        onHideFoot () {
+        onHideFoot (val) {
             console.log(123)
-            this.isShowFoot = false
+            this.isShowFoot = val
         }
 
     }

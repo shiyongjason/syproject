@@ -1,5 +1,5 @@
 <template>
-    <div class="finalApproval">
+    <div class="finalApproval" v-if="finalFormID">
         <el-radio-group v-model="radio1" @change="changeGroup">
             <el-radio-button label="评审决议内容"></el-radio-button>
             <el-radio-button label="决议修改记录"></el-radio-button>
@@ -870,9 +870,10 @@ export default class FinalApproval extends Vue {
     changeGroup (value) {
         this.$forceUpdate()
         if (value == '决议修改记录') {
-            this.$emit('onHideFoot')
+            this.$emit('onHideFoot', false)
             this.onFindRecords()
         } else {
+            this.$emit('onHideFoot', true)
             this.onFindRes()
         }
     }
