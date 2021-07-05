@@ -71,6 +71,12 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col__label">提交人：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.submitBy" placeholder="请输入" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
                     <h-button type="primary" @click="findPurchaseList({...queryParamsUseQuery, pageNumber: 1})">
                         查询
                     </h-button>
@@ -94,6 +100,13 @@
                 </template>
                 <template slot="status" slot-scope="scope">
                     <span> {{ scope.data.row.status| attributeComputed(PurchaseOrderDict.status.list)}}</span>
+                </template>
+                <template slot="submitBy" slot-scope="scope">
+                    <div v-if="scope.data.row.submitBy">
+                        <p>{{ scope.data.row.submitBy }}</p>
+                        <p>({{ scope.data.row.submitPhone }})</p>
+                    </div>
+                    <div v-else>-</div>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <!-- <h-button table @click="openDialog(dialogStatus.enter.status, scope.data.row)" v-if="PurchaseOrderDict.status.list[1].key === scope.data.row.status &&
@@ -166,6 +179,7 @@ export default {
                 pageNumber: 1,
                 startTime: '',
                 endTime: '',
+                submitBy: '',
                 pageSize: 10,
                 'sort.property': null,
                 'sort.direction': null
@@ -180,6 +194,7 @@ export default {
                 { label: '项目编号', prop: 'projectNo', width: '150' },
                 { label: '采购单金额', prop: 'poAmount', width: '100', align: 'right' },
                 { label: '状态', prop: 'status', width: '120' },
+                { label: '提交人', prop: 'submitBy', width: '120' },
                 { label: '共管户信息', prop: 'coManager', width: '150' },
                 { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTime', sortable: 'createTimeOrder' },
                 { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTime', sortable: 'updateTimeOrder' }

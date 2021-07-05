@@ -44,3 +44,26 @@ export const getProjectLevels = (projectId) => axios.get(`/memeber/openapi/proje
 // 设置项目等级&项目服务费
 export const setProjectLevels = (params) => axios.put(`/memeber/openapi/project/levels`, params)
 export const downLoadZip = (params) => axios.get(`memeber/openapi/project/docs-download/${params.projectId}/${params.status}/${params.bizType}`)
+// 天眼查列表搜索
+export const getTYCList = (params) => axios.get(`/memeber/api/tianyancha/searches`, { params })
+
+// 评审决议详情
+export const getResolutions = (params) => axios.get(`/memeber/api/resolutions/boss/${params}`)
+
+// 保存客户信息
+export const resCustomer = (params) => axios.patch(`/memeber/api/resolutions/boss/customer`, params)
+
+// 保存 采购单
+export const resPurchase = (params) => axios.patch(`/memeber/api/resolutions/boss/purchase`, params)
+
+// 评议记录
+export const getRecordList = (params) => axios.get(`/memeber/api/resolutions/boss/${params}/record-list`)
+
+// 评审决议通过 钉钉回调
+export const initiateDing = (params) => axios.post(`/memeber/api/resolutions/boss/initiate-ding`, params)
+// 评审决议不通过
+export const finalApproveNo = (params) => axios.put(`/memeber/api/resolutions/boss/final-approve-not-pass`, params)
+// 新增空采购单
+export const addEmptyPurchase = (params) => axios.post(`/project/api/purchase-orders/boss-save`, params)
+// 删除采购单
+export const deletePurchase = (params) => axios.delete(`/project/api/purchase-orders/boss/${params}`)

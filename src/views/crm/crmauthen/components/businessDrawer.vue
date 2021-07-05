@@ -1,5 +1,5 @@
 <template>
-    <div class="drawer-wrap" v-if="drawer" >
+    <div class="drawer-wrap" v-if="drawer">
         <h-drawer v-if="drawer" title="企业详情" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='50%' :wrapperClosable="false">
             <template #connect>
                 <el-tabs v-model="activeName" @tab-click="handleTabClick">
@@ -18,6 +18,10 @@
                                 </el-form-item>
                                 <el-form-item label="管理员姓名：" :label-width="formLabelWidth">
                                     {{businessDetail.userName||'-'}}
+                                </el-form-item>
+                                <el-form-item label="客户经理：" :label-width="formLabelWidth">
+                                    {{businessDetail.customerManager||'-'}}
+                                    <el-button type="primary" size="mini" @click="onEditInfo" v-if="hosAuthCheck(Auths.CRM_AUTHEN_EDITNAME)">修改客户经理</el-button>
                                 </el-form-item>
                                 <el-form-item label="所属分部：" :label-width="formLabelWidth" prop="pkDeptDoc">
                                     <el-select v-model="businessDetail.pkDeptDoc" placeholder="请选择" :clearable=true>
@@ -188,7 +192,7 @@
                                 </el-form-item>
                                 <el-form-item label="最近维护人：" :label-width="formLabelWidth">
                                     {{businessDetail.updateBy?businessDetail.updateBy:'-'}} ({{businessDetail.updatePhone}})
-                                    <span class="delcompany" @click="onRemove">删除该企业</span>
+                                    <span class="delcompany" @click="onRemove" v-if="hosAuthCheck(Auths.CRM_AUTHEN_DELETE)">删除该企业</span>
                                 </el-form-item>
                             </el-form>
 
@@ -291,7 +295,7 @@
                                 <h2>{{ businessDetail.companyName }}</h2>
                                 <h-button type="primary" @click="openTransferAdminDialog" v-if="hosAuthCheck(auth_transfer_admin)">转让管理员</h-button>
                             </div>
-<!--                            goodwork/authenlist  show-check-all-->
+                            <!--                            goodwork/authenlist  show-check-all-->
                             <basicTable :tableData="employeeTableData" :tableLabel="employeeTableLabel" :show-check-all="false" :is-pagination="false" :isMultiple="false" :actionMinWidth=120>
                                 <template slot="selfAction" slot-scope="scope">
                                     <img src="../../../../assets/images/edit.png" alt="" class="employee-edit" @click="openEmployeeRoleDialog(scope.data.row)">
@@ -369,9 +373,9 @@
                 <el-button type="primary" @click="qualificationDialogVisible = false">确 定</el-button>
             </span>
         </el-dialog>
-        <EditTargetEmployeeRoleDialog :editEmployeeDialogVisible.sync="editEmployeeDialogVisible" :target-val="targetEmployeeData" :roleList="roleList" @updateTableList="getEmployeeList"/>
-        <TransferAdmin :transferAdminDialogVisible.sync="transferAdminDialogVisible" :adminData="adminData" :employeeTableData="employeeTableData"
-                       :companyCode="businessDetail.companyCode" @updateTableList="getEmployeeList"/>
+        <EditTargetEmployeeRoleDialog :editEmployeeDialogVisible.sync="editEmployeeDialogVisible" :target-val="targetEmployeeData" :roleList="roleList" @updateTableList="getEmployeeList" />
+        <TransferAdmin :transferAdminDialogVisible.sync="transferAdminDialogVisible" :adminData="adminData" :employeeTableData="employeeTableData" :companyCode="businessDetail.companyCode" @updateTableList="getEmployeeList" />
+        <Searchdialog ref="searchdialog" @onEditCustomerInfo=onEditCustomerInfo></Searchdialog>
     </div>
 </template>
 <script>
@@ -379,6 +383,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import EditTargetEmployeeRoleDialog from './editTargetEmployeeRoleDialog'
 import TransferAdmin from './transferAdminDialog'
 import { mapState, mapGetters, mapActions } from 'vuex'
+import Searchdialog from './searchDialog.vue'
 import {
     getBusinessAuthen,
     updateCrmauthen,
@@ -409,6 +414,7 @@ export default {
     },
     data () {
         return {
+            Auths,
             memberTagArr: [{ key: 1, value: '一般会员' }, { key: 2, value: '认证会员' }, { key: 3, value: '评级会员' }, { key: 4, value: '签约会员' }, { key: 5, value: '交易会员' }],
             chengLabel: {
                 0: '橙工采会员(未激活)',
@@ -480,15 +486,6 @@ export default {
                 provinceId: [
                     { required: true, message: '请选择省', trigger: 'change' }
                 ]
-                // relationCompanyCode: [
-                //     { required: true, message: '请选择关联公司' }
-                // ],
-                // developOnlineCompanyCode: [
-                //     { required: true, message: '请选择平台公司' }
-                // ],
-                // isRelated: [
-                //     { required: true, message: '请选择是否关联平台公司', trigger: 'change' }
-                // ]
             },
             targetObj: {
                 selectName: '',
@@ -545,7 +542,8 @@ export default {
         elImageAddToken,
         inputAutocomplete,
         EditTargetEmployeeRoleDialog,
-        TransferAdmin
+        TransferAdmin,
+        Searchdialog
     },
     computed: {
         ...mapState({
@@ -679,7 +677,7 @@ export default {
             })
         },
         onClearV () {
-            this.$refs['ruleForm'].clearValidate()
+            // this.$refs['ruleForm'].clearValidate()
         },
         onClearType () {
             this.targetObj.selectCode = ''
@@ -929,6 +927,13 @@ export default {
                 this.companyContact.request.companyId = this.businessDetail.companyId
                 this.companyContact.response = data
             }
+        },
+        onEditInfo () {
+            this.$refs.searchdialog.onShowSearch({ companyId: this.businessDetail.companyId, deptDoc: this.businessDetail.subsectionCode, deptName: this.businessDetail.subsectionName })
+        },
+        onEditCustomerInfo (val) {
+            console.log(val)
+            this.$set(this.businessDetail, 'customerManager', val)
         }
     },
     mounted () {
@@ -1166,5 +1171,4 @@ export default {
     justify-content: space-between;
     padding-bottom: 20px;
 }
-
 </style>
