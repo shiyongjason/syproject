@@ -514,6 +514,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/crm/merchanEnginePlan/edit.vue')
+                    },
+                    {
+                        path: 'H5Preview',
+                        name: 'H5Preview',
+                        meta: {
+                            title: 'H5预览',
+                            tagName: 'H5预览',
+                            parentName: '工程方案',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/crm/merchanEnginePlan/H5Preview.vue')
                     }
                 ]
             }
