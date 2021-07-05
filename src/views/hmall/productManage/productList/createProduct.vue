@@ -80,7 +80,7 @@
                                     <el-input v-model="addValues[index]" @change="onAddOptionVlaue(index)" suffix-icon="el-icon-plus" maxlength="50" placeholder="多个属性值以空格隔开"></el-input>
                                 </el-form-item>
                             </div>
-                            <span class="group-spec_close" @click="onDelOptionTemplate(index)" v-if="form.auditStatus != 1"><i class="el-icon-close"></i></span>
+                            <span class="group-spec_close" @click="onDelOptionTemplate(index)" v-if="!item.disabled"><i class="el-icon-close"></i></span>
                         </div>
                         <h-button type="create" class="mb20" @click="onAddOptionTemplate" :disabled="disabled">添加规格</h-button>
                     </div>
@@ -289,7 +289,12 @@ export default {
                         // 增加一列，且只赋予第一个规格值
                         if (value[value.length - 1].optionValues.length > 0) {
                             this.form.mainSkus = this.form.mainSkus.map(item => {
-                                item.optionValues.push(deepCopy(value[value.length - 1].optionValues[0]))
+                                item.optionValues.push({
+                                    id: '',
+                                    name: '',
+                                    optionTypeId: deepCopy(value[value.length - 1].optionValues[0]).optionTypeId,
+                                    optionTypeName: deepCopy(value[value.length - 1].optionValues[0]).optionTypeName
+                                })
                                 return item
                             })
                         }
@@ -576,6 +581,7 @@ export default {
                         form = {
                             ...this.form,
                             mainSkus: deepCopy(this.form.mainSkus).map(item => {
+                                item.id = item.mainSkuId ? item.mainSkuId : ''
                                 item.name = this.form.name
                                 item.imageUrls = item.imageUrls ? item.imageUrls.split(',') : ''
                                 return item
@@ -584,20 +590,26 @@ export default {
                             operator: this.userInfo.employeeName
                         }
                     }
-                    try {
-                        if (this.$route.query.id) {
-                            await this.editProduct(form)
-                            this.$router.push('/b2b/product/productList')
-                            this.setNewTags((this.$route.fullPath).split('?')[0])
-                        } else {
-                            form.id = ''
-                            await this.createProduct(form)
-                            this.$router.push('/b2b/product/productList')
-                            this.setNewTags((this.$route.fullPath).split('?')[0])
+                    if (form.mainSkus.length <= 0) {
+                        this.$message.warning('请添加商品！')
+                        this.btnLoading = false
+                        return false
+                    } else {
+                        try {
+                            if (this.$route.query.id) {
+                                await this.editProduct(form)
+                                this.$router.push('/b2b/product/productList')
+                                this.setNewTags((this.$route.fullPath).split('?')[0])
+                            } else {
+                                form.id = ''
+                                await this.createProduct(form)
+                                this.$router.push('/b2b/product/productList')
+                                this.setNewTags((this.$route.fullPath).split('?')[0])
+                            }
+                            this.btnLoading = false
+                        } catch (error) {
+                            this.btnLoading = false
                         }
-                        this.btnLoading = false
-                    } catch (error) {
-                        this.btnLoading = false
                     }
                 } else {
                     this.btnLoading = false
