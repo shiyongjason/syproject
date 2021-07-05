@@ -1,4 +1,5 @@
 import Layout from '@/views/layout/Default.vue'
+import InterlayerContainer from '@/views/layout/InterlayerContainer'
 
 export default [
     {
@@ -480,6 +481,41 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/crm/crmauthen/tianyan.vue')
+            },
+            {
+                path: 'crmengineplan',
+                meta: {
+                    title: '工程方案',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'crmenginedetail',
+                        name: 'crmenginedetail',
+                        meta: {
+                            title: '工程方案',
+                            tagName: '工程方案',
+                            parentName: '工程方案',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/crm/merchanEnginePlan/index.vue')
+                    },
+                    {
+                        path: 'crmengineedit',
+                        name: 'crmengineedit',
+                        meta: {
+                            title: '工程方案编辑',
+                            tagName: '工程方案编辑',
+                            parentName: '工程方案',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/crm/merchanEnginePlan/edit.vue')
+                    }
+                ]
             }
         ]
     }
