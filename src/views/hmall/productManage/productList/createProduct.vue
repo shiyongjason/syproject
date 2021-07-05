@@ -382,6 +382,12 @@ export default {
                 }
             },
             deep: true
+        },
+        '$route' (to, from) {
+            console.log(to.query.id)
+            if (!to.query.id) {
+                this.reload('createProduct')
+            }
         }
     },
     methods: {
@@ -716,10 +722,6 @@ export default {
     },
     mounted () {
         this.init()
-    },
-    beforeRouteEnter (to, from, next) {
-        newCache('createProduct')
-        next()
     },
     beforeRouteLeave (to, from, next) {
         if (to.name != 'productList') {
