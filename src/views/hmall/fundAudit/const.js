@@ -54,8 +54,8 @@ export const AUDITLIST_STATUS_MAP = new Map([
 // 订单审核列表审核状态tab
 export const AUDIT_TAB_OPTIONS = [
     { label: '全部', value: '0' },
-    { label: '审核通过', value: '1' },
-    { label: '审核不通过', value: '2' }
+    { label: '审核通过', value: '20' },
+    { label: '审核不通过', value: '60' }
 ]
 // 预付款状态
 export const PAYMENT_STATUS_OPTIONS = [
@@ -143,4 +143,16 @@ export const PLATFORM_STATUS_MAP = new Map([
 export const LIMIT_STATUS_MAP = new Map([
     [1, '生效'],
     [0, '失效']
+])
+// 审核状态
+export const AUDIT_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '待审核', value: '10' },
+    { label: '审核通过', value: '20' },
+    { label: '审核不通过', value: '60' }
+]
+export const AUDIT_MAP = new Map([
+    [10, '待审核'],
+    [20, '审核通过'],
+    [60, '审核不通过']
 ])

@@ -3,17 +3,17 @@
         <div class="page-body-cont">
             <el-form ref="form" :model="form" :rules="rules" label-width="auto">
                 <div class="table-cont-title big-title">
-                    <span class="table-title-name">代采订单号：{{}}</span>
+                    <span class="table-title-name">代采订单号：{{form.agentOrderNo}}</span>
                 </div>
                 <div class="table-cont-title">
                     <span class="table-title-name">供应商信息</span>
                 </div>
                 <div style="display:flex;flex-wrap: wrap;">
-                    <el-form-item label="供应商名称：" prop="name">
-                        <el-input class="form-input_big" v-model="form.name" maxlength="100" disabled></el-input>
+                    <el-form-item label="供应商名称：" prop="supplierName">
+                        <el-input class="form-input_big" v-model="form.supplierName" maxlength="100" disabled></el-input>
                     </el-form-item>
-                    <el-form-item label="供应商付款银行账号：" prop="showName" class="ml20">
-                        <el-input class="form-input_big" v-model="form.showName" maxlength="100" disabled></el-input>
+                    <el-form-item label="供应商付款银行账号：" prop="supplierBankCardNo" class="ml20">
+                        <el-input class="form-input_big" v-model="form.supplierBankCardNo" maxlength="100" disabled></el-input>
                     </el-form-item>
                 </div>
                 <div class="table-cont-title">
@@ -23,11 +23,11 @@
                     <el-form-item label="选择仓库：" prop="parameter1">
                         <el-cascader class="area-cascader" :append-to-body="false" v-model="entrepotList" :options="provinceData" :props="provinceProps" @change="onChangeProvince" disabled></el-cascader>
                     </el-form-item>
-                    <el-form-item label="收货确认人姓名：" prop="parameter2">
-                        <el-input class="form-input_big" v-model="form.parameter2" maxlength="100" disabled></el-input>
+                    <el-form-item label="收货确认人姓名：" prop="confirmorName">
+                        <el-input class="form-input_big" v-model="form.confirmorName" maxlength="100" disabled></el-input>
                     </el-form-item>
-                    <el-form-item label="确认人电话：" prop="parameter2">
-                        <el-input class="form-input_big" v-model="form.parameter2" maxlength="100" disabled></el-input>
+                    <el-form-item label="确认人电话：" prop="confirmorMobile">
+                        <el-input class="form-input_big" v-model="form.confirmorMobile" maxlength="100" disabled></el-input>
                     </el-form-item>
                 </div>
                 <div class="table-cont-title">
@@ -35,58 +35,58 @@
                 </div>
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isShowIndex='true' :isfiexd="'right'" :isShowSum="true" :getSum="getSum" class="mt20 mb20">
                 </basicTable>
-                <el-form-item label="代采订单总金额：" prop="remark">
-                    <el-input class="form-input_big" v-model="form.parameter2" maxlength="100" disabled></el-input>
+                <el-form-item label="代采订单总金额：" prop="totalAmount">
+                    <el-input class="form-input_big" v-model="form.totalAmount" maxlength="100" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="待付款金额：" prop="remark">
-                    <el-input class="form-input_big" v-model="form.parameter2" maxlength="100" disabled></el-input>
+                <el-form-item label="待付款金额：" prop="retainageAmount">
+                    <el-input class="form-input_big" v-model="form.retainageAmount" maxlength="100" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="需商家预付金额：" prop="remark">
-                    <el-input class="form-input_big" v-model="form.parameter2" maxlength="100" disabled></el-input>
+                <el-form-item label="需商家预付金额：" prop="prepayAmount">
+                    <el-input class="form-input_big" v-model="form.prepayAmount" maxlength="100" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="付款方式：" prop="parameter1">
+                <el-form-item label="付款方式：" prop="payWay">
                     <el-cascader class="area-cascader" :append-to-body="false" v-model="entrepotList" :options="provinceData" :props="provinceProps" @change="onChangeProvince" disabled></el-cascader>
                 </el-form-item>
-                <el-form-item label="备注信息：" prop="remark">
-                    <el-input type="textarea" v-model="form.remark" maxlength="50" disabled>
+                <el-form-item label="备注信息：" prop="note">
+                    <el-input type="textarea" v-model="form.note" maxlength="50" disabled>
                     </el-input>
                 </el-form-item>
-                <el-form-item v-if="pageType == 'auditFundList'" label="订单最终回款日期：" prop="authenticationStartTime">
-                    <el-input class="form-input_big" v-model="form.auditFundList" maxlength="50">
-                    </el-input>
-                </el-form-item>
-                <div style="display:flex;" v-if="pageType == 'auditFundList'">
-                    <el-form-item label="审核：" prop="type">
-                        <el-radio-group v-model="form.merchantType">
-                            <el-radio :label="1">通过</el-radio>
-                            <el-radio :label="2">不通过</el-radio>
-                        </el-radio-group>
+                <template v-if="seeTask == false">
+                    <el-form-item label="订单最终回款日期：" prop="authenticationStartTime">
+                        <el-input class="form-input_big" v-model="form.auditFundList" maxlength="50">
+                        </el-input>
                     </el-form-item>
-                    <el-form-item label="原因：">
-                        <el-input v-model="form.shopName" maxLength="60" prop='' placeholder="请输入原因"></el-input>
-                    </el-form-item>
-                </div>
+                    <div style="display:flex;">
+                        <el-form-item label="审核：" prop="type">
+                            <el-radio-group v-model="form.merchantType">
+                                <el-radio :label="1">通过</el-radio>
+                                <el-radio :label="2">不通过</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="原因：">
+                            <el-input v-model="form.shopName" maxLength="60" prop='' placeholder="请输入原因"></el-input>
+                        </el-form-item>
+                    </div>
+                </template>
                 <basicTable :tableData="tableDataLog" :tableLabel="tableLabelLog" :isMultiple="false" class="mt20 mb20" v-if="pageType == 'auditFundStatus'">
                 </basicTable>
             </el-form>
         </div>
         <div class="page-body-cont btn-cont fr">
             <h-button @click="onCancel()">取消</h-button>
-            <h-button type='primary' @click="onSave()" v-if="pageType == 'auditFundList'">确定</h-button>
+            <h-button type='primary' @click="onSave()" v-if="seeTask == false">确定</h-button>
         </div>
     </div>
 </template>
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapGetters } from 'vuex'
 export default {
     name: 'fundInfo',
     data () {
         return {
+            seeTask: false,
             pageType: '',
             entrepotList: {},
-            brandOption: [],
-            templateOption: [],
-            categoryOption: [],
             provinceData: [],
             provinceProps: {
                 multiple: true
@@ -101,14 +101,14 @@ export default {
             form: {},
             rules: {},
             tableLabel: [
-                { label: 'SPU编码', prop: 'spuCode' },
-                { label: '商品名称', prop: 'spuName' },
+                { label: 'SKU编码', prop: 'skuCode' },
+                { label: '商品名称', prop: 'skuName' },
                 { label: '品牌', prop: 'brandName' },
                 { label: '型号', prop: 'model' },
-                { label: '单位', prop: 'saleableStock' },
-                { label: '需求数量', prop: 'activityStock' },
-                { label: '含税单价', prop: 'attachmentCount' },
-                { label: '含税金额', prop: 'isShared' }
+                { label: '单位', prop: 'unit' },
+                { label: '需求数量', prop: 'quantity' },
+                { label: '含税单价', prop: 'price' },
+                { label: '含税金额', prop: 'totalAmount' }
             ],
             tableData: [],
             tableLabelLog: [
@@ -121,12 +121,24 @@ export default {
     },
     computed: {
         ...mapState({
+            userInfo: state => state.userInfo,
+            auditFundInfo: state => state.fundAudit.auditFundInfo
+        }),
+        ...mapGetters({
+            auditFundInfo: 'fundAudit/auditFundInfo'
         })
     },
     methods: {
         init () {
-            this.pageType = this.$route.query.pageType
+            if (this.$route.query.id) {
+                this.seeTask = JSON.parse(this.$route.query.seeTask)
+                this.pageType = this.$route.query.pageType
+                this.getInfo()
+            }
         },
+        ...mapActions({
+            findAuditFundInfo: 'fundAudit/findAuditFundInfo'
+        }),
         onSave () {
         },
         onCancel () {
@@ -136,7 +148,10 @@ export default {
         ...mapActions({
             setNewTags: 'setNewTags'
         }),
-        async getSkuInfo () {
+        async getInfo () {
+            await this.findAuditFundInfo({ id: this.$router.query.id })
+            this.form = { ...this.auditFundInfo }
+            this.tableData = { ...this.auditFundInfo.skuList }
         },
         onChangeProvince (value) {
         },
@@ -150,7 +165,7 @@ export default {
                 }
                 // 含税金额
                 if (column.property == 'totalAmount') {
-                    sums[index] = this.childOrderStatistics.totalAmount
+                    sums[index] = this.tableData.totalAmount
                 }
             })
             return sums

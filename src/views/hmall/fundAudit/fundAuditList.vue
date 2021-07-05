@@ -166,7 +166,6 @@ export default {
                 pageSize: 10,
                 pageNumber: 1
             },
-            paginationInfo: {},
             tableLabel: [
                 { label: '企业名称', prop: 'companyName' },
                 { label: '管理员账号', prop: 'username' },
@@ -264,12 +263,19 @@ export default {
             fundList: 'fundAudit/fundList',
             fundInfo: 'fundAudit/fundInfo'
         }),
+        paginationInfo () {
+            return {
+                total: this.fundList.total,
+                pageNumber: this.fundList.current,
+                pageSize: this.fundList.size
+            }
+        },
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.applyEndTime
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() >= new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -279,7 +285,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.applyStartTime
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
@@ -289,7 +295,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.auditEndTime
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() >= new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -299,7 +305,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.auditStartTime
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
@@ -311,8 +317,16 @@ export default {
     },
     methods: {
         async init () {
-            this.onGetbranch()
-            this.findFundList()
+            await this.onGetbranch()
+            await this.findFundList()
+        },
+        onSizeChange (val) {
+            this.queryParams.pageSize = val
+            this.findFundList(this.queryParams)
+        },
+        onCurrentChange (val) {
+            this.queryParams.pageNumber = val.pageNumber
+            this.findFundList(this.queryParams)
         },
         onQuery () {
             this.queryParams.pageNumber = 1

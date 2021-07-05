@@ -5,13 +5,13 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">代采订单号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.merchantAccount" placeholder="请输入代采订单号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.agentOrderNo" placeholder="请输入代采订单号" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont__col">
+                <div class="query-cont__col" v-if="tabName=='0'">
                     <div class="query-col__lable">审核状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.isAuthentication">
+                        <el-select v-model="queryParams.orderStatus">
                             <el-option v-for="item in auditStatusOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
@@ -25,16 +25,16 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">管理员账号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.companyName" placeholder="请输入管理员账号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.username" placeholder="请输入管理员账号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">提交时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.registrationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.submitStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.registrationEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.submitEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
@@ -63,10 +63,10 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">审核时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.auditStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.authenticationEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.auditEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerEnd">
                         </el-date-picker>
                     </div>
                 </div>
@@ -91,15 +91,12 @@
                 <template slot="merchantType" slot-scope="scope">
                     {{businessTypeMap.get(scope.data.row.merchantType) || '-'}}
                 </template>
-                <template slot="isAuthentication" slot-scope="scope">
-                    <span>{{auditStatusMap.get(scope.data.row.isAuthentication)}}}</span>
-                </template>
-                <template slot="openingStatus" slot-scope="scope">
-                    {{deadlineMap.get(scope.data.row.openingStatus)}}
+                <template slot="orderStatus" slot-scope="scope">
+                    <span>{{auditStatusMap.get(scope.data.row.orderStatus)}}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onseeTask(scope.data.row)">查看</h-button>
-                    <h-button table v-if="scope.data.row.isAuthentication==1" @click="onAudit(scope.data.row)">审核</h-button>
+                    <h-button table v-if="scope.data.row.orderStatus=='10'" @click="onAudit(scope.data.row)">审核</h-button>
                 </template>
             </basicTable>
         </div>
@@ -107,72 +104,80 @@
 </template>
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
-import { BUSINESS_TYPE_OPTIONS, BUSINESS_TYPE_MAP, AUDITLIST_STATUS_OPTIONS, AUDITLIST_STATUS_MAP, DEADLINE_OPTIONS, DEADLINE_MAP, AUDIT_TAB_OPTIONS } from './const'
+import { BUSINESS_TYPE_OPTIONS, BUSINESS_TYPE_MAP, AUDIT_OPTIONS, AUDIT_MAP, DEADLINE_OPTIONS, DEADLINE_MAP, AUDIT_TAB_OPTIONS } from './const'
 export default {
     name: 'auditFundList',
     data () {
         return {
             businessTypeOptions: BUSINESS_TYPE_OPTIONS,
             businessTypeMap: BUSINESS_TYPE_MAP,
-            auditStatusOptions: AUDITLIST_STATUS_OPTIONS,
-            auditStatusMap: AUDITLIST_STATUS_MAP,
+            auditStatusOptions: AUDIT_OPTIONS,
+            auditStatusMap: AUDIT_MAP,
             deadlineOptions: DEADLINE_OPTIONS,
             deadlineMap: DEADLINE_MAP,
             auditTabOptions: AUDIT_TAB_OPTIONS,
             queryParams: {
-                authenticationEndTime: '',
-                authenticationStartTime: '',
+                agentOrderNo: '',
+                orderStatus: '',
+                submitStartTime: '',
+                submitEndTime: '',
+                auditStartTime: '',
+                auditEndTime: '',
                 companyName: '',
-                isAuthentication: '',
-                isEnabled: '',
-                merchantAccount: '',
-                merchantType: '',
                 pageNumber: 1,
                 pageSize: 10,
-                registrationEndTime: '',
-                registrationStartTime: '',
+                username: '',
+                merchantType: '',
                 subsectionCode: '',
-                authenticationTime: '',
-                createTime: 'desc',
                 shopName: ''
             },
-            paginationInfo: {},
             tableLabel: [
-                { label: '代采订单号', prop: 'openingStatus' },
-                { label: '提交时间', prop: 'registrationTime', formatters: 'dateTimes' },
-                { label: '代采订单总金额', prop: 'openingStatus' },
-                { label: '代采商品数量', prop: 'openingStatus' },
+                { label: '代采订单号', prop: 'agentOrderNo' },
+                { label: '提交时间', prop: 'createTime', formatters: 'dateTimes' },
+                { label: '代采订单总金额', prop: 'totalAmount' },
+                { label: '代采商品数量', prop: 'quantity' },
                 { label: '企业名称', prop: 'companyName' },
-                { label: '管理员账号', prop: 'adminAccount' },
+                { label: '管理员账号', prop: 'username' },
                 { label: '商家类型', prop: 'merchantType' },
                 { label: '所属分部', prop: 'subsectionName' },
                 { label: '店铺名称', prop: 'shopName' },
-                { label: '审核状态', prop: 'isAuthentication' },
-                { label: '审核时间', prop: 'authenticationTime', sortable: true }, { label: '额度', prop: 'openingStatus' },
-                { label: '回款期限', prop: 'openingStatus' }
+                { label: '审核状态', prop: 'orderStatus' },
+                { label: '审核时间', prop: 'auditTime' },
+                { label: '回款期限', prop: 'period' }
             ],
             tableData: [],
             drawer: false,
             copyParams: {},
             // 所属分部
             branchArr: [],
-            tabName: 0
+            tabName: ''
         }
     },
     computed: {
         ...mapState({
-            // userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            auditFundList: state => state.fundAudit.auditFundList
         }),
         ...mapGetters({
             merchantData: 'merchantData',
             branchList: 'branchList'
         }),
+        ...mapGetters({
+            auditFundList: 'fundAudit/auditFundList'
+        }),
+        paginationInfo () {
+            return {
+                total: this.auditFundList.total,
+                pageNumber: this.auditFundList.current,
+                pageSize: this.auditFundList.size
+            }
+        },
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endTime
+                    let beginDateVal = this.queryParams.submitEndTime
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() >= new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -180,74 +185,94 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startTime
+                    let beginDateVal = this.queryParams.submitStartTime
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                    }
+                }
+            }
+        },
+        pickerStart () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.auditEndTime
+                    if (beginDateVal) {
+                        return time.getTime() >= new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerEnd () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.auditStartTime
+                    if (beginDateVal) {
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
         }
     },
     mounted () {
-        // this.onFindMlist()
-        this.onGetbranch()
+        this.init()
         this.copyParams = { ...this.queryParams }
     },
     methods: {
+        async init () {
+            await this.onGetbranch()
+            await this.findAuditFundList()
+        },
+        onSizeChange (val) {
+            this.queryParams.pageSize = val
+            this.findAuditFundList(this.queryParams)
+        },
+        onCurrentChange (val) {
+            this.queryParams.pageNumber = val.pageNumber
+            this.findAuditFundList(this.queryParams)
+        },
+        ...mapActions({
+            findBranch: 'findBranch',
+            findAuditFundList: 'fundAudit/findAuditFundList'
+        }),
         onQuery () {
             this.queryParams.pageNumber = 1
-            // this.findOrders(this.queryParams)
+            this.findAuditFundList(this.queryParams)
         },
         onReset () {
             this.queryParams = { ...this.copyParams }
-            // this.findOrders()
+            this.findAuditFundList()
         },
-
-        onSave () { },
         onTab (value) {
-            this.queryParams.pageNumber = 1
-            // this.orderStatusOptions.map(item => {
-            //     if (value.name == item.value) {
-            //         this.queryParams.status = item.value
-            //     }
-            // })
-            // this.findFreightOrders(this.queryParams)
+            if (this.tabName == '20') {
+                this.queryParams.orderStatus = '20'
+            } else if (this.tabName == '60') {
+                this.queryParams.orderStatus = '60'
+            } else if (this.tabName == '0') {
+                this.queryParams.orderStatus = ''
+            }
+            this.onQuery()
         },
-        ...mapActions({
-            // findMerchantList: 'findMerchantList',
-            findBranch: 'findBranch'
-        }),
         onRest () {
             this.queryParams = { ...this.copyParams }
-            // this.onFindMlist(1)
+            this.findAuditFundList()
         },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
-            // this.onFindMlist()
+            this.findAuditFundList()
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            // this.onFindMlist()
-        },
-        async onFindMlist (val) {
-            // if (val) this.queryParams.pageNumber = val
-            // await this.findMerchantList(this.queryParams)
-            // this.tableData = this.merchantData.records
-            // this.paginationInfo = {
-            //     total: this.merchantData.total,
-            //     pageNumber: this.merchantData.current,
-            //     pageSize: this.merchantData.size
-            // }
+            this.findAuditFundList()
         },
         async onGetbranch () {
             await this.findBranch()
             this.branchArr = this.branchList
         },
         onseeTask (val) {
-            this.$router.push({ path: '/fundAudit/listFundInfo', query: { id: val, audit: false, pageType: auditFundList } })
+            this.$router.push({ path: '/fundAudit/listFundInfo', query: { id: val.id, audit: false, pageType: auditFundList } })
         },
         onAudit (val) {
-            this.$router.push({ path: '/fundAudit/aduitFundInfo', query: { id: val, audit: true, pageType: auditFundList } })
+            this.$router.push({ path: '/fundAudit/aduitFundInfo', query: { id: val.id, audit: true, pageType: auditFundList } })
         }
     }
 }
