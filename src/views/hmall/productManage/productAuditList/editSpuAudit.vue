@@ -445,7 +445,7 @@ export default {
                         }
                     } else {
                         this.btnLoading = false
-                        this.$message.error('请审核！')
+                        this.$message.error('请选择审核结果！')
                     }
                 } else {
                     this.btnLoading = false
