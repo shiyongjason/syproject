@@ -104,6 +104,7 @@ export default {
                 brandName: '',
                 brandId: '',
                 model: '',
+                categoryId: '',
                 auditStatus: '',
                 enabled: '',
                 pageNumber: 1,
