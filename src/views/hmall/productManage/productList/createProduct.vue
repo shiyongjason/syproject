@@ -80,7 +80,7 @@
                                     <el-input v-model="addValues[index]" @change="onAddOptionVlaue(index)" suffix-icon="el-icon-plus" maxlength="50" placeholder="多个属性值以空格隔开"></el-input>
                                 </el-form-item>
                             </div>
-                            <span class="group-spec_close" @click="onDelOptionTemplate(index)" v-if="!item.disabled"><i class="el-icon-close"></i></span>
+                            <span class="group-spec_close" @click="onDelOptionTemplate(index)" v-if="!(form.auditStatus == 1 && item.disabled)"><i class="el-icon-close"></i></span>
                         </div>
                         <h-button type="create" class="mb20" @click="onAddOptionTemplate" :disabled="disabled">添加规格</h-button>
                     </div>
