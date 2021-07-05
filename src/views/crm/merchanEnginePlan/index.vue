@@ -45,7 +45,7 @@
 <script>
 
 import { mapGetters, mapActions, mapState } from 'vuex'
-import { getCrmPlanList } from './api/index'
+import { getCrmPlanList, deleteProjectScheme } from './api/index'
 import { iotUrl } from '@/api/config'
 import H5Preview from '@/components/h5Preview'
 
