@@ -86,6 +86,17 @@
                         </HDatePicker>
                     </div>
                 </div>
+                 <div class="query-cont-col">
+                    <div class="query-col__label">橙工采会员：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.chengGongCaiLable">
+                            <el-option label="全部" value="">
+                            </el-option>
+                            <el-option v-for="item in chengArr" :key="item.key" :label="item.value" :value="item.key">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">客户经理：</div>
                     <div class="query-col__input">
@@ -148,6 +159,12 @@ export default {
     data () {
         return {
             authen_detail: Auths.CRM_AUTHEN_DETAIL,
+            chengLabel: {
+                0: '橙工采会员(未激活)',
+                1: '橙工采初级会员',
+                2: '橙工采橙级会员'
+            },
+            chengArr: [{ key: 0, value: '橙工采会员(未激活)' }, { key: 1, value: '橙工采初级会员' }, { key: 2, value: '橙工采橙级会员' }],
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
