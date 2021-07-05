@@ -38,7 +38,7 @@
                     <td>
                         <span class="tr-label">状态</span>
                     </td>
-                    <td v-if="form.optionTypeList.length>0">
+                    <td>
                         <span class="tr-label">操作</span>
                     </td>
                 </tr>
@@ -98,18 +98,16 @@
                             <span>{{checkStatus(item.enabled,item.auditStatus)}}</span>
                         </el-form-item>
                     </td>
-                    <td v-if="form.optionTypeList.length>0">
-                        <el-form-item label-width='0'>
-                            <template v-if="item.auditStatus == 1">
-                                <h-button table @click="onEfficacySku(item,index)" v-if="item.enabled">失效</h-button>
-                                <h-button table @click="onEffectiveSku(item,index)" v-if="!item.enabled">生效</h-button>
-                                <h-button table @click="onEditSku(index)" v-if="!item.enabled">编辑</h-button>
-                            </template>
-                            <template v-else>
-                                <h-button table @click="onEditSku(index)" :disabled="!item.auditStatus && item.auditStatus != 0">编辑</h-button>
-                                <h-button table @click="onDelSku(index)">删除</h-button>
-                            </template>
-                        </el-form-item>
+                    <td>
+                        <template v-if="item.auditStatus == 1">
+                            <h-button table @click="onEfficacySku(item,index)" v-if="item.enabled">失效</h-button>
+                            <h-button table @click="onEffectiveSku(item,index)" v-if="!item.enabled">生效</h-button>
+                            <h-button table @click="onEditSku(index)" v-if="!item.enabled">编辑</h-button>
+                        </template>
+                        <template v-else>
+                            <h-button table @click="onEditSku(index)" :disabled="!item.auditStatus && item.auditStatus != 0">编辑</h-button>
+                            <h-button table @click="onDelSku(index)" v-if="form.optionTypeList.length>0">删除</h-button>
+                        </template>
                     </td>
                 </tr>
             </tbody>
@@ -299,6 +297,7 @@ export default {
         async onEffectiveSku (row, index) {
             await this.effectiveSKU({ id: row.mainSkuId })
             this.$set(this.form.mainSkus[index], 'enabled', !this.form.mainSkus[index].enabled)
+            this.$set(this.form.mainSkus[index], 'disabled', !this.form.mainSkus[index].disabled)
             this.$message.success('生效成功！')
         },
         // 失效sku
