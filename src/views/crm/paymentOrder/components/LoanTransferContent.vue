@@ -14,12 +14,12 @@
                     <font style="flex:0 0 110px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>质押信息：</font><span>{{LoanTransferContent.reviewResolutionResponse.pledgeNo||'-'}}</span>
                 </div>
             </div>
-            <div class="info-layout">
+            <!-- <div class="info-layout">
                 <div class="info-layout-item">
                     <font style="flex:0 0 110px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>评审决议流程：</font>
                     <span>{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?'已完结':''}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?' （':''}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionNo||'-'}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?'）':''}}</span>
                 </div>
-            </div>
+            </div> -->
             <div class="info-layout">
                 <div class="info-layout-item">
                     <font style="flex:0 0 110px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>货款支付流程：</font>
@@ -161,7 +161,7 @@
                         <!-- 长度为50位以内字母或数字。 -->
                         <el-input placeholder="请输入中登网质押编号" v-model="reviewResolutionForm.pledgeNo" maxlength="50"></el-input>
                     </el-form-item>
-                        <div class="reviewResolutionForm-title">
+                        <!-- <div class="reviewResolutionForm-title">
                             评审决议流程：
                         </div>
                         <div class="reviewResolutionForm-reviewResolutionNo" style="margin-left: 32px;">
@@ -171,7 +171,7 @@
                             <el-select v-model="reviewResolutionForm.reviewResolutionStatus" placeholder="请选择">
                                 <el-option label="已完结" :value="1"></el-option>
                             </el-select>
-                        </el-form-item>
+                        </el-form-item> -->
                         <div class="reviewResolutionForm-title">
                             货款支付流程：
                         </div>
@@ -401,7 +401,7 @@ export default {
     },
     methods: {
         async confirmLoanTransfers () {
-            if (!this.LoanTransferContent.reviewResolutionResponse.pledgeNo || !this.LoanTransferContent.reviewResolutionResponse.reviewResolutionNo || !this.LoanTransferContent.reviewResolutionResponse.oaNo || !this.LoanTransferContent.contractArchiveDocs.length) {
+            if (!this.LoanTransferContent.reviewResolutionResponse.pledgeNo || !this.LoanTransferContent.reviewResolutionResponse.oaNo || !this.LoanTransferContent.contractArchiveDocs.length) {
                 this.$message.error('必填项不得为空哦~')
                 return
             }

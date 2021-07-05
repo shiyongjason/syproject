@@ -17,11 +17,15 @@ export interface tableLabelItem extends Partial<ElTableColumn> {
     render?: TableRenderFunc,
     /**
      * 自定义插槽 [{prop: 'ceshi' , label: '测试插槽', slot : 'ceshi'}]
-     * @template 《template slot="ceshi" slot-scope="scope"》
+     * @template <template slot="ceshi" slot-scope="scope">
     */
     slot?: string,
+    /** 单元格单位 比如  10000元 */
+    unit?: string,
+    /** 表头单位：比如   合计（元） */
+    headerUnit?: string,
     /** 金额、日期格式化 */
-    displayAs?: 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD' | 'YYYY年MM月DD日 HH时mm分ss秒' | 'YYYY年MM月DD日' | 'money',
+    displayAs?: 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD HH:mm' | 'YYYY-MM-DD' | 'YYYY年MM月DD日 HH时mm分ss秒' | 'YYYY年MM月DD日' | 'money',
     /** 字典 Ex: [ { value : 1,label : '是' } ] 比如后端返回1，那表格展示中文'是'  */
     dicData?: { value: any; label: any; }[],
     /** 该列是否可以排序，如果设置为 'custom'，则代表用户希望远程排序，需要监听 Table 的 sort-change 事件 */

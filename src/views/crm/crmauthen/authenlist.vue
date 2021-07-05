@@ -82,13 +82,14 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">关联/认证时间：</div>
                     <div class="query-col__input">
-                        <!-- <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.authenticationEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker> -->
                         <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="authOptions">
                         </HDatePicker>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col__label">客户经理：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.customerManager" placeholder="请输入客户经理" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -108,6 +109,10 @@
                 </template>
                  <template slot="memberTag" slot-scope="scope">
                      {{memberTagArr[scope.data.row.memberTag-1].value}}
+                </template>
+                <template slot="customerManager" slot-scope="scope">
+                     <p>{{scope.data.row.customerManager||'-'}}</p>
+                     <p>{{scope.data.row.customerManagerPhone||'-'}}</p>
                 </template>
                 <template slot="userName" slot-scope="scope">
                     <span class="colblue" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
@@ -162,7 +167,8 @@ export default {
                 deptDoc: '',
                 jobNumber: '',
                 authCode: '',
-                memberTag: ''
+                memberTag: '',
+                customerManager: ''
             },
             copyParams: {},
             tableData: [],
@@ -176,6 +182,7 @@ export default {
                 { label: '企业类型', prop: 'companyType', width: '100' },
                 { label: '客户分类', prop: 'customerType', width: '100', sortable: 'custom' },
                 { label: '认证状态', prop: 'isAuthentication' },
+                { label: '客户经理', prop: 'customerManager', width: '100' },
                 { label: '会员标签', prop: 'memberTag' },
                 { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: 'custom' },
                 { label: '关联认证时间', prop: 'authenticationTime', width: '150', formatters: 'dateTimes' }
