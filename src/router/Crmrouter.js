@@ -492,8 +492,8 @@ export default [
                 component: InterlayerContainer,
                 children: [
                     {
-                        path: 'crmengineplan',
-                        name: 'crmengineplan',
+                        path: 'crmenginedetail',
+                        name: 'crmenginedetail',
                         meta: {
                             title: '工程方案',
                             tagName: '工程方案',
