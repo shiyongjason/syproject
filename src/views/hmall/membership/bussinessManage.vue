@@ -165,6 +165,7 @@ export default {
                 registrationStartTime: '',
                 subsectionCode: '',
                 authenticationTime: '',
+                fundAuthorization: '',
                 createTime: 'desc',
                 shopName: ''
             },

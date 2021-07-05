@@ -66,19 +66,19 @@
                                 <el-switch v-model="bossDetail.isAutoDispatch" :active-value=1 :inactive-value=0></el-switch>
                             </el-form-item>
                             <el-form-item label="资金业务：" prop="resource" :label-width="formLabelWidth">
-                                <el-switch v-model="bossDetail.isAutoDispatch" :active-value=1 :inactive-value=0></el-switch>
+                                <el-switch v-model="bossDetail.fundAuthorization" :active-value=true :inactive-value=false :disabled='switchD'></el-switch>
                             </el-form-item>
                         </div>
-                        <el-form-item label="商家角色：" prop="type" :label-width="formLabelWidth">
-                            <el-checkbox label="商品型" name="type" v-model="bossDetail.isCommodity" :true-label=1 :false-label=0></el-checkbox>
-                            <el-checkbox label="运营型" name="type" v-model="bossDetail.isOperational" :true-label=1 :false-label=0></el-checkbox>
-                        </el-form-item>
                     </template>
                     <el-form-item label="认证状态：" :label-width="formLabelWidth">
                         {{bossDetail.isAuthentication==true?'已认证':'未认证'}}
                         <template v-if="bossDetail.authenticationTime">
                             {{bossDetail.authenticationTime | formatterTime}}
                         </template>
+                    </el-form-item>
+                    <el-form-item label="商家角色：" prop="type" :label-width="formLabelWidth" v-if="type==='merchant'">
+                        <el-checkbox label="商品型" name="type" v-model="bossDetail.isCommodity" :true-label=1 :false-label=0></el-checkbox>
+                        <el-checkbox label="运营型" name="type" v-model="bossDetail.isOperational" :true-label=1 :false-label=0></el-checkbox>
                     </el-form-item>
                     <el-form-item label="员工：" :label-width="formLabelWidth" v-if="bossDetail.staff">
                         <ul v-if="bossDetail.staff.length>0">
@@ -210,6 +210,9 @@ export default {
                 return city[0].countries
             }
             return []
+        },
+        switchD () {
+            return this.bossDetail.fundAuthorization == true
         }
     },
     watch: {

@@ -15,10 +15,10 @@ export const BUSINESS_ROLE_MAP = new Map([
 // 资金业务开通状态
 export const OPENING_STATUS_OPTIONS = [
     { label: '全部', value: '' },
-    { label: '开启', value: '1' },
-    { label: '关闭', value: '2' }
+    { label: '开启', value: true },
+    { label: '关闭', value: false }
 ]
 export const OPENING_STATUS_MAP = new Map([
-    [1, '开启'],
-    [2, '关闭']
+    [true, '开启'],
+    [false, '关闭']
 ])
