@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { Route, VueRouter } from 'vue-router/types/router'
 declare module '*.vue' {
 
     export default Vue
@@ -15,6 +16,8 @@ declare module 'vue/types/vue' {
         /** 精确除法 */
         $dividedBy: Function,
         /** 精确乘法 */
-        $multipliedBy: Function
+        $multipliedBy: Function,
+        $router: VueRouter,
+        $route: Route
     }
 }
