@@ -100,9 +100,9 @@
         <div class="info_box">
              <div class="info_box-icon"><i class="el-icon-s-claim"></i>质押信息：{{data.pledgeNo}}</div>
         </div>
-        <div class="info_box">
+        <!-- <div class="info_box">
               <div class="info_box-icon"><i class="el-icon-s-claim"></i>评审决议流程：{{data.reviewResolutionStatus==1?'已完结':'未完结'}}（{{data.reviewResolutionNo}}）</div>
-        </div>
+        </div> -->
         <div class="info_box">
             <div class="info_box-icon"><i class="el-icon-s-claim"></i>货款支付流程：{{data.oaStatus==1?'已完结':'未完结'}}（{{data.oaNo}}）</div>
         </div>
