@@ -67,7 +67,7 @@
                                 <el-radio :label="2">不通过</el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <el-form-item label="原因：" prop="rejectReason">
+                        <el-form-item label="原因：" prop="rejectReason" v-if="form.status=='2'">
                             <el-input v-model="form.rejectReason" maxLength="60" prop='' placeholder="请输入原因"></el-input>
                         </el-form-item>
                     </div>
@@ -96,7 +96,24 @@ export default {
             btnLoading: false,
             houseOptions: [],
             form: {},
-            rules: {},
+            rules: {
+                status: [
+                    { required: true, message: '请选择审核结果', trigger: 'change' }
+                ],
+                rejectReason: [
+                    { required: true, message: '请填写理由说明', trigger: 'blur' },
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            if (this.form.auditOpinion && this.form.auditOpinion.replace(/\s/g, '').length < 1) {
+                                return callback(new Error('请填写理由说明'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
+                ]
+            },
             tableLabel: [
                 { label: 'SKU编码', prop: 'skuCode' },
                 { label: '商品名称', prop: 'skuName' },
@@ -166,7 +183,6 @@ export default {
                     this.btnLoading = false
                 }
             })
-
         },
         onCancel () {
             history.go(-1)
