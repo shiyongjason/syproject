@@ -19,7 +19,7 @@ export const findAuditFundList = (params) => {
     return axios.get(`${B2bUrl}fund/boss/agent/order/audit-page`, { params })
 }
 // 代采订单审核
-export const AuditFund = (params) => {
+export const auditFund = (params) => {
     return axios.patch(`${B2bUrl}fund/boss/agent/order/audit`, { params })
 }
 // 代采订单详情

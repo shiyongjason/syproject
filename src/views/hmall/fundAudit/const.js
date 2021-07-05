@@ -156,3 +156,7 @@ export const AUDIT_MAP = new Map([
     [20, '审核通过'],
     [60, '审核不通过']
 ])
+// 预付款付款方式
+export const PAY_OPTIONS = [
+    { label: '线下转账', value: '10' }
+]

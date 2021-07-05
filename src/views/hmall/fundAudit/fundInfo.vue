@@ -20,8 +20,10 @@
                     <span class="table-title-name">采购入仓仓库及收货人</span>
                 </div>
                 <div style="display:flex;flex-wrap: wrap;">
-                    <el-form-item label="选择仓库：" prop="parameter1">
-                        <el-cascader class="area-cascader" :append-to-body="false" v-model="entrepotList" :options="provinceData" :props="provinceProps" @change="onChangeProvince" disabled></el-cascader>
+                    <el-form-item label="选择仓库：" prop="warehouse">
+                        <el-select v-model="form.warehouse" disabled>
+                            <el-option v-for="item in houseOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="收货确认人姓名：" prop="confirmorName">
                         <el-input class="form-input_big" v-model="form.confirmorName" maxlength="100" disabled></el-input>
@@ -45,26 +47,28 @@
                     <el-input class="form-input_big" v-model="form.prepayAmount" maxlength="100" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="付款方式：" prop="payWay">
-                    <el-cascader class="area-cascader" :append-to-body="false" v-model="entrepotList" :options="provinceData" :props="provinceProps" @change="onChangeProvince" disabled></el-cascader>
+                    <el-select v-model="form.payWay" disabled>
+                        <el-option v-for="item in payOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="备注信息：" prop="note">
                     <el-input type="textarea" v-model="form.note" maxlength="50" disabled>
                     </el-input>
                 </el-form-item>
                 <template v-if="seeTask == false">
-                    <el-form-item label="订单最终回款日期：" prop="authenticationStartTime">
-                        <el-input class="form-input_big" v-model="form.auditFundList" maxlength="50">
+                    <el-form-item label="订单最终回款日期：" prop="period">
+                        <el-input class="form-input_big" v-model="form.period" maxlength="50">
                         </el-input>
                     </el-form-item>
                     <div style="display:flex;">
-                        <el-form-item label="审核：" prop="type">
-                            <el-radio-group v-model="form.merchantType">
+                        <el-form-item label="审核：" prop="status">
+                            <el-radio-group v-model="form.status">
                                 <el-radio :label="1">通过</el-radio>
                                 <el-radio :label="2">不通过</el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <el-form-item label="原因：">
-                            <el-input v-model="form.shopName" maxLength="60" prop='' placeholder="请输入原因"></el-input>
+                        <el-form-item label="原因：" prop="rejectReason">
+                            <el-input v-model="form.rejectReason" maxLength="60" prop='' placeholder="请输入原因"></el-input>
                         </el-form-item>
                     </div>
                 </template>
@@ -74,30 +78,23 @@
         </div>
         <div class="page-body-cont btn-cont fr">
             <h-button @click="onCancel()">取消</h-button>
-            <h-button type='primary' @click="onSave()" v-if="seeTask == false">确定</h-button>
+            <h-button type='primary' :loading="btnLoading" @click="onSave()" v-if="seeTask == false">确定</h-button>
         </div>
     </div>
 </template>
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex'
+import { PAY_OPTIONS } from './const'
+import { auditFund } from './api/index'
 export default {
     name: 'fundInfo',
     data () {
         return {
+            payOptions: PAY_OPTIONS,
             seeTask: false,
             pageType: '',
-            entrepotList: {},
-            provinceData: [],
-            provinceProps: {
-                multiple: true
-            },
-            props: {
-                multiple: true,
-                emitPath: false,
-                value: 'id',
-                label: 'name',
-                children: 'subCategoryList'
-            },
+            btnLoading: false,
+            houseOptions: [],
             form: {},
             rules: {},
             tableLabel: [
@@ -140,6 +137,36 @@ export default {
             findAuditFundInfo: 'fundAudit/findAuditFundInfo'
         }),
         onSave () {
+            let form = {}
+            form = {
+                id: this.form.id,
+                period: this.period,
+                updateBy: this.userInfo.employeeName,
+                status: this.form.auditStatus,
+                rejectReason: this.form.auditOpinion
+            }
+            this.btnLoading = true
+            this.$refs.form.validate(async (valid) => {
+                if (valid) {
+                    if (this.form.auditStatus != '') {
+                        try {
+                            await auditFund(form)
+                            this.btnLoading = false
+                            this.$message.success('操作成功！')
+                            this.$router.push('/b2b/product/productAuditList')
+                            this.setNewTags((this.$route.fullPath).split('?')[0])
+                        } catch (error) {
+                            this.btnLoading = false
+                        }
+                    } else {
+                        this.btnLoading = false
+                        this.$message.error('请选择审核结果！')
+                    }
+                } else {
+                    this.btnLoading = false
+                }
+            })
+
         },
         onCancel () {
             history.go(-1)
@@ -152,8 +179,6 @@ export default {
             await this.findAuditFundInfo({ id: this.$router.query.id })
             this.form = { ...this.auditFundInfo }
             this.tableData = { ...this.auditFundInfo.skuList }
-        },
-        onChangeProvince (value) {
         },
         // 商家明细合计
         getSum (param) {
