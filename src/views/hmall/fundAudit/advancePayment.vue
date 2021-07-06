@@ -247,7 +247,7 @@ export default {
             this.findAdvanceList()
         },
         onseeTask (val) {
-            this.$router.push({ path: '/fundAudit/advanceFundInfo', query: { id: val, pageType: advancePayment } })
+            this.$router.push({ path: '/fundAudit/advanceFundInfo', query: { id: val.id, seeTask: true } })
         },
         async onFund (val) {
             try {
