@@ -88,7 +88,7 @@
                     </h-button>
                 </div>
             </div>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true' :isfiexd="'right'">
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isfiexd="'right'">
                 <template slot="merchantType" slot-scope="scope">
                     {{paymentStatusMap.get(scope.data.row.merchantType) || '-'}}
                 </template>
@@ -130,36 +130,35 @@ export default {
                 agentOrderNo: '',
                 prepayStatus: '',
                 orderSwitch: '',
-                isAuthentication: '',
-                isEnabled: '',
-                merchantAccount: '',
-                merchantType: '',
-                merchantTypes: '',
+                orderSyncStatus: '',
+                fundSyncStatus: '',
+                operator: '',
+                submitStartTime: '',
+                submitEndTime: '',
                 pageNumber: 1,
                 pageSize: 10,
-                registrationEndTime: '',
-                registrationStartTime: '',
-                subsectionCode: '',
-                authenticationTime: '',
-                createTime: 'desc',
-                shopName: ''
+                prepayConfirmStartTime: '',
+                prepayConfirmEndTime: '',
+                companyName: '',
+                username: ''
             },
             paginationInfo: {},
             tableLabel: [
-                { label: '代采订单号', prop: 'openingStatus' },
-                { label: 'mis订单号', prop: 'openingStatus' },
-                { label: '提交时间', prop: 'registrationTime', formatters: 'dateTimes' },
-                { label: '代采订单总金额', prop: 'openingStatus' },
-                { label: '代采商品数量', prop: 'openingStatus' },
-                { label: '预付款', prop: 'openingStatus' },
+                { label: '代采订单号', prop: 'agentOrderNo' },
+                { label: 'mis订单号', prop: 'misOrderNo' },
+                { label: '提交时间', prop: 'createTime', formatters: 'dateTimes' },
+                { label: '代采订单总金额', prop: 'totalAmount' },
+                { label: '代采商品数量', prop: 'quantity' },
+                { label: '预付款', prop: 'prepayAmount' },
                 { label: '企业名称', prop: 'companyName' },
-                { label: '管理员账号', prop: 'adminAccount' },
+                { label: '管理员账号', prop: 'username' },
                 { label: '店铺名称', prop: 'shopName' },
-                { label: '预付款状态', prop: 'isAuthentication' },
-                { label: '确认时间', prop: 'authenticationTime', sortable: true },
-                { label: '订单状态', prop: 'openingStatus' },
-                { label: '订单同步状态', prop: 'openingStatus' },
-                { label: '资金同步状态', prop: 'openingStatus' }
+                { label: '预付款状态', prop: 'prepayStatus' },
+                { label: '确认时间', prop: 'prepayConfirmTime' },
+                { label: '订单状态', prop: 'orderSwitch' },
+                { label: '订单同步状态', prop: 'orderSyncStatus' },
+                { label: '资金同步状态', prop: 'fundSyncStatus' },
+                { label: '操作人', prop: 'prepayConfirmOperator' }
             ],
             tableData: [],
             copyParams: {}

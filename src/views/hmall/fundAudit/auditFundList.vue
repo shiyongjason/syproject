@@ -84,7 +84,7 @@
                     <el-tab-pane v-for="item in auditTabOptions" :label="item.label" :value="item.value" :key="item.value" :name="item.value"></el-tab-pane>
                 </el-tabs>
             </div>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true' :isfiexd="'right'">
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isfiexd="'right'">
                 <template slot="subsectionName" slot-scope="scope">
                     {{scope.data.row.subsectionName || '无'}}
                 </template>
