@@ -1,4 +1,5 @@
 import Layout from '@/views/layout/Default.vue'
+import InterlayerContainer from '@/views/layout/InterlayerContainer.vue'
 
 export default [
     {
@@ -480,6 +481,31 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/crm/crmauthen/tianyan.vue')
+            },
+            {
+                path: 'commodityManagement',
+                name: 'commodityManagement',
+                meta: {
+                    title: '商品管理',
+                    tagName: '商品管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'addProduct',
+                        name: 'addProduct',
+                        meta: {
+                            title: '新增商品',
+                            tagName: '新增商品',
+                            parentName: '好橙工',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/crm/shopMall/addProduct/list.vue')
+                    }
+                ]
             }
         ]
     }
