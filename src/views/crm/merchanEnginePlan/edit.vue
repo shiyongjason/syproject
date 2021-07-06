@@ -59,7 +59,7 @@
 <script>
 import { interfaceUrl } from '@/api/config'
 import { addCrmPlanDetail, getCrmPlanDetail } from './api'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
     name: 'crmedit',
     data () {
@@ -161,12 +161,24 @@ export default {
             }
         }
     },
+    watch: {
+        'form.schemeImage' (val) {
+            if (val) {
+                this.$nextTick(() => {
+                    this.$refs['schemeImage'].clearValidate()
+                })
+            }
+        }
+    },
     async mounted () {
         if (this.$route.query.id) {
             this.getDetail(this.$route.query.id)
         }
     },
     methods: {
+        ...mapActions({
+            setNewTags: 'setNewTags'
+        }),
         async getDetail (id) {
             const { data } = await getCrmPlanDetail({ id })
             this.form = { ...data }
@@ -176,7 +188,7 @@ export default {
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/comfortCloudMerchant/merchantEngine/merchantEnginePlan')
+            this.$router.push('/goodwork/crmengineplan/crmenginedetail')
         },
 
         onSave () {
@@ -196,7 +208,7 @@ export default {
                         }
 
                         this.setNewTags((this.$route.fullPath).split('?')[0])
-                        this.$router.push('/comfortCloudMerchant/merchantEngine/merchantEnginePlan')
+                        this.$router.push('/goodwork/crmengineplan/crmenginedetail')
                         this.loading = false
                     } catch (error) {
                         this.loading = false
