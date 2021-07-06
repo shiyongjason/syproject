@@ -2,7 +2,7 @@ import axios from 'axios'
 // 直播列表
 export const getLiveList = (params) => axios.get('/memeber/openapi/applet/live-info/boss', { params })
 
-export const getRooms = (params) => axios.get('/memeber/openapi/applet/live-info/list', { params })
+export const getRooms = (params) => axios.get('/memeber/openapi/applet/live-info/boss/room-ids', { params })
 
 // 新增房间 保存
 
