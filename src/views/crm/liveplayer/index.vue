@@ -26,15 +26,23 @@
                 </div>
             </div>
             <!-- end search bar -->
-            <hosJoyTable localName="V3.5.1" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe  :column="tableLabel" :data="tableData"  actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0' >
+            <hosJoyTable localName="V3.5.1" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe :column="tableLabel" :data="tableData" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <h-button table @click="onEditLive(slotProps.data.row)">编辑</h-button>
-                    <h-button table >放在首页</h-button>
-                    <h-button table @click="onDelete(slotProps.data.row)">删除</h-button>
+                    <div v-if="!slotProps.data.row.homePage">
+                        <h-button table @click="onEditLive(slotProps.data.row)">编辑</h-button>
+                        <h-button table v-if="slotProps.data.row.status==1" @click="onPutHome(slotProps.data.row)">放在首页</h-button>
+                        <h-button table @click="onDelete(slotProps.data.row)">删除</h-button>
+                    </div>
+                    <div v-else>
+                        <h-button table @click="onNoHome(slotProps.data.row)">不放在首页</h-button>
+                    </div>
                 </template>
             </hosJoyTable>
         </div>
-
+        <el-dialog width="600px" title="视频播放" @close="()=>{this.innerVisible= false}" :visible.sync="innerVisible" append-to-body>
+            <Video ref="videoPlay" :src="brandVideoUrl" class="avatarVideo" controls="controls">您的浏览器不支持视频播放
+            </Video>
+        </el-dialog>
     </div>
 </template>
 
@@ -43,12 +51,13 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
 import { CreateElement } from 'vue'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-import ImageAddToken from '@/components/imageAddToken/index.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
+// import ImageAddToken from '@/components/imageAddToken/index.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import * as Api from './api/index'
 import { LiveRoomResponse } from './live'
 import filters from '@/utils/filters'
 
 import moment from 'moment'
+const ImageAddToken = require('@/components/imageAddToken/index.vue').default
 
 @Component({
     name: 'liveplayer',
@@ -62,10 +71,12 @@ export default class Liveplayer extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
-     uploadParameters = {
-         updateUid: '',
-         reservedName: false
-     }
+    uploadParameters = {
+        updateUid: '',
+        reservedName: false
+    }
+    innerVisible:boolean = false
+    brandVideoUrl:string = ''
     page = {
         sizes: [10, 20, 50, 100],
         total: 0
@@ -88,7 +99,17 @@ export default class Liveplayer extends Vue {
     @State('userInfo') userInfo: any
 
     tableLabel:tableLabelProps = [
-        { label: '品牌视频', prop: 'brandVideoUrl', width: '100' },
+        { label: '品牌视频',
+            prop: 'brandVideoUrl',
+            width: '100',
+            render: (h: CreateElement, scope:TableRenderParam): JSX.Element => {
+                return (
+                    <span class="label_img" onClick={() => this.onShowVide(scope)}>
+                        <img src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20210706/356a3aec-5c8e-47df-941a-91a222fe9e07.png'/>
+                    </span>
+                )
+            }
+        },
         { label: '落地页名称', prop: 'roomName', width: '130' },
         { label: '品牌logo',
             prop: 'brandLogoUrl',
@@ -117,20 +138,33 @@ export default class Liveplayer extends Vue {
         this.$router.push({ path: '/goodwork/playeredit' })
     }
 
+    async onPutHome (val) {
+        await Api.getHomePage(val.id)
+        this.$message.success('设置首页成功~')
+        this.getList()
+    }
+    async onNoHome (val) {
+        await Api.getNoHomePage(val.id)
+        this.getList()
+    }
+
     onDelete (val) {
         this.$confirm('确定删除该条落地页信息吗？', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
         }).then(async () => {
-            console.log(val)
-
             await Api.deleteLiveInfo(val.id)
             this.$message.success('落地页删除成功~')
             this.getList()
         }).catch(() => {
 
         })
+    }
+
+    onShowVide (val) {
+        this.innerVisible = true
+        this.brandVideoUrl = val.row.brandVideoUrl
     }
 
     onEditLive (val) {

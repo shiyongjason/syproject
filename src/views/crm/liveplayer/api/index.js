@@ -24,3 +24,7 @@ export const enableLiveInfoPut = (params) => axios.put(`/memeber/openapi/applet/
 export const deleteLiveInfo = (id) => axios.delete(`/memeber/openapi/applet/live-info/boss/${id}`)
 // 房间详情
 export const findLiveInfo = (id) => axios.get(`/memeber/openapi/applet/live-info/boss/${id}`)
+// 放在首页
+export const getHomePage = (id) => axios.patch(`/memeber/openapi/applet/live-info/boss-home-page/${id}`)
+// 不放首页
+export const getNoHomePage = (id) => axios.patch(`/memeber/openapi/applet/live-info/boss-not-home-page/${id}`)

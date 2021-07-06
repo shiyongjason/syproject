@@ -50,7 +50,6 @@
             <div class="player_wrap">
                 <div class="player_wrap-tit">{{form.roomName}}</div>
                 <div class="player_wrap-main" v-html="form.productIntroduc">
-
                 </div>
             </div>
         </el-drawer>
@@ -189,7 +188,7 @@ export default {
             const { data } = await Api.findLiveInfo(this.$route.query.id)
             this.form = { ...data }
             if (this.form.brandVideoUrl) {
-                this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
+                this.videoimageUrl = 'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20210706/356a3aec-5c8e-47df-941a-91a222fe9e07.png'
             }
         },
         onPreview () {
