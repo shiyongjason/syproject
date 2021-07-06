@@ -322,28 +322,16 @@ export default {
             if (this.tableData.length <= 0) {
                 this.$message.warning('无商品可导出！')
             } else {
-                if (this.queryParams.createTimeFrom == null || this.queryParams.createTimeFrom === 'null') {
-                    this.queryParams.createTimeFrom = ''
-                    return this.queryParams.createTimeFrom
-                }
-                if (this.queryParams.createTimeTo == null || this.queryParams.createTimeTo === 'null') {
-                    this.queryParams.createTimeTo = ''
-                    return this.queryParams.createTimeTo
-                }
-                if (this.queryParams.categoryId == null || this.queryParams.categoryId === 'null') {
-                    this.queryParams.categoryId = ''
-                    return this.queryParams.categoryId
-                }
                 if (this.productType == 'SPU') {
                     let url = ''
                     for (let key in this.queryParams) {
-                        url += (key + '=' + this.queryParams[key] + '&')
+                        url += (key + '=' + (this.queryParams[key] == null ? '' : this.queryParams[key]) + '&')
                     }
                     location.href = B2bUrl + 'product/boss/main-spu/export/audit?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
                 } else if (this.productType == 'SKU') {
                     let url = ''
                     for (let key in this.queryParams) {
-                        url += (key + '=' + this.queryParams[key] + '&')
+                        url += (key + '=' + (this.queryParams[key] == null ? '' : this.queryParams[key]) + '&')
                     }
                     location.href = B2bUrl + 'product/boss/main-sku/export/audit?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
                 }
