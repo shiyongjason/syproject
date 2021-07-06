@@ -330,6 +330,10 @@ export default {
                     this.queryParams.createTimeTo = ''
                     return this.queryParams.createTimeTo
                 }
+                if (this.queryParams.categoryId == null || this.queryParams.categoryId === 'null') {
+                    this.queryParams.categoryId = ''
+                    return this.queryParams.categoryId
+                }
                 if (this.productType == 'SPU') {
                     let url = ''
                     for (let key in this.queryParams) {
@@ -381,7 +385,7 @@ export default {
             await this.findCategoryOptions()
         },
         selectable (row) {
-            if (row.auditStatus == '2') return false
+            if (row.auditStatus == '2' || row.auditStatus == '1') return false
             return true
         }
     },
