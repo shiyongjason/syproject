@@ -425,7 +425,10 @@ export default {
                     detail: this.form.detail,
                     specifications: this.form.specifications.filter(item => item.v)
                 },
-                mainSkuWarehouseRequest: deepCopy(this.form.mainSkus),
+                mainSkuWarehouseRequest: deepCopy(this.form.mainSkus).map(item => {
+                    item.imageUrls = item.imageUrls.split(',')
+                    return item
+                }),
                 operator: this.userInfo.employeeName,
                 auditStatus: this.form.auditStatus,
                 auditOpinion: this.form.auditOpinion
@@ -517,11 +520,8 @@ export default {
         this.init()
     },
     beforeRouteLeave (to, from, next) {
-        if (to.name != 'productList') {
-            clearCache('productList')
-        }
-        if (to.name != 'stepPrice') {
-            clearCache('stepPrice')
+        if (to.name != 'productAuditList') {
+            clearCache('productAuditList')
         }
         next()
     }

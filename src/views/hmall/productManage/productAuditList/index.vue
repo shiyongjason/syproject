@@ -385,16 +385,20 @@ export default {
         this.init()
     },
     activated () {
-        this.onQuery()
-        // this.init()
-        // this.productType == 'SPU' ? this.getProductSpuList() : this.getProductSkuList()
+        if (this.productType == 'SPU') {
+            this.getProductSpuList()
+        } else {
+            this.getProductSkuList()
+        }
     },
     beforeRouteEnter (to, from, next) {
-        clearCache('productAuditList')
+        newCache('productAuditList')
         next()
     },
     beforeRouteLeave (to, from, next) {
-        newCache('productAuditList')
+        if (!(to.name == 'editSpuAudit' || to.name == 'editSkuAudit')) {
+            clearCache('productAuditList')
+        }
         next()
     }
 }
