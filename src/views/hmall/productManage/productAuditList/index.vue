@@ -79,7 +79,7 @@
                 </template>
             </div>
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" :multiSelection.sync="multiSelection" :actionMinWidth="200" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isShowCollapse="true"
-                :isMultiple="tabName == '4' || tabName == '0' ? true:false" :isAction="true">
+                :isMultiple="tabName == '4' || tabName == '0' ? true:false" :isAction="true" :selectable="selectable">
                 <template slot="auditStatus" slot-scope="scope">
                     {{ productMap.get(scope.data.row.auditStatus) || '-' }}
                 </template>
@@ -330,6 +330,10 @@ export default {
                     this.queryParams.createTimeTo = ''
                     return this.queryParams.createTimeTo
                 }
+                if (this.queryParams.categoryId == null || this.queryParams.categoryId === 'null') {
+                    this.queryParams.categoryId = ''
+                    return this.queryParams.categoryId
+                }
                 if (this.productType == 'SPU') {
                     let url = ''
                     for (let key in this.queryParams) {
@@ -379,6 +383,10 @@ export default {
         },
         async getCategoryOptions () {
             await this.findCategoryOptions()
+        },
+        selectable (row) {
+            if (row.auditStatus == '2' || row.auditStatus == '1') return false
+            return true
         }
     },
     mounted () {
