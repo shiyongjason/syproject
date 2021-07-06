@@ -520,11 +520,8 @@ export default {
         this.init()
     },
     beforeRouteLeave (to, from, next) {
-        if (to.name != 'productList') {
-            clearCache('productList')
-        }
-        if (to.name != 'stepPrice') {
-            clearCache('stepPrice')
+        if (to.name != 'productAuditList') {
+            clearCache('productAuditList')
         }
         next()
     }
