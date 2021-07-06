@@ -41,7 +41,7 @@
                     <div class="query-cont__col">
                         <div class="query-col__lable">商品类目：</div>
                         <div class="query-col__input">
-                            <el-cascader v-model="queryParams.categoryId" :key="cascaderKey" :options="categoryOption" :props="props" :change-on-select="true" clearable placeholder="请选择商品类目"></el-cascader>
+                            <el-cascader v-model="queryParams.categoryId" :options="categoryOption" :props="props" :change-on-select="true" clearable placeholder="请选择商品类目"></el-cascader>
                         </div>
                     </div>
                 </template>
@@ -104,13 +104,13 @@ export default {
                 brandName: '',
                 brandId: '',
                 model: '',
+                categoryId: '',
                 auditStatus: '',
                 enabled: '',
                 pageNumber: 1,
                 pageSize: 10
             },
             resetParams: {},
-            cascaderKey: 0,
             multiSelection: [],
             props: {
                 emitPath: false,
@@ -194,7 +194,6 @@ export default {
         // SPU or SKU 切换
         onTabProductType (productType) {
             this.queryParams = { ...this.resetParams }
-            this.cascaderKey++
             this.tabParams(this.tabName)
             if (productType == 'SPU') {
                 this.getProductSpuList()
@@ -360,13 +359,13 @@ export default {
                 if (this.productType == 'SPU') {
                     let url = ''
                     for (let key in this.queryParams) {
-                        url += (key + '=' + this.queryParams[key] + '&')
+                        url += (key + '=' + (this.queryParams[key] == null ? '' : this.queryParams[key]) + '&')
                     }
                     location.href = B2bUrl + 'product/boss/main-spu/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
                 } else {
                     let url = ''
                     for (let key in this.queryParams) {
-                        url += (key + '=' + this.queryParams[key] + '&')
+                        url += (key + '=' + (this.queryParams[key] == null ? '' : this.queryParams[key]) + '&')
                     }
                     location.href = B2bUrl + 'product/boss/main-sku/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
                 }

@@ -164,7 +164,17 @@ export default {
                     { required: true, message: '请选择审核结果', trigger: 'change' }
                 ],
                 auditOpinion: [
-                    { required: true, message: '请填写理由说明', trigger: 'blur' }
+                    { required: true, message: '请填写理由说明', trigger: 'blur' },
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            if (this.form.auditOpinion && this.form.auditOpinion.replace(/\s/g, '').length < 1) {
+                                return callback(new Error('请填写理由说明'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
                 ],
                 serialNumber: [
                     {
@@ -435,7 +445,7 @@ export default {
                         }
                     } else {
                         this.btnLoading = false
-                        this.$message.error('请审核！')
+                        this.$message.error('请选择审核结果！')
                     }
                 } else {
                     this.btnLoading = false

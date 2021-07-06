@@ -51,7 +51,7 @@
                 </div>
                 <div class="form-cont-row parameter">
                     <div class="form-cont-col mb20" v-for="(item,index) in specifications" :key="index">
-                        <el-form-item :label="item.k + '：'" :prop="`specifications[${index}].v`" :rules="seeTask == true ?{required:item.isRequired == 1 ? true : false, message: item.isCombobox == 1 ? '请选择' + item.k : '请输入' + item.k }: {}">
+                        <el-form-item :label="item.k + '：'" :prop="`specifications[${index}].v`" :rules="disabled ? {}:{required:item.isRequired == 1 ? true : false, message: item.isCombobox == 1 ? '请选择' + item.k : '请输入' + item.k }">
                             <el-input v-model="form.specifications[index].v" v-if="item.isCombobox == 0" maxlength="20" :disabled="seeTask == true">
                                 <template slot="suffix">{{item.unit}}</template>
                             </el-input>
@@ -341,6 +341,25 @@ export default {
             let form = {}
             form = {
                 ...this.form,
+
+                length: deepCopy(this.form.mainSkus).map(item => {
+                    return item.length
+                }),
+                width: deepCopy(this.form.mainSkus).map(item => {
+                    return item.width
+                }),
+                height: deepCopy(this.form.mainSkus).map(item => {
+                    return item.height
+                }),
+                grossWeight: deepCopy(this.form.mainSkus).map(item => {
+                    return item.grossWeight
+                }),
+                volume: deepCopy(this.form.mainSkus).map(item => {
+                    return item.volume
+                }),
+                netWeight: deepCopy(this.form.mainSkus).map(item => {
+                    return item.netWeight
+                }),
                 mainSpuId: this.newId,
                 modifiableInfo: {
                     imgUrls: this.imageUrls,
@@ -351,6 +370,7 @@ export default {
                 operator: this.userInfo.employeeName,
                 auditStatus: this.auditStatus,
                 auditOpinion: this.form.auditOpinion
+
             }
             this.btnLoading = true
             this.$refs.form.validate(async (valid) => {
@@ -367,7 +387,7 @@ export default {
                         }
                     } else {
                         this.btnLoading = false
-                        this.$message.error('请审核！')
+                        this.$message.error('请选择审核结果！')
                     }
                 } else {
                     this.btnLoading = false

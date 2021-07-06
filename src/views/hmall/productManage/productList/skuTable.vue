@@ -15,7 +15,7 @@
                                 <el-dropdown-item command="imageUrls">应用全部</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
-                        <div class="image-wrap" v-if="$route.query.id"></div>
+                        <!-- <div class="image-wrap" v-if="$route.query.id"></div> -->
                     </td>
                     <td>
                         <span class="tr-label">条头码</span>
@@ -59,7 +59,7 @@
                             <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" />
                             <input type="hidden" v-model="item.imageUrls">
                         </el-form-item>
-                        <div class="image-wrap" v-if="item.disabled"></div>
+                        <!-- <div class="image-wrap" v-if="item.disabled"></div> -->
                     </td>
                     <td>
                         <el-form-item label-width='0' :prop="`mainSkus[${index}].serialNumber`" :rules="rules.serialNumber">
@@ -99,17 +99,15 @@
                         </el-form-item>
                     </td>
                     <td>
-                        <el-form-item label-width='0'>
-                            <template v-if="item.auditStatus == 1">
-                                <h-button table @click="onEfficacySku(item,index)" v-if="item.enabled">失效</h-button>
-                                <h-button table @click="onEffectiveSku(item,index)" v-if="!item.enabled">生效</h-button>
-                                <h-button table @click="onEditSku(index)" v-if="!item.enabled">编辑</h-button>
-                            </template>
-                            <template v-else>
-                                <h-button table @click="onEditSku(index)" :disabled="!item.auditStatus && item.auditStatus != 0">编辑</h-button>
-                                <h-button table @click="onDelSku(index)">删除</h-button>
-                            </template>
-                        </el-form-item>
+                        <template v-if="item.auditStatus == 1">
+                            <h-button table @click="onEfficacySku(item,index)" v-if="item.enabled">失效</h-button>
+                            <h-button table @click="onEffectiveSku(item,index)" v-if="!item.enabled">生效</h-button>
+                            <h-button table @click="onEditSku(index)" v-if="!item.enabled">编辑</h-button>
+                        </template>
+                        <template v-else>
+                            <h-button table @click="onEditSku(index)" :disabled="!item.auditStatus && item.auditStatus != 0">编辑</h-button>
+                            <h-button table @click="onDelSku(index)" v-if="form.optionTypeList.length>0">删除</h-button>
+                        </template>
                     </td>
                 </tr>
             </tbody>
@@ -299,6 +297,7 @@ export default {
         async onEffectiveSku (row, index) {
             await this.effectiveSKU({ id: row.mainSkuId })
             this.$set(this.form.mainSkus[index], 'enabled', !this.form.mainSkus[index].enabled)
+            this.$set(this.form.mainSkus[index], 'disabled', !this.form.mainSkus[index].disabled)
             this.$message.success('生效成功！')
         },
         // 失效sku

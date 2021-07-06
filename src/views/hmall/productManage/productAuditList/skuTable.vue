@@ -157,20 +157,6 @@ export default {
                 ]
             },
             rules: {
-                optionValues: [
-                    {
-                        required: true,
-                        validator: (rule, value, callback) => {
-                            value.every(item => {
-                                if (item.id == '') {
-                                    return callback(new Error('请选择属性值'))
-                                }
-                            })
-                            return callback()
-                        },
-                        trigger: 'change'
-                    }
-                ],
                 imageUrls: [
                     {
                         required: true,

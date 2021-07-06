@@ -322,6 +322,14 @@ export default {
             if (this.tableData.length <= 0) {
                 this.$message.warning('无商品可导出！')
             } else {
+                if (this.queryParams.createTimeFrom == null || this.queryParams.createTimeFrom === 'null') {
+                    this.queryParams.createTimeFrom = ''
+                    return this.queryParams.createTimeFrom
+                }
+                if (this.queryParams.createTimeTo == null || this.queryParams.createTimeTo === 'null') {
+                    this.queryParams.createTimeTo = ''
+                    return this.queryParams.createTimeTo
+                }
                 if (this.productType == 'SPU') {
                     let url = ''
                     for (let key in this.queryParams) {
