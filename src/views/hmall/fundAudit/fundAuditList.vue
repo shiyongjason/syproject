@@ -180,7 +180,6 @@ export default {
                 { label: '审核状态', prop: 'auditStatus' },
                 { label: '审核时间', prop: 'auditTime', formatters: 'dateTimes' }
             ],
-            tableData: [],
             copyParams: {},
             // 所属分部
             branchArr: [],
@@ -263,6 +262,9 @@ export default {
             fundList: 'fundAudit/fundList',
             fundInfo: 'fundAudit/fundInfo'
         }),
+        tableData () {
+            return this.fundList.records
+        },
         paginationInfo () {
             return {
                 total: this.fundList.total,
