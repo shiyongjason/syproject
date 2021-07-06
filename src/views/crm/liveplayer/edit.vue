@@ -2,18 +2,24 @@
     <div class="page-body">
         <div class="page-body-cont">
             <el-form ref="form" :model="form" :rules="rules" label-width="150px">
-                <el-form-item label="落地页名称：" prop="schemeTitle">
-                    <el-input v-model.trim="form.schemeTitle" show-word-limit placeholder="请输入" maxlength='50' class="newTitle"></el-input>
+                <el-form-item label="落地页名称：" prop="roomName">
+                    <el-input v-model.trim="form.roomName" show-word-limit placeholder="请输入" maxlength='20' class="newTitle"></el-input>
                 </el-form-item>
-                <el-form-item label="品牌logo：" prop="schemeImage" ref="schemeImage">
-                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="form.schemeImage" ref="uploadImg" @back-event="readUrl" :imgW="100" :imgH="100" />
+                <el-form-item label="直播间ID：" prop="roomId">
+                    <el-select v-model="form.roomId" placeholder="请选择">
+                        <el-option v-for="item in options" :key="item.roomId" :label="item.roomId" :value="item.roomId">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="品牌logo：" prop="brandLogoUrl" ref="brandLogoUrl">
+                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="form.brandLogoUrl" ref="uploadImg" @back-event="readUrl" :imgW="100" :imgH="100" />
                     <div class="upload-tips">建议尺寸：4:3比例图片，1M以内，支持jpeg,png和jpg格式</div>
                 </el-form-item>
-                <el-form-item label="品牌视频：" prop="schemeVideo">
+                <el-form-item label="品牌视频：" prop="brandVideoUrl" ref="brandVideoUrl">
                     <el-row>
                         <SingleUpload sizeLimit='100M' :upload="videoUpload" :imageUrl="videoimageUrl" @back-event="videoUrl" :imgW="100" :imgH="100">
                         </SingleUpload>
-                        <h-button v-if="form.schemeVideo" type="primary" @click="palyVideo">视频预览</h-button>
+                        <h-button v-if="form.brandVideoUrl" type="primary" @click="palyVideo">视频预览</h-button>
                         <div class="upload-tips">
                             建议尺寸：支持 MP4格式, 大小不超过20MB
                             视频尺寸16:9，视频长度建议不超过60秒
@@ -24,12 +30,12 @@
                 <div class="page-body-title">
                     <h3>产品介绍图：</h3>
                 </div>
-                <el-form-item label="详情：" prop="schemeDetail">
+                <el-form-item label="详情：" prop="productIntroduc">
                     <RichEditor :height="500" :menus="menus" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" :uploadImgServer="uploadImgServer" @change="$refs['form'].validateField('schemeDetail')" @blur="$refs['form'].validateField('schemeDetail')" hidefocus="true" ref="editors"
-                        style="outline: 0;margin-bottom: 12px;width:100%" tabindex="0" v-model="form.schemeDetail"></RichEditor>
+                        style="outline: 0;margin-bottom: 12px;width:100%" tabindex="0" v-model="form.productIntroduc"></RichEditor>
                 </el-form-item>
                 <el-form-item style="text-align: right">
-                    <el-button @click="onBack()">保存模板</el-button>
+                    <el-button @click="onSaveTemp()">保存模板</el-button>
                     <el-button @click="onPreview()">预览</el-button>
                     <el-button type="primary" @click="onSave" :loading="loading">{{ loading ? '提交中 ...' : '保存并启用' }}</el-button>
                     <el-button @click="onBack()">取消</el-button>
@@ -37,14 +43,14 @@
             </el-form>
         </div>
         <el-dialog width="600px" title="视频播放" @close="closePlayDialog" :visible.sync="innerVisible" append-to-body>
-            <Video ref="videoPlay" :src="this.form.schemeVideo" class="avatarVideo" controls="controls">您的浏览器不支持视频播放
+            <Video ref="videoPlay" :src="form.brandVideoUrl" class="avatarVideo" controls="controls">您的浏览器不支持视频播放
             </Video>
         </el-dialog>
         <el-drawer title="预览" :visible.sync="drawer" direction="rtl" :before-close="()=>{this.drawer = false}">
             <div class="player_wrap">
-                <div class="player_wrap-tit">111</div>
-                <div class="player_wrap-main">
-                    hshshhs
+                <div class="player_wrap-tit">{{form.roomName}}</div>
+                <div class="player_wrap-main" v-html="form.productIntroduc">
+
                 </div>
             </div>
         </el-drawer>
@@ -54,19 +60,20 @@
 
 <script>
 import { interfaceUrl } from '@/api/config'
-import { addCrmPlanDetail, getCrmPlanDetail } from './api'
-import { mapState } from 'vuex'
+import * as Api from './api'
+import { mapState, mapActions } from 'vuex'
 export default {
     name: 'playeredit',
     data () {
         return {
             drawer: false,
+            options: [],
             form: {
-                schemeTitle: '',
-                schemeImage: '',
-                effectiveTime: '',
-                schemeDetail: '',
-                schemeVideo: ''
+                brandLogoUrl: '',
+                brandVideoUrl: '',
+                productIntroduc: '',
+                roomId: '',
+                roomName: ''
             },
             menus: [
                 'head', // 标题
@@ -88,23 +95,23 @@ export default {
                 'redo' // 重复
             ],
             rules: {
-                schemeTitle: [
-                    { required: true, message: '请输入标题', trigger: 'blur' }
+                roomName: [
+                    { required: true, message: '请输入落地页名称', trigger: 'blur' }
                 ],
-                schemeImage: [
-                    { required: true, message: '请上传方案列表缩略图', trigger: 'change' }
+                roomId: [
+                    { required: true, message: '请选择直播房间ID', trigger: 'change' }
                 ],
-                effectiveTime: [
-                    { required: true, message: '请选择生效时间', trigger: 'change' }
+                brandLogoUrl: [
+                    { required: true, message: '请上传品牌logo', trigger: 'change' }
                 ],
-                schemeVideo: [
-                    { required: false, message: '请上传商品视频', trigger: 'change' }
+                brandVideoUrl: [
+                    { required: true, message: '请上传品牌视频', trigger: 'change' }
                 ],
-                schemeDetail: [
+                productIntroduc: [
                     {
                         validator: (rule, value, callback) => {
                             if (value.length <= 0 || value === '<p><br></p>') {
-                                return callback(new Error('请输入方案详细内容'))
+                                return callback(new Error('请输入产品介绍图'))
                             }
                             return callback()
                         },
@@ -115,6 +122,22 @@ export default {
             loading: false,
             videoimageUrl: '',
             innerVisible: false
+        }
+    },
+    watch: {
+        'form.brandLogoUrl' (val) {
+            if (val) {
+                this.$nextTick(() => {
+                    this.$refs['brandLogoUrl'].clearValidate()
+                })
+            }
+        },
+        'form.brandVideoUrl' (val) {
+            if (val) {
+                this.$nextTick(() => {
+                    this.$refs['brandVideoUrl'].clearValidate()
+                })
+            }
         }
     },
     computed: {
@@ -155,12 +178,17 @@ export default {
         if (this.$route.query.id) {
             this.getDetail(this.$route.query.id)
         }
+        const { data } = await Api.getRooms()
+        this.options = data.liveRooms
     },
     methods: {
+        ...mapActions({
+            setNewTags: 'setNewTags'
+        }),
         async getDetail (id) {
-            const { data } = await getCrmPlanDetail({ id })
+            const { data } = await Api.findLiveInfo(this.$route.query.id)
             this.form = { ...data }
-            if (this.form.schemeVideo) {
+            if (this.form.brandVideoUrl) {
                 this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
             }
         },
@@ -169,27 +197,30 @@ export default {
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/comfortCloudMerchant/merchantEngine/merchantEnginePlan')
+            this.$router.push('/goodwork/liveplayer')
         },
 
         onSave () {
+            // 保存启用
             this.loading = true
             this.form.operator = this.userInfo.employeeName
-            if (!this.$route.query.id) {
-                this.form.createPhone = this.userInfo.phoneNumber
+            if (this.$route.query.id) {
+                this.form.id = this.$route.query.id
             }
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     try {
-                        await addCrmPlanDetail(this.form)
                         if (this.$route.query.id) {
+                            console.log(123123)
+                            await Api.enableLiveInfoPut(this.form)
                             this.$message.success('修改成功')
                         } else {
+                            await Api.enableLiveInfo(this.form)
                             this.$message.success('创建成功')
                         }
-
                         this.setNewTags((this.$route.fullPath).split('?')[0])
-                        this.$router.push('/comfortCloudMerchant/merchantEngine/merchantEnginePlan')
+                        this.$router.push('/goodwork/liveplayer')
+
                         this.loading = false
                     } catch (error) {
                         this.loading = false
@@ -199,12 +230,32 @@ export default {
                 }
             })
         },
+        async  onSaveTemp () {
+            if (!this.form.roomName) {
+                this.$message.warning('落地页名称必填')
+                return
+            }
+            try {
+                if (this.$route.query.id) {
+                    await Api.addLiveInfoPut(this.form)
+                    this.$message.success('修改成功')
+                } else {
+                    await Api.addLiveInfo(this.form)
+                    this.$message.success('创建成功')
+                }
+                this.setNewTags((this.$route.fullPath).split('?')[0])
+                this.$router.push('/goodwork/liveplayer')
+                this.loading = false
+            } catch (error) {
+                this.loading = false
+            }
+        },
         readUrl (val) {
-            this.form.schemeImage = val.imageUrl
+            this.form.brandLogoUrl = val.imageUrl
         },
         videoUrl (val) {
             this.$message.success('视频上传成功')
-            this.form.schemeVideo = val.imageUrl
+            this.form.brandVideoUrl = val.imageUrl
             this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
         },
         palyVideo () {
@@ -218,10 +269,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.player_wrap{
-   width: 90%;
-    margin:0 auto;
-    &-tit{
+.player_wrap {
+    width: 90%;
+    margin: 0 auto;
+    &-tit {
         font-size: 16px;
         text-align: center;
     }
@@ -258,5 +309,11 @@ export default {
 }
 /deep/.w-e-toolbar {
     z-index: 99 !important;
+}
+.avatarVideo{
+    width: 400px;
+    height: 300px;
+    display: block;
+    margin: 0 auto
 }
 </style>
