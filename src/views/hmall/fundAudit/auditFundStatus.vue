@@ -233,7 +233,7 @@ export default {
             // this.branchArr = this.branchList
         },
         onseeTask (val) {
-            this.$router.push({ path: '/fundAudit/statusFundInfo', query: { id: val, pageType: advancePayment } })
+            this.$router.push({ path: '/fundAudit/statusFundInfo', query: { id: val.id, pageType: auditFundStatus } })
         },
         onParagraph () {
             this.$confirm(`是否确认出款`, '出款确认', {

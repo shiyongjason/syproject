@@ -142,9 +142,9 @@ export default {
             ],
             tableData: [],
             tableLabelLog: [
-                { label: '时间', prop: 'spuCode' },
-                { label: '操作人', prop: 'spuName' },
-                { label: '操作内容', prop: 'brandName' }
+                { label: '时间', prop: 'createTime' },
+                { label: '操作人', prop: 'operator' },
+                { label: '操作内容', prop: 'operateMotion' }
             ],
             tableDataLog: []
         }
@@ -214,6 +214,7 @@ export default {
             await this.findAuditFundInfo({ id: this.$router.query.id })
             this.form = { ...this.auditFundInfo }
             this.tableData = { ...this.auditFundInfo.skuList }
+            this.tableLabelLog = { ...this.auditFundInfo.logs }
         },
         onChange () {
             this.$nextTick(() => {
