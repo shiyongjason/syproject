@@ -297,7 +297,7 @@ export default {
         async onEffectiveSku (row, index) {
             await this.effectiveSKU({ id: row.mainSkuId })
             this.$set(this.form.mainSkus[index], 'enabled', !this.form.mainSkus[index].enabled)
-            this.$set(this.form.mainSkus[index], 'disabled', !this.form.mainSkus[index].disabled)
+            this.$set(this.form.mainSkus[index], 'disabled', true)
             this.$message.success('生效成功！')
         },
         // 失效sku
