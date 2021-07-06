@@ -58,6 +58,7 @@
                 <template v-if="seeTask == false">
                     <el-form-item label="订单最终回款日期：" prop="period">
                         <el-input class="form-input_big" v-model="form.period" maxlength="50">
+                            <template slot="suffix">天</template>
                         </el-input>
                     </el-form-item>
                     <div style="display:flex;">
@@ -97,6 +98,19 @@ export default {
             houseOptions: [],
             form: {},
             rules: {
+                period: [
+                    {
+                        required: false,
+                        validator: (rule, value, callback) => {
+                            const Reg = /^(?[1-9][0-9][0-9]?|9)$/
+                            if (this.form.period && !Reg.test(this.form.period)) {
+                                return callback(new Error('请填写大于0的整数，最大值999'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
+                ],
                 status: [
                     { required: true, message: '请选择审核结果', trigger: 'change' }
                 ],
@@ -159,16 +173,17 @@ export default {
                 id: this.form.id,
                 period: this.period,
                 updateBy: this.userInfo.employeeName,
-                status: this.form.auditStatus,
-                rejectReason: this.form.auditOpinion
+                status: this.form.status,
+                rejectReason: this.form.rejectReason
             }
             this.btnLoading = true
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
-                    if (this.form.auditStatus != '') {
+                    if (this.form.status != '') {
                         try {
                             await auditFund(form)
                             this.btnLoading = false
+                            console.log(form)
                             this.$message.success('操作成功！')
                             this.$router.push('/b2b/product/productAuditList')
                             this.setNewTags((this.$route.fullPath).split('?')[0])
