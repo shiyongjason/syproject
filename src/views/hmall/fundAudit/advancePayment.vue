@@ -5,7 +5,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">代采订单号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.merchantAccount" placeholder="请输入代采订单号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.agentOrderNo" placeholder="请输入代采订单号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -17,13 +17,13 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">管理员账号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.companyName" placeholder="请输入管理员账号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.username" placeholder="请输入管理员账号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">预付款状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.isAuthentication">
+                        <el-select v-model="queryParams.prepayStatus">
                             <el-option v-for="item in paymentStatusOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
@@ -32,33 +32,33 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">操作人：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.subsectionCode" placeholder="请输入管理员账号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.operator" placeholder="请输入管理员账号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">提交时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.registrationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.submitStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.registrationEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.submitEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">确认时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.prepayConfirmStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.authenticationEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.prepayConfirmEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerEnd">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">订单状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.merchantType">
+                        <el-select v-model="queryParams.orderSwitch">
                             <el-option v-for="item in ordrerStatusOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
@@ -66,7 +66,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">订单同步状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.merchantTypes">
+                        <el-select v-model="queryParams.orderSyncStatus">
                             <el-option v-for="item in orderSynchronousOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
@@ -74,7 +74,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">资金同步状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.merchantType">
+                        <el-select v-model="queryParams.fundSyncStatus">
                             <el-option v-for="item in synchronousOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
@@ -127,9 +127,9 @@ export default {
             synchronousOptions: SYNCHRONOUS_OPTIONS,
             synchronousMap: SYNCHRONOUS_MAP,
             queryParams: {
-                authenticationEndTime: '',
-                authenticationStartTime: '',
-                companyName: '',
+                agentOrderNo: '',
+                prepayStatus: '',
+                orderSwitch: '',
                 isAuthentication: '',
                 isEnabled: '',
                 merchantAccount: '',
@@ -167,18 +167,22 @@ export default {
     },
     computed: {
         ...mapState({
-            // userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            advanceList: state => state.fundAudit.advanceList
         }),
         ...mapGetters({
             merchantData: 'merchantData',
             branchList: 'branchList'
         }),
+        ...mapGetters({
+            advanceList: 'fundAudit/advanceList'
+        }),
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endTime
+                    let beginDateVal = this.queryParams.submitEndTime
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() >= new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -186,9 +190,29 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startTime
+                    let beginDateVal = this.queryParams.submitStartTime
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                    }
+                }
+            }
+        },
+        pickerStart () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.prepayConfirmEndTime
+                    if (beginDateVal) {
+                        return time.getTime() >= new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerEnd () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.prepayConfirmStartTime
+                    if (beginDateVal) {
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
@@ -219,8 +243,8 @@ export default {
             // this.findFreightOrders(this.queryParams)
         },
         ...mapActions({
-            // findMerchantList: 'findMerchantList',
-            // findBranch: 'findBranch'
+            findBranch: 'findBranch',
+            findAdvanceList: 'fundAudit/findAdvanceList'
         }),
         handleSizeChange (val) {
             this.queryParams.pageSize = val

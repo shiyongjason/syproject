@@ -1,19 +1,21 @@
 
 import * as types from './mutation-types'
-import { findFundList, findFundInfo, findAuditFundList, findAuditFundInfo } from '../api'
+import { findFundList, findFundInfo, findAuditFundList, findAuditFundInfo, findAdvanceList } from '../api'
 
 const state = {
     fundList: [], // 资金申请审核列表
     fundInfo: {}, // 资金申请详情
     auditFundList: [], // 代采订单审核列表
-    auditFundInfo: {} // 代采订单详情
+    auditFundInfo: {}, // 代采订单详情
+    advanceList: [] // 代采订单预付款确认列表
 }
 
 const getters = {
     fundList: state => state.fundList,
     fundInfo: state => state.fundInfo,
     auditFundList: state => state.auditFundList,
-    auditFundInfo: state => state.auditFundInfo
+    auditFundInfo: state => state.auditFundInfo,
+    advanceList: state => state.advanceList
 }
 
 const mutations = {
@@ -28,6 +30,9 @@ const mutations = {
     },
     [types.AUDIT_FUND_INFO] (state, payload) {
         state.auditFundInfo = payload
+    },
+    [types.ADVANCE_LIST] (state, payload) {
+        state.advanceList = payload
     }
 }
 
@@ -47,6 +52,10 @@ const actions = {
     async findAuditFundInfo ({ commit }, params) {
         const { data } = await findAuditFundInfo(params)
         commit(types.AUDIT_FUND_INFO, data)
+    },
+    async findAdvanceList ({ commit }, params) {
+        const { data } = await findAdvanceList(params)
+        commit(types.ADVANCE_LIST, data)
     }
 }
 

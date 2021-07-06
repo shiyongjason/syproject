@@ -52,23 +52,23 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="备注信息：" prop="note">
-                    <el-input type="textarea" v-model="form.note" maxlength="50" disabled>
+                    <el-input type="textarea" v-model="form.note" style="width:500px" rows="6" disabled>
                     </el-input>
                 </el-form-item>
                 <template v-if="seeTask == false">
-                    <el-form-item label="订单最终回款日期：" prop="period">
-                        <el-input class="form-input_big" v-model="form.period" maxlength="50">
+                    <el-form-item label="订单最终回款日期：" prop="period" :rules="form.status=='20'?rules.period:{}">
+                        <el-input class="form-input_big" v-model="form.period" maxlength="10">
                             <template slot="suffix">天</template>
                         </el-input>
                     </el-form-item>
                     <div style="display:flex;">
                         <el-form-item label="审核：" prop="status">
-                            <el-radio-group v-model="form.status">
-                                <el-radio :label="1">通过</el-radio>
-                                <el-radio :label="2">不通过</el-radio>
+                            <el-radio-group v-model="form.status" @change="onChange">
+                                <el-radio :label="20">通过</el-radio>
+                                <el-radio :label="60">不通过</el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <el-form-item label="原因：" prop="rejectReason" v-if="form.status=='2'">
+                        <el-form-item label="原因：" prop="rejectReason" v-if="form.status=='60'">
                             <el-input v-model="form.rejectReason" maxLength="60" prop='' placeholder="请输入原因"></el-input>
                         </el-form-item>
                     </div>
@@ -100,9 +100,12 @@ export default {
             rules: {
                 period: [
                     {
-                        required: false,
+                        required: true,
                         validator: (rule, value, callback) => {
-                            const Reg = /^(?[1-9][0-9][0-9]?|9)$/
+                            const Reg = /^\+?[1-9]{1}[0-9]{0,2}\d{0,0}$/
+                            if (!this.form.period) {
+                                return callback(new Error('请输入最终回款期限'))
+                            }
                             if (this.form.period && !Reg.test(this.form.period)) {
                                 return callback(new Error('请填写大于0的整数，最大值999'))
                             }
@@ -210,6 +213,11 @@ export default {
             await this.findAuditFundInfo({ id: this.$router.query.id })
             this.form = { ...this.auditFundInfo }
             this.tableData = { ...this.auditFundInfo.skuList }
+        },
+        onChange () {
+            this.$nextTick(() => {
+                this.$refs['form'].clearValidate()
+            })
         },
         // 商家明细合计
         getSum (param) {

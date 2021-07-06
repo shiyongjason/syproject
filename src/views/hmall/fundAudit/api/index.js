@@ -26,3 +26,7 @@ export const auditFund = (params) => {
 export const findAuditFundInfo = (params) => {
     return axios.get(`${B2bUrl}fund/boss/agent/order/${params.id}`, { params })
 }
+// 代采订单预付款确认列表
+export const findAdvanceList = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/agent/order/confirm-prepay-page`, { params })
+}
