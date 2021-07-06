@@ -528,6 +528,18 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/crm/liveplayer/index.vue')
+            },
+            {
+                path: 'playeredit',
+                name: 'playeredit',
+                meta: {
+                    title: '直播落地页',
+                    tagName: '直播落地页',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/liveplayer/edit.vue')
             }
         ]
     }

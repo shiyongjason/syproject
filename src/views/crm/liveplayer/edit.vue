@@ -2,34 +2,18 @@
     <div class="page-body">
         <div class="page-body-cont">
             <el-form ref="form" :model="form" :rules="rules" label-width="150px">
-                <div class="page-body-title">
-                    <h3>工程方案编辑</h3>
-                </div>
-                <el-form-item label="工程方案标题：" prop="schemeTitle">
-                    <el-input v-model.trim="form.schemeTitle" show-word-limit placeholder="请输入工程方案标题" maxlength='50' class="newTitle"></el-input>
+                <el-form-item label="落地页名称：" prop="schemeTitle">
+                    <el-input v-model.trim="form.schemeTitle" show-word-limit placeholder="请输入" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
-
-                <el-form-item label="方案列表缩略图：" prop="schemeImage" ref="schemeImage">
-                    <SingleUpload sizeLimit='1M'
-                                  :upload="uploadInfo"
-                                  :imageUrl="form.schemeImage"
-                                  ref="uploadImg"
-                                  @back-event="readUrl"
-                                  :imgW="100"
-                                  :imgH="100" />
+                <el-form-item label="品牌logo：" prop="schemeImage" ref="schemeImage">
+                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="form.schemeImage" ref="uploadImg" @back-event="readUrl" :imgW="100" :imgH="100" />
                     <div class="upload-tips">建议尺寸：4:3比例图片，1M以内，支持jpeg,png和jpg格式</div>
                 </el-form-item>
-                <el-form-item label="生效时间：" prop="effectiveTime">
-                    <el-date-picker type="datetime" v-model="form.effectiveTime" :clearable=false placeholder="生效时间" value-format='yyyy-MM-ddTHH:mm:ss' :picker-options="pickerOptionsStart">
-                    </el-date-picker>
-                </el-form-item>
-
-                <el-form-item label="商品视频：" prop="schemeVideo" >
+                <el-form-item label="品牌视频：" prop="schemeVideo">
                     <el-row>
-                        <SingleUpload  sizeLimit='100M' :upload="videoUpload" :imageUrl="videoimageUrl"
-                                       @back-event="videoUrl" :imgW="100" :imgH="100">
+                        <SingleUpload sizeLimit='100M' :upload="videoUpload" :imageUrl="videoimageUrl" @back-event="videoUrl" :imgW="100" :imgH="100">
                         </SingleUpload>
-                        <h-button v-if="form.schemeVideo"   type="primary" @click="palyVideo">视频预览</h-button>
+                        <h-button v-if="form.schemeVideo" type="primary" @click="palyVideo">视频预览</h-button>
                         <div class="upload-tips">
                             建议尺寸：支持 MP4格式, 大小不超过20MB
                             视频尺寸16:9，视频长度建议不超过60秒
@@ -38,14 +22,17 @@
                 </el-form-item>
 
                 <div class="page-body-title">
-                    <h3>方案详细内容</h3>
+                    <h3>产品介绍图：</h3>
                 </div>
                 <el-form-item label="详情：" prop="schemeDetail">
-                    <RichEditor :height="500" :menus="menus" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" :uploadImgServer="uploadImgServer" @change="$refs['form'].validateField('schemeDetail')" @blur="$refs['form'].validateField('schemeDetail')" hidefocus="true" ref="editors" style="outline: 0;margin-bottom: 12px;width:100%" tabindex="0" v-model="form.schemeDetail"></RichEditor>
+                    <RichEditor :height="500" :menus="menus" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" :uploadImgServer="uploadImgServer" @change="$refs['form'].validateField('schemeDetail')" @blur="$refs['form'].validateField('schemeDetail')" hidefocus="true" ref="editors"
+                        style="outline: 0;margin-bottom: 12px;width:100%" tabindex="0" v-model="form.schemeDetail"></RichEditor>
                 </el-form-item>
-                <el-form-item style="text-align: center">
-                    <el-button type="primary" @click="onSave" :loading="loading">{{ loading ? '提交中 ...' : '确定' }}</el-button>
-                    <el-button @click="onBack()">返回</el-button>
+                <el-form-item style="text-align: right">
+                    <el-button @click="onBack()">保存模板</el-button>
+                    <el-button @click="onPreview()">预览</el-button>
+                    <el-button type="primary" @click="onSave" :loading="loading">{{ loading ? '提交中 ...' : '保存并启用' }}</el-button>
+                    <el-button @click="onBack()">取消</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -53,6 +40,15 @@
             <Video ref="videoPlay" :src="this.form.schemeVideo" class="avatarVideo" controls="controls">您的浏览器不支持视频播放
             </Video>
         </el-dialog>
+        <el-drawer title="预览" :visible.sync="drawer" direction="rtl" :before-close="()=>{this.drawer = false}">
+            <div class="player_wrap">
+                <div class="player_wrap-tit">111</div>
+                <div class="player_wrap-main">
+                    hshshhs
+                </div>
+            </div>
+        </el-drawer>
+
     </div>
 </template>
 
@@ -61,9 +57,10 @@ import { interfaceUrl } from '@/api/config'
 import { addCrmPlanDetail, getCrmPlanDetail } from './api'
 import { mapState } from 'vuex'
 export default {
-    name: 'crmedit',
+    name: 'playeredit',
     data () {
         return {
+            drawer: false,
             form: {
                 schemeTitle: '',
                 schemeImage: '',
@@ -152,13 +149,6 @@ export default {
         },
         uploadImgName () {
             return 'multiFile'
-        },
-        pickerOptionsStart () {
-            return {
-                disabledDate: time => {
-                    return time.getTime() < Date.now() - 8.64e7
-                }
-            }
         }
     },
     async mounted () {
@@ -173,6 +163,9 @@ export default {
             if (this.form.schemeVideo) {
                 this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
             }
+        },
+        onPreview () {
+            this.drawer = true
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
@@ -225,40 +218,45 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .page-body-title {
-        margin-bottom: 20px;
+.player_wrap{
+   width: 90%;
+    margin:0 auto;
+    &-tit{
+        font-size: 16px;
+        text-align: center;
     }
-    .upload-tips {
-        font-size: 12px;
-        color: #999;
-        display: flex;
-        align-items: center;
-        height: 100px;
-        margin-left: 10px;
-    }
-    /deep/.avatar-uploader {
-        margin-right: 10px;
-    }
-    .editor-wrap {
-        margin-top: 20px;
-    }
+}
+.upload-tips {
+    font-size: 12px;
+    color: #999;
+    display: flex;
+    align-items: center;
+    height: 100px;
+    margin-left: 10px;
+}
+/deep/.avatar-uploader {
+    margin-right: 10px;
+}
+.editor-wrap {
+    margin-top: 20px;
+}
 
-    /deep/.newTitle {
-        width: 500px!important;
-    }
-    .el-picker-panel {
-        z-index: 99999 !important;
-    }
-    /deep/.w-e-text-container {
-        z-index: 40 !important;
-    }
-    /deep/.w-e-menu {
-        z-index: 99 !important;
-    }
-    /deep/.editor-wrap{
-        margin-bottom: 23px  !important;
-    }
-    /deep/.w-e-toolbar {
-        z-index: 99 !important;
-    }
+/deep/.newTitle {
+    width: 500px !important;
+}
+.el-picker-panel {
+    z-index: 99999 !important;
+}
+/deep/.w-e-text-container {
+    z-index: 40 !important;
+}
+/deep/.w-e-menu {
+    z-index: 99 !important;
+}
+/deep/.editor-wrap {
+    margin-bottom: 23px !important;
+}
+/deep/.w-e-toolbar {
+    z-index: 99 !important;
+}
 </style>
