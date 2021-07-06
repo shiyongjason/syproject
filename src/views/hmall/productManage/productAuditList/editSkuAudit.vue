@@ -341,25 +341,24 @@ export default {
             let form = {}
             form = {
                 ...this.form,
-
                 length: deepCopy(this.form.mainSkus).map(item => {
                     return item.length
-                }),
+                })[0],
                 width: deepCopy(this.form.mainSkus).map(item => {
                     return item.width
-                }),
+                })[0],
                 height: deepCopy(this.form.mainSkus).map(item => {
                     return item.height
-                }),
+                })[0],
                 grossWeight: deepCopy(this.form.mainSkus).map(item => {
                     return item.grossWeight
-                }),
+                })[0],
                 volume: deepCopy(this.form.mainSkus).map(item => {
                     return item.volume
-                }),
+                })[0],
                 netWeight: deepCopy(this.form.mainSkus).map(item => {
                     return item.netWeight
-                }),
+                })[0],
                 mainSpuId: this.newId,
                 modifiableInfo: {
                     imgUrls: this.imageUrls,
@@ -444,7 +443,6 @@ export default {
             //     item.imageUrls = item.imageUrls.join(',')
             //     return item
             // }),
-            console.log(this.form.mainSkus)
             // TODO: 处理老数据
             const specifications = this.productSpuInfo.specifications || []
             this.form.specifications = deepCopy(this.specifications).map((item, index) => {
