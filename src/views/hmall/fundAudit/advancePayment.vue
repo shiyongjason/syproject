@@ -89,17 +89,17 @@
                 </div>
             </div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isfiexd="'right'">
-                <template slot="merchantType" slot-scope="scope">
-                    {{paymentStatusMap.get(scope.data.row.merchantType) || '-'}}
+                <template slot="prepayStatus" slot-scope="scope">
+                    {{paymentStatusMap.get(scope.data.row.prepayStatus) || '-'}}
                 </template>
-                <template slot="isAuthentication" slot-scope="scope">
-                    <span>{{orderStatusMap.get(scope.data.row.isAuthentication)}}}</span>
+                <template slot="orderSwitch" slot-scope="scope">
+                    <span>{{orderStatusMap.get(scope.data.row.orderSwitch)}}}</span>
                 </template>
-                <template slot="openingStatus" slot-scope="scope">
-                    {{orderSynchronousMap.get(scope.data.row.openingStatus)}}
+                <template slot="orderSyncStatus" slot-scope="scope">
+                    {{orderSynchronousMap.get(scope.data.row.orderSyncStatus)}}
                 </template>
-                <template slot="openingStatus" slot-scope="scope">
-                    {{synchronousMap.get(scope.data.row.openingStatus)}}
+                <template slot="fundSyncStatus" slot-scope="scope">
+                    {{synchronousMap.get(scope.data.row.fundSyncStatus)}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table v-if="scope.data.row.isAuthentication == 2" @click="onSure(scope.data.row)">确认</h-button>
@@ -218,61 +218,44 @@ export default {
         }
     },
     mounted () {
-        this.init(),
-            this.copyParams = { ...this.queryParams }
+        this.init()
+        this.copyParams = { ...this.queryParams }
     },
     methods: {
-        init () {
-
+        async init () {
+            await this.findAdvanceList()
         },
         onQuery () {
             this.queryParams.pageNumber = 1
-            // this.findOrders(this.queryParams)
+            this.findAdvanceList(this.queryParams)
         },
         onReset () {
             this.queryParams = { ...this.copyParams }
-            // this.findOrders()
-        },
-        onSave () { },
-        onTab (value) {
-            this.queryParams.pageNumber = 1
-            // this.orderStatusOptions.map(item => {
-            //     if (value.name == item.value) {
-            //         this.queryParams.status = item.value
-            //     }
-            // })
-            // this.findFreightOrders(this.queryParams)
+            this.findAdvanceList()
         },
         ...mapActions({
-            findBranch: 'findBranch',
             findAdvanceList: 'fundAudit/findAdvanceList'
         }),
         handleSizeChange (val) {
             this.queryParams.pageSize = val
-            // this.onFindMlist()
+            this.findAdvanceList()
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            // this.onFindMlist()
-        },
-        async onFindMlist (val) {
-            // if (val) this.queryParams.pageNumber = val
-            // await this.findMerchantList(this.queryParams)
-            // this.tableData = this.merchantData.records
-            // this.paginationInfo = {
-            //     total: this.merchantData.total,
-            //     pageNumber: this.merchantData.current,
-            //     pageSize: this.merchantData.size
-            // }
-        },
-        async onGetbranch () {
+            this.findAdvanceList()
         },
         onseeTask (val) {
             this.$router.push({ path: '/fundAudit/advanceFundInfo', query: { id: val, pageType: advancePayment } })
         },
-        onAudit () { },
-        onSure () { },
-        onClose () { }
+        onAudit () {
+            this.findAdvanceList()
+        },
+        onSure () {
+            this.findAdvanceList()
+        },
+        onClose () {
+            this.findAdvanceList()
+        }
     }
 }
 </script>
