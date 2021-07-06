@@ -218,11 +218,13 @@ export default {
         }
     },
     mounted () {
-        // this.onFindMlist()
-        // this.onGetbranch()
-        this.copyParams = { ...this.queryParams }
+        this.init(),
+            this.copyParams = { ...this.queryParams }
     },
     methods: {
+        init () {
+
+        },
         onQuery () {
             this.queryParams.pageNumber = 1
             // this.findOrders(this.queryParams)
@@ -264,8 +266,6 @@ export default {
             // }
         },
         async onGetbranch () {
-            // await this.findBranch()
-            // this.branchArr = this.branchList
         },
         onseeTask (val) {
             this.$router.push({ path: '/fundAudit/advanceFundInfo', query: { id: val, pageType: advancePayment } })
