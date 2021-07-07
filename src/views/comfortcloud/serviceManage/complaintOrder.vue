@@ -7,7 +7,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">投诉工单号：</div>
                 <div class="query-col-input">
-                    <el-input placeholder="输入投诉工单号" v-model="queryParams.serviceNo" maxlength="50" clearable></el-input>
+                    <el-input placeholder="输入投诉工单号" v-model="queryParams.workOrderNo" maxlength="50" clearable></el-input>
                 </div>
             </div>
 
@@ -25,35 +25,35 @@
                 <div class="query-col-title">解决状态：</div>
                 <div class="query-col-input">
                     <el-select v-model="queryParams.status" style="width: 100%">
-                        <el-option label="处理中" value=""></el-option>
-                        <el-option label="已解决" value="10"></el-option>
                         <el-option label="待处理" value="0"></el-option>
+                        <el-option label="处理中" value="10"></el-option>
+                        <el-option label="已解决" value="20"></el-option>
                     </el-select>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">投诉产品：</div>
                 <div class="query-col-input">
-                    <el-input placeholder="输入产品名称" v-model="queryParams.serviceNo" maxlength="50" clearable></el-input>
+                    <el-input placeholder="输入产品名称" v-model="queryParams.productName" maxlength="50" clearable></el-input>
                 </div>
             </div>
 
             <div class="query-cont-col">
                 <div class="query-col-title">客户手机号：</div>
                 <div class="query-col-input">
-                    <el-input placeholder="输入客户手机号" v-model="queryParams.serviceNo" maxlength="50" clearable></el-input>
+                    <el-input placeholder="输入客户手机号" v-model="queryParams.customerMobile" maxlength="50" clearable></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">经销商手机号：</div>
                 <div class="query-col-input">
-                    <el-input placeholder="输入经销商手机号" v-model="queryParams.serviceNo" maxlength="50" clearable></el-input>
+                    <el-input placeholder="输入经销商手机号" v-model="queryParams.agencyMobile" maxlength="50" clearable></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">经销商：</div>
                 <div class="query-col-input">
-                    <el-input placeholder="输入经销商名称" v-model="queryParams.serviceNo" maxlength="50" clearable></el-input>
+                    <el-input placeholder="输入经销商名称" v-model="queryParams.agencyCompanyName" maxlength="50" clearable></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -68,37 +68,51 @@
 
         <div class="page-body-cont">
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
-                <template slot="serviceType" slot-scope="scope">
-                    {{scope.data.row.serviceType==1?'预约维修':'清洗保养'}}
+                <template slot="status" slot-scope="scope">
+                    {{orderStatus(scope.data.row.status)}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">详情</el-button>
+                    <el-button class="orangeBtn" @click="onEdit(scope.data.row.id)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
 
-        <el-dialog title="新增投诉工单" :visible.sync="addOrderDialogVisible" class="upload-show" width="1200px" :close-on-click-modal="false" :before-close="onCloseAddOrderDialog">
+        <el-dialog :title="detailData.id > 0 ?'投诉详情':'新增投诉工单'" :visible.sync="addOrderDialogVisible" class="upload-show" width="1200px" :close-on-click-modal="false" :before-close="onCloseAddOrderDialog">
             <div class="el-dialog-div">
-                <el-form :model="addOrderForm" :rules="addOrderRules" ref="addOrderForm" label-width="140px">
+                <div class="radio-container" v-if="detailData.id > 0">
+                    <el-radio-group v-model="radio" @change="onTabRadio">
+                        <el-radio-button label="投诉信息"></el-radio-button>
+                        <el-radio-button label="解决记录"></el-radio-button>
+                    </el-radio-group>
+                </div>
+                <el-form :model="detailData" :rules="addOrderRules" ref="addOrderForm" label-width="140px" v-if="showDetailForm">
+                    <el-form-item label="投诉时间" prop="time">
+                        <el-date-picker v-model="detailData.time" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-ddTHH:mm:ss" type="datetime" placeholder="选择日期">
+                        </el-date-picker>
+                    </el-form-item>
                     <el-form-item label-width="0">
-                        <el-col :span="7">
-                            <el-form-item label="客户手机号：" prop="consigneePhone">
-                                <el-input v-model="addOrderForm.consigneePhone" maxlength="11" placeholder="请填写客户手机号"></el-input>
+                        <el-col :span="8">
+                            <el-form-item label="客户手机号：" prop="customerMobile">
+                                <el-input v-model="detailData.customerMobile" maxlength="11" placeholder="请填写客户手机号"></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="7">
-                            <el-form-item label="客户姓名：" prop="consigneeName">
-                                <el-input v-model="addOrderForm.consigneeName" maxlength="50" placeholder="请填写客户姓名"></el-input>
+                        <el-col :span="8">
+                            <el-form-item label="客户姓名：" prop="customerName">
+                                <el-input v-model="detailData.customerName" maxlength="50" placeholder="请填写客户姓名"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="客户微信号：" prop="customerWxId">
+                                <el-input v-model="detailData.customerWxId" maxlength="50" placeholder="请填写客户微信号"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-form-item>
                     <el-form-item label="客户地址：">
                         <el-col :span="6">
-                            <el-form-item label-width="0" prop="consigneeProvinceName">
-                                <el-select v-model="addOrderForm.consigneeProvinceName" placeholder="请选择省" @change="onProvince" class="selectInput">
-                                    <el-option label="请选择" value=""></el-option>
+                            <el-form-item label-width="0" prop="provinceId">
+                                <el-select v-model="detailData.provinceId" placeholder="请选择省" @change="onProvince">
                                     <template v-for="item in provinceList">
-                                        <el-option :key="item.provinceId" :label="item.name" :value="item.name">
+                                        <el-option :key="item.provinceId" :label="item.name" :value="item.provinceId">
                                         </el-option>
                                     </template>
                                 </el-select>
@@ -106,189 +120,370 @@
                         </el-col>
                         <el-col class="line" :span="1">-</el-col>
                         <el-col :span="6">
-                            <el-form-item label-width="0" prop="consigneeCityName">
-                                <el-select v-model="addOrderForm.consigneeCityName" placeholder="请选择市" @change="onCity" class="selectInput">
-                                    <el-option label="请选择" value=""></el-option>
-                                    <el-option v-for="(item) in getCity" :key="item.cityId" :label="item.name" :value="item.name">
+                            <el-form-item label-width="0" prop="cityId">
+                                <el-select v-model="detailData.cityId" placeholder="请选择市" @change="onCity">
+                                    <el-option v-for="(item) in getCity" :key="item.cityId" :label="item.name" :value="item.cityId">
                                     </el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
                         <el-col class="line" :span="1">-</el-col>
                         <el-col :span="6">
-                            <el-form-item label-width="0" prop="consigneeCountyName">
-                                <el-select v-model="addOrderForm.consigneeCountyName" placeholder="请选择区" class="selectInput">
-                                    <el-option label="请选择" value=""></el-option>
-                                    <el-option v-for="(item) in getCountry" :key="item.countryId" :label="item.name" :value="item.name">
+                            <el-form-item label-width="0" prop="countryId">
+                                <el-select v-model="detailData.countryId" placeholder="请选择区" @change="onArea">
+                                    <el-option v-for="(item) in getCountry" :key="item.countryId" :label="item.name" :value="item.countryId">
                                     </el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
                     </el-form-item>
-                    <el-form-item prop="consigneeAddress">
-                        <el-input style="width: 500px" v-model="addOrderForm.consigneeAddress" maxlength="200" :rows="1" placeholder="请输入详细地址" />
+                    <el-form-item prop="address">
+                        <el-input style="width: 500px" v-model="detailData.address" maxlength="100" :rows="1" placeholder="请输入详细地址" />
                     </el-form-item>
 
-                    <el-form-item label="商品明细：" prop="productBOS">
+                    <el-form-item label="选择投诉产品：" prop="deviceInfoList">
                         <el-button type="primary" @click="onAddProduct">+添加商品</el-button>
                     </el-form-item>
 
-                    <div class="query-cont-row" v-for="(productItem,index) in addOrderForm.productBOS" :key="index">
-                        <el-form-item label="品类：" :prop="'productBOS.' + index + '.productCategory'" :rules="addOrderRules.productCategory">
-                            <el-select v-model="productItem.productCategory" @change="()=> { selectChanged(index) }">
-                                <el-option label="选择" value=""></el-option>
-                                <el-option :label="item.categoryName" :value="item.categoryName" v-for="item in allCategorys" :key="item.categoryId"></el-option>
+                    <div class="query-cont-row" v-for="(productItem,index) in detailData.deviceInfoList" :key="index">
+                        <el-form-item label="归属品类：" :prop="'deviceInfoList.' + index + '.categoryId'" :rules="addOrderRules.categoryId">
+                            <el-select v-model="productItem.categoryId" @change="()=> { selectChanged(index) }">
+                                <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in allCategorys" :key="item.categoryId"></el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="商品型号：" label-width="100px" :prop="'productBOS.' + index + '.productSpecification'" :rules="addOrderRules.productSpecification">
-                            <el-select v-model="productItem.productSpecification" @change="selectSpecificationIdChanged">
-                                <el-option label="选择" value=""></el-option>
-                                <el-option :label="item.specificationName" :value="item.specificationName" v-for="item in categoryTypes[index]" :key="item.specificationId"></el-option>
+                        <el-form-item label="商品型号：" label-width="100px" :prop="'deviceInfoList.' + index + '.specificationId'" :rules="addOrderRules.specificationId">
+                            <el-select v-model="productItem.specificationId" @change="()=>{selectSpecificationIdChanged(index)}">
+                                <el-option :label="item.specificationName" :value="item.specificationId" v-for="item in categoryTypes[index]" :key="item.specificationId"></el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="销售金额：" label-width="100px" :prop="'productBOS.' + index + '.productAmount'" :rules="addOrderRules.productAmount">
-                            <el-input style="width: 150px" v-model="productItem.productAmount" maxlength="100" :rows="1" placeholder="请输入销售金额" />
-                        </el-form-item>
-                        <el-form-item label="商品件数：" label-width="100px" :prop="'productBOS.' + index + '.productCount'" :rules="addOrderRules.productCount">
-                            <el-input style="width: 150px" v-model="productItem.productCount" maxlength="100" :rows="1" placeholder="请输入商品件数" />
+                        <el-form-item label="设备ID" label-width="100px" :prop="'deviceInfoList.' + index + '.deviceId'" :rules="addOrderRules.deviceId">
+                            <el-input style="width: 150px" v-model="productItem.deviceId" maxlength="100" :rows="1" placeholder="请输入设备ID" />
                         </el-form-item>
                         <el-button style="align-self: flex-start;margin-left: 20px;" type="primary" @click="()=> { onRemoveProduct(index) }">删除</el-button>
                     </div>
-                    <el-form-item label="商品总运费：" prop="freight">
-                        <el-input v-model="addOrderForm.freight" maxlength="100" :rows="1" placeholder="请输入商品总运费" />
+                    <el-form-item label="问题描述：" prop="description">
+                        <el-input style="width: 500px" v-model="detailData.description" maxlength="100" :rows="2" placeholder="请输入问题描述" />
                     </el-form-item>
-                    <el-form-item label="支付方式：" prop="payMethod">
-                        <el-select v-model="addOrderForm.payMethod">
-                            <el-option label="选择" value=""></el-option>
-                            <el-option label="支付宝转账" value="支付宝转账"></el-option>
-                            <el-option label="银行转账" value="银行转账"></el-option>
-                            <el-option label="微信转账" value="微信转账"></el-option>
-                            <el-option label="现金支付" value="现金支付"></el-option>
-                            <el-option label="其他" value="其他"></el-option>
-                        </el-select>
+                    <el-form-item label="问题图片(不超过8张)：" ref="payImgs">
+                        <el-upload list-type="picture-card" :action="imageUploadAction" :data="imageUploadData" accept='image/jpeg, image/jpg, image/png' name='multiFile' :file-list="imgs" :multiple='true' :on-success="handleUploadImageSuccess" :limit="8" :on-exceed="uploadImageExceptMessage"
+                            :before-upload="beforeImageUpload" :on-remove="handleImageRemove">
+                            <i class="el-icon-plus"></i>
+                        </el-upload>
                     </el-form-item>
-                    <el-form-item label="订单总金额：" prop="payAmount">
-                        <el-input v-model="addOrderForm.payAmount" maxlength="100" :rows="1" placeholder="请输入订单总金额" />
+                    <el-form-item label="经销商手机号：" prop="agencyMobile">
+                        <el-input v-model="detailData.agencyMobile" maxlength="100" :rows="1" placeholder="请输入经销商手机号" />
                     </el-form-item>
-                    <el-form-item label="支付时间：" prop="payTime">
-                        <el-date-picker v-model="addOrderForm.payTime" value-format="yyyy-MM-dd HH:mm" type="datetime" placeholder="选择时间">
-                        </el-date-picker>
+                    <el-form-item label="经销商姓名：" prop="agencyName">
+                        <el-input v-model="detailData.agencyName" maxlength="100" :rows="1" placeholder="请输入经销商姓名" />
                     </el-form-item>
-                    <el-form-item label="请上传支付凭证：" prop="certificate" :rules="addOrderRules.certificate" ref="payImgs">
-                        <el-row :span="8">
-                            <el-upload list-type="picture-card" :action="imageUploadAction" :data="imageUploadData" accept='image/jpeg, image/jpg, image/png' name='multiFile' :file-list="imgs" :multiple='true' :on-success="handleUploadImageSuccess" :limit="2" :on-exceed="uploadImageExceptMessage"
-                                :before-upload="beforeImageUpload" :on-remove="handleImageRemove">
-                                <i class="el-icon-plus"></i>
-                            </el-upload>
-                            <div class="upload-tips">上传1-2张经销商的付款截图或银行到账截图，JPEG或png均可</div>
-                        </el-row>
+                    <el-form-item label="经销商企业名称：" prop="agencyCompanyName">
+                        <el-input v-model="detailData.agencyCompanyName" maxlength="100" :rows="1" placeholder="请输入经销商企业名称" />
                     </el-form-item>
-                    <div style="height : 20px"></div>
                 </el-form>
-
+                <div v-else>
+                    <div class="query-cont-col">
+                        <div class="query-col-title">
+                            <el-button type="primary" plain class="ml20" @click="addResloveRecord">+新增解决记录</el-button>
+                        </div>
+                    </div>
+                    <basicTable :tableLabel="recordTableLabel" :tableData="recordTableData" :isShowIndex='true' :pagination="recordPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                        <template slot="action" slot-scope="scope">
+                            <el-button class="orangeBtn" @click="onEdit(scope.data.row.id)">编辑</el-button>
+                            <el-button class="orangeBtn" @click="onEdit(scope.data.row.id)">删除</el-button>
+                        </template>
+                    </basicTable>
+                </div>
             </div>
             <div slot="footer" class="dialog-footer">
                 <h-button @click="cancelAddOrderClick">取 消</h-button>
                 <h-button type="primary" @click="submitAddOrderForm" :loading="loading">确 定</h-button>
             </div>
         </el-dialog>
-
-        <el-dialog title="服务详情" :modal-append-to-body=false :append-to-body=false :visible.sync="detailDialogVisible" width="50%">
-            <div class="detailLine">
-                <span>服务类型：{{detailData.serviceType===1?'预约维修':'清洗保养'}}</span><span class="centerLine">服务产品：{{detailData.product}}</span><span class="rightLine">服务时间：{{detailData.serviceTime}}</span>
+        <el-dialog title="新增解决记录" :visible.sync="addRecordDialogVisible" class="upload-show" width="600px" :close-on-click-modal="false" :before-close="onCloseAddRecordDialog">
+            <div class="el-dialog-div">
+                <el-form :model="recordData" :rules="addRecordRules" ref="addRecordForm" label-width="140px">
+                    <el-form-item label="沟通时间" prop="processTime">
+                        <el-date-picker v-model="recordData.processTime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-ddTHH:mm:ss" type="datetime" placeholder="选择日期">
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="解决结果：" prop="status">
+                        <el-select v-model="recordData.status" style="width: 100%">
+                            <el-option label="待处理" value="0"></el-option>
+                            <el-option label="处理中" value="10"></el-option>
+                            <el-option label="已解决" value="20"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="解决内容：" prop="content">
+                        <el-input style="width: 400px" v-model="recordData.content" maxlength="100" :rows="3" placeholder="请输入沟通内容" />
+                    </el-form-item>
+                </el-form>
             </div>
-            <div class="detailLine">
-                <span>客户姓名：{{detailData.customerName}}</span><span class="centerLine">客户电话：{{detailData.customerPhone}}</span>
+            <div slot="footer" class="dialog-footer">
+                <h-button>取 消</h-button>
+                <h-button type="primary" :loading="loading">确 定</h-button>
             </div>
-            <p class="detailLine">客户地址：{{detailData.customerAddress}}</p>
-            <p class="detailLine">备注：{{detailData.remark==undefined?'无':detailData.remark}}</p>
-            <p class="detailLine">图片：</p>
-            <template v-if="detailData.picUlrs&&detailData.picUlrs.length>0">
-                <div class="detailLine lastLine">
-                    <el-image v-for="(src,index) in detailData.picUlrs" :key='index+"img"' :z-index='9999' fit='cover' style="width: 100px; height: 100px;marginLeft:10px" :src="src" :preview-src-list="detailData.picUlrs">
-                    </el-image>
-                </div>
-            </template>
         </el-dialog>
     </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
+import { getChiness } from '../../hmall/membership/api'
+import { createComplaintOrder, editComplaintOrder, editComplaintProcessOrder, createComplaintProcessOrder, deleteComplaintProcessOrder } from '../api/index'
+import { iotUrl, interfaceUrl } from '@/api/config'
 import Vue from 'vue'
+
+const _dataForm = {
+    id: 0,
+    time: '',
+    customerMobile: '',
+    customerName: '',
+    customerWxId: '',
+    provinceId: '',
+    provinceName: '',
+    cityId: '',
+    cityName: '',
+    countryId: '',
+    countryName: '',
+    address: '',
+    deviceInfoList: [],
+    description: '',
+    pictures: [],
+    agencyMobile: '',
+    agencyName: '',
+    agencyCompanyName: '',
+    operator: '',
+    operatorPhone: ''
+}
+
+const _recordData = {
+    id: 0,
+    workOrderId: '',
+    processTime: '',
+    status: null,
+    content: '',
+    operator: ''
+}
+
 export default {
     name: 'complaintOrder',
     data () {
         return {
-            pic: {
-                marginLeft: '20px',
-                width: '100px',
-                height: '100px'
-            },
-            firstPic: {
-                width: '100px',
-                height: '100px'
-            },
             queryParams: {
-                serviceNo: '',
                 pageNumber: 1,
                 pageSize: 10,
-                operator: '',
+                workOrderNo: '',
+                status: null,
+                productName: '',
+                customerMobile: '',
+                agencyMobile: '',
+                agencyCompanyName: '',
                 endTime: '',
                 startTime: ''
             },
+            recordQueryParams: {
+                pageNumber: 1,
+                pageSize: 10,
+                workOrderNo: ''
+            },
+            radio: '投诉信息',
+            imgs: [],
+            loading: false,
             searchParams: {},
+            categoryTypes: [],
+            allCategorys: [],
+            provinceList: [],
             tableData: [],
+            recordTableData: [],
             tableLabel: [
-                { label: '申请时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '服务单号', prop: 'serviceNo' },
-                { label: '申请人账号', prop: 'operator', width: '120px' },
+                { label: '投诉时间', prop: 'time', formatters: 'dateTime' },
+                { label: '工单号', prop: 'workOrderNo' },
+                { label: '创建人', prop: 'creator' },
                 { label: '客户姓名', prop: 'customerName' },
-                { label: '客户电话', prop: 'customerPhone' },
-                { label: '客户地址', prop: 'customerAddress' },
-                { label: '服务类型', prop: 'serviceType' },
-                { label: '服务产品', prop: 'product' }
+                { label: '客户电话', prop: 'customerMobile' },
+                { label: '客户地址', prop: 'address' },
+                { label: '经销商手机号', prop: 'agencyMobile' },
+                { label: '经销商名称', prop: 'agencyCompanyName' },
+                { label: '投诉产品', prop: 'productName' },
+                { label: '问题描述', prop: 'description' },
+                { label: '解决状态', prop: 'status' }
+            ],
+            recordTableLabel: [
+                { label: '沟通时间', prop: 'processTime', formatters: 'dateTime' },
+                { label: '解决结果', prop: 'status' },
+                { label: '解决内容', prop: 'content' }
             ],
             pagination: {
                 pageNumber: 1,
                 pageSize: 10,
                 total: 0
             },
-            detailData: {},
-            detailDialogVisible: false,
-            addOrderDialogVisible: false
+            recordPagination: {
+                pageNumber: 1,
+                pageSize: 10,
+                total: 0
+            },
+            detailData: JSON.parse(JSON.stringify(_dataForm)),
+            recordData: JSON.parse(JSON.stringify(_recordData)),
+            addOrderRules: {
+                time: [
+                    { required: true, message: '请选择投诉时间', trigger: 'blur' }
+                ],
+                customerMobile: [
+                    { required: true, message: '请输入正确客户手机号', trigger: 'blur', pattern: /^[1][0-9]{10}$/ }
+                ],
+                consigneeName: [
+                    { required: true, message: '请输入客户姓名', trigger: 'blur' }
+                ],
+                deviceInfoList: [
+                    { required: true, message: '请添加商品', trigger: 'change' }
+                ],
+                categoryId: [
+                    { required: true, message: '请选择商品品类', trigger: 'change' }
+                ],
+                specificationId: [
+                    { required: true, message: '请选择商品型号', trigger: 'change' }
+                ],
+                deviceId: [
+                    { required: true, message: '请输入设备ID', trigger: 'blur' }
+                ],
+                description: [
+                    { required: true, message: '请输入问题描述', trigger: 'blur' }
+                ],
+                agencyMobile: [
+                    { required: true, message: '请输入正确经销商手机号', trigger: 'blur', pattern: /^[1][0-9]{10}$/ }
+                ]
+            },
+            addRecordRules: {
+                processTime: [
+                    { required: true, message: '请选择沟通日期', trigger: 'blur' }
+                ],
+                status: [
+                    { required: true, message: '请选择沟通结果', trigger: 'blur' }
+                ],
+                content: [
+                    { required: true, message: '请输入沟通内容', trigger: 'change' }
+                ]
+            },
+            addOrderDialogVisible: false,
+            addRecordDialogVisible: false
         }
     },
     methods: {
         ...mapActions({
-            getServiceManageHistoryList: 'getServiceManageHistoryList'
+            getComplaintOrderList: 'getComplaintOrderList',
+            getComplaintOrderDetail: 'getComplaintOrderDetail',
+            getComplaintProcessOrderList: 'getComplaintProcessOrderList',
+            getComplaintProcessOrderDetail: 'getComplaintProcessOrderDetail',
+            findCloudMerchantShopCategoryList: 'findCloudMerchantShopCategoryList',
+            findCloudMerchantShopCategoryTypeList: 'findCloudMerchantShopCategoryTypeList'
         }),
-        async onQuery () {
-            await this.getServiceManageHistoryList(this.searchParams)
-            this.tableData = this.serviceHistory.records
-            this.pagination = {
-                pageNumber: this.serviceHistory.current,
-                pageSize: this.serviceHistory.size,
-                total: this.serviceHistory.total
+
+        addResloveRecord () {
+            this.addRecordDialogVisible = true
+        },
+        async onTabRadio (val) {
+            if (val === '解决记录') {
+                this.recordQueryParams.pageNumber = 1
+                let parmas = { ...this.recordQueryParams }
+                parmas.workOrderId = this.detailData.id
+                await this.getComplaintProcessOrderList(parmas)
+                console.log(this.complaintProcessOrderList)
             }
         },
-        onSearch () {
-            this.searchParams = { ...this.queryParams }
-            this.onQuery()
+        onCloseAddOrderDialog () {
+            this.detailData = JSON.parse(JSON.stringify(_dataForm))
+            this.addOrderDialogVisible = false
         },
-        createComplaintOrder () {
-            this.addOrderDialogVisible = true
+        onCloseAddRecordDialog () {
+            this.addRecordDialogVisible = false
         },
-        onEdit (val) {
-            this.detailData = val
-            if (val.pictureUrl) {
-                let urls = val.pictureUrl.split(',')
-                this.detailData.picUlrs = urls
+        onAddProduct () {
+            this.detailData.deviceInfoList.push({ categoryId: '', specificationId: '', deviceId: '' })
+            this.categoryTypes.push([])
+            this.$refs['addOrderForm'].clearValidate(['deviceInfoList'])
+        },
+        async selectChanged (index) {
+            const categoryId = this.detailData.deviceInfoList[index].categoryId
+            this.allCategorys.forEach(item => {
+                if (item.categoryId === categoryId) {
+                    this.detailData.deviceInfoList[index].categoryName = item.categoryName
+                }
+            })
+            this.detailData.deviceInfoList[index].specificationId = ''
+            this.detailData.deviceInfoList[index].deviceId = ''
+            this.categoryTypes.splice(index, 1, [])
+            await this.findCloudMerchantShopCategoryTypeList({ categoryId: categoryId })
+            this.categoryTypes.splice(index, 1, this.cloudMerchantShopCategoryTypeList)
+        },
+        selectSpecificationIdChanged (index) {
+            const specificationId = this.detailData.deviceInfoList[index].specificationId
+            this.cloudMerchantShopCategoryTypeList.forEach(item => {
+                if (item.specificationId === specificationId) {
+                    this.detailData.deviceInfoList[index].specificationName = item.specificationName
+                }
+            })
+            for (let i = 0; i < this.detailData.deviceInfoList.length; i++) {
+                this.$refs['addOrderForm'].validateField('deviceInfoList.' + i + '.specificationId')
+            }
+        },
+        onRemoveProduct (index) {
+            this.detailData.deviceInfoList.splice(index, 1)
+            this.categoryTypes.splice(index, 1)
+        },
+        handleUploadImageSuccess (response, file, fileList) {
+            if (response.code === 200) {
+                console.log(response.data.accessUrl)
+                this.detailData.pictures.push(response.data.accessUrl)
+            }
+        },
+        uploadImageExceptMessage (files, fileList) {
+            this.$message({
+                type: 'warning',
+                message: '最多上传8张'
+            })
+        },
+        beforeImageUpload (file) {
+            const isJPG = file.type === 'image/jpg'
+            const isJPEG = file.type === 'image/jpeg'
+            const isPNG = file.type === 'image/png'
+            if (!(isJPG || isJPEG || isPNG)) {
+                this.$message({
+                    type: 'error',
+                    message: '文件格式不正确'
+                })
+            }
+            return isJPG || isJPEG || isPNG
+        },
+        handleImageRemove (file, fileList) {
+            console.log(file, '======', fileList)
+            let url = ''
+            if (file.response && file.response.data) {
+                url = file.response.data.accessUrl
             } else {
-                this.detailData.picUlrs = []
+                url = file.url
             }
-            console.log(this.detailData)
-            this.detailDialogVisible = true
+            let index = this.detailData.pictures.indexOf(url)
+            this.detailData.pictures.splice(index, 1)
+        },
+        async onEdit (val) {
+            this.categoryTypes = []
+            await this.getComplaintOrderDetail({ id: val })
+            for (let i = 0; i < this.detailData.deviceInfoList.length; i++) {
+                const device = this.detailData.deviceInfoList[i]
+                await this.findCloudMerchantShopCategoryTypeList({ categoryId: device.categoryId })
+                this.categoryTypes.push(this.cloudMerchantShopCategoryTypeList)
+            }
+            this.detailData = this.complaintOrderDetail
+            this.addOrderDialogVisible = true
+            if (this.detailData.pictures) {
+                this.imgs = this.detailData.pictures.map(item => {
+                    return {
+                        uid: item,
+                        url: item
+                    }
+                })
+            }
         },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
@@ -297,18 +492,156 @@ export default {
         onSizeChange (val) {
             this.searchParams.pageSize = val
             this.onQuery()
+        },
+        async getAreacode () {
+            const { data } = await getChiness()
+            this.provinceList = data
+        },
+        onProvince (key) {
+            this.detailData.provinceId = key
+            this.provinceList.forEach(item => {
+                if (item.provinceId === key) {
+                    this.detailData.provinceName = item.name
+                }
+            })
+            this.detailData.cityName = ''
+            this.detailData.cityId = ''
+            this.detailData.countryName = ''
+            this.detailData.countryId = ''
+        },
+        onCity (key) {
+            this.detailData.cityId = key
+            this.getCity.forEach(item => {
+                if (item.cityId === key) {
+                    this.detailData.cityName = item.name
+                }
+            })
+            this.detailData.countryName = ''
+            this.detailData.countryId = ''
+        },
+        onArea (key) {
+            this.detailData.countryId = key
+            this.getCountry.forEach(item => {
+                if (item.countryId === key) {
+                    this.detailData.countryName = item.name
+                }
+            })
+        },
+        async onQuery () {
+            await this.getComplaintOrderList(this.searchParams)
+            this.tableData = this.complaintOrderList.records
+            this.pagination = {
+                pageNumber: this.complaintOrderList.current,
+                pageSize: this.complaintOrderList.size,
+                total: this.complaintOrderList.total
+            }
+        },
+        onSearch () {
+            this.searchParams = { ...this.queryParams }
+            this.searchParams.pageNumber = 1
+            this.onQuery()
+        },
+        createComplaintOrder () {
+            this.detailData = JSON.parse(JSON.stringify(_dataForm))
+            this.addOrderDialogVisible = true
+        },
+        cancelAddOrderClick () {
+            this.imgs = []
+            if (this.$refs['addOrderForm']) {
+                this.$refs['addOrderForm'].clearValidate()
+            }
+            this.radio = '投诉信息'
+            this.addOrderDialogVisible = false
+        },
+        submitAddOrderForm () {
+            if (!this.showDetailForm) {
+                this.cancelAddOrderClick()
+                return
+            }
+            this.detailData.operator = this.userInfo.employeeName
+            this.detailData.operatorPhone = this.userInfo.phoneNumber
+            this.loading = true
+            this.$refs['addOrderForm'].validate(async (valid) => {
+                if (valid) {
+                    try {
+                        if (this.detailData.id > 0) {
+                            await editComplaintOrder(this.detailData)
+                        } else {
+                            this.detailData.id = undefined
+                            await createComplaintOrder(this.detailData)
+                        }
+                        this.loading = false
+                        this.cancelAddOrderClick()
+                        this.onSearch()
+                        this.$message({
+                            message: `操作成功`,
+                            type: 'success'
+                        })
+                    } catch (e) {
+                        this.loading = false
+                    }
+                } else {
+                    this.loading = false
+                }
+            })
         }
     },
-    mounted () {
+    async mounted () {
         this.onSearch()
+        this.getAreacode()
+        await this.findCloudMerchantShopCategoryList()
+        this.allCategorys = this.cloudMerchantShopCategoryList
     },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            serviceHistory: 'serviceManageHistoryList'
+            complaintOrderList: 'complaintOrderList',
+            complaintOrderDetail: 'complaintOrderDetail',
+            complaintProcessOrderList: 'complaintProcessOrderList',
+            complaintProcessOrderDetail: 'complaintProcessOrderDetail',
+            cloudMerchantShopCategoryList: 'cloudMerchantShopCategoryList',
+            cloudMerchantShopCategoryTypeList: 'cloudMerchantShopCategoryTypeList' // 商品类型
         }),
+        showDetailForm () {
+            if (this.detailData.id > 0 && this.radio === '解决记录') {
+                return false
+            }
+            return true
+        },
+        imageUploadAction () {
+            return interfaceUrl + 'tms/files/upload'
+        },
+        imageUploadData () {
+            return { updateUid: this.userInfo.employeeName }
+        },
+        orderStatus () {
+            return status => {
+                if (status === 0) {
+                    return '待解决'
+                } else if (status === 10) {
+                    return '解决中'
+                } else if (status === 20) {
+                    return '已解决'
+                }
+                return ''
+            }
+        },
+        getCity () {
+            const province = this.provinceList.filter(item => item.provinceId === this.detailData.provinceId)
+            if (province.length > 0) {
+                return province[0].cities
+            }
+            return []
+        },
+        getCountry () {
+            const city = this.getCity.filter(item => item.cityId === this.detailData.cityId)
+            if (city.length > 0) {
+                return city[0].countries
+            }
+            return []
+        },
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
@@ -334,25 +667,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.detailLine {
-    color: black;
-    margin-top: 20px;
-}
-.lastLine {
-    margin-bottom: 20px;
-}
-.centerLine {
-    position: absolute;
-    left: 33%;
-}
-.rightLine {
-    position: absolute;
-    left: 66%;
-}
-.picContainer {
-    display: flex;
-    margin-top: 20px;
-    margin-bottom: 20px;
+.radio-container {
+    padding: 10px;
+    margin-left: 10px;
 }
 .spanflex {
     display: flex;
