@@ -256,7 +256,7 @@ export default {
             await this.findAuditFundList(this.queryParams)
         },
         onseeTask (val) {
-            this.$router.push({ path: '/b2b/fundAudit/auditFundList/listFundInfo', query: { id: val.id } })
+            this.$router.push({ path: '/b2b/fundAudit/listFundInfo', query: { id: val.id } })
         },
         onCheck (val) {
             this.$router.push({ path: '/b2b/fundAudit/aduitFundInfo', query: { id: val.id, check: true } })
