@@ -338,7 +338,8 @@ export default {
                         prepayPercentage: this.form.prepayPercentage,
                         expireTime: this.form.expireTime,
                         auditStatus: this.form.auditStatus,
-                        note: this.form.note
+                        note: this.form.note,
+                        auditBy: this.userInfo.employeeName
                     }
                     await checkFund(form)
                     this.$message.success('审核成功')
