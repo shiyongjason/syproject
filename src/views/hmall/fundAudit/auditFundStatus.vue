@@ -25,7 +25,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">管理员账号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.companyName" placeholder="请输入管理员账号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.username" placeholder="请输入管理员账号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -49,18 +49,14 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">货物状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.merchantType">
+                        <el-select v-model="queryParams.goodsStatus">
                             <el-option v-for="item in goodsStatusOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <h-button type="primary" @click="onQuery">
-                        查询
-                    </h-button>
-                    <h-button @click="onReset">
-                        重置
-                    </h-button>
+                    <h-button type="primary" @click="onQuery">查询</h-button>
+                    <h-button @click="onReset">重置</h-button>
                 </div>
             </div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true' :isfiexd="'right'">
@@ -111,38 +107,32 @@ export default {
             goodsStatusOptions: GOODS_STATUS_OPTIONS,
             goodsStatusMap: GOODS_STATUS_MAP,
             queryParams: {
-                authenticationEndTime: '',
-                authenticationStartTime: '',
+                agentOrderNo: '',
+                allocateStatus: '',
                 companyName: '',
-                isAuthentication: '',
-                isEnabled: '',
-                merchantAccount: '',
-                merchantType: '',
-                merchantTypes: '',
+                username: '',
+                submitStartTime: '',
+                submitEndTime: '',
+                fundStatus: '',
+                goodsStatus: '',
                 pageNumber: 1,
-                pageSize: 10,
-                registrationEndTime: '',
-                registrationStartTime: '',
-                subsectionCode: '',
-                authenticationTime: '',
-                createTime: 'desc',
-                shopName: ''
+                pageSize: 10
             },
             paginationInfo: {},
             tableLabel: [
-                { label: '代采订单号', prop: 'openingStatus' },
-                { label: 'mis订单号', prop: 'openingStatus' },
-                { label: '提交时间', prop: 'registrationTime', formatters: 'dateTimes' },
-                { label: '代采订单总金额', prop: 'openingStatus' },
+                { label: '代采订单号', prop: 'agentOrderNo' },
+                { label: 'mis订单号', prop: 'misOrderNo' },
+                { label: '提交时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '代采订单总金额', prop: 'totalAmount' },
                 { label: '代付款金额', prop: 'openingStatus' },
-                { label: '首付款', prop: 'openingStatus' },
-                { label: '尾款', prop: 'openingStatus' },
+                { label: '首付款', prop: 'prepayAmount' },
+                { label: '尾款', prop: 'retainageAmount' },
                 { label: '企业名称', prop: 'companyName' },
-                { label: '管理员账号', prop: 'adminAccount' },
+                { label: '管理员账号', prop: 'username' },
                 { label: '店铺名称', prop: 'shopName' },
-                { label: '出款状态', prop: 'isAuthentication' },
-                { label: '资金状态', prop: 'openingStatus' },
-                { label: '货物状态', prop: 'openingStatus' }
+                { label: '出款状态', prop: 'allocateStatus' },
+                { label: '资金状态', prop: 'fundStatus' },
+                { label: '货物状态', prop: 'goodsStatus' }
             ],
             copyParams: {},
             closeOrderDialog: false,
