@@ -896,6 +896,7 @@ export default class FinalApproval extends Vue {
         const { data } = await getResolutions(this.finalFormID)
         this.resolutionDetail = data
         this.tableData = data.resolutionPurchaseList
+        this.$emit('onBackLoad', false, this.resolutionDetail.resolutionStatus)
     }
 
     // 记录
@@ -949,7 +950,7 @@ export default class FinalApproval extends Vue {
                         updateByMobile: JSON.parse(sessionStorage.getItem('userInfo') || '').phoneNumber
                     })
                     this.$emit('onCompsback')
-                    this.$emit('onBackLoad', false, this.resolutionDetail.resolutionStatus)
+                    this.$emit('onBackLoad', false)
                 } else {
                     await initiateDing({ projectId: this.finalFormID,
                         remark: this.lastForm.remark,
@@ -957,7 +958,7 @@ export default class FinalApproval extends Vue {
                         updateByMobile: JSON.parse(sessionStorage.getItem('userInfo') || '').phoneNumber
                     })
                     this.$emit('onCompsback')
-                    this.$emit('onBackLoad', false, this.resolutionDetail.resolutionStatus)
+                    this.$emit('onBackLoad', false)
                 }
             }
         })

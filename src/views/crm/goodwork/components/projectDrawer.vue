@@ -44,9 +44,9 @@
             </template>
             <template #btn>
                 <div class="drawer-button" v-if="isShowFoot">
-                    <template v-if="activeName==='4'&&status == 11&&resolutionStatus==2">
-                        <h-button @click="onFinalApprove(1)" v-if="hosAuthCheck(newAuth.CRM_WORK_FINAL_NOPASS)">终审不通过</h-button>
-                        <h-button type="primary" @click="onFinalApprove(2)" v-if="hosAuthCheck(newAuth.CRM_WORK_FINAL_PASS)">发起评审决议审批流</h-button>
+                    <template v-if="activeName==='4'&&status == 11">
+                        <h-button @click="onFinalApprove(1)" v-if="hosAuthCheck(newAuth.CRM_WORK_FINAL_NOPASS)&&(resolutionStatus==3||resolutionStatus==1)">终审不通过</h-button>
+                        <h-button type="primary" @click="onFinalApprove(2)" v-if="hosAuthCheck(newAuth.CRM_WORK_FINAL_PASS)&&(resolutionStatus==3||resolutionStatus==1)">发起评审决议审批流</h-button>
                     </template>
                     <!-- 这里的权限有后台配置的  还有根据项目的状态  还有 tab切的权限 -->
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BACKUP)&&activeName==='2'&&status==12">
