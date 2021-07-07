@@ -144,7 +144,6 @@ export default {
                 { label: '资金状态', prop: 'openingStatus' },
                 { label: '货物状态', prop: 'openingStatus' }
             ],
-            tableData: [],
             copyParams: {},
             closeOrderDialog: false,
             createform: {
@@ -155,12 +154,12 @@ export default {
     },
     computed: {
         ...mapState({
-            // userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            statusFundList: state => state.hmall.fundAudit.statusFundList
         }),
-        ...mapGetters({
-            merchantData: 'merchantData',
-            branchList: 'branchList'
-        }),
+        tableData () {
+            return this.statusFundList.records
+        },
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
@@ -188,15 +187,15 @@ export default {
     },
     methods: {
         init () {
-
+            this.getStatusFundList()
         },
         onQuery () {
             this.queryParams.pageNumber = 1
-            // this.findOrders(this.queryParams)
+            this.getStatusFundList()
         },
         onReset () {
             this.queryParams = { ...this.copyParams }
-            // this.findOrders()
+            this.getStatusFundList()
         },
         onSave () { },
         onTab (value) {
@@ -209,16 +208,15 @@ export default {
             // this.findFreightOrders(this.queryParams)
         },
         ...mapActions({
-            // findMerchantList: 'findMerchantList',
-            // findBranch: 'findBranch'
+            findStatusFund: 'fundAudit/findStatusFund'
         }),
         handleSizeChange (val) {
             this.queryParams.pageSize = val
-            // this.onFindMlist()
+            this.getStatusFundList()
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            // this.onFindMlist()
+            this.getStatusFundList()
         },
         onseeTask (val) {
             this.$router.push({ path: '/fundAudit/statusFundInfo', query: { id: val.id, pageType: auditFundStatus } })
@@ -231,6 +229,9 @@ export default {
                 // await cashWithdrawal(this.reqWithdraw)
                 // this.withdrawalSuccess()
             })
+        },
+        async getStatusFundList () {
+            await this.findStatusFund(this.queryParams)
         },
         onGodown () {
             this.closeOrderDialog = true

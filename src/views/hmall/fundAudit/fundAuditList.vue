@@ -246,7 +246,6 @@ export default {
             fundInfo: state => state.hmall.fundAudit.fundInfo
         }),
         ...mapGetters({
-            merchantData: 'merchantData',
             branchList: 'branchList'
         }),
         tableData () {
@@ -308,11 +307,11 @@ export default {
         },
         onQuery () {
             this.queryParams.pageNumber = 1
-            this.findFundList()
+            this.getFundList()
         },
         onReset () {
             this.queryParams = { ...this.resetParams }
-            this.findFundList()
+            this.getFundList()
         },
         async onCheck ({ id }) {
             this.drawer = true
@@ -329,7 +328,6 @@ export default {
             })
         },
         async onSave () {
-            console.log(this.form)
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
                     const form = {
@@ -343,20 +341,19 @@ export default {
                     await checkFund(form)
                     this.$message.success('审核成功')
                     this.drawer = false
-                    this.findFundList()
+                    this.getFundList()
                 }
             })
         },
         onSizeChange (val) {
             this.queryParams.pageSize = val
-            this.findFundList()
+            this.getFundList()
         },
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            this.findFundList()
+            this.getFundList()
         },
         ...mapActions({
-            // findMerchantList: 'findMerchantList',
             findBranch: 'findBranch',
             findFundList: 'fundAudit/findFundList',
             findFundInfo: 'fundAudit/findFundInfo'

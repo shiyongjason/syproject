@@ -162,22 +162,17 @@ export default {
                 { label: '资金同步状态', prop: 'fundSyncStatus' },
                 { label: '操作人', prop: 'prepayConfirmOperator' }
             ],
-            tableData: [],
             copyParams: {}
         }
     },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
-            advanceList: state => state.fundAudit.advanceList
+            advanceList: state => state.hmall.fundAudit.advanceList
         }),
-        ...mapGetters({
-            merchantData: 'merchantData',
-            branchList: 'branchList'
-        }),
-        ...mapGetters({
-            advanceList: 'fundAudit/advanceList'
-        }),
+        tableData () {
+            return this.advanceList.records
+        },
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
@@ -224,45 +219,48 @@ export default {
         this.copyParams = { ...this.queryParams }
     },
     methods: {
-        async init () {
-            await this.findAdvanceList()
+        init () {
+            this.getAdvanceList()
         },
         onQuery () {
             this.queryParams.pageNumber = 1
-            this.findAdvanceList(this.queryParams)
+            this.getAdvanceList()
         },
         onReset () {
             this.queryParams = { ...this.copyParams }
-            this.findAdvanceList()
+            this.getAdvanceList()
         },
         ...mapActions({
             findAdvanceList: 'fundAudit/findAdvanceList'
         }),
         handleSizeChange (val) {
             this.queryParams.pageSize = val
-            this.findAdvanceList()
+            this.getAdvanceList()
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            this.findAdvanceList()
+            this.getAdvanceList()
         },
         onseeTask (val) {
-            this.$router.push({ path: '/fundAudit/advanceFundInfo', query: { id: val.id, seeTask: true } })
+            this.$router.push({ path: '/fundAudit/advanceFundInfo', query: { id: val.id, seeTask: true, pageType: advancePayment } })
+        },
+        async getAdvanceList () {
+            await this.findAdvanceList(this.queryParams)
         },
         async onFund (val) {
             try {
                 await syncMisFund(val.id)
-                this.findAdvanceList()
+                this.getAdvanceList()
             } catch (e) {
-                this.findAdvanceList()
+                this.getAdvanceList()
             }
         },
         async onAudit (val) {
             try {
                 await syncFund(val.id)
-                this.findAdvanceList()
+                this.getAdvanceList()
             } catch (e) {
-                this.findAdvanceList()
+                this.getAdvanceList()
             }
         },
         async onSure (val) {
@@ -271,9 +269,9 @@ export default {
                     id: val.id,
                     updateBy: this.userInfo.employeeName
                 })
-                this.findAdvanceList()
+                this.getAdvanceList()
             } catch (e) {
-                this.findAdvanceList()
+                this.getAdvanceList()
             }
         },
         async onClose (val) {
@@ -282,9 +280,9 @@ export default {
                     id: val.id,
                     updateBy: this.userInfo.employeeName
                 })
-                this.findAdvanceList()
+                this.getAdvanceList()
             } catch (e) {
-                this.findAdvanceList()
+                this.getAdvanceList()
             }
         }
     }

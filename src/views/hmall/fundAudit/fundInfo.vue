@@ -152,10 +152,7 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
-            auditFundInfo: state => state.fundAudit.auditFundInfo
-        }),
-        ...mapGetters({
-            auditFundInfo: 'fundAudit/auditFundInfo'
+            auditFundInfo: state => state.hmall.fundAudit.auditFundInfo
         }),
         seeTask () {
             return !this.$route.query.seeTask

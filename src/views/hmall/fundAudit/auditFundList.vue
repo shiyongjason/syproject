@@ -33,7 +33,6 @@
                     <div class="query-col__input">
                         <el-date-picker v-model="queryParams.submitStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
-                        <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.submitEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
@@ -65,18 +64,13 @@
                     <div class="query-col__input">
                         <el-date-picker v-model="queryParams.auditStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerStart">
                         </el-date-picker>
-                        <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.auditEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerEnd">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <h-button type="primary" @click="onQuery">
-                        查询
-                    </h-button>
-                    <h-button @click="onRest()">
-                        重置
-                    </h-button>
+                    <h-button type="primary" @click="onQuery">查询</h-button>
+                    <h-button @click="onReset()">重置</h-button>
                 </div>
             </div>
             <div class="table-cont-tabs">
@@ -89,14 +83,14 @@
                     {{scope.data.row.subsectionName || '无'}}
                 </template>
                 <template slot="merchantType" slot-scope="scope">
-                    {{businessTypeMap.get(scope.data.row.merchantType) || '-'}}
+                    <span>{{businessTypeMap.get(scope.data.row.merchantType) || '-'}}</span>
                 </template>
                 <template slot="orderStatus" slot-scope="scope">
                     <span>{{auditStatusMap.get(scope.data.row.orderStatus)}}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onseeTask(scope.data.row)">查看</h-button>
-                    <h-button table v-if="scope.data.row.orderStatus=='10'" @click="onAudit(scope.data.row)">审核</h-button>
+                    <h-button table v-if="scope.data.row.orderStatus=='10'" @click="onCheck(scope.data.row)">审核</h-button>
                 </template>
             </basicTable>
         </div>
@@ -145,7 +139,6 @@ export default {
                 { label: '审核时间', prop: 'auditTime' },
                 { label: '回款期限', prop: 'period' }
             ],
-            tableData: [],
             drawer: false,
             copyParams: {},
             // 所属分部
@@ -156,15 +149,14 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
-            auditFundList: state => state.fundAudit.auditFundList
+            auditFundList: state => state.hmall.fundAudit.auditFundList
         }),
         ...mapGetters({
-            merchantData: 'merchantData',
             branchList: 'branchList'
         }),
-        ...mapGetters({
-            auditFundList: 'fundAudit/auditFundList'
-        }),
+        tableData () {
+            return this.auditFundList.records
+        },
         paginationInfo () {
             return {
                 total: this.auditFundList.total,
@@ -218,17 +210,17 @@ export default {
         this.copyParams = { ...this.queryParams }
     },
     methods: {
-        async init () {
-            await this.onGetbranch()
-            await this.findAuditFundList()
+        init () {
+            this.onGetbranch()
+            this.getAuditFundList()
         },
         onSizeChange (val) {
             this.queryParams.pageSize = val
-            this.findAuditFundList(this.queryParams)
+            this.getAuditFundList()
         },
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            this.findAuditFundList(this.queryParams)
+            this.getAuditFundList()
         },
         ...mapActions({
             findBranch: 'findBranch',
@@ -236,11 +228,11 @@ export default {
         }),
         onQuery () {
             this.queryParams.pageNumber = 1
-            this.findAuditFundList(this.queryParams)
+            this.getAuditFundList()
         },
         onReset () {
             this.queryParams = { ...this.copyParams }
-            this.findAuditFundList()
+            this.getAuditFundList()
         },
         onTab (value) {
             if (this.tabName == '20') {
@@ -252,26 +244,25 @@ export default {
             }
             this.onQuery()
         },
-        onRest () {
-            this.queryParams = { ...this.copyParams }
-            this.findAuditFundList()
-        },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
-            this.findAuditFundList()
+            this.getAuditFundList()
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            this.findAuditFundList()
+            this.getAuditFundList()
         },
         async onGetbranch () {
             await this.findBranch()
             this.branchArr = this.branchList
         },
+        async getAuditFundList () {
+            await this.findAuditFundList(this.queryParams)
+        },
         onseeTask (val) {
             this.$router.push({ path: '/fundAudit/listFundInfo', query: { id: val.id, seeTask: true, pageType: auditFundList } })
         },
-        onAudit (val) {
+        onCheck (val) {
             this.$router.push({ path: '/fundAudit/aduitFundInfo', query: { id: val.id, pageType: auditFundList } })
         }
     }
