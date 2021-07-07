@@ -141,8 +141,8 @@ export const PLATFORM_STATUS_MAP = new Map([
 ])
 // 额度状态
 export const LIMIT_STATUS_MAP = new Map([
-    [1, '生效'],
-    [0, '失效']
+    [true, '生效'],
+    [false, '失效']
 ])
 // 审核状态
 export const AUDIT_OPTIONS = [

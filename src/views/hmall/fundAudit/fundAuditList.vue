@@ -39,8 +39,8 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">申请时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.applyStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-ddTHH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart"></el-date-picker>
-                        <el-date-picker v-model="queryParams.applyEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-ddTHH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd"></el-date-picker>
+                        <el-date-picker v-model="queryParams.applyStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-ddTHH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart"></el-date-picker>
+                        <el-date-picker v-model="queryParams.applyEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-ddTHH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -54,8 +54,8 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">审核时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.auditStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-ddTHH:mm" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
-                        <el-date-picker v-model="queryParams.auditEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-ddTHH:mm" placeholder="结束日期" :picker-options="pickerEnd"></el-date-picker>
+                        <el-date-picker v-model="queryParams.auditStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-ddTHH:mm:ss" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
+                        <el-date-picker v-model="queryParams.auditEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-ddTHH:mm:ss" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -105,8 +105,7 @@
                         </el-input>
                     </el-form-item>
                     <el-form-item label="额度有效时间：" :prop="form.auditStatus==20?'expireTime':'-'">
-                        <el-date-picker v-model="form.expireTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-ddTHH:mm:ss" placeholder="额度有效时间">
-                        </el-date-picker>
+                        <el-date-picker v-model="form.expireTime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-ddT23:59:59" placeholder="额度有效时间"></el-date-picker>
                     </el-form-item>
                     <el-form-item label="审核：" prop="auditStatus">
                         <el-radio-group v-model="form.auditStatus" @change="onChange">
@@ -165,11 +164,11 @@ export default {
                 { label: '所属分部', prop: 'subsectionName' },
                 { label: '店铺名称', prop: 'shopName' },
                 { label: '商家类型', prop: 'merchantType' },
-                { label: '申请时间', prop: 'applyTime', formatters: 'dateTime' },
+                { label: '申请时间', prop: 'applyTime', formatters: 'date' },
                 { label: '额度', prop: 'creditLimit' },
                 { label: '比例', prop: 'prepayPercentage' },
                 { label: '额度状态', prop: 'limitStatus' },
-                { label: '额度有效期', prop: 'expireTime', formatters: 'dateTime' },
+                { label: '额度有效期', prop: 'expireTime', formatters: 'date' },
                 { label: '审核状态', prop: 'auditStatus' },
                 { label: '审核时间', prop: 'auditTime', formatters: 'dateTime' }
             ],
@@ -274,7 +273,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.applyStartTime
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                        return time.getTime() <= new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -294,7 +293,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.auditStartTime
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                        return time.getTime() <= new Date(beginDateVal).getTime()
                     }
                 }
             }
