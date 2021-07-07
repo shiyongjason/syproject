@@ -45,8 +45,8 @@
             <template #btn>
                 <div class="drawer-button" v-if="isShowFoot">
                     <template v-if="activeName==='4'&&status == 11">
-                        <h-button @click="onFinalApprove(1)" v-if="hosAuthCheck(newAuth.CRM_WORK_FINAL_NOPASS)">终审不通过</h-button>
-                        <h-button type="primary" @click="onFinalApprove(2)" v-if="hosAuthCheck(newAuth.CRM_WORK_FINAL_PASS)">发起评审决议审批流</h-button>
+                        <h-button @click="onFinalApprove(1)" v-if="hosAuthCheck(newAuth.CRM_WORK_FINAL_NOPASS)&&(resolutionStatus==3||resolutionStatus==1)">终审不通过</h-button>
+                        <h-button type="primary" @click="onFinalApprove(2)" v-if="hosAuthCheck(newAuth.CRM_WORK_FINAL_PASS)&&(resolutionStatus==3||resolutionStatus==1)">发起评审决议审批流</h-button>
                     </template>
                     <!-- 这里的权限有后台配置的  还有根据项目的状态  还有 tab切的权限 -->
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BACKUP)&&activeName==='2'&&status==12">
@@ -56,7 +56,7 @@
                         <h-button type="assist" @click="onAuditstatus(status)" :key="index" v-if="item.isShow">{{item.name}}</h-button>
                     </template>
                     <h-button @click="cancelForm">取消</h-button>
-                    <h-button v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BAOCUN)&&activeName!=='2'&&!(activeName=='3'&&status!=4)&&!(activeName=='4'&&status!=11) && activeName!=='5'" type="primary" @click="onSaveproject(activeName)" :loading="loading">{{ loading ? '提交中 ...' : '保存' }}</h-button>
+                    <h-button v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BAOCUN)&&activeName!=='2'&&!(activeName=='3'&&status!=4)&& activeName!=='5'" type="primary" @click="onSaveproject(activeName)" :loading="loading">{{ loading ? '提交中 ...' : '保存' }}</h-button>
                 </div>
             </template>
         </h-drawer>
@@ -89,6 +89,7 @@ export default {
     },
     data () {
         return {
+            resolutionStatus: '',
             showPacking: null,
             newAuth,
             loading: false,
@@ -398,8 +399,9 @@ export default {
             this.showPacking = false
             window.location.href = data
         },
-        onBackLoad (val) {
+        onBackLoad (val, res) {
             this.loading = val
+            this.resolutionStatus = res || ''
         },
         onFinalApprove (val) {
             this.$refs.finalApproval._finalApprove(val)
