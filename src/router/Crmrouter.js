@@ -504,6 +504,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/crm/shopMall/addProduct/list.vue')
+                    },
+                    {
+                        path: 'productLibrary',
+                        name: 'productLibrary',
+                        meta: {
+                            title: '好橙工商品库',
+                            tagName: '好橙工商品库',
+                            parentName: '好橙工',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/crm/shopMall/productLibrary/list.vue')
                     }
                 ]
             }
