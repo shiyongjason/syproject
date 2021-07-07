@@ -11,8 +11,8 @@ export const findFundInfo = (params) => {
     return axios.get(`${B2bUrl}fund/boss/fund/apply/${params.id}`, { params })
 }
 // 资金审核
-export const findFund = (params) => {
-    return axios.post(`${B2bUrl}fund/boss/fund/apply/verify`, { params })
+export const checkFund = (params) => {
+    return axios.post(`${B2bUrl}fund/boss/fund/apply/verify`, params)
 }
 // 代采订单审核列表
 export const findAuditFundList = (params) => {
