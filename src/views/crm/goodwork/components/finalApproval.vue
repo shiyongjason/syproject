@@ -932,7 +932,6 @@ export default class FinalApproval extends Vue {
 
     async _finalApprove (val) {
         this.lastDialog = true
-
         this.lastForm.remark = this.baseInfoForm.remark
         this.type = val
         this.$nextTick(() => {
@@ -950,7 +949,7 @@ export default class FinalApproval extends Vue {
                         updateByMobile: JSON.parse(sessionStorage.getItem('userInfo') || '').phoneNumber
                     })
                     this.$emit('onCompsback')
-                    this.$emit('onBackLoad', false)
+                    this.$emit('onBackLoad', false, this.resolutionDetail.resolutionStatus)
                 } else {
                     await initiateDing({ projectId: this.finalFormID,
                         remark: this.lastForm.remark,
@@ -958,7 +957,7 @@ export default class FinalApproval extends Vue {
                         updateByMobile: JSON.parse(sessionStorage.getItem('userInfo') || '').phoneNumber
                     })
                     this.$emit('onCompsback')
-                    this.$emit('onBackLoad', false)
+                    this.$emit('onBackLoad', false, this.resolutionDetail.resolutionStatus)
                 }
             }
         })

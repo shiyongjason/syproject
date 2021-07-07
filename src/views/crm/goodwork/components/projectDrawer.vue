@@ -44,7 +44,7 @@
             </template>
             <template #btn>
                 <div class="drawer-button" v-if="isShowFoot">
-                    <template v-if="activeName==='4'&&status == 11">
+                    <template v-if="activeName==='4'&&status == 11&&resolutionStatus==2">
                         <h-button @click="onFinalApprove(1)" v-if="hosAuthCheck(newAuth.CRM_WORK_FINAL_NOPASS)">终审不通过</h-button>
                         <h-button type="primary" @click="onFinalApprove(2)" v-if="hosAuthCheck(newAuth.CRM_WORK_FINAL_PASS)">发起评审决议审批流</h-button>
                     </template>
@@ -89,6 +89,7 @@ export default {
     },
     data () {
         return {
+            resolutionStatus: '',
             showPacking: null,
             newAuth,
             loading: false,
@@ -398,8 +399,9 @@ export default {
             this.showPacking = false
             window.location.href = data
         },
-        onBackLoad (val) {
+        onBackLoad (val, res) {
             this.loading = val
+            this.resolutionStatus = res || ''
         },
         onFinalApprove (val) {
             this.$refs.finalApproval._finalApprove(val)
