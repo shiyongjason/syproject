@@ -516,6 +516,19 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/crm/shopMall/productLibrary/list.vue')
+                    },
+                    {
+                        path: 'spuEdit',
+                        name: 'spuEdit',
+                        meta: {
+                            title: 'SPU编辑',
+                            tagName: 'SPU编辑',
+                            parentName: '好橙工',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/goodwork/commodityManagement/productLibrary'
+                        },
+                        component: () => import('@/views/crm/shopMall/productLibrary/spuEdit.vue')
                     }
                 ]
             }

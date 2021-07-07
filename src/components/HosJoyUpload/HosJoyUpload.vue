@@ -225,10 +225,12 @@ export default {
                 this.previewSrcList = tempArr.map(item => {
                     return item.fileUrl
                 })
-                const pre = this.$refs[`preview_${index}`]
-                if (pre && pre[0]) {
-                    pre[0].clickHandler()
-                }
+                this.$nextTick(() => {
+                    const pre = this.$refs[`preview_${index}`]
+                    if (pre && pre[0]) {
+                        pre[0].clickHandler()
+                    }
+                })
             } else {
                 window.open(item.fileUrl)
             }
@@ -274,7 +276,7 @@ export default {
     width: 130px;
     height: 120px;
     border-radius: 6px;
-    background: rgba(250, 250, 250, 1);
+    background: #fbfdff;
     border: 1px dashed #c0ccda;
     box-sizing: border-box;
     text-align: center;

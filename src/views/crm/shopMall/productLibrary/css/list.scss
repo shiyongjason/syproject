@@ -9,4 +9,29 @@
     .search-btn{
         margin-left: 25px;
     }
+    
+}
+.crmshopMallSpuEdit{
+    /deep/.elupload{
+        margin-top: 0px;
+    }
+    /deep/.default-pre-view{
+        margin-top: 0px;
+        margin-right: 0px;
+    }
+    
+}
+/deep/.vicepics{
+    .default-pre-view{
+        margin-top: 0px;
+        margin-right: 8px;
+    }
+}
+/deep/.productPicture{
+    display: flex;
+}
+.SpuEdit{
+    .el-form .el-input{
+        width: 340px;
+    }
 }
