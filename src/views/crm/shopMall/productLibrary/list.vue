@@ -15,6 +15,7 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
+                    {{JSON.stringify(queryParams.categoryIdArr)}}
                     <div class="query-col__label">商品类目：</div>
                     <div class="query-col__input">
                         <el-cascader :options="categoryOptions" :props="props" multiple collapse-tags v-model="queryParams.categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
