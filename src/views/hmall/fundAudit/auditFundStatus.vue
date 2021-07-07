@@ -60,14 +60,14 @@
                 </div>
             </div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true' :isfiexd="'right'">
-                <template slot="merchantType" slot-scope="scope">
-                    {{paragraphStatusMap.get(scope.data.row.merchantType) || '-'}}
+                <template slot="allocateStatus" slot-scope="scope">
+                    {{paragraphStatusMap.get(scope.data.row.allocateStatus) || '-'}}
                 </template>
-                <template slot="isAuthentication" slot-scope="scope">
-                    {{fundStatusMap.get(scope.data.row.isAuthentication)}}}
+                <template slot="fundStatus" slot-scope="scope">
+                    {{fundStatusMap.get(scope.data.row.fundStatus)}}}
                 </template>
-                <template slot="openingStatus" slot-scope="scope">
-                    {{goodsStatusMap.get(scope.data.row.openingStatus)}}
+                <template slot="goodsStatus" slot-scope="scope">
+                    {{goodsStatusMap.get(scope.data.row.goodsStatus)}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onseeTask(scope.data.row)">查看</h-button>

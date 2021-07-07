@@ -100,32 +100,32 @@ export const SYNCHRONOUS_MAP = new Map([
 // 出款状态
 export const PARAGRAPH_STATUS_OPTIONS = [
     { label: '全部', value: '' },
-    { label: '未采购', value: '1' },
-    { label: '已采购', value: '2' }
+    { label: '未出款', value: '10' },
+    { label: '已出款', value: '20' }
 ]
 export const PARAGRAPH_STATUS_MAP = new Map([
-    [1, '未采购'],
-    [2, '已采购']
+    [10, '未出款'],
+    [20, '已出款']
 ])
 // 资金状态
 export const FUND_STATUS_OPTIONS = [
     { label: '全部', value: '' },
-    { label: '已使用', value: '1' },
-    { label: '未使用', value: '2' }
+    { label: '已使用', value: '20' },
+    { label: '未使用', value: '10' }
 ]
 export const FUND_STATUS_MAP = new Map([
-    [1, '已使用'],
-    [2, '未使用']
+    [20, '已使用'],
+    [10, '未使用']
 ])
 // 货物状态
 export const GOODS_STATUS_OPTIONS = [
     { label: '全部', value: '' },
-    { label: '未入仓', value: '1' },
-    { label: '已入仓', value: '2' }
+    { label: '未入仓', value: '20' },
+    { label: '已入仓', value: '40' }
 ]
 export const GOODS_STATUS_MAP = new Map([
-    [1, '未入仓'],
-    [2, '已入仓']
+    [20, '未入仓'],
+    [40, '已入仓']
 ])
 // 平台确认状态
 export const PLATFORM_STATUS_OPTIONS = [
