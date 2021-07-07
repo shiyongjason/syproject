@@ -173,7 +173,7 @@ export default {
             let form = {}
             form = {
                 id: this.form.id,
-                period: this.period,
+                period: this.form.period,
                 updateBy: this.userInfo.employeeName,
                 status: this.form.status,
                 rejectReason: this.form.rejectReason
@@ -187,7 +187,7 @@ export default {
                             this.btnLoading = false
                             console.log(form)
                             this.$message.success('操作成功！')
-                            this.$router.push('/b2b/product/productAuditList')
+                            this.$router.go(-1)
                             this.setNewTags((this.$route.fullPath).split('?')[0])
                         } catch (error) {
                             this.btnLoading = false
@@ -209,8 +209,8 @@ export default {
         async getInfo () {
             await this.findAuditFundInfo({ id: this.$route.query.id })
             this.form = { ...this.auditFundInfo }
-            this.tableData = { ...this.auditFundInfo.skuList }
-            this.tableLabelLog = { ...this.auditFundInfo.logs }
+            this.tableData = this.auditFundInfo.skuList
+            this.tableLabelLog = this.auditFundInfo.logs
         },
         onChange () {
             this.$nextTick(() => {
@@ -225,9 +225,21 @@ export default {
                 if (index == 0) {
                     sums[index] = '合计'
                 }
-                // 含税金额
                 if (column.property == 'totalAmount') {
-                    sums[index] = this.tableData.totalAmount
+                    const values = data.map(item => {
+                        return Number(item[column.property])
+                    })
+                    if (!values.every(value => isNaN(value))) {
+                        sums[index] = values.reduce((prev, curr) => {
+                            const value = Number(curr)
+                            if (!isNaN(value)) {
+                                return prev + curr
+                            } else {
+                                return prev
+                            }
+                        }, 0)
+                        sums[index] = sums[index] ? sums[index] : '-'
+                    }
                 }
             })
             return sums
