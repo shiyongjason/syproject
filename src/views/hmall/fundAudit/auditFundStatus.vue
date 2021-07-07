@@ -71,22 +71,22 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onseeTask(scope.data.row)">查看</h-button>
-                    <h-button table @click="onParagraph">出款确认</h-button>
-                    <h-button table @click="onGodown">货物到仓确认</h-button>
+                    <h-button table v-if="scope.data.row.allocateStatus == 10" @click="onParagraph(scope.data.row)">出款确认</h-button>
+                    <h-button table v-if="scope.data.row.allocateStatus == 20 && scope.data.row.fundStatus == 10&& scope.data.row.fundStatus == 20&& scope.data.row.goodsStatus == 20&& scope.data.row.goodsStatus == 30" @click="onGodown(scope.data.row)">货物到仓确认</h-button>
                 </template>
             </basicTable>
             <el-dialog title="货物出仓确认" width="500px" :visible.sync="closeOrderDialog" :close-on-click-modal=false>
-                <el-form :model="createform" ref="createform" label-width="180px" class="pt80">
-                    <el-form-item label="请选择货物到仓情况：">
-                        <el-radio-group v-model="createform.merchantType">
-                            <el-radio :label="1">全部到仓</el-radio>
-                            <el-radio :label="2">部分到仓</el-radio>
+                <el-form :model="createform" ref="createform" :rules='rules' label-width="180px" class="pt80">
+                    <el-form-item label="请选择货物到仓情况：" prop="goodsStatus">
+                        <el-radio-group v-model="createform.goodsStatus">
+                            <el-radio :label="40">全部到仓</el-radio>
+                            <el-radio :label="30">部分到仓</el-radio>
                         </el-radio-group>
                     </el-form-item>
                 </el-form>
                 <span slot="footer">
-                    <h-button @click="onCancel">取消</h-button>
-                    <h-button type="primary" @click="onEdit">确定</h-button>
+                    <h-button @click="closeOrderDialog = false">取消</h-button>
+                    <h-button type="primary" @click="onSure">确定</h-button>
                 </span>
             </el-dialog>
 
@@ -96,6 +96,7 @@
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { PARAGRAPH_STATUS_OPTIONS, PARAGRAPH_STATUS_MAP, FUND_STATUS_OPTIONS, FUND_STATUS_MAP, GOODS_STATUS_OPTIONS, GOODS_STATUS_MAP } from './const'
+import { allocateFund, warehouseFund } from './api/index'
 export default {
     name: 'auditFundStatus',
     data () {
@@ -124,7 +125,6 @@ export default {
                 { label: 'mis订单号', prop: 'misOrderNo' },
                 { label: '提交时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '代采订单总金额', prop: 'totalAmount' },
-                { label: '代付款金额', prop: 'openingStatus' },
                 { label: '首付款', prop: 'prepayAmount' },
                 { label: '尾款', prop: 'retainageAmount' },
                 { label: '企业名称', prop: 'companyName' },
@@ -135,11 +135,14 @@ export default {
                 { label: '货物状态', prop: 'goodsStatus' }
             ],
             copyParams: {},
-            closeOrderDialog: false,
-            createform: {
-                id: '',
-                price: ''
-            }
+            closeOrderDialog: true,
+            createform: {},
+            rules: {
+                goodsStatus: [
+                    { required: true, message: '请选择货物到仓情况', trigger: 'change' }
+                ]
+            },
+            statusId: ''
         }
     },
     computed: {
@@ -187,16 +190,6 @@ export default {
             this.queryParams = { ...this.copyParams }
             this.getStatusFundList()
         },
-        onSave () { },
-        onTab (value) {
-            this.queryParams.pageNumber = 1
-            // this.orderStatusOptions.map(item => {
-            //     if (value.name == item.value) {
-            //         this.queryParams.status = item.value
-            //     }
-            // })
-            // this.findFreightOrders(this.queryParams)
-        },
         ...mapActions({
             findStatusFund: 'fundAudit/findStatusFund'
         }),
@@ -211,26 +204,40 @@ export default {
         onseeTask (val) {
             this.$router.push({ path: '/fundAudit/statusFundInfo', query: { id: val.id, pageType: auditFundStatus } })
         },
-        onParagraph () {
+        onParagraph (val) {
             this.$confirm(`是否确认出款`, '出款确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消'
             }).then(async () => {
-                // await cashWithdrawal(this.reqWithdraw)
-                // this.withdrawalSuccess()
+                await allocateFund({
+                    id: val.id,
+                    updateBy: this.userInfo.employeeName
+                })
+                this.getStatusFundList()
             })
         },
         async getStatusFundList () {
             await this.findStatusFund(this.queryParams)
         },
-        onGodown () {
+        onGodown (val) {
+            this.statusId = val.id
             this.closeOrderDialog = true
         },
-        onCancel () {
-            this.closeOrderDialog = false
-        },
-        onEdit () {
-            this.closeOrderDialog = false
+        onSure () {
+            this.$refs.createform.validate(async (valid) => {
+                if (valid) {
+                    try {
+                        await warehouseFund({
+                            id: this.statusId,
+                            updateBy: this.userInfo.employeeName,
+                            goodsStatus: this.createform.goodsStatus
+                        })
+                        this.closeOrderDialog = false
+                    } catch (error) {
+                        this.closeOrderDialog = false
+                    }
+                }
+            })
         }
     }
 }

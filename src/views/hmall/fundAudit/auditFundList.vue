@@ -260,10 +260,10 @@ export default {
             await this.findAuditFundList(this.queryParams)
         },
         onseeTask (val) {
-            this.$router.push({ path: '/fundAudit/listFundInfo', query: { id: val.id, seeTask: true, pageType: auditFundList } })
+            this.$router.push({ path: '/fundAudit/listFundInfo', query: { id: val.id } })
         },
         onCheck (val) {
-            this.$router.push({ path: '/fundAudit/aduitFundInfo', query: { id: val.id, pageType: auditFundList } })
+            this.$router.push({ path: '/fundAudit/aduitFundInfo', query: { id: val.id, check: true } })
         }
     }
 }

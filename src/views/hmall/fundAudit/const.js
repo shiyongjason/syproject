@@ -120,12 +120,14 @@ export const FUND_STATUS_MAP = new Map([
 // 货物状态
 export const GOODS_STATUS_OPTIONS = [
     { label: '全部', value: '' },
-    { label: '未入仓', value: '20' },
-    { label: '已入仓', value: '40' }
+    { label: '未入库', value: '20' },
+    { label: '部分入库', value: '30' },
+    { label: '全部入库', value: '40' }
 ]
 export const GOODS_STATUS_MAP = new Map([
-    [20, '未入仓'],
-    [40, '已入仓']
+    [20, '未入库'],
+    [30, '部分入库'],
+    [40, '全部入库']
 ])
 // 平台确认状态
 export const PLATFORM_STATUS_OPTIONS = [
