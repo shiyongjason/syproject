@@ -46,3 +46,7 @@ export const syncFund = (params) => {
 export const syncMisFund = (params) => {
     return axios.patch(`${B2bUrl}fund/boss/agent/order/${params.id}/sync-fund-to-mis`, { params })
 }
+// 代采订单状态列表
+export const findStatusFund = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/agent/order/confirmed-prepay-page`, { params })
+}

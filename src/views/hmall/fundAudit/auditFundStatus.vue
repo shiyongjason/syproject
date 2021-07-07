@@ -183,11 +183,13 @@ export default {
         }
     },
     mounted () {
-        // this.onFindMlist()
-        // this.onGetbranch()
+        this.init()
         this.copyParams = { ...this.queryParams }
     },
     methods: {
+        init () {
+
+        },
         onQuery () {
             this.queryParams.pageNumber = 1
             // this.findOrders(this.queryParams)
@@ -217,20 +219,6 @@ export default {
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
             // this.onFindMlist()
-        },
-        async onFindMlist (val) {
-            // if (val) this.queryParams.pageNumber = val
-            // await this.findMerchantList(this.queryParams)
-            // this.tableData = this.merchantData.records
-            // this.paginationInfo = {
-            //     total: this.merchantData.total,
-            //     pageNumber: this.merchantData.current,
-            //     pageSize: this.merchantData.size
-            // }
-        },
-        async onGetbranch () {
-            // await this.findBranch()
-            // this.branchArr = this.branchList
         },
         onseeTask (val) {
             this.$router.push({ path: '/fundAudit/statusFundInfo', query: { id: val.id, pageType: auditFundStatus } })

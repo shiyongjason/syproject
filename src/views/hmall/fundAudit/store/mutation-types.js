@@ -6,3 +6,5 @@ export const FUND_INFO = 'FUND_INFO'
 export const AUDIT_FUND_LIST = 'AUDIT_FUND_LIST'
 // 代采订单预付款确认列表
 export const ADVANCE_LIST = 'ADVANCE_LIST'
+// 代采订单状态列表
+export const STATUS_FUND_LIST = 'STATUS_FUND_LIST'
