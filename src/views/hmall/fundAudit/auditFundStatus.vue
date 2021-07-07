@@ -5,13 +5,13 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">代采订单号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.merchantAccount" placeholder="请输入代采订单号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.agentOrderNo" placeholder="请输入代采订单号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">出款状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.isAuthentication">
+                        <el-select v-model="queryParams.allocateStatus">
                             <el-option v-for="item in paragraphStatusOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
@@ -25,23 +25,23 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">管理员账号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.companyName" placeholder="请输入管理员账号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.username" placeholder="请输入管理员账号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">提交时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.registrationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.submitStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.registrationEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.submitEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">资金状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.merchantTypes">
+                        <el-select v-model="queryParams.fundStatus">
                             <el-option v-for="item in fundStatusOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
@@ -49,48 +49,44 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">货物状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.merchantType">
+                        <el-select v-model="queryParams.goodsStatus">
                             <el-option v-for="item in goodsStatusOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <h-button type="primary" @click="onQuery">
-                        查询
-                    </h-button>
-                    <h-button @click="onReset">
-                        重置
-                    </h-button>
+                    <h-button type="primary" @click="onQuery">查询</h-button>
+                    <h-button @click="onReset">重置</h-button>
                 </div>
             </div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true' :isfiexd="'right'">
-                <template slot="merchantType" slot-scope="scope">
-                    {{paragraphStatusMap.get(scope.data.row.merchantType) || '-'}}
+                <template slot="allocateStatus" slot-scope="scope">
+                    {{paragraphStatusMap.get(scope.data.row.allocateStatus) || '-'}}
                 </template>
-                <template slot="isAuthentication" slot-scope="scope">
-                    {{fundStatusMap.get(scope.data.row.isAuthentication)}}}
+                <template slot="fundStatus" slot-scope="scope">
+                    {{fundStatusMap.get(scope.data.row.fundStatus)}}}
                 </template>
-                <template slot="openingStatus" slot-scope="scope">
-                    {{goodsStatusMap.get(scope.data.row.openingStatus)}}
+                <template slot="goodsStatus" slot-scope="scope">
+                    {{goodsStatusMap.get(scope.data.row.goodsStatus)}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onseeTask(scope.data.row)">查看</h-button>
-                    <h-button table @click="onParagraph">出款确认</h-button>
-                    <h-button table @click="onGodown">货物到仓确认</h-button>
+                    <h-button table v-if="scope.data.row.allocateStatus == 10" @click="onParagraph(scope.data.row)">出款确认</h-button>
+                    <h-button table v-if="scope.data.row.allocateStatus == 20 && scope.data.row.fundStatus == 10&& scope.data.row.fundStatus == 20&& scope.data.row.goodsStatus == 20&& scope.data.row.goodsStatus == 30" @click="onGodown(scope.data.row)">货物到仓确认</h-button>
                 </template>
             </basicTable>
             <el-dialog title="货物出仓确认" width="500px" :visible.sync="closeOrderDialog" :close-on-click-modal=false>
-                <el-form :model="createform" ref="createform" label-width="180px" class="pt80">
-                    <el-form-item label="请选择货物到仓情况：">
-                        <el-radio-group v-model="createform.merchantType">
-                            <el-radio :label="1">全部到仓</el-radio>
-                            <el-radio :label="2">部分到仓</el-radio>
+                <el-form :model="createform" ref="createform" :rules='rules' label-width="180px" class="pt80">
+                    <el-form-item label="请选择货物到仓情况：" prop="goodsStatus">
+                        <el-radio-group v-model="createform.goodsStatus">
+                            <el-radio :label="40">全部到仓</el-radio>
+                            <el-radio :label="30">部分到仓</el-radio>
                         </el-radio-group>
                     </el-form-item>
                 </el-form>
                 <span slot="footer">
-                    <h-button @click="onCancel">取消</h-button>
-                    <h-button type="primary" @click="onEdit">确定</h-button>
+                    <h-button @click="closeOrderDialog = false">取消</h-button>
+                    <h-button type="primary" @click="onSure">确定</h-button>
                 </span>
             </el-dialog>
 
@@ -100,6 +96,7 @@
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { PARAGRAPH_STATUS_OPTIONS, PARAGRAPH_STATUS_MAP, FUND_STATUS_OPTIONS, FUND_STATUS_MAP, GOODS_STATUS_OPTIONS, GOODS_STATUS_MAP } from './const'
+import { allocateFund, warehouseFund } from './api/index'
 export default {
     name: 'auditFundStatus',
     data () {
@@ -111,56 +108,51 @@ export default {
             goodsStatusOptions: GOODS_STATUS_OPTIONS,
             goodsStatusMap: GOODS_STATUS_MAP,
             queryParams: {
-                authenticationEndTime: '',
-                authenticationStartTime: '',
+                agentOrderNo: '',
+                allocateStatus: '',
                 companyName: '',
-                isAuthentication: '',
-                isEnabled: '',
-                merchantAccount: '',
-                merchantType: '',
-                merchantTypes: '',
+                username: '',
+                submitStartTime: '',
+                submitEndTime: '',
+                fundStatus: '',
+                goodsStatus: '',
                 pageNumber: 1,
-                pageSize: 10,
-                registrationEndTime: '',
-                registrationStartTime: '',
-                subsectionCode: '',
-                authenticationTime: '',
-                createTime: 'desc',
-                shopName: ''
+                pageSize: 10
             },
             paginationInfo: {},
             tableLabel: [
-                { label: '代采订单号', prop: 'openingStatus' },
-                { label: 'mis订单号', prop: 'openingStatus' },
-                { label: '提交时间', prop: 'registrationTime', formatters: 'dateTimes' },
-                { label: '代采订单总金额', prop: 'openingStatus' },
-                { label: '代付款金额', prop: 'openingStatus' },
-                { label: '首付款', prop: 'openingStatus' },
-                { label: '尾款', prop: 'openingStatus' },
+                { label: '代采订单号', prop: 'agentOrderNo' },
+                { label: 'mis订单号', prop: 'misOrderNo' },
+                { label: '提交时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '代采订单总金额', prop: 'totalAmount' },
+                { label: '首付款', prop: 'prepayAmount' },
+                { label: '尾款', prop: 'retainageAmount' },
                 { label: '企业名称', prop: 'companyName' },
-                { label: '管理员账号', prop: 'adminAccount' },
+                { label: '管理员账号', prop: 'username' },
                 { label: '店铺名称', prop: 'shopName' },
-                { label: '出款状态', prop: 'isAuthentication' },
-                { label: '资金状态', prop: 'openingStatus' },
-                { label: '货物状态', prop: 'openingStatus' }
+                { label: '出款状态', prop: 'allocateStatus' },
+                { label: '资金状态', prop: 'fundStatus' },
+                { label: '货物状态', prop: 'goodsStatus' }
             ],
-            tableData: [],
             copyParams: {},
-            closeOrderDialog: false,
-            createform: {
-                id: '',
-                price: ''
-            }
+            closeOrderDialog: true,
+            createform: {},
+            rules: {
+                goodsStatus: [
+                    { required: true, message: '请选择货物到仓情况', trigger: 'change' }
+                ]
+            },
+            statusId: ''
         }
     },
     computed: {
         ...mapState({
-            // userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            statusFundList: state => state.hmall.fundAudit.statusFundList
         }),
-        ...mapGetters({
-            merchantData: 'merchantData',
-            branchList: 'branchList'
-        }),
+        tableData () {
+            return this.statusFundList.records
+        },
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
@@ -183,75 +175,69 @@ export default {
         }
     },
     mounted () {
-        // this.onFindMlist()
-        // this.onGetbranch()
+        this.init()
         this.copyParams = { ...this.queryParams }
     },
     methods: {
+        init () {
+            this.getStatusFundList()
+        },
         onQuery () {
             this.queryParams.pageNumber = 1
-            // this.findOrders(this.queryParams)
+            this.getStatusFundList()
         },
         onReset () {
             this.queryParams = { ...this.copyParams }
-            // this.findOrders()
-        },
-        onSave () { },
-        onTab (value) {
-            this.queryParams.pageNumber = 1
-            // this.orderStatusOptions.map(item => {
-            //     if (value.name == item.value) {
-            //         this.queryParams.status = item.value
-            //     }
-            // })
-            // this.findFreightOrders(this.queryParams)
+            this.getStatusFundList()
         },
         ...mapActions({
-            // findMerchantList: 'findMerchantList',
-            // findBranch: 'findBranch'
+            findStatusFund: 'fundAudit/findStatusFund'
         }),
         handleSizeChange (val) {
             this.queryParams.pageSize = val
-            // this.onFindMlist()
+            this.getStatusFundList()
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            // this.onFindMlist()
-        },
-        async onFindMlist (val) {
-            // if (val) this.queryParams.pageNumber = val
-            // await this.findMerchantList(this.queryParams)
-            // this.tableData = this.merchantData.records
-            // this.paginationInfo = {
-            //     total: this.merchantData.total,
-            //     pageNumber: this.merchantData.current,
-            //     pageSize: this.merchantData.size
-            // }
-        },
-        async onGetbranch () {
-            // await this.findBranch()
-            // this.branchArr = this.branchList
+            this.getStatusFundList()
         },
         onseeTask (val) {
             this.$router.push({ path: '/fundAudit/statusFundInfo', query: { id: val.id, pageType: auditFundStatus } })
         },
-        onParagraph () {
+        onParagraph (val) {
             this.$confirm(`是否确认出款`, '出款确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消'
             }).then(async () => {
-                // await cashWithdrawal(this.reqWithdraw)
-                // this.withdrawalSuccess()
+                await allocateFund({
+                    id: val.id,
+                    updateBy: this.userInfo.employeeName
+                })
+                this.getStatusFundList()
             })
         },
-        onGodown () {
+        async getStatusFundList () {
+            await this.findStatusFund(this.queryParams)
+        },
+        onGodown (val) {
+            this.statusId = val.id
             this.closeOrderDialog = true
         },
-        onCancel () {
-            this.closeOrderDialog = false
-        },
-        onEdit () {
-            this.closeOrderDialog = false
+        onSure () {
+            this.$refs.createform.validate(async (valid) => {
+                if (valid) {
+                    try {
+                        await warehouseFund({
+                            id: this.statusId,
+                            updateBy: this.userInfo.employeeName,
+                            goodsStatus: this.createform.goodsStatus
+                        })
+                        this.closeOrderDialog = false
+                    } catch (error) {
+                        this.closeOrderDialog = false
+                    }
+                }
+            })
         }
     }
 }

@@ -55,7 +55,7 @@
                     <el-input type="textarea" v-model="form.note" style="width:500px" rows="6" disabled>
                     </el-input>
                 </el-form-item>
-                <template v-if="seeTask">
+                <template v-if="check">
                     <el-form-item label="订单最终回款日期：" prop="period" :rules="form.status=='20'?rules.period:{}">
                         <el-input class="form-input_big" v-model="form.period" maxlength="10">
                             <template slot="suffix">天</template>
@@ -73,13 +73,13 @@
                         </el-form-item>
                     </div>
                 </template>
-                <basicTable :tableData="tableDataLog" :tableLabel="tableLabelLog" :isMultiple="false" class="mt20 mb20" v-if="pageType == 'auditFundStatus'">
+                <basicTable :tableData="tableDataLog" :tableLabel="tableLabelLog" :isMultiple="false" class="mt20 mb20" v-if="auditFundStatus">
                 </basicTable>
             </el-form>
         </div>
         <div class="page-body-cont btn-cont fr">
             <h-button @click="onCancel()">取消</h-button>
-            <h-button type='primary' :loading="btnLoading" @click="onSave()" v-if="seeTask">确定</h-button>
+            <h-button type='primary' :loading="btnLoading" @click="onSave()" v-if="check">确定</h-button>
         </div>
     </div>
 </template>
@@ -92,7 +92,6 @@ export default {
     data () {
         return {
             payOptions: PAY_OPTIONS,
-            pageType: '',
             btnLoading: false,
             houseOptions: [],
             form: {},
@@ -152,19 +151,18 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
-            auditFundInfo: state => state.fundAudit.auditFundInfo
+            auditFundInfo: state => state.hmall.fundAudit.auditFundInfo
         }),
-        ...mapGetters({
-            auditFundInfo: 'fundAudit/auditFundInfo'
-        }),
-        seeTask () {
-            return !this.$route.query.seeTask
+        check () {
+            return this.$route.query.check
+        },
+        auditFundStatus () {
+            return this.$route.query.pageType
         }
     },
     methods: {
         init () {
             if (this.$route.query.id) {
-                this.pageType = this.$route.query.pageType
                 this.getInfo()
             }
         },
@@ -198,8 +196,6 @@ export default {
                         this.btnLoading = false
                         this.$message.error('请选择审核结果！')
                     }
-                } else {
-                    this.btnLoading = false
                 }
             })
         },

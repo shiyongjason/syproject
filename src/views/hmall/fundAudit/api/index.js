@@ -46,3 +46,15 @@ export const syncFund = (params) => {
 export const syncMisFund = (params) => {
     return axios.patch(`${B2bUrl}fund/boss/agent/order/${params.id}/sync-fund-to-mis`, { params })
 }
+// 代采订单状态列表
+export const findStatusFund = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/agent/order/confirmed-prepay-page`, { params })
+}
+// 代采订单出款确认
+export const allocateFund = (params) => {
+    return axios.patch(`${B2bUrl}fund/boss/agent/order/confirm-allocate`, { params })
+}
+// 代采订单货物到仓确认
+export const warehouseFund = (params) => {
+    return axios.patch(`${B2bUrl}fund/boss/agent/order/confirm-in-warehouse`, { params })
+}
