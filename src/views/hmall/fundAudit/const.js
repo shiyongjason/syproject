@@ -60,18 +60,18 @@ export const AUDIT_TAB_OPTIONS = [
 // 预付款状态
 export const PAYMENT_STATUS_OPTIONS = [
     { label: '全部', value: '' },
-    { label: '已支付', value: '1' },
-    { label: '未支付', value: '2' }
+    { label: '已支付', value: '20' },
+    { label: '未支付', value: '10' }
 ]
 export const PAYMENT_STATUS_MAP = new Map([
-    [1, '已支付'],
-    [2, '未支付']
+    [20, '已支付'],
+    [10, '未支付']
 ])
 // 订单状态
 export const ORDER_STATUS_OPTIONS = [
     { label: '全部', value: '' },
-    { label: '开启', value: '1' },
-    { label: '关闭', value: '2' }
+    { label: '开启', value: true },
+    { label: '关闭', value: false }
 ]
 export const ORDER_STATUS_MAP = new Map([
     [1, '开启'],
@@ -80,22 +80,22 @@ export const ORDER_STATUS_MAP = new Map([
 // 订单同步状态
 export const ORDER_SYNCHRONOUS_OPTIONS = [
     { label: '全部', value: '' },
-    { label: '已同步', value: '1' },
-    { label: '未同步', value: '2' }
+    { label: '已同步', value: '40' },
+    { label: '未同步', value: '10' }
 ]
 export const ORDER_SYNCHRONOUS_MAP = new Map([
-    [1, '已同步'],
-    [2, '未同步']
+    [40, '已同步'],
+    [10, '未同步']
 ])
 // 资金同步状态
 export const SYNCHRONOUS_OPTIONS = [
     { label: '全部', value: '' },
-    { label: '已同步', value: '1' },
-    { label: '未同步', value: '2' }
+    { label: '已同步', value: '20' },
+    { label: '未同步', value: '10' }
 ]
 export const SYNCHRONOUS_MAP = new Map([
-    [1, '已同步'],
-    [2, '未同步']
+    [20, '已同步'],
+    [10, '未同步']
 ])
 // 出款状态
 export const PARAGRAPH_STATUS_OPTIONS = [

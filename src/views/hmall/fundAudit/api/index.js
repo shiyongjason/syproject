@@ -30,3 +30,19 @@ export const findAuditFundInfo = (params) => {
 export const findAdvanceList = (params) => {
     return axios.get(`${B2bUrl}fund/boss/agent/order/confirm-prepay-page`, { params })
 }
+// 代采订单预付款确认
+export const sureFund = (params) => {
+    return axios.patch(`${B2bUrl}fund/boss/agent/order/confirm-prepay`, { params })
+}
+// 代采订单预付款关闭
+export const closeFund = (params) => {
+    return axios.patch(`${B2bUrl}fund/boss/agent/order/close`, { params })
+}
+// 代采订单预付款订单同步
+export const syncFund = (params) => {
+    return axios.patch(`${B2bUrl}fund/boss/agent/order/${params.id}/sync-to-mis`, { params })
+}
+// 代采订单预付款资金同步
+export const syncMisFund = (params) => {
+    return axios.patch(`${B2bUrl}fund/boss/agent/order/${params.id}/sync-fund-to-mis`, { params })
+}

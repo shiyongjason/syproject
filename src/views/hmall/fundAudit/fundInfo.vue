@@ -55,7 +55,7 @@
                     <el-input type="textarea" v-model="form.note" style="width:500px" rows="6" disabled>
                     </el-input>
                 </el-form-item>
-                <template v-if="seeTask == false">
+                <template v-if="seeTask">
                     <el-form-item label="订单最终回款日期：" prop="period" :rules="form.status=='20'?rules.period:{}">
                         <el-input class="form-input_big" v-model="form.period" maxlength="10">
                             <template slot="suffix">天</template>
@@ -79,7 +79,7 @@
         </div>
         <div class="page-body-cont btn-cont fr">
             <h-button @click="onCancel()">取消</h-button>
-            <h-button type='primary' :loading="btnLoading" @click="onSave()" v-if="seeTask == false">确定</h-button>
+            <h-button type='primary' :loading="btnLoading" @click="onSave()" v-if="seeTask">确定</h-button>
         </div>
     </div>
 </template>
@@ -92,7 +92,6 @@ export default {
     data () {
         return {
             payOptions: PAY_OPTIONS,
-            seeTask: false,
             pageType: '',
             btnLoading: false,
             houseOptions: [],
@@ -103,10 +102,10 @@ export default {
                         required: true,
                         validator: (rule, value, callback) => {
                             const Reg = /^\+?[1-9]{1}[0-9]{0,2}\d{0,0}$/
-                            if (!this.form.period) {
+                            if (!value) {
                                 return callback(new Error('请输入最终回款期限'))
                             }
-                            if (this.form.period && !Reg.test(this.form.period)) {
+                            if (value && !Reg.test(value)) {
                                 return callback(new Error('请填写大于0的整数，最大值999'))
                             }
                             return callback()
@@ -122,7 +121,7 @@ export default {
                     {
                         required: true,
                         validator: (rule, value, callback) => {
-                            if (this.form.auditOpinion && this.form.auditOpinion.replace(/\s/g, '').length < 1) {
+                            if (value && value.replace(/\s/g, '').length < 1) {
                                 return callback(new Error('请填写理由说明'))
                             }
                             return callback()
@@ -143,9 +142,9 @@ export default {
             ],
             tableData: [],
             tableLabelLog: [
-                { label: '时间', prop: 'spuCode' },
-                { label: '操作人', prop: 'spuName' },
-                { label: '操作内容', prop: 'brandName' }
+                { label: '时间', prop: 'createTime' },
+                { label: '操作人', prop: 'operator' },
+                { label: '操作内容', prop: 'operateMotion' }
             ],
             tableDataLog: []
         }
@@ -157,12 +156,14 @@ export default {
         }),
         ...mapGetters({
             auditFundInfo: 'fundAudit/auditFundInfo'
-        })
+        }),
+        seeTask () {
+            return !this.$route.query.seeTask
+        }
     },
     methods: {
         init () {
             if (this.$route.query.id) {
-                this.seeTask = JSON.parse(this.$route.query.seeTask)
                 this.pageType = this.$route.query.pageType
                 this.getInfo()
             }
@@ -213,6 +214,7 @@ export default {
             await this.findAuditFundInfo({ id: this.$router.query.id })
             this.form = { ...this.auditFundInfo }
             this.tableData = { ...this.auditFundInfo.skuList }
+            this.tableLabelLog = { ...this.auditFundInfo.logs }
         },
         onChange () {
             this.$nextTick(() => {

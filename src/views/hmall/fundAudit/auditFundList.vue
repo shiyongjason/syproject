@@ -272,7 +272,7 @@ export default {
             this.$router.push({ path: '/fundAudit/listFundInfo', query: { id: val.id, seeTask: true, pageType: auditFundList } })
         },
         onAudit (val) {
-            this.$router.push({ path: '/fundAudit/aduitFundInfo', query: { id: val.id, seeTask: false, pageType: auditFundList } })
+            this.$router.push({ path: '/fundAudit/aduitFundInfo', query: { id: val.id, pageType: auditFundList } })
         }
     }
 }

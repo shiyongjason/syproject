@@ -102,10 +102,11 @@
                     {{synchronousMap.get(scope.data.row.fundSyncStatus)}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table v-if="scope.data.row.isAuthentication == 2" @click="onSure(scope.data.row)">确认</h-button>
+                    <h-button table v-if="scope.data.row.prepayStatus == 10" @click="onSure(scope.data.row)">确认</h-button>
                     <h-button table @click="onseeTask(scope.data.row)">查看</h-button>
-                    <h-button table @click="onClose(scope.data.row)">关闭</h-button>
-                    <h-button table @click="onAudit(scope.data.row)">订单同步资金同步</h-button>
+                    <h-button table v-if="scope.data.row.orderSyncStatus == 10" @click="onAudit(scope.data.row)">订单同步</h-button>
+                    <h-button table v-if="scope.data.row.fundSyncStatus == 10" @click="onFund(scope.data.row)">资金同步</h-button>
+                    <h-button table v-if="scope.data.row.orderSwitch == 1" @click="onClose(scope.data.row)">关闭</h-button>
                 </template>
             </basicTable>
         </div>
@@ -114,6 +115,7 @@
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { PAYMENT_STATUS_OPTIONS, PAYMENT_STATUS_MAP, ORDER_STATUS_OPTIONS, ORDER_STATUS_MAP, ORDER_SYNCHRONOUS_OPTIONS, ORDER_SYNCHRONOUS_MAP, SYNCHRONOUS_OPTIONS, SYNCHRONOUS_MAP } from './const'
+import { sureFund, closeFund, syncFund, syncMisFund } from './api/index'
 export default {
     name: 'advancePayment',
     data () {
@@ -245,16 +247,45 @@ export default {
             this.findAdvanceList()
         },
         onseeTask (val) {
-            this.$router.push({ path: '/fundAudit/advanceFundInfo', query: { id: val, pageType: advancePayment } })
+            this.$router.push({ path: '/fundAudit/advanceFundInfo', query: { id: val.id, seeTask: true } })
         },
-        onAudit () {
-            this.findAdvanceList()
+        async onFund (val) {
+            try {
+                await syncMisFund(val.id)
+                this.findAdvanceList()
+            } catch (e) {
+                this.findAdvanceList()
+            }
         },
-        onSure () {
-            this.findAdvanceList()
+        async onAudit (val) {
+            try {
+                await syncFund(val.id)
+                this.findAdvanceList()
+            } catch (e) {
+                this.findAdvanceList()
+            }
         },
-        onClose () {
-            this.findAdvanceList()
+        async onSure (val) {
+            try {
+                await sureFund({
+                    id: val.id,
+                    updateBy: this.userInfo.employeeName
+                })
+                this.findAdvanceList()
+            } catch (e) {
+                this.findAdvanceList()
+            }
+        },
+        async onClose (val) {
+            try {
+                await closeFund({
+                    id: val.id,
+                    updateBy: this.userInfo.employeeName
+                })
+                this.findAdvanceList()
+            } catch (e) {
+                this.findAdvanceList()
+            }
         }
     }
 }
