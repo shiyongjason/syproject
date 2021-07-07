@@ -64,3 +64,15 @@ export const findPrepayRepay = (params) => {
 export const findRepayStatist = (params) => {
     return axios.get(`${B2bUrl}fund/boss/repay/statistics`, { params })
 }
+// 资金申请详情
+export const findApplyList = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/fund/apply`, { params })
+}
+// 资金代付,占用详情
+export const findPrepayList = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/agent/order/occupation`, { params })
+}
+// 资金回款详情
+export const findOccupationList = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/repay`, { params })
+}

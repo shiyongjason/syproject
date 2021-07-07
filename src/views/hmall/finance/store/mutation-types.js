@@ -24,3 +24,9 @@ export const OFFLINE_REPAY_LIST = 'OFFLINE_REPAY_LIST'
 export const PREPAY_REPAY_LIST = 'PREPAY_REPAY_LIST'
 // 资金代采 交易记录统计
 export const REPAY_STATIST_INFO = 'REPAY_STATIST_INFO'
+// 资金申请详情
+export const APPLY_LIST = 'APPLY_LIST'
+// 资金代付,占用详情
+export const PREPAY_LIST = 'PREPAY_LIST'
+// 资金回款详情
+export const OCCUPATION_LIST = 'OCCUPATION_LIST'

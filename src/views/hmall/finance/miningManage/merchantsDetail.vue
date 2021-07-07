@@ -565,10 +565,10 @@ export default {
         },
         // 跳转商家详情
         onInfo (val, page) {
-            if (page == 'creditLimit') {
-                this.$router.push({ path: '/b2b/finance/merchantBehalf', query: { id: val } })
-            } else if (page == 'creditLimit') {
-
+            if (page == 'overdueAmount') {
+                this.$router.push({ path: '/b2b/finance/merchantBehalf', query: { id: val.overdue, page: page } })
+            } else {
+                this.$router.push({ path: '/b2b/finance/merchantBehalf', query: { id: val.overdue, page: page } })
             }
         },
         // 商家明细合计

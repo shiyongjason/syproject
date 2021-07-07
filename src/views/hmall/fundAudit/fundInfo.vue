@@ -20,8 +20,8 @@
                     <span class="table-title-name">采购入仓仓库及收货人</span>
                 </div>
                 <div style="display:flex;flex-wrap: wrap;">
-                    <el-form-item label="选择仓库：" prop="warehouse">
-                        <el-select v-model="form.warehouse" disabled>
+                    <el-form-item label="选择仓库：" prop="warehouseName">
+                        <el-select v-model="form.warehouseName" disabled>
                             <el-option v-for="item in houseOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </el-form-item>

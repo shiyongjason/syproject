@@ -61,7 +61,7 @@
                     {{paragraphStatusMap.get(scope.data.row.allocateStatus) || '-'}}
                 </template>
                 <template slot="fundStatus" slot-scope="scope">
-                    {{fundStatusMap.get(scope.data.row.fundStatus)}}}
+                    {{fundStatusMap.get(scope.data.row.fundStatus)}}
                 </template>
                 <template slot="goodsStatus" slot-scope="scope">
                     {{goodsStatusMap.get(scope.data.row.goodsStatus)}}

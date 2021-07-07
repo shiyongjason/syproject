@@ -1,6 +1,6 @@
 
 import * as types from './mutation-types'
-import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo, findMerchant, findMerchantStatist, findOnlineRepay, findOfflineRepay, findPrepayRepay, findRepayStatist } from '../api'
+import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo, findMerchant, findMerchantStatist, findOnlineRepay, findOfflineRepay, findPrepayRepay, findRepayStatist, findApplyList, findPrepayList, findOccupationList } from '../api'
 
 const state = {
     // 服务费收取明细
@@ -30,7 +30,13 @@ const state = {
     // 交易记录预付款
     prepayRepayList: [],
     // 交易记录统计
-    repayStatistInfo: {}
+    repayStatistInfo: {},
+    // 资金申请详情
+    applyList: {},
+    // 资金代付,占用详情
+    prepayList: {},
+    // 资金回款详情
+    occupationList: {}
 }
 
 const getters = {
@@ -46,7 +52,10 @@ const getters = {
     onlineRepayList: state => state.onlineRepayList,
     offlineRepayList: state => state.offlineRepayList,
     prepayRepayList: state => state.prepayRepayList,
-    repayStatistInfo: state => state.repayStatistInfo
+    repayStatistInfo: state => state.repayStatistInfo,
+    applyList: state => state.applyList,
+    prepayList: state => state.prepayList,
+    occupationList: state => state.occupationList
 }
 
 const mutations = {
@@ -88,6 +97,15 @@ const mutations = {
     },
     [types.REPAY_STATIST_INFO] (state, payload) {
         state.repayStatistInfo = payload
+    },
+    [types.APPLY_LIST] (state, payload) {
+        state.applyList = payload
+    },
+    [types.PREPAY_LIST] (state, payload) {
+        state.prepayList = payload
+    },
+    [types.OCCUPATION_LIST] (state, payload) {
+        state.occupationList = payload
     }
 }
 
@@ -143,6 +161,18 @@ const actions = {
     async findRepayStatist ({ commit }, params) {
         const { data } = await findRepayStatist(params)
         commit(types.REPAY_STATIST_INFO, data)
+    },
+    async findApplyList ({ commit }, params) {
+        const { data } = await findApplyList(params)
+        commit(types.APPLY_LIST, data)
+    },
+    async findPrepayList ({ commit }, params) {
+        const { data } = await findPrepayList(params)
+        commit(types.PREPAY_LIST, data)
+    },
+    async findOccupationList ({ commit }, params) {
+        const { data } = await findOccupationList(params)
+        commit(types.OCCUPATION_LIST, data)
     }
 }
 
