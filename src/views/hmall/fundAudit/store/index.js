@@ -1,6 +1,6 @@
 
 import * as types from './mutation-types'
-import { findFundList, findFundInfo, findAuditFundList, findAuditFundInfo, findAdvanceList, findStatusFund, findPrepayment, warehouseFund, prepaymentRepay } from '../api'
+import { findFundList, findFundInfo, findAuditFundList, findAuditFundInfo, findAdvanceList, findStatusFund, findPrepayment } from '../api'
 
 const state = {
     fundList: [], // 资金申请审核列表

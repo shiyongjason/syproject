@@ -44,21 +44,15 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">提交时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.submitTimeFrom" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.submitTimeTo" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
+                        <el-date-picker v-model="queryParams.submitTimeFrom" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart"></el-date-picker>
+                        <el-date-picker v-model="queryParams.submitTimeTo" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">确认时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.platformConfirmTimeFrom" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerStart">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.platformConfirmTimeTo" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerEnd">
-                        </el-date-picker>
+                        <el-date-picker v-model="queryParams.platformConfirmTimeFrom" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
+                        <el-date-picker v-model="queryParams.platformConfirmTimeTo" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -118,7 +112,6 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
-            paginationInfo: {},
             tableLabel: [
                 { label: '代采订单号', prop: 'agentOrderNo' },
                 { label: 'mis订单号', prop: 'misOrderNo' },
@@ -135,7 +128,7 @@ export default {
                 { label: '备注', prop: 'rejectReason' }
             ],
             copyParams: {},
-            closeOrderDialog: true,
+            closeOrderDialog: false,
             form: {},
             sureId: '',
             rules: {
@@ -163,6 +156,13 @@ export default {
             userInfo: state => state.userInfo,
             prepaymentList: state => state.hmall.fundAudit.prepaymentList
         }),
+        paginationInfo () {
+            return {
+                total: this.prepaymentList.total,
+                pageNumber: this.prepaymentList.current,
+                pageSize: this.prepaymentList.size
+            }
+        },
         tableData () {
             return this.prepaymentList.records
         },
@@ -181,7 +181,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.submitTimeFrom
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                        return time.getTime() <= new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -201,7 +201,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.platformConfirmTimeFrom
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                        return time.getTime() <= new Date(beginDateVal).getTime()
                     }
                 }
             }

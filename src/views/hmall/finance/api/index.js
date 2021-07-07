@@ -40,3 +40,27 @@ export const findProductsInfo = (params) => {
 }
 // 查询所有类目
 export const findAllCategory = (params) => axios.get(B2bUrl + 'product/api/categories/tree', { params })
+// 资金代采 商家明细
+export const findMerchant = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/fund`, { params })
+}
+// 资金代采 商家明细统计
+export const findMerchantStatist = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/fund/statistics`, { params })
+}
+// 资金代采 交易记录线上回款
+export const findOnlineRepay = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/repay/online-page`, { params })
+}
+// 资金代采 交易记录线下回款
+export const findOfflineRepay = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/repay/offline-page`, { params })
+}
+// 资金代采 交易记录预付款
+export const findPrepayRepay = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/repay/prepay-page`, { params })
+}
+// 资金代采 交易记录统计
+export const findRepayStatist = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/repay/statistics`, { params })
+}

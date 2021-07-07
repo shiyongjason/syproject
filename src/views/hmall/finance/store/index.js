@@ -1,6 +1,6 @@
 
 import * as types from './mutation-types'
-import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo } from '../api'
+import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo, findMerchant, findMerchantStatist, findOnlineRepay, findOfflineRepay, findPrepayRepay, findRepayStatist } from '../api'
 
 const state = {
     // 服务费收取明细
@@ -18,7 +18,19 @@ const state = {
     // 营销列表
     marketingList: [],
     // 商品明细列表信息
-    productsInfo: {}
+    productsInfo: {},
+    // 资金代采 商家明细
+    merchantList: [],
+    // 资金代采 商家明细统计
+    merchantStatistInfo: {},
+    // 交易记录线上回款
+    onlineRepayList: [],
+    // 交易记录线下回款
+    offlineRepayList: [],
+    // 交易记录预付款
+    prepayRepayList: [],
+    // 交易记录统计
+    repayStatistInfo: {}
 }
 
 const getters = {
@@ -28,7 +40,13 @@ const getters = {
     bankCardInfo: state => state.bankCardInfo,
     orderList: state => state.orderList,
     marketingList: state => state.marketingList,
-    productsInfo: state => state.productsInfo
+    productsInfo: state => state.productsInfo,
+    merchantList: state => state.merchantList,
+    merchantStatistInfo: state => state.merchantStatistInfo,
+    onlineRepayList: state => state.onlineRepayList,
+    offlineRepayList: state => state.offlineRepayList,
+    prepayRepayList: state => state.prepayRepayList,
+    repayStatistInfo: state => state.repayStatistInfo
 }
 
 const mutations = {
@@ -52,6 +70,24 @@ const mutations = {
     },
     [types.PRODUCTS_INFO] (state, payload) {
         state.productsInfo = payload
+    },
+    [types.MERCHANT_LIST] (state, payload) {
+        state.merchantList = payload
+    },
+    [types.MERCHANT_STATIST_INFO] (state, payload) {
+        state.merchantStatistInfo = payload
+    },
+    [types.ONLINE_REPAY_LIST] (state, payload) {
+        state.onlineRepayList = payload
+    },
+    [types.OFFLINE_REPAY_LIST] (state, payload) {
+        state.offlineRepayList = payload
+    },
+    [types.PREPAY_REPAY_LIST] (state, payload) {
+        state.prepayRepayList = payload
+    },
+    [types.REPAY_STATIST_INFO] (state, payload) {
+        state.repayStatistInfo = payload
     }
 }
 
@@ -83,6 +119,30 @@ const actions = {
     async findProductsInfo ({ commit }, params) {
         const { data } = await findProductsInfo(params)
         commit(types.PRODUCTS_INFO, data)
+    },
+    async findMerchant ({ commit }, params) {
+        const { data } = await findMerchant(params)
+        commit(types.MERCHANT_LIST, data)
+    },
+    async findMerchantStatist ({ commit }, params) {
+        const { data } = await findMerchantStatist(params)
+        commit(types.MERCHANT_STATIST_INFO, data)
+    },
+    async findOnlineRepay ({ commit }, params) {
+        const { data } = await findOnlineRepay(params)
+        commit(types.ONLINE_REPAY_LIST, data)
+    },
+    async findOfflineRepay ({ commit }, params) {
+        const { data } = await findOfflineRepay(params)
+        commit(types.OFFLINE_REPAY_LIST, data)
+    },
+    async findPrepayRepay ({ commit }, params) {
+        const { data } = await findPrepayRepay(params)
+        commit(types.PREPAY_REPAY_LIST, data)
+    },
+    async findRepayStatist ({ commit }, params) {
+        const { data } = await findRepayStatist(params)
+        commit(types.REPAY_STATIST_INFO, data)
     }
 }
 

@@ -207,7 +207,7 @@ export default {
             setNewTags: 'setNewTags'
         }),
         async getInfo () {
-            await this.findAuditFundInfo({ id: this.$router.query.id })
+            await this.findAuditFundInfo({ id: this.$route.query.id })
             this.form = { ...this.auditFundInfo }
             this.tableData = { ...this.auditFundInfo.skuList }
             this.tableLabelLog = { ...this.auditFundInfo.logs }

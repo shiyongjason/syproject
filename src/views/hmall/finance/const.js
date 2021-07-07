@@ -80,11 +80,11 @@ export const CASH_WITHDRAWAL_MAP = new Map([
 export const BUSINESS_DETAIL_OPTIONS = [
     { label: '全部', value: '' },
     { label: '销售回款', value: '1' },
-    { label: '提现', value: '2' }
+    { label: '提现', value: '3' }
 ]
 export const BUSINESS_DETAIL_MAP = new Map([
     [1, '销售回款'],
-    [2, '提现']
+    [3, '提现']
 ])
 // 资金代采商家明细状态
 export const STAUTS_OPTIONS = [
@@ -107,15 +107,16 @@ export const STAUTS_MAP = new Map([
 // 逾期否
 export const OVERDUE_OPTIONS = [
     { label: '全部', value: '' },
-    { label: '是', value: '1' },
-    { label: '否', value: '2' }
+    { label: '是', value: true },
+    { label: '否', value: false }
 ]
 export const OVERDUE_MAP = new Map([
-    [1, '是'],
-    [2, '否']
+    [true, '是'],
+    [false, '否']
 ])
 // 资金状态
 export const CAPITAL_STATUS_OPTIONS = [
+    { label: '全部', value: '0' },
     { label: '未回款', value: '10' },
     { label: '部分汇款', value: '20' },
     { label: '已回款', value: '30' }
@@ -137,8 +138,8 @@ export const CAPITAL_MAP = new Map([
 ])
 // 商家明细 回款期限
 export const DEADLINE_OPTIONS = [
-    { label: '最近回款日期', value: '10' },
-    { label: '最终回款日期', value: '20' }
+    { label: '最终回款日期', value: '1' },
+    { label: '最近回款日期', value: '2' }
 ]
 // 商家详情 审核时间
 export const ADUITLINE_OPTIONS = [

@@ -10,3 +10,5 @@ export const ADVANCE_LIST = 'ADVANCE_LIST'
 export const STATUS_FUND_LIST = 'STATUS_FUND_LIST'
 // 提前还款确认列表
 export const PREPAYMENT_LIST = 'PREPAYMENT_LIST'
+// 代采订单详情
+export const AUDIT_FUND_INFO = 'AUDIT_FUND_INFO'

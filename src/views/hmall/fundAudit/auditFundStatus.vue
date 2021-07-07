@@ -31,11 +31,8 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">提交时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.submitStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.submitEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
+                        <el-date-picker v-model="queryParams.submitStartTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart"></el-date-picker>
+                        <el-date-picker v-model="queryParams.submitEndTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -119,7 +116,6 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
-            paginationInfo: {},
             tableLabel: [
                 { label: '代采订单号', prop: 'agentOrderNo' },
                 { label: 'mis订单号', prop: 'misOrderNo' },
@@ -154,6 +150,13 @@ export default {
             userInfo: state => state.userInfo,
             statusFundList: state => state.hmall.fundAudit.statusFundList
         }),
+        paginationInfo () {
+            return {
+                total: this.statusFundList.total,
+                pageNumber: this.statusFundList.current,
+                pageSize: this.statusFundList.size
+            }
+        },
         tableData () {
             return this.statusFundList.records
         },
@@ -162,7 +165,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.submitEndTime
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() >= new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -172,7 +175,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.submitStartTime
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() <= new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -206,7 +209,7 @@ export default {
             this.getStatusFundList()
         },
         onseeTask (val) {
-            this.$router.push({ path: '/fundAudit/statusFundInfo', query: { id: val.id, pageType: auditFundStatus } })
+            this.$router.push({ path: '/b2b/fundAudit/statusFundInfo', query: { id: val.id, pageType: auditFundStatus } })
         },
         onParagraph (val) {
             this.$confirm(`是否确认出款`, '出款确认', {

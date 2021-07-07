@@ -31,10 +31,8 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">提交时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.submitStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
-                        <el-date-picker v-model="queryParams.submitEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
+                        <el-date-picker v-model="queryParams.submitStartTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart"></el-date-picker>
+                        <el-date-picker v-model="queryParams.submitEndTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -62,10 +60,8 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">审核时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.auditStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerStart">
-                        </el-date-picker>
-                        <el-date-picker v-model="queryParams.auditEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerEnd">
-                        </el-date-picker>
+                        <el-date-picker v-model="queryParams.auditStartTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
+                        <el-date-picker v-model="queryParams.auditEndTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -179,7 +175,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.submitStartTime
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                        return time.getTime() <= new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -199,7 +195,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.auditStartTime
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                        return time.getTime() <= new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -260,10 +256,10 @@ export default {
             await this.findAuditFundList(this.queryParams)
         },
         onseeTask (val) {
-            this.$router.push({ path: '/fundAudit/listFundInfo', query: { id: val.id } })
+            this.$router.push({ path: '/b2b/fundAudit/auditFundList/listFundInfo', query: { id: val.id } })
         },
         onCheck (val) {
-            this.$router.push({ path: '/fundAudit/aduitFundInfo', query: { id: val.id, check: true } })
+            this.$router.push({ path: '/b2b/fundAudit/aduitFundInfo', query: { id: val.id, check: true } })
         }
     }
 }

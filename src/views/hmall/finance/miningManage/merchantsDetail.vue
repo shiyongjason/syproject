@@ -18,7 +18,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>当前额度<span>（元）</span></p>
-                            <p>{{}}</p>
+                            <p>{{fundDetil.creditLimit}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -27,7 +27,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总代采<span>（元）</span></p>
-                            <p>{{}}</p>
+                            <p>{{fundDetil.totalAmount}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -36,7 +36,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总预付<span>（元）</span></p>
-                            <p>{{}}</p>
+                            <p>{{fundDetil.totalPrepayAmount}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -45,7 +45,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总代付<span>（元）</span></p>
-                            <p>{{}}</p>
+                            <p>{{fundDetil.totalRetainageAmount}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -54,7 +54,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总回款<span>（元）</span></p>
-                            <p>{{}}</p>
+                            <p>{{fundDetil.totalRepayAmount}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -63,7 +63,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>当前占用<span>（元）</span></p>
-                            <p>{{}}</p>
+                            <p>{{fundDetil.occupationAmount}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -72,7 +72,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>当前逾期未还<span>（元）</span></p>
-                            <p>{{}}</p>
+                            <p>{{fundDetil.overdueAmount}}</p>
                         </div>
                     </div>
                 </div>
@@ -83,24 +83,24 @@
                     <div class="query-cont-col">
                         <div class="query-col-title">商家：</div>
                         <div class="query-col-input">
-                            <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入管理员账号或者企业名称"></el-input>
+                            <el-input v-model="queryParams.username" maxlength="50" placeholder="请输入管理员账号或者企业名称"></el-input>
                         </div>
                     </div>
                     <div class="query-cont-col">
                         <div class="query-col-title">
-                            <el-select v-model="queryParams.time" style="width:140px" class="pr10">
+                            <el-select v-model="queryParams.timeQueryType" style="width:140px" class="pr10">
                                 <el-option v-for="item in deadlineOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                             </el-select>
                         </div>
                         <div class="query-col-input">
-                            <el-date-picker v-model="queryParams.updateTimeStart" type="date" placeholder="开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsStart"></el-date-picker>
-                            <el-date-picker v-model="queryParams.updateTimeEnd" type="date" placeholder="结束时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsEnd"></el-date-picker>
+                            <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart"></el-date-picker>
+                            <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59"></el-date-picker>
                         </div>
                     </div>
                     <div class="query-cont-col">
                         <div class="query-col-title">逾期否：</div>
                         <div class="query-col-input">
-                            <el-select v-model="queryParams.yuqi">
+                            <el-select v-model="queryParams.overdue">
                                 <el-option v-for="item in overdueOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                             </el-select>
                         </div>
@@ -108,7 +108,7 @@
                     <div class="query-cont-col">
                         <div class="query-col-title">资金状态：</div>
                         <div class="query-col-input">
-                            <el-select v-model="queryParams.zijinzt">
+                            <el-select v-model="queryParams.fundStatus">
                                 <el-option v-for="item in capitalStatusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </div>
@@ -116,13 +116,36 @@
                     <div class="query-cont-col">
                         <h-button type='primary' @click="onQuery">查询</h-button>
                         <h-button @click="onReset">重置</h-button>
-                        <h-button @click="onExport">导出</h-button>
                     </div>
                 </div>
-                <basicTable :tableData="tableDetailData" :tableLabel="tableDetailLabel" :pagination="paginationDetail" @onCurrentChange="onCurrentChange" :isShowSum="true" :getSum="getSum">
+                <basicTable :tableData="tableDetailData" :tableLabel="tableDetailLabel" :pagination="paginationDetail" @onCurrentChange="onCurrentChange" @onSizeChange="handleSizeChange" :isShowSum="true" :getSum="getSum">
                     <!-- 当前额度 -->
-                    <template slot="attachmentCount" slot-scope="scope">
-                        <a class="isLink" @click="onInfo(scope.data.row.spuId)">{{scope.data.row.attachmentCount}}</a>
+                    <template slot="creditLimit" slot-scope="scope">
+                        <a class="isLink" @click="onInfo(scope.data.row,'creditLimit')">{{scope.data.row.creditLimit}}</a>
+                    </template>
+                    <template slot="totalAmount" slot-scope="scope">
+                        <a class="isLink" @click="onInfo(scope.data.row,'totalAmount')">{{scope.data.row.totalAmount}}</a>
+                    </template>
+                    <template slot="totalPrepayAmount" slot-scope="scope">
+                        <a class="isLink" @click="onInfo(scope.data.row,'totalPrepayAmount')">{{scope.data.row.totalPrepayAmount}}</a>
+                    </template>
+                    <template slot="totalRetaingeAmount" slot-scope="scope">
+                        <a class="isLink" @click="onInfo(scope.data.row,'totalRetaingeAmount')">{{scope.data.row.totalRetaingeAmount}}</a>
+                    </template>
+                    <template slot="totalRepayAmount" slot-scope="scope">
+                        <a class="isLink" @click="onInfo(scope.data.row,'totalRepayAmount')">{{scope.data.row.totalRepayAmount}}</a>
+                    </template>
+                    <template slot="occupationAmount" slot-scope="scope">
+                        <a class="isLink" @click="onInfo(scope.data.row,'occupationAmount')">{{scope.data.row.occupationAmount}}</a>
+                    </template>
+                    <template slot="overdueAmount" slot-scope="scope">
+                        <a class="isLink" @click="onInfo(scope.data.row,'overdueAmount')">{{scope.data.row.overdueAmount}}</a>
+                    </template>
+                    <template slot="overdue" slot-scope="scope">
+                        <span>{{overdueMap.get(scope.data.row.overdue)}}</span>
+                    </template>
+                    <template slot="fundStatus" slot-scope="scope">
+                        <span>{{capitalStatusMap.get(scope.data.row.fundStatus)}}</span>
                     </template>
                 </basicTable>
             </div>
@@ -137,7 +160,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总回款<span>（元）</span></p>
-                            <p>{{}}</p>
+                            <p>{{detail.totalRepayAmount}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -146,7 +169,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>线下回款<span>（元）</span></p>
-                            <p>{{}}</p>
+                            <p>{{detail.offlineRepayAmount}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -155,7 +178,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>线上回款<span>（元）</span></p>
-                            <p>{{}}</p>
+                            <p>{{detail.onlineRepayAmount}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -164,7 +187,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>已提现<span>（元）</span></p>
-                            <p>{{}}</p>
+                            <p>{{detail.withdrawAmount}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -173,7 +196,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>可提现<span>（元）</span></p>
-                            <p>{{}}</p>
+                            <p>{{detail.availableWithdrawAmount}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -182,7 +205,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>预付款<span>（元）</span></p>
-                            <p>{{}}</p>
+                            <p>{{detail.prepayAmount}}</p>
                         </div>
                     </div>
                 </div>
@@ -197,15 +220,15 @@
                     <div class="query-cont-col">
                         <div class="query-col-title">时间：</div>
                         <div class="query-col-input">
-                            <el-date-picker v-model="queryParams.updateTimeStart" type="date" placeholder="开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsStart"></el-date-picker>
-                            <el-date-picker v-model="queryParams.updateTimeEnd" type="date" placeholder="结束时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsEnd"></el-date-picker>
+                            <el-date-picker v-model="repayQueryParams.startTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
+                            <el-date-picker v-model="repayQueryParams.endTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
                         </div>
                     </div>
                     <template v-if="recordTabName == 'isOnline'">
                         <div class="query-cont-col">
                             <div class="query-col-title">类型：</div>
                             <div class="query-col-input">
-                                <el-select v-model="queryParams.businessType">
+                                <el-select v-model="repayQueryParams.type">
                                     <el-option v-for="item in businessDetaulOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </div>
@@ -213,7 +236,7 @@
                         <div class="query-cont-col">
                             <div class="query-col-title">状态：</div>
                             <div class="query-col-input">
-                                <el-select v-model="queryParams.status">
+                                <el-select v-model="repayQueryParams.status">
                                     <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </div>
@@ -221,55 +244,54 @@
                         <div class="query-cont-col">
                             <div class="query-col-title">回款订单号：</div>
                             <div class="query-col-input">
-                                <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入回款订单号"></el-input>
+                                <el-input v-model="queryParams.childOrderNo" maxlength="50" placeholder="请输入回款订单号"></el-input>
                             </div>
                         </div>
                     </template>
-                    <div class="query-cont-col" v-if="recordTabName == 'isOffline'">
+                    <div class="query-cont-col" v-if="recordTabName != 'isOnline'">
                         <div class="query-col-title">回款代采订单号：</div>
                         <div class="query-col-input">
-                            <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入回款代采订单号"></el-input>
-                        </div>
-                    </div>
-                    <div class="query-cont-col" v-if="recordTabName == 'isAdvance'">
-                        <div class="query-col-title">代采订单号：</div>
-                        <div class="query-col-input">
-                            <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入回款代采订单号"></el-input>
+                            <el-input v-model="repayQueryParams.agentOrderNo" maxlength="50" placeholder="请输入回款代采订单号"></el-input>
                         </div>
                     </div>
                     <template v-if="recordTabName == 'isOffline' || recordTabName=='isAdvance'">
                         <div class="query-cont-col">
                             <div class="query-col-title">商家：</div>
                             <div class="query-col-input">
-                                <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入管理员账号或者企业名称"></el-input>
+                                <el-input v-model="repayQueryParams.username" maxlength="50" placeholder="请输入管理员账号或者企业名称"></el-input>
                             </div>
                         </div>
                         <div class="query-cont-col">
                             <div class="query-col-title">打款账户名称：</div>
                             <div class="query-col-input">
-                                <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入打款账户名称"></el-input>
+                                <el-input v-model="repayQueryParams.accountName" maxlength="50" placeholder="请输入打款账户名称"></el-input>
                             </div>
                         </div>
                         <div class="query-cont-col">
                             <div class="query-col-title">打款银行账号：</div>
                             <div class="query-col-input">
-                                <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入打款银行账号"></el-input>
+                                <el-input v-model="repayQueryParams.bankCardNo" maxlength="50" placeholder="请输入打款银行账号"></el-input>
                             </div>
                         </div>
                     </template>
                     <div class="query-cont-col">
                         <div class="query-col-title">MIS订单号：</div>
                         <div class="query-col-input">
-                            <el-input v-model="queryParams.clientType" maxlength="50" placeholder="请输入MIS订单号"></el-input>
+                            <el-input v-model="repayQueryParams.misOrderNo" maxlength="50" placeholder="请输入MIS订单号"></el-input>
                         </div>
                     </div>
                     <div class="query-cont-col">
                         <h-button type='primary' @click="onQuery">查询</h-button>
                         <h-button @click="onReset">重置</h-button>
-                        <h-button @click="onExport">导出</h-button>
                     </div>
                 </div>
-                <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="pagination" @onCurrentChange="onCurrentChange" :isShowSum="true" :getSum="getSum">
+                <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="pagination" @onCurrentChange="onCurrentChange" @onSizeChange="handleSizeChange" :isShowSum="true" :getSum="getSum">
+                    <template slot="type" slot-scope="scope">
+                        <span>{{businessDetaulMap.get(scope.data.row.type)}}</span>
+                    </template>
+                    <template slot="status" slot-scope="scope">
+                        <span>{{statusMap.get(scope.data.row.status)}}</span>
+                    </template>
                 </basicTable>
             </div>
         </div>
@@ -292,55 +314,86 @@ export default {
             capitalStatusOptions: CAPITAL_STATUS_OPTIONS,
             capitalStatusMap: CAPITAL_STATUS_MAP,
             deadlineOptions: DEADLINE_OPTIONS,
+            fundDetil: {
+                creditLimit: '',
+                totalAmount: '',
+                totalPrepayAmount: '',
+                totalRetainageAmount: '',
+                totalRepayAmount: '',
+                occupationAmount: '',
+                overdueAmoun: ''
+            },
             resetParams: {},
             queryParams: {
-                businessType: '',
-                updateTimeStart: '',
-                updateTimeEnd: '',
-                status: '',
-                clientType: '',
+                username: '',
+                timeQueryType: '1',
+                startTime: '',
+                endTime: '',
+                overdue: '',
+                fundStatus: '0',
                 pageNumber: 1,
                 pageSize: 10
             },
             recordTabName: 'isOnline',
-            searchParams: {},
-            tableDetailData: [],
             tableDetailLabel: [
-                { label: '管理员账号', prop: 'updateTime' },
-                { label: '企业名称', prop: 'changeAmount' },
-                { label: '当前额度', prop: 'businessType' },
-                { label: '总代采', prop: 'status' },
-                { label: '总预付', prop: 'clientType' },
-                { label: '总代付', prop: 'clientType' },
-                { label: '总回款', prop: 'clientType' },
-                { label: '当前占用', prop: 'clientType' },
-                { label: '当前逾期未还', prop: 'clientType' },
-                { label: '最终回款期限', prop: 'clientType' },
-                { label: '最近还款日期', prop: 'clientType' },
-                { label: '逾期否', prop: 'clientType' },
-                { label: '资金状态', prop: 'clientType' }
+                { label: '管理员账号', prop: 'username' },
+                { label: '企业名称', prop: 'companyName' },
+                { label: '当前额度', prop: 'creditLimit' },
+                { label: '总代采', prop: 'totalAmount' },
+                { label: '总预付', prop: 'totalPrepayAmount' },
+                { label: '总代付', prop: 'totalRetaingeAmount' },
+                { label: '总回款', prop: 'totalRepayAmount' },
+                { label: '当前占用', prop: 'occupationAmount' },
+                { label: '当前逾期未还', prop: 'overdueAmount' },
+                { label: '最终回款期限', prop: 'finalRepayTime', formatters: 'date' },
+                { label: '最近还款日期', prop: 'lastRepayTime', formatters: 'date' },
+                { label: '逾期否', prop: 'overdue' },
+                { label: '资金状态', prop: 'fundStatus' }
             ],
             paginationDetail: {},
+            repayQueryParams: {
+                type: '',
+                status: '',
+                startTime: '',
+                endTime: '',
+                childOrderNo: '',
+                agentOrderNo: '',
+                username: '',
+                accountName: '',
+                bankCardNo: '',
+                misOrderNo: '',
+                pageNumber: 1,
+                pageSize: 10
+            },
+            repayResetParams: {},
             tableData: [],
             tableLabel: [
-                { label: '时间', prop: 'updateTime' },
-                { label: '金额', prop: 'changeAmount' },
-                { label: '类型', prop: 'businessType' },
+                { label: '时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '金额', prop: 'amount' },
+                { label: '类型', prop: 'type' },
                 { label: '状态', prop: 'status' },
-                { label: '回款订单号', prop: 'clientType' },
-                { label: '回款代采订单号', prop: 'clientType' },
-                { label: 'MIS订单号', prop: 'clientType' }
+                { label: '回款订单号', prop: 'childOrderNo' },
+                { label: '回款代采订单号', prop: 'agentOrderNo' },
+                { label: 'MIS订单号', prop: 'misOrderNo' }
             ],
-            pagination: {}
+            pagination: {},
+            detail: {
+                totalRepayAmount: '',
+                offlineRepayAmount: '',
+                onlineRepayAmount: '',
+                withdrawAmount: '',
+                availableWithdrawAmount: '',
+                prepayAmount: ''
+            }
         }
     },
     computed: {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    const beginDateVal = this.queryParams.updateTimeEnd
+                    const beginDateVal = this.queryParams.endTime
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
+                        return time.getTime() >= new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -348,116 +401,201 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    const beginDateVal = this.queryParams.updateTimeStart
+                    const beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime() - 8.64e7
+                        return time.getTime() <= new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerStart () {
+            return {
+                disabledDate: (time) => {
+                    const beginDateVal = this.repayQueryParams.endTime
+                    if (beginDateVal) {
+                        return time.getTime() >= new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerEnd () {
+            return {
+                disabledDate: (time) => {
+                    const beginDateVal = this.repayQueryParams.startTime
+                    if (beginDateVal) {
+                        return time.getTime() <= new Date(beginDateVal).getTime()
                     }
                 }
             }
         },
         ...mapState({
-            userInfo: state => state.userInfo.principal
-        })
+            userInfo: state => state.userInfo,
+            merchantList: state => state.hmall.finance.merchantList,
+            merchantStatistInfo: state => state.hmall.finance.merchantStatistInfo,
+            onlineRepayList: state => state.hmall.finance.onlineRepayList,
+            offlineRepayList: state => state.hmall.finance.offlineRepayList,
+            prepayRepayList: state => state.hmall.finance.prepayRepayList,
+            repayStatistInfo: state => state.hmall.finance.repayStatistInfo
+        }),
+        tableDetailData () {
+            return this.merchantList.records
+        }
     },
     methods: {
-        async init () {
+        init () {
+            this.getMerchant()
+            this.getRepayStatist()
+            this.getOnlineRepay()
+            this.getOfflineRepay()
+            this.getPrepayRepay()
+            this.getMerchantStatistInfo()
             this.resetParams = { ...this.queryParams }
-            this.getRecord()
         },
-        onTab (value) {
+        onTab () {
             this.queryParams = { ...this.resetParams }
-            // this.onQuery()
+            if (this.tabName == 'detail') {
+                this.getMerchant()
+            }
         },
         onRecordTab (value) {
             this.onQuery()
             if (this.recordTabName == 'isOnline') {
                 this.tableLabel = [
-                    { label: '时间', prop: 'updateTime' },
-                    { label: '金额', prop: 'changeAmount' },
-                    { label: '类型', prop: 'businessType' },
+                    { label: '时间', prop: 'createTime', formatters: 'dateTime' },
+                    { label: '金额', prop: 'amount' },
+                    { label: '类型', prop: 'type' },
                     { label: '状态', prop: 'status' },
-                    { label: '回款订单号', prop: 'clientType' },
-                    { label: '回款代采订单号', prop: 'clientType' },
-                    { label: 'MIS订单号', prop: 'clientType' }
+                    { label: '回款订单号', prop: 'childOrderNo' },
+                    { label: '回款代采订单号', prop: 'agentOrderNo' },
+                    { label: 'MIS订单号', prop: 'misOrderNo' }
                 ]
             } else if (this.recordTabName == 'isOffline') {
                 this.tableLabel = [
-                    { label: '时间', prop: 'updateTime' },
-                    { label: '金额', prop: 'changeAmount' },
-                    { label: '类型', prop: 'businessType' },
-                    { label: '打款账户名称', prop: 'status' },
-                    { label: '打款银行账号', prop: 'status' },
-                    { label: '企业名称', prop: 'status' },
-                    { label: '管理员账号', prop: 'status' },
-                    { label: '回款代采订单号', prop: 'clientType' },
-                    { label: 'MIS订单号', prop: 'clientType' }
+                    { label: '时间', prop: 'createTime', formatters: 'dateTime' },
+                    { label: '金额', prop: 'amount' },
+                    { label: '类型', prop: 'type' },
+                    { label: '打款账户名称', prop: 'prepayAccountName' },
+                    { label: '打款银行账号', prop: 'prepayBankCardNo' },
+                    { label: '企业名称', prop: 'companyName' },
+                    { label: '管理员账号', prop: 'username' },
+                    { label: '回款代采订单号', prop: 'agentOrderNo' },
+                    { label: 'MIS订单号', prop: 'misOrderNo' }
                 ]
             } else if (this.recordTabName == 'isAdvance') {
                 this.tableLabel = [
-                    { label: '时间', prop: 'updateTime' },
-                    { label: '金额', prop: 'changeAmount' },
-                    { label: '类型', prop: 'businessType' },
-                    { label: '打款账户名称', prop: 'status' },
-                    { label: '打款银行账号', prop: 'status' },
-                    { label: '企业名称', prop: 'status' },
-                    { label: '管理员账号', prop: 'status' },
-                    { label: '代采订单号', prop: 'clientType' },
-                    { label: 'MIS订单号', prop: 'clientType' }
+                    { label: '时间', prop: 'createTime', formatters: 'dateTime' },
+                    { label: '金额', prop: 'amount' },
+                    { label: '类型', prop: 'type' },
+                    { label: '打款账户名称', prop: 'prepayAccountName' },
+                    { label: '打款银行账号', prop: 'prepayBankCardNo' },
+                    { label: '企业名称', prop: 'companyName' },
+                    { label: '管理员账号', prop: 'username' },
+                    { label: '回款代采订单号', prop: 'clientType' },
+                    { label: 'MIS订单号', prop: 'misOrderNo' }
                 ]
             }
         },
         onQuery () {
-            this.queryParams.pageNumber = 1
-            this.resetParams = { ...this.queryParams }
-            // this.getisOnlineAccountBillInfo()
+            if (this.tabName == 'detail') {
+                this.queryParams.pageNumber = 1
+                this.resetParams = { ...this.queryParams }
+                this.getMerchant()
+            } else if (this.tabName == 'record') {
+                if (this.recordTabName == 'isOnline') {
+                    this.repayQueryParams.pageNumber = 1
+                    this.repayResetParams = { ...this.repayQueryParams }
+                    this.getOnlineRepay()
+                } else if (this.recordTabName == 'isOffline') {
+                    this.repayQueryParams.pageNumber = 1
+                    this.repayResetParams = { ...this.repayQueryParams }
+                    this.getOfflineRepay()
+                } else if (this.recordTabName == 'isAdvance') {
+                    this.repayQueryParams.pageNumber = 1
+                    this.repayResetParams = { ...this.repayQueryParams }
+                    this.getPrepayRepay()
+                }
+            }
         },
         onCurrentChange (val) {
-            this.queryParams.pageNumber = val.pageNumber
-            this.searchParams.pageNumber = val.pageNumber
-            // this.getisOnlineAccountBillInfo()
+            if (this.tabName == 'detail') {
+                this.queryParams.pageNumber = val.pageNumber
+                this.getMerchant()
+            } else if (this.tabName == 'record') {
+                if (this.recordTabName == 'isOnline') {
+                    this.repayQueryParams.pageNumber = val.pageNumber
+                    this.getOnlineRepay()
+                } else if (this.recordTabName == 'isOffline') {
+                    this.repayQueryParams.pageNumber = val.pageNumber
+                    this.getOfflineRepay()
+                } else if (this.recordTabName == 'isAdvance') {
+                    this.repayQueryParams.pageNumber = val.pageNumber
+                    this.getPrepayRepay()
+                }
+            }
         },
-        getRecord () {
-
+        handleSizeChange (val) {
+            if (this.tabName == 'detail') {
+                this.queryParams.pageSize = val
+                this.getMerchant()
+            } else if (this.tabName == 'record') {
+                if (this.recordTabName == 'isOnline') {
+                    this.repayQueryParams.pageSize = val
+                    this.getOnlineRepay()
+                } else if (this.recordTabName == 'isOffline') {
+                    this.repayQueryParams.pageSize = val
+                    this.getOfflineRepay()
+                } else if (this.recordTabName == 'isAdvance') {
+                    this.repayQueryParams.pageSize = val
+                    this.getPrepayRepay()
+                }
+            }
         },
         // 重置
         onReset () {
-            this.queryParams = { ...this.resetParams }
-            this.onQuery()
-        },
-        // 导出
-        onExport () {
-            if (this.tableData.length <= 0) {
-                this.$message.warning('无数据可导出！')
-            } else {
-                let url = ''
-                for (const key in this.queryParams) {
-                    if (this.queryParams[key] !== '') {
-                        url += (`${key}=${this.queryParams[key]}&`)
-                    }
-                }
-                window.location = interfaceUrl + '?' + url
+            if (this.tabName == 'detail') {
+                this.queryParams = { ...this.resetParams }
+            } else if (this.tabName == 'record') {
+                this.repayQueryParams = { ...this.repayResetParams }
             }
+            this.onQuery()
         },
         // 提现
         onWithdrawal () {
             this.$router.push('/b2b/finance/withdrawalMerchant')
         },
         // 跳转商家详情
-        onInfo (val) {
-            this.$router.push({ path: '/b2b/finance/merchantBehalf', query: { id: val } })
+        onInfo (val, page) {
+            if (page == 'creditLimit') {
+
+                this.$router.push({ path: '/b2b/finance/merchantBehalf', query: { id: val } })
+            } else if (page == 'creditLimit') {
+
+            }
         },
         // 商家明细合计
         getSum (param) {
             const { columns, data } = param
             const sums = []
-            if (this.tabName == 'detail') {
+            if (this.tableDetailData != [] && this.tabName == 'detail') {
                 columns.forEach((column, index) => {
                     if (index == 0) {
                         sums[index] = '合计'
                     }
-                    // 当前额度 总预付 总代采 总回款 当前占用 当前逾期未还
-                    if (column.property == 'totalAmount') {
-                        sums[index] = this.childOrderStatistics.totalAmount
+                    if (column.property == 'creditLimit' || column.property == 'totalPrepayAmount' || column.property == 'totalRetaingeAmount' || column.property == 'totalRepayAmount' || column.property == 'occupationAmount' || column.property == 'overdueAmount') {
+                        const values = data.map(item => {
+                            return Number(item[column.property])
+                        })
+                        if (!values.every(value => isNaN(value))) {
+                            sums[index] = values.reduce((prev, curr) => {
+                                const value = Number(curr)
+                                if (!isNaN(value)) {
+                                    return prev + curr
+                                } else {
+                                    return prev
+                                }
+                            }, 0)
+                            sums[index] = sums[index] ? sums[index] : '-'
+                        }
                     }
                 })
                 return sums
@@ -466,15 +604,54 @@ export default {
                     if (index == 0) {
                         sums[index] = '合计'
                     }
-                    // 金额
-                    if (column.property == 'totalAmount') {
-                        sums[index] = this.childOrderStatistics.totalAmount
+                    if (column.property == 'amount') {
+                        const values = data.map(item => {
+                            return Number(item[column.property])
+                        })
+                        if (!values.every(value => isNaN(value))) {
+                            sums[index] = values.reduce((prev, curr) => {
+                                const value = Number(curr)
+                                if (!isNaN(value)) {
+                                    return prev + curr
+                                } else {
+                                    return prev
+                                }
+                            }, 0)
+                            sums[index] = sums[index] ? sums[index] : '-'
+                        }
                     }
                 })
                 return sums
             }
         },
-        ...mapActions([])
+        ...mapActions({
+            findMerchant: 'finance/findMerchant',
+            findMerchantStatist: 'finance/findMerchantStatist',
+            findOnlineRepay: 'finance/findOnlineRepay',
+            findOfflineRepay: 'finance/findOfflineRepay',
+            findPrepayRepay: 'finance/findPrepayRepay',
+            findRepayStatist: 'finance/findRepayStatist'
+        }),
+        async getMerchant () {
+            await this.findMerchant(this.queryParams)
+        },
+        async getMerchantStatistInfo () {
+            await this.findMerchantStatist()
+            this.fundDetil = this.merchantStatistInfo
+        },
+        async getRepayStatist () {
+            await this.findRepayStatist()
+            this.detail = this.repayStatistInfo
+        },
+        async getOnlineRepay () {
+            await this.findOnlineRepay(this.repayQueryParams)
+        },
+        async getOfflineRepay () {
+            await this.findOfflineRepay(this.repayQueryParams)
+        },
+        async getPrepayRepay () {
+            await this.findPrepayRepay(this.repayQueryParams)
+        }
     },
     mounted () {
         this.init()

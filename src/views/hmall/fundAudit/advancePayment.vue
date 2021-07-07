@@ -38,21 +38,15 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">提交时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.submitStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.submitEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
+                        <el-date-picker v-model="queryParams.submitStartTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart"></el-date-picker>
+                        <el-date-picker v-model="queryParams.submitEndTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">确认时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.prepayConfirmStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerStart">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.prepayConfirmEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerEnd">
-                        </el-date-picker>
+                        <el-date-picker v-model="queryParams.prepayConfirmStartTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
+                        <el-date-picker v-model="queryParams.prepayConfirmEndTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -144,7 +138,6 @@ export default {
                 companyName: '',
                 username: ''
             },
-            paginationInfo: {},
             tableLabel: [
                 { label: '代采订单号', prop: 'agentOrderNo' },
                 { label: 'mis订单号', prop: 'misOrderNo' },
@@ -170,6 +163,13 @@ export default {
             userInfo: state => state.userInfo,
             advanceList: state => state.hmall.fundAudit.advanceList
         }),
+        paginationInfo () {
+            return {
+                total: this.advanceList.total,
+                pageNumber: this.advanceList.current,
+                pageSize: this.advanceList.size
+            }
+        },
         tableData () {
             return this.advanceList.records
         },
@@ -188,7 +188,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.submitStartTime
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                        return time.getTime() <= new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -208,7 +208,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.prepayConfirmStartTime
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                        return time.getTime() <= new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -242,7 +242,7 @@ export default {
             this.getAdvanceList()
         },
         onseeTask (val) {
-            this.$router.push({ path: '/fundAudit/advanceFundInfo', query: { id: val.id, seeTask: true, pageType: advancePayment } })
+            this.$router.push({ path: '/b2b/fundAudit/advanceFundInfo', query: { id: val.id, seeTask: true, pageType: advancePayment } })
         },
         async getAdvanceList () {
             await this.findAdvanceList(this.queryParams)
