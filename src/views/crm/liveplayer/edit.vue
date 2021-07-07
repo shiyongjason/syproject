@@ -7,7 +7,7 @@
                 </el-form-item>
                 <el-form-item label="直播间ID：" prop="roomId">
                     <el-select v-model="form.roomId" placeholder="请选择">
-                        <el-option v-for="item in options" :key="item.roomId" :label="item.roomId" :value="item.roomId">
+                        <el-option v-for="item in options" :key="item" :label="item" :value="item">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -17,11 +17,11 @@
                 </el-form-item>
                 <el-form-item label="品牌视频：" prop="brandVideoUrl" ref="brandVideoUrl">
                     <el-row>
-                        <SingleUpload sizeLimit='100M' :upload="videoUpload" :imageUrl="videoimageUrl" @back-event="videoUrl" :imgW="100" :imgH="100">
+                        <SingleUpload sizeLimit='600M' :upload="videoUpload" :imageUrl="videoimageUrl" @back-event="videoUrl" :imgW="100" :imgH="100">
                         </SingleUpload>
                         <h-button v-if="form.brandVideoUrl" type="primary" @click="palyVideo">视频预览</h-button>
                         <div class="upload-tips">
-                            建议尺寸：支持 MP4格式, 大小不超过20MB
+                            建议尺寸：支持 MP4格式, 大小不超过600M
                             视频尺寸16:9，视频长度建议不超过60秒
                         </div>
                     </el-row>
@@ -178,7 +178,7 @@ export default {
             this.getDetail(this.$route.query.id)
         }
         const { data } = await Api.getRooms()
-        this.options = data.liveRooms
+        this.options = data
     },
     methods: {
         ...mapActions({

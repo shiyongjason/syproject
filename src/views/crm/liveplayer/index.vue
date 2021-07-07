@@ -122,7 +122,7 @@ export default class Liveplayer extends Vue {
             }
         },
         { label: '直播间ID', prop: 'roomId' },
-        { label: '创建时间', prop: 'createTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+        { label: '创建时间', prop: 'createTime', width: '160', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '更新时间', prop: 'updateTime', width: '160', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '更新人', prop: 'updateBy', width: '160' },
         { label: '落地页状态', prop: 'status', width: '150', dicData: [{ value: 1, label: '启用' }, { value: 2, label: '禁用' }] }

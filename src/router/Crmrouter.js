@@ -536,7 +536,7 @@ export default [
                     title: '直播落地页',
                     tagName: '直播落地页',
                     parentName: '好橙工',
-                    isMenu: true,
+                    isMenu: false,
                     icon: ''
                 },
                 component: () => import('@/views/crm/liveplayer/edit.vue')
