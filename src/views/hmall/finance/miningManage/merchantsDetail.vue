@@ -566,7 +566,6 @@ export default {
         // 跳转商家详情
         onInfo (val, page) {
             if (page == 'creditLimit') {
-
                 this.$router.push({ path: '/b2b/finance/merchantBehalf', query: { id: val } })
             } else if (page == 'creditLimit') {
 
