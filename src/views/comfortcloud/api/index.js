@@ -1035,3 +1035,10 @@ export const addCloudMerchantProjectScheme = params => axios.post(iotUrl + '/mal
 
 // 删除工程方案
 export const deleteProjectScheme = params => axios.delete(iotUrl + '/mall/boss/project-scheme/' + params.id)
+
+// 获取boss端可解绑设备列表
+export const getBossCanUnbindDeviceList = params => axios.get(iotUrl + '/api/boss/device-unbind', { params })
+// 获取boss端解绑设备记录
+export const getBossBindRecords = params => axios.get(iotUrl + '/api/boss/device-unbind/record', { params })
+// boss端设备解绑
+export const bossDeviceUnbind = params => axios.post(iotUrl + '/api/boss/device-unbind', params)

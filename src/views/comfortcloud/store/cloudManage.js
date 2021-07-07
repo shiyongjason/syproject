@@ -120,7 +120,9 @@ const state = {
     cloudMerchantMaterialList: [],
     cloudMerchantProjectSchemeList: [],
     cloudMerchantProjectSchemeListPagination: {},
-    cloudMerchantProjectSchemeDetail: {}
+    cloudMerchantProjectSchemeDetail: {},
+    canUnbindDeivceList: [],
+    bossBindRecords: []
 }
 
 const getters = {
@@ -250,7 +252,9 @@ const getters = {
     cloudMerchantMaterialList: state => state.cloudMerchantMaterialList,
     cloudMerchantProjectSchemeList: state => state.cloudMerchantProjectSchemeList,
     cloudMerchantProjectSchemeListPagination: state => state.cloudMerchantProjectSchemeListPagination,
-    cloudMerchantProjectSchemeDetail: state => state.cloudMerchantProjectSchemeDetail
+    cloudMerchantProjectSchemeDetail: state => state.cloudMerchantProjectSchemeDetail,
+    canUnbindDeivceList: state => state.canUnbindDeivceList,
+    bossBindRecords: state => state.bossBindRecords
 }
 
 const mutations = {
@@ -597,6 +601,12 @@ const mutations = {
     },
     [cloud.GET_CLOUD_MERCHANT_PROJECT_SCHEME_DETAIL] (state, payload) {
         state.cloudMerchantProjectSchemeDetail = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_CANUNBIND_DEVICE_LIST] (state, payload) {
+        state.canUnbindDeivceList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_BIND_RECORDS] (state, payload) {
+        state.bossBindRecords = payload
     }
 }
 
@@ -1108,6 +1118,14 @@ const actions = {
     async findCloudMerchanProjectSchemeDetail ({ commit }, params) {
         const { data } = await Api.getCloudMerchantProjectSchemeDetail(params)
         commit(cloud.GET_CLOUD_MERCHANT_PROJECT_SCHEME_DETAIL, data)
+    },
+    async getBossCanUnbindDeviceList ({ commit }, params) {
+        const { data } = await Api.getBossCanUnbindDeviceList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_CANUNBIND_DEVICE_LIST, data.data)
+    },
+    async getBossBindRecords ({ commit }, params) {
+        const { data } = await Api.getBossBindRecords(params)
+        commit(cloud.GET_CLOUD_MERCHANT_BIND_RECORDS, data.data)
     }
 }
 export default {

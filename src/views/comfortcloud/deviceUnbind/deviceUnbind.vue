@@ -7,13 +7,13 @@
             <div class="query-cont-col">
                 <div class="query-col-title">手机号：</div>
                 <div class="query-col-input">
-                    <el-input placeholder="输入手机号" v-model="queryParams.serviceNo" maxlength="50" clearable></el-input>
+                    <el-input placeholder="输入手机号" v-model="queryParams.phone" maxlength="50" clearable></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col-title">设备ID</div>
+                <div class="query-col-title">设备ID：</div>
                 <div class="query-col-input">
-                    <el-input placeholder="输入设备ID" v-model="queryParams.serviceNo" maxlength="50" clearable></el-input>
+                    <el-input placeholder="输入设备ID" v-model="queryParams.iotId" maxlength="50" clearable></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -21,44 +21,36 @@
                     <el-button type="primary" class="ml20" @click="onSearch">查 询</el-button>
                 </div>
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="createComplaintOrder">解绑记录</el-button>
+                    <el-button type="primary" class="ml20" @click="unbindRecord">解绑记录</el-button>
                 </div>
             </div>
         </div>
 
         <div class="page-body-cont">
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
-                <template slot="serviceType" slot-scope="scope">
-                    {{scope.data.row.serviceType==1?'预约维修':'清洗保养'}}
-                </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">详情</el-button>
+                    <el-button class="orangeBtn" @click="onDetail(scope.data.row)">详情</el-button>
+                    <el-button class="orangeBtn" @click="onUnbind(scope.data.row)">解绑</el-button>
                 </template>
             </basicTable>
         </div>
 
-        <el-dialog title="服务详情" :modal-append-to-body=false :append-to-body=false :visible.sync="detailDialogVisible" width="50%">
-            <div class="detailLine">
-                <span>服务类型：{{detailData.serviceType===1?'预约维修':'清洗保养'}}</span><span class="centerLine">服务产品：{{detailData.product}}</span><span class="rightLine">服务时间：{{detailData.serviceTime}}</span>
+        <el-dialog title="请输入解绑备注" :modal-append-to-body=false :append-to-body=false :visible.sync="detailDialogVisible" width="500px">
+            <div class="query-col-input">
+                <el-input v-model="unBindDesc" type="textarea" :rows="11" maxlength="200" show-word-limit placeholder="请输入内容">
+                </el-input>
             </div>
-            <div class="detailLine">
-                <span>客户姓名：{{detailData.customerName}}</span><span class="centerLine">客户电话：{{detailData.customerPhone}}</span>
-            </div>
-            <p class="detailLine">客户地址：{{detailData.customerAddress}}</p>
-            <p class="detailLine">备注：{{detailData.remark==undefined?'无':detailData.remark}}</p>
-            <p class="detailLine">图片：</p>
-            <template v-if="detailData.picUlrs&&detailData.picUlrs.length>0">
-                <div class="detailLine lastLine">
-                    <el-image v-for="(src,index) in detailData.picUlrs" :key='index+"img"' :z-index='9999' fit='cover' style="width: 100px; height: 100px;marginLeft:10px" :src="src" :preview-src-list="detailData.picUlrs">
-                    </el-image>
-                </div>
-            </template>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="detailDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="conformUnbind">确 定</el-button>
+            </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
+import { bossDeviceUnbind } from '../api/index'
 import Vue from 'vue'
 export default {
     name: 'deviceUnbind',
@@ -74,65 +66,79 @@ export default {
                 height: '100px'
             },
             queryParams: {
-                serviceNo: '',
+                iotId: '',
                 pageNumber: 1,
                 pageSize: 10,
-                operator: '',
-                endTime: '',
-                startTime: ''
+                phone: ''
             },
             searchParams: {},
             tableData: [],
             tableLabel: [
-                { label: '申请时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '服务单号', prop: 'serviceNo' },
-                { label: '申请人账号', prop: 'operator', width: '120px' },
-                { label: '客户姓名', prop: 'customerName' },
-                { label: '客户电话', prop: 'customerPhone' },
-                { label: '客户地址', prop: 'customerAddress' },
-                { label: '服务类型', prop: 'serviceType' },
-                { label: '服务产品', prop: 'product' }
+                { label: '绑定时间', prop: 'bindTime', formatters: 'dateTime' },
+                { label: '经销商', prop: 'dealer' },
+                { label: '设备ID', prop: 'iotId' },
+                { label: '管理员手机', prop: 'phone' },
+                { label: '设备型号名称', prop: 'typeName' }
             ],
             pagination: {
                 pageNumber: 1,
                 pageSize: 10,
                 total: 0
             },
-            detailData: {},
-            detailDialogVisible: false,
-            addOrderDialogVisible: false
+            unBindDesc: '',
+            currentDevice: null,
+            detailDialogVisible: false
         }
     },
     methods: {
         ...mapActions({
-            getServiceManageHistoryList: 'getServiceManageHistoryList'
+            getBossCanUnbindDeviceList: 'getBossCanUnbindDeviceList'
         }),
         async onQuery () {
-            await this.getServiceManageHistoryList(this.searchParams)
-            this.tableData = this.serviceHistory.records
+            await this.getBossCanUnbindDeviceList(this.searchParams)
+            this.tableData = this.unbindDeivceList.records
             this.pagination = {
-                pageNumber: this.serviceHistory.current,
-                pageSize: this.serviceHistory.size,
-                total: this.serviceHistory.total
+                pageNumber: this.unbindDeivceList.current,
+                pageSize: this.unbindDeivceList.size,
+                total: this.unbindDeivceList.total
             }
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
+            this.searchParams.pageNumber = 1
             this.onQuery()
         },
-        createComplaintOrder () {
-            this.addOrderDialogVisible = true
+        onDetail (val) {
+
         },
-        onEdit (val) {
-            this.detailData = val
-            if (val.pictureUrl) {
-                let urls = val.pictureUrl.split(',')
-                this.detailData.picUlrs = urls
-            } else {
-                this.detailData.picUlrs = []
-            }
-            console.log(this.detailData)
+        onUnbind (val) {
+            this.currentDevice = val
+            this.unBindDesc = ''
             this.detailDialogVisible = true
+        },
+        unbindRecord () {
+            this.$router.push('/comfortCloud/equipmentOverview/unbindRecord')
+        },
+        async conformUnbind () {
+            console.log(this.userInfo)
+            if (this.currentDevice) {
+                if (this.unBindDesc.length === 0) {
+                    this.$message.error('请输入解绑备注')
+                    return
+                }
+                const params = {
+                    iotId: this.currentDevice.iotId,
+                    operator: this.userInfo.employeeName,
+                    phone: this.currentDevice.phone,
+                    remark: this.unBindDesc,
+                    typeName: this.currentDevice.typeName
+                }
+                await bossDeviceUnbind(params)
+                this.$message.success('解绑成功')
+                this.currentDevice = null
+                this.unBindDesc = ''
+                this.onSearch()
+            }
         },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
@@ -151,53 +157,13 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            serviceHistory: 'serviceManageHistoryList'
-        }),
-        pickerOptionsStart () {
-            return {
-                disabledDate: time => {
-                    let endDateVal = this.queryParams.endTime
-                    if (endDateVal) {
-                        return time.getTime() > new Date(endDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.startTime
-                    if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
-                    }
-                }
-            }
-        }
+            unbindDeivceList: 'canUnbindDeivceList'
+        })
     }
 }
 </script>
 
 <style lang="scss" scoped>
-.detailLine {
-    color: black;
-    margin-top: 20px;
-}
-.lastLine {
-    margin-bottom: 20px;
-}
-.centerLine {
-    position: absolute;
-    left: 33%;
-}
-.rightLine {
-    position: absolute;
-    left: 66%;
-}
-.picContainer {
-    display: flex;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
 .spanflex {
     display: flex;
     justify-content: space-between;

@@ -7,13 +7,13 @@
             <div class="query-cont-col">
                 <div class="query-col-title">手机号：</div>
                 <div class="query-col-input">
-                    <el-input placeholder="输入手机号" v-model="queryParams.serviceNo" maxlength="50" clearable></el-input>
+                    <el-input placeholder="输入手机号" v-model="queryParams.phone" maxlength="50" clearable></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col-title">设备ID</div>
+                <div class="query-col-title">设备ID：</div>
                 <div class="query-col-input">
-                    <el-input placeholder="输入设备ID" v-model="queryParams.serviceNo" maxlength="50" clearable></el-input>
+                    <el-input placeholder="输入设备ID" v-model="queryParams.iotId" maxlength="50" clearable></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -24,13 +24,8 @@
         </div>
 
         <div class="page-body-cont">
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
-                <template slot="serviceType" slot-scope="scope">
-                    {{scope.data.row.serviceType==1?'预约维修':'清洗保养'}}
-                </template>
-                <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">详情</el-button>
-                </template>
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'>
+
             </basicTable>
         </div>
     </div>
@@ -43,75 +38,46 @@ export default {
     name: 'unbindRecord',
     data () {
         return {
-            pic: {
-                marginLeft: '20px',
-                width: '100px',
-                height: '100px'
-            },
-            firstPic: {
-                width: '100px',
-                height: '100px'
-            },
             queryParams: {
-                serviceNo: '',
+                iotId: '',
                 pageNumber: 1,
                 pageSize: 10,
-                operator: '',
-                endTime: '',
-                startTime: ''
+                phone: ''
             },
             searchParams: {},
             tableData: [],
             tableLabel: [
-                { label: '申请时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '服务单号', prop: 'serviceNo' },
-                { label: '申请人账号', prop: 'operator', width: '120px' },
-                { label: '客户姓名', prop: 'customerName' },
-                { label: '客户电话', prop: 'customerPhone' },
-                { label: '客户地址', prop: 'customerAddress' },
-                { label: '服务类型', prop: 'serviceType' },
-                { label: '服务产品', prop: 'product' }
+                { label: '解绑时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '设备型号', prop: 'typeName' },
+                { label: '设备ID', prop: 'iotId' },
+                { label: '被解绑的管理员手机号', prop: 'phone' },
+                { label: '操作人', prop: 'operator' },
+                { label: '备注', prop: 'remark' }
             ],
             pagination: {
                 pageNumber: 1,
                 pageSize: 10,
                 total: 0
-            },
-            detailData: {},
-            detailDialogVisible: false,
-            addOrderDialogVisible: false
+            }
         }
     },
     methods: {
         ...mapActions({
-            getServiceManageHistoryList: 'getServiceManageHistoryList'
+            getBossBindRecords: 'getBossBindRecords'
         }),
         async onQuery () {
-            await this.getServiceManageHistoryList(this.searchParams)
-            this.tableData = this.serviceHistory.records
+            await this.getBossBindRecords(this.searchParams)
+            this.tableData = this.bossBindRecords.records
             this.pagination = {
-                pageNumber: this.serviceHistory.current,
-                pageSize: this.serviceHistory.size,
-                total: this.serviceHistory.total
+                pageNumber: this.bossBindRecords.current,
+                pageSize: this.bossBindRecords.size,
+                total: this.bossBindRecords.total
             }
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
+            this.searchParams.pageNumber = 1
             this.onQuery()
-        },
-        createComplaintOrder () {
-            this.addOrderDialogVisible = true
-        },
-        onEdit (val) {
-            this.detailData = val
-            if (val.pictureUrl) {
-                let urls = val.pictureUrl.split(',')
-                this.detailData.picUlrs = urls
-            } else {
-                this.detailData.picUlrs = []
-            }
-            console.log(this.detailData)
-            this.detailDialogVisible = true
         },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
@@ -130,53 +96,13 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            serviceHistory: 'serviceManageHistoryList'
-        }),
-        pickerOptionsStart () {
-            return {
-                disabledDate: time => {
-                    let endDateVal = this.queryParams.endTime
-                    if (endDateVal) {
-                        return time.getTime() > new Date(endDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.startTime
-                    if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
-                    }
-                }
-            }
-        }
+            bossBindRecords: 'bossBindRecords'
+        })
     }
 }
 </script>
 
 <style lang="scss" scoped>
-.detailLine {
-    color: black;
-    margin-top: 20px;
-}
-.lastLine {
-    margin-bottom: 20px;
-}
-.centerLine {
-    position: absolute;
-    left: 33%;
-}
-.rightLine {
-    position: absolute;
-    left: 66%;
-}
-.picContainer {
-    display: flex;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
 .spanflex {
     display: flex;
     justify-content: space-between;
