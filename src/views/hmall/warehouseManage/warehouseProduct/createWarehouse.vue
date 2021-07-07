@@ -273,13 +273,13 @@ export default {
     mounted () {
         this.init()
     },
-    beforeRouteEnter (to, from, next) {
-        newCache('createWarehouse')
-        next()
-    },
+    // beforeRouteEnter (to, from, next) {
+    //     newCache('createWarehouse')
+    //     next()
+    // },
     beforeRouteLeave (to, from, next) {
         if (to.name != 'addWarehouseProducts') {
-            clearCache('createWarehouse')
+            // clearCache('createWarehouse')
             this.setSelectWarehouseProduct([])
         }
         next()
