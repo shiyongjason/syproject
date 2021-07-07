@@ -1,6 +1,6 @@
 
 import * as types from './mutation-types'
-import { findFundList, findFundInfo, findAuditFundList, findAuditFundInfo, findAdvanceList, findStatusFund } from '../api'
+import { findFundList, findFundInfo, findAuditFundList, findAuditFundInfo, findAdvanceList, findStatusFund, findPrepayment, warehouseFund, prepaymentRepay } from '../api'
 
 const state = {
     fundList: [], // 资金申请审核列表
@@ -8,7 +8,8 @@ const state = {
     auditFundList: [], // 代采订单审核列表
     auditFundInfo: {}, // 代采订单详情
     advanceList: [], // 代采订单预付款确认列表
-    statusFundList: [] // 代采订单状态列表
+    statusFundList: [], // 代采订单状态列表
+    prepaymentList: [] // 提前还款确认列表
 }
 
 const getters = {
@@ -17,7 +18,8 @@ const getters = {
     auditFundList: state => state.auditFundList,
     auditFundInfo: state => state.auditFundInfo,
     advanceList: state => state.advanceList,
-    statusFundList: state => state.statusFundList
+    statusFundList: state => state.statusFundList,
+    prepaymentList: state => state.prepaymentList
 }
 
 const mutations = {
@@ -38,6 +40,9 @@ const mutations = {
     },
     [types.STATUS_FUND_LIST] (state, payload) {
         state.statusFundList = payload
+    },
+    [types.PREPAYMENT_LIST] (state, payload) {
+        state.prepaymentList = payload
     }
 }
 
@@ -65,6 +70,10 @@ const actions = {
     async findStatusFund ({ commit }, params) {
         const { data } = await findStatusFund(params)
         commit(types.STATUS_FUND_LIST, data)
+    },
+    async findPrepayment ({ commit }, params) {
+        const { data } = await findPrepayment(params)
+        commit(types.PREPAYMENT_LIST, data)
     }
 }
 

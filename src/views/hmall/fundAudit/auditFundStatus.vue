@@ -76,9 +76,9 @@
                 </template>
             </basicTable>
             <el-dialog title="货物出仓确认" width="500px" :visible.sync="closeOrderDialog" :close-on-click-modal=false>
-                <el-form :model="createform" ref="createform" :rules='rules' label-width="180px" class="pt80">
+                <el-form :model="form" ref="form" :rules='rules' label-width="180px" class="pt80">
                     <el-form-item label="请选择货物到仓情况：" prop="goodsStatus">
-                        <el-radio-group v-model="createform.goodsStatus">
+                        <el-radio-group v-model="form.goodsStatus">
                             <el-radio :label="40">全部到仓</el-radio>
                             <el-radio :label="30">部分到仓</el-radio>
                         </el-radio-group>
@@ -126,7 +126,7 @@ export default {
                 { label: '提交时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '代采订单总金额', prop: 'totalAmount' },
                 { label: '首付款', prop: 'prepayAmount' },
-                { label: '尾款', prop: 'retainageAmount' },
+                { label: '代付款金额', prop: 'retainageAmount' },
                 { label: '企业名称', prop: 'companyName' },
                 { label: '管理员账号', prop: 'username' },
                 { label: '店铺名称', prop: 'shopName' },
@@ -135,8 +135,12 @@ export default {
                 { label: '货物状态', prop: 'goodsStatus' }
             ],
             copyParams: {},
-            closeOrderDialog: true,
-            createform: {},
+            closeOrderDialog: false,
+            form: {
+                id: '',
+                goodsStatus: '',
+                updateBy: ''
+            },
             rules: {
                 goodsStatus: [
                     { required: true, message: '请选择货物到仓情况', trigger: 'change' }
@@ -156,7 +160,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endTime
+                    let beginDateVal = this.queryParams.submitEndTime
                     if (beginDateVal) {
                         return time.getTime() > beginDateVal
                     }
@@ -166,7 +170,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startTime
+                    let beginDateVal = this.queryParams.submitStartTime
                     if (beginDateVal) {
                         return time.getTime() < beginDateVal
                     }
@@ -224,14 +228,15 @@ export default {
             this.closeOrderDialog = true
         },
         onSure () {
-            this.$refs.createform.validate(async (valid) => {
+            this.$refs.form.validate(async (valid) => {
                 if (valid) {
                     try {
-                        await warehouseFund({
+                        const form = {
+                            goodsStatus: this.form.goodsStatus,
                             id: this.statusId,
-                            updateBy: this.userInfo.employeeName,
-                            goodsStatus: this.createform.goodsStatus
-                        })
+                            updateBy: this.userInfo.employeeName
+                        }
+                        await warehouseFund(form)
                         this.closeOrderDialog = false
                     } catch (error) {
                         this.closeOrderDialog = false

@@ -20,7 +20,7 @@ export const findAuditFundList = (params) => {
 }
 // 代采订单审核
 export const auditFund = (params) => {
-    return axios.patch(`${B2bUrl}fund/boss/agent/order/audit`, { params })
+    return axios.patch(`${B2bUrl}fund/boss/agent/order/audit`, params)
 }
 // 代采订单详情
 export const findAuditFundInfo = (params) => {
@@ -32,19 +32,19 @@ export const findAdvanceList = (params) => {
 }
 // 代采订单预付款确认
 export const sureFund = (params) => {
-    return axios.patch(`${B2bUrl}fund/boss/agent/order/confirm-prepay`, { params })
+    return axios.patch(`${B2bUrl}fund/boss/agent/order/confirm-prepay`, params)
 }
 // 代采订单预付款关闭
 export const closeFund = (params) => {
-    return axios.patch(`${B2bUrl}fund/boss/agent/order/close`, { params })
+    return axios.patch(`${B2bUrl}fund/boss/agent/order/close`, params)
 }
 // 代采订单预付款订单同步
 export const syncFund = (params) => {
-    return axios.patch(`${B2bUrl}fund/boss/agent/order/${params.id}/sync-to-mis`, { params })
+    return axios.patch(`${B2bUrl}fund/boss/agent/order/${params.id}/sync-to-mis`, params)
 }
 // 代采订单预付款资金同步
 export const syncMisFund = (params) => {
-    return axios.patch(`${B2bUrl}fund/boss/agent/order/${params.id}/sync-fund-to-mis`, { params })
+    return axios.patch(`${B2bUrl}fund/boss/agent/order/${params.id}/sync-fund-to-mis`, params)
 }
 // 代采订单状态列表
 export const findStatusFund = (params) => {
@@ -52,9 +52,17 @@ export const findStatusFund = (params) => {
 }
 // 代采订单出款确认
 export const allocateFund = (params) => {
-    return axios.patch(`${B2bUrl}fund/boss/agent/order/confirm-allocate`, { params })
+    return axios.patch(`${B2bUrl}fund/boss/agent/order/confirm-allocate`, params)
 }
 // 代采订单货物到仓确认
 export const warehouseFund = (params) => {
-    return axios.patch(`${B2bUrl}fund/boss/agent/order/confirm-in-warehouse`, { params })
+    return axios.patch(`${B2bUrl}fund/boss/agent/order/confirm-in-warehouse`, params)
+}
+// 提前还款确认列表
+export const findPrepayment = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/repay/advance`, { params })
+}
+// 提前还款确认
+export const prepaymentRepay = (id, params) => {
+    return axios.patch(`${B2bUrl}fund/boss/repay/${id}/confirm`, params)
 }

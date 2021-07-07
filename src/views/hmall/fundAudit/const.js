@@ -120,26 +120,26 @@ export const FUND_STATUS_MAP = new Map([
 // 货物状态
 export const GOODS_STATUS_OPTIONS = [
     { label: '全部', value: '' },
-    { label: '未入库', value: '20' },
-    { label: '部分入库', value: '30' },
-    { label: '全部入库', value: '40' }
+    { label: '未到仓', value: '20' },
+    { label: '部分到仓', value: '30' },
+    { label: '已入库', value: '40' }
 ]
 export const GOODS_STATUS_MAP = new Map([
-    [20, '未入库'],
+    [20, '未到仓'],
     [30, '部分入库'],
-    [40, '全部入库']
+    [40, '已入库']
 ])
 // 平台确认状态
 export const PLATFORM_STATUS_OPTIONS = [
     { label: '全部', value: '' },
-    { label: '已确认', value: '1' },
-    { label: '未确认', value: '2' },
-    { label: '确认不通过', value: '3' }
+    { label: '已确认', value: '20' },
+    { label: '未确认', value: '10' },
+    { label: '确认不通过', value: '30' }
 ]
 export const PLATFORM_STATUS_MAP = new Map([
-    [1, '已确认'],
-    [2, '未确认'],
-    [3, '确认不通过']
+    [20, '已确认'],
+    [10, '未确认'],
+    [30, '确认不通过']
 ])
 // 额度状态
 export const LIMIT_STATUS_MAP = new Map([
