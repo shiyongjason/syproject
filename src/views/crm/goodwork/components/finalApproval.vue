@@ -896,6 +896,7 @@ export default class FinalApproval extends Vue {
         const { data } = await getResolutions(this.finalFormID)
         this.resolutionDetail = data
         this.tableData = data.resolutionPurchaseList
+        this.$emit('onBackLoad', false, this.resolutionDetail.resolutionStatus)
     }
 
     // 记录
@@ -932,7 +933,6 @@ export default class FinalApproval extends Vue {
 
     async _finalApprove (val) {
         this.lastDialog = true
-
         this.lastForm.remark = this.baseInfoForm.remark
         this.type = val
         this.$nextTick(() => {
