@@ -19,25 +19,21 @@
                     <h-button @click="onReset">重置</h-button>
                 </div>
             </div>
-            <div class="query-cont-row">
-                <div class="query-cont__col">
-                    <h-button type="primary" class="ml20" @click="onAdd">新建落地页</h-button>
-                </div>
-            </div>
             <!-- tab页签 -->
                  <el-tabs v-model="activeName" @tab-click="handleTabClick">
                     <el-tab-pane label="banner管理" name="banner">
                         <!-- <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest' @requestBack='getList' :paymentOrderId='paymentOrderId'></loanHandoverInformation> -->
+                        <Bannertabs/>
                     </el-tab-pane>
                     <el-tab-pane label="楼层管理" name="floor" >
                         <!-- <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation> -->
                     </el-tab-pane>
                     <el-tab-pane label="品类推荐" name="category" >
                         <!-- <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation> -->
+                        <Categorytabs/>
                     </el-tab-pane>
                 </el-tabs>
             <!-- end search bar -->
-
         </div>
     </div>
 </template>
@@ -46,24 +42,22 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
 import { CreateElement } from 'vue'
-import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-// import ImageAddToken from '@/components/imageAddToken/index.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-import * as Api from './api/index'
-import { LiveRoomResponse } from './live'
+import Bannertabs from './components/banner_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
+import Categorytabs from './components/category_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
+
 import filters from '@/utils/filters'
 
 import moment from 'moment'
-const ImageAddToken = require('@/components/imageAddToken/index.vue').default
 
 @Component({
-    name: 'liveplayer',
+    name: 'Advmanage',
     components: {
-        hosJoyTable,
-        ImageAddToken
+        Bannertabs,
+        Categorytabs
     }
 })
 
-export default class Liveplayer extends Vue {
+export default class Advmanage extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
@@ -80,7 +74,7 @@ export default class Liveplayer extends Vue {
         total: 0
     }
 
-    tableData:LiveRoomResponse[] | [] = []
+    tableData:any[] | [] = []
 
     private _queryParams = {}
     queryParams: any = {
@@ -95,89 +89,6 @@ export default class Liveplayer extends Vue {
         [2, '部分支付']
     ])
     @State('userInfo') userInfo: any
-
-    tableLabel:tableLabelProps = [
-        { label: '品牌视频',
-            prop: 'brandVideoUrl',
-            width: '100',
-            render: (h: CreateElement, scope:TableRenderParam): JSX.Element => {
-                return (
-                    <span class="label_img" onClick={() => this.onShowVide(scope)}>
-                        <img src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20210706/356a3aec-5c8e-47df-941a-91a222fe9e07.png'/>
-                    </span>
-                )
-            }
-        },
-        { label: '落地页名称', prop: 'roomName', width: '130' },
-        { label: '品牌logo',
-            prop: 'brandLogoUrl',
-            render: (h: CreateElement, scope:TableRenderParam): JSX.Element => {
-                return (
-                    <span class="label_img">
-                        <ImageAddToken file-url={scope.row.brandLogoUrl}/>
-                    </span>
-                )
-            }
-        },
-        { label: '直播间ID', prop: 'roomId' },
-        { label: '创建时间', prop: 'createTime', width: '160', displayAs: 'YYYY-MM-DD HH:mm:ss' },
-        { label: '更新时间', prop: 'updateTime', width: '160', displayAs: 'YYYY-MM-DD HH:mm:ss' },
-        { label: '更新人', prop: 'updateBy', width: '160' },
-        { label: '落地页状态', prop: 'status', width: '150', dicData: [{ value: 1, label: '启用' }, { value: 2, label: '禁用' }] }
-
-    ]
-
-    async getList () {
-        const { data } = await Api.getLiveList(this.queryParams)
-        this.tableData = data || []
-    }
-
-    async onAdd () {
-        this.$router.push({ path: '/goodwork/playeredit' })
-    }
-
-    async onPutHome (val) {
-        await Api.getHomePage(val.id)
-        this.$message.success('设置首页成功~')
-        this.getList()
-    }
-    async onNoHome (val) {
-        await Api.getNoHomePage(val.id)
-        this.getList()
-    }
-
-    onDelete (val) {
-        this.$confirm('确定删除该条落地页信息吗？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-        }).then(async () => {
-            await Api.deleteLiveInfo(val.id)
-            this.$message.success('落地页删除成功~')
-            this.getList()
-        }).catch(() => {
-
-        })
-    }
-
-    onShowVide (val) {
-        this.innerVisible = true
-        this.brandVideoUrl = val.row.brandVideoUrl
-    }
-
-    onEditLive (val) {
-        this.$router.push({ path: '/goodwork/playeredit', query: { id: val.id } })
-    }
-
-    onReset () {
-        this.queryParams = JSON.parse(JSON.stringify(this._queryParams))
-        this.getList()
-    }
-
-    async mounted () {
-        this.getList()
-        this._queryParams = JSON.parse(JSON.stringify(this.queryParams))
-    }
 }
 </script>
 

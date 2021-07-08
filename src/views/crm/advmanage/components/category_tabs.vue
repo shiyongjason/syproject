@@ -1,41 +1,31 @@
 
 <template>
     <div class="banner-tab">
-        <div class="baner-btn">
-            <el-button type="primary">新增banner</el-button>
+        <div class="baner-btn mb20">
+            <el-button type="primary">新增品类推荐</el-button>
         </div>
         <hosJoyTable localName="V3.10.3" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe :column="tableLabel" :data="tableData" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
             <template #action="slotProps">
-                <div v-if="!slotProps.data.row.homePage">
-                    <h-button table @click="onEditLive(slotProps.data.row)">编辑</h-button>
-                    <h-button table v-if="slotProps.data.row.status==1" @click="onPutHome(slotProps.data.row)">删除</h-button>
-                    <h-button table @click="onDelete(slotProps.data.row)">启用</h-button>
+
                     <h-button table @click="onDelete(slotProps.data.row)">上移</h-button>
                     <h-button table @click="onDelete(slotProps.data.row)">下移</h-button>
-                </div>
-                <div v-else>
-                    <h-button table @click="onNoHome(slotProps.data.row)">停用</h-button>
-                </div>
+                    <h-button table @click="onDelete(slotProps.data.row)">取消推荐</h-button>
+
             </template>
         </hosJoyTable>
         <el-dialog title="新增banner" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
-                <el-form-item label="banner名称：" prop="name">
-                    <el-input v-model="ruleForm.name"></el-input>
-                </el-form-item>
-                <el-form-item label="bannar位置：" prop="name">
+                <el-form-item label="选择品类：" prop="name">
                     <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
                         <el-option label="区域一" value="shanghai"></el-option>
                         <el-option label="区域二" value="beijing"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="跳转链接：" >
-                    <el-input v-model="ruleForm.name"></el-input>
-                </el-form-item>
-                 <el-form-item label="banner图：" prop="name">
-                        <OssFileHosjoyUpload v-model="ruleForm.payVouchers" :showPreView='true' :fileSize=20 :fileNum=1 :uploadParameters='uploadParameters' @successCb="$refs.form.clearValidate()" accept=".jpg,.png,.jpeg">
+                 <el-form-item label="品类图标：" prop="name">
+                        <OssFileHosjoyUpload v-model="ruleForm.payVouchers" :showPreView='true' :fileSize=1 :fileNum=1 :uploadParameters='uploadParameters' @successCb="$refs.form.clearValidate()" accept=".jpg,.png,.jpeg">
                         </OssFileHosjoyUpload>
-                        <p>图片尺寸为750*300，不超过2M，仅支持jpeg、jpg、png格式</p>
+                        <p>（品类图标格式为JGP/JPEG/PNG等主流格式图片，最大不超过1M）</p>
+                        <p>注意：推荐后，该品类信息将出现在小程序首页~</p>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -54,13 +44,13 @@ import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyU
 import { CreateElement } from 'vue'
 
 @Component({
-    name: 'Bannertabs',
+    name: 'Categorytabs',
     components: {
         hosJoyTable,
         OssFileHosjoyUpload
     }
 })
-export default class Bannertabs extends Vue {
+export default class Categorytabs extends Vue {
     // @Prop({ default: '' }) readonly data!:RespLoanHandoverInfo
     @Prop({ default: '' }) readonly userInfo!:any
     @Prop({ default: '' }) readonly paymentOrderId!:any
