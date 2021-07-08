@@ -176,8 +176,6 @@ export default {
                 username: '',
                 applyNo: '',
                 timeQueryType: '1',
-                auditTimeStart: '',
-                auditTimeEnd: '',
                 agentOrderNo: '',
                 childOrderNo: '',
                 startTime: '',
@@ -474,8 +472,8 @@ export default {
         ...mapActions([])
     },
     mounted () {
-        this.init()
         this.resetParams = { ...this.queryParams }
+        this.init()
     },
     watch: {
         $route () {
