@@ -22,20 +22,20 @@ module.exports = {
                 "parameters": 1,
                 "body": 1
             },
-            "FunctionExpression": {
-                "parameters": 1,
-                "body": 1
+            'FunctionExpression': {
+                'parameters': 1,
+                'body': 1
             },
-            "CallExpression": {
-                "arguments": 1
+            'CallExpression': {
+                'arguments': 1
             },
-            "ArrayExpression": 1,
-            "ObjectExpression": 1,
-            "ImportDeclaration": 1,
-            "flatTernaryExpressions": false,
-            "ignoreComments": false
+            'ArrayExpression': 1,
+            'ObjectExpression': 1,
+            'ImportDeclaration': 1,
+            'flatTernaryExpressions': false,
+            'ignoreComments': false
         }],
         'eol-last': 'off',
-        "eqeqeq": 0
+        'eqeqeq': 0
     }
 }

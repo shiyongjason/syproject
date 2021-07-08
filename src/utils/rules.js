@@ -220,3 +220,17 @@ export const checkNumandEng = (rule, value, callback) => {
     }
     callback()
 }
+
+// 999内两位小数正数（最小0.01）
+export const withinDetail = (rule, value, callback) => {
+    const Reg = /^0\.([1-9]|\d[1-9])$|^[1-9]\d{0,2}\.\d{0,2}$|^[1-9]\d{0,2}$/
+    if (value <= 999) {
+        if (value && !(Reg.test(value))) {
+            return callback(new Error('仅支持输入999内两位小数正数（最小0.01）'))
+        }
+    } else {
+        return callback(new Error('仅支持输入999内两位小数正数（最小0.01）'))
+    }
+
+    callback()
+}

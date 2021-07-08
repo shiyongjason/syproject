@@ -280,6 +280,83 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/hmall/finance/withdrawal.vue')
+                    },
+                    // {
+                    //     path: 'orderRecord',
+                    //     name: 'orderRecord',
+                    //     meta: {
+                    //         title: '订单／收款记录查询',
+                    //         tagName: '订单／收款记录查询',
+                    //         isMenu: true,
+                    //         icon: ''
+                    //     },
+                    //     component: () => import('@/views/hmall/order/order.vue')
+                    // }
+                    {
+                        path: 'shippingOrder',
+                        name: 'shippingOrder',
+                        meta: {
+                            title: '运费订单',
+                            tagName: '运费订单',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/shippingOrder/index')
+                    },
+                    {
+                        path: 'shippingorderDetail',
+                        name: 'shippingorderDetail',
+                        meta: {
+                            title: '订单查看',
+                            tagName: '订单查看',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/shippingorderDetail/index')
+                    },
+                    {
+                        path: 'onlinefreightDetails',
+                        name: 'onlinefreightDetails',
+                        meta: {
+                            title: '线上运费明细',
+                            tagName: '线上运费明细',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/onlinefreightDetails/index')
+                    },
+                    {
+                        path: 'freightDetails',
+                        name: 'freightDetails',
+                        meta: {
+                            title: '运费资金管理',
+                            tagName: '运费资金管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/freightDetails/index')
+                    },
+                    {
+                        path: 'withdrawalFreight',
+                        name: 'withdrawalFreight',
+                        meta: {
+                            title: '提现',
+                            tagName: '提现',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/withdrawalFreight/index')
+                    },
+                    {
+                        path: 'behalfManage',
+                        name: 'behalfManage',
+                        meta: {
+                            title: '代采资金管理',
+                            tagName: '代采资金管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/behalfManage/index')
                     }
                 ]
             },
@@ -613,6 +690,64 @@ export default [
                             showMenuAs: '/b2b/finance/merchantsDetail'
                         },
                         component: () => import('@/views/hmall/finance/miningManage/merchantBehalf.vue')
+                    }
+                ]
+            }, {
+                path: 'warehouse',
+                name: 'warehouse',
+                meta: {
+                    title: '仓配运费管理',
+                    tagName: '仓配运费管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'freightComputeRule',
+                        name: 'freightComputeRule',
+                        meta: {
+                            title: '运费计算规则',
+                            tagName: '运费计算规则',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/warehouseManage/freightComputeRule/index.vue')
+                    },
+                    {
+                        path: 'warehouseProductList',
+                        name: 'warehouseProductList',
+                        meta: {
+                            title: '仓配商品管理',
+                            tagName: '仓配商品管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/warehouseManage/warehouseProduct/index.vue')
+                    },
+                    {
+                        path: 'createWarehouse',
+                        name: 'createWarehouse',
+                        meta: {
+                            title: '批量添加仓配商品',
+                            tagName: '批量添加仓配商品',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/warehouse/warehouseProductList'
+                        },
+                        component: () => import('@/views/hmall/warehouseManage/warehouseProduct/createWarehouse.vue')
+                    },
+                    {
+                        path: 'addWarehouseProducts',
+                        name: 'addWarehouseProducts',
+                        meta: {
+                            title: '选择商品',
+                            tagName: '选择商品',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/warehouse/warehouseProductList'
+                        },
+                        component: () => import('@/views/hmall/warehouseManage/warehouseProduct/addWarehouseProducts.vue')
                     }
                 ]
             }
