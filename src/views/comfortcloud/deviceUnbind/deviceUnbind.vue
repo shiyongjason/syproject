@@ -109,7 +109,15 @@ export default {
             this.onQuery()
         },
         onDetail (val) {
-
+            console.log(val)
+            this.$router.push({
+                path: '/comfortcloud/equipmentOverview/deviceDetail',
+                query: {
+                    iotId: val.iotId,
+                    subIotId: val.iotId,
+                    deviceClass: '1'
+                }
+            })
         },
         onUnbind (val) {
             this.currentDevice = val
