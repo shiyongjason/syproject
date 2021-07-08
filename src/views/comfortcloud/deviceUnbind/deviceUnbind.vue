@@ -129,7 +129,7 @@ export default {
                 const params = {
                     iotId: this.currentDevice.iotId,
                     operator: this.userInfo.employeeName,
-                    phone: this.currentDevice.phone,
+                    phone: this.userInfo.phoneNumber,
                     remark: this.unBindDesc,
                     typeName: this.currentDevice.typeName
                 }
@@ -137,6 +137,7 @@ export default {
                 this.$message.success('解绑成功')
                 this.currentDevice = null
                 this.unBindDesc = ''
+                this.detailDialogVisible = false
                 this.onSearch()
             }
         },
