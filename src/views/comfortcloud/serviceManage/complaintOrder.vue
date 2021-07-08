@@ -14,17 +14,17 @@
             <div class="query-cont-col">
                 <div class="query-col-title">投诉时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                     <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                    <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                     </el-date-picker>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">解决状态：</div>
                 <div class="query-col-input">
-                    <el-select v-model="queryParams.status" style="width: 100%">
+                    <el-select v-model="queryParams.status" style="width: 100%" clearable>
                         <el-option label="待处理" value="0"></el-option>
                         <el-option label="处理中" value="10"></el-option>
                         <el-option label="已解决" value="20"></el-option>
@@ -72,7 +72,7 @@
                     {{orderStatus(scope.data.row.status)}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row.id)">查看详情</el-button>
+                    <el-button class="orangeBtn" @click="onDetail(scope.data.row.id)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
@@ -157,7 +157,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="设备ID" label-width="100px" :prop="'deviceInfoList.' + index + '.deviceId'" :rules="addOrderRules.deviceId">
-                            <el-input style="width: 150px" v-model="productItem.deviceId" maxlength="100" :rows="1" placeholder="请输入设备ID" />
+                            <el-input style="width: 150px" v-model="productItem.deviceId" maxlength="100" :rows="1" @blur='()=>{deviceIDonBlur(index)}' placeholder="请输入设备ID" />
                         </el-form-item>
                         <el-button style="align-self: flex-start;margin-left: 20px;" type="primary" @click="()=> { onRemoveProduct(index) }">删除</el-button>
                     </div>
@@ -187,9 +187,12 @@
                         </div>
                     </div>
                     <basicTable :tableLabel="recordTableLabel" :tableData="recordTableData" :isShowIndex='true' :pagination="recordPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                        <template slot="status" slot-scope="scope">
+                            {{orderStatus(scope.data.row.status)}}
+                        </template>
                         <template slot="action" slot-scope="scope">
                             <el-button class="orangeBtn" @click="onEdit(scope.data.row.id)">编辑</el-button>
-                            <el-button class="orangeBtn" @click="onEdit(scope.data.row.id)">删除</el-button>
+                            <el-button class="orangeBtn" @click="onDelete(scope.data.row.id)">删除</el-button>
                         </template>
                     </basicTable>
                 </div>
@@ -208,19 +211,18 @@
                     </el-form-item>
                     <el-form-item label="解决结果：" prop="status">
                         <el-select v-model="recordData.status" style="width: 100%">
-                            <el-option label="待处理" value="0"></el-option>
-                            <el-option label="处理中" value="10"></el-option>
-                            <el-option label="已解决" value="20"></el-option>
+                            <el-option label="处理中" :value='10'></el-option>
+                            <el-option label="已处理" :value='20'></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="解决内容：" prop="content">
-                        <el-input style="width: 400px" v-model="recordData.content" maxlength="100" :rows="3" placeholder="请输入沟通内容" />
+                        <el-input style="width: 400px" v-model="recordData.content" type="textarea" maxlength="100" :rows="3" placeholder="请输入沟通内容" />
                     </el-form-item>
                 </el-form>
             </div>
             <div slot="footer" class="dialog-footer">
-                <h-button>取 消</h-button>
-                <h-button type="primary" :loading="loading">确 定</h-button>
+                <h-button @click="createRecordCancel">取 消</h-button>
+                <h-button type="primary" @click="createRecordConform" :loading="loading">确 定</h-button>
             </div>
         </el-dialog>
     </div>
@@ -229,7 +231,14 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { getChiness } from '../../hmall/membership/api'
-import { createComplaintOrder, editComplaintOrder, editComplaintProcessOrder, createComplaintProcessOrder, deleteComplaintProcessOrder } from '../api/index'
+import {
+    createComplaintOrder,
+    editComplaintOrder,
+    editComplaintProcessOrder,
+    createComplaintProcessOrder,
+    deleteComplaintProcessOrder,
+    getOutboundList
+} from '../api/index'
 import { iotUrl, interfaceUrl } from '@/api/config'
 import Vue from 'vue'
 
@@ -284,7 +293,7 @@ export default {
             recordQueryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                workOrderNo: ''
+                workOrderId: ''
             },
             radio: '投诉信息',
             imgs: [],
@@ -296,6 +305,7 @@ export default {
             tableData: [],
             recordTableData: [],
             tableLabel: [
+                { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '投诉时间', prop: 'time', formatters: 'dateTime' },
                 { label: '工单号', prop: 'workOrderNo' },
                 { label: '创建人', prop: 'creator' },
@@ -309,7 +319,7 @@ export default {
                 { label: '解决状态', prop: 'status' }
             ],
             recordTableLabel: [
-                { label: '沟通时间', prop: 'processTime', formatters: 'dateTime' },
+                { label: '沟通时间', prop: 'processTimeString' },
                 { label: '解决结果', prop: 'status' },
                 { label: '解决内容', prop: 'content' }
             ],
@@ -382,14 +392,79 @@ export default {
         addResloveRecord () {
             this.addRecordDialogVisible = true
         },
-        async onTabRadio (val) {
+        onTabRadio (val) {
             if (val === '解决记录') {
-                this.recordQueryParams.pageNumber = 1
-                let parmas = { ...this.recordQueryParams }
-                parmas.workOrderId = this.detailData.id
-                await this.getComplaintProcessOrderList(parmas)
-                console.log(this.complaintProcessOrderList)
+                this.onQueryComplaintRecord()
             }
+        },
+        async onQueryComplaintRecord () {
+            this.recordQueryParams.pageNumber = 1
+            let parmas = { ...this.recordQueryParams }
+            parmas.workOrderId = this.detailData.id
+            await this.getComplaintProcessOrderList(parmas)
+            this.recordTableData = this.complaintProcessOrderList.records
+            this.recordPagination = {
+                pageNumber: this.complaintProcessOrderList.current,
+                pageSize: this.complaintProcessOrderList.size,
+                total: this.complaintProcessOrderList.total
+            }
+        },
+        createRecordConform () {
+            this.recordData.operator = this.userInfo.employeeName
+            this.recordData.workOrderId = this.detailData.id
+            console.log(this.recordData)
+            this.loading = true
+            this.$refs['addRecordForm'].validate(async (valid) => {
+                if (valid) {
+                    try {
+                        if (this.recordData.id > 0) {
+                            await editComplaintProcessOrder(this.recordData)
+                        } else {
+                            this.recordData.id = undefined
+                            await createComplaintProcessOrder(this.recordData)
+                        }
+                        this.loading = false
+                        this.createRecordCancel()
+                        this.onQueryComplaintRecord()
+                        this.$message({
+                            message: `操作成功`,
+                            type: 'success'
+                        })
+                    } catch (e) {
+                        this.loading = false
+                    }
+                } else {
+                    this.loading = false
+                }
+            })
+        },
+        async onEdit (val) {
+            await this.getComplaintProcessOrderDetail({ id: val })
+            this.recordData = { ...this.complaintProcessOrderDetail }
+            this.recordData.id = val
+            this.recordData.workOrderId = this.detailData.id
+            this.recordData.operator = this.userInfo.employeeName
+            this.addRecordDialogVisible = true
+        },
+        async onDelete (val) {
+            this.$confirm('删除后将无法恢复，请确认继续删除。', '解决记录删除确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await deleteComplaintProcessOrder({ id: val, operateUserName: this.userInfo.employeeName })
+                this.onQueryComplaintRecord()
+                this.$message.success('删除成功')
+            })
+        },
+        createRecordCancel () {
+            if (this.$refs['addRecordForm']) {
+                this.$nextTick(() => {
+                    this.$refs['addRecordForm'].clearValidate()
+                })
+            }
+            this.recordData = JSON.parse(JSON.stringify(_recordData))
+            this.addRecordDialogVisible = false
         },
         onCloseAddOrderDialog () {
             this.detailData = JSON.parse(JSON.stringify(_dataForm))
@@ -456,7 +531,6 @@ export default {
             return isJPG || isJPEG || isPNG
         },
         handleImageRemove (file, fileList) {
-            console.log(file, '======', fileList)
             let url = ''
             if (file.response && file.response.data) {
                 url = file.response.data.accessUrl
@@ -466,16 +540,15 @@ export default {
             let index = this.detailData.pictures.indexOf(url)
             this.detailData.pictures.splice(index, 1)
         },
-        async onEdit (val) {
+        async onDetail (val) {
             this.categoryTypes = []
             await this.getComplaintOrderDetail({ id: val })
+            this.detailData = this.complaintOrderDetail
             for (let i = 0; i < this.detailData.deviceInfoList.length; i++) {
                 const device = this.detailData.deviceInfoList[i]
                 await this.findCloudMerchantShopCategoryTypeList({ categoryId: device.categoryId })
                 this.categoryTypes.push(this.cloudMerchantShopCategoryTypeList)
             }
-            this.detailData = this.complaintOrderDetail
-            this.addOrderDialogVisible = true
             if (this.detailData.pictures) {
                 this.imgs = this.detailData.pictures.map(item => {
                     return {
@@ -484,6 +557,7 @@ export default {
                     }
                 })
             }
+            this.addOrderDialogVisible = true
         },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
@@ -492,6 +566,21 @@ export default {
         onSizeChange (val) {
             this.searchParams.pageSize = val
             this.onQuery()
+        },
+        async deviceIDonBlur (index) {
+            const iotId = this.detailData.deviceInfoList[index].deviceId
+            if (index === 0 && iotId && iotId.length > 0) {
+                const { data } = await getOutboundList({ iotId })
+                const records = data.data.records
+                if (records.length > 0) {
+                    const info = records[0]
+                    this.detailData.agencyMobile = info.dealerPhone
+                    this.detailData.agencyName = info.dealer
+                } else {
+                    this.detailData.agencyMobile = ''
+                    this.detailData.agencyName = ''
+                }
+            }
         },
         async getAreacode () {
             const { data } = await getChiness()
@@ -548,7 +637,9 @@ export default {
         cancelAddOrderClick () {
             this.imgs = []
             if (this.$refs['addOrderForm']) {
-                this.$refs['addOrderForm'].clearValidate()
+                this.$nextTick(() => {
+                    this.$refs['addOrderForm'].clearValidate()
+                })
             }
             this.radio = '投诉信息'
             this.addOrderDialogVisible = false
@@ -619,11 +710,11 @@ export default {
         orderStatus () {
             return status => {
                 if (status === 0) {
-                    return '待解决'
+                    return '待处理'
                 } else if (status === 10) {
-                    return '解决中'
+                    return '处理中'
                 } else if (status === 20) {
-                    return '已解决'
+                    return '已处理'
                 }
                 return ''
             }
