@@ -26,10 +26,13 @@
             </div>
             <!-- tab页签 -->
                  <el-tabs v-model="activeName" @tab-click="handleTabClick">
-                    <el-tab-pane label="放款交接信息" name="loanHandoverInformation">
+                    <el-tab-pane label="banner管理" name="banner">
                         <!-- <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest' @requestBack='getList' :paymentOrderId='paymentOrderId'></loanHandoverInformation> -->
                     </el-tab-pane>
-                    <el-tab-pane label="上游支付信息" name="upstreamPaymentInformation" v-if="isTabs">
+                    <el-tab-pane label="楼层管理" name="floor" >
+                        <!-- <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation> -->
+                    </el-tab-pane>
+                    <el-tab-pane label="品类推荐" name="category" >
                         <!-- <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation> -->
                     </el-tab-pane>
                 </el-tabs>
@@ -75,10 +78,12 @@ export default class Liveplayer extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
+
     uploadParameters = {
         updateUid: '',
         reservedName: false
     }
+    activeName:string='banner'
     innerVisible:boolean = false
     brandVideoUrl:string = ''
     page = {

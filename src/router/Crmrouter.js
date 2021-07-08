@@ -529,21 +529,21 @@ export default [
                             showMenuAs: '/goodwork/commodityManagement/productLibrary'
                         },
                         component: () => import('@/views/crm/shopMall/productLibrary/spuEdit.vue')
-                    },
-                    {
-                        path: 'advmanage',
-                        name: 'advmanage',
-                        meta: {
-                            title: '广告位管理',
-                            tagName: '广告位管理',
-                            parentName: '好橙工',
-                            isMenu: false,
-                            icon: '',
-                            showMenuAs: '/goodwork/advmanage/index'
-                        },
-                        component: () => import('@/views/crm/advmanage/index.vue')
                     }
                 ]
+            },
+            {
+                path: 'advmanage',
+                name: 'advmanage',
+                meta: {
+                    title: '广告位管理',
+                    tagName: '广告位管理',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: '',
+                    showMenuAs: '/goodwork/advmanage'
+                },
+                component: () => import('@/views/crm/advmanage/index.vue')
             }
         ]
     }
