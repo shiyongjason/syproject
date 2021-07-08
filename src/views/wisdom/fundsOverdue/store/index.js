@@ -13,7 +13,6 @@ const state = {
 }
 const getters = {
     backMoneyList: state => {
-        console.log('🚀 --- state', precisionMethods)
         return state.backMoneyList.map(value => {
             value.onTimeRate = value.onTimeRate !== null ? precisionMethods.multipliedBy(value.onTimeRate, 100) + '%' : '-'
             value.rebateRate = value.rebateRate !== null ? precisionMethods.multipliedBy(value.rebateRate, 100) + '%' : '-'
