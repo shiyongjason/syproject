@@ -37,10 +37,10 @@
                         <el-input v-model="homeParams.phone" placeholder="输入手机号" maxlength="11"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont-col" v-if="homeParams.modeType != 'all'">
                     <div class="query-col-title">设备ID：</div>
                     <div class="query-col-input">
-                        <el-input v-model="homeParams.subIotId" placeholder="输入手机号" maxlength="11"></el-input>
+                        <el-input v-model="homeParams.subIotId" placeholder="输入设备ID"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -392,6 +392,7 @@ export default {
                 pageSize: 10,
                 pageNumber: 1,
                 phone: '',
+                subIotId: '',
                 type: '',
                 startDate: '',
                 endDate: '',
