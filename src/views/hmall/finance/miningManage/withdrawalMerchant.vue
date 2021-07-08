@@ -231,7 +231,7 @@ export default {
         },
 
         onCancel () {
-            this.$router.push('/b2b/finance/merchantsDetail')
+            this.$router.push('/b2b/fundAudit/merchantsDetail')
             this.setNewTags((this.$route.fullPath).split('?')[0])
         },
 

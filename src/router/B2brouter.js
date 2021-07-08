@@ -675,7 +675,7 @@ export default [
                             tagName: '提现',
                             isMenu: false,
                             icon: '',
-                            showMenuAs: '/b2b/finance/merchantsDetail'
+                            showMenuAs: '/b2b/fundAudit/merchantsDetail'
                         },
                         component: () => import('@/views/hmall/finance/miningManage/withdrawalMerchant.vue')
                     },
@@ -687,7 +687,7 @@ export default [
                             tagName: '商家详情',
                             isMenu: false,
                             icon: '',
-                            showMenuAs: '/b2b/finance/merchantsDetail'
+                            showMenuAs: '/b2b/fundAudit/merchantsDetail'
                         },
                         component: () => import('@/views/hmall/finance/miningManage/merchantBehalf.vue')
                     }

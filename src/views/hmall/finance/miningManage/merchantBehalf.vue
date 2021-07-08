@@ -132,7 +132,7 @@
                 </template>
                 <!-- 代采订单号 -->
                 <template slot="agentOrderNo" slot-scope="scope">
-                    <a class="isLink" @click="onInfo">{{scope.data.row.agentOrderNo}}</a>
+                    <a class="isLink" @click="onInfo(scope.data.row)">{{scope.data.row.agentOrderNo}}</a>
                 </template>
                 <template slot="retainageAmount" slot-scope="scope">
                     <span v-if="Number(scope.data.row.retainageAmount)<0" style="color:red">{{scope.data.row.retainageAmount}}</span>
@@ -317,7 +317,7 @@ export default {
                     { label: '回款日期', prop: 'repayTime' },
                     { label: '回款金额', prop: 'repayAmount' },
                     { label: '资金同步状态', prop: 'fundSyncStatus' },
-                    { label: '同步备注', prop: 'syncFailureReason' }
+                    { label: '同步备注', prop: 'fundSyncFailureReason' }
                 ]
             } else if (this.tabName == 'occupy') {
                 this.tableLabel = [
@@ -367,8 +367,8 @@ export default {
             this.onQuery()
         },
         // 跳转boss代采订单详情
-        onInfo () {
-            this.$router.push({ path: '/b2b/fundAudit/fundInfo' })
+        onInfo (val) {
+            this.$router.push({ path: '/b2b/fundAudit/statusFundInfo', query: { id: val.agentOrderId, pageType: 'auditFundStatus' } })
         },
         // 资金同步
         async onFund (val) {
@@ -476,6 +476,13 @@ export default {
     mounted () {
         this.init()
         this.resetParams = { ...this.queryParams }
+    },
+    watch: {
+        $route () {
+            if (this.$route.query.id || this.$route.query.page) {
+                this.init()
+            }
+        }
     }
 }
 </script>
