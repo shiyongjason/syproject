@@ -176,8 +176,6 @@ export default {
                 username: '',
                 applyNo: '',
                 timeQueryType: '1',
-                auditTimeStart: '',
-                auditTimeEnd: '',
                 agentOrderNo: '',
                 childOrderNo: '',
                 startTime: '',
@@ -480,6 +478,7 @@ export default {
     watch: {
         $route () {
             if (this.$route.query.id || this.$route.query.page) {
+                console.log('111')
                 this.init()
             }
         }

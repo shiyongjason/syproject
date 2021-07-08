@@ -137,8 +137,8 @@ export const DEADLINE_OPTIONS = [
 ]
 // 商家详情 审核时间
 export const ADUITLINE_OPTIONS = [
-    { label: '申请日期', value: '10' },
-    { label: '审核日期', value: '20' }
+    { label: '审核日期', value: '1' },
+    { label: '申请日期', value: '2' }
 ]
 // 商家详情 代采提交日期
 export const MINADUITLINE_OPTIONS = [
