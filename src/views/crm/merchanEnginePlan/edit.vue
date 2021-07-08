@@ -116,7 +116,7 @@ export default {
                 ]
             },
             loading: false,
-            videoimageUrl: 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png',
+            videoimageUrl: '',
             innerVisible: false
         }
     },
