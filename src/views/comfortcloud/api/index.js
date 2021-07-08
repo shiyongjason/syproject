@@ -1044,7 +1044,7 @@ export const getBossBindRecords = params => axios.get(iotUrl + '/api/boss/device
 export const bossDeviceUnbind = params => axios.post(iotUrl + '/api/boss/device-unbind', params)
 
 // 获取投诉工单列表
-export const getComplaintOrderList = params => axios.get(iotUrl + '/mall/boss/complaint', params)
+export const getComplaintOrderList = params => axios.get(iotUrl + '/mall/boss/complaint', { params })
 // 获取投诉工单详情
 export const getComplaintOrderDetail = params => axios.get(iotUrl + '/mall/boss/complaint/detail', { params })
 // 创建投诉工单
@@ -1059,6 +1059,6 @@ export const editComplaintProcessOrder = params => axios.put(iotUrl + '/mall/bos
 // 创建工单解决记录
 export const createComplaintProcessOrder = params => axios.post(iotUrl + '/mall/boss/complaint/process', params)
 // 删除工单解决记录
-export const deleteComplaintProcessOrder = params => axios.delete(iotUrl + '/mall/boss/complaint/process', params)
+export const deleteComplaintProcessOrder = params => axios.delete(iotUrl + '/mall/boss/complaint/process', { data: params })
 // 获取工单解决记录详情
 export const getComplaintProcessOrderDetail = params => axios.get(iotUrl + '/mall/boss/complaint/process/detail', { params })
