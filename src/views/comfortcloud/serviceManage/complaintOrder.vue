@@ -284,7 +284,7 @@ export default {
                 workOrderNo: '',
                 status: null,
                 productName: '',
-                customerMobile: '',
+                customerMobile: this.$route.query.phone ? this.$route.query.phone : '',
                 agencyMobile: '',
                 agencyCompanyName: '',
                 endTime: '',

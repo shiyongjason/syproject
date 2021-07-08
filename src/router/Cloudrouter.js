@@ -320,18 +320,6 @@ export default [
                         component: () => import('@/views/comfortcloud/sendMessage/sendMessageDetail.vue')
                     },
                     {
-                        path: 'userFeedback',
-                        name: 'userFeedback',
-                        meta: {
-                            title: '用户反馈',
-                            tagName: '用户反馈',
-                            parentName: '舒适云概览',
-                            isMenu: true,
-                            icon: ''
-                        },
-                        component: () => import('@/views/comfortcloud/userFeedback/userFeedback.vue')
-                    },
-                    {
                         path: 'splashScreenManagement',
                         name: 'splashScreenManagement',
                         meta: {
@@ -380,18 +368,6 @@ export default [
                         component: () => import('@/views/comfortcloud/adpop/detail.vue')
                     },
                     {
-                        path: 'serviceRecord',
-                        name: 'serviceRecord',
-                        meta: {
-                            title: '客服记录',
-                            tagName: '客服记录',
-                            parentName: '舒适云概览',
-                            isMenu: true,
-                            icon: ''
-                        },
-                        component: () => import('@/views/comfortcloud/homeOverview/serviceRecord.vue')
-                    },
-                    {
                         path: 'knowledge',
                         name: 'knowledge',
                         meta: {
@@ -425,6 +401,30 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/serviceManage/serivceOrder.vue')
+                    },
+                    {
+                        path: 'userFeedback',
+                        name: 'userFeedback',
+                        meta: {
+                            title: '用户反馈',
+                            tagName: '用户反馈',
+                            parentName: '舒适云概览',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/userFeedback/userFeedback.vue')
+                    },
+                    {
+                        path: 'serviceRecord',
+                        name: 'serviceRecord',
+                        meta: {
+                            title: '客服记录',
+                            tagName: '客服记录',
+                            parentName: '舒适云概览',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/homeOverview/serviceRecord.vue')
                     },
                     {
                         path: 'complaintOrder',
