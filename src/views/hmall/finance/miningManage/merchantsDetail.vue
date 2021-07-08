@@ -436,12 +436,17 @@ export default {
             this.getOfflineRepay()
             this.getPrepayRepay()
             this.getMerchantStatistInfo()
-            this.resetParams = { ...this.queryParams }
         },
         onTab () {
             this.queryParams = { ...this.resetParams }
             if (this.tabName == 'detail') {
                 this.getMerchant()
+                this.getMerchantStatistInfo()
+            } else {
+                this.getOnlineRepay()
+                this.getOfflineRepay()
+                this.getPrepayRepay()
+                this.getRepayStatist()
             }
         },
         onRecordTab (value) {
@@ -643,6 +648,8 @@ export default {
     },
     mounted () {
         this.init()
+        this.resetParams = { ...this.queryParams }
+        this.repayResetParams = { ...this.repayQueryParams }
     }
 }
 </script>

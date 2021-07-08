@@ -280,41 +280,6 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/hmall/finance/withdrawal.vue')
-                    },
-                    {
-                        path: 'merchantsDetail',
-                        name: 'financeMerchantsDetail',
-                        meta: {
-                            title: '代采资金管理',
-                            tagName: '代采资金管理提现',
-                            isMenu: true,
-                            icon: ''
-                        },
-                        component: () => import('@/views/hmall/finance/miningManage/merchantsDetail.vue')
-                    },
-                    {
-                        path: 'withdrawalMerchant',
-                        name: 'withdrawalMerchant',
-                        meta: {
-                            title: '提现',
-                            tagName: '提现',
-                            isMenu: false,
-                            icon: '',
-                            showMenuAs: '/b2b/finance/merchantsDetail'
-                        },
-                        component: () => import('@/views/hmall/finance/miningManage/withdrawalMerchant.vue')
-                    },
-                    {
-                        path: 'merchantBehalf',
-                        name: 'financeMerchantBehalf',
-                        meta: {
-                            title: '商家详情',
-                            tagName: '商家详情',
-                            isMenu: false,
-                            icon: '',
-                            showMenuAs: '/b2b/finance/merchantsDetail'
-                        },
-                        component: () => import('@/views/hmall/finance/miningManage/merchantBehalf.vue')
                     }
                 ]
             },
@@ -504,8 +469,8 @@ export default [
                 path: 'fundAudit',
                 name: 'fundAudit',
                 meta: {
-                    title: '资金审核',
-                    tagName: '资金审核',
+                    title: '代采资金管理',
+                    tagName: '代采资金管理',
                     isMenu: true,
                     icon: ''
                 },
@@ -613,6 +578,41 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/hmall/fundAudit/prepayment.vue')
+                    },
+                    {
+                        path: 'merchantsDetail',
+                        name: 'financeMerchantsDetail',
+                        meta: {
+                            title: '代采资金管理',
+                            tagName: '代采资金管理提现',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/miningManage/merchantsDetail.vue')
+                    },
+                    {
+                        path: 'withdrawalMerchant',
+                        name: 'withdrawalMerchant',
+                        meta: {
+                            title: '提现',
+                            tagName: '提现',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/finance/merchantsDetail'
+                        },
+                        component: () => import('@/views/hmall/finance/miningManage/withdrawalMerchant.vue')
+                    },
+                    {
+                        path: 'merchantBehalf',
+                        name: 'financeMerchantBehalf',
+                        meta: {
+                            title: '商家详情',
+                            tagName: '商家详情',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/finance/merchantsDetail'
+                        },
+                        component: () => import('@/views/hmall/finance/miningManage/merchantBehalf.vue')
                     }
                 ]
             }

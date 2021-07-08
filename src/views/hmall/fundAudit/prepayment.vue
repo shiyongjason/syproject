@@ -252,8 +252,10 @@ export default {
                         }
                         await prepaymentRepay(this.sureId, form)
                         this.closeOrderDialog = false
+                        this.getPrepaymentList()
                     } catch (error) {
                         this.closeOrderDialog = false
+                        this.getPrepaymentList()
                     }
                 }
             })
