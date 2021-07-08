@@ -302,18 +302,24 @@ export default {
             this.closeOrderDialog = true
         },
         async onDialogSure () {
-            try {
-                await closeFund({
-                    id: this.dialogId,
-                    updateBy: this.userInfo.employeeName,
-                    cancelReason: this.form.cancelReason
-                })
-                this.closeOrderDialog = false
-                this.getAdvanceList()
-            } catch (e) {
-                this.closeOrderDialog = false
-                this.getAdvanceList()
-            }
+            this.$confirm('是否确认关闭此订单，订单确认后无法更改，请谨慎选择', '提示', {
+                cancelButtonText: '取消',
+                confirmButtonText: '确认',
+                type: 'warning'
+            }).then(async () => {
+                try {
+                    await closeFund({
+                        id: this.dialogId,
+                        updateBy: this.userInfo.employeeName,
+                        cancelReason: this.form.cancelReason
+                    })
+                    this.closeOrderDialog = false
+                    this.getAdvanceList()
+                } catch (e) {
+                    this.closeOrderDialog = false
+                    this.getAdvanceList()
+                }
+            })
         }
     }
 }
