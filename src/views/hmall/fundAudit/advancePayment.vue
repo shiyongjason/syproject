@@ -103,6 +103,20 @@
                     <h-button table v-if="scope.data.row.orderSwitch == 1" @click="onClose(scope.data.row)">关闭</h-button>
                 </template>
             </basicTable>
+            <el-dialog title="关闭" width="500px" :visible.sync="closeOrderDialog" :close-on-click-modal=false>
+                <div class="pl40 pt20">
+                    <span>是否确认关闭此订单，订单关闭后无法更改，请谨慎选择</span>
+                </div>
+                <el-form :model="form" label-width="80px" class="pt40">
+                    <el-form-item label="原因：" prop='cancelReason'>
+                        <el-input type="textarea" v-model="form.cancelReason" maxLength="50" placeholder="请输入原因"></el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer">
+                    <h-button @click="closeOrderDialog = false">取消</h-button>
+                    <h-button type="primary" @click="onDialogSure">确定</h-button>
+                </span>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -155,7 +169,10 @@ export default {
                 { label: '资金同步状态', prop: 'fundSyncStatus' },
                 { label: '操作人', prop: 'prepayConfirmOperator' }
             ],
-            copyParams: {}
+            copyParams: {},
+            form: {},
+            closeOrderDialog: false,
+            dialogId: ''
         }
     },
     computed: {
@@ -264,24 +281,37 @@ export default {
             }
         },
         async onSure (val) {
-            try {
-                await sureFund({
-                    id: val.id,
-                    updateBy: this.userInfo.employeeName
-                })
-                this.getAdvanceList()
-            } catch (e) {
-                this.getAdvanceList()
-            }
+            this.$confirm('是否确认预付款，订单确认后无法更改，请谨慎选择', '提示', {
+                cancelButtonText: '取消',
+                confirmButtonText: '确认',
+                type: 'warning'
+            }).then(async () => {
+                try {
+                    await sureFund({
+                        id: val.id,
+                        updateBy: this.userInfo.employeeName
+                    })
+                    this.getAdvanceList()
+                } catch (e) {
+                    this.getAdvanceList()
+                }
+            })
         },
-        async onClose (val) {
+        onClose (val) {
+            this.dialogId = val.id
+            this.closeOrderDialog = true
+        },
+        async onDialogSure () {
             try {
                 await closeFund({
-                    id: val.id,
-                    updateBy: this.userInfo.employeeName
+                    id: this.dialogId,
+                    updateBy: this.userInfo.employeeName,
+                    cancelReason: this.form.cancelReason
                 })
+                this.closeOrderDialog = false
                 this.getAdvanceList()
             } catch (e) {
+                this.closeOrderDialog = false
                 this.getAdvanceList()
             }
         }

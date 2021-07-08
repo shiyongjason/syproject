@@ -442,6 +442,12 @@ export default {
             this.queryParams = { ...this.resetParams }
             if (this.tabName == 'detail') {
                 this.getMerchant()
+                this.getMerchantStatistInfo()
+            } else {
+                this.getOnlineRepay()
+                this.getOfflineRepay()
+                this.getPrepayRepay()
+                this.getRepayStatist()
             }
         },
         onRecordTab (value) {
