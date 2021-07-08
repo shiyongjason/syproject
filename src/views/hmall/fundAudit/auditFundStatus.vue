@@ -67,7 +67,7 @@
                     {{goodsStatusMap.get(scope.data.row.goodsStatus)}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="onseeTask(scope.data.row)">查看</h-button>
+                    <h-button table @click="onseeTask(scope.data.row ,'auditFundStatus')">查看</h-button>
                     <h-button table v-if="scope.data.row.allocateStatus == 10" @click="onParagraph(scope.data.row)">出款确认</h-button>
                     <h-button table v-if="scope.data.row.allocateStatus == 20 && scope.data.row.fundStatus == 10&& scope.data.row.fundStatus == 20&& scope.data.row.goodsStatus == 20&& scope.data.row.goodsStatus == 30" @click="onGodown(scope.data.row)">货物到仓确认</h-button>
                 </template>
@@ -208,8 +208,8 @@ export default {
             this.queryParams.pageNumber = val.pageNumber
             this.getStatusFundList()
         },
-        onseeTask (val) {
-            this.$router.push({ path: '/b2b/fundAudit/statusFundInfo', query: { id: val.id, pageType: auditFundStatus } })
+        onseeTask (val, page) {
+            this.$router.push({ path: '/b2b/fundAudit/statusFundInfo', query: { id: val.id, pageType: page } })
         },
         onParagraph (val) {
             this.$confirm(`是否确认出款`, '出款确认', {

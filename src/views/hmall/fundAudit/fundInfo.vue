@@ -73,8 +73,13 @@
                         </el-form-item>
                     </div>
                 </template>
-                <basicTable :tableData="tableDataLog" :tableLabel="tableLabelLog" :isMultiple="false" class="mt20 mb20" v-if="auditFundStatus">
-                </basicTable>
+                <template v-if="auditFundStatus">
+                    <div class="table-cont-title">
+                        <span class="table-title-name">日志信息</span>
+                    </div>
+                    <basicTable :tableData="tableDataLog" :tableLabel="tableLabelLog" :isMultiple="false" class="mt20 mb20">
+                    </basicTable>
+                </template>
             </el-form>
         </div>
         <div class="page-body-cont btn-cont fr">
@@ -210,7 +215,7 @@ export default {
             await this.findAuditFundInfo({ id: this.$route.query.id })
             this.form = { ...this.auditFundInfo }
             this.tableData = this.auditFundInfo.skuList
-            this.tableLabelLog = this.auditFundInfo.logs
+            this.tableDataLog = this.auditFundInfo.logs
         },
         onChange () {
             this.$nextTick(() => {
