@@ -69,7 +69,7 @@
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onseeTask(scope.data.row ,'auditFundStatus')">查看</h-button>
                     <h-button table v-if="scope.data.row.allocateStatus == 10" @click="onParagraph(scope.data.row)">出款确认</h-button>
-                    <h-button table v-if="scope.data.row.allocateStatus == 20 && scope.data.row.fundStatus == 10&& scope.data.row.fundStatus == 20&& scope.data.row.goodsStatus == 20&& scope.data.row.goodsStatus == 30" @click="onGodown(scope.data.row)">货物到仓确认</h-button>
+                    <h-button table v-if="scope.data.row.allocateStatus == 20 &&scope.data.row.goodsStatus != 40" @click="onGodown(scope.data.row)">货物到仓确认</h-button>
                 </template>
             </basicTable>
             <el-dialog title="货物出仓确认" width="500px" :visible.sync="closeOrderDialog" :close-on-click-modal=false>
@@ -241,8 +241,10 @@ export default {
                         }
                         await warehouseFund(form)
                         this.closeOrderDialog = false
+                        this.getStatusFundList()
                     } catch (error) {
                         this.closeOrderDialog = false
+                        this.getStatusFundList()
                     }
                 }
             })

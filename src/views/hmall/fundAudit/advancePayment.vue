@@ -314,9 +314,11 @@ export default {
                         cancelReason: this.form.cancelReason
                     })
                     this.closeOrderDialog = false
+                    this.form.cancelReason = ''
                     this.getAdvanceList()
                 } catch (e) {
                     this.closeOrderDialog = false
+                    this.form.cancelReason = ''
                     this.getAdvanceList()
                 }
             })
