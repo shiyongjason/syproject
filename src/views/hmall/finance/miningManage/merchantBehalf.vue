@@ -472,13 +472,12 @@ export default {
         ...mapActions([])
     },
     mounted () {
-        this.init()
         this.resetParams = { ...this.queryParams }
+        this.init()
     },
     watch: {
         $route () {
             if (this.$route.query.id || this.$route.query.page) {
-                console.log('111')
                 this.init()
             }
         }
