@@ -1,6 +1,6 @@
 
 import * as types from './mutation-types'
-import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo, findMerchant, findMerchantStatist, findOnlineRepay, findOfflineRepay, findPrepayRepay, findRepayStatist, findApplyList, findPrepayList, findOccupationList } from '../api'
+import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo, findMerchant, findMerchantStatist, findOnlineRepay, findOfflineRepay, findPrepayRepay, findRepayStatist, findApplyList, findPrepayList, findOccupationList, findAgentCharge, findAgentCashWithdrawal, findAgentBankAccountInfo, findAgentBankCardInfo } from '../api'
 
 const state = {
     // 服务费收取明细
@@ -36,7 +36,17 @@ const state = {
     // 资金代付,占用详情
     prepayList: {},
     // 资金回款详情
-    occupationList: {}
+    occupationList: {},
+    // 代采资金 提现明细
+    agentCharge: {},
+    // 代采资金提现
+    agentCashWithdrawal: [],
+    // 代采资金 账户信息
+    agentBankAccountInfo: {},
+    // 代采资金 提现银行卡信息
+    agentBankCardInfo: {
+        agentBankPhoneNumber: ''
+    }
 }
 
 const getters = {
@@ -55,7 +65,11 @@ const getters = {
     repayStatistInfo: state => state.repayStatistInfo,
     applyList: state => state.applyList,
     prepayList: state => state.prepayList,
-    occupationList: state => state.occupationList
+    occupationList: state => state.occupationList,
+    agentCharge: state => state.agentCharge,
+    agentCashWithdrawal: state => state.agentCashWithdrawal,
+    agentBankAccountInfo: state => state.agentBankAccountInfo,
+    agentBankCardInfo: state => state.agentBankCardInfo
 }
 
 const mutations = {
@@ -106,6 +120,18 @@ const mutations = {
     },
     [types.OCCUPATION_LIST] (state, payload) {
         state.occupationList = payload
+    },
+    [types.AGENT_CHARGE] (state, payload) {
+        state.agentCharge = payload
+    },
+    [types.AGENT_CASH_WITHDRAWAL_INFO] (state, payload) {
+        state.agentCashWithdrawal = payload
+    },
+    [types.AGENT_BANK_ACCOUNT_INFO] (state, payload) {
+        state.agentBankAccountInfo = payload
+    },
+    [types.AGENT_BANK_CARD_INFO] (state, payload) {
+        state.agentBankCardInfo = payload
     }
 }
 
@@ -173,6 +199,22 @@ const actions = {
     async findOccupationList ({ commit }, params) {
         const { data } = await findOccupationList(params)
         commit(types.OCCUPATION_LIST, data)
+    },
+    async findAgentCharge ({ commit }, params) {
+        const { data } = await findAgentCharge(params)
+        commit(types.AGENT_CHARGE, data)
+    },
+    async findAgentCashWithdrawal ({ commit }, params) {
+        const { data } = await findAgentCashWithdrawal(params)
+        commit(types.AGENT_CASH_WITHDRAWAL_INFO, data)
+    },
+    async findAgentBankAccountInfo ({ commit }, params) {
+        const { data } = await findAgentBankAccountInfo(params)
+        commit(types.AGENT_BANK_ACCOUNT_INFO, data)
+    },
+    async findAgentBankCardInfo ({ commit }, params) {
+        const { data } = await findAgentBankCardInfo(params)
+        commit(types.AGENT_BANK_CARD_INFO, data)
     }
 }
 

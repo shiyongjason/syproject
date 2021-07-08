@@ -39,12 +39,12 @@ export const closeFund = (params) => {
     return axios.patch(`${B2bUrl}fund/boss/agent/order/close`, params)
 }
 // 代采订单预付款订单同步
-export const syncFund = (params) => {
-    return axios.patch(`${B2bUrl}fund/boss/agent/order/${params.id}/sync-to-mis`, params)
+export const syncFund = (id, params) => {
+    return axios.patch(`${B2bUrl}fund/boss/agent/order/${id}/sync-to-mis`, params)
 }
 // 代采订单预付款资金同步
-export const syncMisFund = (params) => {
-    return axios.patch(`${B2bUrl}fund/boss/agent/order/${params.id}/sync-fund-to-mis`, params)
+export const syncMisFund = (id, params) => {
+    return axios.patch(`${B2bUrl}fund/boss/agent/order/${id}/sync-fund-to-mis`, params)
 }
 // 代采订单状态列表
 export const findStatusFund = (params) => {

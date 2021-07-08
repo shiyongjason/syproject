@@ -226,14 +226,6 @@
                     </div>
                     <template v-if="recordTabName == 'isOnline'">
                         <div class="query-cont-col">
-                            <div class="query-col-title">类型：</div>
-                            <div class="query-col-input">
-                                <el-select v-model="repayQueryParams.type">
-                                    <el-option v-for="item in businessDetaulOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                                </el-select>
-                            </div>
-                        </div>
-                        <div class="query-cont-col">
                             <div class="query-col-title">状态：</div>
                             <div class="query-col-input">
                                 <el-select v-model="repayQueryParams.status">
@@ -286,9 +278,6 @@
                     </div>
                 </div>
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="pagination" @onCurrentChange="onCurrentChange" @onSizeChange="handleSizeChange" :isShowSum="true" :getSum="getSum">
-                    <template slot="type" slot-scope="scope">
-                        <span>{{businessDetaulMap.get(scope.data.row.type)}}</span>
-                    </template>
                     <template slot="status" slot-scope="scope">
                         <span>{{statusMap.get(scope.data.row.status)}}</span>
                     </template>
@@ -352,7 +341,6 @@ export default {
             ],
             paginationDetail: {},
             repayQueryParams: {
-                type: '',
                 status: '',
                 startTime: '',
                 endTime: '',
@@ -370,7 +358,6 @@ export default {
             tableLabel: [
                 { label: '时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '金额', prop: 'amount' },
-                { label: '类型', prop: 'type' },
                 { label: '状态', prop: 'status' },
                 { label: '回款订单号', prop: 'childOrderNo' },
                 { label: '回款代采订单号', prop: 'agentOrderNo' },
@@ -463,7 +450,6 @@ export default {
                 this.tableLabel = [
                     { label: '时间', prop: 'createTime', formatters: 'dateTime' },
                     { label: '金额', prop: 'amount' },
-                    { label: '类型', prop: 'type' },
                     { label: '状态', prop: 'status' },
                     { label: '回款订单号', prop: 'childOrderNo' },
                     { label: '回款代采订单号', prop: 'agentOrderNo' },
@@ -644,12 +630,15 @@ export default {
         },
         async getOnlineRepay () {
             await this.findOnlineRepay(this.repayQueryParams)
+            this.tableData = this.onlineRepayList.records
         },
         async getOfflineRepay () {
             await this.findOfflineRepay(this.repayQueryParams)
+            this.tableData = this.offlineRepayList.records
         },
         async getPrepayRepay () {
             await this.findPrepayRepay(this.repayQueryParams)
+            this.tableData = this.prepayRepayList.records
         }
     },
     mounted () {

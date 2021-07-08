@@ -97,7 +97,7 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table v-if="scope.data.row.prepayStatus == 10" @click="onSure(scope.data.row)">确认</h-button>
-                    <h-button table @click="onseeTask(scope.data.row)">查看</h-button>
+                    <h-button table @click="onseeTask(scope.data.row,'advancePayment')">查看</h-button>
                     <h-button table v-if="scope.data.row.orderSyncStatus == 10" @click="onAudit(scope.data.row)">订单同步</h-button>
                     <h-button table v-if="scope.data.row.fundSyncStatus == 10" @click="onFund(scope.data.row)">资金同步</h-button>
                     <h-button table v-if="scope.data.row.orderSwitch == 1" @click="onClose(scope.data.row)">关闭</h-button>
@@ -241,14 +241,15 @@ export default {
             this.queryParams.pageNumber = val.pageNumber
             this.getAdvanceList()
         },
-        onseeTask (val) {
-            this.$router.push({ path: '/b2b/fundAudit/advanceFundInfo', query: { id: val.id, seeTask: true, pageType: advancePayment } })
+        onseeTask (val, page) {
+            this.$router.push({ path: '/b2b/fundAudit/advanceFundInfo', query: { id: val.id, pageType: page } })
         },
         async getAdvanceList () {
             await this.findAdvanceList(this.queryParams)
         },
         async onFund (val) {
             try {
+                console.log(val.id)
                 await syncMisFund(val.id)
                 this.getAdvanceList()
             } catch (e) {
@@ -257,6 +258,7 @@ export default {
         },
         async onAudit (val) {
             try {
+                console.log(val.id)
                 await syncFund(val.id)
                 this.getAdvanceList()
             } catch (e) {

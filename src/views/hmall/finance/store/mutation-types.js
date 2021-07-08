@@ -30,3 +30,11 @@ export const APPLY_LIST = 'APPLY_LIST'
 export const PREPAY_LIST = 'PREPAY_LIST'
 // 资金回款详情
 export const OCCUPATION_LIST = 'OCCUPATION_LIST'
+// 代采资金提现明细
+export const AGENT_CHARGE = 'AGENT_CHARGE'
+// 代采资金提现
+export const AGENT_CASH_WITHDRAWAL_INFO = 'AGENT_CASH_WITHDRAWAL_INFO'
+// 代采资金 账户信息
+export const AGENT_BANK_ACCOUNT_INFO = 'AGENT_BANK_ACCOUNT_INFO'
+// 代采资金 提现银行卡信息
+export const AGENT_BANK_CARD_INFO = 'AGENT_BANK_CARD_INFO'

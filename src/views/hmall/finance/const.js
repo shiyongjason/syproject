@@ -89,20 +89,12 @@ export const BUSINESS_DETAIL_MAP = new Map([
 // 资金代采商家明细状态
 export const STAUTS_OPTIONS = [
     { label: '全部', value: '' },
-    { label: '未处理', value: '1' },
-    { label: '处理中', value: '2' },
-    { label: '成功', value: '3' },
-    { label: '失败', value: '4' },
-    { label: '关闭', value: '5' },
-    { label: '冻结中', value: '6' }
+    { label: '冻结中', value: '10' },
+    { label: '已解冻', value: '20' }
 ]
 export const STAUTS_MAP = new Map([
-    [1, '未处理'],
-    [2, '处理中'],
-    [3, '成功'],
-    [4, '失败'],
-    [5, '关闭'],
-    [6, '冻结中']
+    [10, '冻结中'],
+    [20, '已解冻']
 ])
 // 逾期否
 export const OVERDUE_OPTIONS = [
@@ -131,7 +123,7 @@ export const CAPITALS_OPTIONS = [
     { label: '全部', value: '0' },
     { label: '未回款', value: '10' },
     { label: '部分汇款', value: '20' },
-    { label: '已回款', value: '20' }
+    { label: '已回款', value: '30' }
 ]
 export const CAPITALS_MAP = new Map([
     [10, '未回款'],

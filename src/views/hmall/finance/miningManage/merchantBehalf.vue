@@ -30,8 +30,8 @@
                             </el-select>
                         </div>
                         <div class="query-col-input">
-                            <el-date-picker v-model="queryParams.auditTimeStart" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart"></el-date-picker>
-                            <el-date-picker v-model="queryParams.auditTimeEnd" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59"></el-date-picker>
+                            <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
+                            <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
                         </div>
                     </div>
                 </template>
@@ -134,10 +134,13 @@
                 <template slot="agentOrderNo" slot-scope="scope">
                     <a class="isLink" @click="onInfo">{{scope.data.row.agentOrderNo}}</a>
                 </template>
-                <!-- 占用金额 -->
-                <template slot="status" slot-scope="scope">
-                    <span v-if="Number(scope.data.row.status)<0" style="color:red">{{scope.data.row.status}}</span>
-                    <span v-else>{{scope.data.row.status}}</span>
+                <template slot="retainageAmount" slot-scope="scope">
+                    <span v-if="Number(scope.data.row.retainageAmount)<0" style="color:red">{{scope.data.row.retainageAmount}}</span>
+                    <span v-else>{{scope.data.row.retainageAmount}}</span>
+                </template>
+                <template slot="repayedAmount" slot-scope="scope">
+                    <span v-if="Number(scope.data.row.repayedAmount)<0" style="color:red">{{scope.data.row.repayedAmount}}</span>
+                    <span v-else>{{scope.data.row.repayedAmount}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button @click="onFund(scope.data.row)">资金同步</el-button>
@@ -149,6 +152,7 @@
 <script>
 import { STAUTS_OPTIONS, STAUTS_MAP, OVERDUE_OPTIONS, OVERDUE_MAP, ADUITLINE_OPTIONS, MINADUITLINE_OPTIONS, RETAADUITLINE_OPTIONS, DEADLINE_TYPE_OPTIONS, DEADLINE_TYPE_MAP, STAUTS_TOGER_OPTIONS, STAUTS_TOGER_MAP, CAPITALS_OPTIONS, CAPITALS_MAP } from '../const.js'
 import { mapState, mapActions } from 'vuex'
+import { syncFundMis } from '../api/index'
 export default {
     name: 'merchantBehalf',
     data () {
@@ -201,32 +205,12 @@ export default {
         }
     },
     computed: {
-        pickerOptionsStart () {
-            return {
-                disabledDate: (time) => {
-                    const beginDateVal = this.queryParams.auditTimeEnd
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: (time) => {
-                    const beginDateVal = this.queryParams.auditTimeStart
-                    if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
         pickerStart () {
             return {
                 disabledDate: (time) => {
-                    const beginDateVal = this.queryParams.auditTimeEnd
+                    const beginDateVal = this.queryParams.endTime
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
+                        return time.getTime() >= new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -234,9 +218,9 @@ export default {
         pickerEnd () {
             return {
                 disabledDate: (time) => {
-                    const beginDateVal = this.queryParams.auditTimeStart
+                    const beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -257,10 +241,8 @@ export default {
             } else {
                 this.getOccupationList()
             }
-            this.resetParams = { ...this.queryParams }
         },
         onTab (value) {
-            this.onQuery()
             if (this.tabName == 'apply') {
                 this.tableLabel = [
                     { label: '管理员账号', prop: 'username' },
@@ -330,10 +312,10 @@ export default {
                     { label: '资金状态', prop: 'fundStatus' }
                 ]
             }
+            this.onReset()
         },
         onQuery () {
             this.queryParams.pageNumber = 1
-            this.resetParams = { ...this.queryParams }
             if (this.tabName == 'apply') {
                 this.getApplyList()
             } else if (this.tabName == 'returned') {
@@ -362,7 +344,13 @@ export default {
             this.$router.push({ path: '/b2b/fundAudit/fundInfo' })
         },
         // 资金同步
-        onFund (val) {
+        async onFund (val) {
+            try {
+                await syncFundMis(val.id)
+                this.getOccupationList()
+            } catch (e) {
+                this.getOccupationList()
+            }
         },
         ...mapActions({
             findApplyList: 'finance/findApplyList',
@@ -371,12 +359,15 @@ export default {
         }),
         async getApplyList () {
             await this.findApplyList(this.queryParams)
+            this.tableData = this.applyList.records
         },
         async getPrepayList () {
             await this.findPrepayList(this.queryParams)
+            this.tableData = this.prepayList.records
         },
         async getOccupationList () {
             await this.findOccupationList(this.queryParams)
+            this.tableData = this.occupationList.records
         },
         // 合计
         getSum (param) {
@@ -457,6 +448,7 @@ export default {
     },
     mounted () {
         this.init()
+        this.resetParams = { ...this.queryParams }
     }
 }
 </script>

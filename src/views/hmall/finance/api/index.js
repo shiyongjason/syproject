@@ -76,3 +76,31 @@ export const findPrepayList = (params) => {
 export const findOccupationList = (params) => {
     return axios.get(`${B2bUrl}fund/boss/repay`, { params })
 }
+// 回款 资金同步
+export const syncFundMis = (id, params) => {
+    return axios.patch(`${B2bUrl}fund/boss/repay/${id}/sync-fund-to-mis`, params)
+}
+// 代采资金 提现明细
+export const findAgentCharge = (params) => {
+    return axios.get(`${B2bUrl}payment/boss/purchasing-agent-funds/withdraws`, { params })
+}
+// 代采资金提现
+export const findAgentCashWithdrawal = (params) => {
+    return axios.get(`${B2bUrl}payment/boss/purchasing-agent-funds/withdraws`, { params })
+}
+// 服务费提现明细
+export const withdrawal = (params) => {
+    return axios.post(`${B2bUrl}payment/boss/purchasing-agent-funds/withdraws`, params)
+}
+// 代采资金 账户信息
+export const findAgentBankAccountInfo = (params) => {
+    return axios.get(`${B2bUrl}payment/boss/purchasing-agent-funds/user-info`, { params })
+}
+// 代采资金 提现银行卡信息
+export const findAgentBankCardInfo = (params) => {
+    return axios.get(`${B2bUrl}payment/boss/purchasing-agent-funds/bank-card`, { params })
+}
+// 代采资金 提现 验证码
+export const getAgentSmsCode = () => {
+    return axios.post(`${B2bUrl}payment/boss/purchasing-agent-funds/withdraws/sms`, {})
+}

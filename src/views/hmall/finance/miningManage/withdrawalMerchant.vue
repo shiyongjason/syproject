@@ -7,11 +7,11 @@
             <div class="query-cont__row mb20">
                 <el-form :model="withdrawalForm" ref="withdrawalForm" label-width="80px" label-position="right" :rules="rules">
                     <el-form-item label="银行卡号">
-                        <span style="margin-left: 20px">{{bankCardInfo.bankAccountNumber}}</span>
+                        <span style="margin-left: 20px">{{agentBankCardInfo.bankAccountNumber}}</span>
                     </el-form-item>
                     <el-form-item label="提现金额" prop="amount">
                         <el-input v-model="withdrawalForm.amount" placeholder="请填写"></el-input>
-                        <span style="margin-left: 20px">可提现金额{{bankAccountInfo.totalBalance | moneyShow}}元</span>
+                        <span style="margin-left: 20px">可提现金额{{agentBankAccountInfo.totalBalance | moneyShow}}元</span>
                     </el-form-item>
                     <el-form-item label="验证码" prop="smsCode">
                         <el-input v-model="withdrawalForm.smsCode" placeholder="请填写" maxlength="6"></el-input>
@@ -47,7 +47,6 @@
                 <div class="query-cont__col">
                     <div class="query-col__input">
                         <h-button type="primary" @click="searchList()">查询</h-button>
-                        <!-- <h-button class="ml20" @click="onRest()">重置</h-button> -->
                         <h-button @click="onExport">导出</h-button>
                     </div>
                 </div>
@@ -65,7 +64,7 @@
 import { CASH_WITHDRAWAL_MAP } from '../const'
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
-import { getSmsCode, cashWithdrawal } from '../api/index'
+import { getAgentSmsCode, withdrawal } from '../api/index'
 import { VerificationCode } from '@/utils/rules.js'
 export default {
     name: 'withdrawalMerchant',
@@ -88,7 +87,7 @@ export default {
                             var Reg = /(^[1-9]([0-9]{1,12})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
                             if (value == 0) {
                                 return callback(new Error('提现金额不能为0'))
-                            } else if (Number(value) > Number(this.bankAccountInfo.totalBalance)) {
+                            } else if (Number(value) > Number(this.agentBankAccountInfo.totalBalance)) {
                                 return callback(new Error('提现金额超限'))
                             } else if (value && !(Reg.test(value))) {
                                 return callback(new Error('金额格式为小数点前十三位，小数点后两位'))
@@ -122,32 +121,32 @@ export default {
     },
     computed: {
         ...mapGetters('finance', {
-            cashWithdrawalInfo: 'cashWithdrawalInfo',
-            bankAccountInfo: 'bankAccountInfo',
-            bankCardInfo: 'bankCardInfo'
+            agentCashWithdrawal: 'agentCashWithdrawal',
+            agentBankAccountInfo: 'agentBankAccountInfo',
+            agentBankCardInfo: 'agentBankCardInfo'
         }),
         phoneNumber () {
-            return this.bankCardInfo.bankPhoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1****$3')
+            return this.agentBankCardInfo.bankPhoneNumber && this.agentBankCardInfo.bankPhoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1****$3')
         },
         reqWithdraw () {
             let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
             return {
                 ...this.withdrawalForm,
-                bankCardId: this.bankCardInfo.bankCardId,
-                mobile: this.bankCardInfo.bankPhoneNumber,
+                bankCardId: this.agentBankCardInfo.bankCardId,
+                mobile: this.agentBankCardInfo.bankPhoneNumber,
                 operator: `${userInfo.employeeName}(${userInfo.phoneNumber})`,
                 receivedAmount: this.withdrawalForm.amount,
                 serviceFee: 0
             }
         },
         tableData () {
-            return this.cashWithdrawalInfo.records
+            return this.agentCashWithdrawal.records
         },
         paginationInfo () {
             return {
-                pageNumber: this.cashWithdrawalInfo.current,
-                pageSize: this.cashWithdrawalInfo.size,
-                total: this.cashWithdrawalInfo.total
+                pageNumber: this.agentCashWithdrawal.current,
+                pageSize: this.agentCashWithdrawal.size,
+                total: this.agentCashWithdrawal.total
             }
         },
         pickerOptionsStart () {
@@ -172,15 +171,15 @@ export default {
         }
     },
     mounted () {
-        this.findCashWithdrawalAction()
-        this.findBankAccountInfo()
-        this.findBankCardInfo()
+        this.findAgentCashWithdrawal()
+        this.findAgentBankAccountInfo()
+        this.findAgentBankCardInfo()
     },
     methods: {
         ...mapActions('finance', {
-            findCashWithdrawal: 'findCashWithdrawal',
-            findBankAccountInfo: 'findBankAccountInfo',
-            findBankCardInfo: 'findBankCardInfo'
+            findAgentCashWithdrawal: 'findAgentCashWithdrawal',
+            findAgentBankAccountInfo: 'findAgentBankAccountInfo',
+            findAgentBankCardInfo: 'findAgentBankCardInfo'
         }),
         ...mapActions({
             setNewTags: 'setNewTags'
@@ -188,7 +187,7 @@ export default {
         onMobileVerifica () {
             this.after = false
             this.content = '重新发送 ' + this.time
-            getSmsCode()
+            getAgentSmsCode()
             this.clock = setInterval(() => {
                 this.time--
                 this.content = '重新发送' + this.time
@@ -208,7 +207,7 @@ export default {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消'
                     }).then(async () => {
-                        await cashWithdrawal(this.reqWithdraw)
+                        await withdrawal(this.reqWithdraw)
                         this.withdrawalSuccess()
                     })
                 }
@@ -218,8 +217,8 @@ export default {
         withdrawalSuccess () {
             this.$refs['withdrawalForm'].resetFields()
             this.findCashWithdrawalAction()
-            this.findBankAccountInfo()
-            this.findBankCardInfo()
+            this.findAgentBankAccountInfo()
+            this.findAgentBankCardInfo()
             clearInterval(this.clock)
             this.content = '获取验证码'
             this.time = 60
@@ -258,7 +257,7 @@ export default {
                 url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
             }
             url += 'access_token=' + localStorage.getItem('token')
-            location.href = B2bUrl + 'payment/api/boss/service-fee/withdraws/export?' + url
+            location.href = B2bUrl + 'payment/boss/purchasing-agent-funds/withdraws/export?' + url
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
@@ -278,7 +277,7 @@ export default {
         },
 
         findCashWithdrawalAction () {
-            this.findCashWithdrawal(this.queryParams)
+            this.findAgentCashWithdrawal(this.queryParams)
         }
     }
 }
