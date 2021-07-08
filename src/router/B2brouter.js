@@ -280,7 +280,7 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/hmall/finance/withdrawal.vue')
-                    }
+                    },
                     // {
                     //     path: 'orderRecord',
                     //     name: 'orderRecord',
@@ -292,6 +292,72 @@ export default [
                     //     },
                     //     component: () => import('@/views/hmall/order/order.vue')
                     // }
+                    {
+                        path: 'shippingOrder',
+                        name: 'shippingOrder',
+                        meta: {
+                            title: '运费订单',
+                            tagName: '运费订单',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/shippingOrder/index')
+                    },
+                    {
+                        path: 'shippingorderDetail',
+                        name: 'shippingorderDetail',
+                        meta: {
+                            title: '订单查看',
+                            tagName: '订单查看',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/shippingorderDetail/index')
+                    },
+                    {
+                        path: 'onlinefreightDetails',
+                        name: 'onlinefreightDetails',
+                        meta: {
+                            title: '线上运费明细',
+                            tagName: '线上运费明细',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/onlinefreightDetails/index')
+                    },
+                    {
+                        path: 'freightDetails',
+                        name: 'freightDetails',
+                        meta: {
+                            title: '运费资金管理',
+                            tagName: '运费资金管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/freightDetails/index')
+                    },
+                    {
+                        path: 'withdrawalFreight',
+                        name: 'withdrawalFreight',
+                        meta: {
+                            title: '提现',
+                            tagName: '提现',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/withdrawalFreight/index')
+                    },
+                    {
+                        path: 'behalfManage',
+                        name: 'behalfManage',
+                        meta: {
+                            title: '代采资金管理',
+                            tagName: '代采资金管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/behalfManage/index')
+                    }
                 ]
             },
             {
@@ -473,6 +539,215 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/hmall/searchProject/searchSynonym.vue')
+                    }
+                ]
+            },
+            {
+                path: 'fundAudit',
+                name: 'fundAudit',
+                meta: {
+                    title: '代采资金管理',
+                    tagName: '代采资金管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'fundAuditList',
+                        name: 'fundAuditList',
+                        meta: {
+                            title: '资金审核列表',
+                            tagName: '资金审核列表',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/fundAudit/fundAuditList.vue')
+                    },
+                    {
+                        path: 'auditFundList',
+                        name: 'auditFundList',
+                        meta: {
+                            title: '商家代采订单审核列表',
+                            tagName: '商家代采订单审核列表',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/fundAudit/auditFundList.vue')
+                    },
+                    {
+                        path: 'listFundInfo',
+                        name: 'fundInfo',
+                        meta: {
+                            title: '查看',
+                            tagName: '查看',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/fundAudit/auditFundList'
+                        },
+                        component: () => import('@/views/hmall/fundAudit/fundInfo.vue')
+                    },
+                    {
+                        path: 'aduitFundInfo',
+                        name: 'fundInfo',
+                        meta: {
+                            title: '审核',
+                            tagName: '审核',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/fundAudit/auditFundList'
+                        },
+                        component: () => import('@/views/hmall/fundAudit/fundInfo.vue')
+                    },
+                    {
+                        path: 'advancePayment',
+                        name: 'advancePayment',
+                        meta: {
+                            title: '商家代采订单预付款确认',
+                            tagName: '商家代采订单预付款确认',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/fundAudit/advancePayment.vue')
+                    },
+                    {
+                        path: 'advanceFundInfo',
+                        name: 'fundInfo',
+                        meta: {
+                            title: '查看',
+                            tagName: '查看',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/fundAudit/advancePayment'
+                        },
+                        component: () => import('@/views/hmall/fundAudit/fundInfo.vue')
+                    },
+                    {
+                        path: 'auditFundStatus',
+                        name: 'auditFundStatus',
+                        meta: {
+                            title: '商家代采订单状态确认',
+                            tagName: '商家代采订单状态确认',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/fundAudit/auditFundStatus.vue')
+                    },
+                    {
+                        path: 'statusFundInfo',
+                        name: 'fundInfo',
+                        meta: {
+                            title: '查看',
+                            tagName: '查看',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/fundAudit/auditFundStatus'
+                        },
+                        component: () => import('@/views/hmall/fundAudit/fundInfo.vue')
+                    },
+                    {
+                        path: 'prepayment',
+                        name: 'prepayment',
+                        meta: {
+                            title: '商家提前还款确认',
+                            tagName: '商家提前还款确认',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/fundAudit/prepayment.vue')
+                    },
+                    {
+                        path: 'merchantsDetail',
+                        name: 'financeMerchantsDetail',
+                        meta: {
+                            title: '代采资金管理',
+                            tagName: '代采资金管理提现',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/miningManage/merchantsDetail.vue')
+                    },
+                    {
+                        path: 'withdrawalMerchant',
+                        name: 'withdrawalMerchant',
+                        meta: {
+                            title: '提现',
+                            tagName: '提现',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/fundAudit/merchantsDetail'
+                        },
+                        component: () => import('@/views/hmall/finance/miningManage/withdrawalMerchant.vue')
+                    },
+                    {
+                        path: 'merchantBehalf',
+                        name: 'financeMerchantBehalf',
+                        meta: {
+                            title: '商家详情',
+                            tagName: '商家详情',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/fundAudit/merchantsDetail'
+                        },
+                        component: () => import('@/views/hmall/finance/miningManage/merchantBehalf.vue')
+                    }
+                ]
+            }, {
+                path: 'warehouse',
+                name: 'warehouse',
+                meta: {
+                    title: '仓配运费管理',
+                    tagName: '仓配运费管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'freightComputeRule',
+                        name: 'freightComputeRule',
+                        meta: {
+                            title: '运费计算规则',
+                            tagName: '运费计算规则',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/warehouseManage/freightComputeRule/index.vue')
+                    },
+                    {
+                        path: 'warehouseProductList',
+                        name: 'warehouseProductList',
+                        meta: {
+                            title: '仓配商品管理',
+                            tagName: '仓配商品管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/warehouseManage/warehouseProduct/index.vue')
+                    },
+                    {
+                        path: 'createWarehouse',
+                        name: 'createWarehouse',
+                        meta: {
+                            title: '批量添加仓配商品',
+                            tagName: '批量添加仓配商品',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/warehouse/warehouseProductList'
+                        },
+                        component: () => import('@/views/hmall/warehouseManage/warehouseProduct/createWarehouse.vue')
+                    },
+                    {
+                        path: 'addWarehouseProducts',
+                        name: 'addWarehouseProducts',
+                        meta: {
+                            title: '选择商品',
+                            tagName: '选择商品',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/warehouse/warehouseProductList'
+                        },
+                        component: () => import('@/views/hmall/warehouseManage/warehouseProduct/addWarehouseProducts.vue')
                     }
                 ]
             }
