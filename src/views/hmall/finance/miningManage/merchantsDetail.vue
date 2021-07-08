@@ -436,7 +436,6 @@ export default {
             this.getOfflineRepay()
             this.getPrepayRepay()
             this.getMerchantStatistInfo()
-            this.resetParams = { ...this.queryParams }
         },
         onTab () {
             this.queryParams = { ...this.resetParams }
@@ -649,6 +648,8 @@ export default {
     },
     mounted () {
         this.init()
+        this.resetParams = { ...this.queryParams }
+        this.repayResetParams = { ...this.repayQueryParams }
     }
 }
 </script>
