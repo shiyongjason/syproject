@@ -38,6 +38,12 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col-title">设备ID：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="homeParams.subIotId" placeholder="输入手机号" maxlength="11"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
                     <div class="query-col-title">注册时间：</div>
                     <div class="query-col-input">
                         <el-date-picker type="date" clearable v-model="homeParams.startDate"
@@ -99,6 +105,7 @@ export default {
                 pageSize: 10,
                 pageNumber: 1,
                 phone: '',
+                subIotId: '',
                 startDate: '',
                 endDate: '',
                 type: '',
