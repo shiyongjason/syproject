@@ -1,26 +1,30 @@
 <template>
     <el-dialog :title="title" :visible.sync="isOpen" :close-on-click-modal=false width="650px" :before-close="()=> $emit('onClose')">
         <div class="info-content">
-            <div class="row-filed info-img-group">
-                <span class="label">支付凭证：</span>
+            <div class="row-filed">
+                <div class="row-filed-flex">
+                    <p class="tips" v-if="!detail._seeing">
+                        <template v-if="this.status === FundsDict.repaymentTypeArrays.list[0].key">首付款</template>
+                        <template v-if="this.status === FundsDict.repaymentTypeArrays.list[1].key">服务费</template>
+                        <template v-if="this.status === FundsDict.repaymentTypeArrays.list[2].key">剩余货款</template>
+                        金额(元)：{{dialogDetail.paymentAmount | fundMoneyHasTail}}
+                    </p>
+                    <p v-if="!detail._seeing">
+                        支付时间：{{moment(FundsDict.paidTime).format('YY-MM-DD HH:mm:ss')}}
+                    </p>
+                </div>
+                <div class="label">支付凭证：</div>
                 <p class="content">
                     <span class="img-box" :key="item.fileUrl" v-for="item in dialogDetail.attachDocList">
                         <imageAddToken :file-url="item.fileUrl" />
                     </span>
                 </p>
             </div>
-            <p class="tips" v-if="!detail._seeing">
-                是否确认收到{{ dialogDetail.companyName }}支付的{{dialogDetail.paymentAmount | fundMoneyHasTail}}元
-                <template v-if="this.status === FundsDict.repaymentTypeArrays.list[0].key">首付款</template>
-                <template v-if="this.status === FundsDict.repaymentTypeArrays.list[1].key">服务费</template>
-                <template v-if="this.status === FundsDict.repaymentTypeArrays.list[2].key">剩余货款</template>
-                ？
-            </p>
         </div>
         <span slot="footer" class="dialog-footer" v-if="!detail._seeing">
-                <h-button type="assist" @click="onReceived">确认收到</h-button>
-                <h-button type="primary" @click="onUnReceived">并未收到</h-button>
-            </span>
+            <h-button type="assist" @click="onReceived">确认收到</h-button>
+            <h-button type="primary" @click="onUnReceived">并未收到</h-button>
+        </span>
     </el-dialog>
 </template>
 
@@ -36,7 +40,7 @@ import {
 } from '../api'
 import { mapState } from 'vuex'
 import imageAddToken from '@/components/imageAddToken'
-
+import moment from 'moment'
 export default {
     name: 'fundsDialog',
     components: {
@@ -59,6 +63,7 @@ export default {
     },
     data () {
         return {
+            moment,
             dialogDetail: {},
             FundsDict
         }
@@ -67,7 +72,8 @@ export default {
         title () {
             let title = '支付确认'
 
-            if (this.detail.companyName || this.detail.amount) {
+            // if (this.detail.companyName || this.detail.amount) {
+            if (this.detail._seeing) {
                 title = '查看凭证'
             }
             return title
@@ -128,21 +134,19 @@ export default {
 </script>
 
 <style scoped lang="scss">
-/deep/.el-dialog__body{
+/deep/.el-dialog__body {
     min-height: 150px;
 }
-.info-content{
+.info-content {
     display: flex;
     flex-direction: column;
-    padding-top: 20px;
-    .row-filed{
-        padding-bottom: 20px;
-        display: flex;
-        align-items: center;
+    .img-box {
+        margin: 10px 10px 0 0;
     }
 }
 .tips {
     color: #8d8d8d;
+    margin-right: 20px;
 }
 .img-info {
     width: 80px;
@@ -150,8 +154,11 @@ export default {
     cursor: pointer;
     margin-right: 10px;
 }
-.info-img-group {
-    display: flex;
+.row-filed {
+    &-flex {
+        display: flex;
+        flex-direction: row;
+    }
     .content {
         display: flex;
         flex-wrap: wrap;
@@ -174,6 +181,7 @@ export default {
     }
     .label {
         flex: 0 0 100px;
+        margin-top: 20px;
     }
 }
 </style>
