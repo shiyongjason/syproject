@@ -10,13 +10,7 @@
                 </el-form-item>
 
                 <el-form-item label="方案列表缩略图：" prop="schemeImage" ref="schemeImage">
-                    <SingleUpload sizeLimit='1M'
-                                  :upload="uploadInfo"
-                                  :imageUrl="form.schemeImage"
-                                  ref="uploadImg"
-                                  @back-event="readUrl"
-                                  :imgW="100"
-                                  :imgH="100" />
+                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="form.schemeImage" ref="uploadImg" @back-event="readUrl" :imgW="100" :imgH="100" />
                     <div class="upload-tips">建议尺寸：4:3比例图片，1M以内，支持jpeg,png和jpg格式</div>
                 </el-form-item>
                 <el-form-item label="生效时间：" prop="effectiveTime">
@@ -24,12 +18,11 @@
                     </el-date-picker>
                 </el-form-item>
 
-                <el-form-item label="商品视频：" prop="schemeVideo" >
+                <el-form-item label="商品视频：" prop="schemeVideo">
                     <el-row>
-                        <SingleUpload  sizeLimit='100M' :upload="videoUpload" :imageUrl="videoimageUrl"
-                                       @back-event="videoUrl" :imgW="100" :imgH="100">
+                        <SingleUpload sizeLimit='100M' :upload="videoUpload" :imageUrl="videoimageUrl" @back-event="videoUrl" :imgW="100" :imgH="100">
                         </SingleUpload>
-                        <h-button v-if="form.schemeVideo"   type="primary" @click="palyVideo">视频预览</h-button>
+                        <h-button v-if="form.schemeVideo" type="primary" @click="palyVideo">视频预览</h-button>
                         <div class="upload-tips">
                             建议尺寸：支持 MP4格式, 大小不超过100MB
                             视频尺寸16:9，视频长度建议不超过60秒
@@ -41,7 +34,8 @@
                     <h3>方案详细内容</h3>
                 </div>
                 <el-form-item label="详情：" prop="schemeDetail">
-                    <RichEditor :height="500" :menus="menus" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" :uploadImgServer="uploadImgServer" @change="$refs['form'].validateField('schemeDetail')" @blur="$refs['form'].validateField('schemeDetail')" hidefocus="true" ref="editors" style="outline: 0;margin-bottom: 12px;width:100%" tabindex="0" v-model="form.schemeDetail"></RichEditor>
+                    <RichEditor :height="500" :menus="menus" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" :uploadImgServer="uploadImgServer" @change="$refs['form'].validateField('schemeDetail')" @blur="$refs['form'].validateField('schemeDetail')" hidefocus="true" ref="editors"
+                        style="outline: 0;margin-bottom: 12px;width:100%" tabindex="0" v-model="form.schemeDetail"></RichEditor>
                 </el-form-item>
                 <el-form-item style="text-align: center">
                     <el-button type="primary" @click="onSave" :loading="loading">{{ loading ? '提交中 ...' : '确定' }}</el-button>
@@ -181,6 +175,8 @@ export default {
             this.form = { ...this.cloudMerchantProjectSchemeDetail }
             if (this.form.schemeVideo) {
                 this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
+            } else {
+                this.videoimageUrl = ''
             }
         },
         onBack () {
@@ -240,42 +236,47 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .page-body-title {
-        margin-bottom: 20px;
-    }
-    .upload-tips {
-        font-size: 12px;
-        color: #999;
-        display: flex;
-        align-items: center;
-        height: 100px;
-        margin-left: 10px;
-    }
-    /deep/.avatar-uploader {
-        margin-right: 10px;
-    }
-    .editor-wrap {
-        margin-top: 20px;
-    }
-    /deep/.el-dialog__wrapper {
-        // z-index: 99999 !important;
-    }
-    /deep/.newTitle {
-        width: 500px!important;
-    }
-    .el-picker-panel {
-        z-index: 99999 !important;
-    }
-    /deep/.w-e-text-container {
-        z-index: 40 !important;
-    }
-    /deep/.w-e-menu {
-        z-index: 99 !important;
-    }
-    /deep/.editor-wrap{
-        margin-bottom: 23px  !important;
-    }
-    /deep/.w-e-toolbar {
-        z-index: 99 !important;
-    }
+.page-body-title {
+    margin-bottom: 20px;
+}
+.upload-tips {
+    font-size: 12px;
+    color: #999;
+    display: flex;
+    align-items: center;
+    height: 100px;
+    margin-left: 10px;
+}
+/deep/.avatar-uploader {
+    margin-right: 10px;
+}
+.editor-wrap {
+    margin-top: 20px;
+}
+/deep/.el-dialog__wrapper {
+    // z-index: 99999 !important;
+}
+/deep/.newTitle {
+    width: 500px !important;
+}
+.el-picker-panel {
+    z-index: 99999 !important;
+}
+/deep/.w-e-text-container {
+    z-index: 40 !important;
+}
+/deep/.w-e-menu {
+    z-index: 99 !important;
+}
+/deep/.editor-wrap {
+    margin-bottom: 23px !important;
+}
+/deep/.w-e-toolbar {
+    z-index: 99 !important;
+}
+.avatarVideo {
+    width: 95%;
+    margin: 0 auto;
+    display: block;
+}
 </style>

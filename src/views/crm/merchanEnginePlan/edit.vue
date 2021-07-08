@@ -187,6 +187,8 @@ export default {
             this.form = { ...data }
             if (this.form.schemeVideo) {
                 this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
+            } else {
+                this.videoimageUrl = ''
             }
         },
         onBack () {
@@ -282,5 +284,10 @@ export default {
     }
     /deep/.w-e-toolbar {
         z-index: 99 !important;
+    }
+    .avatarVideo{
+        width: 95%;
+        margin:0 auto;
+        display: block;
     }
 </style>
