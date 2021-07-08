@@ -552,14 +552,14 @@ export default {
         },
         // 提现
         onWithdrawal () {
-            this.$router.push('/b2b/finance/withdrawalMerchant')
+            this.$router.push('/b2b/fundAudit/withdrawalMerchant')
         },
         // 跳转商家详情
         onInfo (val, page) {
             if (page == 'overdueAmount') {
-                this.$router.push({ path: '/b2b/finance/merchantBehalf', query: { id: val.overdue, page: page } })
+                this.$router.push({ path: '/b2b/fundAudit/merchantBehalf', query: { id: val.overdue, page: page } })
             } else {
-                this.$router.push({ path: '/b2b/finance/merchantBehalf', query: { id: val.username, page: page } })
+                this.$router.push({ path: '/b2b/fundAudit/merchantBehalf', query: { id: val.username, page: page } })
             }
         },
         // 商家明细合计
