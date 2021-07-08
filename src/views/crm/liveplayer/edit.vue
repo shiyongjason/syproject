@@ -17,11 +17,11 @@
                 </el-form-item>
                 <el-form-item label="品牌视频：" prop="brandVideoUrl" ref="brandVideoUrl">
                     <el-row>
-                        <SingleUpload sizeLimit='600M' :upload="videoUpload" :imageUrl="videoimageUrl" @back-event="videoUrl" :imgW="100" :imgH="100">
+                        <SingleUpload sizeLimit='100M' :upload="videoUpload" :imageUrl="videoimageUrl" @back-event="videoUrl" :imgW="100" :imgH="100">
                         </SingleUpload>
                         <h-button v-if="form.brandVideoUrl" type="primary" @click="palyVideo">视频预览</h-button>
                         <div class="upload-tips">
-                            建议尺寸：支持 MP4格式, 大小不超过600M
+                            建议尺寸：支持 MP4格式, 大小不超过100M
                             视频尺寸16:9，视频长度建议不超过60秒
                         </div>
                     </el-row>
@@ -269,11 +269,23 @@ export default {
 
 <style lang="scss" scoped>
 .player_wrap {
-    width: 90%;
+    width: 350px;
     margin: 0 auto;
+     width: 350px;
+    height: 700px;
+    background: transparent url("../../../assets/images/iPhoneX_model.png") no-repeat scroll center center;
+    background-size: 100% 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
     &-tit {
         font-size: 16px;
         text-align: center;
+        margin-top: 60px;
+    }
+    &-main{
+        padding: 0 30px;
     }
 }
 .upload-tips {
