@@ -178,7 +178,7 @@ export const STAUTS_TOGER_MAP = new Map([
     [30, '同步失败'],
     [40, '同步成功'],
     [50, '不处理']
-
+])
 // 运费订单状态
 export const FREIGHT_STATUS_OPTIONS = [
     { label: '全部', value: '' },
