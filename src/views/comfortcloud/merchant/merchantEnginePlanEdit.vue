@@ -219,9 +219,14 @@ export default {
             this.form.schemeImage = val.imageUrl
         },
         videoUrl (val) {
-            this.$message.success('视频上传成功')
-            this.form.schemeVideo = val.imageUrl
-            this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
+            if (val.imageUrl) {
+                this.$message.success('视频上传成功')
+                this.form.schemeVideo = val.imageUrl
+                this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
+            } else {
+                this.form.schemeVideo = ''
+                this.videoimageUrl = ''
+            }
         },
         palyVideo () {
             this.innerVisible = true
