@@ -18,7 +18,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>当前额度<span>（元）</span></p>
-                            <p>{{fundDetil.creditLimit}}</p>
+                            <p>{{fundDetil.creditLimit|| 0}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -27,7 +27,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总代采<span>（元）</span></p>
-                            <p>{{fundDetil.totalAmount}}</p>
+                            <p>{{fundDetil.totalAmount || 0}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -36,7 +36,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总预付<span>（元）</span></p>
-                            <p>{{fundDetil.totalPrepayAmount}}</p>
+                            <p>{{fundDetil.totalPrepayAmount|| 0}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -45,7 +45,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总代付<span>（元）</span></p>
-                            <p>{{fundDetil.totalRetainageAmount}}</p>
+                            <p>{{fundDetil.totalRetainageAmount || 0}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -54,7 +54,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总回款<span>（元）</span></p>
-                            <p>{{fundDetil.totalRepayAmount}}</p>
+                            <p>{{fundDetil.totalRepayAmount|| 0}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -63,7 +63,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>当前占用<span>（元）</span></p>
-                            <p>{{fundDetil.occupationAmount}}</p>
+                            <p>{{fundDetil.occupationAmount|| 0}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -72,7 +72,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>当前逾期未还<span>（元）</span></p>
-                            <p>{{fundDetil.overdueAmount}}</p>
+                            <p>{{fundDetil.overdueAmount || 0}}</p>
                         </div>
                     </div>
                 </div>
@@ -160,7 +160,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总回款<span>（元）</span></p>
-                            <p>{{detail.totalRepayAmount}}</p>
+                            <p>{{detail.totalRepayAmount|| 0}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -169,7 +169,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>线下回款<span>（元）</span></p>
-                            <p>{{detail.offlineRepayAmount}}</p>
+                            <p>{{detail.offlineRepayAmount|| 0}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -178,7 +178,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>线上回款<span>（元）</span></p>
-                            <p>{{detail.onlineRepayAmount}}</p>
+                            <p>{{detail.onlineRepayAmount|| 0}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -187,7 +187,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>已提现<span>（元）</span></p>
-                            <p>{{detail.withdrawAmount}}</p>
+                            <p>{{detail.withdrawAmount|| 0}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -196,7 +196,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>可提现<span>（元）</span></p>
-                            <p>{{detail.availableWithdrawAmount}}</p>
+                            <p>{{detail.availableWithdrawAmount|| 0}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -205,7 +205,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>预付款<span>（元）</span></p>
-                            <p>{{detail.prepayAmount}}</p>
+                            <p>{{detail.prepayAmount|| 0}}</p>
                         </div>
                     </div>
                 </div>
