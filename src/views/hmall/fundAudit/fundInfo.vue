@@ -48,7 +48,7 @@
                 </el-form-item>
                 <el-form-item label="付款方式：" prop="payWay">
                     <el-select v-model="form.payWay" disabled>
-                        <el-option :label="item.label" :value="item.value" :key="item.value"></el-option>
+                        <el-option :label="payOptions[0].label" :value="payOptions[0].value"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="备注信息：" prop="note">
@@ -247,6 +247,13 @@ export default {
     },
     mounted () {
         this.init()
+    },
+    watch: {
+        $route () {
+            if (this.$route.query.id) {
+                this.init()
+            }
+        }
     }
 }
 </script>

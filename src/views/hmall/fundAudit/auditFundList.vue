@@ -82,7 +82,7 @@
                     <span>{{businessTypeMap.get(scope.data.row.merchantType) || '-'}}</span>
                 </template>
                 <template slot="orderStatus" slot-scope="scope">
-                    <span>{{auditStatusMap.get(scope.data.row.orderStatus)}}}</span>
+                    <span>{{auditStatusMap.get(scope.data.row.orderStatus)}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onseeTask(scope.data.row)">查看</h-button>

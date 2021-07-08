@@ -230,10 +230,37 @@ export default {
             applyList: state => state.hmall.finance.applyList,
             prepayList: state => state.hmall.finance.prepayList,
             occupationList: state => state.hmall.finance.occupationList
-        })
+        }),
+        page () {
+            return this.$route.query.page
+        },
+        pageId () {
+            return this.$route.query.id
+        }
     },
     methods: {
         async init () {
+            if (this.page == 'creditLimit') {
+                this.tabName = 'apply'
+                this.queryParams.username = this.pageId
+                this.getApplyList()
+            } else if (this.page == 'overdueAmount') {
+                this.tabName = 'occupy'
+                this.queryParams.overdue = true
+                this.getOccupationList()
+            } else if (this.page == 'occupationAmount') {
+                this.tabName = 'occupy'
+                this.queryParams.username = this.pageId
+                this.getOccupationList()
+            } else if (this.page == 'totalRepayAmount') {
+                this.tabName = 'returned'
+                this.queryParams.username = this.pageId
+                this.getPrepayList()
+            } else {
+                this.tabName = 'pay'
+                this.queryParams.username = this.pageId
+                this.getOccupationList()
+            }
             if (this.tabName == 'apply') {
                 this.getApplyList()
             } else if (this.tabName == 'returned') {

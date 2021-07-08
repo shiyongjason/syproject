@@ -554,7 +554,7 @@ export default {
             if (page == 'overdueAmount') {
                 this.$router.push({ path: '/b2b/finance/merchantBehalf', query: { id: val.overdue, page: page } })
             } else {
-                this.$router.push({ path: '/b2b/finance/merchantBehalf', query: { id: val.overdue, page: page } })
+                this.$router.push({ path: '/b2b/finance/merchantBehalf', query: { id: val.username, page: page } })
             }
         },
         // 商家明细合计

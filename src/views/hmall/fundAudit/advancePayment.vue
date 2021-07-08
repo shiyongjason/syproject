@@ -87,7 +87,7 @@
                     {{paymentStatusMap.get(scope.data.row.prepayStatus) || '-'}}
                 </template>
                 <template slot="orderSwitch" slot-scope="scope">
-                    <span>{{orderStatusMap.get(scope.data.row.orderSwitch)}}}</span>
+                    <span>{{orderStatusMap.get(scope.data.row.orderSwitch)}}</span>
                 </template>
                 <template slot="orderSyncStatus" slot-scope="scope">
                     {{orderSynchronousMap.get(scope.data.row.orderSyncStatus)}}
