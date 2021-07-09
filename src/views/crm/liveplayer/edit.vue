@@ -210,7 +210,6 @@ export default {
                 if (valid) {
                     try {
                         if (this.$route.query.id) {
-                            console.log(123123)
                             await Api.enableLiveInfoPut(this.form)
                             this.$message.success('修改成功')
                         } else {
@@ -253,9 +252,14 @@ export default {
             this.form.brandLogoUrl = val.imageUrl
         },
         videoUrl (val) {
-            this.$message.success('视频上传成功')
+            if (val.imageUrl) {
+                this.$message.success('视频上传成功')
+                this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
+            } else {
+                this.$message.success('视频删除成功')
+                this.videoimageUrl = ''
+            }
             this.form.brandVideoUrl = val.imageUrl
-            this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
         },
         palyVideo () {
             this.innerVisible = true
