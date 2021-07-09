@@ -202,7 +202,7 @@ export default {
                     {
                         required: true,
                         validator: (rule, value, callback) => {
-                            const reg = /^(([0-9])|([1-9][0-9]{1,2})|100)$/
+                            const reg = /^(([0-9])|([1-9][0-9]{1})|100)$/
                             if (!value || value == '') {
                                 return callback(new Error('请输入比例'))
                             }
@@ -251,7 +251,7 @@ export default {
                     {
                         required: false,
                         validator: (rule, value, callback) => {
-                            const reg = /^(([0-9])|([1-9][0-9]{1,2})|100)$/
+                            const reg = /^(([0-9])|([1-9][0-9]{1})|100)$/
                             if (value && !reg.test(value)) {
                                 return callback(new Error('比例格式为0-100的整数'))
                             }

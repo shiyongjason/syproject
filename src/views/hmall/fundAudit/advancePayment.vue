@@ -96,7 +96,7 @@
                     {{synchronousMap.get(scope.data.row.fundSyncStatus)}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table v-if="scope.data.row.prepayStatus == 10" @click="onSure(scope.data.row)">确认</h-button>
+                    <h-button table v-if="scope.data.row.orderSwitch == 1&&scope.data.row.prepayStatus == 10" @click="onSure(scope.data.row)">确认</h-button>
                     <h-button table @click="onseeTask(scope.data.row)">查看</h-button>
                     <h-button table v-if="scope.data.row.prepayStatus == 20&&scope.data.row.orderSyncStatus!= 40" @click="onAudit(scope.data.row)">订单同步</h-button>
                     <h-button table v-if="scope.data.row.prepayStatus == 20&&scope.data.row.fundSyncStatus != 40" @click="onFund(scope.data.row)">资金同步</h-button>
