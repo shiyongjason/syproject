@@ -341,3 +341,10 @@ export const CRM_WORK_FINAL_DELETEPUR = 100706
 
 // 好橙工项目 导出客户列表
 export const CRM_WORK_CUSTOMER_EXPORT = 100707
+
+// 直播视频 按钮权限
+export const CRM_LIVE_ADD = 108701
+export const CRM_LIVE_EDIT = 108702
+export const CRM_LIVE_ONTOP = 108703
+export const CRM_LIVE_NOTOP = 108704
+export const CRM_LIVE_DELETE = 108705
