@@ -291,6 +291,7 @@
 </template>
 <script>
 import { BUSINESS_DETAIL_OPTIONS, BUSINESS_DETAIL_MAP, STAUTS_OPTIONS, STAUTS_MAP, OVERDUE_OPTIONS, OVERDUE_MAP, CAPITAL_STATUS_OPTIONS, CAPITAL_STATUS_MAP, DEADLINE_OPTIONS, DEA_TYPE_MAP } from '../const.js'
+import { clearCache, newCache } from '@/utils/index'
 import { mapState, mapActions } from 'vuex'
 export default {
     name: 'merchantsDetail',
@@ -650,6 +651,19 @@ export default {
         this.init()
         this.resetParams = { ...this.queryParams }
         this.repayResetParams = { ...this.repayQueryParams }
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('merchantsDetail')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'merchantBehalf') {
+            clearCache('merchantsDetail')
+        }
+        next()
+    },
+    activated () {
+        this.init()
     }
 }
 </script>

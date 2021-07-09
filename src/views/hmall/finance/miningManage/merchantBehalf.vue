@@ -152,6 +152,7 @@
 <script>
 import { STAUTS_OPTIONS, STAUTS_MAP, OVERDUE_OPTIONS, OVERDUE_MAP, ADUITLINE_OPTIONS, MINADUITLINE_OPTIONS, RETAADUITLINE_OPTIONS, DEADLINE_TYPE_OPTIONS, DEADLINE_TYPE_MAP, STAUTS_TOGER_OPTIONS, STAUTS_TOGER_MAP, CAPITALS_OPTIONS, CAPITALS_MAP } from '../const.js'
 import { mapState, mapActions } from 'vuex'
+import { clearCache, newCache } from '@/utils/index'
 import { syncFundMis } from '../api/index'
 export default {
     name: 'merchantBehalf',
@@ -482,6 +483,10 @@ export default {
                 this.init()
             }
         }
+    },
+    beforeRouteLeave (to, from, next) {
+        clearCache('merchantBehalf')
+        next()
     }
 }
 </script>
