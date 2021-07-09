@@ -82,7 +82,7 @@
             <el-tag size="medium" class="eltagtop">已筛选 {{ fundsListPagination.total }}
                 项,{{ totalLabelName }}总金额：<b>{{ fundsListPagination.amount | fundMoneyHasTail }} </b>元;
             </el-tag>
-            <basicTable :tableData="fundsList" :tableLabel="tableLabel" :pagination="fundsListPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=200 :isShowIndex='true'>
+            <basicTable :tableData="fundsList" :tableLabel="tableLabel" :pagination="fundsListPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=290 :isShowIndex='true'>
                 <template slot="paymentAmount" slot-scope="scope">
                     <span class="colblue"> {{ scope.data.row.paymentAmount | fundMoneyHasTail }}</span>
                 </template>
@@ -100,11 +100,18 @@
                     {{emailStatus[scope.data.row.currDayEmailStatus]}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="onPayEnter(scope.data.row)" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)">支付确认</h-button>
+                    <h-button table @click="onPayEnter(scope.data.row)" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)&&!scope.data.row.payBatch">支付确认</h-button>
                     <h-button table @click="seePayEnter(scope.data.row)" v-if="hasSeePayEnterAuth(queryParams.repaymentTypeArrays)">查看凭证</h-button>
+                    <h-button table @click="onUploadPay(scope.data.row)" v-if="(scope.data.row.paymentFlag==0||scope.data.row.paymentFlag==3)&&hosAuthCheck(Auths.CRM_FUNDS_DOWN_UPLOAD)">
+                        上传支付凭证
+                    </h-button>
+                    <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.payBatch&&scope.data.row.paymentFlag==1">
+                        批量确认
+                    </h-button>
                 </template>
             </basicTable>
             <FundsDialog :is-open="fundsDialogVisible" :detail="fundsDialogDetail" :status="queryParams.repaymentTypeArrays" @onClose="fundsDialogClose"></FundsDialog>
+            <UploadDialog ref="uploaddialog" @onBackSearch =findFundsList ></UploadDialog>
         </div>
     </div>
 </template>
@@ -114,12 +121,13 @@ import { mapActions, mapGetters, mapState } from 'vuex'
 import FundsDialog from './components/fundsDialog'
 import FundsDict from '@/views/crm/funds/fundsDict'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
+import UploadDialog from './components/uploadPayDialog.vue'
 import * as Auths from '@/utils/auth_const'
 
 export default {
     name: 'funds',
     components: {
-        FundsDialog
+        FundsDialog, UploadDialog
     },
     data () {
         return {
@@ -211,9 +219,9 @@ export default {
         },
         queryParamsUseQuery () {
             return {
-                ...this.queryParams,
-                authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '',
-                jobNumber: this.userInfo.jobNumber
+                ...this.queryParams
+                // authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '',
+                // jobNumber: this.userInfo.jobNumber
             }
         }
     },
@@ -314,6 +322,12 @@ export default {
                 this.labelName = '剩余货款流水号'
                 this.totalLabelName = '剩余货款'
             }
+        },
+        onUploadPay (val) {
+            this.$refs.uploaddialog.onDialogClick(val)
+        },
+        onBatchSumbit (val) {
+            this.$router.push({ path: '/goodwork/batchpsubmit', query: { fundId: val.id } })
         },
         ...mapActions({
             findFundsList: 'crmFunds/findPurchaseList',

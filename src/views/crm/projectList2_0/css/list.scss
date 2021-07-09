@@ -1,0 +1,109 @@
+/deep/::-webkit-scrollbar-thumb {
+    background-color: #d6d1d1 !important;
+}
+.itemflex{
+    .el-form-item{
+        display: flex;
+    }
+}
+.list2_0{
+    max-height: 600px;
+    overflow-y: scroll;
+    .noctx{
+        .el-form-item{
+            margin-bottom: 5px;
+            display:inline-block !important;
+            width: 100%;
+        }
+        /deep/.el-form-item__error{
+            top: 30px;
+        }
+    }
+    /deep/.form-item {
+        margin-bottom: 20px;
+       
+        .el-form-item__label{
+            display: flex;
+            justify-content: flex-end;
+            align-items: baseline;
+        }
+        .txt{
+            font-size: 13px;
+        }
+        .a-line{
+            margin-top: 5px;
+            span{
+                display: flex;
+                align-items: center;
+            }
+        }
+        .file-icon {
+            font-size: 18px;
+            margin: 0 3px 0 0  !important;
+            line-height: 24px !important;
+            color: #fff;
+        }
+        .file_box {
+            margin: 10px 0 0 0;
+            display: flex;
+            i {
+                font-size: 18px;
+                margin: 0 !important;
+                color: #ff6600;
+                padding-right: 5px;
+            }
+            span {
+                width: 450px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                color: #ff6600;
+
+            }
+            em {
+                display: block;
+                font-style: normal;
+                margin-left: 10px;
+                color: #169bd5;
+                cursor: pointer;
+
+            }
+        }
+    }
+    .list2{
+        .flex-item{
+            display: flex;
+        }
+        /deep/.form-item{
+            flex: 0 0 500px;
+            margin-bottom:15px;
+            .el-select__tags{
+                margin-left: 10px;
+            }
+        }
+    }
+}
+.ProjectList2{
+    /deep/.el-drawer__header{
+        font-size: 18px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #d3d4d6;
+        margin-bottom: 10px
+    }
+    /deep/.ProjectList2Detail {
+        padding: 0 10px 100px 0px;
+        box-sizing: border-box;
+        margin-left: 15px;
+        .el-radio-button__inner {
+            margin-top: 10px;
+            width: 310px;
+        }
+       .el-radio-button__orig-radio:checked + .el-radio-button__inner {
+            background-color: #716a6a;
+            border-color: #716a6a;
+            box-shadow: none;
+            transition: none;
+        }
+    }
+    .eltagtop{margin-bottom: 15px;}
+}

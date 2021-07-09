@@ -1,4 +1,5 @@
 import Layout from '@/views/layout/Default.vue'
+import InterlayerContainer from '@/views/layout/InterlayerContainer'
 
 export default [
     {
@@ -21,6 +22,30 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/crm/goodwork/projectlist')
+            },
+            {
+                path: 'projectList2_0',
+                name: 'projectList2_0',
+                meta: {
+                    title: '2.0项目列表',
+                    tagName: '2.0项目列表',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/projectList2_0/list.vue')
+            },
+            {
+                path: 'thread',
+                name: 'thread',
+                meta: {
+                    title: '客户线索',
+                    tagName: '客户线索',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/thread/list.vue')
             },
             {
                 path: 'authenlist',
@@ -254,6 +279,34 @@ export default [
                 component: () => import('@/views/crm/funds/funds.vue')
             },
             {
+                path: 'batchpay',
+                name: 'batchpay',
+                meta: {
+                    title: '批量支付',
+                    tagName: '批量支付',
+                    parentName: '好橙工',
+                    isMenu: false,
+                    icon: '',
+                    showMenuAs: '/goodwork/funds'
+
+                },
+                component: () => import('@/views/crm/funds/batchPay.vue')
+            },
+            {
+                path: 'batchpsubmit',
+                name: 'batchpsubmit',
+                meta: {
+                    title: '批量支付确认',
+                    tagName: '批量支付确认',
+                    parentName: '好橙工',
+                    isMenu: false,
+                    icon: '',
+                    showMenuAs: '/goodwork/funds'
+
+                },
+                component: () => import('@/views/crm/funds/batchSubmit.vue')
+            },
+            {
                 path: 'contractlist',
                 name: 'contractlist',
                 meta: {
@@ -428,6 +481,77 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/crm/crmauthen/tianyan.vue')
+            },
+            {
+                path: 'crmengineplan',
+                meta: {
+                    title: '工程方案',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'crmenginedetail',
+                        name: 'crmenginedetail',
+                        meta: {
+                            title: '工程方案',
+                            tagName: '工程方案',
+                            parentName: '工程方案',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/crm/merchanEnginePlan/index.vue')
+                    },
+                    {
+                        path: 'crmengineedit',
+                        name: 'crmengineedit',
+                        meta: {
+                            title: '工程方案编辑',
+                            tagName: '工程方案编辑',
+                            parentName: '工程方案',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/crm/merchanEnginePlan/edit.vue')
+                    },
+                    {
+                        path: 'H5Preview',
+                        name: 'H5Preview',
+                        meta: {
+                            title: 'H5预览',
+                            tagName: 'H5预览',
+                            parentName: '工程方案',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/crm/merchanEnginePlan/H5Preview.vue')
+                    }
+                ]
+            },
+            {
+                path: 'liveplayer',
+                name: 'liveplayer',
+                meta: {
+                    title: '直播落地页管理',
+                    tagName: '直播落地页管理',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/liveplayer/index.vue')
+            },
+            {
+                path: 'playeredit',
+                name: 'playeredit',
+                meta: {
+                    title: '直播落地页',
+                    tagName: '直播落地页',
+                    parentName: '好橙工',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/liveplayer/edit.vue')
             }
         ]
     }

@@ -1,12 +1,9 @@
 <template>
     <div class="project-wrap">
-
-        <!-- <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='45%' :before-close="handleClose" :wrapperClosable=false>
-             -->
-        <h-drawer title="项目详情" v-if="drawer" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='40%' :wrapperClosable="false">
+        <h-drawer title="项目详情" v-if="drawer" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='710px' :wrapperClosable="false">
             <template #connect>
                 <div class="fiextab">
-                    <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
+                    <el-tabs v-model="activeName" @tab-click="handleClick">
                         <template v-for="item in tabs">
                             <template v-if='isShowTab(item.key,status)'>
                                 <el-tab-pane :label=item.value :name=item.key :key=item.key v-if="form.docAfterStatus!=1"></el-tab-pane>
@@ -17,8 +14,9 @@
                 <projectCom ref="projectCom" :projectForm=form @onBackLoad=onBackLoad @onCompsback=onCompsback v-if="activeName==='1'"></projectCom>
                 <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='2'" :showPacking='showPacking'></datacolCom>
                 <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='3'" :showPacking='showPacking'></approveCom>
-                <approveCom ref="finalCom" :projectForm=form :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip @refreshDetail="refreshFinalDetail" v-if="activeName==='4'" :showPacking='showPacking'></approveCom>
-                <ProjectOrderTab v-if="activeName==='5'" @onBackLoad=onBackLoad @onCompsback=onCompsback :id="projectId"></ProjectOrderTab>
+                <!-- <approveCom ref="finalCom" :projectForm=form :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip @refreshDetail="refreshFinalDetail" v-if="activeName==='4'" :showPacking='showPacking'></approveCom> -->
+                <finalApproval ref="finalApproval" v-if="activeName==='4'" @onCompsback=onCompsback @onBackLoad=onBackLoad @onHideFoot=onHideFoot :finalFormID=projectId></finalApproval>
+                <ProjectOrderTab v-if="activeName==='5'" @onBackLoad=onBackLoad @onCompsback=onCompsback  :id="projectId"></ProjectOrderTab>
 
                 <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :modal=false :close-on-click-modal=false>
                     <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
@@ -45,7 +43,11 @@
                 </el-dialog>
             </template>
             <template #btn>
-                <div class="drawer-button">
+                <div class="drawer-button" v-if="isShowFoot">
+                    <template v-if="activeName==='4'&&status == 11">
+                        <h-button @click="onFinalApprove(1)" v-if="hosAuthCheck(newAuth.CRM_WORK_FINAL_NOPASS)&&(resolutionStatus==3||resolutionStatus==1)">终审不通过</h-button>
+                        <h-button type="primary" @click="onFinalApprove(2)" v-if="hosAuthCheck(newAuth.CRM_WORK_FINAL_PASS)&&(resolutionStatus==3||resolutionStatus==1)">发起评审决议审批流</h-button>
+                    </template>
                     <!-- 这里的权限有后台配置的  还有根据项目的状态  还有 tab切的权限 -->
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BACKUP)&&activeName==='2'&&status==12">
                         <h-button @click="onCallBack()">打回补充</h-button>
@@ -54,7 +56,7 @@
                         <h-button type="assist" @click="onAuditstatus(status)" :key="index" v-if="item.isShow">{{item.name}}</h-button>
                     </template>
                     <h-button @click="cancelForm">取消</h-button>
-                    <h-button v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BAOCUN)&&activeName!=='2'&&!(activeName=='3'&&status!=4)&&!(activeName=='4'&&status!=11) && activeName!=='5'" type="primary" @click="onSaveproject(activeName)" :loading="loading">{{ loading ? '提交中 ...' : '保存' }}</h-button>
+                    <h-button v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BAOCUN)&&activeName!=='2'&&!(activeName=='3'&&status!=4)&&!activeName=='4'&&activeName!=='5'" type="primary" @click="onSaveproject(activeName)" :loading="loading">{{ loading ? '提交中 ...' : '保存' }}</h-button>
                 </div>
             </template>
         </h-drawer>
@@ -64,6 +66,7 @@
 import projectCom from './project_com'
 import datacolCom from './datacollect_com'
 import approveCom from './approve_com'
+import finalApproval from './finalApproval'
 import ProjectOrderTab from './projectOrderTab'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import * as newAuth from '@/utils/auth_const'
@@ -82,10 +85,11 @@ export default {
         }
     },
     components: {
-        projectCom, datacolCom, approveCom, ProjectOrderTab
+        projectCom, datacolCom, approveCom, ProjectOrderTab, finalApproval
     },
     data () {
         return {
+            resolutionStatus: '',
             showPacking: null,
             newAuth,
             loading: false,
@@ -130,7 +134,8 @@ export default {
             copyForm: {},
             projectId: '',
             colForm: {},
-            bizType: ''
+            bizType: '',
+            isShowFoot: true
         }
     },
     computed: {
@@ -145,10 +150,10 @@ export default {
                     name: '立项结果提交',
                     isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_XINSHEN) && this.status == 4 && this.activeName === '3'
                 },
-                {
-                    name: '终审结果提交',
-                    isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_FINAL) && this.status == 11 && this.activeName === '4'
-                },
+                // {
+                //     name: '终审结果提交',
+                //     isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_FINAL) && this.status == 11 && this.activeName === '4'
+                // },
                 {
                     name: '审核未通过',
                     isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_CLOSE) && this.status == 3
@@ -209,6 +214,7 @@ export default {
             })
         },
         async onFindProjectCom (val) {
+            this.isShowFoot = true
             this.activeName = '1'
             // 调用初审详情
             this.projectId = val
@@ -354,13 +360,14 @@ export default {
                     this.loading = false
                 }
             } else if (val == 4) {
+                this.$emit('backEvent')
                 // 终审详情保存
-                try {
-                    this.$refs.finalCom.onSaveapproveOrfinal(1)
-                    // this.$emit('backEvent')
-                } catch (error) {
-                    this.loading = false
-                }
+                // try {
+                //     this.$refs.finalCom.onSaveapproveOrfinal(1)
+                //     // this.$emit('backEvent')
+                // } catch (error) {
+                //     this.loading = false
+                // }
             }
         },
         cancelForm () {
@@ -392,15 +399,28 @@ export default {
             this.showPacking = false
             window.location.href = data
         },
-        onBackLoad (val) {
+        onBackLoad (val, res) {
             this.loading = val
+            this.resolutionStatus = res || ''
+        },
+        onFinalApprove (val) {
+            this.$refs.finalApproval._finalApprove(val)
+        },
+        onHideFoot (val) {
+            console.log(123)
+            this.isShowFoot = val
         }
+
     }
 }
 </script>
 <style  lang="scss" scoped>
+::-webkit-scrollbar-thumb {
+    background-color: #d6d1d1 !important;
+}
 /deep/.drawer__content {
-    padding: 0 20px 0 20px;
+    padding: 0 20px 0 15px;
+    box-sizing: border-box;
 }
 /deep/.el-tabs__header {
     padding: 0 0 0 10px;
@@ -444,9 +464,9 @@ export default {
 .fiextab {
     position: fixed;
     background: #ffffff;
-    width: 100%;
+    width: 660px;
     z-index: 11;
-    top: 68px;
+    top: 66px;
 }
 .el-textarea /deep/.el-input__count {
     bottom: -45px;
