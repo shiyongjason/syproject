@@ -1,24 +1,6 @@
 <template>
     <div class="page-body B2b">
         <div class="page-body-cont">
-            <div class="query-cont-row">
-                <div class="query-cont__col">
-                    <div class="query-col__label">落地页面名称：</div>
-                    <div class="query-col__input">
-                        <el-input v-model="queryParams.roomName" placeholder="请输入" maxlength="50"></el-input>
-                    </div>
-                </div>
-                <div class="query-cont__col">
-                    <div class="query-col__label">直播间ID：</div>
-                    <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.roomId" maxlength="20" placeholder="请输入"></el-input>
-                    </div>
-                </div>
-                <div class="query-cont__col">
-                    <h-button type="primary" @click="getList">查询</h-button>
-                    <h-button @click="onReset">重置</h-button>
-                </div>
-            </div>
             <!-- tab页签 -->
                  <el-tabs v-model="activeName" @tab-click="handleTabClick">
                     <el-tab-pane label="banner管理" name="banner">
@@ -27,6 +9,7 @@
                     </el-tab-pane>
                     <el-tab-pane label="楼层管理" name="floor" >
                         <!-- <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation> -->
+                        <Floortabs/>
                     </el-tab-pane>
                     <el-tab-pane label="品类推荐" name="category" >
                         <!-- <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation> -->
@@ -44,6 +27,7 @@ import { State, namespace, Getter, Action } from 'vuex-class'
 import { CreateElement } from 'vue'
 import Bannertabs from './components/banner_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import Categorytabs from './components/category_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
+import Floortabs from './components/floor_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 
 import filters from '@/utils/filters'
 
@@ -53,7 +37,8 @@ import moment from 'moment'
     name: 'Advmanage',
     components: {
         Bannertabs,
-        Categorytabs
+        Categorytabs,
+        Floortabs
     }
 })
 
@@ -89,6 +74,9 @@ export default class Advmanage extends Vue {
         [2, '部分支付']
     ])
     @State('userInfo') userInfo: any
+
+    handleTabClick (tab, event): void {
+    }
 }
 </script>
 
