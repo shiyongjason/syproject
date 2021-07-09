@@ -545,6 +545,18 @@ export default [
                 ]
             },
             {
+                path: 'brandManage',
+                name: 'brandManage',
+                meta: {
+                    title: '品牌管理',
+                    tagName: '品牌管理',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/shopMall/brandManage/list.vue')
+            },
+            {
                 path: 'advmanage',
                 name: 'advmanage',
                 meta: {
