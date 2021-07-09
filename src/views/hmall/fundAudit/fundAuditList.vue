@@ -321,7 +321,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.applyStartTime
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
@@ -341,7 +341,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.auditStartTime
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }

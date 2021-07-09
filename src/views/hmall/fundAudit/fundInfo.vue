@@ -36,6 +36,9 @@
                     <span class="table-title-name">采购商品清单</span>
                 </div>
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isShowIndex='true' :isfiexd="'right'" :isShowSum="true" :getSum="getSum" class="mt20 mb20">
+                    <template slot="unit" slot-scope="scope">
+                        {{unitMap.get(scope.data.row.unit) || '-'}}
+                    </template>
                 </basicTable>
                 <el-form-item label="代采订单总金额：" prop="totalAmount">
                     <el-input class="form-input_big" v-model="form.totalAmount" maxlength="100" disabled></el-input>
@@ -90,7 +93,7 @@
 </template>
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex'
-import { PAY_OPTIONS } from './const'
+import { PAY_OPTIONS, UNIT_MAP } from './const'
 import { auditFund } from './api/index'
 import { clearCache, newCache } from '@/utils/index'
 export default {
@@ -98,6 +101,7 @@ export default {
     data () {
         return {
             payOptions: PAY_OPTIONS,
+            unitMap: UNIT_MAP,
             btnLoading: false,
             houseOptions: [],
             form: {},
@@ -202,21 +206,18 @@ export default {
             this.btnLoading = true
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
-                    if (this.form.status != '') {
-                        try {
-                            await auditFund(form)
-                            this.btnLoading = false
-                            console.log(form)
-                            this.$message.success('操作成功！')
-                            this.$router.go(-1)
-                            this.setNewTags((this.$route.fullPath).split('?')[0])
-                        } catch (error) {
-                            this.btnLoading = false
-                        }
-                    } else {
+                    try {
+                        // await auditFund(form)
                         this.btnLoading = false
-                        this.$message.error('请选择审核结果！')
+                        this.$message.success('操作成功！')
+                        // this.$router.go(-1)
+                        // this.setNewTags((this.$route.fullPath).split('?')[0])
+                    } catch (error) {
+                        this.btnLoading = false
                     }
+                } else {
+                    this.btnLoading = false
+                    this.$message.error('请选择审核结果！')
                 }
             })
         },

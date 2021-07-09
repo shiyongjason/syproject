@@ -143,7 +143,7 @@
                     <span v-else>{{scope.data.row.repayedAmount}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button @click="onFund(scope.data.row)">资金同步</el-button>
+                    <h-button v-if='scope.data.row.fundSyncStatus!==40' table @click="onFund(scope.data.row)">资金同步</h-button>
                 </template>
             </basicTable>
         </div>
@@ -247,19 +247,19 @@ export default {
                 this.tabName = 'occupy'
                 this.queryParams.username = this.pageId
                 this.queryParams.overDue = true
-                this.getOccupationList()
+                this.getPrepayList()
             } else if (this.page == 'occupationAmount') {
                 this.tabName = 'occupy'
                 this.queryParams.username = this.pageId
-                this.getOccupationList()
+                this.getPrepayList()
             } else if (this.page == 'totalRepayAmount') {
                 this.tabName = 'returned'
                 this.queryParams.username = this.pageId
-                this.getPrepayList()
+                this.getOccupationList()
             } else {
                 this.tabName = 'pay'
                 this.queryParams.username = this.pageId
-                this.getOccupationList()
+                this.getPrepayList()
             }
             if (this.tabName == 'apply') {
                 this.getApplyList()
@@ -306,15 +306,15 @@ export default {
                     { label: '企业名称', prop: 'companyName' },
                     { label: '代采订单号', prop: 'agentOrderNo' },
                     { label: 'MIS订单号', prop: 'misOrderNo' },
-                    { label: '代采提交日期', prop: 'createTime' },
-                    { label: '出款确认日期', prop: 'auditTime' },
+                    { label: '代采提交日期', prop: 'createTime', formatters: 'date' },
+                    { label: '出款确认日期', prop: 'auditTime', formatters: 'date' },
                     { label: '代采金额', prop: 'totalAmount' },
                     { label: '预付款', prop: 'prepayAmount' },
                     { label: '代付金额', prop: 'retainageAmount' },
                     { label: '回款类型', prop: 'repayWay' },
                     { label: '回款订单号', prop: 'childOrderNo' },
-                    { label: '最终回款期限', prop: 'finalRepayTime' },
-                    { label: '回款日期', prop: 'repayTime' },
+                    { label: '最终回款期限', prop: 'finalRepayTime', formatters: 'date' },
+                    { label: '回款日期', prop: 'repayTime', formatters: 'date' },
                     { label: '回款金额', prop: 'repayAmount' },
                     { label: '资金同步状态', prop: 'fundSyncStatus' },
                     { label: '同步备注', prop: 'fundSyncFailureReason' }
@@ -346,9 +346,9 @@ export default {
             if (this.tabName == 'apply') {
                 this.getApplyList()
             } else if (this.tabName == 'returned') {
-                this.getPrepayList()
-            } else {
                 this.getOccupationList()
+            } else {
+                this.getPrepayList()
             }
         },
         onCurrentChange (val) {
@@ -356,9 +356,9 @@ export default {
             if (this.tabName == 'apply') {
                 this.getApplyList()
             } else if (this.tabName == 'returned') {
-                this.getPrepayList()
-            } else {
                 this.getOccupationList()
+            } else {
+                this.getPrepayList()
             }
         },
         // 重置
