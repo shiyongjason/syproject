@@ -4,7 +4,7 @@
         <div class="baner-btn mb20">
             <el-button type="primary" @click="onAddFloor">新增楼层</el-button>
         </div>
-        <hosJoyTable localName="V3.10.5" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe :column="tableLabel" :data="tableData" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
+        <hosJoyTable isShowIndex ref="hosjoyTable" align="center"  border stripe :column="tableLabel" :data="tableData" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
             <template #action="slotProps">
                     <h-button table @click="onEditLive(slotProps.data.row)">查看</h-button>
                     <h-button table v-if="slotProps.data.row.status==1" @click="onPutHome(slotProps.data.row)">启用</h-button>
@@ -61,6 +61,7 @@ export default class Floortabs extends Vue {
 
         onAddFloor () {
             // this.dialogVisible = true
+            this.$router.push({ path: '/goodwork/flooredit' })
         }
 }
 </script>
