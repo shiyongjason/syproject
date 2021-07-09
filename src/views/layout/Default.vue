@@ -221,7 +221,7 @@ export default {
 
 <style lang="scss" scoped>
 .tabs-container {
-    z-index: 1000;
+    z-index: 100;
     &__height {
         height: 50px;
     }
