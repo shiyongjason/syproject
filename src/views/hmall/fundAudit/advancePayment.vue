@@ -98,8 +98,8 @@
                 <template slot="action" slot-scope="scope">
                     <h-button table v-if="scope.data.row.prepayStatus == 10" @click="onSure(scope.data.row)">确认</h-button>
                     <h-button table @click="onseeTask(scope.data.row)">查看</h-button>
-                    <h-button table v-if="scope.data.row.orderSyncStatus == 10" @click="onAudit(scope.data.row)">订单同步</h-button>
-                    <h-button table v-if="scope.data.row.fundSyncStatus == 10" @click="onFund(scope.data.row)">资金同步</h-button>
+                    <h-button table v-if="scope.data.row.prepayStatus == 20&&scope.data.row.orderSyncStatus!= 40" @click="onAudit(scope.data.row)">订单同步</h-button>
+                    <h-button table v-if="scope.data.row.prepayStatus == 20&&scope.data.row.fundSyncStatus != 40" @click="onFund(scope.data.row)">资金同步</h-button>
                     <h-button table v-if="scope.data.row.orderSwitch == 1" @click="onClose(scope.data.row)">关闭</h-button>
                 </template>
             </basicTable>

@@ -75,7 +75,7 @@ export const ORDER_STATUS_OPTIONS = [
 ]
 export const ORDER_STATUS_MAP = new Map([
     [1, '开启'],
-    [2, '关闭']
+    [0, '关闭']
 ])
 // 订单同步状态
 export const ORDER_SYNCHRONOUS_OPTIONS = [
@@ -85,7 +85,10 @@ export const ORDER_SYNCHRONOUS_OPTIONS = [
 ]
 export const ORDER_SYNCHRONOUS_MAP = new Map([
     [40, '已同步'],
-    [10, '未同步']
+    [10, '未同步'],
+    [20, '同步中'],
+    [30, '同步失败'],
+    [50, '不处理']
 ])
 // 资金同步状态
 export const SYNCHRONOUS_OPTIONS = [
@@ -94,8 +97,11 @@ export const SYNCHRONOUS_OPTIONS = [
     { label: '未同步', value: '10' }
 ]
 export const SYNCHRONOUS_MAP = new Map([
-    [20, '已同步'],
-    [10, '未同步']
+    [40, '已同步'],
+    [10, '未同步'],
+    [20, '同步中'],
+    [30, '同步失败'],
+    [50, '不处理']
 ])
 // 出款状态
 export const PARAGRAPH_STATUS_OPTIONS = [
@@ -162,3 +168,10 @@ export const AUDIT_MAP = new Map([
 export const PAY_OPTIONS = [
     { label: '线下转账', value: 10 }
 ]
+// 单位
+export const UNIT_MAP = new Map([
+    [1, '个'],
+    [2, '台'],
+    [3, '件'],
+    [4, '套']
+])
