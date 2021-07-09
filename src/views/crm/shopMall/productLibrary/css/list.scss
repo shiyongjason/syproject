@@ -89,3 +89,9 @@
     display: flex;
     justify-content: space-between;
 }
+.tipsDialog{
+    /deep/.el-dialog__body{
+        min-height:120px;
+        box-sizing: border-box;
+    }
+}
