@@ -22,19 +22,19 @@
             </div>
             <div class="query-cont-row">
                 <div class="query-cont__col">
-                    <h-button type="primary" class="ml20" @click="onAdd">新建落地页</h-button>
+                    <h-button type="primary" class="ml20" @click="onAdd" v-if="hosAuthCheck(Auths.CRM_LIVE_ADD)">新建落地页</h-button>
                 </div>
             </div>
             <!-- end search bar -->
             <hosJoyTable localName="V3.5.1" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe :column="tableLabel" :data="tableData" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
                     <div v-if="!slotProps.data.row.homePage">
-                        <h-button table @click="onEditLive(slotProps.data.row)">编辑</h-button>
-                        <h-button table v-if="slotProps.data.row.status==1" @click="onPutHome(slotProps.data.row)">放在首页</h-button>
-                        <h-button table @click="onDelete(slotProps.data.row)">删除</h-button>
+                        <h-button table @click="onEditLive(slotProps.data.row)" v-if="hosAuthCheck(Auths.CRM_LIVE_EDIT)">编辑</h-button>
+                        <h-button table v-if="slotProps.data.row.status==1&&hosAuthCheck(Auths.CRM_LIVE_ONTOP)" @click="onPutHome(slotProps.data.row)">放在首页</h-button>
+                        <h-button table @click="onDelete(slotProps.data.row)" v-if="hosAuthCheck(Auths.CRM_LIVE_DELETE)">删除</h-button>
                     </div>
                     <div v-else>
-                        <h-button table @click="onNoHome(slotProps.data.row)">不放在首页</h-button>
+                        <h-button table @click="onNoHome(slotProps.data.row)" v-if="hosAuthCheck(Auths.CRM_LIVE_NOTOP)">不放在首页</h-button>
                     </div>
                 </template>
             </hosJoyTable>
@@ -51,7 +51,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
 import { CreateElement } from 'vue'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-// import ImageAddToken from '@/components/imageAddToken/index.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
+import * as Auths from '@/utils/auth_const'
 import * as Api from './api/index'
 import { LiveRoomResponse } from './live'
 import filters from '@/utils/filters'
@@ -71,6 +71,7 @@ export default class Liveplayer extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
+    Auths=Auths
     uploadParameters = {
         updateUid: '',
         reservedName: false
