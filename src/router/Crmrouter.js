@@ -529,6 +529,18 @@ export default [
                             showMenuAs: '/goodwork/commodityManagement/productLibrary'
                         },
                         component: () => import('@/views/crm/shopMall/productLibrary/spuEdit.vue')
+                    },
+                    {
+                        path: 'productLabel',
+                        name: 'productLabel',
+                        meta: {
+                            title: '商品标签',
+                            tagName: '商品标签',
+                            parentName: '好橙工',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/crm/shopMall/productLabel/list.vue')
                     }
                 ]
             },
