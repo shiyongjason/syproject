@@ -229,7 +229,14 @@ export default {
         },
         onReset () {
             this.queryParams = { ...this.copyParams }
-            this.getAuditFundList()
+            if (this.tabName == '20') {
+                this.queryParams.orderStatus = '20'
+            } else if (this.tabName == '60') {
+                this.queryParams.orderStatus = '60'
+            } else if (this.tabName == '0') {
+                this.queryParams.orderStatus = ''
+            }
+            this.onQuery()
         },
         onTab (value) {
             if (this.tabName == '20') {
