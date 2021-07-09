@@ -648,9 +648,9 @@ export default {
         }
     },
     mounted () {
-        this.init()
         this.resetParams = { ...this.queryParams }
         this.repayResetParams = { ...this.repayQueryParams }
+        this.init()
     },
     beforeRouteEnter (to, from, next) {
         newCache('merchantsDetail')
