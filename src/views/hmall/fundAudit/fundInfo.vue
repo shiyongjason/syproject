@@ -149,7 +149,7 @@ export default {
             tableLabelLog: [
                 { label: '时间', prop: 'createTime', formatters: 'dateTimes' },
                 { label: '操作人', prop: 'operator' },
-                { label: '操作内容', prop: 'operateMotion' }
+                { label: '操作内容', prop: 'operateMotionDesc' }
             ],
             tableDataLog: []
         }
