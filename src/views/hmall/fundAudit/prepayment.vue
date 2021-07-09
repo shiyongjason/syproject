@@ -61,6 +61,9 @@
                 </div>
             </div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true' :isfiexd="'right'">
+                <template slot="agentOrderNo" slot-scope="scope">
+                    <a class="isLink" @click="onInfo(scope.data.row)">{{scope.data.row.agentOrderNo}}</a>
+                </template>
                 <template slot="repayStatus" slot-scope="scope">
                     {{platformStatusMap.get(scope.data.row.repayStatus) || '-'}}
                 </template>
@@ -240,6 +243,10 @@ export default {
         onSure (val) {
             this.sureId = val.id
             this.closeOrderDialog = true
+        },
+        // 跳转boss代采订单详情
+        onInfo (val) {
+            this.$router.push({ path: '/b2b/fundAudit/statusFundInfo', query: { id: val.agentOrderId, pageType: 'auditFundStatus' } })
         },
         async onEdit () {
             this.$refs.form.validate(async (valid) => {

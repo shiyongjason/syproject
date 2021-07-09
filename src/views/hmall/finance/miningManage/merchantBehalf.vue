@@ -30,8 +30,8 @@
                             </el-select>
                         </div>
                         <div class="query-col-input">
-                            <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
-                            <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
+                            <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
+                            <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
                         </div>
                     </div>
                 </template>
@@ -54,8 +54,8 @@
                         </el-select>
                     </div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
-                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
+                        <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
+                        <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col" v-if="tabName == 'returned'">
@@ -65,8 +65,8 @@
                         </el-select>
                     </div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
-                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
+                        <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
+                        <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
                 <template v-if="tabName == 'pay' || tabName == 'occupy'">
@@ -239,31 +239,26 @@ export default {
             if (this.page == 'creditLimit') {
                 this.tabName = 'apply'
                 this.queryParams.username = this.pageId
-                this.getApplyList()
             } else if (this.page == 'overdueAmount') {
                 this.tabName = 'occupy'
                 this.queryParams.username = this.pageId
                 this.queryParams.overDue = true
-                this.getPrepayList()
             } else if (this.page == 'occupationAmount') {
                 this.tabName = 'occupy'
                 this.queryParams.username = this.pageId
-                this.getPrepayList()
             } else if (this.page == 'totalRepayAmount') {
                 this.tabName = 'returned'
                 this.queryParams.username = this.pageId
-                this.getOccupationList()
             } else {
                 this.tabName = 'pay'
                 this.queryParams.username = this.pageId
-                this.getPrepayList()
             }
             if (this.tabName == 'apply') {
                 this.getApplyList()
             } else if (this.tabName == 'returned') {
-                this.getPrepayList()
-            } else {
                 this.getOccupationList()
+            } else {
+                this.getPrepayList()
             }
         },
         onTab (value) {
