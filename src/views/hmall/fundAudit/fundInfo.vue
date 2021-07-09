@@ -56,7 +56,7 @@
                     </el-input>
                 </el-form-item>
                 <template v-if="check">
-                    <el-form-item label="订单最终回款日期：" prop="period" :rules="form.status=='20'?rules.period:{}">
+                    <el-form-item label="订单最终回款日期：" prop="period" :rules="form.status=='20'?rules.period:falseRules.period">
                         <el-input class="form-input_big" v-model="form.period" maxlength="10">
                             <template slot="suffix">天</template>
                         </el-input>
@@ -128,6 +128,21 @@ export default {
                         validator: (rule, value, callback) => {
                             if (value && value.replace(/\s/g, '').length < 1) {
                                 return callback(new Error('请填写理由说明'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
+                ]
+            },
+            falseRules: {
+                period: [
+                    {
+                        required: false,
+                        validator: (rule, value, callback) => {
+                            const Reg = /^\+?[1-9]{1}[0-9]{0,2}\d{0,0}$/
+                            if (value && !Reg.test(value)) {
+                                return callback(new Error('请填写大于0的整数，最大值999'))
                             }
                             return callback()
                         },

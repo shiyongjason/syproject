@@ -133,7 +133,7 @@ export default {
                 { label: '所属分部', prop: 'subsectionName' },
                 { label: '店铺名称', prop: 'shopName' },
                 { label: '审核状态', prop: 'orderStatus' },
-                { label: '审核时间', prop: 'auditTime' },
+                { label: '审核时间', prop: 'auditTime', formatters: 'dateTimes' },
                 { label: '回款期限', prop: 'period' }
             ],
             drawer: false,
