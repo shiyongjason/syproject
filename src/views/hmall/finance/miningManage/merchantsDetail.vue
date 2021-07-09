@@ -395,7 +395,7 @@ export default {
                 disabledDate: (time) => {
                     const beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
@@ -415,7 +415,7 @@ export default {
                 disabledDate: (time) => {
                     const beginDateVal = this.repayQueryParams.startTime
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
