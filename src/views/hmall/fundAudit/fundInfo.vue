@@ -203,21 +203,17 @@ export default {
                 status: this.form.status,
                 rejectReason: this.form.rejectReason
             }
-            this.btnLoading = true
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
                     try {
-                        // await auditFund(form)
+                        await auditFund(form)
                         this.btnLoading = false
                         this.$message.success('操作成功！')
-                        // this.$router.go(-1)
-                        // this.setNewTags((this.$route.fullPath).split('?')[0])
+                        this.$router.go(-1)
+                        this.setNewTags((this.$route.fullPath).split('?')[0])
                     } catch (error) {
                         this.btnLoading = false
                     }
-                } else {
-                    this.btnLoading = false
-                    this.$message.error('请选择审核结果！')
                 }
             })
         },
