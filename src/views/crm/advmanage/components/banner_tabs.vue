@@ -4,7 +4,7 @@
         <div class="baner-btn mb20">
             <el-button type="primary" @click="onAddBanner">新增banner</el-button>
         </div>
-        <hosJoyTable localName="V3.10.3" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe :column="tableLabel" :data="tableData" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
+        <hosJoyTable isShowIndex ref="hosjoyTable" align="center"  border stripe :column="tableLabel" :data="tableData" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
             <template #action="slotProps">
                 <div v-if="!slotProps.data.row.homePage">
                     <h-button table @click="onEditLive(slotProps.data.row)">编辑</h-button>
