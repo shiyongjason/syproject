@@ -86,7 +86,7 @@
         </div>
         <h-drawer title="资金审核" :visible.sync="drawer" :wrapperClosable="false" size="640px" @close="handleClose">
             <template #connect>
-                <el-form ref="form" :model="form" :rules="rules" label-width="140px">
+                <el-form ref="form" :model="form" :rules="form.auditStatus == 30?falseRules:rules" label-width="140px">
                     <el-form-item label="企业名称：">
                         {{form.companyName?form.companyName:'-'}}
                     </el-form-item>
@@ -99,15 +99,18 @@
                     <el-form-item label="店铺名称：">
                         {{form.shopName||'-'}}
                     </el-form-item>
-                    <el-form-item label="额度：" :prop="form.auditStatus==20?'creditLimit':'-'">
+                    <el-form-item label="商家类型：">
+                        {{businessTypeMap.get(form.merchantType) || '-'}}
+                    </el-form-item>
+                    <el-form-item label="额度：" prop="creditLimit">
                         <el-input v-model="form.creditLimit" maxLength="10" placeholder="请输入额度"></el-input>
                     </el-form-item>
-                    <el-form-item label="比例：" :prop="form.auditStatus==20?'prepayPercentage':'-'">
+                    <el-form-item label="比例：" prop="prepayPercentage">
                         <el-input v-model="form.prepayPercentage" maxLength="10" placeholder="请输入比例">
                             <template slot="suffix">%</template>
                         </el-input>
                     </el-form-item>
-                    <el-form-item label="额度有效时间：" :prop="form.auditStatus==20?'expireTime':'-'">
+                    <el-form-item label="额度有效时间：" prop="expireTime">
                         <el-date-picker v-model="form.expireTime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-ddT23:59:59" placeholder="额度有效时间"></el-date-picker>
                     </el-form-item>
                     <el-form-item label="审核：" prop="auditStatus">
@@ -183,7 +186,7 @@ export default {
                     {
                         required: true,
                         validator: (rule, value, callback) => {
-                            const reg = /^(([0-9])|([1-9][0-9]{1,7})|100000000)$/
+                            const reg = /^(([1-9])|([1-9][0-9]{1,7})|100000000)$/
                             if (!value || value == '') {
                                 return callback(new Error('请输入额度'))
                             }
@@ -201,7 +204,7 @@ export default {
                         validator: (rule, value, callback) => {
                             const reg = /^(([0-9])|([1-9][0-9]{1,2})|100)$/
                             if (!value || value == '') {
-                                return callback(new Error('请输入额度'))
+                                return callback(new Error('请输入比例'))
                             }
                             if (value && !reg.test(value)) {
                                 return callback(new Error('比例格式为0-100的整数'))
@@ -224,7 +227,50 @@ export default {
                     }
                 ],
                 auditStatus: [
-                    { required: true, message: '请选择', trigger: 'change' }
+                    { required: true, message: '请选择审核结果', trigger: 'change' }
+                ],
+                note: [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            if (!value || value == '') {
+                                return callback(new Error('请输入原因'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
+                ]
+            },
+            falseRules: {
+                creditLimit: [
+                    {
+                        required: false,
+                        validator: (rule, value, callback) => {
+                            const reg = /^(([1-9])|([1-9][0-9]{1,7})|100000000)$/
+                            if (value && !reg.test(value)) {
+                                return callback(new Error('额度格式为0-100000000的整数'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                prepayPercentage: [
+                    {
+                        required: false,
+                        validator: (rule, value, callback) => {
+                            const reg = /^(([0-9])|([1-9][0-9]{1,2})|100)$/
+                            if (value && !reg.test(value)) {
+                                return callback(new Error('比例格式为0-100的整数'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                auditStatus: [
+                    { required: true, message: '请选择审核结果', trigger: 'change' }
                 ],
                 note: [
                     {
