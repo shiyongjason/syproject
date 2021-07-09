@@ -7,9 +7,9 @@
         <hosJoyTable localName="V3.10.3" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe :column="tableLabel" :data="tableData" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
             <template #action="slotProps">
 
-                    <h-button table @click="onDelete(slotProps.data.row)">上移</h-button>
-                    <h-button table @click="onDelete(slotProps.data.row)">下移</h-button>
-                    <h-button table @click="onDelete(slotProps.data.row)">取消推荐</h-button>
+                <h-button table @click="onDelete(slotProps.data.row)">上移</h-button>
+                <h-button table @click="onDelete(slotProps.data.row)">下移</h-button>
+                <h-button table @click="onDelete(slotProps.data.row)">取消推荐</h-button>
 
             </template>
         </hosJoyTable>
@@ -21,11 +21,11 @@
                         <el-option label="区域二" value="beijing"></el-option>
                     </el-select>
                 </el-form-item>
-                 <el-form-item label="品类图标：" prop="name">
-                        <OssFileHosjoyUpload v-model="ruleForm.payVouchers" :showPreView='true' :fileSize=1 :fileNum=1 :uploadParameters='uploadParameters' @successCb="$refs.form.clearValidate()" accept=".jpg,.png,.jpeg">
-                        </OssFileHosjoyUpload>
-                        <p>（品类图标格式为JGP/JPEG/PNG等主流格式图片，最大不超过1M）</p>
-                        <p>注意：推荐后，该品类信息将出现在小程序首页~</p>
+                <el-form-item label="品类图标：" prop="name">
+                    <OssFileHosjoyUpload v-model="ruleForm.payVouchers" :showPreView='true' :fileSize=1 :fileNum=1 :uploadParameters='uploadParameters' @successCb="$refs.form.clearValidate()" accept=".jpg,.png,.jpeg">
+                    </OssFileHosjoyUpload>
+                    <p>（品类图标格式为JGP/JPEG/PNG等主流格式图片，最大不超过1M）</p>
+                    <p>注意：推荐后，该品类信息将出现在小程序首页~</p>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -51,58 +51,48 @@ import { CreateElement } from 'vue'
     }
 })
 export default class Categorytabs extends Vue {
-    // @Prop({ default: '' }) readonly data!:RespLoanHandoverInfo
-    @Prop({ default: '' }) readonly userInfo!:any
-    @Prop({ default: '' }) readonly paymentOrderId!:any
-    $refs!: {
-        form: HTMLFormElement
-    }
-    uploadParameters = {
-        updateUid: '',
-        reservedName: false
-    }
-    dialogVisible:boolean = false
-    ruleForm:object={
-        payVouchers: []
-    }
-    page = {
-        sizes: [10, 20, 50, 100],
-        total: 0
-    }
-
-    tableData:any[] | [] = []
-
-    tableLabel: tableLabelProps = [
-        { label: 'bannar名称', prop: 'deviceBrand', width: '120' },
-        { label: 'bannar图', prop: 'upstreamSupplierName', width: '120' },
-        { label: '跳转链接', prop: 'upstreamSupplierType', width: '150', dicData: [{ value: 1, label: '厂商' }, { value: 2, label: '代理商' }, { value: 3, label: '经销商' }] },
-        { label: 'banner位置', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] },
-        { label: '创建时间',
-            prop: 'deviceCategoryType',
-            render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
-                return (
-                    <div>
-                    1
-                    </div>
-                )
-            }
-        },
-        { label: 'bannar状态', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] }
-    ]
-
-    get rules () {
-        let rules = {
-            name: [
-                { required: true, message: '请选择变更交接状态', trigger: 'change' }
-            ]
+        // @Prop({ default: '' }) readonly data!:RespLoanHandoverInfo
+        @Prop({ default: '' }) readonly userInfo!:any
+        @Prop({ default: '' }) readonly paymentOrderId!:any
+        $refs!: {
+            form: HTMLFormElement
         }
-        return rules
-    }
+        uploadParameters = {
+            updateUid: '',
+            reservedName: false
+        }
+        dialogVisible:boolean = false
+        ruleForm:object={
+            payVouchers: []
+        }
+        page = {
+            sizes: [10, 20, 50, 100],
+            total: 0
+        }
 
-    handleClose () {
-        this.dialogVisible = false
-        this.$refs['ruleForm'].clearValidate()
-    }
+        tableData:any[] | [] = []
+
+        tableLabel: tableLabelProps = [
+            { label: '品类顺序', prop: 'deviceBrand', width: '120' },
+            { label: '品类名称', prop: 'upstreamSupplierName', width: '120' },
+            { label: '品类图标', prop: 'upstreamSupplierType', width: '150' },
+            { label: '更新人', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] },
+            { label: '更新时间', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] }
+        ]
+
+        get rules () {
+            let rules = {
+                name: [
+                    { required: true, message: '请选择变更交接状态', trigger: 'change' }
+                ]
+            }
+            return rules
+        }
+
+        handleClose () {
+            this.dialogVisible = false
+            this.$refs['ruleForm'].clearValidate()
+        }
 }
 </script>
 <style lang='scss' scoped>
