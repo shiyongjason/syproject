@@ -121,9 +121,6 @@
                 <template slot="overdue" slot-scope="scope">
                     <span>{{overdueMap.get(scope.data.row.overdue)}}</span>
                 </template>
-                <template slot="fundStatus" slot-scope="scope">
-                    <span>{{capitalMap.get(scope.data.row.fundStatus)}}</span>
-                </template>
                 <template slot="repayWay" slot-scope="scope">
                     <span>{{deadlineTypeMap.get(scope.data.row.repayWay)}}</span>
                 </template>

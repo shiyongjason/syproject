@@ -17,7 +17,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">管理员账号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.adminAccount" placeholder="请输入管理员账号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.username" placeholder="请输入管理员账号" maxlength="50"></el-input>
                     </div>
                 </div>
 
@@ -101,7 +101,7 @@ export default {
             queryParams: {
                 agentOrderNo: '',
                 companyName: '',
-                adminAccount: '',
+                username: '',
                 repayStatus: '',
                 accountName: '',
                 bankCardNo: '',
@@ -119,7 +119,7 @@ export default {
                 { label: '代采订单总金额', prop: 'totalAmount' },
                 { label: '待回尾款', prop: 'leftRepayAmount' },
                 { label: '提前还款金额', prop: 'repayAmount' },
-                { label: '打款银行名称', prop: 'accountName' },
+                { label: '打款账户名称', prop: 'accountName' },
                 { label: '打款银行账号', prop: 'bankCardNo' },
                 { label: '企业名称', prop: 'companyName' },
                 { label: '管理员账号', prop: 'username' },

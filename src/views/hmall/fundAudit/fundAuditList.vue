@@ -84,7 +84,7 @@
                 </template>
             </basicTable>
         </div>
-        <h-drawer title="资金审核" :visible.sync="drawer" :wrapperClosable="false" size="640px" @close="handleClose">
+        <h-drawer title="资金审核" :visible.sync="drawer" :wrapperClosable="false" size="640px" @opened="handleOpen" @close="handleClose">
             <template #connect>
                 <el-form ref="form" :model="form" :rules="form.auditStatus == 30?falseRules:rules" label-width="140px">
                     <el-form-item label="企业名称：">
@@ -215,16 +215,7 @@ export default {
                     }
                 ],
                 expireTime: [
-                    {
-                        required: true,
-                        validator: (rule, value, callback) => {
-                            if (!value || value == '') {
-                                return callback(new Error('请输入额度有效时间'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'change'
-                    }
+                    { required: true, message: '请输入额度有效时间', trigger: 'change' }
                 ],
                 auditStatus: [
                     { required: true, message: '请选择审核结果', trigger: 'change' }
@@ -233,7 +224,7 @@ export default {
                     {
                         required: true,
                         validator: (rule, value, callback) => {
-                            if (!value || value == '') {
+                            if (!value) {
                                 return callback(new Error('请输入原因'))
                             }
                             return callback()
@@ -268,6 +259,9 @@ export default {
                         },
                         trigger: 'blur'
                     }
+                ],
+                expireTime: [
+                    { required: false, message: '请输入额度有效时间' }
                 ],
                 auditStatus: [
                     { required: true, message: '请选择审核结果', trigger: 'change' }
@@ -361,14 +355,20 @@ export default {
             this.queryParams = { ...this.resetParams }
             this.getFundList()
         },
-        async onCheck ({ id }) {
+        onCheck (val) {
             this.drawer = true
-            this.fundId = id
-            await this.getFindInfo(id)
+            this.fundId = val.id
         },
         handleClose () {
-            this.drawer = false
-            this.$refs.form.resetFields()
+            this.$nextTick(() => {
+                this.$refs.form.clearValidate()
+            })
+        },
+        async handleOpen () {
+            await this.getFindInfo(this.fundId)
+            this.$nextTick(() => {
+                this.$refs.form.clearValidate()
+            })
         },
         onChange () {
             this.$nextTick(() => {
@@ -416,7 +416,7 @@ export default {
         },
         async getFindInfo (id) {
             await this.findFundInfo({ id: id })
-            this.form = { ...this.fundInfo }
+            this.form = { ...this.fundInfo, expireTime: '' }
         }
     },
     mounted () {
