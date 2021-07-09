@@ -281,13 +281,16 @@
                     <template slot="status" slot-scope="scope">
                         <span>{{statusMap.get(scope.data.row.status)}}</span>
                     </template>
+                    <template slot="type" slot-scope="scope">
+                        <span>{{deaTypeMap.get(scope.data.row.type)}}</span>
+                    </template>
                 </basicTable>
             </div>
         </div>
     </div>
 </template>
 <script>
-import { BUSINESS_DETAIL_OPTIONS, BUSINESS_DETAIL_MAP, STAUTS_OPTIONS, STAUTS_MAP, OVERDUE_OPTIONS, OVERDUE_MAP, CAPITAL_STATUS_OPTIONS, CAPITAL_STATUS_MAP, DEADLINE_OPTIONS } from '../const.js'
+import { BUSINESS_DETAIL_OPTIONS, BUSINESS_DETAIL_MAP, STAUTS_OPTIONS, STAUTS_MAP, OVERDUE_OPTIONS, OVERDUE_MAP, CAPITAL_STATUS_OPTIONS, CAPITAL_STATUS_MAP, DEADLINE_OPTIONS, DEA_TYPE_MAP } from '../const.js'
 import { mapState, mapActions } from 'vuex'
 export default {
     name: 'merchantsDetail',
@@ -303,6 +306,7 @@ export default {
             capitalStatusOptions: CAPITAL_STATUS_OPTIONS,
             capitalStatusMap: CAPITAL_STATUS_MAP,
             deadlineOptions: DEADLINE_OPTIONS,
+            deaTypeMap: DEA_TYPE_MAP,
             fundDetil: {
                 creditLimit: '',
                 totalAmount: '',
