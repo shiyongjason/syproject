@@ -105,9 +105,15 @@ export default class Liveplayer extends Vue {
             width: '100',
             render: (h: CreateElement, scope:TableRenderParam): JSX.Element => {
                 return (
-                    <span class="label_img" onClick={() => this.onShowVide(scope)}>
-                        <img src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20210706/356a3aec-5c8e-47df-941a-91a222fe9e07.png'/>
-                    </span>
+                    <div>
+                        {
+                            scope.row.brandVideoUrl
+                                ? <span class="label_img" onClick={() => this.onShowVide(scope)}>
+                                    <img src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20210706/356a3aec-5c8e-47df-941a-91a222fe9e07.png'/>
+                                </span>
+                                : '-'
+                        }
+                    </div>
                 )
             }
         },
@@ -117,7 +123,11 @@ export default class Liveplayer extends Vue {
             render: (h: CreateElement, scope:TableRenderParam): JSX.Element => {
                 return (
                     <span class="label_img">
-                        <ImageAddToken file-url={scope.row.brandLogoUrl}/>
+                        {
+                            scope.row.brandLogoUrl
+                                ? <ImageAddToken file-url={scope.row.brandLogoUrl}/>
+                                : '-'
+                        }
                     </span>
                 )
             }
