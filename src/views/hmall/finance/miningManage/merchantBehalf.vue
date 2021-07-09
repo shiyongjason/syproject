@@ -244,7 +244,8 @@ export default {
                 this.getApplyList()
             } else if (this.page == 'overdueAmount') {
                 this.tabName = 'occupy'
-                this.queryParams.overdue = true
+                this.queryParams.username = this.pageId
+                this.queryParams.overDue = true
                 this.getOccupationList()
             } else if (this.page == 'occupationAmount') {
                 this.tabName = 'occupy'

@@ -560,11 +560,7 @@ export default {
         },
         // 跳转商家详情
         onInfo (val, page) {
-            if (page == 'overdueAmount') {
-                this.$router.push({ path: '/b2b/fundAudit/merchantBehalf', query: { id: val.overdue, page: page } })
-            } else {
-                this.$router.push({ path: '/b2b/fundAudit/merchantBehalf', query: { id: val.username, page: page } })
-            }
+            this.$router.push({ path: '/b2b/fundAudit/merchantBehalf', query: { id: val.username, page: page } })
         },
         // 商家明细合计
         getSum (param) {
