@@ -310,3 +310,10 @@ export const ONLINE_FREIGHT_STATUS_MAP = new Map([
     [40, '已开票'],
     [50, '已退款']
 ])
+
+// 交易记录 类型
+export const DEA_TYPE_MAP = new Map([
+    [1, '销售回款'],
+    [2, '提前还款'],
+    [3, '预付款']
+])

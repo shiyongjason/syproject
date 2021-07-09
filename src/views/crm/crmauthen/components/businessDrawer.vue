@@ -8,7 +8,8 @@
                             <el-form :model="businessDetail" :rules="rules" ref="ruleForm">
                                 <el-form-item label="企业名称：" :label-width="formLabelWidth" class="nameall">
                                     <p> {{businessDetail.companyName}} &emsp;<span :class="['authTag',businessDetail.isAuthentication?'tagGreen':'tagOrg']">{{businessDetail.isAuthentication?'已认证':'未认证'}}</span>
-                                        <span class="authTag tagInfo">{{businessDetail.memberTag?memberTagArr[businessDetail.memberTag-1].value:'-'}}</span>
+                                         <span class="authTag tagInfo">{{businessDetail.memberTag?memberTagArr[businessDetail.memberTag-1].value:'-'}}</span>
+                                        <span class="authTag tagInfo">{{chengLabel[businessDetail.chengGongCaiLable]}}</span>
                                         <span class="authTag tagBlue" @click="onTianyan(businessDetail.companyName)">一键天眼</span>
                                     </p>
                                 </el-form-item>
@@ -247,11 +248,8 @@
                                         {{authenticationDetail.authenticationBy}}
                                     </span>
                                     <span v-else>-</span>
-
                                 </el-form-item>
-
                             </el-form>
-
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="联系方式" name="third">
@@ -418,6 +416,11 @@ export default {
         return {
             Auths,
             memberTagArr: [{ key: 1, value: '一般会员' }, { key: 2, value: '认证会员' }, { key: 3, value: '评级会员' }, { key: 4, value: '签约会员' }, { key: 5, value: '交易会员' }],
+            chengLabel: {
+                0: '橙工采会员(未激活)',
+                1: '橙工采初级会员',
+                2: '橙工采橙级会员'
+            },
             editorShow: {
                 email: false,
                 address: false

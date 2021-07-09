@@ -95,6 +95,7 @@
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { BUSINESS_TYPE_OPTIONS, BUSINESS_TYPE_MAP, AUDIT_OPTIONS, AUDIT_MAP, DEADLINE_OPTIONS, DEADLINE_MAP, AUDIT_TAB_OPTIONS } from './const'
+import { clearCache, newCache } from '@/utils/index'
 export default {
     name: 'auditFundList',
     data () {
@@ -261,6 +262,19 @@ export default {
         onCheck (val) {
             this.$router.push({ path: '/b2b/fundAudit/aduitFundInfo', query: { id: val.id, check: true } })
         }
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('auditFundList')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'aduitFundInfo' || to.name != 'listFundInfo') {
+            clearCache('auditFundList')
+        }
+        next()
+    },
+    activated () {
+        this.getAuditFundList()
     }
 }
 </script>

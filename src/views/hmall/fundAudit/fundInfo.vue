@@ -92,6 +92,7 @@
 import { mapActions, mapState, mapGetters } from 'vuex'
 import { PAY_OPTIONS } from './const'
 import { auditFund } from './api/index'
+import { clearCache, newCache } from '@/utils/index'
 export default {
     name: 'fundInfo',
     data () {
@@ -146,7 +147,7 @@ export default {
             ],
             tableData: [],
             tableLabelLog: [
-                { label: '时间', prop: 'createTime' },
+                { label: '时间', prop: 'createTime', formatters: 'dateTimes' },
                 { label: '操作人', prop: 'operator' },
                 { label: '操作内容', prop: 'operateMotion' }
             ],
@@ -259,6 +260,16 @@ export default {
                 this.init()
             }
         }
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'auditFundList') {
+            clearCache('auditFundList')
+        } else if (to.name != 'advancePayment') {
+            clearCache('advancePayment')
+        } else if (to.name != 'auditFundStatus') {
+            clearCache('auditFundStatus')
+        }
+        next()
     }
 }
 </script>

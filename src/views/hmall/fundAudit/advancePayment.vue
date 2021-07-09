@@ -103,7 +103,7 @@
                     <h-button table v-if="scope.data.row.orderSwitch == 1" @click="onClose(scope.data.row)">关闭</h-button>
                 </template>
             </basicTable>
-            <el-dialog title="关闭" width="500px" :visible.sync="closeOrderDialog" :close-on-click-modal=false>
+            <el-dialog title="关闭" width="500px" :visible.sync="closeOrderDialog" :close-on-click-modal=false @close='closeDialog'>
                 <div class="pl40 pt20">
                     <span>是否确认关闭此订单，订单关闭后无法更改，请谨慎选择</span>
                 </div>
@@ -124,6 +124,7 @@
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { PAYMENT_STATUS_OPTIONS, PAYMENT_STATUS_MAP, ORDER_STATUS_OPTIONS, ORDER_STATUS_MAP, ORDER_SYNCHRONOUS_OPTIONS, ORDER_SYNCHRONOUS_MAP, SYNCHRONOUS_OPTIONS, SYNCHRONOUS_MAP } from './const'
 import { sureFund, closeFund, syncFund, syncMisFund } from './api/index'
+import { clearCache, newCache } from '@/utils/index'
 export default {
     name: 'advancePayment',
     data () {
@@ -163,7 +164,7 @@ export default {
                 { label: '管理员账号', prop: 'username' },
                 { label: '店铺名称', prop: 'shopName' },
                 { label: '预付款状态', prop: 'prepayStatus' },
-                { label: '确认时间', prop: 'prepayConfirmTime' },
+                { label: '确认时间', prop: 'prepayConfirmTime', formatters: 'dateTimes' },
                 { label: '订单状态', prop: 'orderSwitch' },
                 { label: '订单同步状态', prop: 'orderSyncStatus' },
                 { label: '资金同步状态', prop: 'fundSyncStatus' },
@@ -322,7 +323,23 @@ export default {
                     this.getAdvanceList()
                 }
             })
+        },
+        closeDialog () {
+            this.form.cancelReason = ''
         }
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('advancePayment')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'advanceFundInfo') {
+            clearCache('advancePayment')
+        }
+        next()
+    },
+    activated () {
+        this.getAdvanceList()
     }
 }
 </script>
