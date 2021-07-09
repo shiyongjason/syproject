@@ -68,7 +68,7 @@
                     <h-button table v-if="scope.data.row.repayStatus == 10" @click="onSure(scope.data.row)">确认</h-button>
                 </template>
             </basicTable>
-            <el-dialog title="确认" width="500px" :visible.sync="closeOrderDialog" :close-on-click-modal=false>
+            <el-dialog title="确认" width="500px" :visible.sync="closeOrderDialog" :close-on-click-modal=false @close='closeDialog'>
                 <el-form :model="form" ref="form" :rules='rules' class="pt40">
                     <el-form-item prop="repayStatus">
                         <el-radio-group v-model="form.repayStatus" @change="formChange">
@@ -124,7 +124,7 @@ export default {
                 { label: '企业名称', prop: 'companyName' },
                 { label: '管理员账号', prop: 'username' },
                 { label: '平台确认状态', prop: 'repayStatus' },
-                { label: '确认时间', prop: 'platformConfirmTime' },
+                { label: '确认时间', prop: 'platformConfirmTime', formatters: 'dateTimes' },
                 { label: '备注', prop: 'rejectReason' }
             ],
             copyParams: {},
@@ -262,6 +262,13 @@ export default {
         },
         formChange (val) {
             // this.createChange = val
+        },
+        closeDialog () {
+            this.form.repayStatus = ''
+            this.form.rejectReason = ''
+            this.$nextTick(() => {
+                this.$refs.form.clearValidate()
+            })
         }
     }
 }

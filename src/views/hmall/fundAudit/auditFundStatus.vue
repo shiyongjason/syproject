@@ -72,7 +72,7 @@
                     <h-button table v-if="scope.data.row.allocateStatus == 20 &&scope.data.row.goodsStatus != 40" @click="onGodown(scope.data.row)">货物到仓确认</h-button>
                 </template>
             </basicTable>
-            <el-dialog title="货物出仓确认" width="500px" :visible.sync="closeOrderDialog" :close-on-click-modal=false>
+            <el-dialog title="货物出仓确认" width="500px" :visible.sync="closeOrderDialog" :close-on-click-modal=false @close='closeDialog'>
                 <el-form :model="form" ref="form" :rules='rules' label-width="180px" class="pt80">
                     <el-form-item label="请选择货物到仓情况：" prop="goodsStatus">
                         <el-radio-group v-model="form.goodsStatus">
@@ -94,6 +94,7 @@
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { PARAGRAPH_STATUS_OPTIONS, PARAGRAPH_STATUS_MAP, FUND_STATUS_OPTIONS, FUND_STATUS_MAP, GOODS_STATUS_OPTIONS, GOODS_STATUS_MAP } from './const'
 import { allocateFund, warehouseFund } from './api/index'
+import { clearCache, newCache } from '@/utils/index'
 export default {
     name: 'auditFundStatus',
     data () {
@@ -248,7 +249,26 @@ export default {
                     }
                 }
             })
+        },
+        closeDialog () {
+            this.form.goodsStatus = ''
+            this.$nextTick(() => {
+                this.$refs.form.clearValidate()
+            })
         }
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('auditFundStatus')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'statusFundInfo') {
+            clearCache('auditFundStatus')
+        }
+        next()
+    },
+    activated () {
+        this.getStatusFundList()
     }
 }
 </script>
