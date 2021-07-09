@@ -26,12 +26,12 @@
 
                 <el-form-item label="商品视频：" prop="schemeVideo" >
                     <el-row>
-                        <SingleUpload  sizeLimit='100M' :upload="videoUpload" :imageUrl="videoimageUrl"
+                        <SingleUpload  sizeLimit='100M' :upload="videoUpload" :imageUrl="imageUrl"
                                        @back-event="videoUrl" :imgW="100" :imgH="100">
                         </SingleUpload>
                         <h-button v-if="form.schemeVideo"   type="primary" @click="palyVideo">视频预览</h-button>
                         <div class="upload-tips">
-                            建议尺寸：支持 MP4格式, 大小不超过20MB
+                            建议尺寸：支持 MP4格式, 大小不超过100MB
                             视频尺寸16:9，视频长度建议不超过60秒
                         </div>
                     </el-row>
@@ -59,7 +59,7 @@
 <script>
 import { interfaceUrl } from '@/api/config'
 import { addCrmPlanDetail, getCrmPlanDetail } from './api'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
     name: 'crmedit',
     data () {
@@ -159,6 +159,18 @@ export default {
                     return time.getTime() < Date.now() - 8.64e7
                 }
             }
+        },
+        imageUrl () {
+            return this.videoimageUrl
+        }
+    },
+    watch: {
+        'form.schemeImage' (val) {
+            if (val) {
+                this.$nextTick(() => {
+                    this.$refs['schemeImage'].clearValidate()
+                })
+            }
         }
     },
     async mounted () {
@@ -167,16 +179,21 @@ export default {
         }
     },
     methods: {
+        ...mapActions({
+            setNewTags: 'setNewTags'
+        }),
         async getDetail (id) {
             const { data } = await getCrmPlanDetail({ id })
             this.form = { ...data }
             if (this.form.schemeVideo) {
                 this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
+            } else {
+                this.videoimageUrl = ''
             }
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/comfortCloudMerchant/merchantEngine/merchantEnginePlan')
+            this.$router.push('/goodwork/crmengineplan/crmenginedetail')
         },
 
         onSave () {
@@ -196,7 +213,7 @@ export default {
                         }
 
                         this.setNewTags((this.$route.fullPath).split('?')[0])
-                        this.$router.push('/comfortCloudMerchant/merchantEngine/merchantEnginePlan')
+                        this.$router.push('/goodwork/crmengineplan/crmenginedetail')
                         this.loading = false
                     } catch (error) {
                         this.loading = false
@@ -210,9 +227,14 @@ export default {
             this.form.schemeImage = val.imageUrl
         },
         videoUrl (val) {
-            this.$message.success('视频上传成功')
+            if (val.imageUrl) {
+                this.$message.success('视频上传成功')
+                this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
+            } else {
+                this.$message.success('视频删除成功')
+                this.videoimageUrl = ''
+            }
             this.form.schemeVideo = val.imageUrl
-            this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
         },
         palyVideo () {
             this.innerVisible = true
@@ -262,5 +284,10 @@ export default {
     }
     /deep/.w-e-toolbar {
         z-index: 99 !important;
+    }
+    .avatarVideo{
+        width: 95%;
+        margin:0 auto;
+        display: block;
     }
 </style>

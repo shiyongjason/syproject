@@ -45,7 +45,7 @@
 <script>
 
 import { mapGetters, mapActions, mapState } from 'vuex'
-import { getCrmPlanList } from './api/index'
+import { getCrmPlanList, deleteProjectScheme } from './api/index'
 import { iotUrl } from '@/api/config'
 import H5Preview from '@/components/h5Preview'
 
@@ -112,7 +112,7 @@ export default {
             this.$router.push({ path: '/goodwork/crmengineplan/crmengineedit', query: { id: data.id } })
         },
         onPreviewClick (val) {
-            this.H5Preview = iotUrl + '/iot/merchantEnginePlanPreview?id=' + val.id
+            this.H5Preview = '/goodwork/crmengineplan/H5Preview?id=' + val.id
         },
         isEffective (plan) {
             return new Date().getTime() > new Date(plan.effectiveTime).getTime()

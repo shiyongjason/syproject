@@ -121,6 +121,9 @@
                  <template slot="memberTag" slot-scope="scope">
                      {{memberTagArr[scope.data.row.memberTag-1].value}}
                 </template>
+                 <template slot="chengGongCaiLable" slot-scope="scope">
+                     {{chengLabel[scope.data.row.chengGongCaiLable]}}
+                </template>
                 <template slot="customerManager" slot-scope="scope">
                      <p>{{scope.data.row.customerManager||'-'}}</p>
                      <p>{{scope.data.row.customerManagerPhone||'-'}}</p>
@@ -149,7 +152,6 @@
     </div>
 </template>
 <script>
-// import { findProducts, findBossSource, changeSpustatus, getBrands } from './api/index'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import businessDrawer from './components/businessDrawer'
@@ -198,6 +200,7 @@ export default {
                 { label: '经营区域', prop: 'areaname', width: '150' },
                 { label: '企业类型', prop: 'companyType', width: '100' },
                 { label: '客户分类', prop: 'customerType', width: '100', sortable: 'custom' },
+                { label: '橙工采会员', prop: 'chengGongCaiLable' },
                 { label: '认证状态', prop: 'isAuthentication' },
                 { label: '客户经理', prop: 'customerManager', width: '100' },
                 { label: '会员标签', prop: 'memberTag' },
