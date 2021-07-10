@@ -567,20 +567,46 @@ export default [
                     icon: '',
                     showMenuAs: '/goodwork/advmanage'
                 },
-                component: () => import('@/views/crm/advmanage/index.vue')
+                component: () => import('@/views/crm/shopMall/advmanage/index.vue')
             },
             {
                 path: 'flooredit',
                 name: 'flooredit',
                 meta: {
-                    title: '楼层商品编辑',
-                    tagName: '楼层商品编辑',
+                    title: '楼层商品新增/编辑',
+                    tagName: '楼层商品新增/编辑',
                     parentName: '好橙工',
                     isMenu: false,
                     icon: '',
                     showMenuAs: '/goodwork/advmanage'
                 },
-                component: () => import('@/views/crm/advmanage/flooredit.vue')
+                component: () => import('@/views/crm/shopMall/advmanage/flooredit.vue')
+            },
+            {
+                path: 'floordetail',
+                name: 'floordetail',
+                meta: {
+                    title: '楼层商品详情',
+                    tagName: '楼层商品详情',
+                    parentName: '好橙工',
+                    isMenu: false,
+                    icon: '',
+                    showMenuAs: '/goodwork/advmanage'
+                },
+                component: () => import('@/views/crm/shopMall/advmanage/floordetail.vue')
+            },
+            {
+                path: 'category',
+                name: 'category',
+                meta: {
+                    title: '品类管理',
+                    tagName: '品类管理',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: '',
+                    showMenuAs: '/goodwork/category'
+                },
+                component: () => import('@/views/crm/shopMall/category/index.vue')
             }
         ]
     }
