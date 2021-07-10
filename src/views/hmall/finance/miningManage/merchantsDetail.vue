@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <div class="table-cont-tabs">
                 <el-tabs type="card" v-model="tabName" @tab-click="onTab">
-                    <el-tab-pane label="商品明细" name="detail"></el-tab-pane>
+                    <el-tab-pane label="商家明细" name="detail"></el-tab-pane>
                     <el-tab-pane label="交易记录" name="record"></el-tab-pane>
                 </el-tabs>
             </div>

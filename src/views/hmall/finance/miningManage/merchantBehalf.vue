@@ -187,16 +187,7 @@ export default {
                 pageSize: 10
             },
             tableData: [],
-            tableLabel: [
-                { label: '管理员账号', prop: 'username' },
-                { label: '企业名称', prop: 'companyName' },
-                { label: '申请单号', prop: 'applyNo' },
-                { label: '申请日期', prop: 'createTime', formatters: 'date' },
-                { label: '审核日期', prop: 'auditTime', formatters: 'date' },
-                { label: '授信额度', prop: 'creditLimit' },
-                { label: '授信截止日期', prop: 'expireTime', formatters: 'date' },
-                { label: '预付款比例', prop: 'prepayPercentage' }
-            ],
+            tableLabel: [],
             pagination: {}
         }
     },
@@ -216,7 +207,7 @@ export default {
                 disabledDate: (time) => {
                     const beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
@@ -253,103 +244,47 @@ export default {
                 this.tabName = 'pay'
                 this.queryParams.username = this.pageId
             }
-            if (this.tabName == 'apply') {
-                this.getApplyList()
-            } else if (this.tabName == 'returned') {
-                this.getOccupationList()
-            } else {
-                this.getPrepayList()
-            }
+            // if (this.tabName == 'apply') {
+            //     this.getApplyList()
+            // } else if (this.tabName == 'returned') {
+            //     this.getOccupationList()
+            // } else {
+            //     this.getPrepayList()
+            // }
+            this.tabParam(this.tabName)
         },
         onTab (value) {
-            if (this.tabName == 'apply') {
-                this.tableLabel = [
-                    { label: '管理员账号', prop: 'username' },
-                    { label: '企业名称', prop: 'companyName' },
-                    { label: '申请单号', prop: 'applyNo' },
-                    { label: '申请日期', prop: 'createTime', formatters: 'date' },
-                    { label: '审核日期', prop: 'auditTime', formatters: 'date' },
-                    { label: '授信额度', prop: 'creditLimit' },
-                    { label: '授信截止日期', prop: 'expireTime', formatters: 'date' },
-                    { label: '预付款比例', prop: 'prepayPercentage' }
-                ]
-            } else if (this.tabName == 'pay') {
-                this.tableLabel = [
-                    { label: '管理员账号', prop: 'username' },
-                    { label: '企业名称', prop: 'companyName' },
-                    { label: '代采订单号', prop: 'agentOrderNo' },
-                    { label: 'MIS订单号', prop: 'misOrderNo' },
-                    { label: '代采提交日期', prop: 'createTime', formatters: 'date' },
-                    { label: '出款确认日期', prop: 'auditTime', formatters: 'date' },
-                    { label: '代采金额', prop: 'totalAmount' },
-                    { label: '预付款', prop: 'prepayAmount' },
-                    { label: '代付金额', prop: 'retainageAmount' },
-                    { label: '回款金额', prop: 'repayedAmount' },
-                    { label: '占用金额', prop: 'occupationAmount' },
-                    { label: '逾期未还金额', prop: 'overdueAmount' },
-                    { label: '最终回款期限', prop: 'finalRepayTime', formatters: 'date' },
-                    { label: '最近回款日期', prop: 'lastRepayTime', formatters: 'date' },
-                    { label: '逾期否', prop: 'overdue' },
-                    { label: '资金状态', prop: 'fundStatus' }
-                ]
-            } else if (this.tabName == 'returned') {
-                this.tableLabel = [
-                    { label: '管理员账号', prop: 'username' },
-                    { label: '企业名称', prop: 'companyName' },
-                    { label: '代采订单号', prop: 'agentOrderNo' },
-                    { label: 'MIS订单号', prop: 'misOrderNo' },
-                    { label: '代采提交日期', prop: 'createTime', formatters: 'date' },
-                    { label: '出款确认日期', prop: 'auditTime', formatters: 'date' },
-                    { label: '代采金额', prop: 'totalAmount' },
-                    { label: '预付款', prop: 'prepayAmount' },
-                    { label: '代付金额', prop: 'retainageAmount' },
-                    { label: '回款类型', prop: 'repayWay' },
-                    { label: '回款订单号', prop: 'childOrderNo' },
-                    { label: '最终回款期限', prop: 'finalRepayTime', formatters: 'date' },
-                    { label: '回款日期', prop: 'repayTime', formatters: 'date' },
-                    { label: '回款金额', prop: 'repayAmount' },
-                    { label: '资金同步状态', prop: 'fundSyncStatus' },
-                    { label: '同步备注', prop: 'fundSyncFailureReason' }
-                ]
-            } else if (this.tabName == 'occupy') {
-                this.tableLabel = [
-                    { label: '管理员账号', prop: 'username' },
-                    { label: '企业名称', prop: 'companyName' },
-                    { label: '代采订单号', prop: 'agentOrderNo' },
-                    { label: 'MIS订单号', prop: 'misOrderNo' },
-                    { label: '代采提交日期', prop: 'createTime', formatters: 'date' },
-                    { label: '出款确认日期', prop: 'auditTime', formatters: 'date' },
-                    { label: '代采金额', prop: 'totalAmount' },
-                    { label: '预付款', prop: 'prepayAmount' },
-                    { label: '代付金额', prop: 'retainageAmount' },
-                    { label: '回款金额', prop: 'repayedAmount' },
-                    { label: '占用金额', prop: 'occupationAmount' },
-                    { label: '逾期未还金额', prop: 'overdueAmount' },
-                    { label: '最终回款期限', prop: 'finalRepayTime', formatters: 'date' },
-                    { label: '最近回款日期', prop: 'lastRepayTime', formatters: 'date' },
-                    { label: '逾期否', prop: 'overdue' },
-                    { label: '资金状态', prop: 'fundStatus' }
-                ]
-            }
+            this.tabParam(this.tabName)
             this.onReset()
         },
         onQuery () {
             this.queryParams.pageNumber = 1
-            if (this.tabName == 'apply') {
-                this.getApplyList()
-            } else if (this.tabName == 'returned') {
-                this.getOccupationList()
-            } else {
-                this.getPrepayList()
-            }
+            // if (this.tabName == 'apply') {
+            //     this.getApplyList()
+            // } else if (this.tabName == 'returned') {
+            //     this.getOccupationList()
+            // } else if (this.tabName == 'pay' || this.tabName == 'occupy') {
+            //     this.getPrepayList()
+            // }
+            this.tabParam(this.tabName)
         },
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            if (this.tabName == 'apply') {
+            // if (this.tabName == 'apply') {
+            //     this.getApplyList()
+            // } else if (this.tabName == 'returned') {
+            //     this.getOccupationList()
+            // } else {
+            //     this.getPrepayList()
+            // }
+            this.tabParam(this.tabName)
+        },
+        tabParam (tabName) {
+            if (tabName == 'apply') {
                 this.getApplyList()
-            } else if (this.tabName == 'returned') {
+            } else if (tabName == 'returned') {
                 this.getOccupationList()
-            } else {
+            } else if (tabName == 'pay' || tabName == 'occupy') {
                 this.getPrepayList()
             }
         },
@@ -377,14 +312,60 @@ export default {
             findOccupationList: 'finance/findOccupationList'
         }),
         async getApplyList () {
+            this.tableLabel = [
+                { label: '管理员账号', prop: 'username' },
+                { label: '企业名称', prop: 'companyName' },
+                { label: '申请单号', prop: 'applyNo' },
+                { label: '申请日期', prop: 'createTime', formatters: 'date' },
+                { label: '审核日期', prop: 'auditTime', formatters: 'date' },
+                { label: '授信额度', prop: 'creditLimit' },
+                { label: '授信截止日期', prop: 'expireTime', formatters: 'date' },
+                { label: '预付款比例', prop: 'prepayPercentage' }
+            ]
             await this.findApplyList(this.queryParams)
             this.tableData = this.applyList.records
         },
         async getPrepayList () {
+            this.tableLabel = [
+                { label: '管理员账号', prop: 'username' },
+                { label: '企业名称', prop: 'companyName' },
+                { label: '代采订单号', prop: 'agentOrderNo' },
+                { label: 'MIS订单号', prop: 'misOrderNo' },
+                { label: '代采提交日期', prop: 'createTime', formatters: 'date' },
+                { label: '出款确认日期', prop: 'auditTime', formatters: 'date' },
+                { label: '代采金额', prop: 'totalAmount' },
+                { label: '预付款', prop: 'prepayAmount' },
+                { label: '代付金额', prop: 'retainageAmount' },
+                { label: '回款金额', prop: 'repayedAmount' },
+                { label: '占用金额', prop: 'occupationAmount' },
+                { label: '逾期未还金额', prop: 'overdueAmount' },
+                { label: '最终回款期限', prop: 'finalRepayTime', formatters: 'date' },
+                { label: '最近回款日期', prop: 'lastRepayTime', formatters: 'date' },
+                { label: '逾期否', prop: 'overdue' },
+                { label: '资金状态', prop: 'fundStatus' }
+            ]
             await this.findPrepayList(this.queryParams)
             this.tableData = this.prepayList.records
         },
         async getOccupationList () {
+            this.tableLabel = [
+                { label: '管理员账号', prop: 'username' },
+                { label: '企业名称', prop: 'companyName' },
+                { label: '代采订单号', prop: 'agentOrderNo' },
+                { label: 'MIS订单号', prop: 'misOrderNo' },
+                { label: '代采提交日期', prop: 'createTime', formatters: 'date' },
+                { label: '出款确认日期', prop: 'auditTime', formatters: 'date' },
+                { label: '代采金额', prop: 'totalAmount' },
+                { label: '预付款', prop: 'prepayAmount' },
+                { label: '代付金额', prop: 'retainageAmount' },
+                { label: '回款类型', prop: 'repayWay' },
+                { label: '回款订单号', prop: 'childOrderNo' },
+                { label: '最终回款期限', prop: 'finalRepayTime', formatters: 'date' },
+                { label: '回款日期', prop: 'repayTime', formatters: 'date' },
+                { label: '回款金额', prop: 'repayAmount' },
+                { label: '资金同步状态', prop: 'fundSyncStatus' },
+                { label: '同步备注', prop: 'fundSyncFailureReason' }
+            ]
             await this.findOccupationList(this.queryParams)
             this.tableData = this.occupationList.records
         },
