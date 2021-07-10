@@ -121,11 +121,12 @@ export default class Liveplayer extends Vue {
         { label: '品牌logo',
             prop: 'brandLogoUrl',
             render: (h: CreateElement, scope:TableRenderParam): JSX.Element => {
+                console.log(scope)
                 return (
                     <span class="label_img">
                         {
                             scope.row.brandLogoUrl
-                                ? <ImageAddToken file-url={scope.row.brandLogoUrl}/>
+                                ? <a href={scope.row.brandLogoUrl} target="_blank"><img src={scope.row.brandLogoUrl}/></a>
                                 : '-'
                         }
                     </span>
