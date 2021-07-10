@@ -594,6 +594,19 @@ export default [
                     showMenuAs: '/goodwork/advmanage'
                 },
                 component: () => import('@/views/crm/shopMall/advmanage/floordetail.vue')
+            },
+            {
+                path: 'category',
+                name: 'category',
+                meta: {
+                    title: '品类管理',
+                    tagName: '品类管理',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: '',
+                    showMenuAs: '/goodwork/category'
+                },
+                component: () => import('@/views/crm/shopMall/category/index.vue')
             }
         ]
     }
