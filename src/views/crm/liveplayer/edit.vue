@@ -49,7 +49,35 @@
         <el-drawer title="预览" :visible.sync="drawer" direction="rtl" :before-close="()=>{this.drawer = false}">
             <div class="player_wrap">
                 <div class="player_wrap-tit">{{form.roomName}}</div>
-                <div class="player_wrap-main" v-html="form.productIntroduc">
+                <div class="paler_video">
+                    <Video ref="videoPlay" :src="form.brandVideoUrl" class="paler_video" controls="controls">您的浏览器不支持视频播放
+                    </Video>
+                </div>
+                <div class='live'>
+                    <div class='live-pic'>
+                        <img class='live-pic-img' src='https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png' />
+                        <div class='live-pic-status'>
+                            <div class='status-container'>
+                                <div class='status-container-title'>直播</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='live-detail'>
+                        <div class='live-detail-title'>直播间介绍</div>
+                        <div class='live-detail-goods'>
+                            <div class="live-detail-goods-item">
+                             <img class='live-detail-goods-item-img' src='https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png' />
+                                    <div class='live-detail-goods-item-count'>
+                                        +1
+                                    </div>
+                            </div>
+                             <div class="live-detail-goods-item">
+                             <img class='live-detail-goods-item-img' src='https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png' />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="player_wrap-main"  v-html="form.productIntroduc">
                 </div>
             </div>
         </el-drawer>
@@ -228,7 +256,7 @@ export default {
                 }
             })
         },
-        async  onSaveTemp () {
+        async onSaveTemp () {
             if (!this.form.roomName) {
                 this.$message.warning('落地页名称必填')
                 return
@@ -275,21 +303,27 @@ export default {
 .player_wrap {
     width: 350px;
     margin: 0 auto;
-     width: 350px;
+    width: 350px;
     height: 700px;
-    background: transparent url("../../../assets/images/iPhoneX_model.png") no-repeat scroll center center;
+    background: transparent url("../../../assets/images/iPhoneX_model.png")
+        no-repeat scroll center center;
     background-size: 100% 100%;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     &-tit {
         font-size: 16px;
         text-align: center;
         margin-top: 60px;
     }
-    &-main{
-        padding: 0 30px;
+    &-main {
+        padding: 10px 10px;
+        background: #ffffff;
+        border-radius: 2px;
+        width: 310px;
+        margin:10px auto;
+        box-sizing: border-box;
     }
 }
 .upload-tips {
@@ -325,10 +359,119 @@ export default {
 /deep/.w-e-toolbar {
     z-index: 99 !important;
 }
-.avatarVideo{
+.avatarVideo {
     width: 400px;
     height: 300px;
     display: block;
-    margin: 0 auto
+    margin: 0 auto;
+}
+.paler_video {
+    width: 310px;
+    height: 200px;
+    display: block;
+    margin: 10px auto;
+}
+.live {
+    border-radius: 4px;
+    overflow: hidden;
+    background: white;
+    display: flex;
+    flex-direction: row;
+    width: 310px;
+    margin:0 auto;
+    height: 140px;
+    &-pic {
+        width: 150px;
+        height: 100%;
+        position: relative;
+        &-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 4px 0 0 4px;
+        }
+
+        &-status {
+            position: absolute;
+            left: 6px;
+            top: 6px;
+        }
+    }
+
+    &-detail {
+        flex: 1;
+        margin: 6px 8px 4px 12px;
+        display: flex;
+        flex-direction: column;
+        &-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: #333333;
+        }
+
+        &-goods {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            &-item {
+                position: relative;
+                margin-right: 12px;
+         width:50px;
+                    height: 50px;
+                &-img {
+                    position: absolute;
+                             width:50px;
+                    height: 50px;
+                }
+
+                &-count {
+                    position: absolute;
+                    width:50px;
+                    height: 50px;
+                    background: #00000044;
+
+                    font-size: 18px;
+                    color: white;
+                    line-height: 70px;
+                    text-align: center;
+                }
+            }
+        }
+    }
+    .status-container {
+        height: 18px;
+        border-radius: 9px;
+        padding: 0 5px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        &-dot {
+            width: 4px;
+            height: 4px;
+            background: #ffffff;
+            border-radius: 4px;
+            margin-right: 4px;
+        }
+
+        &-gray {
+            background: #00000080;
+        }
+
+        &-orange {
+            background: #fd9212;
+        }
+
+        &-title {
+            font-size: 10px;
+            font-weight: 400;
+            color: #ffffff;
+            line-height: 18px;
+            text-align: center;
+            white-space: nowrap;
+        }
+    }
 }
 </style>
