@@ -92,11 +92,6 @@ export default class Liveplayer extends Vue {
 
     }
 
-    PAYMENTSTATUS: Map<number | null, string> = new Map([
-        [null, '-'],
-        [1, '待支付'],
-        [2, '部分支付']
-    ])
     @State('userInfo') userInfo: any
 
     tableLabel:tableLabelProps = [
@@ -121,7 +116,6 @@ export default class Liveplayer extends Vue {
         { label: '品牌logo',
             prop: 'brandLogoUrl',
             render: (h: CreateElement, scope:TableRenderParam): JSX.Element => {
-                console.log(scope)
                 return (
                     <span class="label_img">
                         {

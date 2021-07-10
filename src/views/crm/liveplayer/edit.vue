@@ -6,7 +6,7 @@
                     <el-input v-model.trim="form.roomName" show-word-limit placeholder="请输入" maxlength='20' class="newTitle"></el-input>
                 </el-form-item>
                 <el-form-item label="直播间ID：" prop="roomId">
-                    <el-select v-model="form.roomId" placeholder="请选择">
+                    <el-select clearable v-model="form.roomId" placeholder="请选择">
                         <el-option v-for="item in options" :key="item" :label="item" :value="item">
                         </el-option>
                     </el-select>
@@ -31,7 +31,7 @@
                     <h3>产品介绍图：</h3>
                 </div>
                 <el-form-item label="详情：" prop="productIntroduc">
-                    <RichEditor :height="500" :menus="menus" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" :uploadImgServer="uploadImgServer" @change="$refs['form'].validateField('schemeDetail')" @blur="$refs['form'].validateField('schemeDetail')" hidefocus="true" ref="editors"
+                    <RichEditor :height="500" :menus="menus" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" :uploadImgServer="uploadImgServer" @change="$refs['form'].validateField('productIntroduc')" @blur="$refs['form'].validateField('productIntroduc')" hidefocus="true" ref="editors"
                         style="outline: 0;margin-bottom: 12px;width:100%" tabindex="0" v-model="form.productIntroduc"></RichEditor>
                 </el-form-item>
                 <el-form-item style="text-align: right">
@@ -48,36 +48,37 @@
         </el-dialog>
         <el-drawer title="预览" :visible.sync="drawer" direction="rtl" :before-close="()=>{this.drawer = false}">
             <div class="player_wrap">
-                <div class="player_wrap-tit">{{form.roomName}}</div>
-                <div class="paler_video">
-                    <Video ref="videoPlay" :src="form.brandVideoUrl" class="paler_video" controls="controls">您的浏览器不支持视频播放
-                    </Video>
-                </div>
-                <div class='live'>
-                    <div class='live-pic'>
-                        <img class='live-pic-img' src='https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png' />
-                        <div class='live-pic-status'>
-                            <div class='status-container'>
-                                <div class='status-container-title'>直播</div>
+                <div class="player_wrap-box">
+
+                    <div class="player_wrap-tit">{{form.roomName}}</div>
+                    <div class="playr_videos">
+                        <Video ref="videoPlay" :src="form.brandVideoUrl" class="player_video" controls="controls">您的浏览器不支持视频播放
+                        </Video>
+                    </div>
+                    <div class='live'>
+                        <div class='live-pic'>
+                            <img class='live-pic-img' src='https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png' />
+                            <div class='live-pic-status'>
+                                <span class='status-container-title status-container-orange'>直播状态</span>
                             </div>
                         </div>
-                    </div>
-                    <div class='live-detail'>
-                        <div class='live-detail-title'>直播间介绍</div>
-                        <div class='live-detail-goods'>
-                            <div class="live-detail-goods-item">
-                             <img class='live-detail-goods-item-img' src='https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png' />
+                        <div class='live-detail'>
+                            <div class='live-detail-title'>直播间介绍</div>
+                            <div class='live-detail-goods'>
+                                <div class="live-detail-goods-item">
+                                    <img class='live-detail-goods-item-img' src='https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png' />
                                     <div class='live-detail-goods-item-count'>
                                         +1
                                     </div>
-                            </div>
-                             <div class="live-detail-goods-item">
-                             <img class='live-detail-goods-item-img' src='https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png' />
+                                </div>
+                                <div class="live-detail-goods-item">
+                                    <img class='live-detail-goods-item-img' src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20210706/356a3aec-5c8e-47df-941a-91a222fe9e07.png' />
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="player_wrap-main"  v-html="form.productIntroduc">
+                    <div class="player_wrap-main" v-html="form.productIntroduc">
+                    </div>
                 </div>
             </div>
         </el-drawer>
@@ -136,7 +137,9 @@ export default {
                 ],
                 productIntroduc: [
                     {
+                        required: true,
                         validator: (rule, value, callback) => {
+                            console.log(value)
                             if (value.length <= 0 || value === '<p><br></p>') {
                                 return callback(new Error('请输入产品介绍图'))
                             }
@@ -207,6 +210,7 @@ export default {
         }
         const { data } = await Api.getRooms()
         this.options = data
+        this.$refs['form'].clearValidate()
     },
     methods: {
         ...mapActions({
@@ -312,18 +316,22 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    padding: 50px 10px 0px 20px;
+    &-box {
+        height: 610px;
+        overflow-y: scroll;
+    }
     &-tit {
         font-size: 16px;
         text-align: center;
-        margin-top: 60px;
     }
     &-main {
-        padding: 10px 10px;
         background: #ffffff;
         border-radius: 2px;
         width: 310px;
-        margin:10px auto;
+        margin: 10px auto;
         box-sizing: border-box;
+
     }
 }
 .upload-tips {
@@ -365,7 +373,7 @@ export default {
     display: block;
     margin: 0 auto;
 }
-.paler_video {
+.player_video {
     width: 310px;
     height: 200px;
     display: block;
@@ -378,7 +386,7 @@ export default {
     display: flex;
     flex-direction: row;
     width: 310px;
-    margin:0 auto;
+    margin: 0 auto;
     height: 140px;
     &-pic {
         width: 150px;
@@ -389,11 +397,11 @@ export default {
             height: 100%;
             border-radius: 4px 0 0 4px;
         }
-
         &-status {
             position: absolute;
             left: 6px;
             top: 6px;
+
         }
     }
 
@@ -409,30 +417,29 @@ export default {
         }
 
         &-goods {
-            margin-top: 30px;
+            margin-top: 45px;
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
             &-item {
                 position: relative;
                 margin-right: 12px;
-         width:50px;
-                    height: 50px;
+                width: 50px;
+                height: 50px;
                 &-img {
                     position: absolute;
-                             width:50px;
+                    width: 50px;
                     height: 50px;
                 }
 
                 &-count {
                     position: absolute;
-                    width:50px;
+                    width: 50px;
                     height: 50px;
                     background: #00000044;
-
                     font-size: 18px;
                     color: white;
-                    line-height: 70px;
+                    line-height: 50px;
                     text-align: center;
                 }
             }
@@ -442,7 +449,6 @@ export default {
         height: 18px;
         border-radius: 9px;
         padding: 0 5px;
-
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -471,6 +477,9 @@ export default {
             line-height: 18px;
             text-align: center;
             white-space: nowrap;
+               padding: 0 10px;
+            z-index: 100;
+            border-radius:10px;
         }
     }
 }
