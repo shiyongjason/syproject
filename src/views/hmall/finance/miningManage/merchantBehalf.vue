@@ -244,13 +244,6 @@ export default {
                 this.tabName = 'pay'
                 this.queryParams.username = this.pageId
             }
-            // if (this.tabName == 'apply') {
-            //     this.getApplyList()
-            // } else if (this.tabName == 'returned') {
-            //     this.getOccupationList()
-            // } else {
-            //     this.getPrepayList()
-            // }
             this.tabParam(this.tabName)
         },
         onTab (value) {
@@ -259,27 +252,14 @@ export default {
         },
         onQuery () {
             this.queryParams.pageNumber = 1
-            // if (this.tabName == 'apply') {
-            //     this.getApplyList()
-            // } else if (this.tabName == 'returned') {
-            //     this.getOccupationList()
-            // } else if (this.tabName == 'pay' || this.tabName == 'occupy') {
-            //     this.getPrepayList()
-            // }
             this.tabParam(this.tabName)
         },
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            // if (this.tabName == 'apply') {
-            //     this.getApplyList()
-            // } else if (this.tabName == 'returned') {
-            //     this.getOccupationList()
-            // } else {
-            //     this.getPrepayList()
-            // }
             this.tabParam(this.tabName)
         },
         tabParam (tabName) {
+            this.queryParams = { ...this.resetParams }
             if (tabName == 'apply') {
                 this.getApplyList()
             } else if (tabName == 'returned') {
