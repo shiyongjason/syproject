@@ -1,48 +1,38 @@
 
 <template>
-    <div class="banner-tab">
-        <div class="baner-btn mb20">
-            <el-button type="primary" @click="onAddBanner">新增banner</el-button>
+  <div class="page-body B2b">
+        <div class="page-body-cont">
+            <div class="query-cont-row">
+                <div class="query-cont__col">
+                    <div class="query-col__label">品类名称：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.paymentOrderNo" placeholder="请输入支付单号" maxlength="50"></el-input>
+                    </div>
+                </div>
+
+                <div class="query-cont__col">
+                    <div class="query-col__label">类目名称：</div>
+                    <div class="query-col__input">
+                        <el-input type="text" v-model="queryParams.companyName" maxlength="20" placeholder="请输入经销商名称"></el-input>
+                    </div>
+                </div>
+
+                <div class="query-cont__col">
+                    <h-button type="primary" @click="getList">查询</h-button>
+                    <h-button @click="onReset">重置</h-button>
+                </div>
+            </div>
+            <div class="query-cont__row mb20">
+                <h-button type="primary" >新增品类</h-button>
+            </div>
+            <!-- end search bar -->
+            <hosJoyTable isShowIndex ref="hosjoyTable" align="center"  border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0' >
+                <template #action="slotProps">
+                    <h-button table >查看详情</h-button>
+
+                </template>
+            </hosJoyTable>
         </div>
-        <hosJoyTable isShowIndex ref="hosjoyTable" align="center"  border stripe :column="tableLabel" :data="tableData" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
-            <template #action="slotProps">
-                <div v-if="!slotProps.data.row.homePage">
-                    <h-button table @click="onEditLive(slotProps.data.row)">编辑</h-button>
-                    <h-button table v-if="slotProps.data.row.status==1" @click="onPutHome(slotProps.data.row)">删除</h-button>
-                    <h-button table @click="onDelete(slotProps.data.row)">启用</h-button>
-                    <h-button table @click="onDelete(slotProps.data.row)">上移</h-button>
-                    <h-button table @click="onDelete(slotProps.data.row)">下移</h-button>
-                </div>
-                <div v-else>
-                    <h-button table @click="onNoHome(slotProps.data.row)">停用</h-button>
-                </div>
-            </template>
-        </hosJoyTable>
-        <el-dialog title="新增banner" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
-                <el-form-item label="banner名称：" prop="name">
-                    <el-input v-model="ruleForm.name"></el-input>
-                </el-form-item>
-                <el-form-item label="bannar位置：" prop="name">
-                    <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="跳转链接：" >
-                    <el-input v-model="ruleForm.name"></el-input>
-                </el-form-item>
-                 <el-form-item label="banner图：" prop="name">
-                        <OssFileHosjoyUpload v-model="ruleForm.payVouchers" :showPreView='true' :fileSize=20 :fileNum=1 :uploadParameters='uploadParameters' @successCb="$refs.form.clearValidate()" accept=".jpg,.png,.jpeg">
-                        </OssFileHosjoyUpload>
-                        <p>图片尺寸为750*300，不超过2M，仅支持jpeg、jpg、png格式</p>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-            </span>
-        </el-dialog>
 
     </div>
 </template>
@@ -71,10 +61,10 @@ export default class Bannertabs extends Vue {
             updateUid: '',
             reservedName: false
         }
-        dialogVisible:boolean = false
-        ruleForm:object={
-            payVouchers: []
+        queryParams:object={
+
         }
+
         page = {
             sizes: [10, 20, 50, 100],
             total: 0
@@ -83,38 +73,21 @@ export default class Bannertabs extends Vue {
         tableData:any[] | [] = []
 
         tableLabel: tableLabelProps = [
-            { label: 'bannar名称', prop: 'deviceBrand', width: '120' },
-            { label: 'bannar图', prop: 'upstreamSupplierName', width: '120' },
-            { label: '跳转链接', prop: 'upstreamSupplierType', width: '150', dicData: [{ value: 1, label: '厂商' }, { value: 2, label: '代理商' }, { value: 3, label: '经销商' }] },
-            { label: 'banner位置', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] },
-            { label: '创建时间',
-                prop: 'deviceCategoryType',
-                render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
-                    return (
-                        <div>
-                        1
-                        </div>
-                    )
-                }
-            },
-            { label: 'bannar状态', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] }
+            { label: '品类名称', prop: 'deviceBrand', width: '120' },
+            { label: '类目信息', prop: 'upstreamSupplierName' },
+            { label: '创建时间', prop: 'upstreamSupplierType' },
+            { label: '更新时间', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] },
+            { label: '更新人', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] },
+            { label: '品类上架数量', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] }
+
         ]
 
-        get rules () {
-            let rules = {
-                name: [
-                    { required: true, message: '请选择变更交接状态', trigger: 'change' }
-                ]
-            }
-            return rules
+        getList () {
+
         }
 
-        handleClose () {
-            this.dialogVisible = false
-            this.$refs['ruleForm'].clearValidate()
-        }
-        onAddBanner () {
-            this.dialogVisible = true
+        onReset () {
+
         }
 }
 </script>
