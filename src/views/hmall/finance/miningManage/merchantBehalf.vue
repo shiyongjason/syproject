@@ -139,6 +139,9 @@
                     <span v-if="Number(scope.data.row.repayedAmount)<0" style="color:red">{{scope.data.row.repayedAmount | moneyShow}}</span>
                     <span v-else>{{scope.data.row.repayedAmount| moneyShow}}</span>
                 </template>
+                <template slot="prepayPercentage" slot-scope="scope">
+                    <span>{{scope.data.row.prepayPercentage|percenShow}}</span>
+                </template>
                 <template slot="action" slot-scope="scope">
                     <h-button v-if='scope.data.row.fundSyncStatus!==40' table @click="onFund(scope.data.row)">资金同步</h-button>
                 </template>
