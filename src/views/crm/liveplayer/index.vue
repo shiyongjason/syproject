@@ -92,11 +92,6 @@ export default class Liveplayer extends Vue {
 
     }
 
-    PAYMENTSTATUS: Map<number | null, string> = new Map([
-        [null, '-'],
-        [1, '待支付'],
-        [2, '部分支付']
-    ])
     @State('userInfo') userInfo: any
 
     tableLabel:tableLabelProps = [
@@ -125,7 +120,7 @@ export default class Liveplayer extends Vue {
                     <span class="label_img">
                         {
                             scope.row.brandLogoUrl
-                                ? <ImageAddToken file-url={scope.row.brandLogoUrl}/>
+                                ? <a href={scope.row.brandLogoUrl} target="_blank"><img src={scope.row.brandLogoUrl}/></a>
                                 : '-'
                         }
                     </span>

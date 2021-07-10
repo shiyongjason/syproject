@@ -37,7 +37,10 @@
                     <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
                 </template>
             </basicTable>
-            <H5Preview :activeUrl="H5Preview" :loading="loading" @hideLoading="loading =false" @clearUrl="H5Preview = ''" />
+            <!-- <H5Preview :activeUrl="H5Preview" :loading="loading" @hideLoading="loading =false" @clearUrl="H5Preview = ''" /> -->
+            <el-drawer title="预览" :visible.sync="drawer" direction="rtl" :before-close="()=>{this.drawer = false}">
+                <H5Preview ref='previews' />
+            </el-drawer>
         </div>
     </div>
 </template>
@@ -47,7 +50,7 @@
 import { mapGetters, mapActions, mapState } from 'vuex'
 import { getCrmPlanList, deleteProjectScheme } from './api/index'
 import { iotUrl } from '@/api/config'
-import H5Preview from '@/components/h5Preview'
+import H5Preview from './H5Preview.vue'
 
 export default {
     name: 'crmplan',
@@ -71,7 +74,8 @@ export default {
             tableData: [],
             paginationInfo: {},
             H5Preview: '',
-            loading: false
+            loading: false,
+            drawer: false
         }
     },
     mounted () {
@@ -112,7 +116,11 @@ export default {
             this.$router.push({ path: '/goodwork/crmengineplan/crmengineedit', query: { id: data.id } })
         },
         onPreviewClick (val) {
-            this.H5Preview = '/goodwork/crmengineplan/H5Preview?id=' + val.id
+            // this.H5Preview = '/goodwork/crmengineplan/H5Preview?id=' + val.id
+            this.drawer = true
+            this.$nextTick(() => {
+                this.$refs.previews.getDetail(val.id)
+            })
         },
         isEffective (plan) {
             return new Date().getTime() > new Date(plan.effectiveTime).getTime()
