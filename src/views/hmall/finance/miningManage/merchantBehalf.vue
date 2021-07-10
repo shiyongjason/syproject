@@ -313,12 +313,12 @@ export default {
                 { label: 'MIS订单号', prop: 'misOrderNo' },
                 { label: '代采提交日期', prop: 'createTime', formatters: 'date' },
                 { label: '出款确认日期', prop: 'auditTime', formatters: 'date' },
-                { label: '代采金额', prop: 'totalAmount' },
-                { label: '预付款', prop: 'prepayAmount' },
-                { label: '代付金额', prop: 'retainageAmount' },
-                { label: '回款金额', prop: 'repayedAmount' },
-                { label: '占用金额', prop: 'occupationAmount' },
-                { label: '逾期未还金额', prop: 'overdueAmount' },
+                { label: '代采金额', prop: 'totalAmount', formatters: 'moneyShow' },
+                { label: '预付款', prop: 'prepayAmount', formatters: 'moneyShow' },
+                { label: '代付金额', prop: 'retainageAmount', formatters: 'moneyShow' },
+                { label: '回款金额', prop: 'repayedAmount', formatters: 'moneyShow' },
+                { label: '占用金额', prop: 'occupationAmount', formatters: 'moneyShow' },
+                { label: '逾期未还金额', prop: 'overdueAmount', formatters: 'moneyShow' },
                 { label: '最终回款期限', prop: 'finalRepayTime', formatters: 'date' },
                 { label: '最近回款日期', prop: 'lastRepayTime', formatters: 'date' },
                 { label: '逾期否', prop: 'overdue' },
@@ -335,14 +335,14 @@ export default {
                 { label: 'MIS订单号', prop: 'misOrderNo' },
                 { label: '代采提交日期', prop: 'createTime', formatters: 'date' },
                 { label: '出款确认日期', prop: 'auditTime', formatters: 'date' },
-                { label: '代采金额', prop: 'totalAmount' },
-                { label: '预付款', prop: 'prepayAmount' },
-                { label: '代付金额', prop: 'retainageAmount' },
+                { label: '代采金额', prop: 'totalAmount', formatters: 'moneyShow' },
+                { label: '预付款', prop: 'prepayAmount', formatters: 'moneyShow' },
+                { label: '代付金额', prop: 'retainageAmount', formatters: 'moneyShow' },
                 { label: '回款类型', prop: 'repayWay' },
                 { label: '回款订单号', prop: 'childOrderNo' },
                 { label: '最终回款期限', prop: 'finalRepayTime', formatters: 'date' },
                 { label: '回款日期', prop: 'repayTime', formatters: 'date' },
-                { label: '回款金额', prop: 'repayAmount' },
+                { label: '回款金额', prop: 'repayAmount', formatters: 'moneyShow' },
                 { label: '资金同步状态', prop: 'fundSyncStatus' },
                 { label: '同步备注', prop: 'fundSyncFailureReason' }
             ]
@@ -421,7 +421,7 @@ export default {
                         }
                     }
                 })
-                return sums
+                return sums.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
             }
         },
         ...mapActions([])
