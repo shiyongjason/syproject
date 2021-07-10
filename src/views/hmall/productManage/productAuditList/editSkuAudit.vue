@@ -339,7 +339,6 @@ export default {
         },
         onSave () {
             let form = {}
-            this.form.mainSkus[0].imageUrls = this.form.mainSkus[0].imageUrls.split(',')
             form = {
                 ...this.form,
                 mainSpuId: this.newId,
@@ -348,7 +347,10 @@ export default {
                     detail: this.form.detail,
                     specifications: this.form.specifications.filter(item => item.v)
                 },
-                warehouseRequest: this.form.mainSkus[0],
+                warehouseRequest: {
+                    ...this.form.mainSkus[0],
+                    imageUrls: this.form.mainSkus[0].imageUrls.split(',')
+                },
                 operator: this.userInfo.employeeName,
                 auditStatus: this.auditStatus,
                 auditOpinion: this.form.auditOpinion
