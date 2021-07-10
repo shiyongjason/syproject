@@ -117,7 +117,7 @@
 
                 </div>
             </div>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="pagination" @onCurrentChange="onCurrentChange" :isAction="tabName == 'returned'" :isShowSum="true" :getSum="getSum">
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="pagination" @onCurrentChange="onCurrentChange" @onSizeChange="handleSizeChange" :isAction="tabName == 'returned'" :isShowSum="true" :getSum="getSum" :isfiexd="'right'">
                 <template slot="overdue" slot-scope="scope">
                     <span>{{overdueMap.get(scope.data.row.overdue)}}</span>
                 </template>
@@ -132,12 +132,12 @@
                     <a class="isLink" @click="onInfo(scope.data.row)">{{scope.data.row.agentOrderNo}}</a>
                 </template>
                 <template slot="retainageAmount" slot-scope="scope">
-                    <span v-if="Number(scope.data.row.retainageAmount)<0" style="color:red">{{scope.data.row.retainageAmount}}</span>
-                    <span v-else>{{scope.data.row.retainageAmount}}</span>
+                    <span v-if="Number(scope.data.row.retainageAmount)<0" style="color:red">{{scope.data.row.retainageAmount | moneyShow}}</span>
+                    <span v-else>{{scope.data.row.retainageAmount | moneyShow}}</span>
                 </template>
                 <template slot="repayedAmount" slot-scope="scope">
-                    <span v-if="Number(scope.data.row.repayedAmount)<0" style="color:red">{{scope.data.row.repayedAmount}}</span>
-                    <span v-else>{{scope.data.row.repayedAmount}}</span>
+                    <span v-if="Number(scope.data.row.repayedAmount)<0" style="color:red">{{scope.data.row.repayedAmount | moneyShow}}</span>
+                    <span v-else>{{scope.data.row.repayedAmount| moneyShow}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button v-if='scope.data.row.fundSyncStatus!==40' table @click="onFund(scope.data.row)">资金同步</h-button>
@@ -247,6 +247,7 @@ export default {
             this.tabParam(this.tabName)
         },
         onTab (value) {
+            this.queryParams = { ...this.resetParams }
             this.tabParam(this.tabName)
             this.onReset()
         },
@@ -254,12 +255,15 @@ export default {
             this.queryParams.pageNumber = 1
             this.tabParam(this.tabName)
         },
+        handleSizeChange (val) {
+            this.queryParams.pageSize = val
+            this.tabParam(this.tabName)
+        },
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
             this.tabParam(this.tabName)
         },
         tabParam (tabName) {
-            this.queryParams = { ...this.resetParams }
             if (tabName == 'apply') {
                 this.getApplyList()
             } else if (tabName == 'returned') {
@@ -304,6 +308,11 @@ export default {
             ]
             await this.findApplyList(this.queryParams)
             this.tableData = this.applyList.records
+            this.pagination = {
+                total: this.applyList.total,
+                pageNumber: this.applyList.current,
+                pageSize: this.applyList.size
+            }
         },
         async getPrepayList () {
             this.tableLabel = [
@@ -313,12 +322,12 @@ export default {
                 { label: 'MIS订单号', prop: 'misOrderNo' },
                 { label: '代采提交日期', prop: 'createTime', formatters: 'date' },
                 { label: '出款确认日期', prop: 'auditTime', formatters: 'date' },
-                { label: '代采金额', prop: 'totalAmount' },
-                { label: '预付款', prop: 'prepayAmount' },
+                { label: '代采金额', prop: 'totalAmount', formatters: 'moneyShow' },
+                { label: '预付款', prop: 'prepayAmount', formatters: 'moneyShow' },
                 { label: '代付金额', prop: 'retainageAmount' },
                 { label: '回款金额', prop: 'repayedAmount' },
-                { label: '占用金额', prop: 'occupationAmount' },
-                { label: '逾期未还金额', prop: 'overdueAmount' },
+                { label: '占用金额', prop: 'occupationAmount', formatters: 'moneyShow' },
+                { label: '逾期未还金额', prop: 'overdueAmount', formatters: 'moneyShow' },
                 { label: '最终回款期限', prop: 'finalRepayTime', formatters: 'date' },
                 { label: '最近回款日期', prop: 'lastRepayTime', formatters: 'date' },
                 { label: '逾期否', prop: 'overdue' },
@@ -326,6 +335,11 @@ export default {
             ]
             await this.findPrepayList(this.queryParams)
             this.tableData = this.prepayList.records
+            this.pagination = {
+                total: this.prepayList.total,
+                pageNumber: this.prepayList.current,
+                pageSize: this.prepayList.size
+            }
         },
         async getOccupationList () {
             this.tableLabel = [
@@ -335,19 +349,24 @@ export default {
                 { label: 'MIS订单号', prop: 'misOrderNo' },
                 { label: '代采提交日期', prop: 'createTime', formatters: 'date' },
                 { label: '出款确认日期', prop: 'auditTime', formatters: 'date' },
-                { label: '代采金额', prop: 'totalAmount' },
-                { label: '预付款', prop: 'prepayAmount' },
+                { label: '代采金额', prop: 'totalAmount', formatters: 'moneyShow' },
+                { label: '预付款', prop: 'prepayAmount', formatters: 'moneyShow' },
                 { label: '代付金额', prop: 'retainageAmount' },
                 { label: '回款类型', prop: 'repayWay' },
                 { label: '回款订单号', prop: 'childOrderNo' },
                 { label: '最终回款期限', prop: 'finalRepayTime', formatters: 'date' },
                 { label: '回款日期', prop: 'repayTime', formatters: 'date' },
-                { label: '回款金额', prop: 'repayAmount' },
+                { label: '回款金额', prop: 'repayAmount', formatters: 'moneyShow' },
                 { label: '资金同步状态', prop: 'fundSyncStatus' },
                 { label: '同步备注', prop: 'fundSyncFailureReason' }
             ]
             await this.findOccupationList(this.queryParams)
             this.tableData = this.occupationList.records
+            this.pagination = {
+                total: this.occupationList.total,
+                pageNumber: this.occupationList.current,
+                pageSize: this.occupationList.size
+            }
         },
         // 合计
         getSum (param) {
@@ -372,6 +391,11 @@ export default {
                                 }
                             }, 0)
                             sums[index] = sums[index] ? sums[index] : '-'
+                            if (sums[index] && sums[index] != '-') {
+                                sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                            } else {
+                                sums[index] = '-'
+                            }
                         }
                     }
                 })
@@ -395,6 +419,11 @@ export default {
                                 }
                             }, 0)
                             sums[index] = sums[index] ? sums[index] : '-'
+                            if (sums[index] && sums[index] != '-') {
+                                sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                            } else {
+                                sums[index] = '-'
+                            }
                         }
                     }
                 })
@@ -418,6 +447,11 @@ export default {
                                 }
                             }, 0)
                             sums[index] = sums[index] ? sums[index] : '-'
+                            if (sums[index] && sums[index] != '-') {
+                                sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                            } else {
+                                sums[index] = '-'
+                            }
                         }
                     }
                 })

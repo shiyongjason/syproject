@@ -161,8 +161,8 @@ export default {
                 { label: '型号', prop: 'model' },
                 { label: '单位', prop: 'unit' },
                 { label: '需求数量', prop: 'quantity' },
-                { label: '含税单价', prop: 'price' },
-                { label: '含税金额', prop: 'totalAmount' }
+                { label: '含税单价', prop: 'price', formatters: 'moneyShow' },
+                { label: '含税金额', prop: 'totalAmount', formatters: 'moneyShow' }
             ],
             tableData: [],
             tableLabelLog: [
@@ -257,6 +257,11 @@ export default {
                             }
                         }, 0)
                         sums[index] = sums[index] ? sums[index] : '-'
+                        if (sums[index] && sums[index] != '-') {
+                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        } else {
+                            sums[index] = '-'
+                        }
                     }
                 }
             })
