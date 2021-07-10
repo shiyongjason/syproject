@@ -261,10 +261,10 @@ export default {
             })
         },
         async onSaveTemp () {
-            if (!this.form.roomName) {
-                this.$message.warning('落地页名称必填')
-                return
-            }
+            // if (!this.form.roomName) {
+            //     this.$message.warning('落地页名称必填')
+            //     return
+            // }
             try {
                 if (this.$route.query.id) {
                     await Api.addLiveInfoPut(this.form)
