@@ -253,6 +253,12 @@ export default {
         },
         onQuery () {
             this.queryParams.pageNumber = 1
+            if (this.queryParams.startTime != '') {
+                this.queryParams.startTime = this.queryParams.startTime + 'T' + '00:00:00'
+            }
+            if (this.queryParams.endTime != '') {
+                this.queryParams.endTime = this.queryParams.endTime + 'T' + '23:59:59'
+            }
             this.tabParam(this.tabName)
         },
         handleSizeChange (val) {
