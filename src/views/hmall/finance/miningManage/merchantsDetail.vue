@@ -619,7 +619,7 @@ export default {
                 { label: 'MIS订单号', prop: 'misOrderNo' }
             ]
             await this.findOnlineRepay(this.repayQueryParams)
-            this.tableData = this.onlineRepayList.recordstion
+            this.tableData = this.onlineRepayList.records
             this.pagination = {
                 total: this.onlineRepayList.total,
                 pageNumber: this.onlineRepayList.current,

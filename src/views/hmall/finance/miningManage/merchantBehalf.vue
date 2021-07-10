@@ -253,6 +253,12 @@ export default {
         },
         onQuery () {
             this.queryParams.pageNumber = 1
+            if (this.queryParams.startTime != '') {
+                this.queryParams.startTime = this.queryParams.startTime + 'T' + '00:00:00'
+            }
+            if (this.queryParams.endTime != '') {
+                this.queryParams.endTime = this.queryParams.endTime + 'T' + '23:59:59'
+            }
             this.tabParam(this.tabName)
         },
         handleSizeChange (val) {
@@ -302,7 +308,7 @@ export default {
                 { label: '申请单号', prop: 'applyNo' },
                 { label: '申请日期', prop: 'createTime', formatters: 'date' },
                 { label: '审核日期', prop: 'auditTime', formatters: 'date' },
-                { label: '授信额度', prop: 'creditLimit' },
+                { label: '授信额度', prop: 'creditLimit', formatters: 'moneyShow' },
                 { label: '授信截止日期', prop: 'expireTime', formatters: 'date' },
                 { label: '预付款比例', prop: 'prepayPercentage' }
             ]
