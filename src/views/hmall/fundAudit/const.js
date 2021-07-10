@@ -132,7 +132,7 @@ export const GOODS_STATUS_OPTIONS = [
 ]
 export const GOODS_STATUS_MAP = new Map([
     [20, '未到仓'],
-    [30, '部分入库'],
+    [30, '部分到仓'],
     [40, '已入库']
 ])
 // 平台确认状态

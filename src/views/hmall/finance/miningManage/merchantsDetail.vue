@@ -121,25 +121,25 @@
                 <basicTable :tableData="tableDetailData" :tableLabel="tableDetailLabel" :pagination="paginationDetail" @onCurrentChange="onCurrentChange" @onSizeChange="handleSizeChange" :isShowSum="true" :getSum="getSum">
                     <!-- 当前额度 -->
                     <template slot="creditLimit" slot-scope="scope">
-                        <a class="isLink" @click="onInfo(scope.data.row,'creditLimit')">{{scope.data.row.creditLimit}}</a>
+                        <a class="isLink" @click="onInfo(scope.data.row,'creditLimit')">{{scope.data.row.creditLimit | moneyShow}}</a>
                     </template>
                     <template slot="totalAmount" slot-scope="scope">
-                        <a class="isLink" @click="onInfo(scope.data.row,'totalAmount')">{{scope.data.row.totalAmount}}</a>
+                        <a class="isLink" @click="onInfo(scope.data.row,'totalAmount')">{{scope.data.row.totalAmount| moneyShow}}</a>
                     </template>
                     <template slot="totalPrepayAmount" slot-scope="scope">
-                        <a class="isLink" @click="onInfo(scope.data.row,'totalPrepayAmount')">{{scope.data.row.totalPrepayAmount}}</a>
+                        <a class="isLink" @click="onInfo(scope.data.row,'totalPrepayAmount')">{{scope.data.row.totalPrepayAmount| moneyShow}}</a>
                     </template>
                     <template slot="totalRetaingeAmount" slot-scope="scope">
-                        <a class="isLink" @click="onInfo(scope.data.row,'totalRetaingeAmount')">{{scope.data.row.totalRetaingeAmount}}</a>
+                        <a class="isLink" @click="onInfo(scope.data.row,'totalRetaingeAmount')">{{scope.data.row.totalRetaingeAmount| moneyShow}}</a>
                     </template>
                     <template slot="totalRepayAmount" slot-scope="scope">
-                        <a class="isLink" @click="onInfo(scope.data.row,'totalRepayAmount')">{{scope.data.row.totalRepayAmount}}</a>
+                        <a class="isLink" @click="onInfo(scope.data.row,'totalRepayAmount')">{{scope.data.row.totalRepayAmount| moneyShow}}</a>
                     </template>
                     <template slot="occupationAmount" slot-scope="scope">
-                        <a class="isLink" @click="onInfo(scope.data.row,'occupationAmount')">{{scope.data.row.occupationAmount}}</a>
+                        <a class="isLink" @click="onInfo(scope.data.row,'occupationAmount')">{{scope.data.row.occupationAmount| moneyShow}}</a>
                     </template>
                     <template slot="overdueAmount" slot-scope="scope">
-                        <a class="isLink" @click="onInfo(scope.data.row,'overdueAmount')">{{scope.data.row.overdueAmount}}</a>
+                        <a class="isLink" @click="onInfo(scope.data.row,'overdueAmount')">{{scope.data.row.overdueAmount| moneyShow}}</a>
                     </template>
                     <template slot="overdue" slot-scope="scope">
                         <span>{{overdueMap.get(scope.data.row.overdue)}}</span>
@@ -332,7 +332,7 @@ export default {
             tableDetailLabel: [
                 { label: '管理员账号', prop: 'username' },
                 { label: '企业名称', prop: 'companyName' },
-                { label: '当前额度', prop: 'creditLimit' },
+                { label: '当前额度', prop: 'creditLimit', formatters: 'moneyShow' },
                 { label: '总代采', prop: 'totalAmount' },
                 { label: '总预付', prop: 'totalPrepayAmount' },
                 { label: '总代付', prop: 'totalRetaingeAmount' },
@@ -344,7 +344,6 @@ export default {
                 { label: '逾期否', prop: 'overdue' },
                 { label: '资金状态', prop: 'fundStatus' }
             ],
-            paginationDetail: {},
             repayQueryParams: {
                 status: '',
                 startTime: '',
@@ -362,13 +361,12 @@ export default {
             tableData: [],
             tableLabel: [
                 { label: '时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '金额', prop: 'amount' },
+                { label: '金额', prop: 'amount', formatters: 'moneyShow' },
                 { label: '状态', prop: 'status' },
                 { label: '回款订单号', prop: 'childOrderNo' },
                 { label: '回款代采订单号', prop: 'agentOrderNo' },
                 { label: 'MIS订单号', prop: 'misOrderNo' }
             ],
-            pagination: {},
             detail: {
                 totalRepayAmount: '',
                 offlineRepayAmount: '',
@@ -429,6 +427,13 @@ export default {
             prepayRepayList: state => state.hmall.finance.prepayRepayList,
             repayStatistInfo: state => state.hmall.finance.repayStatistInfo
         }),
+        paginationDetail () {
+            return {
+                total: this.merchantList.total,
+                pageNumber: this.merchantList.current,
+                pageSize: this.merchantList.size
+            }
+        },
         tableDetailData () {
             return this.merchantList.records
         }
@@ -449,65 +454,25 @@ export default {
                 this.getMerchantStatistInfo()
             } else {
                 this.getOnlineRepay()
-                this.getOfflineRepay()
-                this.getPrepayRepay()
                 this.getRepayStatist()
             }
         },
         onRecordTab (value) {
             this.onQuery()
-            if (this.recordTabName == 'isOnline') {
-                this.tableLabel = [
-                    { label: '时间', prop: 'createTime', formatters: 'dateTime' },
-                    { label: '金额', prop: 'amount' },
-                    { label: '状态', prop: 'status' },
-                    { label: '回款订单号', prop: 'childOrderNo' },
-                    { label: '回款代采订单号', prop: 'agentOrderNo' },
-                    { label: 'MIS订单号', prop: 'misOrderNo' }
-                ]
-            } else if (this.recordTabName == 'isOffline') {
-                this.tableLabel = [
-                    { label: '时间', prop: 'createTime', formatters: 'dateTime' },
-                    { label: '金额', prop: 'amount' },
-                    { label: '类型', prop: 'type' },
-                    { label: '打款账户名称', prop: 'prepayAccountName' },
-                    { label: '打款银行账号', prop: 'prepayBankCardNo' },
-                    { label: '企业名称', prop: 'companyName' },
-                    { label: '管理员账号', prop: 'username' },
-                    { label: '回款代采订单号', prop: 'agentOrderNo' },
-                    { label: 'MIS订单号', prop: 'misOrderNo' }
-                ]
-            } else if (this.recordTabName == 'isAdvance') {
-                this.tableLabel = [
-                    { label: '时间', prop: 'createTime', formatters: 'dateTime' },
-                    { label: '金额', prop: 'amount' },
-                    { label: '类型', prop: 'type' },
-                    { label: '打款账户名称', prop: 'prepayAccountName' },
-                    { label: '打款银行账号', prop: 'prepayBankCardNo' },
-                    { label: '企业名称', prop: 'companyName' },
-                    { label: '管理员账号', prop: 'username' },
-                    { label: '回款代采订单号', prop: 'clientType' },
-                    { label: 'MIS订单号', prop: 'misOrderNo' }
-                ]
-            }
         },
         onQuery () {
             if (this.tabName == 'detail') {
                 this.queryParams.pageNumber = 1
-                this.resetParams = { ...this.queryParams }
                 this.getMerchant()
             } else if (this.tabName == 'record') {
                 if (this.recordTabName == 'isOnline') {
                     this.repayQueryParams.pageNumber = 1
-                    this.repayResetParams = { ...this.repayQueryParams }
                     this.getOnlineRepay()
                 } else if (this.recordTabName == 'isOffline') {
                     this.repayQueryParams.pageNumber = 1
-                    this.repayResetParams = { ...this.repayQueryParams }
                     this.getOfflineRepay()
                 } else if (this.recordTabName == 'isAdvance') {
                     this.repayQueryParams.pageNumber = 1
-                    this.repayResetParams = { ...this.repayQueryParams }
                     this.getPrepayRepay()
                 }
             }
@@ -586,6 +551,11 @@ export default {
                                 }
                             }, 0)
                             sums[index] = sums[index] ? sums[index] : '-'
+                            if (sums[index] && sums[index] != '-') {
+                                sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                            } else {
+                                sums[index] = '-'
+                            }
                         }
                     }
                 })
@@ -609,6 +579,11 @@ export default {
                                 }
                             }, 0)
                             sums[index] = sums[index] ? sums[index] : '-'
+                            if (sums[index] && sums[index] != '-') {
+                                sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                            } else {
+                                sums[index] = '-'
+                            }
                         }
                     }
                 })
@@ -635,21 +610,66 @@ export default {
             this.detail = this.repayStatistInfo
         },
         async getOnlineRepay () {
+            this.tableLabel = [
+                { label: '时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '金额', prop: 'amount', formatters: 'moneyShow' },
+                { label: '状态', prop: 'status' },
+                { label: '回款订单号', prop: 'childOrderNo' },
+                { label: '回款代采订单号', prop: 'agentOrderNo' },
+                { label: 'MIS订单号', prop: 'misOrderNo' }
+            ]
             await this.findOnlineRepay(this.repayQueryParams)
-            this.tableData = this.onlineRepayList.records
+            this.tableData = this.onlineRepayList.recordstion
+            this.pagination = {
+                total: this.onlineRepayList.total,
+                pageNumber: this.onlineRepayList.current,
+                pageSize: this.onlineRepayList.size
+            }
         },
         async getOfflineRepay () {
+            this.tableLabel = [
+                { label: '时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '金额', prop: 'amount', formatters: 'moneyShow' },
+                { label: '类型', prop: 'type' },
+                { label: '打款账户名称', prop: 'prepayAccountName' },
+                { label: '打款银行账号', prop: 'prepayBankCardNo' },
+                { label: '企业名称', prop: 'companyName' },
+                { label: '管理员账号', prop: 'username' },
+                { label: '回款代采订单号', prop: 'agentOrderNo' },
+                { label: 'MIS订单号', prop: 'misOrderNo' }
+            ]
             await this.findOfflineRepay(this.repayQueryParams)
             this.tableData = this.offlineRepayList.records
+            this.pagination = {
+                total: this.offlineRepayList.total,
+                pageNumber: this.offlineRepayList.current,
+                pageSize: this.offlineRepayList.size
+            }
         },
         async getPrepayRepay () {
+            this.tableLabel = [
+                { label: '时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '金额', prop: 'amount', formatters: 'moneyShow' },
+                { label: '类型', prop: 'type' },
+                { label: '打款账户名称', prop: 'prepayAccountName' },
+                { label: '打款银行账号', prop: 'prepayBankCardNo' },
+                { label: '企业名称', prop: 'companyName' },
+                { label: '管理员账号', prop: 'username' },
+                { label: '回款代采订单号', prop: 'clientType' },
+                { label: 'MIS订单号', prop: 'misOrderNo' }
+            ]
             await this.findPrepayRepay(this.repayQueryParams)
             this.tableData = this.prepayRepayList.records
+            this.pagination = {
+                total: this.prepayRepayList.total,
+                pageNumber: this.prepayRepayList.current,
+                pageSize: this.prepayRepayList.size
+            }
         }
     },
     mounted () {
-        this.resetParams = { ...this.queryParams }
         this.repayResetParams = { ...this.repayQueryParams }
+        this.resetParams = { ...this.queryParams }
         this.init()
     },
     beforeRouteEnter (to, from, next) {
