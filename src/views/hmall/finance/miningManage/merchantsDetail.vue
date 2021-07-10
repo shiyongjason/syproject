@@ -144,9 +144,9 @@
                     <template slot="overdue" slot-scope="scope">
                         <span>{{overdueMap.get(scope.data.row.overdue)}}</span>
                     </template>
-                    <template slot="fundStatus" slot-scope="scope">
+                    <!-- <template slot="fundStatus" slot-scope="scope">
                         <span>{{capitalStatusMap.get(scope.data.row.fundStatus)}}</span>
-                    </template>
+                    </template> -->
                 </basicTable>
             </div>
             <div v-if="tabName == 'record'">

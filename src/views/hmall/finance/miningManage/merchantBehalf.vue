@@ -73,7 +73,7 @@
                     <div class="query-cont-col">
                         <div class="query-col-title">逾期否：</div>
                         <div class="query-col-input">
-                            <el-select v-model="queryParams.overDue">
+                            <el-select v-model="queryParams.overdue">
                                 <el-option v-for="item in overdueOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                             </el-select>
                         </div>
@@ -139,6 +139,9 @@
                     <span v-if="Number(scope.data.row.repayedAmount)<0" style="color:red">{{scope.data.row.repayedAmount | moneyShow}}</span>
                     <span v-else>{{scope.data.row.repayedAmount| moneyShow}}</span>
                 </template>
+                <template slot="prepayPercentage" slot-scope="scope">
+                    <span>{{scope.data.row.prepayPercentage|percenShow}}</span>
+                </template>
                 <template slot="action" slot-scope="scope">
                     <h-button v-if='scope.data.row.fundSyncStatus!==40' table @click="onFund(scope.data.row)">资金同步</h-button>
                 </template>
@@ -178,7 +181,7 @@ export default {
                 childOrderNo: '',
                 startTime: '',
                 endTime: '',
-                overDue: '',
+                overdue: '',
                 fundStatus: '0',
                 repayWay: '',
                 fundSyncStatus: '',
@@ -233,7 +236,7 @@ export default {
             } else if (this.page == 'overdueAmount') {
                 this.tabName = 'occupy'
                 this.queryParams.username = this.pageId
-                this.queryParams.overDue = true
+                this.queryParams.overdue = true
             } else if (this.page == 'occupationAmount') {
                 this.tabName = 'occupy'
                 this.queryParams.username = this.pageId
@@ -341,6 +344,7 @@ export default {
             ]
             await this.findPrepayList(this.queryParams)
             this.tableData = this.prepayList.records
+            this.tableData.repayedAmount = '-100'
             this.pagination = {
                 total: this.prepayList.total,
                 pageNumber: this.prepayList.current,

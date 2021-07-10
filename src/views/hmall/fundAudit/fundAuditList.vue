@@ -77,7 +77,7 @@
                     <span>{{auditStatusMap.get(scope.data.row.auditStatus) || '-'}}</span>
                 </template>
                 <template slot="prepayPercentage" slot-scope="scope">
-                    <span>{{scope.data.row.prepayPercentage}}</span><span>%</span>
+                    <span>{{scope.data.row.prepayPercentage|percenShow}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button v-if="scope.data.row.auditStatus==10" table @click="onCheck(scope.data.row)">审核</h-button>
