@@ -315,5 +315,5 @@ export const ONLINE_FREIGHT_STATUS_MAP = new Map([
 export const DEA_TYPE_MAP = new Map([
     [1, '销售回款'],
     [2, '提前还款'],
-    [3, '预付款']
+    [4, '预付款']
 ])
