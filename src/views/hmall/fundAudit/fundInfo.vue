@@ -291,7 +291,6 @@ export default {
         } else if (!(to.name == 'merchantBehalf')) {
             clearCache('merchantBehalf')
         }
-        console.log('222')
         next()
     }
 }

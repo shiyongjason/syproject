@@ -333,7 +333,7 @@ export default {
         next()
     },
     beforeRouteLeave (to, from, next) {
-        if (to.name != 'advanceFundInfo') {
+        if (!(to.name == 'fundInfo')) {
             clearCache('advancePayment')
         }
         next()
