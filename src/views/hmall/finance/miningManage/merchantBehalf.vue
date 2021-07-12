@@ -131,13 +131,9 @@
                 <template slot="agentOrderNo" slot-scope="scope">
                     <a class="isLink" @click="onInfo(scope.data.row)">{{scope.data.row.agentOrderNo}}</a>
                 </template>
-                <template slot="retainageAmount" slot-scope="scope">
-                    <span v-if="Number(scope.data.row.retainageAmount)<0" style="color:red">{{scope.data.row.retainageAmount | moneyShow}}</span>
-                    <span v-else>{{scope.data.row.retainageAmount | moneyShow}}</span>
-                </template>
-                <template slot="repayedAmount" slot-scope="scope">
-                    <span v-if="Number(scope.data.row.repayedAmount)<0" style="color:red">{{scope.data.row.repayedAmount | moneyShow}}</span>
-                    <span v-else>{{scope.data.row.repayedAmount| moneyShow}}</span>
+                <template slot="occupationAmount" slot-scope="scope">
+                    <span v-if="Number(scope.data.row.occupationAmount)<0" style="color:red">{{scope.data.row.occupationAmount | moneyShow}}</span>
+                    <span v-else>{{scope.data.row.occupationAmount| moneyShow}}</span>
                 </template>
                 <template slot="prepayPercentage" slot-scope="scope">
                     <span>{{scope.data.row.prepayPercentage|percenShow}}</span>
@@ -344,7 +340,6 @@ export default {
             ]
             await this.findPrepayList(this.queryParams)
             this.tableData = this.prepayList.records
-            this.tableData.repayedAmount = '-100'
             this.pagination = {
                 total: this.prepayList.total,
                 pageNumber: this.prepayList.current,
