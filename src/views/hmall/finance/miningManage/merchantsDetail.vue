@@ -693,7 +693,7 @@ export default {
         next()
     },
     beforeRouteLeave (to, from, next) {
-        if (to.name != 'merchantBehalf') {
+        if (!(to.name == 'merchantBehalf')) {
             clearCache('merchantsDetail')
         }
         next()

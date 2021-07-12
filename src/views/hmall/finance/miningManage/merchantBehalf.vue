@@ -472,21 +472,21 @@ export default {
         this.resetParams = { ...this.queryParams }
         this.init()
     },
-    watch: {
-        $route () {
-            if (this.$route.query.toId || this.$route.query.page) {
-                this.init()
-            }
-        }
-    },
+    // watch: {
+    //     $route () {
+    //         if (this.$route.query.toId || this.$route.query.page) {
+    //             this.init()
+    //         }
+    //     }
+    // },
     beforeRouteEnter (to, from, next) {
         newCache('merchantBehalf')
         next()
     },
     beforeRouteLeave (to, from, next) {
-        if (to.name != 'statusFundInfo') {
+        if (!(to.name == 'fundInfo')) {
             clearCache('merchantBehalf')
-        } else if (to.name != 'merchantsDetail') {
+        } else if (!(to.name == 'merchantsDetail')) {
             clearCache('merchantsDetail')
         }
         next()

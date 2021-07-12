@@ -373,17 +373,6 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/hmall/finance/withdrawalFreight/index')
-                    },
-                    {
-                        path: 'behalfManage',
-                        name: 'behalfManage',
-                        meta: {
-                            title: '代采资金管理',
-                            tagName: '代采资金管理',
-                            isMenu: true,
-                            icon: ''
-                        },
-                        component: () => import('@/views/hmall/finance/behalfManage/index')
                     }
                 ]
             },
@@ -685,7 +674,7 @@ export default [
                     },
                     {
                         path: 'merchantsDetail',
-                        name: 'financeMerchantsDetail',
+                        name: 'merchantsDetail',
                         meta: {
                             title: '代采资金管理',
                             tagName: '代采资金管理提现',
@@ -708,7 +697,7 @@ export default [
                     },
                     {
                         path: 'merchantBehalf',
-                        name: 'financeMerchantBehalf',
+                        name: 'merchantBehalf',
                         meta: {
                             title: '商家详情',
                             tagName: '商家详情',
