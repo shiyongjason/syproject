@@ -341,6 +341,11 @@ export default {
                 { label: '逾期否', prop: 'overdue' },
                 { label: '资金状态', prop: 'fundStatus' }
             ]
+            if (this.tabName == 'pay') {
+                this.queryParams.type = 1
+            } else if (this.tabName == 'occupy') {
+                this.queryParams.type = 2
+            }
             await this.findPrepayList(this.queryParams)
             this.tableData = this.prepayList.records
             this.pagination = {
