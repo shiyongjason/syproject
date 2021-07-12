@@ -288,6 +288,8 @@ export default {
             clearCache('advancePayment')
         } else if (to.name != 'auditFundStatus') {
             clearCache('auditFundStatus')
+        } else if (to.name != 'merchantBehalf') {
+            clearCache('merchantBehalf')
         }
         next()
     }
