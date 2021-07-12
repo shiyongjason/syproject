@@ -119,15 +119,21 @@ export const CAPITAL_STATUS_MAP = new Map([
     [30, '已回款']
 ])
 // 资金状态
+export const CAPITAL_OPTIONS = [
+    { label: '全部', value: '0' },
+    { label: '未回款', value: '10' },
+    { label: '部分回款', value: '20' },
+    { label: '已回款', value: '30' }
+]
+// 资金状态
 export const CAPITALS_OPTIONS = [
     { label: '全部', value: '0' },
     { label: '未回款', value: '10' },
-    { label: '部分汇款', value: '20' },
-    { label: '已回款', value: '30' }
+    { label: '部分回款', value: '20' }
 ]
 export const CAPITALS_MAP = new Map([
     [10, '未回款'],
-    [20, '部分汇款'],
+    [20, '部分回款'],
     [30, '已回款']
 ])
 // 商家明细 回款期限

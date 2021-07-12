@@ -384,7 +384,6 @@ export default {
             deep: true
         },
         '$route' (to, from) {
-            console.log(to.query.id)
             if (!to.query.id) {
                 this.reload('createProduct')
             }
@@ -426,7 +425,9 @@ export default {
             }, 1000)
         },
         async handleSelectModel (item) {
+            await this.getProductInfo(item.mainSpuId)
             this.$router.push({ path: '/b2b/product/createProduct', query: { id: item.mainSpuId } })
+            this.showMore = true
         },
         createStateFilter (queryString) {
             return (state) => {

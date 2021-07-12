@@ -93,8 +93,8 @@
                             </el-select>
                         </div>
                         <div class="query-col-input">
-                            <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart"></el-date-picker>
-                            <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59"></el-date-picker>
+                            <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-ddT00:00:00" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart"></el-date-picker>
+                            <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-ddT23:59:59" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59"></el-date-picker>
                         </div>
                     </div>
                     <div class="query-cont-col">
@@ -132,8 +132,8 @@
                     <template slot="totalRetaingeAmount" slot-scope="scope">
                         <a class="isLink" @click="onInfo(scope.data.row,'totalRetaingeAmount')">{{scope.data.row.totalRetaingeAmount| moneyShow}}</a>
                     </template>
-                    <template slot="totalRepayAmount" slot-scope="scope">
-                        <a class="isLink" @click="onInfo(scope.data.row,'totalRepayAmount')">{{scope.data.row.totalRepayAmount| moneyShow}}</a>
+                    <template slot="totalRepayedAmount" slot-scope="scope">
+                        <a class="isLink" @click="onInfo(scope.data.row,'totalRepayedAmount')">{{scope.data.row.totalRepayedAmount| moneyShow}}</a>
                     </template>
                     <template slot="occupationAmount" slot-scope="scope">
                         <a class="isLink" @click="onInfo(scope.data.row,'occupationAmount')">{{scope.data.row.occupationAmount| moneyShow}}</a>
@@ -342,7 +342,7 @@ export default {
                 { label: '总代采', prop: 'totalAmount' },
                 { label: '总预付', prop: 'totalPrepayAmount' },
                 { label: '总代付', prop: 'totalRetaingeAmount' },
-                { label: '总回款', prop: 'totalRepayAmount' },
+                { label: '总回款', prop: 'totalRepayedAmount' },
                 { label: '当前占用', prop: 'occupationAmount' },
                 { label: '当前逾期未还', prop: 'overdueAmount' },
                 { label: '最终回款期限', prop: 'finalRepayTime', formatters: 'date' },
@@ -464,7 +464,17 @@ export default {
             }
         },
         onRecordTab (value) {
-            this.onQuery()
+            if (this.recordTabName == 'isOnline') {
+                this.repayQueryParams.pageNumber = 1
+                this.getOnlineRepay()
+            } else if (this.recordTabName == 'isOffline') {
+                this.repayQueryParams.pageNumber = 1
+                this.getOfflineRepay()
+            } else if (this.recordTabName == 'isAdvance') {
+                this.repayQueryParams.pageNumber = 1
+                this.getPrepayRepay()
+            }
+            this.onReset()
         },
         onQuery () {
             if (this.tabName == 'detail') {
@@ -532,7 +542,7 @@ export default {
         },
         // 跳转商家详情
         onInfo (val, page) {
-            this.$router.push({ path: '/b2b/fundAudit/merchantBehalf', query: { id: val.username, page: page } })
+            this.$router.push({ path: '/b2b/fundAudit/merchantBehalf', query: { toId: val.username, page: page } })
         },
         // 商家明细合计
         getSum (param) {
@@ -543,7 +553,7 @@ export default {
                     if (index == 0) {
                         sums[index] = '合计'
                     }
-                    if (column.property == 'creditLimit' || column.property == 'totalPrepayAmount' || column.property == 'totalRetaingeAmount' || column.property == 'totalRepayAmount' || column.property == 'occupationAmount' || column.property == 'overdueAmount') {
+                    if (column.property == 'creditLimit' || column.property == 'totalPrepayAmount' || column.property == 'totalRetaingeAmount' || column.property == 'totalRepayedAmount' || column.property == 'occupationAmount' || column.property == 'overdueAmount') {
                         const values = data.map(item => {
                             return Number(item[column.property])
                         })
@@ -683,7 +693,7 @@ export default {
         next()
     },
     beforeRouteLeave (to, from, next) {
-        if (to.name != 'merchantBehalf') {
+        if (!(to.name == 'merchantBehalf')) {
             clearCache('merchantsDetail')
         }
         next()

@@ -175,3 +175,11 @@ export const UNIT_MAP = new Map([
     [3, '件'],
     [4, '套']
 ])
+// 资金同步状态
+export const FUND_SYNC_STATUS_MAP = new Map([
+    [40, '同步成功'],
+    [10, '未同步'],
+    [20, '同步中'],
+    [30, '同步失败'],
+    [50, '不处理']
+])

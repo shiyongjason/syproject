@@ -67,8 +67,12 @@
                 <template slot="repayStatus" slot-scope="scope">
                     {{platformStatusMap.get(scope.data.row.repayStatus) || '-'}}
                 </template>
+                <template slot="fundSyncStatus" slot-scope="scope">
+                    {{fundSyncStatus.get(scope.data.row.fundSyncStatus) || '-'}}
+                </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table v-if="scope.data.row.repayStatus == 10" @click="onSure(scope.data.row)">确认</h-button>
+                    <h-button table v-if="scope.data.row.repayStatus == 20 &&scope.data.row.fundSyncStatus == 30" @click="onFund(scope.data.row)">资金同步</h-button>
                 </template>
             </basicTable>
             <el-dialog title="确认" width="500px" :visible.sync="closeOrderDialog" :close-on-click-modal=false @close='closeDialog'>
@@ -93,14 +97,16 @@
 </template>
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
-import { PLATFORM_STATUS_OPTIONS, PLATFORM_STATUS_MAP } from './const'
+import { PLATFORM_STATUS_OPTIONS, PLATFORM_STATUS_MAP, FUND_SYNC_STATUS_MAP } from './const'
 import { prepaymentRepay } from './api/index'
+import { syncFundMis } from '../finance/api/index'
 export default {
     name: 'auditFundList',
     data () {
         return {
             platformStatusOptions: PLATFORM_STATUS_OPTIONS,
             platformStatusMap: PLATFORM_STATUS_MAP,
+            fundSyncStatus: FUND_SYNC_STATUS_MAP,
             queryParams: {
                 agentOrderNo: '',
                 companyName: '',
@@ -128,6 +134,7 @@ export default {
                 { label: '企业名称', prop: 'companyName' },
                 { label: '管理员账号', prop: 'username' },
                 { label: '平台确认状态', prop: 'repayStatus' },
+                { label: '资金同步状态', prop: 'fundSyncStatus' },
                 { label: '确认时间', prop: 'platformConfirmTime', formatters: 'dateTimes' },
                 { label: '备注', prop: 'rejectReason' }
             ],
@@ -267,6 +274,15 @@ export default {
                     }
                 }
             })
+        },
+        // 资金同步
+        async onFund (val) {
+            try {
+                await syncFundMis(val.id)
+                this.getPrepaymentList()
+            } catch (e) {
+                this.getPrepaymentList()
+            }
         },
         formChange (val) {
             // this.createChange = val

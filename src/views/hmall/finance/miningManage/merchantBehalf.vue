@@ -30,8 +30,8 @@
                             </el-select>
                         </div>
                         <div class="query-col-input">
-                            <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
-                            <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
+                            <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-ddT00:00:00" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
+                            <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-ddT23:59:59" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
                         </div>
                     </div>
                 </template>
@@ -54,8 +54,8 @@
                         </el-select>
                     </div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
-                        <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
+                        <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-ddT00:00:00" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
+                        <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-ddT23:59:59" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col" v-if="tabName == 'returned'">
@@ -65,8 +65,8 @@
                         </el-select>
                     </div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
-                        <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
+                        <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-ddT00:00:00" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
+                        <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-ddT23:59:59" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
                 <template v-if="tabName == 'pay' || tabName == 'occupy'">
@@ -78,15 +78,23 @@
                             </el-select>
                         </div>
                     </div>
-                    <div class="query-cont-col">
-                        <div class="query-col-title">资金状态：</div>
-                        <div class="query-col-input">
-                            <el-select v-model="queryParams.fundStatus">
-                                <el-option v-for="item in capitalOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
-                        </div>
-                    </div>
                 </template>
+                <div class="query-cont-col" v-if="tabName == 'pay'">
+                    <div class="query-col-title">资金状态：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.fundStatus">
+                            <el-option v-for="item in capitalOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col" v-if="tabName == 'occupy'">
+                    <div class="query-col-title">资金状态：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.fundStatus">
+                            <el-option v-for="item in capitalsOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </div>
+                </div>
                 <template v-if="tabName == 'returned'">
                     <div class="query-cont-col">
                         <div class="query-col-title">回款类型：</div>
@@ -146,7 +154,7 @@
     </div>
 </template>
 <script>
-import { STAUTS_OPTIONS, STAUTS_MAP, OVERDUE_OPTIONS, OVERDUE_MAP, ADUITLINE_OPTIONS, MINADUITLINE_OPTIONS, RETAADUITLINE_OPTIONS, DEADLINE_TYPE_OPTIONS, DEADLINE_TYPE_MAP, STAUTS_TOGER_OPTIONS, STAUTS_TOGER_MAP, CAPITALS_OPTIONS, CAPITALS_MAP } from '../const.js'
+import { STAUTS_OPTIONS, STAUTS_MAP, OVERDUE_OPTIONS, OVERDUE_MAP, ADUITLINE_OPTIONS, MINADUITLINE_OPTIONS, RETAADUITLINE_OPTIONS, DEADLINE_TYPE_OPTIONS, DEADLINE_TYPE_MAP, STAUTS_TOGER_OPTIONS, STAUTS_TOGER_MAP, CAPITAL_OPTIONS, CAPITALS_OPTIONS, CAPITALS_MAP } from '../const.js'
 import { mapState, mapActions } from 'vuex'
 import { clearCache, newCache } from '@/utils/index'
 import { syncFundMis } from '../api/index'
@@ -166,7 +174,8 @@ export default {
             deadlineTypeMap: DEADLINE_TYPE_MAP,
             statusTogerOptions: STAUTS_TOGER_OPTIONS,
             statusTogerMap: STAUTS_TOGER_MAP,
-            capitalOptions: CAPITALS_OPTIONS,
+            capitalOptions: CAPITAL_OPTIONS,
+            capitalsOptions: CAPITALS_OPTIONS,
             capitalMap: CAPITALS_MAP,
             resetParams: {},
             queryParams: {
@@ -221,7 +230,7 @@ export default {
             return this.$route.query.page
         },
         pageId () {
-            return this.$route.query.id
+            return this.$route.query.toId
         }
     },
     methods: {
@@ -236,7 +245,7 @@ export default {
             } else if (this.page == 'occupationAmount') {
                 this.tabName = 'occupy'
                 this.queryParams.username = this.pageId
-            } else if (this.page == 'totalRepayAmount') {
+            } else if (this.page == 'totalRepayedAmount') {
                 this.tabName = 'returned'
                 this.queryParams.username = this.pageId
             } else {
@@ -245,19 +254,13 @@ export default {
             }
             this.tabParam(this.tabName)
         },
-        onTab (value) {
+        onTab () {
             this.queryParams = { ...this.resetParams }
             this.tabParam(this.tabName)
             this.onReset()
         },
         onQuery () {
             this.queryParams.pageNumber = 1
-            if (this.queryParams.startTime != '') {
-                this.queryParams.startTime = this.queryParams.startTime + 'T' + '00:00:00'
-            }
-            if (this.queryParams.endTime != '') {
-                this.queryParams.endTime = this.queryParams.endTime + 'T' + '23:59:59'
-            }
             this.tabParam(this.tabName)
         },
         handleSizeChange (val) {
@@ -329,9 +332,9 @@ export default {
                 { label: '出款确认日期', prop: 'auditTime', formatters: 'date' },
                 { label: '代采金额', prop: 'totalAmount', formatters: 'moneyShow' },
                 { label: '预付款', prop: 'prepayAmount', formatters: 'moneyShow' },
-                { label: '代付金额', prop: 'retainageAmount' },
-                { label: '回款金额', prop: 'repayedAmount' },
-                { label: '占用金额', prop: 'occupationAmount', formatters: 'moneyShow' },
+                { label: '代付金额', prop: 'retainageAmount', formatters: 'moneyShow' },
+                { label: '回款金额', prop: 'repayedAmount', formatters: 'moneyShow' },
+                { label: '占用金额', prop: 'occupationAmount' },
                 { label: '逾期未还金额', prop: 'overdueAmount', formatters: 'moneyShow' },
                 { label: '最终回款期限', prop: 'finalRepayTime', formatters: 'date' },
                 { label: '最近回款日期', prop: 'lastRepayTime', formatters: 'date' },
@@ -356,7 +359,7 @@ export default {
                 { label: '出款确认日期', prop: 'auditTime', formatters: 'date' },
                 { label: '代采金额', prop: 'totalAmount', formatters: 'moneyShow' },
                 { label: '预付款', prop: 'prepayAmount', formatters: 'moneyShow' },
-                { label: '代付金额', prop: 'retainageAmount' },
+                { label: '代付金额', prop: 'retainageAmount', formatters: 'moneyShow' },
                 { label: '回款类型', prop: 'repayWay' },
                 { label: '回款订单号', prop: 'childOrderNo' },
                 { label: '最终回款期限', prop: 'finalRepayTime', formatters: 'date' },
@@ -469,15 +472,24 @@ export default {
         this.resetParams = { ...this.queryParams }
         this.init()
     },
-    watch: {
-        $route () {
-            if (this.$route.query.id || this.$route.query.page) {
-                this.init()
-            }
-        }
+    // watch: {
+    //     $route () {
+    //         if (this.$route.query.toId || this.$route.query.page) {
+    //             this.init()
+    //         }
+    //     }
+    // },
+    beforeRouteEnter (to, from, next) {
+        newCache('merchantBehalf')
+        next()
     },
     beforeRouteLeave (to, from, next) {
-        clearCache('merchantBehalf')
+        newCache('merchantBehalf')
+        if (!(to.name == 'fundInfo')) {
+            clearCache('merchantBehalf')
+        } else if (!(to.name == 'merchantsDetail')) {
+            clearCache('merchantsDetail')
+        }
         next()
     }
 }
