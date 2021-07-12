@@ -188,10 +188,10 @@ export default {
                                 if (item.length && !reg.test(item.length)) {
                                     return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
                                 }
-                                if (item.width && !reg.test(item.length)) {
+                                if (item.width && !reg.test(item.width)) {
                                     return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
                                 }
-                                if (item.height && !reg.test(item.length)) {
+                                if (item.height && !reg.test(item.height)) {
                                     return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
                                 }
                             })

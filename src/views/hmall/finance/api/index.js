@@ -40,6 +40,70 @@ export const findProductsInfo = (params) => {
 }
 // 查询所有类目
 export const findAllCategory = (params) => axios.get(B2bUrl + 'product/api/categories/tree', { params })
+// 资金代采 商家明细
+export const findMerchant = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/fund`, { params })
+}
+// 资金代采 商家明细统计
+export const findMerchantStatist = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/fund/statistics`, { params })
+}
+// 资金代采 交易记录线上回款
+export const findOnlineRepay = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/repay/online-page`, { params })
+}
+// 资金代采 交易记录线下回款
+export const findOfflineRepay = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/repay/offline-page`, { params })
+}
+// 资金代采 交易记录预付款
+export const findPrepayRepay = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/repay/prepay-page`, { params })
+}
+// 资金代采 交易记录统计
+export const findRepayStatist = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/repay/statistics`, { params })
+}
+// 资金申请详情
+export const findApplyList = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/fund/apply`, { params })
+}
+// 资金代付,占用详情
+export const findPrepayList = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/agent/order/occupation`, { params })
+}
+// 资金回款详情
+export const findOccupationList = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/repay`, { params })
+}
+// 回款 资金同步
+export const syncFundMis = (id, params) => {
+    return axios.patch(`${B2bUrl}fund/boss/repay/${id}/sync-fund-to-mis`, params)
+}
+// 代采资金 提现明细
+export const findAgentCharge = (params) => {
+    return axios.get(`${B2bUrl}payment/boss/purchasing-agent-funds/withdraws`, { params })
+}
+// 代采资金提现
+export const findAgentCashWithdrawal = (params) => {
+    return axios.get(`${B2bUrl}payment/boss/purchasing-agent-funds/withdraws`, { params })
+}
+// 服务费提现明细
+export const withdrawal = (params) => {
+    return axios.post(`${B2bUrl}payment/boss/purchasing-agent-funds/withdraws`, params)
+}
+// 代采资金 账户信息
+export const findAgentBankAccountInfo = (params) => {
+    return axios.get(`${B2bUrl}payment/boss/purchasing-agent-funds/user-info`, { params })
+}
+// 代采资金 提现银行卡信息
+export const findAgentBankCardInfo = (params) => {
+    return axios.get(`${B2bUrl}payment/boss/purchasing-agent-funds/bank-card`, { params })
+}
+// 代采资金 提现 验证码
+export const getAgentSmsCode = () => {
+    return axios.post(`${B2bUrl}payment/boss/purchasing-agent-funds/withdraws/sms`, {})
+}
 // ================== finance 运费 ============================
 // 运费订单列表
 export const findFreightOrders = (params) => {

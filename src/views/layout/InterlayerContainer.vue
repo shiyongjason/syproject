@@ -1,6 +1,6 @@
 <template>
     <keep-alive :include="cachedInclude" :exclude="cachedExclude">
-        <router-view :key='$route.fullPath' v-if="isRouterAlive"></router-view>
+        <router-view  v-if="isRouterAlive"></router-view>
     </keep-alive>
     <!-- <keep-alive :include="cachedInclude" :exclude="cachedExclude">
         <router-view></router-view>

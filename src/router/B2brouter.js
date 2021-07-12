@@ -570,6 +570,156 @@ export default [
                 ]
             },
             {
+                path: 'fundAudit',
+                name: 'fundAudit',
+                meta: {
+                    title: '代采资金管理',
+                    tagName: '代采资金管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'fundAuditList',
+                        name: 'fundAuditList',
+                        meta: {
+                            title: '资金审核列表',
+                            tagName: '资金审核列表',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/fundAudit/fundAuditList.vue')
+                    },
+                    {
+                        path: 'auditFundList',
+                        name: 'auditFundList',
+                        meta: {
+                            title: '商家代采订单审核列表',
+                            tagName: '商家代采订单审核列表',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/fundAudit/auditFundList.vue')
+                    },
+                    {
+                        path: 'listFundInfo',
+                        name: 'fundInfo',
+                        meta: {
+                            title: '查看',
+                            tagName: '查看',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/fundAudit/auditFundList'
+                        },
+                        component: () => import('@/views/hmall/fundAudit/fundInfo.vue')
+                    },
+                    {
+                        path: 'aduitFundInfo',
+                        name: 'fundInfo',
+                        meta: {
+                            title: '审核',
+                            tagName: '审核',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/fundAudit/auditFundList'
+                        },
+                        component: () => import('@/views/hmall/fundAudit/fundInfo.vue')
+                    },
+                    {
+                        path: 'advancePayment',
+                        name: 'advancePayment',
+                        meta: {
+                            title: '商家代采订单预付款确认',
+                            tagName: '商家代采订单预付款确认',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/fundAudit/advancePayment.vue')
+                    },
+                    {
+                        path: 'advanceFundInfo',
+                        name: 'fundInfo',
+                        meta: {
+                            title: '查看',
+                            tagName: '查看',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/fundAudit/advancePayment'
+                        },
+                        component: () => import('@/views/hmall/fundAudit/fundInfo.vue')
+                    },
+                    {
+                        path: 'auditFundStatus',
+                        name: 'auditFundStatus',
+                        meta: {
+                            title: '商家代采订单状态确认',
+                            tagName: '商家代采订单状态确认',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/fundAudit/auditFundStatus.vue')
+                    },
+                    {
+                        path: 'statusFundInfo',
+                        name: 'fundInfo',
+                        meta: {
+                            title: '查看',
+                            tagName: '查看',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/fundAudit/auditFundStatus'
+                        },
+                        component: () => import('@/views/hmall/fundAudit/fundInfo.vue')
+                    },
+                    {
+                        path: 'prepayment',
+                        name: 'prepayment',
+                        meta: {
+                            title: '商家提前还款确认',
+                            tagName: '商家提前还款确认',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/fundAudit/prepayment.vue')
+                    },
+                    {
+                        path: 'merchantsDetail',
+                        name: 'financeMerchantsDetail',
+                        meta: {
+                            title: '代采资金管理',
+                            tagName: '代采资金管理提现',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/miningManage/merchantsDetail.vue')
+                    },
+                    {
+                        path: 'withdrawalMerchant',
+                        name: 'withdrawalMerchant',
+                        meta: {
+                            title: '提现',
+                            tagName: '提现',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/fundAudit/merchantsDetail'
+                        },
+                        component: () => import('@/views/hmall/finance/miningManage/withdrawalMerchant.vue')
+                    },
+                    {
+                        path: 'merchantBehalf',
+                        name: 'financeMerchantBehalf',
+                        meta: {
+                            title: '商家详情',
+                            tagName: '商家详情',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/fundAudit/merchantsDetail'
+                        },
+                        component: () => import('@/views/hmall/finance/miningManage/merchantBehalf.vue')
+                    }
+                ]
+            }, {
                 path: 'warehouse',
                 name: 'warehouse',
                 meta: {

@@ -301,6 +301,11 @@ export default {
         }
     },
     watch: {
+        $route () {
+            if (this.$route.query.id) {
+                this.init()
+            }
+        },
         'form.brandName' (value) {
             if (value == '') {
                 this.form.brandId = ''
