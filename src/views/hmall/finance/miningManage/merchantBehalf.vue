@@ -78,15 +78,23 @@
                             </el-select>
                         </div>
                     </div>
-                    <div class="query-cont-col">
-                        <div class="query-col-title">资金状态：</div>
-                        <div class="query-col-input">
-                            <el-select v-model="queryParams.fundStatus">
-                                <el-option v-for="item in capitalOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
-                        </div>
-                    </div>
                 </template>
+                <div class="query-cont-col" v-if="tabName == 'pay'">
+                    <div class="query-col-title">资金状态：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.fundStatus">
+                            <el-option v-for="item in capitalOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col" v-if="tabName == 'occupy'">
+                    <div class="query-col-title">资金状态：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.fundStatus">
+                            <el-option v-for="item in capitalsOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </div>
+                </div>
                 <template v-if="tabName == 'returned'">
                     <div class="query-cont-col">
                         <div class="query-col-title">回款类型：</div>
@@ -146,7 +154,7 @@
     </div>
 </template>
 <script>
-import { STAUTS_OPTIONS, STAUTS_MAP, OVERDUE_OPTIONS, OVERDUE_MAP, ADUITLINE_OPTIONS, MINADUITLINE_OPTIONS, RETAADUITLINE_OPTIONS, DEADLINE_TYPE_OPTIONS, DEADLINE_TYPE_MAP, STAUTS_TOGER_OPTIONS, STAUTS_TOGER_MAP, CAPITALS_OPTIONS, CAPITALS_MAP } from '../const.js'
+import { STAUTS_OPTIONS, STAUTS_MAP, OVERDUE_OPTIONS, OVERDUE_MAP, ADUITLINE_OPTIONS, MINADUITLINE_OPTIONS, RETAADUITLINE_OPTIONS, DEADLINE_TYPE_OPTIONS, DEADLINE_TYPE_MAP, STAUTS_TOGER_OPTIONS, STAUTS_TOGER_MAP, CAPITAL_OPTIONS, CAPITALS_OPTIONS, CAPITALS_MAP } from '../const.js'
 import { mapState, mapActions } from 'vuex'
 import { clearCache, newCache } from '@/utils/index'
 import { syncFundMis } from '../api/index'
@@ -166,7 +174,8 @@ export default {
             deadlineTypeMap: DEADLINE_TYPE_MAP,
             statusTogerOptions: STAUTS_TOGER_OPTIONS,
             statusTogerMap: STAUTS_TOGER_MAP,
-            capitalOptions: CAPITALS_OPTIONS,
+            capitalOptions: CAPITAL_OPTIONS,
+            capitalsOptions: CAPITALS_OPTIONS,
             capitalMap: CAPITALS_MAP,
             resetParams: {},
             queryParams: {
