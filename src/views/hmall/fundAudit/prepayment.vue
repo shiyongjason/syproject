@@ -72,7 +72,7 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table v-if="scope.data.row.repayStatus == 10" @click="onSure(scope.data.row)">确认</h-button>
-                    <h-button table v-if="scope.data.row.fundSyncStatus != 40" @click="onFund(scope.data.row)">资金同步</h-button>
+                    <h-button table v-if="scope.data.row.repayStatus == 20 &&scope.data.row.fundSyncStatus == 30" @click="onFund(scope.data.row)">资金同步</h-button>
                 </template>
             </basicTable>
             <el-dialog title="确认" width="500px" :visible.sync="closeOrderDialog" :close-on-click-modal=false @close='closeDialog'>

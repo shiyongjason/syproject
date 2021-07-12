@@ -262,7 +262,7 @@ export default {
         next()
     },
     beforeRouteLeave (to, from, next) {
-        if (to.name != 'statusFundInfo') {
+        if (!(to.name == 'fundInfo')) {
             clearCache('auditFundStatus')
         }
         next()

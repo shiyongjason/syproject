@@ -484,15 +484,13 @@ export default {
         next()
     },
     beforeRouteLeave (to, from, next) {
+        newCache('merchantBehalf')
         if (!(to.name == 'fundInfo')) {
             clearCache('merchantBehalf')
         } else if (!(to.name == 'merchantsDetail')) {
             clearCache('merchantsDetail')
         }
         next()
-    },
-    activated () {
-        this.init()
     }
 }
 </script>
