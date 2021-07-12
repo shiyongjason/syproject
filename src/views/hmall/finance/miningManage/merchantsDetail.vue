@@ -464,7 +464,17 @@ export default {
             }
         },
         onRecordTab (value) {
-            this.onQuery()
+            if (this.recordTabName == 'isOnline') {
+                this.repayQueryParams.pageNumber = 1
+                this.getOnlineRepay()
+            } else if (this.recordTabName == 'isOffline') {
+                this.repayQueryParams.pageNumber = 1
+                this.getOfflineRepay()
+            } else if (this.recordTabName == 'isAdvance') {
+                this.repayQueryParams.pageNumber = 1
+                this.getPrepayRepay()
+            }
+            this.onReset()
         },
         onQuery () {
             if (this.tabName == 'detail') {
@@ -683,7 +693,7 @@ export default {
         next()
     },
     beforeRouteLeave (to, from, next) {
-        if (to.name != 'merchantBehalf') {
+        if (!(to.name == 'merchantBehalf')) {
             clearCache('merchantsDetail')
         }
         next()

@@ -282,15 +282,16 @@ export default {
         }
     },
     beforeRouteLeave (to, from, next) {
-        if (to.name != 'auditFundList') {
+        if (!(to.name == 'auditFundList')) {
             clearCache('auditFundList')
-        } else if (to.name != 'advancePayment') {
+        } else if (!(to.name == 'advancePayment')) {
             clearCache('advancePayment')
-        } else if (to.name != 'auditFundStatus') {
+        } else if (!(to.name == 'auditFundStatus')) {
             clearCache('auditFundStatus')
-        } else if (to.name != 'merchantBehalf') {
+        } else if (!(to.name == 'merchantBehalf')) {
             clearCache('merchantBehalf')
         }
+        console.log('222')
         next()
     }
 }
