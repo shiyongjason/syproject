@@ -229,6 +229,9 @@ export default {
             this.form = { ...this.auditFundInfo }
             this.tableData = this.auditFundInfo.skuList
             this.tableDataLog = this.auditFundInfo.logs
+            this.$nextTick(() => {
+                this.$refs['form'].clearValidate()
+            })
         },
         onChange () {
             this.$nextTick(() => {
