@@ -32,3 +32,8 @@ export const onMoveDownFloor: (params: any) => AxiosPromise<void> = (params) => 
 export const getFloorDetail: (params:any) => AxiosPromise<Shops.RespBossShopFloorDetail> = (params) => {
     return axios.get(`/shop/api/boss/shop/floor/${params}`)
 }
+
+// spu
+export const getSpuPage: (params:any) => AxiosPromise<Shops.IPageRespBossSpuPage> = (params) => {
+    return axios.get(`/shop/api/boss/spu/page`, { params })
+}

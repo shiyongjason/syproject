@@ -1,6 +1,6 @@
 
 <template>
-  <div class="page-body B2b">
+    <div class="page-body B2b">
         <div class="page-body-cont">
             <div class="query-cont-row">
                 <div class="query-cont__col">
@@ -9,29 +9,31 @@
                         <el-input v-model="queryParams.paymentOrderNo" placeholder="请输入支付单号" maxlength="50"></el-input>
                     </div>
                 </div>
-
                 <div class="query-cont__col">
                     <div class="query-col__label">类目名称：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.companyName" maxlength="20" placeholder="请输入经销商名称"></el-input>
+                        1123
+                    </div>
+                </div>
+            </div>
+            <div class="query-cont-row">
+                <div class="query-cont__col">
+                    <div class="query-col__label">类名搜索：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.paymentOrderNo" placeholder="可输入类目名称、类目编码进行搜索" maxlength="50"></el-input>
                     </div>
                 </div>
 
-                <div class="query-cont__col">
-                    <h-button type="primary" @click="getList">查询</h-button>
-                    <h-button @click="onReset">重置</h-button>
-                </div>
-            </div>
-            <div class="query-cont__row mb20">
-                <h-button type="primary" @click="onAdd">新增品类</h-button>
             </div>
             <!-- end search bar -->
-            <hosJoyTable isShowIndex ref="hosjoyTable" align="center"  border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0' >
-                <template #action="slotProps">
-                    <h-button table >查看详情</h-button>
-
+           <tree-table ref="treeTable" :data="data" :columns="columns" :selectable="true" :expand-type="false" @checkbox-click='onClickCheckbox' children-prop="subCategoryList" >
+                <template slot="operations" slot-scope="scope">
+                    <h-button table @click="onShowEdit(scope.row)">修改</h-button>
+                    <h-button table @click="onShowParams(scope.row)" v-if="scope.row.level === 2">设置参数</h-button>
+                    <!-- <span class="action mr10" @click="onShowEdit(scope.row)">修改</span> -->
+                    <!-- <span class="action mr10" @click="onShowParams(scope.row)" v-if="scope.row.level === 2">设置参数</span> -->
                 </template>
-            </hosJoyTable>
+            </tree-table>
         </div>
 
     </div>
@@ -69,31 +71,35 @@ export default class Bannertabs extends Vue {
             sizes: [10, 20, 50, 100],
             total: 0
         }
-
-        tableData:any[] | [] = []
-
-        tableLabel: tableLabelProps = [
-            { label: '品类名称', prop: 'deviceBrand', width: '120' },
-            { label: '类目信息', prop: 'upstreamSupplierName' },
-            { label: '创建时间', prop: 'upstreamSupplierType' },
-            { label: '更新时间', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] },
-            { label: '更新人', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] },
-            { label: '品类上架数量', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] }
-
+        columns= [
+            {
+                title: '一级类目/二级类目/三级类目',
+                key: 'name',
+                width: '300px'
+            },
+            {
+                title: '类目编码',
+                key: 'code',
+                width: '100px'
+            },
+            {
+                title: '上架商品数量',
+                key: 'name',
+                width: '100px'
+            }
         ]
+        data= [{ id: 1, code: 'C000001', name: '冷暖系统', parentId: 0, path: '1', sort: 1, level: 1, imgUrl: null },
+            { id: 2, code: 'C000001', name: '冷暖系统', parentId: 0, path: '1', sort: 1, level: 1, imgUrl: null }]
 
         getList () {
 
         }
 
-        onReset () {
-
-        }
-        onAdd () {
-            this.$router.push({ path: '/goodwork/categoryedit' })
+        onClickCheckbox (val) {
+            console.log(val)
         }
 }
 </script>
 <style lang='scss' scoped>
-// @import "./css.scss";
+@import "./css.scss";
 </style>
