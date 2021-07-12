@@ -60,7 +60,7 @@
                     <h-button @click="onReset()">重置</h-button>
                 </div>
             </div>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true' :isfiexd="'right'">
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=150 :isShowIndex='true' :isfiexd="'right'">
                 <template slot="agentOrderNo" slot-scope="scope">
                     <a class="isLink" @click="onInfo(scope.data.row)">{{scope.data.row.agentOrderNo}}</a>
                 </template>
@@ -122,6 +122,7 @@ export default {
                 { label: '代采订单总金额', prop: 'totalAmount' },
                 { label: '待回尾款', prop: 'leftRepayAmount' },
                 { label: '提前还款金额', prop: 'repayAmount' },
+                { label: '超额回款金额', prop: 'overRepayAmount' },
                 { label: '打款账户名称', prop: 'accountName' },
                 { label: '打款银行账号', prop: 'bankCardNo' },
                 { label: '企业名称', prop: 'companyName' },

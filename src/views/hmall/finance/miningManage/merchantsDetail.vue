@@ -236,14 +236,20 @@
                         <div class="query-cont-col">
                             <div class="query-col-title">回款订单号：</div>
                             <div class="query-col-input">
-                                <el-input v-model="queryParams.childOrderNo" maxlength="50" placeholder="请输入回款订单号"></el-input>
+                                <el-input v-model="repayQueryParams.childOrderNo" maxlength="50" placeholder="请输入回款订单号"></el-input>
                             </div>
                         </div>
                     </template>
-                    <div class="query-cont-col" v-if="recordTabName != 'isOnline'">
+                    <div class="query-cont-col" v-if="recordTabName != 'isAdvance'">
                         <div class="query-col-title">回款代采订单号：</div>
                         <div class="query-col-input">
                             <el-input v-model="repayQueryParams.agentOrderNo" maxlength="50" placeholder="请输入回款代采订单号"></el-input>
+                        </div>
+                    </div>
+                    <div class="query-cont-col" v-if="recordTabName == 'isAdvance'">
+                        <div class="query-col-title">代采订单号：</div>
+                        <div class="query-col-input">
+                            <el-input v-model="repayQueryParams.agentOrderNo" maxlength="50" placeholder="请输入代采订单号"></el-input>
                         </div>
                     </div>
                     <template v-if="recordTabName == 'isOffline' || recordTabName=='isAdvance'">
@@ -631,8 +637,8 @@ export default {
                 { label: '时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '金额', prop: 'amount', formatters: 'moneyShow' },
                 { label: '类型', prop: 'type' },
-                { label: '打款账户名称', prop: 'prepayAccountName' },
-                { label: '打款银行账号', prop: 'prepayBankCardNo' },
+                { label: '打款账户名称', prop: 'accountName' },
+                { label: '打款银行账号', prop: 'bankCardNo' },
                 { label: '企业名称', prop: 'companyName' },
                 { label: '管理员账号', prop: 'username' },
                 { label: '回款代采订单号', prop: 'agentOrderNo' },
@@ -651,11 +657,11 @@ export default {
                 { label: '时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '金额', prop: 'amount', formatters: 'moneyShow' },
                 { label: '类型', prop: 'type' },
-                { label: '打款账户名称', prop: 'prepayAccountName' },
-                { label: '打款银行账号', prop: 'prepayBankCardNo' },
+                { label: '打款账户名称', prop: 'accountName' },
+                { label: '打款银行账号', prop: 'bankCardNo' },
                 { label: '企业名称', prop: 'companyName' },
                 { label: '管理员账号', prop: 'username' },
-                { label: '回款代采订单号', prop: 'clientType' },
+                { label: '代采订单号', prop: 'agentOrderNo' },
                 { label: 'MIS订单号', prop: 'misOrderNo' }
             ]
             await this.findPrepayRepay(this.repayQueryParams)
