@@ -93,8 +93,8 @@
                             </el-select>
                         </div>
                         <div class="query-col-input">
-                            <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart"></el-date-picker>
-                            <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59"></el-date-picker>
+                            <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-ddT00:00:00" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart"></el-date-picker>
+                            <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-ddT23:59:59" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59"></el-date-picker>
                         </div>
                     </div>
                     <div class="query-cont-col">
@@ -532,7 +532,7 @@ export default {
         },
         // 跳转商家详情
         onInfo (val, page) {
-            this.$router.push({ path: '/b2b/fundAudit/merchantBehalf', query: { id: val.username, page: page } })
+            this.$router.push({ path: '/b2b/fundAudit/merchantBehalf', query: { toId: val.username, page: page } })
         },
         // 商家明细合计
         getSum (param) {

@@ -30,8 +30,8 @@
                             </el-select>
                         </div>
                         <div class="query-col-input">
-                            <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
-                            <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
+                            <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-ddT00:00:00" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
+                            <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-ddT23:59:59" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
                         </div>
                     </div>
                 </template>
@@ -54,8 +54,8 @@
                         </el-select>
                     </div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
-                        <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
+                        <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-ddT00:00:00" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
+                        <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-ddT23:59:59" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col" v-if="tabName == 'returned'">
@@ -65,8 +65,8 @@
                         </el-select>
                     </div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
-                        <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
+                        <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-ddT00:00:00" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
+                        <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-ddT23:59:59" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
                 <template v-if="tabName == 'pay' || tabName == 'occupy'">
@@ -221,7 +221,7 @@ export default {
             return this.$route.query.page
         },
         pageId () {
-            return this.$route.query.id
+            return this.$route.query.toId
         }
     },
     methods: {
@@ -245,19 +245,13 @@ export default {
             }
             this.tabParam(this.tabName)
         },
-        onTab (value) {
+        onTab () {
             this.queryParams = { ...this.resetParams }
             this.tabParam(this.tabName)
             this.onReset()
         },
         onQuery () {
             this.queryParams.pageNumber = 1
-            if (this.queryParams.startTime != '') {
-                this.queryParams.startTime = this.queryParams.startTime + 'T' + '00:00:00'
-            }
-            if (this.queryParams.endTime != '') {
-                this.queryParams.endTime = this.queryParams.endTime + 'T' + '23:59:59'
-            }
             this.tabParam(this.tabName)
         },
         handleSizeChange (val) {
@@ -329,9 +323,9 @@ export default {
                 { label: '出款确认日期', prop: 'auditTime', formatters: 'date' },
                 { label: '代采金额', prop: 'totalAmount', formatters: 'moneyShow' },
                 { label: '预付款', prop: 'prepayAmount', formatters: 'moneyShow' },
-                { label: '代付金额', prop: 'retainageAmount' },
-                { label: '回款金额', prop: 'repayedAmount' },
-                { label: '占用金额', prop: 'occupationAmount', formatters: 'moneyShow' },
+                { label: '代付金额', prop: 'retainageAmount', formatters: 'moneyShow' },
+                { label: '回款金额', prop: 'repayedAmount', formatters: 'moneyShow' },
+                { label: '占用金额', prop: 'occupationAmount' },
                 { label: '逾期未还金额', prop: 'overdueAmount', formatters: 'moneyShow' },
                 { label: '最终回款期限', prop: 'finalRepayTime', formatters: 'date' },
                 { label: '最近回款日期', prop: 'lastRepayTime', formatters: 'date' },
@@ -356,7 +350,7 @@ export default {
                 { label: '出款确认日期', prop: 'auditTime', formatters: 'date' },
                 { label: '代采金额', prop: 'totalAmount', formatters: 'moneyShow' },
                 { label: '预付款', prop: 'prepayAmount', formatters: 'moneyShow' },
-                { label: '代付金额', prop: 'retainageAmount' },
+                { label: '代付金额', prop: 'retainageAmount', formatters: 'moneyShow' },
                 { label: '回款类型', prop: 'repayWay' },
                 { label: '回款订单号', prop: 'childOrderNo' },
                 { label: '最终回款期限', prop: 'finalRepayTime', formatters: 'date' },
@@ -471,14 +465,25 @@ export default {
     },
     watch: {
         $route () {
-            if (this.$route.query.id || this.$route.query.page) {
+            if (this.$route.query.toId || this.$route.query.page) {
                 this.init()
             }
         }
     },
-    beforeRouteLeave (to, from, next) {
-        clearCache('merchantBehalf')
+    beforeRouteEnter (to, from, next) {
+        newCache('merchantBehalf')
         next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'statusFundInfo') {
+            clearCache('merchantBehalf')
+        } else if (to.name != 'merchantsDetail') {
+            clearCache('merchantsDetail')
+        }
+        next()
+    },
+    activated () {
+        this.init()
     }
 }
 </script>
