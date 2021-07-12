@@ -112,6 +112,17 @@ export default {
             required: false,
             type: Boolean,
             default: false
+        },
+        tableRowClassName: { type: Function,
+            default:
+                ({ row }) => {
+                    if (row.cellType === 2) {
+                        return 'branch-total-row'
+                    } else if (row.cellType === 3) {
+                        return 'total-row'
+                    }
+                    return ''
+                }
         }
     },
     components: {
@@ -277,14 +288,15 @@ export default {
                 return 'hiddenOverflowTooltip'
             }
         },
-        tableRowClassName ({ row }) {
+        // 这个谁写死了，导致其他页面需要用到的时候复写不了。注释,添加到prop by sunjun
+        /* tableRowClassName ({ row }) {
             if (row.cellType === 2) {
                 return 'branch-total-row'
             } else if (row.cellType === 3) {
                 return 'total-row'
             }
             return ''
-        },
+        }, */
         async handleSizeChange (val) {
             await this.$emit('pagination', {
                 pageNumber: this.currentPage,
