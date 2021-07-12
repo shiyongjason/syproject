@@ -11,32 +11,37 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">商品名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.xxx" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.name" placeholder="请输入" maxlength="13" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    {{JSON.stringify(queryParams.categoryIdArr)}}
                     <div class="query-col__label">商品类目：</div>
                     <div class="query-col__input">
-                        <el-cascader :options="categoryOptions" :props="props" multiple collapse-tags v-model="queryParams.categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
+                        <el-cascader :options="categoryOptions" :props="props" multiple collapse-tags v-model="queryParams.categoryIds" clearable @change="productCategoryChange"></el-cascader>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">商品品牌：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.xxx" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.brandName" placeholder="请输入" maxlength="13" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">商品型号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.xxx" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.model" placeholder="请输入" maxlength="13" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">SPU编码：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.xxx" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.spuCode" placeholder="请输入" maxlength="13" clearable></el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col" v-if="activeName=='SKU'">
+                    <div class="query-col__label">SKU编码：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.skuCode" placeholder="请输入" maxlength="13" clearable></el-input>
                     </div>
                 </div>
 
@@ -46,7 +51,7 @@
                     <el-checkbox :label="item.value" v-for="item in checkboxOptions" :key="item.label">{{item.label}}</el-checkbox>
                 </el-checkbox-group>
                 <div class="search-btn">
-                    <h-button type="primary">
+                    <h-button type="primary" @click="getList">
                         查询
                     </h-button>
                     <h-button @click="onReset">
@@ -54,11 +59,11 @@
                     </h-button>
                 </div>
             </div>
-            <h-button type="create" class="bulkPull">新增商品</h-button>
-            <h-button type="primary" class="bulkPull" style="margin:0 10px" v-if="activeName=='SKU'">批量上架</h-button>
-            <h-button type="assist" class="bulkPull"  v-if="activeName=='SKU'">批量下架</h-button>
-            <h-button class="bulkPull" style="margin-left:10px"  v-if="activeName=='SKU'">批量删除</h-button>
-            <hosJoyTable v-if="resetTable" :isShowselection="activeName=='SKU'" @selection-change="selectChange" :localName="activeName=='SPU'?'V3.10.SPU.*':'V3.10.SKu.*'" ref="hosjoyTable" collapseShow align="center" border stripe showPagination :column="activeName=='SPU'?tableLabel:tableLabelOfSku" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='100' >
+            <h-button type="create" class="bulkPull" @click="onAddNew">新增商品</h-button>
+            <h-button type="primary" class="bulkPull" style="margin:0 10px" v-if="activeName=='SKU'" @click="Bulk">批量上架</h-button>
+            <h-button type="assist" class="bulkPull"  v-if="activeName=='SKU'" @click="Batch">批量下架</h-button>
+            <h-button class="bulkPull" style="margin-left:10px"  v-if="activeName=='SKU'" @click="Del">批量删除</h-button>
+            <hosJoyTable v-if="resetTable" :isShowselection="activeName=='SKU'" @selection-change="selectChange" :localName="activeName=='SPU'?'V3.10.SPU.*':'V3.10.SKu.*'" ref="hosjoyTable" collapseShow align="center" border stripe showPagination :column="activeName=='SPU'?tableLabel:tableLabelOfSku" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='100' :row-class-name="tableRowClassName" >
             </hosJoyTable>
             <!-- 「编辑」：下架SPU、待编辑SPU可编辑，上架SPU的「编辑」按钮置灰，点击「编辑」按钮，进入SKU详情页； -->
         </div>
@@ -109,9 +114,18 @@ import { Vue, Component, Prop, Watch, Ref } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import elImageAddToken from '@/components/elImageAddToken/index.vue'
+import { getSpuList, getSkuList, batchDelete } from './api/index'
+import utils from '@/utils/filters'
+import { RespBossSku } from '@/interface/hbp-shop'
 const _queryParams = {
-    xxx: '',
-    categoryIdArr: [],
+    name: '',
+    categoryIds: [],
+    brandName: '',
+    model: '',
+    spuCode: '',
+    skuCode: '',
+    status: '',
+    isOnShelf: '',
     pageNumber: 1,
     pageSize: 10
 }
@@ -124,56 +138,105 @@ export default class ProductLibrary extends Vue {
     @Action('category/findAllCategory') findAllCategory: Function
     resetTable:boolean = true
     checkList = []
-    spuCheckboxOptions = [{ label: '只看上架SPU', value: '1' }, { label: '只看下架SPU', value: '2' }, { label: '只看待编辑SPU', value: '3' }]
-    skuCheckboxOptions = [{ label: '只看上架SKU', value: '4' }, { label: '只看下架SKU', value: '5' }, { label: '只看待编辑SKU', value: '6' }]
+    spuCheckboxOptions = [{ label: '只看上架SPU', value: 'isOnShelf:1' }, { label: '只看下架SPU', value: 'isOnShelf:0' }, { label: '只看待编辑SPU', value: 'status:0' }]
+    skuCheckboxOptions = [{ label: '只看上架SKU', value: 'isOnShelf:1' }, { label: '只看下架SKU', value: 'isOnShelf:0' }, { label: '只看待编辑SKU', value: 'status:0' }]
     checkboxOptions = this.spuCheckboxOptions
     activeName = 'SPU'
     props = { multiple: true }
-    queryParams: any = JSON.parse(JSON.stringify(_queryParams))
-    page = {
+    queryParams: typeof _queryParams = JSON.parse(JSON.stringify(_queryParams))
+    page:any = {
         sizes: [10, 20, 50, 100],
         total: 0
     }
-    tableData:any = [
-        {
-            name: 'xxoo'
-        }
-    ]
+    tableData:RespBossSku[] = []
     sellDialog:boolean = false
     delDialog:boolean = false
     onTheShelvesDialog:boolean = false
     rackDialog:boolean = false
+    Selection = [] // 列表选择
 
     // spu 列表
     tableLabel: tableLabelProps = [
-        { label: 'SPU编码', prop: 'name' },
+        { label: 'SPU编码', prop: 'code' },
         { label: '商品名称', prop: 'name' },
-        { label: '商品类目', prop: 'name' },
-        { label: '商品品牌', prop: 'name' },
-        { label: '商品型号', prop: 'name' },
-        { label: '销售价', prop: 'name' },
-        { label: '商品类别', prop: 'name' },
+        { label: '商品类目', prop: 'categoryContent' },
+        { label: '商品品牌', prop: 'brandName' },
+        { label: '商品型号', prop: 'model' },
+        {
+            label: '销售价', // 销售价是否可见 0：否 1：是
+            prop: 'name',
+            render: (h, scope) => {
+                return (
+                    <div>
+                        {!scope.row.priceVisible ? '不展示'
+                            : scope.row.minSalePrice === null && scope.row.minSalePrice === null ? '-' : <span>{utils.money(scope.row.minSalePrice)}-{utils.money(scope.row.maxSalePrice)}</span>
+                        }
+                    </div>
+                )
+            }
+        },
+        {
+            label: '商品类别', // status 编辑状态 0：草稿 1：已提交     isOnShelf 0:下架 1:上架
+            prop: 'name',
+            render: (h, scope) => {
+                return (
+                    <div>
+                        {
+                            !scope.row.status ? '待编辑SPU'
+                                : scope.row.isOnShelf == 1 ? '上架SPU'
+                                    : scope.row.isOnShelf == 0 ? '下架SPU' : ''
+                        }
+                    </div>
+                )
+            }
+        },
         {
             label: '操作',
             width: '150px',
-            // slot: 'action',
+            // 「编辑」：下架SPU、待编辑SPU可编辑，上架SPU的「编辑」按钮置灰，点击「编辑」按钮，进入SPU详情页；
             render: (h, scope) => {
-                return <h-button table >编辑</h-button>
+                return <h-button table disabled={!!(scope.row.status == 1 && scope.row.isOnShelf == 1)}>编辑</h-button>
             }
         }
     ]
 
     // sku 列表
     tableLabelOfSku: tableLabelProps = [
-        { label: 'SKU编码', prop: 'name' },
-        { label: 'SPU编码', prop: 'name' },
+        { label: 'SKU编码', prop: 'code' },
+        { label: 'SPU编码', prop: 'spuCode' },
         { label: '商品名称', prop: 'name' },
-        { label: '商品类目', prop: 'name' },
-        { label: '商品品牌', prop: 'name' },
-        { label: '商品型号', prop: 'name' },
-        { label: '商品规格', prop: 'name' },
-        { label: '商品类别', prop: 'name' },
-        { label: '销售价（元）', prop: 'name' },
+        { label: '商品类目', prop: 'categoryPath' },
+        { label: '商品品牌', prop: 'brandName' },
+        { label: '商品型号', prop: 'model' },
+        { label: '商品规格', prop: 'optionValues' },
+        {
+            label: '商品类别', // status 编辑状态 0：草稿 1：已提交     isOnShelf 0:下架 1:上架
+            prop: 'name',
+            render: (h, scope) => {
+                return (
+                    <div>
+                        {
+                            !scope.row.status ? '待编辑SPU'
+                                : scope.row.isOnShelf == 1 ? '上架SPU'
+                                    : scope.row.isOnShelf == 0 ? '下架SPU' : ''
+                        }
+                    </div>
+                )
+            }
+        },
+        {
+            label: '销售价', // 销售价是否可见 0：否 1：是
+            prop: 'name',
+            render: (h, scope) => {
+                return (
+                    <div>
+                        {!scope.row.priceVisible ? '不展示'
+                            : scope.row.minSalePrice === null && scope.row.minSalePrice === null ? '-' : <span>{utils.money(scope.row.minSalePrice)}-{utils.money(scope.row.maxSalePrice)}</span>
+                        }
+                    </div>
+                )
+            }
+        },
         {
             label: '操作',
             width: '150px',
@@ -189,6 +252,14 @@ export default class ProductLibrary extends Vue {
     ]
 
     // methods:::
+
+    tableRowClassName ({ row, rowIndex }) {
+        console.log('🚀 --- tableRowClassName --- row', row)
+        return 'warning-row'
+    }
+    onAddNew () {
+        this.$router.push({ path: '/goodwork/commodityManagement/addProduct' })
+    }
 
     // 上架提醒 Dialog
     onOPenSell () {
@@ -213,6 +284,7 @@ export default class ProductLibrary extends Vue {
             this.checkboxOptions = this.skuCheckboxOptions
         }
         this.onReset()
+        this.getList()
         this.resetTable = false
         this.$nextTick(() => {
             this.resetTable = true
@@ -221,10 +293,18 @@ export default class ProductLibrary extends Vue {
 
     // '只看上架SPU'... 状态查询
     handleCheckBox () {
+        this.queryParams.status = ''
+        this.queryParams.isOnShelf = ''
+        if (this.checkList.length == 0) {
+            return
+        }
         if (this.checkList.length > 1) {
             this.checkList.splice(0, 1)
         }
-        console.log('log::::::', this.checkList)
+        let res = this.checkList[0].split(':')
+        let key = res[0]
+        let val = res[1]
+        this.queryParams[key] = val
     }
 
     // 商品类目Change
@@ -241,16 +321,47 @@ export default class ProductLibrary extends Vue {
 
     // 列表选择
     selectChange (val:any[]) {
-        console.log('🚀 --- selectChange --- val', val)
+        this.Selection = []
+        val.map(i => {
+            this.Selection.push(i.id)
+        })
+    }
+    // 批量下架
+    async Batch () {
+        // await bulkPullSku({ skuIds: [id] })
+        // this.getList()
+        // this.$message.success('商品已进入好橙工商品库，可进入商品列表编辑')
+        // this.Selection = []
+    }
+    // 批量上架
+    Bulk () {
+
+    }
+    // 批量删除
+    Del () {
+
     }
 
     // getList
-    getList () {
-
+    async getList () {
+        let query = JSON.parse(JSON.stringify(this.queryParams))
+        if (query.categoryIds.length > 0) {
+            query.categoryIds = query.categoryIds.toString()
+        }
+        if (this.activeName == 'SKU') {
+            const { data } = await getSkuList(query)
+            this.tableData = data.records
+            this.page.total = data.total
+        } else {
+            const { data } = await getSpuList(query)
+            this.tableData = data.records
+            this.page.total = data.total
+        }
     }
 
     mounted () {
         this.findAllCategory()
+        this.getList()
     }
 }
 </script>
