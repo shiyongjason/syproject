@@ -132,8 +132,8 @@
                     <template slot="totalRetaingeAmount" slot-scope="scope">
                         <a class="isLink" @click="onInfo(scope.data.row,'totalRetaingeAmount')">{{scope.data.row.totalRetaingeAmount| moneyShow}}</a>
                     </template>
-                    <template slot="totalRepayAmount" slot-scope="scope">
-                        <a class="isLink" @click="onInfo(scope.data.row,'totalRepayAmount')">{{scope.data.row.totalRepayAmount| moneyShow}}</a>
+                    <template slot="totalRepayedAmount" slot-scope="scope">
+                        <a class="isLink" @click="onInfo(scope.data.row,'totalRepayedAmount')">{{scope.data.row.totalRepayedAmount| moneyShow}}</a>
                     </template>
                     <template slot="occupationAmount" slot-scope="scope">
                         <a class="isLink" @click="onInfo(scope.data.row,'occupationAmount')">{{scope.data.row.occupationAmount| moneyShow}}</a>
@@ -342,7 +342,7 @@ export default {
                 { label: '总代采', prop: 'totalAmount' },
                 { label: '总预付', prop: 'totalPrepayAmount' },
                 { label: '总代付', prop: 'totalRetaingeAmount' },
-                { label: '总回款', prop: 'totalRepayAmount' },
+                { label: '总回款', prop: 'totalRepayedAmount' },
                 { label: '当前占用', prop: 'occupationAmount' },
                 { label: '当前逾期未还', prop: 'overdueAmount' },
                 { label: '最终回款期限', prop: 'finalRepayTime', formatters: 'date' },
@@ -543,7 +543,7 @@ export default {
                     if (index == 0) {
                         sums[index] = '合计'
                     }
-                    if (column.property == 'creditLimit' || column.property == 'totalPrepayAmount' || column.property == 'totalRetaingeAmount' || column.property == 'totalRepayAmount' || column.property == 'occupationAmount' || column.property == 'overdueAmount') {
+                    if (column.property == 'creditLimit' || column.property == 'totalPrepayAmount' || column.property == 'totalRetaingeAmount' || column.property == 'totalRepayedAmount' || column.property == 'occupationAmount' || column.property == 'overdueAmount') {
                         const values = data.map(item => {
                             return Number(item[column.property])
                         })

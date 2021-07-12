@@ -236,7 +236,7 @@ export default {
             } else if (this.page == 'occupationAmount') {
                 this.tabName = 'occupy'
                 this.queryParams.username = this.pageId
-            } else if (this.page == 'totalRepayAmount') {
+            } else if (this.page == 'totalRepayedAmount') {
                 this.tabName = 'returned'
                 this.queryParams.username = this.pageId
             } else {
