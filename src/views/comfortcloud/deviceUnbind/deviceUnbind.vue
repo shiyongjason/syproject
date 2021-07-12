@@ -30,7 +30,7 @@
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onDetail(scope.data.row)">详情</el-button>
-                    <el-button class="orangeBtn" @click="onUnbind(scope.data.row)">解绑</el-button>
+                    <el-button class="orangeBtn" v-if="hosAuthCheck(Auths.MERCHANT_DEVICE_UNBIND)" @click="onUnbind(scope.data.row)">解绑</el-button>
                 </template>
             </basicTable>
         </div>
@@ -51,26 +51,19 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { bossDeviceUnbind } from '../api/index'
+import * as Auths from '@/utils/auth_const'
 import Vue from 'vue'
 export default {
     name: 'deviceUnbind',
     data () {
         return {
-            pic: {
-                marginLeft: '20px',
-                width: '100px',
-                height: '100px'
-            },
-            firstPic: {
-                width: '100px',
-                height: '100px'
-            },
             queryParams: {
                 iotId: '',
                 pageNumber: 1,
                 pageSize: 10,
                 phone: ''
             },
+            Auths,
             searchParams: {},
             tableData: [],
             tableLabel: [
