@@ -121,7 +121,7 @@ export default {
                     } else if (row.cellType === 3) {
                         return 'total-row'
                     }
-                    return 'xxxxx'
+                    return ''
                 }
         }
     },
