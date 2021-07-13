@@ -426,7 +426,9 @@ export default {
             }, 1000)
         },
         async handleSelectModel (item) {
+            await this.getProductInfo(item.mainSpuId)
             this.$router.push({ path: '/b2b/product/createProduct', query: { id: item.mainSpuId } })
+            this.showMore = true
         },
         createStateFilter (queryString) {
             return (state) => {
@@ -726,6 +728,7 @@ export default {
     beforeRouteLeave (to, from, next) {
         if (to.name != 'productList') {
             clearCache('productList')
+            // clearCache('productList')
         }
         next()
     }

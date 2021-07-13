@@ -10,7 +10,13 @@
                 </el-form-item>
 
                 <el-form-item label="方案列表缩略图：" prop="schemeImage" ref="schemeImage">
-                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="form.schemeImage" ref="uploadImg" @back-event="readUrl" :imgW="100" :imgH="100" />
+                    <SingleUpload sizeLimit='1M'
+                                  :upload="uploadInfo"
+                                  :imageUrl="form.schemeImage"
+                                  ref="uploadImg"
+                                  @back-event="readUrl"
+                                  :imgW="100"
+                                  :imgH="100" />
                     <div class="upload-tips">建议尺寸：4:3比例图片，1M以内，支持jpeg,png和jpg格式</div>
                 </el-form-item>
                 <el-form-item label="生效时间：" prop="effectiveTime">
@@ -18,11 +24,12 @@
                     </el-date-picker>
                 </el-form-item>
 
-                <el-form-item label="商品视频：" prop="schemeVideo">
+                <el-form-item label="商品视频：" prop="schemeVideo" >
                     <el-row>
-                        <SingleUpload sizeLimit='100M' :upload="videoUpload" :imageUrl="videoimageUrl" @back-event="videoUrl" :imgW="100" :imgH="100">
+                        <SingleUpload  sizeLimit='100M' :upload="videoUpload" :imageUrl="imageUrl"
+                                       @back-event="videoUrl" :imgW="100" :imgH="100">
                         </SingleUpload>
-                        <h-button v-if="form.schemeVideo" type="primary" @click="palyVideo">视频预览</h-button>
+                        <h-button v-if="form.schemeVideo"   type="primary" @click="palyVideo">视频预览</h-button>
                         <div class="upload-tips">
                             建议尺寸：支持 MP4格式, 大小不超过100MB
                             视频尺寸16:9，视频长度建议不超过60秒
@@ -34,8 +41,7 @@
                     <h3>方案详细内容</h3>
                 </div>
                 <el-form-item label="详情：" prop="schemeDetail">
-                    <RichEditor :height="500" :menus="menus" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" :uploadImgServer="uploadImgServer" @change="$refs['form'].validateField('schemeDetail')" @blur="$refs['form'].validateField('schemeDetail')" hidefocus="true" ref="editors"
-                        style="outline: 0;margin-bottom: 12px;width:100%" tabindex="0" v-model="form.schemeDetail"></RichEditor>
+                    <RichEditor :height="500" :menus="menus" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" :uploadImgServer="uploadImgServer" @change="$refs['form'].validateField('schemeDetail')" @blur="$refs['form'].validateField('schemeDetail')" hidefocus="true" ref="editors" style="outline: 0;margin-bottom: 12px;width:100%" tabindex="0" v-model="form.schemeDetail"></RichEditor>
                 </el-form-item>
                 <el-form-item style="text-align: center">
                     <el-button type="primary" @click="onSave" :loading="loading">{{ loading ? '提交中 ...' : '确定' }}</el-button>
@@ -52,11 +58,10 @@
 
 <script>
 import { interfaceUrl } from '@/api/config'
-import { addCloudMerchantProjectScheme } from '../api'
-import { mapState, mapGetters, mapActions } from 'vuex'
-
+import { addCrmPlanDetail, getCrmPlanDetail } from './api'
+import { mapState, mapActions } from 'vuex'
 export default {
-    name: 'merchantEnginePlanEdit',
+    name: 'crmedit',
     data () {
         return {
             form: {
@@ -119,9 +124,6 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo
         }),
-        ...mapGetters({
-            cloudMerchantProjectSchemeDetail: 'cloudMerchantProjectSchemeDetail'
-        }),
         videoUpload () {
             return {
                 action: interfaceUrl + 'tms/files/upload',
@@ -157,6 +159,18 @@ export default {
                     return time.getTime() < Date.now() - 8.64e7
                 }
             }
+        },
+        imageUrl () {
+            return this.videoimageUrl
+        }
+    },
+    watch: {
+        'form.schemeImage' (val) {
+            if (val) {
+                this.$nextTick(() => {
+                    this.$refs['schemeImage'].clearValidate()
+                })
+            }
         }
     },
     async mounted () {
@@ -166,13 +180,11 @@ export default {
     },
     methods: {
         ...mapActions({
-            setNewTags: 'setNewTags',
-            findCloudMerchanProjectSchemeDetail: 'findCloudMerchanProjectSchemeDetail'
+            setNewTags: 'setNewTags'
         }),
-
         async getDetail (id) {
-            await this.findCloudMerchanProjectSchemeDetail({ id })
-            this.form = { ...this.cloudMerchantProjectSchemeDetail }
+            const { data } = await getCrmPlanDetail({ id })
+            this.form = { ...data }
             if (this.form.schemeVideo) {
                 this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
             } else {
@@ -180,8 +192,16 @@ export default {
             }
         },
         onBack () {
-            this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/comfortCloudMerchant/merchantEngine/merchantEnginePlan')
+            this.$confirm('取消后，文本将不被保存', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.setNewTags((this.$route.fullPath).split('?')[0])
+                this.$router.push('/goodwork/crmengineplan/crmenginedetail')
+            }).catch(() => {
+
+            })
         },
 
         onSave () {
@@ -193,7 +213,7 @@ export default {
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     try {
-                        await addCloudMerchantProjectScheme(this.form)
+                        await addCrmPlanDetail(this.form)
                         if (this.$route.query.id) {
                             this.$message.success('修改成功')
                         } else {
@@ -201,7 +221,7 @@ export default {
                         }
 
                         this.setNewTags((this.$route.fullPath).split('?')[0])
-                        this.$router.push('/comfortCloudMerchant/merchantEngine/merchantEnginePlan')
+                        this.$router.push('/goodwork/crmengineplan/crmenginedetail')
                         this.loading = false
                     } catch (error) {
                         this.loading = false
@@ -223,7 +243,6 @@ export default {
                 this.videoimageUrl = ''
             }
             this.form.schemeVideo = val.imageUrl
-            // this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
         },
         palyVideo () {
             this.innerVisible = true
@@ -236,47 +255,47 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.page-body-title {
-    margin-bottom: 20px;
-}
-.upload-tips {
-    font-size: 12px;
-    color: #999;
-    display: flex;
-    align-items: center;
-    height: 100px;
-    margin-left: 10px;
-}
-/deep/.avatar-uploader {
-    margin-right: 10px;
-}
-.editor-wrap {
-    margin-top: 20px;
-}
-/deep/.el-dialog__wrapper {
-    // z-index: 99999 !important;
-}
-/deep/.newTitle {
-    width: 500px !important;
-}
-.el-picker-panel {
-    z-index: 99999 !important;
-}
-/deep/.w-e-text-container {
-    z-index: 40 !important;
-}
-/deep/.w-e-menu {
-    z-index: 99 !important;
-}
-/deep/.editor-wrap {
-    margin-bottom: 23px !important;
-}
-/deep/.w-e-toolbar {
-    z-index: 99 !important;
-}
-.avatarVideo {
-    width: 95%;
-    margin: 0 auto;
-    display: block;
-}
+    .page-body-title {
+        margin-bottom: 20px;
+    }
+    .upload-tips {
+        font-size: 12px;
+        color: #999;
+        display: flex;
+        align-items: center;
+        height: 100px;
+        margin-left: 10px;
+    }
+    /deep/.avatar-uploader {
+        margin-right: 10px;
+    }
+    .editor-wrap {
+        margin-top: 20px;
+    }
+    /deep/.el-dialog__wrapper {
+        // z-index: 99999 !important;
+    }
+    /deep/.newTitle {
+        width: 500px!important;
+    }
+    .el-picker-panel {
+        z-index: 99999 !important;
+    }
+    /deep/.w-e-text-container {
+        z-index: 40 !important;
+    }
+    /deep/.w-e-menu {
+        z-index: 99 !important;
+    }
+    /deep/.editor-wrap{
+        margin-bottom: 23px  !important;
+    }
+    /deep/.w-e-toolbar {
+        z-index: 99 !important;
+    }
+    .avatarVideo{
+        width: 95%;
+        margin:0 auto;
+        display: block;
+    }
 </style>
