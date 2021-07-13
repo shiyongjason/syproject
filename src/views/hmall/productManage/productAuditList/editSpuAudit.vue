@@ -301,6 +301,11 @@ export default {
         }
     },
     watch: {
+        '$route' (to, from) {
+            if (to.name == 'editSpuAudit') {
+                this.init()
+            }
+        },
         'form.brandName' (value) {
             if (value == '') {
                 this.form.brandId = ''
