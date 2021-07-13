@@ -461,8 +461,8 @@ export default class FinalApproval extends Vue {
             advancePaymentRate: [{ required: true, message: '首付款比例必选', trigger: 'blur' },
                 {
                     validator: (rule, value, callback) => {
-                        if (value <= 0 || value >= 100) {
-                            return callback(new Error('首付款比例区间为（0，100）'))
+                        if (value < 0 || value > 100) {
+                            return callback(new Error('首付款比例区间为 [0，100]'))
                         } else {
                             callback()
                         }

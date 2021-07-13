@@ -528,6 +528,30 @@ export default [
                         component: () => import('@/views/crm/merchanEnginePlan/H5Preview.vue')
                     }
                 ]
+            },
+            {
+                path: 'liveplayer',
+                name: 'liveplayer',
+                meta: {
+                    title: '直播落地页管理',
+                    tagName: '直播落地页管理',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/liveplayer/index.vue')
+            },
+            {
+                path: 'playeredit',
+                name: 'playeredit',
+                meta: {
+                    title: '直播落地页',
+                    tagName: '直播落地页',
+                    parentName: '好橙工',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/liveplayer/edit.vue')
             }
         ]
     }
