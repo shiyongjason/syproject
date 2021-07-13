@@ -86,6 +86,17 @@
                         </HDatePicker>
                     </div>
                 </div>
+                 <div class="query-cont-col">
+                    <div class="query-col__label">橙工采会员：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.chengGongCaiLable">
+                            <el-option label="全部" value="">
+                            </el-option>
+                            <el-option v-for="item in chengArr" :key="item.key" :label="item.value" :value="item.key">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">客户经理：</div>
                     <div class="query-col__input">
@@ -109,6 +120,9 @@
                 </template>
                  <template slot="memberTag" slot-scope="scope">
                      {{memberTagArr[scope.data.row.memberTag-1].value}}
+                </template>
+                 <template slot="chengGongCaiLable" slot-scope="scope">
+                     {{chengLabel[scope.data.row.chengGongCaiLable]}}
                 </template>
                 <template slot="customerManager" slot-scope="scope">
                      <p>{{scope.data.row.customerManager||'-'}}</p>
@@ -138,7 +152,6 @@
     </div>
 </template>
 <script>
-// import { findProducts, findBossSource, changeSpustatus, getBrands } from './api/index'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import businessDrawer from './components/businessDrawer'
@@ -149,6 +162,12 @@ export default {
     data () {
         return {
             authen_detail: Auths.CRM_AUTHEN_DETAIL,
+            chengLabel: {
+                0: '橙工采会员(未激活)',
+                1: '橙工采初级会员',
+                2: '橙工采橙级会员'
+            },
+            chengArr: [{ key: 0, value: '橙工采会员(未激活)' }, { key: 1, value: '橙工采初级会员' }, { key: 2, value: '橙工采橙级会员' }],
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -181,6 +200,7 @@ export default {
                 { label: '经营区域', prop: 'areaname', width: '150' },
                 { label: '企业类型', prop: 'companyType', width: '100' },
                 { label: '客户分类', prop: 'customerType', width: '100', sortable: 'custom' },
+                { label: '橙工采会员', prop: 'chengGongCaiLable' },
                 { label: '认证状态', prop: 'isAuthentication' },
                 { label: '客户经理', prop: 'customerManager', width: '100' },
                 { label: '会员标签', prop: 'memberTag' },
