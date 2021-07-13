@@ -93,7 +93,7 @@ export const ORDER_SYNCHRONOUS_MAP = new Map([
 // 资金同步状态
 export const SYNCHRONOUS_OPTIONS = [
     { label: '全部', value: '' },
-    { label: '已同步', value: '20' },
+    { label: '已同步', value: '40' },
     { label: '未同步', value: '10' }
 ]
 export const SYNCHRONOUS_MAP = new Map([

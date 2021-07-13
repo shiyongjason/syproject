@@ -100,7 +100,7 @@
                     <h-button table @click="onseeTask(scope.data.row)">查看</h-button>
                     <h-button table v-if="scope.data.row.prepayStatus == 20&&scope.data.row.orderSyncStatus!= 40" @click="onAudit(scope.data.row)">订单同步</h-button>
                     <h-button table v-if="scope.data.row.prepayStatus == 20&&scope.data.row.fundSyncStatus != 40" @click="onFund(scope.data.row)">资金同步</h-button>
-                    <h-button table v-if="scope.data.row.orderSwitch == 1" @click="onClose(scope.data.row)">关闭</h-button>
+                    <h-button table v-if="scope.data.row.orderSwitch == 1&&scope.data.row.prepayStatus == 10" @click="onClose(scope.data.row)">关闭</h-button>
                 </template>
             </basicTable>
             <el-dialog title="关闭" width="500px" :visible.sync="closeOrderDialog" :close-on-click-modal=false @close='closeDialog'>
