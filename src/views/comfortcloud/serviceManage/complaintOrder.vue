@@ -98,7 +98,7 @@
                         </el-col>
                         <el-col :span="8">
                             <el-form-item label="客户姓名：" prop="customerName">
-                                <el-input v-model="detailData.customerName" maxlength="50" placeholder="请填写客户姓名"></el-input>
+                                <el-input v-model="detailData.customerName" maxlength="16" placeholder="请填写客户姓名"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
@@ -142,7 +142,7 @@
                     </el-form-item>
 
                     <el-form-item label="选择投诉产品：" prop="deviceInfoList">
-                        <el-button type="primary" @click="onAddProduct">+添加商品</el-button>
+                        <el-button type="primary" @click="onAddProduct">+添加设备</el-button>
                     </el-form-item>
 
                     <div class="query-cont-row" v-for="(productItem,index) in detailData.deviceInfoList" :key="index">
@@ -162,12 +162,13 @@
                         <el-button style="align-self: flex-start;margin-left: 20px;" type="primary" @click="()=> { onRemoveProduct(index) }">删除</el-button>
                     </div>
                     <el-form-item label="问题描述：" prop="description">
-                        <el-input style="width: 500px" v-model="detailData.description" maxlength="100" :rows="2" placeholder="请输入问题描述" />
+                        <el-input style="width: 500px" type="textarea" v-model="detailData.description" maxlength="500" show-word-limit :rows="2" placeholder="请输入问题描述" />
                     </el-form-item>
                     <el-form-item label="问题图片(不超过8张)：" ref="payImgs">
-                        <el-upload list-type="picture-card" :action="imageUploadAction" :data="imageUploadData" accept='image/jpeg, image/jpg, image/png' name='multiFile' :file-list="imgs" :multiple='true' :on-success="handleUploadImageSuccess" :limit="8" :on-exceed="uploadImageExceptMessage"
-                            :before-upload="beforeImageUpload" :on-remove="handleImageRemove">
-                            <i class="el-icon-plus"></i>
+                        <el-upload :action="imageUploadAction" :data="imageUploadData" accept='image/jpeg, image/jpg, image/png, audio/mp4, video/mp4' name='multiFile' :on-preview="handlePreview" :file-list="imgs" :multiple='true' :on-success="handleUploadImageSuccess" :limit="8"
+                            :on-exceed="uploadImageExceptMessage" :before-upload="beforeImageUpload" :on-remove="handleImageRemove">
+                            <el-button size="small" type="primary">点击上传</el-button>
+                            <!-- <i class="el-icon-plus"></i> -->
                         </el-upload>
                     </el-form-item>
                     <el-form-item label="经销商手机号：" prop="agencyMobile">
@@ -388,7 +389,6 @@ export default {
             findCloudMerchantShopCategoryList: 'findCloudMerchantShopCategoryList',
             findCloudMerchantShopCategoryTypeList: 'findCloudMerchantShopCategoryTypeList'
         }),
-
         addResloveRecord () {
             this.addRecordDialogVisible = true
         },
@@ -507,6 +507,7 @@ export default {
             this.categoryTypes.splice(index, 1)
         },
         handleUploadImageSuccess (response, file, fileList) {
+            console.log(response)
             if (response.code === 200) {
                 console.log(response.data.accessUrl)
                 this.detailData.pictures.push(response.data.accessUrl)
@@ -522,13 +523,24 @@ export default {
             const isJPG = file.type === 'image/jpg'
             const isJPEG = file.type === 'image/jpeg'
             const isPNG = file.type === 'image/png'
-            if (!(isJPG || isJPEG || isPNG)) {
+            const isMP4 = file.type === 'audio/mp4' || file.type === 'video/mp4'
+            if (!(isJPG || isJPEG || isPNG || isMP4)) {
                 this.$message({
                     type: 'error',
                     message: '文件格式不正确'
                 })
             }
-            return isJPG || isJPEG || isPNG
+            return isJPG || isJPEG || isPNG || isMP4
+        },
+        handlePreview (file) {
+            console.log(file)
+            let url = ''
+            if (file.response && file.response.data) {
+                url = file.response.data.accessUrl
+            } else {
+                url = file.url
+            }
+            window.open(url)
         },
         handleImageRemove (file, fileList) {
             let url = ''
@@ -758,6 +770,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/deep/ .el-upload-list--picture-card .el-upload-list__item {
+    width: 104px;
+    height: 104px;
+}
 .radio-container {
     padding: 10px;
     margin-left: 10px;
