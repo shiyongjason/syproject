@@ -77,7 +77,7 @@
                         </div>
                         <div class="info-layout-item">
                             <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>经销商首付款比例(%)：</font>
-                            <span>{{resolutionDetail.advancePaymentRate||'-'}}%</span>
+                            <span>{{resolutionDetail.advancePaymentRate>=0?resolutionDetail.advancePaymentRate:'-'}}%</span>
                         </div>
                     </div>
                     <div class="info-layout">
