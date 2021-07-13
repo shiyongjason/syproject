@@ -213,6 +213,12 @@
                                 <el-option label="4个月" :value="4"></el-option>
                                 <el-option label="5个月" :value="5"></el-option>
                                 <el-option label="6个月" :value="6"></el-option>
+                                <el-option label="7个月" :value="7"></el-option>
+                                <el-option label="8个月" :value="8"></el-option>
+                                <el-option label="9个月" :value="9"></el-option>
+                                <el-option label="10个月" :value="10"></el-option>
+                                <el-option label="11个月" :value="11"></el-option>
+                                <el-option label="12个月" :value="12"></el-option>
                             </el-select>
                         </el-form-item>
                     </div>
