@@ -505,6 +505,7 @@ export default {
         onRemoveProduct (index) {
             this.detailData.deviceInfoList.splice(index, 1)
             this.categoryTypes.splice(index, 1)
+            this.deviceIDonBlur(0)
         },
         handleUploadImageSuccess (response, file, fileList) {
             console.log(response)
@@ -714,7 +715,6 @@ export default {
             return true
         },
         hiddenAddRecord () {
-            console.log(this.recordTableData, 'xxxxx')
             if (this.recordTableData.length > 0) {
                 return this.recordTableData[0].status !== 20
             }
