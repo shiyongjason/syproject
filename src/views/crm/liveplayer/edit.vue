@@ -331,7 +331,9 @@ export default {
         width: 310px;
         margin: 10px auto;
         box-sizing: border-box;
-
+/deep/ img{
+    max-width: 100% !important;
+}
     }
 }
 .upload-tips {
