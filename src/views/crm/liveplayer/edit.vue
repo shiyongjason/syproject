@@ -31,8 +31,8 @@
                     <h3>产品介绍图：</h3>
                 </div>
                 <el-form-item label="详情：" prop="productIntroduc">
-                    <RichEditor :height="500" :menus="menus" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" :uploadImgServer="uploadImgServer" @change="$refs['form'].validateField('productIntroduc')" @blur="$refs['form'].validateField('productIntroduc')" hidefocus="true" ref="editors"
-                        style="outline: 0;margin-bottom: 12px;width:100%" tabindex="0" v-model="form.productIntroduc"></RichEditor>
+                    <RichEditor :height="500" :menus="menus" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" :uploadImgServer="uploadImgServer" @change="$refs['form'].validateField('productIntroduc')" @blur="$refs['form'].validateField('productIntroduc')" hidefocus="true"
+                        ref="editors" style="outline: 0;margin-bottom: 12px;width:100%" tabindex="0" v-model="form.productIntroduc"></RichEditor>
                 </el-form-item>
                 <el-form-item style="text-align: right">
                     <el-button @click="onSaveTemp()">保存模板</el-button>
@@ -52,7 +52,7 @@
 
                     <div class="player_wrap-tit">{{form.roomName}}</div>
                     <div class="playr_videos">
-                        <Video ref="videoPlay" :src="form.brandVideoUrl" class="player_video" controls="controls">您的浏览器不支持视频播放
+                        <Video ref="videoPlay" :src="form.brandVideoUrl" class="player_video" muted=true loop=true autoplay=true controls="controls" controlslist="nodownload nofullscreen noremoteplayback" :disablePictureInPicture="true">您的浏览器不支持视频播放
                         </Video>
                     </div>
                     <div class='live'>
@@ -225,6 +225,10 @@ export default {
         },
         onPreview () {
             this.drawer = true
+            this.$nextTick(() => {
+                // 调整音量为0
+                this.$refs.videoPlay.volume = 0
+            })
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
@@ -331,7 +335,9 @@ export default {
         width: 310px;
         margin: 10px auto;
         box-sizing: border-box;
-
+        /deep/ img {
+            max-width: 100% !important;
+        }
     }
 }
 .upload-tips {
@@ -401,7 +407,6 @@ export default {
             position: absolute;
             left: 6px;
             top: 6px;
-
         }
     }
 
@@ -477,9 +482,9 @@ export default {
             line-height: 18px;
             text-align: center;
             white-space: nowrap;
-               padding: 0 10px;
+            padding: 0 10px;
             z-index: 100;
-            border-radius:10px;
+            border-radius: 10px;
         }
     }
 }
