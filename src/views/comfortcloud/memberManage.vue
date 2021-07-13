@@ -38,6 +38,7 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">登录详情</el-button>
+                    <el-button class="orangeBtn" @click="onComplaintRecord(scope.data.row.phone)">投诉记录</el-button>
                 </template>
             </basicTable>
         </div>
@@ -77,6 +78,7 @@ export default {
                 { label: '昵称', prop: 'nick' },
                 { label: '手机号', prop: 'phone', width: '120px' },
                 { label: '家庭数', prop: 'homeCount' },
+                { label: '投诉次数', prop: 'complaintCount' },
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '是否已绑定微信', prop: 'wx_openid' }
             ],
@@ -149,6 +151,9 @@ export default {
         },
         onEdit (val) {
             this.$router.push({ path: '/comfortcloud/memberDetail', query: { phone: val.phone } })
+        },
+        onComplaintRecord (val) {
+            this.$router.push({ path: '/comfortCloud/serviceManage/complaintOrder', query: { phone: val } })
         },
         async onShowHome (val) {
             this.dialogVisible = true

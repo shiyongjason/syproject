@@ -341,3 +341,6 @@ export const CRM_WORK_FINAL_DELETEPUR = 100706
 
 // 好橙工项目 导出客户列表
 export const CRM_WORK_CUSTOMER_EXPORT = 100707
+
+// 舒适云项目 设备解绑
+export const MERCHANT_DEVICE_UNBIND = 100708
