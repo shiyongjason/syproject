@@ -14,7 +14,7 @@
                 <div class="balance-cont-row">
                     <div class="balance-cont-col">
                         <div class="balance-col-icon">
-                            <i class="iconfont icon-hosjoy_moneyall"></i>
+                            <i class="icon iconfont hosjoy_money"></i>
                         </div>
                         <div class="balance-col-money">
                             <p>当前额度<span>（元）</span></p>
@@ -23,7 +23,7 @@
                     </div>
                     <div class="balance-cont-col">
                         <div class="balance-col-icon">
-                            <i class="iconfont icon-hosjoy_moneyall"></i>
+                            <i class="iconfont hosjoy_order"></i>
                         </div>
                         <div class="balance-col-money">
                             <p>总代采<span>（元）</span></p>
@@ -32,7 +32,7 @@
                     </div>
                     <div class="balance-cont-col">
                         <div class="balance-col-icon">
-                            <i class="iconfont icon-hosjoy_moneyall"></i>
+                            <i class="iconfont hosjoy_operation"></i>
                         </div>
                         <div class="balance-col-money">
                             <p>总预付<span>（元）</span></p>
@@ -41,7 +41,7 @@
                     </div>
                     <div class="balance-cont-col">
                         <div class="balance-col-icon">
-                            <i class="iconfont icon-hosjoy_moneyall"></i>
+                            <i class="iconfont hosjoy_set"></i>
                         </div>
                         <div class="balance-col-money">
                             <p>总代付<span>（元）</span></p>
@@ -50,7 +50,7 @@
                     </div>
                     <div class="balance-cont-col">
                         <div class="balance-col-icon">
-                            <i class="iconfont icon-hosjoy_moneyall"></i>
+                            <i class="iconfont hosjoy_store"></i>
                         </div>
                         <div class="balance-col-money">
                             <p>总回款<span>（元）</span></p>
@@ -59,7 +59,7 @@
                     </div>
                     <div class="balance-cont-col">
                         <div class="balance-col-icon">
-                            <i class="iconfont icon-hosjoy_moneyall"></i>
+                            <i class="iconfont hosjoy_jgzx"></i>
                         </div>
                         <div class="balance-col-money">
                             <p>当前占用<span>（元）</span></p>
@@ -68,7 +68,7 @@
                     </div>
                     <div class="balance-cont-col">
                         <div class="balance-col-icon">
-                            <i class="iconfont icon-hosjoy_moneyall"></i>
+                            <i class="iconfont hosjoy_goods"></i>
                         </div>
                         <div class="balance-col-money">
                             <p>当前逾期未还<span>（元）</span></p>
@@ -150,13 +150,13 @@
                 </basicTable>
             </div>
             <div v-if="tabName == 'record'">
-                <span class="title-cont__btn" style="float: right;">
+                <span class="title-cont__btn" style="text-align: right;display: block;">
                     <h-button type='assist' @click="onWithdrawal">提现</h-button>
                 </span>
                 <div class="balance-cont-row">
                     <div class="balance-cont-col">
                         <div class="balance-col-icon">
-                            <i class="iconfont icon-hosjoy_moneyall"></i>
+                            <i class="iconfont hosjoy_money"></i>
                         </div>
                         <div class="balance-col-money">
                             <p>总回款<span>（元）</span></p>
@@ -165,7 +165,7 @@
                     </div>
                     <div class="balance-cont-col">
                         <div class="balance-col-icon">
-                            <i class="iconfont icon-hosjoy_moneyall"></i>
+                            <i class="iconfont hosjoy_order"></i>
                         </div>
                         <div class="balance-col-money">
                             <p>线下回款<span>（元）</span></p>
@@ -174,7 +174,7 @@
                     </div>
                     <div class="balance-cont-col">
                         <div class="balance-col-icon">
-                            <i class="iconfont icon-hosjoy_moneyall"></i>
+                            <i class="iconfont hosjoy_operation"></i>
                         </div>
                         <div class="balance-col-money">
                             <p>线上回款<span>（元）</span></p>
@@ -183,7 +183,7 @@
                     </div>
                     <div class="balance-cont-col">
                         <div class="balance-col-icon">
-                            <i class="iconfont icon-hosjoy_moneyall"></i>
+                            <i class="iconfont hosjoy_set"></i>
                         </div>
                         <div class="balance-col-money">
                             <p>已提现<span>（元）</span></p>
@@ -192,7 +192,7 @@
                     </div>
                     <div class="balance-cont-col">
                         <div class="balance-col-icon">
-                            <i class="iconfont icon-hosjoy_moneyall"></i>
+                            <i class="iconfont hosjoy_store"></i>
                         </div>
                         <div class="balance-col-money">
                             <p>可提现<span>（元）</span></p>
@@ -201,7 +201,7 @@
                     </div>
                     <div class="balance-cont-col">
                         <div class="balance-col-icon">
-                            <i class="iconfont icon-hosjoy_moneyall"></i>
+                            <i class="iconfont hosjoy_jgzx"></i>
                         </div>
                         <div class="balance-col-money">
                             <p>预付款<span>（元）</span></p>
@@ -777,6 +777,33 @@ export default {
                 135deg,
                 rgba(105, 192, 255, 1) 0%,
                 rgba(24, 144, 255, 1) 100%
+            );
+        }
+    }
+    &:nth-child(5) {
+        .balance-col-icon {
+            background: linear-gradient(
+                135deg,
+                rgba(105, 192, 255, 1) 0%,
+                rgba(24, 144, 255, 1) 100%
+            );
+        }
+    }
+    &:nth-child(6) {
+        .balance-col-icon {
+            background: linear-gradient(
+                135deg,
+                rgb(175, 105, 255) 0%,
+                rgb(105, 24, 255) 100%
+            );
+        }
+    }
+    &:nth-child(7) {
+        .balance-col-icon {
+            background: linear-gradient(
+                135deg,
+                rgba(255, 120, 117, 1) 0%,
+                rgba(255, 77, 79, 1) 100%
             );
         }
     }

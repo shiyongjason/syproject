@@ -100,7 +100,7 @@
                     <h-button table @click="onseeTask(scope.data.row)">查看</h-button>
                     <h-button table v-if="scope.data.row.prepayStatus == 20&&scope.data.row.orderSyncStatus!= 40" @click="onAudit(scope.data.row)">订单同步</h-button>
                     <h-button table v-if="scope.data.row.prepayStatus == 20&&scope.data.row.fundSyncStatus != 40" @click="onFund(scope.data.row)">资金同步</h-button>
-                    <h-button table v-if="scope.data.row.orderSwitch == 1" @click="onClose(scope.data.row)">关闭</h-button>
+                    <h-button table v-if="scope.data.row.orderSwitch == 1&&scope.data.row.prepayStatus == 10" @click="onClose(scope.data.row)">关闭</h-button>
                 </template>
             </basicTable>
             <el-dialog title="关闭" width="500px" :visible.sync="closeOrderDialog" :close-on-click-modal=false @close='closeDialog'>
@@ -156,7 +156,7 @@ export default {
             tableLabel: [
                 { label: '代采订单号', prop: 'agentOrderNo' },
                 { label: 'mis订单号', prop: 'misOrderNo' },
-                { label: '提交时间', prop: 'createTime', formatters: 'dateTimes' },
+                { label: '提交时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '代采订单总金额', prop: 'totalAmount' },
                 { label: '代采商品数量', prop: 'quantity' },
                 { label: '预付款', prop: 'prepayAmount' },
@@ -164,7 +164,9 @@ export default {
                 { label: '管理员账号', prop: 'username' },
                 { label: '店铺名称', prop: 'shopName' },
                 { label: '预付款状态', prop: 'prepayStatus' },
-                { label: '确认时间', prop: 'prepayConfirmTime', formatters: 'dateTimes' },
+                { label: '打款账号', prop: 'prepayBankCardNo' },
+                { label: '打款账户名', prop: 'prepayAccountName' },
+                { label: '确认时间', prop: 'prepayConfirmTime', formatters: 'dateTime' },
                 { label: '订单状态', prop: 'orderSwitch' },
                 { label: '订单同步状态', prop: 'orderSyncStatus' },
                 { label: '资金同步状态', prop: 'fundSyncStatus' },

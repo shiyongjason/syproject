@@ -301,8 +301,8 @@ export default {
         }
     },
     watch: {
-        $route () {
-            if (this.$route.query.id) {
+        '$route' (to, from) {
+            if (to.name == 'editSpuAudit') {
                 this.init()
             }
         },
