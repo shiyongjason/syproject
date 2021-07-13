@@ -183,7 +183,7 @@
                 </el-form>
                 <div v-else>
                     <div class="query-cont-col">
-                        <div class="query-col-title">
+                        <div class="query-col-title" v-if="hiddenAddRecord">
                             <el-button type="primary" plain class="ml20" @click="addResloveRecord">+新增解决记录</el-button>
                         </div>
                     </div>
@@ -710,6 +710,13 @@ export default {
         showDetailForm () {
             if (this.detailData.id > 0 && this.radio === '解决记录') {
                 return false
+            }
+            return true
+        },
+        hiddenAddRecord () {
+            console.log(this.recordTableData, 'xxxxx')
+            if (this.recordTableData.length > 0) {
+                return this.recordTableData[0].status !== 20
             }
             return true
         },
