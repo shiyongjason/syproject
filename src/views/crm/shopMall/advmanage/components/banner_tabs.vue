@@ -4,77 +4,87 @@
         <div class="baner-btn mb20">
             <el-button type="primary" @click="onAddBanner">新增banner</el-button>
         </div>
-        <hosJoyTable isShowIndex ref="hosjoyTable" align="center"  border stripe :column="tableLabel" :data="tableData" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
+        <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border showPagination stripe :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList"  actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
             <template #action="slotProps">
-                <div v-if="!slotProps.data.row.homePage">
-                    <h-button table @click="onEditLive(slotProps.data.row)">编辑</h-button>
-                    <h-button table v-if="slotProps.data.row.status==1" @click="onPutHome(slotProps.data.row)">删除</h-button>
-                    <h-button table @click="onDelete(slotProps.data.row)">启用</h-button>
-                    <h-button table @click="onDelete(slotProps.data.row)">上移</h-button>
-                    <h-button table @click="onDelete(slotProps.data.row)">下移</h-button>
+                <div v-if="slotProps.data.row.status==2">
+                    <h-button table @click="onEdit(slotProps.data.row)">编辑</h-button>
+                    <h-button table @click="onDelete(slotProps.data.row)">删除</h-button>
+                    <h-button table @click="onOperate(slotProps.data.row,'enable')">启用</h-button>
+                    <h-button table @click="onMove(slotProps.data.row,'up')" v-if="slotProps.data.$index!=0">上移</h-button>
+                    <h-button table @click="onMove(slotProps.data.row,'down')" v-if="slotProps.data.$index!=tableData.length-1">下移</h-button>
                 </div>
                 <div v-else>
-                    <h-button table @click="onNoHome(slotProps.data.row)">停用</h-button>
+                    <h-button table @click="onOperate(slotProps.data.row,'disable')" v-if="slotProps.data.row.status==1">停用</h-button>
                 </div>
             </template>
         </hosJoyTable>
-        <el-dialog title="新增banner" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
-                <el-form-item label="banner名称：" prop="name">
-                    <el-input v-model="ruleForm.name"></el-input>
+        <el-dialog title="新增banner" :visible.sync="dialogVisible" width="30%" :before-close="handleClose" :close-on-click-modal=false>
+            <el-form :model="bannerForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
+                <el-form-item label="banner名称：" prop="bannerName">
+                    <el-input v-model.trim="bannerForm.bannerName" maxlength="20"></el-input>
                 </el-form-item>
-                <el-form-item label="bannar位置：" prop="name">
-                    <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
+                <el-form-item label="banner位置：" prop="location">
+                    <el-select v-model="bannerForm.location" placeholder="请选择">
+                        <el-option label='商城首页' :value=1></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="跳转链接：" >
-                    <el-input v-model="ruleForm.name"></el-input>
+                <el-form-item label="跳转链接：">
+                    <el-input v-model.trim="bannerForm.linkUrl" maxlength="100"></el-input>
                 </el-form-item>
-                 <el-form-item label="banner图：" prop="name">
-                        <OssFileHosjoyUpload v-model="ruleForm.payVouchers" :showPreView='true' :fileSize=20 :fileNum=1 :uploadParameters='uploadParameters' @successCb="$refs.form.clearValidate()" accept=".jpg,.png,.jpeg">
-                        </OssFileHosjoyUpload>
-                        <p>图片尺寸为750*300，不超过2M，仅支持jpeg、jpg、png格式</p>
+                <el-form-item label="banner图：" prop="bannerArr" ref="bannerArrs">
+                    <HosJoyUpload v-model="bannerForm.bannerArr" :showPreView='true' :fileSize=2 :fileNum=1 :uploadParameters='uploadParameters' :action="action" @successCb="$refs['bannerArrs'].clearValidate()" accept=".jpg,.png,.jpeg">
+                    </HosJoyUpload>
+                    <p>图片尺寸为750*300，不超过2M，仅支持jpeg、jpg、png格式</p>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button @click="handleClose">取 消</el-button>
+                <el-button type="primary" @click="onSave">确 定</el-button>
             </span>
         </el-dialog>
 
     </div>
 </template>
 <script lang='tsx'>
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
-
+import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import { CreateElement } from 'vue'
-
+import { getBannerPage, bannerEnable, bannerDisable, bannerMoveDown, bannerMoveUp, bannerDelete, getBannerDetail, addBanner, editBanner } from '../api/index'
+import { ShopBannerAddRequest } from '@/interface/hbp-shop'
+import { deepCopy } from '@/utils/utils'
+import { ccpBaseUrl } from '@/api/config'
 @Component({
     name: 'Bannertabs',
     components: {
         hosJoyTable,
-        OssFileHosjoyUpload
+        HosJoyUpload
     }
 })
 export default class Bannertabs extends Vue {
-        // @Prop({ default: '' }) readonly data!:RespLoanHandoverInfo
-        @Prop({ default: '' }) readonly userInfo!:any
-        @Prop({ default: '' }) readonly paymentOrderId!:any
         $refs!: {
             form: HTMLFormElement
+        }
+
+        queryParams:object={
+            pageNumber: 1,
+            pageSize: 10
         }
         uploadParameters = {
             updateUid: '',
             reservedName: false
         }
         dialogVisible:boolean = false
-        ruleForm:object={
-            payVouchers: []
+        action=ccpBaseUrl + 'common/files/upload-old'
+        bannerForm:ShopBannerAddRequest & {bannerArr?:any[], id?:any} ={
+            'bannerName': '',
+            'bannerPicUrl': '',
+            'linkUrl': '',
+            'location': '',
+            bannerArr: []
+
         }
+        private _bannerForm = {}
         page = {
             sizes: [10, 20, 50, 100],
             total: 0
@@ -83,30 +93,51 @@ export default class Bannertabs extends Vue {
         tableData:any[] | [] = []
 
         tableLabel: tableLabelProps = [
-            { label: 'bannar名称', prop: 'deviceBrand', width: '120' },
-            { label: 'bannar图', prop: 'upstreamSupplierName', width: '120' },
-            { label: '跳转链接', prop: 'upstreamSupplierType', width: '150', dicData: [{ value: 1, label: '厂商' }, { value: 2, label: '代理商' }, { value: 3, label: '经销商' }] },
-            { label: 'banner位置', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] },
-            { label: '创建时间',
-                prop: 'deviceCategoryType',
+            { label: 'banner名称', prop: 'bannerName' },
+            { label: 'banner图',
+                prop: 'bannerPicUrl',
                 render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
                     return (
-                        <div>
-                        1
-                        </div>
+                        <span class="label_img">
+                            {
+                                scope.row.bannerPicUrl
+                                    ? <a href={scope.row.bannerPicUrl} target="_blank"><img src={scope.row.bannerPicUrl}/></a>
+                                    : '-'
+                            }
+                        </span>
                     )
                 }
             },
-            { label: 'bannar状态', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] }
+            { label: '跳转链接', prop: 'linkUrl' },
+            { label: 'banner位置', prop: 'location', dicData: [{ value: 1, label: '商城首页' }] },
+            { label: '创建时间',
+                prop: 'createTime',
+                displayAs: 'YYYY-MM-DD HH:mm:ss'
+            },
+            { label: 'banner状态', prop: 'status', dicData: [{ value: 1, label: '启用' }, { value: 2, label: '停用' }] }
         ]
 
         get rules () {
             let rules = {
-                name: [
-                    { required: true, message: '请选择变更交接状态', trigger: 'change' }
+                bannerName: [
+                    { required: true, message: '请输入banner名称', trigger: 'blur' }
+                ],
+                location: [
+                    { required: true, message: '请选择banner位置', trigger: 'change' }
+                ],
+                bannerArr: [
+                    { required: true, message: '请上传banner图' }
                 ]
             }
             return rules
+        }
+
+        @Watch('bannerArr') private getBArr (val) {
+            if (val.length > 0) {
+                // if (this.$refs['bannerArrs']) {
+                //     this.$refs['ruleForm'].clearValidate('bannerArr')
+                // }
+            }
         }
 
         handleClose () {
@@ -114,10 +145,100 @@ export default class Bannertabs extends Vue {
             this.$refs['ruleForm'].clearValidate()
         }
         onAddBanner () {
+            this.bannerForm = deepCopy(this._bannerForm)
+
             this.dialogVisible = true
+            this.$nextTick(() => {
+                this.$refs['ruleForm'].clearValidate()
+            })
+        }
+
+        async onFindList () {
+            const { data } = await getBannerPage(this.queryParams)
+            this.tableData = data.records
+            this.page.total = data.total as number
+        }
+
+        async onEdit (val) {
+            const { data } = await getBannerDetail(val.id)
+            this.bannerForm = { ...this.bannerForm, ...data }
+            this.bannerForm.bannerArr = [{ fileUrl: data.bannerPicUrl, fileName: data.bannerPicUrl }]
+            this.dialogVisible = true
+        }
+        onSave () {
+            this.$refs['ruleForm'].validate(async (valid) => {
+                if (valid) {
+                    this.bannerForm.bannerPicUrl = this.bannerForm.bannerArr[0].fileUrl
+                    if (this.bannerForm.id) {
+                        await editBanner(this.bannerForm)
+                    } else {
+                        await addBanner(this.bannerForm)
+                        this.$message.success('bannar新增成功~')
+                    }
+
+                    this.dialogVisible = false
+                    this.onFindList()
+                }
+            })
+        }
+
+        onOperate (val, type) {
+            if (type == 'enable') {
+                this.$confirm('确定启用该条banner吗？启用后该条信息将展示在小程序端对应的位置', '启用确认', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(async () => {
+                    await bannerEnable(val.id)
+                    this.$message.success('banner启用成功~')
+                    this.onFindList()
+                }).catch(() => {
+
+                })
+            } else {
+                this.$confirm('确定停用该条banner吗？停用后该条信息在小程序端不可见', '停用确认', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(async () => {
+                    await bannerDisable(val.id)
+                    this.$message.success('banner停用成功~')
+                    this.onFindList()
+                }).catch(() => {
+
+                })
+            }
+        }
+
+        async onMove (val, type) {
+            if (type == 'up') {
+                await bannerMoveUp(val.id)
+            } else {
+                await bannerMoveDown(val.id)
+            }
+            this.onFindList()
+        }
+
+        onDelete (val) {
+            this.$confirm('确定删除该条bannar吗？', '删除确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await bannerDelete(val.id)
+                this.$message.success('bannar删除成功~')
+                this.onFindList()
+            }).catch(() => {
+
+            })
+        }
+
+        mounted () {
+            this.onFindList()
+            this._bannerForm = deepCopy(this.bannerForm)
         }
 }
 </script>
 <style lang='scss' scoped>
-// @import "./css.scss";
+@import "../css.scss";
 </style>

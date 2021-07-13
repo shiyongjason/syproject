@@ -4,7 +4,8 @@
         <div class="baner-btn mb20">
             <el-button type="primary">新增品类推荐</el-button>
         </div>
-        <hosJoyTable isShowIndex ref="hosjoyTable" align="center"  border stripe :column="tableLabel" :data="tableData" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
+        <hosJoyTable isShowIndex ref="hosjoyTable" align="center"  border stripe :column="tableLabel" :data="tableData" actionWidth='250'
+        :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList"  isAction :isActionFixed='tableData&&tableData.length>0'>
             <template #action="slotProps">
 
                 <h-button table @click="onDelete(slotProps.data.row)">上移</h-button>
@@ -92,6 +93,10 @@ export default class Categorytabs extends Vue {
         handleClose () {
             this.dialogVisible = false
             this.$refs['ruleForm'].clearValidate()
+        }
+
+        onFindList () {
+
         }
 }
 </script>
