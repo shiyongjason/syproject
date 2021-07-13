@@ -166,7 +166,7 @@ export default {
             ],
             tableData: [],
             tableLabelLog: [
-                { label: '时间', prop: 'createTime', formatters: 'dateTimes' },
+                { label: '时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '操作人', prop: 'operator' },
                 { label: '操作内容', prop: 'operateMotionDesc' }
             ],

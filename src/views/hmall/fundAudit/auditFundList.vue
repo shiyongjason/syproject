@@ -124,7 +124,7 @@ export default {
             },
             tableLabel: [
                 { label: '代采订单号', prop: 'agentOrderNo' },
-                { label: '提交时间', prop: 'createTime', formatters: 'dateTimes' },
+                { label: '提交时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '代采订单总金额', prop: 'totalAmount' },
                 { label: '代采商品数量', prop: 'quantity' },
                 { label: '企业名称', prop: 'companyName' },
@@ -133,7 +133,7 @@ export default {
                 { label: '所属分部', prop: 'subsectionName' },
                 { label: '店铺名称', prop: 'shopName' },
                 { label: '审核状态', prop: 'orderStatus' },
-                { label: '审核时间', prop: 'auditTime', formatters: 'dateTimes' },
+                { label: '审核时间', prop: 'auditTime', formatters: 'dateTime' },
                 { label: '回款期限', prop: 'period' }
             ],
             drawer: false,

@@ -124,7 +124,7 @@ export default {
             tableLabel: [
                 { label: '代采订单号', prop: 'agentOrderNo' },
                 { label: 'mis订单号', prop: 'misOrderNo' },
-                { label: '提交时间', prop: 'submitTime', formatters: 'dateTimes' },
+                { label: '提交时间', prop: 'submitTime', formatters: 'dateTime' },
                 { label: '代采订单总金额', prop: 'totalAmount' },
                 { label: '待回尾款', prop: 'leftRepayAmount' },
                 { label: '提前还款金额', prop: 'repayAmount' },
@@ -135,7 +135,7 @@ export default {
                 { label: '管理员账号', prop: 'username' },
                 { label: '平台确认状态', prop: 'repayStatus' },
                 { label: '资金同步状态', prop: 'fundSyncStatus' },
-                { label: '确认时间', prop: 'platformConfirmTime', formatters: 'dateTimes' },
+                { label: '确认时间', prop: 'platformConfirmTime', formatters: 'dateTime' },
                 { label: '备注', prop: 'rejectReason' }
             ],
             copyParams: {},
