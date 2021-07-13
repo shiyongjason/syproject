@@ -2,7 +2,10 @@ const SentryPlugin = require('@sentry/webpack-plugin')
 // const SentryPlugin = require('webpack-sentry-plugin')
 module.exports = {
     devServer: {
-        // host: '192.168.27.33'
+        port: 8082,
+        open: false,
+        sockHost: 'http://localhost:8081/',
+        disableHostCheck: true
     },
     productionSourceMap: false,
     configureWebpack: config => {
