@@ -727,8 +727,8 @@ export default {
     },
     beforeRouteLeave (to, from, next) {
         if (to.name != 'productList') {
-            // clearCache('productList')
             clearCache('productList')
+            // clearCache('productList')
         }
         next()
     }
