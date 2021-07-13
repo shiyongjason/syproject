@@ -370,10 +370,10 @@ export default {
                     { required: true, message: '请选择沟通日期', trigger: 'blur' }
                 ],
                 status: [
-                    { required: true, message: '请选择沟通结果', trigger: 'blur' }
+                    { required: true, message: '请选择解决结果', trigger: 'blur' }
                 ],
                 content: [
-                    { required: true, message: '请输入沟通内容', trigger: 'change' }
+                    { required: true, message: '请输入解决内容', trigger: 'change' }
                 ]
             },
             addOrderDialogVisible: false,
@@ -412,7 +412,6 @@ export default {
         createRecordConform () {
             this.recordData.operator = this.userInfo.employeeName
             this.recordData.workOrderId = this.detailData.id
-            console.log(this.recordData)
             this.loading = true
             this.$refs['addRecordForm'].validate(async (valid) => {
                 if (valid) {
@@ -426,6 +425,7 @@ export default {
                         this.loading = false
                         this.createRecordCancel()
                         this.onQueryComplaintRecord()
+                        this.onQuery()
                         this.$message({
                             message: `操作成功`,
                             type: 'success'
