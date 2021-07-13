@@ -192,8 +192,16 @@ export default {
             }
         },
         onBack () {
-            this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/goodwork/crmengineplan/crmenginedetail')
+            this.$confirm('取消后，文本将不被保存', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.setNewTags((this.$route.fullPath).split('?')[0])
+                this.$router.push('/goodwork/crmengineplan/crmenginedetail')
+            }).catch(() => {
+
+            })
         },
 
         onSave () {
