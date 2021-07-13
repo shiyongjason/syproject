@@ -11,8 +11,8 @@
                     <h-button table v-if="slotProps.data.row.status!=3" @click="onDisable(slotProps.data.row)">停用</h-button>
                     <h-button table @click="onEdit(slotProps.data.row)">编辑</h-button>
                     <h-button table @click="onDelete(slotProps.data.row)">删除</h-button>
-                    <h-button table @click="onMoveFloor(slotProps.data.row,1)">上移</h-button>
-                    <h-button table @click="onMoveFloor(slotProps.data.row,2)">下移</h-button>
+                    <h-button table @click="onMoveFloor(slotProps.data.row,1)" v-if="slotProps.data.row.$index==0">上移</h-button>
+                    <h-button table @click="onMoveFloor(slotProps.data.row,2)"  v-if="slotProps.data.row.$index==tableData.length-1">下移</h-button>
             </template>
         </hosJoyTable>
 

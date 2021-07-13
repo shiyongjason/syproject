@@ -37,8 +37,8 @@
             <div class="mb20">
                 <h-button type="primary">批量选择</h-button>
             </div>
-            <hosJoyTable ref="hosjoyTable" align="center" border showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" :row-class-name="rowClass" :row-style='rowClass' :selectable="selectable"
-                :pageSizes='page.size' actionWidth='250' isAction :height="500" @selection-change="handleSelectionChange" isShowselection :isActionFixed='tableData&&tableData.length>0'>
+            <hosJoyTable ref="hosjoyTable" align="center" border showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" :tableRowClassName="rowClass"  :selectable="selectable"   :pageSizes='page.sizes'
+               actionWidth='250' isAction :height="500" @selection-change="handleSelectionChange" isShowselection :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
                     <h-button table v-if="!slotProps.data.row.checked" @click="onSelect(slotProps.data)">选择</h-button>
                     <h-button table v-if="slotProps.data.row.checked" @click="onNoSelect(slotProps.data)">取消选择</h-button>
@@ -50,7 +50,7 @@
                 <template #action="slotProps">
                     <h-button table @click="onMove(slotProps.data, 'up')" v-if="slotProps.data.$index!=0">上移</h-button>
                     <h-button table @click="onMove(slotProps.data, 'down')" v-if="slotProps.data.$index!=tableForm.length-1">下移</h-button>
-                    <h-button table>取消选择</h-button>
+                    <h-button table @click="onCancelChoose(slotProps.data.row)">取消选择</h-button>
                 </template>
             </hosJoyTable>
             <div class="floot-bot">
@@ -69,7 +69,7 @@ import Bannertabs from './components/banner_tabs.vue' // 组件导入需要 .vue
 import Categorytabs from './components/category_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import Floortabs from './components/floor_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-import { getFloorDetail, getSpuPage } from './api/index'
+import { getFloorDetail, getSpuPage, saveFloor } from './api/index'
 import filters from '@/utils/filters'
 import { RespBossShopFloorDetail } from '@/interface/hbp-shop'
 import moment from 'moment'
@@ -98,21 +98,25 @@ export default class Flooredit extends Vue {
         selectData = []
         private _queryParams = {}
         queryParams: any = {
-            pageSize: 15,
+            pageSize: 10,
             pageNumber: 1,
             name: '',
             categoryContent: '',
             brandName: ''
         }
 
-        floorForm:RespBossShopFloorDetail={ } as RespBossShopFloorDetail
+        floorForm:object={
+            floorName: '',
+            reqBossFloorSpuList: []
+        }
 
         page = {
-            sizes: [15, 25, 50, 100],
+            // sizes: [15, 25, 50, 100],
+            sizes: [10, 15, 50, 100],
             total: 0
         }
 
-        tableData:any[] | [] = []
+        tableData:any[] = []
         tableLabel:tableLabelProps = [
             { label: 'SPU编码', prop: 'code' },
             { label: '商品名称', prop: 'name' },
@@ -171,26 +175,34 @@ export default class Flooredit extends Vue {
         handleSelectionChange (val) {
             this.selectData = val
         }
-        // 选中行
+        // 选中行 换色
         rowClass ({ row, rowIndex }) {
-            return 'slecleRowColor'
+            if (row.checked) {
+                return 'slecleRowColor '
+            }
         }
 
         async onFindList () {
             const { data: spu } = await getSpuPage(this.queryParams)
             this.tableData = spu.records
             this.page.total = spu.total as number
+            // 查询时候 查下状态
+
+            if (this.tableForm.length > 0) {
+                this.tableData && this.tableData.map((item, index) => {
+                    this.tableForm.indexOf(item)
+                })
+            }
         }
 
         onSelect (val) {
-            console.log(val)
             // val.row.checked = true
             this.$set(this.tableData[val.$index], 'checked', true)
             this.tableForm.push(val.row)
         }
         onNoSelect (val) {
             this.$set(val.row, 'checked', false)
-            let one = this.tableForm.indexOf(this.tableForm.filter(i => val.skuId == i.skuId)[0])
+            let one = this.tableForm.indexOf(this.tableForm.filter(i => val.id == i.id)[0])
             console.log('one', one)
             this.tableForm.splice(one, 1)
         }
@@ -221,22 +233,30 @@ export default class Flooredit extends Vue {
             }
         }
 
-        @Watch('selectData') private onSelectData (data) {
-            console.log(111)
-            this.selectRow = []
-            if (data.length > 0) {
-                data.forEach((item, index) => {
-                    this.selectRow.push(item.skuId)
-                })
-            }
+        // @Watch('selectData') private onSelectData (data) {
+        //     console.log(111, data)
+        //     this.selectRow = []
+        //     if (data.length > 0) {
+        //         data.forEach((item, index) => {
+        //             this.selectRow.push(item.id)
+        //         })
+        //     }
+        // }
+        onCancelChoose (val) {
+            console.log(val)
+            console.log(this.tableData.filter(i => val.id == i.id)[0])
+            let one = this.tableData.indexOf(this.tableData.filter(i => val.id == i.id)[0])
+            console.log('00', one)
+            this.$set(this.tableData[one], 'checked', false)
+            this.tableForm.splice(val.$index, 1)
         }
 
         onSave () {
-
+            saveFloor(this.floorForm)
         }
 
         onCancel () {
-
+            this.$router.push('/goodwork/advmanage')
         }
         async mounted () {
             if (this.$route.query.id) {

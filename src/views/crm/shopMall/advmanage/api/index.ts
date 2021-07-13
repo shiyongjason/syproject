@@ -37,3 +37,9 @@ export const getFloorDetail: (params:any) => AxiosPromise<Shops.RespBossShopFloo
 export const getSpuPage: (params:any) => AxiosPromise<Shops.IPageRespBossSpuPage> = (params) => {
     return axios.get(`/shop/api/boss/spu/page`, { params })
 }
+// 新增楼层
+export const saveFloor: (params:any) => AxiosPromise<Shops.ReqBossFloorAdd> = (params) => {
+    return axios.get(`/shop/api/boss/shop/floor`, params)
+}
+
+// 
