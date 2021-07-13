@@ -207,6 +207,7 @@
                         <!--  -->
                         <el-form-item label="剩余货款支付周期：" prop='remainPaymentCycle' style="marginLeft:-9px;">
                             <el-select v-model="purForm.remainPaymentCycle" placeholder="请选择">
+
                                 <el-option label="1个月" :value="1"></el-option>
                                 <el-option label="2个月" :value="2"></el-option>
                                 <el-option label="3个月" :value="3"></el-option>
