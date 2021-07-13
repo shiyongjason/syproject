@@ -27,7 +27,7 @@
                     <el-select v-model="queryParams.status" style="width: 100%" clearable>
                         <el-option label="待处理" value="0"></el-option>
                         <el-option label="处理中" value="10"></el-option>
-                        <el-option label="已解决" value="20"></el-option>
+                        <el-option label="已处理" value="20"></el-option>
                     </el-select>
                 </div>
             </div>
@@ -172,13 +172,13 @@
                         </el-upload>
                     </el-form-item>
                     <el-form-item label="经销商手机号：" prop="agencyMobile">
-                        <el-input v-model="detailData.agencyMobile" maxlength="100" :rows="1" placeholder="请输入经销商手机号" />
+                        <el-input v-model="detailData.agencyMobile" maxlength="11" :rows="1" placeholder="请输入经销商手机号" />
                     </el-form-item>
                     <el-form-item label="经销商姓名：" prop="agencyName">
-                        <el-input v-model="detailData.agencyName" maxlength="100" :rows="1" placeholder="请输入经销商姓名" />
+                        <el-input v-model="detailData.agencyName" maxlength="16" :rows="1" placeholder="请输入经销商姓名" />
                     </el-form-item>
                     <el-form-item label="经销商企业名称：" prop="agencyCompanyName">
-                        <el-input v-model="detailData.agencyCompanyName" maxlength="100" :rows="1" placeholder="请输入经销商企业名称" />
+                        <el-input v-model="detailData.agencyCompanyName" maxlength="50" :rows="1" placeholder="请输入经销商企业名称" />
                     </el-form-item>
                 </el-form>
                 <div v-else>
@@ -207,7 +207,7 @@
             <div class="el-dialog-div">
                 <el-form :model="recordData" :rules="addRecordRules" ref="addRecordForm" label-width="140px">
                     <el-form-item label="沟通时间" prop="processTime">
-                        <el-date-picker v-model="recordData.processTime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-ddTHH:mm:ss" type="datetime" placeholder="选择日期">
+                        <el-date-picker v-model="recordData.processTime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-ddTHH:mm:ss" type="datetime" placeholder="选择日期" :picker-options="complatintPickerOptionsStart">
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="解决结果：" prop="status">
