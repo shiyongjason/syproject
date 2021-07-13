@@ -14,10 +14,10 @@
             <div class="query-cont-col">
                 <div class="query-col-title">投诉时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.startTime" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-ddTHH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                     <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                    <el-date-picker v-model="queryParams.endTime" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-ddTHH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                     </el-date-picker>
                 </div>
             </div>
@@ -87,7 +87,7 @@
                 </div>
                 <el-form :model="detailData" :rules="addOrderRules" ref="addOrderForm" label-width="140px" v-if="showDetailForm">
                     <el-form-item label="投诉时间" prop="time">
-                        <el-date-picker v-model="detailData.time" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-ddTHH:mm:ss" type="datetime" placeholder="选择日期">
+                        <el-date-picker v-model="detailData.time" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-ddTHH:mm:ss" type="datetime" placeholder="选择日期" :picker-options="complatintPickerOptionsStart">
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label-width="0">
@@ -148,12 +148,12 @@
                     <div class="query-cont-row" v-for="(productItem,index) in detailData.deviceInfoList" :key="index">
                         <el-form-item label="归属品类：" :prop="'deviceInfoList.' + index + '.categoryId'" :rules="addOrderRules.categoryId">
                             <el-select v-model="productItem.categoryId" @change="()=> { selectChanged(index) }">
-                                <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in allCategorys" :key="item.categoryId"></el-option>
+                                <el-option :label="item.name" :value="item.id" v-for="item in allCategorys" :key="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="商品型号：" label-width="100px" :prop="'deviceInfoList.' + index + '.specificationId'" :rules="addOrderRules.specificationId">
                             <el-select v-model="productItem.specificationId" @change="()=>{selectSpecificationIdChanged(index)}">
-                                <el-option :label="item.specificationName" :value="item.specificationId" v-for="item in categoryTypes[index]" :key="item.specificationId"></el-option>
+                                <el-option :label="item.name" :value="item.type" v-for="item in categoryTypes[index]" :key="item.type"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="设备ID" label-width="100px" :prop="'deviceInfoList.' + index + '.deviceId'" :rules="addOrderRules.deviceId">
@@ -164,11 +164,11 @@
                     <el-form-item label="问题描述：" prop="description">
                         <el-input style="width: 500px" type="textarea" v-model="detailData.description" maxlength="500" show-word-limit :rows="2" placeholder="请输入问题描述" />
                     </el-form-item>
-                    <el-form-item label="问题图片(不超过8张)：" ref="payImgs">
+                    <el-form-item label="问题图片：" ref="payImgs">
                         <el-upload :action="imageUploadAction" :data="imageUploadData" accept='image/jpeg, image/jpg, image/png, audio/mp4, video/mp4' name='multiFile' :on-preview="handlePreview" :file-list="imgs" :multiple='true' :on-success="handleUploadImageSuccess" :limit="8"
                             :on-exceed="uploadImageExceptMessage" :before-upload="beforeImageUpload" :on-remove="handleImageRemove">
                             <el-button size="small" type="primary">点击上传</el-button>
-                            <!-- <i class="el-icon-plus"></i> -->
+                            <div slot="tip" class="el-upload__tip">不超过8张（支持JPEG、PNG、MP4格式）</div>
                         </el-upload>
                     </el-form-item>
                     <el-form-item label="经销商手机号：" prop="agencyMobile">
@@ -307,7 +307,7 @@ export default {
             recordTableData: [],
             tableLabel: [
                 { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '投诉时间', prop: 'time', formatters: 'dateTime' },
+                { label: '投诉时间', prop: 'time', displayAs: 'yyyy-MM-DD HH:mm' },
                 { label: '工单号', prop: 'workOrderNo' },
                 { label: '创建人', prop: 'creator' },
                 { label: '客户姓名', prop: 'customerName' },
@@ -386,8 +386,8 @@ export default {
             getComplaintOrderDetail: 'getComplaintOrderDetail',
             getComplaintProcessOrderList: 'getComplaintProcessOrderList',
             getComplaintProcessOrderDetail: 'getComplaintProcessOrderDetail',
-            findCloudMerchantShopCategoryList: 'findCloudMerchantShopCategoryList',
-            findCloudMerchantShopCategoryTypeList: 'findCloudMerchantShopCategoryTypeList'
+            findCloudMerchantShopCategoryList: 'findCloudOutboundCategoryList',
+            findCloudMerchantShopCategoryTypeList: 'findCloudOutboundDeviceList'
         }),
         addResloveRecord () {
             this.addRecordDialogVisible = true
@@ -704,8 +704,8 @@ export default {
             complaintOrderDetail: 'complaintOrderDetail',
             complaintProcessOrderList: 'complaintProcessOrderList',
             complaintProcessOrderDetail: 'complaintProcessOrderDetail',
-            cloudMerchantShopCategoryList: 'cloudMerchantShopCategoryList',
-            cloudMerchantShopCategoryTypeList: 'cloudMerchantShopCategoryTypeList' // 商品类型
+            cloudMerchantShopCategoryList: 'cloudOutboundCategoryList',
+            cloudMerchantShopCategoryTypeList: 'cloudOutboundDeviceList' // 商品类型
         }),
         showDetailForm () {
             if (this.detailData.id > 0 && this.radio === '解决记录') {
@@ -744,6 +744,11 @@ export default {
                 return city[0].countries
             }
             return []
+        },
+        complatintPickerOptionsStart () {
+            return {
+                disabledDate: time => time.getTime() > new Date().getTime()
+            }
         },
         pickerOptionsStart () {
             return {
