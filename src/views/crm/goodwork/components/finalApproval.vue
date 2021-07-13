@@ -77,7 +77,7 @@
                         </div>
                         <div class="info-layout-item">
                             <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>经销商首付款比例(%)：</font>
-                            <span>{{resolutionDetail.advancePaymentRate||'-'}}%</span>
+                            <span>{{resolutionDetail.advancePaymentRate>=0?resolutionDetail.advancePaymentRate:'-'}}%</span>
                         </div>
                     </div>
                     <div class="info-layout">
@@ -461,8 +461,8 @@ export default class FinalApproval extends Vue {
             advancePaymentRate: [{ required: true, message: '首付款比例必选', trigger: 'blur' },
                 {
                     validator: (rule, value, callback) => {
-                        if (value <= 0 || value >= 100) {
-                            return callback(new Error('首付款比例区间为（0，100）'))
+                        if (value < 0 || value > 100) {
+                            return callback(new Error('首付款比例区间为 [0，100]'))
                         } else {
                             callback()
                         }
