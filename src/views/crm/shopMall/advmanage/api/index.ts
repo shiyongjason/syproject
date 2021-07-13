@@ -42,4 +42,4 @@ export const saveFloor: (params:any) => AxiosPromise<Shops.ReqBossFloorAdd> = (p
     return axios.get(`/shop/api/boss/shop/floor`, params)
 }
 
-// 
+//
