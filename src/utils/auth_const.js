@@ -348,3 +348,5 @@ export const CRM_LIVE_EDIT = 108702
 export const CRM_LIVE_ONTOP = 108703
 export const CRM_LIVE_NOTOP = 108704
 export const CRM_LIVE_DELETE = 108705
+// 舒适云项目 设备解绑
+export const MERCHANT_DEVICE_UNBIND = 100708
