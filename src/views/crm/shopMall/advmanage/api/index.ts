@@ -79,6 +79,6 @@ export const editBanner:(params:any)=>AxiosPromise<void> = (params) => {
     return axios.put(`/shop/api/boss/banners`, params)
 }
 // 品类列表
-export const find:(params:any)=>AxiosPromise<void> = (params) => {
-    return axios.put(`/shop/api/boss/banners`, params)
+export const findCategories:(params:any)=>AxiosPromise<Shops.IPageBossFrontCategoryPageResponse> = (params) => {
+    return axios.get(`/shop/api/boss/front-categories/page`, { params })
 }

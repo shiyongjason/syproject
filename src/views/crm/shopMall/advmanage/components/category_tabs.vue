@@ -2,7 +2,7 @@
 <template>
     <div class="banner-tab">
         <div class="baner-btn mb20">
-            <el-button type="primary">新增品类推荐</el-button>
+            <el-button type="primary" @click="onAdd">新增品类推荐</el-button>
         </div>
         <hosJoyTable isShowIndex ref="hosjoyTable" align="center"  border stripe :column="tableLabel" :data="tableData" actionWidth='250'
         :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList"  isAction :isActionFixed='tableData&&tableData.length>0'>
@@ -23,14 +23,14 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="品类图标：" prop="name">
-                    <OssFileHosjoyUpload v-model="ruleForm.payVouchers" :showPreView='true' :fileSize=1 :fileNum=1 :uploadParameters='uploadParameters' @successCb="$refs.form.clearValidate()" accept=".jpg,.png,.jpeg">
-                    </OssFileHosjoyUpload>
+                    <HosJoyUpload v-model="ruleForm.payVouchers" :showPreView='true' :fileSize=1 :fileNum=1 :uploadParameters='uploadParameters' :action="action" @successCb="$refs.form.clearValidate()" accept=".jpg,.png,.jpeg">
+                    </HosJoyUpload>
                     <p>（品类图标格式为JGP/JPEG/PNG等主流格式图片，最大不超过1M）</p>
                     <p>注意：推荐后，该品类信息将出现在小程序首页~</p>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button @click="handleClose">取 消</el-button>
                 <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
             </span>
         </el-dialog>
@@ -40,27 +40,31 @@
 <script lang='tsx'>
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
+import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 
 import { CreateElement } from 'vue'
+import { findCategories } from '../api'
+import { ccpBaseUrl } from '@/api/config'
 
 @Component({
     name: 'Categorytabs',
     components: {
         hosJoyTable,
-        OssFileHosjoyUpload
+        HosJoyUpload
     }
 })
 export default class Categorytabs extends Vue {
-        // @Prop({ default: '' }) readonly data!:RespLoanHandoverInfo
-        @Prop({ default: '' }) readonly userInfo!:any
-        @Prop({ default: '' }) readonly paymentOrderId!:any
         $refs!: {
             form: HTMLFormElement
         }
+        action=ccpBaseUrl + 'common/files/upload-old'
         uploadParameters = {
             updateUid: '',
             reservedName: false
+        }
+        queryParams:object={
+            pageNumber: 1,
+            pageSize: 10
         }
         dialogVisible:boolean = false
         ruleForm:object={
@@ -74,11 +78,11 @@ export default class Categorytabs extends Vue {
         tableData:any[] | [] = []
 
         tableLabel: tableLabelProps = [
-            { label: '品类顺序', prop: 'deviceBrand', width: '120' },
-            { label: '品类名称', prop: 'upstreamSupplierName', width: '120' },
-            { label: '品类图标', prop: 'upstreamSupplierType', width: '150' },
-            { label: '更新人', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] },
-            { label: '更新时间', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] }
+            { label: '品类顺序', prop: 'sort' },
+            { label: '品类名称', prop: 'frontCategoryName' },
+            { label: '品类图标', prop: 'upstreamSupplierType' },
+            { label: '更新人', prop: 'createBy' },
+            { label: '更新时间', prop: 'updateBy' }
         ]
 
         get rules () {
@@ -95,8 +99,14 @@ export default class Categorytabs extends Vue {
             this.$refs['ruleForm'].clearValidate()
         }
 
-        onFindList () {
+        async onFindList () {
+            const { data } = await findCategories(this.queryParams)
+            this.tableData = data.records
+            this.page.total = data.total as number
+        }
 
+        mounted () {
+            this.onFindList()
         }
 }
 </script>
