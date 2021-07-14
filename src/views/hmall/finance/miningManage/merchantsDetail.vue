@@ -654,7 +654,7 @@ export default {
             this.fundDetil = this.merchantStatistInfo
         },
         async getMerchantAllInfo () {
-            await this.findMerchantAll()
+            await this.findMerchantAll(this.queryParams)
         },
         async getRepayStatist () {
             await this.findRepayStatist()

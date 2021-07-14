@@ -1,6 +1,6 @@
 
 import * as types from './mutation-types'
-import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo, findFreightOrders, findFreightInfo, findFreightList, findFreightBankAccountInfo, findFreightWithdrawal, findFreightBankCardInfo, findOnlinefreightList, findBankInfo, findMerchant, findMerchantStatist, findMerchantAll, findOnlineRepay, findOfflineRepay, findPrepayRepay, findRepayStatist, findApplyList, findPrepayList, findOccupationList, findAgentCharge, findAgentCashWithdrawal, findAgentBankAccountInfo, findAgentBankCardInfo } from '../api'
+import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo, findFreightOrders, findFreightInfo, findFreightList, findFreightBankAccountInfo, findFreightWithdrawal, findFreightBankCardInfo, findOnlinefreightList, findBankInfo, findMerchant, findMerchantStatist, findMerchantAll, findOnlineRepay, findOfflineRepay, findPrepayRepay, findRepayStatist, findApplyList, findPrepayList, findOccupationList, findApplyAll, findPrepayAll, findOccupationAll, findAgentCharge, findAgentCashWithdrawal, findAgentBankAccountInfo, findAgentBankCardInfo } from '../api'
 
 const state = {
     // 服务费收取明细
@@ -39,6 +39,12 @@ const state = {
     prepayList: {},
     // 资金回款详情
     occupationList: {},
+    // 资金申请详情 合计
+    applyAllInfo: {},
+    // 资金代付,占用详情 合计
+    prepayAllInfo: {},
+    // 资金回款详情 合计
+    occupationAllInfo: {},
     // 代采资金 提现明细
     agentCharge: {},
     // 代采资金提现
@@ -85,6 +91,9 @@ const getters = {
     applyList: state => state.applyList,
     prepayList: state => state.prepayList,
     occupationList: state => state.occupationList,
+    applyAllInfo: state => state.applyAllInfo,
+    prepayAllInfo: state => state.prepayAllInfo,
+    occupationAllInfo: state => state.occupationAllInfo,
     agentCharge: state => state.agentCharge,
     agentCashWithdrawal: state => state.agentCashWithdrawal,
     agentBankAccountInfo: state => state.agentBankAccountInfo,
@@ -150,6 +159,15 @@ const mutations = {
     },
     [types.OCCUPATION_LIST] (state, payload) {
         state.occupationList = payload
+    },
+    [types.APPLY_ALL_INFO] (state, payload) {
+        state.applyAllInfo = payload
+    },
+    [types.PREPAY_ALL_INFO] (state, payload) {
+        state.prepayAllInfo = payload
+    },
+    [types.OCCUPATION_ALL_INFO] (state, payload) {
+        state.occupationAllInfo = payload
     },
     [types.AGENT_CHARGE] (state, payload) {
         state.agentCharge = payload
@@ -257,6 +275,18 @@ const actions = {
     async findOccupationList ({ commit }, params) {
         const { data } = await findOccupationList(params)
         commit(types.OCCUPATION_LIST, data)
+    },
+    async findApplyAll ({ commit }, params) {
+        const { data } = await findApplyAll(params)
+        commit(types.APPLY_ALL_INFO, data)
+    },
+    async findPrepayAll ({ commit }, params) {
+        const { data } = await findPrepayAll(params)
+        commit(types.PREPAY_ALL_INFO, data)
+    },
+    async findOccupationAll ({ commit }, params) {
+        const { data } = await findOccupationAll(params)
+        commit(types.OCCUPATION_ALL_INFO, data)
     },
     async findAgentCharge ({ commit }, params) {
         const { data } = await findAgentCharge(params)
