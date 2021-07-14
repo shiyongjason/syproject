@@ -14,10 +14,10 @@
             <div class="query-cont-col">
                 <div class="query-col-title">投诉时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.startTime" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-ddTHH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                     <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                    <el-date-picker v-model="queryParams.endTime" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-ddTHH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                     </el-date-picker>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                     <el-select v-model="queryParams.status" style="width: 100%" clearable>
                         <el-option label="待处理" value="0"></el-option>
                         <el-option label="处理中" value="10"></el-option>
-                        <el-option label="已解决" value="20"></el-option>
+                        <el-option label="已处理" value="20"></el-option>
                     </el-select>
                 </div>
             </div>
@@ -87,7 +87,7 @@
                 </div>
                 <el-form :model="detailData" :rules="addOrderRules" ref="addOrderForm" label-width="140px" v-if="showDetailForm">
                     <el-form-item label="投诉时间" prop="time">
-                        <el-date-picker v-model="detailData.time" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-ddTHH:mm:ss" type="datetime" placeholder="选择日期">
+                        <el-date-picker v-model="detailData.time" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-ddTHH:mm:ss" type="datetime" placeholder="选择日期" :picker-options="complatintPickerOptionsStart">
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label-width="0">
@@ -98,7 +98,7 @@
                         </el-col>
                         <el-col :span="8">
                             <el-form-item label="客户姓名：" prop="customerName">
-                                <el-input v-model="detailData.customerName" maxlength="50" placeholder="请填写客户姓名"></el-input>
+                                <el-input v-model="detailData.customerName" maxlength="16" placeholder="请填写客户姓名"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
@@ -142,18 +142,18 @@
                     </el-form-item>
 
                     <el-form-item label="选择投诉产品：" prop="deviceInfoList">
-                        <el-button type="primary" @click="onAddProduct">+添加商品</el-button>
+                        <el-button type="primary" @click="onAddProduct">+添加设备</el-button>
                     </el-form-item>
 
                     <div class="query-cont-row" v-for="(productItem,index) in detailData.deviceInfoList" :key="index">
                         <el-form-item label="归属品类：" :prop="'deviceInfoList.' + index + '.categoryId'" :rules="addOrderRules.categoryId">
                             <el-select v-model="productItem.categoryId" @change="()=> { selectChanged(index) }">
-                                <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in allCategorys" :key="item.categoryId"></el-option>
+                                <el-option :label="item.name" :value="item.id" v-for="item in allCategorys" :key="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="商品型号：" label-width="100px" :prop="'deviceInfoList.' + index + '.specificationId'" :rules="addOrderRules.specificationId">
                             <el-select v-model="productItem.specificationId" @change="()=>{selectSpecificationIdChanged(index)}">
-                                <el-option :label="item.specificationName" :value="item.specificationId" v-for="item in categoryTypes[index]" :key="item.specificationId"></el-option>
+                                <el-option :label="item.name" :value="item.type" v-for="item in categoryTypes[index]" :key="item.type"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="设备ID" label-width="100px" :prop="'deviceInfoList.' + index + '.deviceId'" :rules="addOrderRules.deviceId">
@@ -162,27 +162,28 @@
                         <el-button style="align-self: flex-start;margin-left: 20px;" type="primary" @click="()=> { onRemoveProduct(index) }">删除</el-button>
                     </div>
                     <el-form-item label="问题描述：" prop="description">
-                        <el-input style="width: 500px" v-model="detailData.description" maxlength="100" :rows="2" placeholder="请输入问题描述" />
+                        <el-input style="width: 500px" type="textarea" v-model="detailData.description" maxlength="500" show-word-limit :rows="2" placeholder="请输入问题描述" />
                     </el-form-item>
-                    <el-form-item label="问题图片(不超过8张)：" ref="payImgs">
-                        <el-upload list-type="picture-card" :action="imageUploadAction" :data="imageUploadData" accept='image/jpeg, image/jpg, image/png' name='multiFile' :file-list="imgs" :multiple='true' :on-success="handleUploadImageSuccess" :limit="8" :on-exceed="uploadImageExceptMessage"
-                            :before-upload="beforeImageUpload" :on-remove="handleImageRemove">
-                            <i class="el-icon-plus"></i>
+                    <el-form-item label="问题图片：" ref="payImgs">
+                        <el-upload :action="imageUploadAction" :data="imageUploadData" accept='image/jpeg, image/jpg, image/png, audio/mp4, video/mp4' name='multiFile' :on-preview="handlePreview" :file-list="imgs" :multiple='true' :on-success="handleUploadImageSuccess" :limit="8"
+                            :on-exceed="uploadImageExceptMessage" :before-upload="beforeImageUpload" :on-remove="handleImageRemove">
+                            <el-button size="small" type="primary">点击上传</el-button>
+                            <div slot="tip" class="el-upload__tip">不超过8张（支持JPEG、PNG、MP4格式）</div>
                         </el-upload>
                     </el-form-item>
                     <el-form-item label="经销商手机号：" prop="agencyMobile">
-                        <el-input v-model="detailData.agencyMobile" maxlength="100" :rows="1" placeholder="请输入经销商手机号" />
+                        <el-input v-model="detailData.agencyMobile" maxlength="11" :rows="1" placeholder="请输入经销商手机号" />
                     </el-form-item>
                     <el-form-item label="经销商姓名：" prop="agencyName">
-                        <el-input v-model="detailData.agencyName" maxlength="100" :rows="1" placeholder="请输入经销商姓名" />
+                        <el-input v-model="detailData.agencyName" maxlength="16" :rows="1" placeholder="请输入经销商姓名" />
                     </el-form-item>
                     <el-form-item label="经销商企业名称：" prop="agencyCompanyName">
-                        <el-input v-model="detailData.agencyCompanyName" maxlength="100" :rows="1" placeholder="请输入经销商企业名称" />
+                        <el-input v-model="detailData.agencyCompanyName" maxlength="50" :rows="1" placeholder="请输入经销商企业名称" />
                     </el-form-item>
                 </el-form>
                 <div v-else>
                     <div class="query-cont-col">
-                        <div class="query-col-title">
+                        <div class="query-col-title" v-if="hiddenAddRecord">
                             <el-button type="primary" plain class="ml20" @click="addResloveRecord">+新增解决记录</el-button>
                         </div>
                     </div>
@@ -206,7 +207,7 @@
             <div class="el-dialog-div">
                 <el-form :model="recordData" :rules="addRecordRules" ref="addRecordForm" label-width="140px">
                     <el-form-item label="沟通时间" prop="processTime">
-                        <el-date-picker v-model="recordData.processTime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-ddTHH:mm:ss" type="datetime" placeholder="选择日期">
+                        <el-date-picker v-model="recordData.processTime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-ddTHH:mm:ss" type="datetime" placeholder="选择日期" :picker-options="complatintPickerOptionsStart">
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="解决结果：" prop="status">
@@ -306,7 +307,7 @@ export default {
             recordTableData: [],
             tableLabel: [
                 { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '投诉时间', prop: 'time', formatters: 'dateTime' },
+                { label: '投诉时间', prop: 'time', displayAs: 'yyyy-MM-DD HH:mm' },
                 { label: '工单号', prop: 'workOrderNo' },
                 { label: '创建人', prop: 'creator' },
                 { label: '客户姓名', prop: 'customerName' },
@@ -369,10 +370,10 @@ export default {
                     { required: true, message: '请选择沟通日期', trigger: 'blur' }
                 ],
                 status: [
-                    { required: true, message: '请选择沟通结果', trigger: 'blur' }
+                    { required: true, message: '请选择解决结果', trigger: 'blur' }
                 ],
                 content: [
-                    { required: true, message: '请输入沟通内容', trigger: 'change' }
+                    { required: true, message: '请输入解决内容', trigger: 'change' }
                 ]
             },
             addOrderDialogVisible: false,
@@ -385,10 +386,9 @@ export default {
             getComplaintOrderDetail: 'getComplaintOrderDetail',
             getComplaintProcessOrderList: 'getComplaintProcessOrderList',
             getComplaintProcessOrderDetail: 'getComplaintProcessOrderDetail',
-            findCloudMerchantShopCategoryList: 'findCloudMerchantShopCategoryList',
-            findCloudMerchantShopCategoryTypeList: 'findCloudMerchantShopCategoryTypeList'
+            findCloudMerchantShopCategoryList: 'findCloudOutboundCategoryList',
+            findCloudMerchantShopCategoryTypeList: 'findCloudOutboundDeviceList'
         }),
-
         addResloveRecord () {
             this.addRecordDialogVisible = true
         },
@@ -412,7 +412,6 @@ export default {
         createRecordConform () {
             this.recordData.operator = this.userInfo.employeeName
             this.recordData.workOrderId = this.detailData.id
-            console.log(this.recordData)
             this.loading = true
             this.$refs['addRecordForm'].validate(async (valid) => {
                 if (valid) {
@@ -426,6 +425,7 @@ export default {
                         this.loading = false
                         this.createRecordCancel()
                         this.onQueryComplaintRecord()
+                        this.onQuery()
                         this.$message({
                             message: `操作成功`,
                             type: 'success'
@@ -481,8 +481,8 @@ export default {
         async selectChanged (index) {
             const categoryId = this.detailData.deviceInfoList[index].categoryId
             this.allCategorys.forEach(item => {
-                if (item.categoryId === categoryId) {
-                    this.detailData.deviceInfoList[index].categoryName = item.categoryName
+                if (item.id === categoryId) {
+                    this.detailData.deviceInfoList[index].categoryName = item.name
                 }
             })
             this.detailData.deviceInfoList[index].specificationId = ''
@@ -494,8 +494,8 @@ export default {
         selectSpecificationIdChanged (index) {
             const specificationId = this.detailData.deviceInfoList[index].specificationId
             this.cloudMerchantShopCategoryTypeList.forEach(item => {
-                if (item.specificationId === specificationId) {
-                    this.detailData.deviceInfoList[index].specificationName = item.specificationName
+                if (item.type === specificationId) {
+                    this.detailData.deviceInfoList[index].specificationName = item.name
                 }
             })
             for (let i = 0; i < this.detailData.deviceInfoList.length; i++) {
@@ -505,10 +505,15 @@ export default {
         onRemoveProduct (index) {
             this.detailData.deviceInfoList.splice(index, 1)
             this.categoryTypes.splice(index, 1)
+            this.deviceIDonBlur(0)
         },
         handleUploadImageSuccess (response, file, fileList) {
+            console.log(file)
             if (response.code === 200) {
                 console.log(response.data.accessUrl)
+                if (this.detailData.pictures === null) {
+                    this.detailData.pictures = []
+                }
                 this.detailData.pictures.push(response.data.accessUrl)
             }
         },
@@ -522,13 +527,24 @@ export default {
             const isJPG = file.type === 'image/jpg'
             const isJPEG = file.type === 'image/jpeg'
             const isPNG = file.type === 'image/png'
-            if (!(isJPG || isJPEG || isPNG)) {
+            const isMP4 = file.type === 'audio/mp4' || file.type === 'video/mp4'
+            if (!(isJPG || isJPEG || isPNG || isMP4)) {
                 this.$message({
                     type: 'error',
                     message: '文件格式不正确'
                 })
             }
-            return isJPG || isJPEG || isPNG
+            return isJPG || isJPEG || isPNG || isMP4
+        },
+        handlePreview (file) {
+            console.log(file)
+            let url = ''
+            if (file.response && file.response.data) {
+                url = file.response.data.accessUrl
+            } else {
+                url = file.url
+            }
+            window.open(url)
         },
         handleImageRemove (file, fileList) {
             let url = ''
@@ -551,8 +567,14 @@ export default {
             }
             if (this.detailData.pictures) {
                 this.imgs = this.detailData.pictures.map(item => {
+                    const arr = item.split('/')
+                    let name = ''
+                    if (arr.length > 0) {
+                        name = arr[arr.length - 1]
+                    }
                     return {
                         uid: item,
+                        name,
                         url: item
                     }
                 })
@@ -692,12 +714,18 @@ export default {
             complaintOrderDetail: 'complaintOrderDetail',
             complaintProcessOrderList: 'complaintProcessOrderList',
             complaintProcessOrderDetail: 'complaintProcessOrderDetail',
-            cloudMerchantShopCategoryList: 'cloudMerchantShopCategoryList',
-            cloudMerchantShopCategoryTypeList: 'cloudMerchantShopCategoryTypeList' // 商品类型
+            cloudMerchantShopCategoryList: 'cloudOutboundCategoryList',
+            cloudMerchantShopCategoryTypeList: 'cloudOutboundDeviceList' // 商品类型
         }),
         showDetailForm () {
             if (this.detailData.id > 0 && this.radio === '解决记录') {
                 return false
+            }
+            return true
+        },
+        hiddenAddRecord () {
+            if (this.recordTableData.length > 0) {
+                return this.recordTableData[0].status !== 20
             }
             return true
         },
@@ -733,6 +761,11 @@ export default {
             }
             return []
         },
+        complatintPickerOptionsStart () {
+            return {
+                disabledDate: time => time.getTime() > new Date().getTime()
+            }
+        },
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
@@ -758,6 +791,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/deep/ .el-upload-list--picture-card .el-upload-list__item {
+    width: 104px;
+    height: 104px;
+}
 .radio-container {
     padding: 10px;
     margin-left: 10px;
