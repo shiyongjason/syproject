@@ -24,7 +24,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">解决状态：</div>
                 <div class="query-col-input">
-                    <el-select v-model="queryParams.status" style="width: 100%" clearable>
+                    <el-select v-model="queryParams.status" clearable>
                         <el-option label="待处理" value="0"></el-option>
                         <el-option label="处理中" value="10"></el-option>
                         <el-option label="已处理" value="20"></el-option>
@@ -77,7 +77,7 @@
             </basicTable>
         </div>
 
-        <el-dialog :title="detailData.id > 0 ?'投诉详情':'新增投诉工单'" :visible.sync="addOrderDialogVisible" class="upload-show" width="1200px" :close-on-click-modal="false" :before-close="onCloseAddOrderDialog">
+        <el-dialog :title="detailData.id > 0 ?'投诉详情':'新增投诉工单'" :visible.sync="addOrderDialogVisible" class="upload-show" width="1200px" :close-on-click-modal="false" :before-close="cancelAddOrderClick">
             <div class="el-dialog-div">
                 <div class="radio-container" v-if="detailData.id > 0">
                     <el-radio-group v-model="radio" @change="onTabRadio">
@@ -165,8 +165,8 @@
                         <el-input style="width: 500px" type="textarea" v-model="detailData.description" maxlength="500" show-word-limit :rows="2" placeholder="请输入问题描述" />
                     </el-form-item>
                     <el-form-item label="问题图片：" ref="payImgs">
-                        <el-upload :action="imageUploadAction" :data="imageUploadData" accept='image/jpeg, image/jpg, image/png, audio/mp4, video/mp4' name='multiFile' :on-preview="handlePreview" :file-list="imgs" :multiple='true' :on-success="handleUploadImageSuccess" :limit="8"
-                            :on-exceed="uploadImageExceptMessage" :before-upload="beforeImageUpload" :on-remove="handleImageRemove">
+                        <el-upload :action="imageUploadAction" :data="imageUploadData" name='multiFile' :on-preview="handlePreview" :file-list="imgs" :multiple='true' :on-success="handleUploadImageSuccess" :limit="8" :on-exceed="uploadImageExceptMessage" :before-upload="beforeImageUpload"
+                            :on-remove="handleImageRemove">
                             <el-button size="small" type="primary">点击上传</el-button>
                             <div slot="tip" class="el-upload__tip">不超过8张（支持JPEG、PNG、MP4格式）</div>
                         </el-upload>
@@ -203,7 +203,7 @@
                 <h-button type="primary" @click="submitAddOrderForm" :loading="loading">确 定</h-button>
             </div>
         </el-dialog>
-        <el-dialog title="新增解决记录" :visible.sync="addRecordDialogVisible" class="upload-show" width="600px" :close-on-click-modal="false" :before-close="onCloseAddRecordDialog">
+        <el-dialog title="新增解决记录" :visible.sync="addRecordDialogVisible" class="upload-show" width="600px" :close-on-click-modal="false" :before-close="createRecordCancel">
             <div class="el-dialog-div">
                 <el-form :model="recordData" :rules="addRecordRules" ref="addRecordForm" label-width="140px">
                     <el-form-item label="沟通时间" prop="processTime">
@@ -211,7 +211,7 @@
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="解决结果：" prop="status">
-                        <el-select v-model="recordData.status" style="width: 100%">
+                        <el-select v-model="recordData.status">
                             <el-option label="处理中" :value='10'></el-option>
                             <el-option label="已处理" :value='20'></el-option>
                         </el-select>
@@ -347,7 +347,7 @@ export default {
                     { required: true, message: '请输入客户姓名', trigger: 'blur' }
                 ],
                 deviceInfoList: [
-                    { required: true, message: '请添加商品', trigger: 'change' }
+                    { required: true, message: '请添加设备', trigger: 'change' }
                 ],
                 categoryId: [
                     { required: true, message: '请选择商品品类', trigger: 'change' }
@@ -464,13 +464,6 @@ export default {
                 })
             }
             this.recordData = JSON.parse(JSON.stringify(_recordData))
-            this.addRecordDialogVisible = false
-        },
-        onCloseAddOrderDialog () {
-            this.detailData = JSON.parse(JSON.stringify(_dataForm))
-            this.addOrderDialogVisible = false
-        },
-        onCloseAddRecordDialog () {
             this.addRecordDialogVisible = false
         },
         onAddProduct () {
@@ -791,9 +784,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/ .el-upload-list--picture-card .el-upload-list__item {
-    width: 104px;
-    height: 104px;
+/deep/ .el-dialog__body {
+    padding-top: 10px;
+    max-height: 600px; // 最大高度
+    overflow: auto;
 }
 .radio-container {
     padding: 10px;
