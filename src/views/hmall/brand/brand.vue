@@ -5,32 +5,20 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">品牌编码：</div>
                     <div class="query-col__input">
-                        <el-input
-                            type="text"
-                            v-model="queryParams.code"
-                            maxlength="50"
-                            placeholder="请输入品牌编码"></el-input>
+                        <el-input type="text" v-model="queryParams.code" maxlength="50" placeholder="请输入品牌编码"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">品牌名称：</div>
                     <div class="query-col__input">
-                        <el-input
-                            type="text"
-                            v-model="queryParams.name"
-                            maxlength="50"
-                            placeholder="请输入品牌名称"></el-input>
+                        <el-input type="text" v-model="queryParams.name" maxlength="50" placeholder="请输入品牌名称"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">品牌状态：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.status" style="width: 100%">
-                            <el-option
-                                v-for="item in brandStatusOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                            <el-option v-for="item in brandStatusOptions" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
@@ -38,11 +26,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">维护人：</div>
                     <div class="query-col__input">
-                        <el-input
-                            type="text"
-                            v-model="queryParams.operator"
-                            maxlength="50"
-                            placeholder="请输入维护人姓名"></el-input>
+                        <el-input type="text" v-model="queryParams.operator" maxlength="50" placeholder="请输入维护人姓名"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -52,59 +36,29 @@
                     <h-button @click="onReset()">重置</h-button>
                 </div>
             </div>
-            <brandTable
-                ref="baseTable"
-                :tableData="tableData"
-                :paginationData="paginationData"
-                @updateStatus="onQuery"
-                @updateBrand="updateBrandChange"
-                @onSizeChange="onSizeChange"
-                @onCurrentChange="onCurrentChange"
-                @openMark="openMark">
+            <brandTable ref="baseTable" :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateBrand="updateBrandChange" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange" @openMark="openMark">
             </brandTable>
         </div>
-        <el-dialog
-            width="700px"
-            title="品牌编辑"
-            :visible.sync="dialogBrandEdit"
-            :close-on-click-modal="false">
+        <el-dialog width="700px" title="品牌编辑" :visible.sync="dialogBrandEdit" :close-on-click-modal="false">
             <el-form :model="form" :rules="rules" ref="form" :label-width="formLabelWidth">
                 <el-form-item label="品牌编号" v-if="this.status === 'modify'">
                     {{form.code}}
                 </el-form-item>
                 <el-form-item prop="name" label="品牌名称">
-                    <el-input
-                        v-model="form.name"
-                        maxlength="10"
-                        style="width: 300px"
-                        placeholder="请输入品牌中文名称"></el-input>
+                    <el-input v-model="form.name" maxlength="10" style="width: 300px" placeholder="请输入品牌中文名称"></el-input>
                 </el-form-item>
                 <el-form-item prop="englishName" label="英文名称">
-                    <el-input
-                        v-model="form.englishName"
-                        placeholder="请输入英文名称"
-                        maxlength="25"
-                        style="width: 300px"></el-input>
+                    <el-input v-model="form.englishName" placeholder="请输入英文名称" maxlength="25" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item prop="logoUrl" label="品牌logo">
                     <!--logoUrl-->
-                    <SingleUpload
-                        :upload="uploadInfo"
-                        :imageUrl="imageUrl"
-                        ref="uploadImg"
-                        @back-event="readUrl"/>
+                    <SingleUpload :upload="uploadInfo" :imageUrl="imageUrl" ref="uploadImg" @back-event="readUrl" />
                     <div class="upload-tips">
                         尺寸300x300,2m以内，支持jpg、jpeg、png
                     </div>
                 </el-form-item>
                 <el-form-item prop="description" label="品牌描述">
-                    <el-input
-                        type="textarea"
-                        maxlength="100"
-                        placeholder="100字以内"
-                        v-model="form.description"
-                        style="width: 300px;"
-                        :rows="5"></el-input>
+                    <el-input type="textarea" maxlength="100" placeholder="100字以内" v-model="form.description" style="width: 300px;" :rows="5"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -302,20 +256,20 @@ export default {
 </script>
 
 <style scoped>
-    .download {
-        text-decoration: none;
-        color: #ffffff;
-        background: #f88825;
-        line-height: 38px;
-        border-radius: 4px;
-        padding: 0 12px;
-    }
+.download {
+    text-decoration: none;
+    color: #ffffff;
+    background: #f88825;
+    line-height: 38px;
+    border-radius: 4px;
+    padding: 0 12px;
+}
 
-    .el-textarea__inner {
-        height: 100px;
-    }
-    .upload-tips{
-        font-size: 12px;
-        color: #999;
-    }
+.el-textarea__inner {
+    height: 100px;
+}
+.upload-tips {
+    font-size: 12px;
+    color: #999;
+}
 </style>

@@ -12,8 +12,8 @@ export default [
         component: Layout,
         children: [
             {
-                path: 'commodity',
-                name: 'commodity',
+                path: 'product',
+                name: 'product',
                 meta: {
                     title: '商品管理',
                     tagName: '商品管理',
@@ -46,6 +46,29 @@ export default [
                         component: () => import('@/views/hmall/brand/brand.vue')
                     },
                     {
+                        path: 'productList',
+                        name: 'productList',
+                        meta: {
+                            title: '商品库管理',
+                            tagName: '商品库管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/productManage/productList/index.vue')
+                    },
+                    {
+                        path: 'createProduct',
+                        name: 'createProduct',
+                        meta: {
+                            title: '商品创建/修改',
+                            tagName: '商品创建/修改',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/product/productList'
+                        },
+                        component: () => import('@/views/hmall/productManage/productList/createProduct.vue')
+                    },
+                    {
                         path: 'brandAudit',
                         name: 'brandAudit',
                         meta: {
@@ -56,71 +79,75 @@ export default [
                         },
                         component: () => import('@/views/hmall/brand/brandAudit.vue')
                     },
-                    // {
-                    //     path: 'attribute',
-                    //     name: 'attribute',
-                    //     meta: {
-                    //         title: '参数属性管理',
-                    //         tagName: '参数属性管理',
-                    //         isMenu: true,
-                    //         icon: ''
-                    //     },
-                    //     component: () => import('@/views/hmall/attribute/attribute.vue')
-                    // },
-                    // {
-                    //     path: 'skuset',
-                    //     name: 'skuset',
-                    //     meta: {
-                    //         title: '商品SKU属性管理',
-                    //         tagName: '商品SKU属性管理',
-                    //         isMenu: true,
-                    //         icon: ''
-                    //     },
-                    //     component: () => import('@/views/hmall/spumanage/skuset')
-                    // },
                     {
-                        path: 'spuauditlist',
-                        name: 'spuauditlist',
+                        path: 'productAuditList',
+                        name: 'productAuditList',
                         meta: {
-                            title: '商品SPU审核',
-                            tagName: '商品SPU审核',
+                            title: '商品审核',
+                            tagName: '商品审核',
                             isMenu: true,
                             icon: ''
                         },
-                        component: () => import('@/views/hmall/spumanage/spuauditlist')
+                        component: () => import('@/views/hmall/productManage/productAuditList/index.vue')
                     },
                     {
-                        path: 'spumange',
-                        name: 'spumange',
+                        path: 'editSpuAudit',
+                        name: 'editSpuAudit',
                         meta: {
-                            title: '商品SPU库',
-                            tagName: '商品SPU库',
-                            isMenu: true,
-                            icon: ''
+                            title: 'SPU商品审核',
+                            tagName: 'SPU商品审核',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/product/productAuditList'
                         },
-                        component: () => import('@/views/hmall/spumanage/index')
+                        component: () => import('@/views/hmall/productManage/productAuditList/editSpuAudit.vue')
+                    },
+                    {
+                        path: 'spuAudit',
+                        name: 'spuAudit',
+                        meta: {
+                            title: 'SPU商品查看',
+                            tagName: 'SPU商品查看',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/product/productAuditList'
+                        },
+                        component: () => import('@/views/hmall/productManage/productAuditList/editSpuAudit.vue')
+                    },
+                    {
+                        path: 'editSkuAudit',
+                        name: 'editSkuAudit',
+                        meta: {
+                            title: 'SKU商品审核',
+                            tagName: 'SKU商品审核',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/product/productAuditList'
+                        },
+                        component: () => import('@/views/hmall/productManage/productAuditList/editSkuAudit.vue')
+                    },
+                    {
+                        path: 'skuAudit',
+                        name: 'skuAudit',
+                        meta: {
+                            title: 'SKU商品查看',
+                            tagName: 'SKU商品查看',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/product/productAuditList'
+                        },
+                        component: () => import('@/views/hmall/productManage/productAuditList/editSkuAudit.vue')
                     },
                     {
                         path: 'marketStore',
                         name: 'marketStore',
                         meta: {
-                            title: '商品管理',
-                            tagName: '商品管理',
+                            title: '商家商品管理',
+                            tagName: '商家商品管理',
                             isMenu: true,
                             icon: ''
                         },
                         component: () => import('@/views/hmall/spumanage/marketStore.vue')
-                    },
-                    {
-                        path: 'spudetail',
-                        name: 'spudetail',
-                        meta: {
-                            title: 'SPU管理',
-                            tagName: 'SPU管理',
-                            isMenu: false,
-                            icon: ''
-                        },
-                        component: () => import('@/views/hmall/spumanage/spudetail')
                     }
                 ]
             },
