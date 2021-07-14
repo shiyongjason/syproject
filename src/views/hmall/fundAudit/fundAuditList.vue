@@ -39,8 +39,8 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">申请时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.applyStartTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart"></el-date-picker>
-                        <el-date-picker v-model="queryParams.applyEndTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59"></el-date-picker>
+                        <el-date-picker v-model="queryParams.applyStartTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :picker-options="pickerOptionsStart"></el-date-picker>
+                        <el-date-picker v-model="queryParams.applyEndTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :picker-options="pickerOptionsEnd" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -227,6 +227,10 @@ export default {
                             if (!value) {
                                 return callback(new Error('请输入原因'))
                             }
+                            if (value && value.replace(/\s/g, '').length < 1) {
+                                console.log('111')
+                                return callback(new Error('请输入原因'))
+                            }
                             return callback()
                         },
                         trigger: 'blur'
@@ -271,6 +275,10 @@ export default {
                         required: true,
                         validator: (rule, value, callback) => {
                             if (!value || value == '') {
+                                return callback(new Error('请输入原因'))
+                            }
+                            if (value && value.replace(/\s/g, '').length < 1) {
+                                console.log('111')
                                 return callback(new Error('请输入原因'))
                             }
                             return callback()

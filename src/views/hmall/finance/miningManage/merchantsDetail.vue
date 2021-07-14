@@ -220,8 +220,8 @@
                     <div class="query-cont-col">
                         <div class="query-col-title">时间：</div>
                         <div class="query-col-input">
-                            <el-date-picker v-model="repayQueryParams.startTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
-                            <el-date-picker v-model="repayQueryParams.endTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
+                            <el-date-picker v-model="repayQueryParams.startTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :picker-options="pickerStart"></el-date-picker>
+                            <el-date-picker v-model="repayQueryParams.endTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
                         </div>
                     </div>
                     <template v-if="recordTabName == 'isOnline'">
@@ -428,6 +428,7 @@ export default {
             userInfo: state => state.userInfo,
             merchantList: state => state.hmall.finance.merchantList,
             merchantStatistInfo: state => state.hmall.finance.merchantStatistInfo,
+            merchantAllInfo: state => state.hmall.finance.merchantAllInfo,
             onlineRepayList: state => state.hmall.finance.onlineRepayList,
             offlineRepayList: state => state.hmall.finance.offlineRepayList,
             prepayRepayList: state => state.hmall.finance.prepayRepayList,
@@ -452,13 +453,16 @@ export default {
             this.getOfflineRepay()
             this.getPrepayRepay()
             this.getMerchantStatistInfo()
+            this.getMerchantAllInfo()
         },
         onTab () {
             this.queryParams = { ...this.resetParams }
             if (this.tabName == 'detail') {
                 this.getMerchant()
                 this.getMerchantStatistInfo()
+                this.getMerchantAllInfo()
             } else {
+                this.recordTabName = 'isOnline'
                 this.getOnlineRepay()
                 this.getRepayStatist()
             }
@@ -553,25 +557,52 @@ export default {
                     if (index == 0) {
                         sums[index] = '合计'
                     }
-                    if (column.property == 'creditLimit' || column.property == 'totalPrepayAmount' || column.property == 'totalRetaingeAmount' || column.property == 'totalRepayedAmount' || column.property == 'occupationAmount' || column.property == 'overdueAmount') {
-                        const values = data.map(item => {
-                            return Number(item[column.property])
-                        })
-                        if (!values.every(value => isNaN(value))) {
-                            sums[index] = values.reduce((prev, curr) => {
-                                const value = Number(curr)
-                                if (!isNaN(value)) {
-                                    return prev + curr
-                                } else {
-                                    return prev
-                                }
-                            }, 0)
-                            sums[index] = sums[index] ? sums[index] : '-'
-                            if (sums[index] && sums[index] != '-') {
-                                sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                            } else {
-                                sums[index] = '-'
-                            }
+                    if (column.property == 'creditLimit') {
+                        sums[index] = this.merchantAllInfo.creditLimit
+                        if (sums[index] && sums[index] != '-') {
+                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        } else {
+                            sums[index] = '-'
+                        }
+                    }
+                    if (column.property == 'totalPrepayAmount') {
+                        sums[index] = this.merchantAllInfo.prepayAmount
+                        if (sums[index] && sums[index] != '-') {
+                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        } else {
+                            sums[index] = '-'
+                        }
+                    }
+                    if (column.property == 'totalRetaingeAmount') {
+                        sums[index] = this.merchantAllInfo.retaingeAmount
+                        if (sums[index] && sums[index] != '-') {
+                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        } else {
+                            sums[index] = '-'
+                        }
+                    }
+                    if (column.property == 'totalRepayedAmount') {
+                        sums[index] = this.merchantAllInfo.repayedAmount
+                        if (sums[index] && sums[index] != '-') {
+                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        } else {
+                            sums[index] = '-'
+                        }
+                    }
+                    if (column.property == 'occupationAmount') {
+                        sums[index] = this.merchantAllInfo.occupationAmount
+                        if (sums[index] && sums[index] != '-') {
+                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        } else {
+                            sums[index] = '-'
+                        }
+                    }
+                    if (column.property == 'overdueAmount') {
+                        sums[index] = this.merchantAllInfo.overdueAmount
+                        if (sums[index] && sums[index] != '-') {
+                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        } else {
+                            sums[index] = '-'
                         }
                     }
                 })
@@ -609,6 +640,7 @@ export default {
         ...mapActions({
             findMerchant: 'finance/findMerchant',
             findMerchantStatist: 'finance/findMerchantStatist',
+            findMerchantAll: 'finance/findMerchantAll',
             findOnlineRepay: 'finance/findOnlineRepay',
             findOfflineRepay: 'finance/findOfflineRepay',
             findPrepayRepay: 'finance/findPrepayRepay',
@@ -620,6 +652,9 @@ export default {
         async getMerchantStatistInfo () {
             await this.findMerchantStatist()
             this.fundDetil = this.merchantStatistInfo
+        },
+        async getMerchantAllInfo () {
+            await this.findMerchantAll(this.queryParams)
         },
         async getRepayStatist () {
             await this.findRepayStatist()
