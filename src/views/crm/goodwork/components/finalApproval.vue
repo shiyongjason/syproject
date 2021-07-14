@@ -77,7 +77,7 @@
                         </div>
                         <div class="info-layout-item">
                             <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>经销商首付款比例(%)：</font>
-                            <span>{{resolutionDetail.advancePaymentRate||'-'}}%</span>
+                            <span>{{resolutionDetail.advancePaymentRate>=0?resolutionDetail.advancePaymentRate:'-'}}%</span>
                         </div>
                     </div>
                     <div class="info-layout">
@@ -207,12 +207,19 @@
                         <!--  -->
                         <el-form-item label="剩余货款支付周期：" prop='remainPaymentCycle' style="marginLeft:-9px;">
                             <el-select v-model="purForm.remainPaymentCycle" placeholder="请选择">
+
                                 <el-option label="1个月" :value="1"></el-option>
                                 <el-option label="2个月" :value="2"></el-option>
                                 <el-option label="3个月" :value="3"></el-option>
                                 <el-option label="4个月" :value="4"></el-option>
                                 <el-option label="5个月" :value="5"></el-option>
                                 <el-option label="6个月" :value="6"></el-option>
+                                <el-option label="7个月" :value="7"></el-option>
+                                <el-option label="8个月" :value="8"></el-option>
+                                <el-option label="9个月" :value="9"></el-option>
+                                <el-option label="10个月" :value="10"></el-option>
+                                <el-option label="11个月" :value="11"></el-option>
+                                <el-option label="12个月" :value="12"></el-option>
                             </el-select>
                         </el-form-item>
                     </div>
@@ -461,8 +468,8 @@ export default class FinalApproval extends Vue {
             advancePaymentRate: [{ required: true, message: '首付款比例必选', trigger: 'blur' },
                 {
                     validator: (rule, value, callback) => {
-                        if (value <= 0 || value >= 100) {
-                            return callback(new Error('首付款比例区间为（0，100）'))
+                        if (value < 0 || value > 100) {
+                            return callback(new Error('首付款比例区间为 [0，100]'))
                         } else {
                             callback()
                         }
