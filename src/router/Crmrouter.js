@@ -677,6 +677,19 @@ export default [
                     showMenuAs: '/goodwork/category'
                 },
                 component: () => import('@/views/crm/shopMall/category/index.vue')
+            },
+            {
+                path: 'categoryedit',
+                name: 'categoryedit',
+                meta: {
+                    title: '品类新增/编辑',
+                    tagName: '品类新增/编辑',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: '',
+                    showMenuAs: '/goodwork/category'
+                },
+                component: () => import('@/views/crm/shopMall/category/edit.vue')
             }
         ]
     }

@@ -6,13 +6,17 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">品类名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.paymentOrderNo" placeholder="请输入支付单号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.searchContent" placeholder="请输入支付单号" maxlength="50"></el-input>
                     </div>
                 </div>
+            </div>
+            <div class="query-cont-row">
                 <div class="query-cont__col">
-                    <div class="query-col__label">类目名称：</div>
-                    <div class="query-col__input">
-                        1123
+                    <div class="query-col__label">品类名称：</div>
+                    <div class="query_tag">
+                        <el-tag closable> 1111</el-tag>
+                        <el-tag closable> 1111</el-tag>
+                        <el-tag closable> 1111</el-tag>
                     </div>
                 </div>
             </div>
@@ -26,13 +30,7 @@
 
             </div>
             <!-- end search bar -->
-           <tree-table ref="treeTable" :data="data" :columns="columns" :selectable="true" :expand-type="false" @checkbox-click='onClickCheckbox' children-prop="subCategoryList" >
-                <template slot="operations" slot-scope="scope">
-                    <h-button table @click="onShowEdit(scope.row)">修改</h-button>
-                    <h-button table @click="onShowParams(scope.row)" v-if="scope.row.level === 2">设置参数</h-button>
-                    <!-- <span class="action mr10" @click="onShowEdit(scope.row)">修改</span> -->
-                    <!-- <span class="action mr10" @click="onShowParams(scope.row)" v-if="scope.row.level === 2">设置参数</span> -->
-                </template>
+            <tree-table ref="treeTable" :data="data" :columns="columns" :selectable="true" :expand-type="false" @checkbox-click='onClickCheckbox' children-prop="subCategoryList" :selection-type="false" @clickRow='clickRow'  @cell-click="clickRow" >
             </tree-table>
         </div>
 
@@ -41,21 +39,17 @@
 <script lang='tsx'>
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
-
+// import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
 import { CreateElement } from 'vue'
+import { getTreeCateGroy } from './api/index'
 
 @Component({
-    name: 'Bannertabs',
+    name: 'Categoryedit',
     components: {
-        hosJoyTable,
-        OssFileHosjoyUpload
+        hosJoyTable
     }
 })
-export default class Bannertabs extends Vue {
-        // @Prop({ default: '' }) readonly data!:RespLoanHandoverInfo
-        @Prop({ default: '' }) readonly userInfo!:any
-        @Prop({ default: '' }) readonly paymentOrderId!:any
+export default class Categoryedit extends Vue {
         $refs!: {
             form: HTMLFormElement
         }
@@ -64,13 +58,9 @@ export default class Bannertabs extends Vue {
             reservedName: false
         }
         queryParams:object={
-
+            searchContent: ''
         }
-
-        page = {
-            sizes: [10, 20, 50, 100],
-            total: 0
-        }
+        data:any[] = []
         columns= [
             {
                 title: '一级类目/二级类目/三级类目',
@@ -84,19 +74,121 @@ export default class Bannertabs extends Vue {
             },
             {
                 title: '上架商品数量',
-                key: 'name',
+                key: 'spuNumber',
                 width: '100px'
             }
         ]
-        data= [{ id: 1, code: 'C000001', name: '冷暖系统', parentId: 0, path: '1', sort: 1, level: 1, imgUrl: null },
-            { id: 2, code: 'C000001', name: '冷暖系统', parentId: 0, path: '1', sort: 1, level: 1, imgUrl: null }]
+        expandCell:any[]=[]
+        // checkList:any[]|[]=[]  这里有个类型定义问题 never
+        checkList:any[]=[]
 
-        getList () {
-
+        async getList () {
+            const { data } = await getTreeCateGroy(this.queryParams)
+            this.data = this.resolveData(data, false, false, '', '')
         }
 
-        onClickCheckbox (val) {
-            console.log(val)
+        findUnques (arr) {
+            var result = []
+            var obj = {}
+            for (var i = 0; i < arr.length; i++) {
+                if (!obj[arr[i].id]) {
+                    result.push(arr[i])
+                    obj[arr[i].id] = true
+                }
+            }
+            return result
+        }
+
+        onClickCheckbox (row, rowIndex, $event) {
+            console.log(row, rowIndex, $event)
+            // console.log(this.$refs['treeTable'].getCheckedProp(columnIndex))
+            // if (val && val._isChecked) {
+
+            // }
+            // 先去查询有没有 没有在push
+            if (row.level == 1 && row._isChecked) {
+                console.log(1)
+                row.subCategoryList.length > 0 && row.subCategoryList.map(item => {
+                    item.subCategoryList && item.subCategoryList.map(jtem => {
+                        this.checkList.push(jtem)
+                    })
+                })
+            } else if (row.level == 1) {
+                console.log(22)
+                row.subCategoryList.length > 0 && row.subCategoryList.map(item => {
+                    item.subCategoryList && item.subCategoryList.map(jtem => {
+                        if (jtem.id == row.id) {
+                            let one = this.checkList.indexOf(jtem)
+                            this.checkList.splice(one, 1)
+                        }
+                    })
+                })
+            }
+            if (row.level == 2 && row._isChecked) {
+                console.log(2)
+                row.subCategoryList.length > 0 && row.subCategoryList.map(jtem => {
+                    this.checkList.push(jtem)
+                })
+            }
+            if (row.level == 3 && row._isChecked) {
+                // this.checkList.map((item, index) => {
+                //     console.log(item.id, row.id)
+                //     if (row.id != item.id) {
+                //         this.checkList.push(row)
+                //     }
+                // })
+                this.checkList.push(row)
+            }
+            console.log(this.findUnques(this.checkList))
+        }
+
+        clickRow (row, rowIndex, column, columnIndex, $event) {
+        }
+
+        // 递归处理数据
+        resolveData (data, parentIsFold = true, grondIsFold = true, pcategoryName = '', scategoryName = '', dcategoryName = '') {
+            return data.map((item, index, arr) => {
+                if (item.level == 1) {
+                    item.pcategoryName = item.name
+                    item.scategoryName = ''
+                    item.dcategoryName = ''
+                }
+                if (item.level == 2) {
+                    item.pcategoryName = pcategoryName
+                    item.scategoryName = item.name
+                    item.dcategoryName = ''
+                }
+                if (item.level == 3) {
+                    item.pcategoryName = pcategoryName
+                    item.scategoryName = scategoryName
+                    item.dcategoryName = item.name
+                }
+                // 在数组中的数据，必定是非折叠的
+                if (this.expandCell.includes(item.id)) {
+                    item._isFold = false
+                }
+                // 如果祖父级是折叠的，则必定隐藏
+                if (grondIsFold) {
+                    item._isHide = true
+                }
+                // 如果祖父级是非折叠的，父级是折叠的，则隐藏
+                if (!grondIsFold && parentIsFold) {
+                    item._isHide = true
+                }
+                // 如果祖父级是非折叠的，父级是非折叠的，则显示
+                if (!grondIsFold && !parentIsFold) {
+                    item._isHide = false
+                }
+
+                if (item.subCategoryList && item.subCategoryList.length > 0) {
+                    this.resolveData(item.subCategoryList, item._isFold, parentIsFold, item.pcategoryName, item.name)
+                }
+                return item
+            })
+        }
+
+        mounted () {
+            this.getList()
         }
 }
 </script>
