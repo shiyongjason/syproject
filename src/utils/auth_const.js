@@ -343,7 +343,7 @@ export const CRM_WORK_FINAL_DELETEPUR = 100706
 export const CRM_WORK_CUSTOMER_EXPORT = 100707
 
 // 舒适云项目  设备解绑
-export const MERCHANT_DEVICE_UNBIND = 100708
+export const MERCHANT_DEVICE_UNBIND = 100709
 
 // 直播视频 按钮权限
 export const CRM_LIVE_ADD = 108701
