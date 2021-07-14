@@ -48,6 +48,10 @@ export const findMerchant = (params) => {
 export const findMerchantStatist = (params) => {
     return axios.get(`${B2bUrl}fund/boss/fund/statistics`, { params })
 }
+// 资金代采 商家明细合计
+export const findMerchantAll = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/fund/finance/overview`, { params })
+}
 // 资金代采 交易记录线上回款
 export const findOnlineRepay = (params) => {
     return axios.get(`${B2bUrl}fund/boss/repay/online-page`, { params })

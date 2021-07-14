@@ -1,6 +1,6 @@
 
 import * as types from './mutation-types'
-import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo, findFreightOrders, findFreightInfo, findFreightList, findFreightBankAccountInfo, findFreightWithdrawal, findFreightBankCardInfo, findOnlinefreightList, findBankInfo, findMerchant, findMerchantStatist, findOnlineRepay, findOfflineRepay, findPrepayRepay, findRepayStatist, findApplyList, findPrepayList, findOccupationList, findAgentCharge, findAgentCashWithdrawal, findAgentBankAccountInfo, findAgentBankCardInfo } from '../api'
+import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo, findFreightOrders, findFreightInfo, findFreightList, findFreightBankAccountInfo, findFreightWithdrawal, findFreightBankCardInfo, findOnlinefreightList, findBankInfo, findMerchant, findMerchantStatist, findMerchantAll, findOnlineRepay, findOfflineRepay, findPrepayRepay, findRepayStatist, findApplyList, findPrepayList, findOccupationList, findAgentCharge, findAgentCashWithdrawal, findAgentBankAccountInfo, findAgentBankCardInfo } from '../api'
 
 const state = {
     // 服务费收取明细
@@ -23,6 +23,8 @@ const state = {
     merchantList: [],
     // 资金代采 商家明细统计
     merchantStatistInfo: {},
+    // 资金代采 商家明细合计
+    merchantAllInfo: {},
     // 交易记录线上回款
     onlineRepayList: [],
     // 交易记录线下回款
@@ -75,6 +77,7 @@ const getters = {
     productsInfo: state => state.productsInfo,
     merchantList: state => state.merchantList,
     merchantStatistInfo: state => state.merchantStatistInfo,
+    merchantAllInfo: state => state.merchantAllInfo,
     onlineRepayList: state => state.onlineRepayList,
     offlineRepayList: state => state.offlineRepayList,
     prepayRepayList: state => state.prepayRepayList,
@@ -123,6 +126,9 @@ const mutations = {
     },
     [types.MERCHANT_STATIST_INFO] (state, payload) {
         state.merchantStatistInfo = payload
+    },
+    [types.MERCHANT_ALL_INFO] (state, payload) {
+        state.merchantAllInfo = payload
     },
     [types.ONLINE_REPAY_LIST] (state, payload) {
         state.onlineRepayList = payload
@@ -219,6 +225,10 @@ const actions = {
     async findMerchantStatist ({ commit }, params) {
         const { data } = await findMerchantStatist(params)
         commit(types.MERCHANT_STATIST_INFO, data)
+    },
+    async findMerchantAll ({ commit }, params) {
+        const { data } = await findMerchantAll(params)
+        commit(types.MERCHANT_ALL_INFO, data)
     },
     async findOnlineRepay ({ commit }, params) {
         const { data } = await findOnlineRepay(params)

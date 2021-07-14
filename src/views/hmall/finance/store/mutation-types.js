@@ -16,6 +16,8 @@ export const PRODUCTS_INFO = 'PRODUCTS_INFO'
 export const MERCHANT_LIST = 'MERCHANT_LIST'
 // 资金代采 商家明细统计
 export const MERCHANT_STATIST_INFO = 'MERCHANT_STATIST_INFO'
+// 资金代采 商家明细合计
+export const MERCHANT_ALL_INFO = 'MERCHANT_ALL_INFO'
 // 资金代采 交易记录线上回款
 export const ONLINE_REPAY_LIST = 'ONLINE_REPAY_LIST'
 // 资金代采 交易记录线下回款

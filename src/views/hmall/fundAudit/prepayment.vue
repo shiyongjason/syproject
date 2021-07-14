@@ -20,7 +20,6 @@
                         <el-input v-model="queryParams.username" placeholder="请输入管理员账号" maxlength="50"></el-input>
                     </div>
                 </div>
-
                 <div class="query-cont__col">
                     <div class="query-col__lable">平台确认状态：</div>
                     <div class="query-col__input">
@@ -53,6 +52,14 @@
                     <div class="query-col__input">
                         <el-date-picker v-model="queryParams.platformConfirmTimeFrom" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerStart"></el-date-picker>
                         <el-date-picker v-model="queryParams.platformConfirmTimeTo" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">资金同步状态：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.fundSyncStatus">
+                            <el-option v-for="item in fundSyncStatusOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -97,7 +104,7 @@
 </template>
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
-import { PLATFORM_STATUS_OPTIONS, PLATFORM_STATUS_MAP, FUND_SYNC_STATUS_MAP } from './const'
+import { PLATFORM_STATUS_OPTIONS, PLATFORM_STATUS_MAP, FUND_SYNC_STATUS_OPTIONS, FUND_SYNC_STATUS_MAP } from './const'
 import { prepaymentRepay } from './api/index'
 import { syncFundMis } from '../finance/api/index'
 export default {
@@ -106,6 +113,7 @@ export default {
         return {
             platformStatusOptions: PLATFORM_STATUS_OPTIONS,
             platformStatusMap: PLATFORM_STATUS_MAP,
+            fundSyncStatusOptions: FUND_SYNC_STATUS_OPTIONS,
             fundSyncStatus: FUND_SYNC_STATUS_MAP,
             queryParams: {
                 agentOrderNo: '',
@@ -118,6 +126,7 @@ export default {
                 submitTimeTo: '',
                 platformConfirmTimeFrom: '',
                 platformConfirmTimeTo: '',
+                fundSyncStatus: '',
                 pageNumber: 1,
                 pageSize: 10
             },

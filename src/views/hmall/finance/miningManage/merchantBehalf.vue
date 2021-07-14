@@ -446,7 +446,7 @@ export default {
                     if (index == 0) {
                         sums[index] = '合计'
                     }
-                    if (column.property == 'retainageAmount' || column.property == 'repayAmount') {
+                    if (column.property == 'repayAmount') {
                         const values = data.map(item => {
                             return Number(item[column.property])
                         })
@@ -477,13 +477,6 @@ export default {
         this.resetParams = { ...this.queryParams }
         this.init()
     },
-    // watch: {
-    //     $route () {
-    //         if (this.$route.query.toId || this.$route.query.page) {
-    //             this.init()
-    //         }
-    //     }
-    // },
     beforeRouteEnter (to, from, next) {
         newCache('merchantBehalf')
         next()
