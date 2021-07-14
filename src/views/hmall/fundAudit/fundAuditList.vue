@@ -227,6 +227,10 @@ export default {
                             if (!value) {
                                 return callback(new Error('请输入原因'))
                             }
+                            if (value && value.replace(/\s/g, '').length < 1) {
+                                console.log('111')
+                                return callback(new Error('请输入原因'))
+                            }
                             return callback()
                         },
                         trigger: 'blur'
@@ -271,6 +275,10 @@ export default {
                         required: true,
                         validator: (rule, value, callback) => {
                             if (!value || value == '') {
+                                return callback(new Error('请输入原因'))
+                            }
+                            if (value && value.replace(/\s/g, '').length < 1) {
+                                console.log('111')
                                 return callback(new Error('请输入原因'))
                             }
                             return callback()
