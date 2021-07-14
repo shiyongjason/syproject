@@ -72,7 +72,7 @@
                     {{orderStatus(scope.data.row.status)}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onDetail(scope.data.row.id)">查看详情</el-button>
+                    <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
@@ -183,7 +183,7 @@
                 </el-form>
                 <div v-else>
                     <div class="query-cont-col">
-                        <div class="query-col-title" v-if="hiddenAddRecord">
+                        <div class="query-col-title" v-if="currentData.status !== 20">
                             <el-button type="primary" plain class="ml20" @click="addResloveRecord">+新增解决记录</el-button>
                         </div>
                     </div>
@@ -298,6 +298,7 @@ export default {
             },
             radio: '投诉信息',
             imgs: [],
+            currentData: null,
             loading: false,
             searchParams: {},
             categoryTypes: [],
@@ -424,7 +425,7 @@ export default {
                         }
                         this.loading = false
                         this.createRecordCancel()
-                        this.onQueryComplaintRecord()
+                        this.cancelAddOrderClick()
                         this.onQuery()
                         this.$message({
                             message: `操作成功`,
@@ -459,12 +460,12 @@ export default {
             })
         },
         createRecordCancel () {
+            this.recordData = JSON.parse(JSON.stringify(_recordData))
             if (this.$refs['addRecordForm']) {
                 this.$nextTick(() => {
                     this.$refs['addRecordForm'].clearValidate()
                 })
             }
-            this.recordData = JSON.parse(JSON.stringify(_recordData))
             this.addRecordDialogVisible = false
         },
         onAddProduct () {
@@ -552,7 +553,8 @@ export default {
         },
         async onDetail (val) {
             this.categoryTypes = []
-            await this.getComplaintOrderDetail({ id: val })
+            this.currentData = val
+            await this.getComplaintOrderDetail({ id: val.id })
             this.detailData = this.complaintOrderDetail
             for (let i = 0; i < this.detailData.deviceInfoList.length; i++) {
                 const device = this.detailData.deviceInfoList[i]
@@ -652,6 +654,7 @@ export default {
         },
         cancelAddOrderClick () {
             this.imgs = []
+            this.currentData = null
             if (this.$refs['addOrderForm']) {
                 this.$nextTick(() => {
                     this.$refs['addOrderForm'].clearValidate()
@@ -714,12 +717,6 @@ export default {
         showDetailForm () {
             if (this.detailData.id > 0 && this.radio === '解决记录') {
                 return false
-            }
-            return true
-        },
-        hiddenAddRecord () {
-            if (this.recordTableData.length > 0) {
-                return this.recordTableData[0].status !== 20
             }
             return true
         },
