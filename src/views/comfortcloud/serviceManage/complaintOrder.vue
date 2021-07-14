@@ -481,8 +481,8 @@ export default {
         async selectChanged (index) {
             const categoryId = this.detailData.deviceInfoList[index].categoryId
             this.allCategorys.forEach(item => {
-                if (item.categoryId === categoryId) {
-                    this.detailData.deviceInfoList[index].categoryName = item.categoryName
+                if (item.id === categoryId) {
+                    this.detailData.deviceInfoList[index].categoryName = item.name
                 }
             })
             this.detailData.deviceInfoList[index].specificationId = ''
@@ -494,8 +494,8 @@ export default {
         selectSpecificationIdChanged (index) {
             const specificationId = this.detailData.deviceInfoList[index].specificationId
             this.cloudMerchantShopCategoryTypeList.forEach(item => {
-                if (item.specificationId === specificationId) {
-                    this.detailData.deviceInfoList[index].specificationName = item.specificationName
+                if (item.type === specificationId) {
+                    this.detailData.deviceInfoList[index].specificationName = item.name
                 }
             })
             for (let i = 0; i < this.detailData.deviceInfoList.length; i++) {
@@ -508,9 +508,12 @@ export default {
             this.deviceIDonBlur(0)
         },
         handleUploadImageSuccess (response, file, fileList) {
-            console.log(response)
+            console.log(file)
             if (response.code === 200) {
                 console.log(response.data.accessUrl)
+                if (this.detailData.pictures === null) {
+                    this.detailData.pictures = []
+                }
                 this.detailData.pictures.push(response.data.accessUrl)
             }
         },
@@ -564,8 +567,14 @@ export default {
             }
             if (this.detailData.pictures) {
                 this.imgs = this.detailData.pictures.map(item => {
+                    const arr = item.split('/')
+                    let name = ''
+                    if (arr.length > 0) {
+                        name = arr[arr.length - 1]
+                    }
                     return {
                         uid: item,
+                        name,
                         url: item
                     }
                 })
