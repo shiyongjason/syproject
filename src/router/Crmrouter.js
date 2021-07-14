@@ -1,6 +1,5 @@
 import Layout from '@/views/layout/Default.vue'
 import InterlayerContainer from '@/views/layout/InterlayerContainer.vue'
-
 export default [
     {
         path: '/goodwork',
@@ -483,6 +482,77 @@ export default [
                 component: () => import('@/views/crm/crmauthen/tianyan.vue')
             },
             {
+                path: 'crmengineplan',
+                meta: {
+                    title: '工程方案',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'crmenginedetail',
+                        name: 'crmenginedetail',
+                        meta: {
+                            title: '工程方案',
+                            tagName: '工程方案',
+                            parentName: '工程方案',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/crm/merchanEnginePlan/index.vue')
+                    },
+                    {
+                        path: 'crmengineedit',
+                        name: 'crmengineedit',
+                        meta: {
+                            title: '工程方案编辑',
+                            tagName: '工程方案编辑',
+                            parentName: '工程方案',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/crm/merchanEnginePlan/edit.vue')
+                    },
+                    {
+                        path: 'H5Preview',
+                        name: 'H5Preview',
+                        meta: {
+                            title: 'H5预览',
+                            tagName: 'H5预览',
+                            parentName: '工程方案',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/crm/merchanEnginePlan/H5Preview.vue')
+                    }
+                ]
+            },
+            {
+                path: 'liveplayer',
+                name: 'liveplayer',
+                meta: {
+                    title: '直播落地页管理',
+                    tagName: '直播落地页管理',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/liveplayer/index.vue')
+            },
+            {
+                path: 'playeredit',
+                name: 'playeredit',
+                meta: {
+                    title: '直播落地页',
+                    tagName: '直播落地页',
+                    parentName: '好橙工',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/liveplayer/edit.vue')
+            },
+            {
                 path: 'commodityManagement',
                 name: 'commodityManagement',
                 meta: {
@@ -607,19 +677,6 @@ export default [
                     showMenuAs: '/goodwork/category'
                 },
                 component: () => import('@/views/crm/shopMall/category/index.vue')
-            },
-            {
-                path: 'categoryedit',
-                name: 'categoryedit',
-                meta: {
-                    title: '品类新增/编辑',
-                    tagName: '品类新增/编辑',
-                    parentName: '好橙工',
-                    isMenu: true,
-                    icon: '',
-                    showMenuAs: '/goodwork/category'
-                },
-                component: () => import('@/views/crm/shopMall/category/edit.vue')
             }
         ]
     }

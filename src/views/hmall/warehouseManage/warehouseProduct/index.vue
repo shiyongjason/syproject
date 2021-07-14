@@ -102,9 +102,11 @@ export default {
             this.getWarahouseProductList()
         },
         onCreateWarehouse () {
+            clearCache('createWarehouse')
             this.$router.push({ path: '/b2b/warehouse/createWarehouse' })
         },
         onEditWarehouse ({ id }) {
+            clearCache('createWarehouse')
             this.$router.push({ path: '/b2b/warehouse/createWarehouse', query: { id: id } })
         },
         onDelWarehouse ({ id }) {
