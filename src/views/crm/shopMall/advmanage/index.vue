@@ -5,15 +5,15 @@
                  <el-tabs v-model="activeName" @tab-click="handleTabClick">
                     <el-tab-pane label="banner管理" name="banner">
                         <!-- <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest' @requestBack='getList' :paymentOrderId='paymentOrderId'></loanHandoverInformation> -->
-                        <Bannertabs/>
+                        <Bannertabs v-if="activeName=='banner'"/>
                     </el-tab-pane>
                     <el-tab-pane label="楼层管理" name="floor" >
                         <!-- <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation> -->
-                        <Floortabs/>
+                        <Floortabs v-if="activeName=='floor'"/>
                     </el-tab-pane>
                     <el-tab-pane label="品类推荐" name="category" >
                         <!-- <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation> -->
-                        <Categorytabs/>
+                        <Categorytabs v-if="activeName=='category'"/>
                     </el-tab-pane>
                 </el-tabs>
             <!-- end search bar -->

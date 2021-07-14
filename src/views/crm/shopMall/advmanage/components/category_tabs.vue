@@ -2,35 +2,35 @@
 <template>
     <div class="banner-tab">
         <div class="baner-btn mb20">
-            <el-button type="primary">新增品类推荐</el-button>
+            <el-button type="primary" @click="onAdd">新增品类推荐</el-button>
         </div>
-        <hosJoyTable isShowIndex ref="hosjoyTable" align="center"  border stripe :column="tableLabel" :data="tableData" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
+        <hosJoyTable isShowIndex ref="hosjoyTable" align="center" showPagination border stripe :column="tableLabel" :data="tableData" actionWidth='250' :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" isAction
+            :isActionFixed='tableData&&tableData.length>0'>
             <template #action="slotProps">
-
-                <h-button table @click="onDelete(slotProps.data.row)">上移</h-button>
-                <h-button table @click="onDelete(slotProps.data.row)">下移</h-button>
-                <h-button table @click="onDelete(slotProps.data.row)">取消推荐</h-button>
+                <h-button table @click="onMove(slotProps.data.row,'up')" v-if="slotProps.data.$index!=0">上移</h-button>
+                <h-button table @click="onMove(slotProps.data.row,'down')" v-if="slotProps.data.$index!=tableData.length-1">下移</h-button>
+                <h-button table @click="onCancelRemmend(slotProps.data.row)">取消推荐</h-button>
 
             </template>
         </hosJoyTable>
         <el-dialog title="新增banner" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
-                <el-form-item label="选择品类：" prop="name">
-                    <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
+            <el-form :model="categoryForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
+                <el-form-item label="选择品类：" prop="frontCategoryId">
+                    <el-select v-model="categoryForm.frontCategoryId" placeholder="请选择">
+                        <el-option v-for="item in options" :key="item.id" :label="item.frontCategoryName" :value="item.id">
+                        </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="品类图标：" prop="name">
-                    <OssFileHosjoyUpload v-model="ruleForm.payVouchers" :showPreView='true' :fileSize=1 :fileNum=1 :uploadParameters='uploadParameters' @successCb="$refs.form.clearValidate()" accept=".jpg,.png,.jpeg">
-                    </OssFileHosjoyUpload>
+                <el-form-item label="品类图标：" prop="imageUrls" ref="imageUrls">
+                    <HosJoyUpload v-model="categoryForm.imageUrls" :showPreView='true' :fileSize=1 :fileNum=1 :uploadParameters='uploadParameters' :action="action" @successCb="$refs['imageUrls'].clearValidate()" accept=".jpg,.png,.jpeg">
+                    </HosJoyUpload>
                     <p>（品类图标格式为JGP/JPEG/PNG等主流格式图片，最大不超过1M）</p>
                     <p>注意：推荐后，该品类信息将出现在小程序首页~</p>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button @click="handleClose">取 消</el-button>
+                <el-button type="primary" @click="onSave">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -39,31 +39,38 @@
 <script lang='tsx'>
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
-
+import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
+import { BossFrontCategoryRecommendAddRequest } from '@/interface/hbp-shop'
 import { CreateElement } from 'vue'
+import { findCategories, categoryMoveUp, categoryMoveDown, findCategoriesList, addCategory, cancelCategory } from '../api'
+import { ccpBaseUrl } from '@/api/config'
 
 @Component({
     name: 'Categorytabs',
     components: {
         hosJoyTable,
-        OssFileHosjoyUpload
+        HosJoyUpload
     }
 })
 export default class Categorytabs extends Vue {
-        // @Prop({ default: '' }) readonly data!:RespLoanHandoverInfo
-        @Prop({ default: '' }) readonly userInfo!:any
-        @Prop({ default: '' }) readonly paymentOrderId!:any
         $refs!: {
             form: HTMLFormElement
         }
+        action=ccpBaseUrl + 'common/files/upload-old'
         uploadParameters = {
             updateUid: '',
             reservedName: false
         }
+        options:any=[]
+        queryParams:object={
+            pageNumber: 1,
+            pageSize: 10
+        }
         dialogVisible:boolean = false
-        ruleForm:object={
-            payVouchers: []
+        categoryForm:BossFrontCategoryRecommendAddRequest & {imageUrls:any[]}={
+            imageUrls: [],
+            frontCategoryId: '',
+            imageUrl: ''
         }
         page = {
             sizes: [10, 20, 50, 100],
@@ -73,17 +80,33 @@ export default class Categorytabs extends Vue {
         tableData:any[] | [] = []
 
         tableLabel: tableLabelProps = [
-            { label: '品类顺序', prop: 'deviceBrand', width: '120' },
-            { label: '品类名称', prop: 'upstreamSupplierName', width: '120' },
-            { label: '品类图标', prop: 'upstreamSupplierType', width: '150' },
-            { label: '更新人', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] },
-            { label: '更新时间', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] }
+            { label: '品类顺序', prop: 'sort' },
+            { label: '品类名称', prop: 'frontCategoryName' },
+            { label: '品类图标',
+                prop: 'imageUrl',
+                render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
+                    return (
+                        <span class="label_img">
+                            {
+                                scope.row.imageUrl
+                                    ? <a href={scope.row.imageUrl} target="_blank"><img src={scope.row.imageUrl}/></a>
+                                    : '-'
+                            }
+                        </span>
+                    )
+                }
+            },
+            { label: '更新人', prop: 'updateBy' },
+            { label: '更新时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss' }
         ]
 
         get rules () {
             let rules = {
-                name: [
-                    { required: true, message: '请选择变更交接状态', trigger: 'change' }
+                frontCategoryId: [
+                    { required: true, message: '请选择品类名称', trigger: 'change' }
+                ],
+                imageUrls: [
+                    { required: true, message: '请上传品类图标' }
                 ]
             }
             return rules
@@ -92,6 +115,54 @@ export default class Categorytabs extends Vue {
         handleClose () {
             this.dialogVisible = false
             this.$refs['ruleForm'].clearValidate()
+        }
+
+        async onFindList () {
+            const { data } = await findCategories(this.queryParams)
+            this.tableData = data.records
+            this.page.total = data.total as number
+        }
+
+        onAdd () {
+            this.dialogVisible = true
+        }
+
+        async onMove (val, type) {
+            if (type == 'up') {
+                await categoryMoveUp(val.id)
+            } else {
+                await categoryMoveDown(val.id)
+            }
+            this.onFindList()
+        }
+        onSave () {
+            this.$refs['ruleForm'].validate(async (valid) => {
+                if (valid) {
+                    this.categoryForm.imageUrl = this.categoryForm.imageUrls[0].fileUrl
+                    await addCategory(this.categoryForm)
+                    this.onFindList()
+                    this.dialogVisible = false
+                }
+            })
+        }
+
+        onCancelRemmend (val) {
+            this.$confirm('确定取消当前品类推荐吗？取消后，当前品类在小程序首页不可见', '取消品类推荐', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await cancelCategory(val.id)
+                this.onFindList()
+            }).catch(() => {
+
+            })
+        }
+
+        async mounted () {
+            this.onFindList()
+            const { data } = await findCategoriesList()
+            this.options = data
         }
 }
 </script>

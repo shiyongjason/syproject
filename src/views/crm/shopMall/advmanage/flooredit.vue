@@ -14,19 +14,19 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">商品名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.paymentOrderNo" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.name" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">商品类目：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.paymentOrderNo" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.categoryContent" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">商品品牌：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.paymentOrderNo" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.brandName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -37,34 +37,39 @@
             <div class="mb20">
                 <h-button type="primary">批量选择</h-button>
             </div>
-            <hosJoyTable ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" actionWidth='250' isAction
-                :isActionFixed='tableData&&tableData.length>0'>
+            <hosJoyTable ref="hosjoyTable" align="center" border showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" :tableRowClassName="rowClass"  :selectable="selectable"   :pageSizes='page.sizes'
+               actionWidth='250' isAction :height="500" @selection-change="handleSelectionChange" isShowselection :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <h-button table>选择</h-button>
-                    <h-button table>取消选择</h-button>
+                    <h-button table v-if="!slotProps.data.row.checked" @click="onSelect(slotProps.data)">选择</h-button>
+                    <h-button table v-if="slotProps.data.row.checked" @click="onNoSelect(slotProps.data)">取消选择</h-button>
                 </template>
             </hosJoyTable>
             <div class="floor-tit mt20">已选择该楼层的商品</div>
             <!-- 表格操作 -->
             <hosJoyTable ref="hosjoyTable" align="center" border stripe :column="formTableLabel" :data="tableForm" isAction>
                 <template #action="slotProps">
-                    <h-button table>选择</h-button>
-                    <h-button table>取消选择</h-button>
+                    <h-button table @click="onMove(slotProps.data, 'up')" v-if="slotProps.data.$index!=0">上移</h-button>
+                    <h-button table @click="onMove(slotProps.data, 'down')" v-if="slotProps.data.$index!=tableForm.length-1">下移</h-button>
+                    <h-button table @click="onCancelChoose(slotProps.data.row)">取消选择</h-button>
                 </template>
             </hosJoyTable>
+            <div class="floot-bot">
+                    <h-button type="" @click="onCancel">取消</h-button>
+                    <h-button type="primary" @click="onSave">保存</h-button>
+            </div>
         </div>
     </div>
 </template>
 
 <script lang='tsx'>
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
 import { CreateElement } from 'vue'
 import Bannertabs from './components/banner_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import Categorytabs from './components/category_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import Floortabs from './components/floor_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-import { getFloorDetail } from './api/index'
+import { getFloorDetail, getSpuPage, saveFloor } from './api/index'
 import filters from '@/utils/filters'
 import { RespBossShopFloorDetail } from '@/interface/hbp-shop'
 import moment from 'moment'
@@ -89,39 +94,47 @@ export default class Flooredit extends Vue {
             reservedName: false
         }
 
+        selectRow = []
+        selectData = []
         private _queryParams = {}
         queryParams: any = {
-            roomName: '',
-            roomId: ''
+            pageSize: 10,
+            pageNumber: 1,
+            name: '',
+            categoryContent: '',
+            brandName: ''
         }
 
-        floorForm:RespBossShopFloorDetail={ } as RespBossShopFloorDetail
+        floorForm:object={
+            floorName: '',
+            reqBossFloorSpuList: []
+        }
 
         page = {
-            sizes: [15, 25, 50, 100],
+            // sizes: [15, 25, 50, 100],
+            sizes: [10, 15, 50, 100],
             total: 0
         }
 
-        tableData:any[] | [] = []
+        tableData:any[] = []
         tableLabel:tableLabelProps = [
-            { label: 'SPU编码', prop: 'paymentOrderNo', width: '100' },
-            { label: '商品名称', prop: 'deptName', width: '130' },
-            { label: '商品类目', prop: 'companyName', width: '150', resizable: true },
-            { label: '品牌', prop: 'supplierCompanyName', width: '180' }
+            { label: 'SPU编码', prop: 'code' },
+            { label: '商品名称', prop: 'name' },
+            { label: '商品类目', prop: 'categoryContent' },
+            { label: '品牌', prop: 'brandName' }
         ]
 
         tableForm: any[] = [
-
         ]
         formTableLabel: tableLabelProps = [
-            { label: 'SPU编码', prop: 'spuCode' },
-            { label: '商品名称', prop: 'spuName' },
-            { label: '商品类目', prop: 'categoryPath' },
+            { label: 'SPU编码', prop: 'code' },
+            { label: '商品名称', prop: 'name' },
+            { label: '商品类目', prop: 'categoryContent' },
             { label: '品牌', prop: 'brandName' },
             {
                 label: '类目关联品类',
                 prop: 'frontCategoryName',
-                width: '150',
+                width: '300',
                 className: 'form-table-header',
                 showOverflowTooltip: false,
                 render: (h: CreateElement, scope: TableRenderParam) => {
@@ -155,23 +168,106 @@ export default class Flooredit extends Vue {
             return rules
         }
 
-        onFindList () {
-
+        selectable (row) {
+            return !row.checked
         }
 
-        handleTabClick (tab, event): void {
-
+        handleSelectionChange (val) {
+            this.selectData = val
+        }
+        // 选中行 换色
+        rowClass ({ row, rowIndex }) {
+            if (row.checked) {
+                return 'slecleRowColor '
+            }
         }
 
+        async onFindList () {
+            const { data: spu } = await getSpuPage(this.queryParams)
+            this.tableData = spu.records
+            this.page.total = spu.total as number
+            // 查询时候 查下状态
+
+            if (this.tableForm.length > 0) {
+                this.tableData && this.tableData.map((item, index) => {
+                    this.tableForm.indexOf(item)
+                })
+            }
+        }
+
+        onSelect (val) {
+            // val.row.checked = true
+            this.$set(this.tableData[val.$index], 'checked', true)
+            this.tableForm.push(val.row)
+        }
+        onNoSelect (val) {
+            this.$set(val.row, 'checked', false)
+            let one = this.tableForm.indexOf(this.tableForm.filter(i => val.id == i.id)[0])
+            console.log('one', one)
+            this.tableForm.splice(one, 1)
+        }
+        onMove (val, type) {
+            let index = val.$index
+            if (type == 'up') {
+                if (index === 0) {
+                    this.$message({
+                        message: '已经是列表中第一个素材！',
+                        type: 'warning'
+                    })
+                } else {
+                    let temp = this.tableForm[index - 1]
+                    this.$set(this.tableForm, index - 1, this.tableForm[index])
+                    this.$set(this.tableForm, index, temp)
+                }
+            } else {
+                if (index === (this.tableForm.length - 1)) {
+                    this.$message({
+                        message: '已经是列表中最后一个素材！',
+                        type: 'warning'
+                    })
+                } else {
+                    let i = this.tableForm[index + 1]
+                    this.$set(this.tableForm, index + 1, this.tableForm[index])
+                    this.$set(this.tableForm, index, i)
+                }
+            }
+        }
+
+        // @Watch('selectData') private onSelectData (data) {
+        //     console.log(111, data)
+        //     this.selectRow = []
+        //     if (data.length > 0) {
+        //         data.forEach((item, index) => {
+        //             this.selectRow.push(item.id)
+        //         })
+        //     }
+        // }
+        onCancelChoose (val) {
+            console.log(val)
+            console.log(this.tableData.filter(i => val.id == i.id)[0])
+            let one = this.tableData.indexOf(this.tableData.filter(i => val.id == i.id)[0])
+            console.log('00', one)
+            this.$set(this.tableData[one], 'checked', false)
+            this.tableForm.splice(val.$index, 1)
+        }
+
+        onSave () {
+            saveFloor(this.floorForm)
+        }
+
+        onCancel () {
+            this.$router.push('/goodwork/advmanage')
+        }
         async mounted () {
             if (this.$route.query.id) {
                 const { data } = await getFloorDetail(this.$route.query.id)
                 this.tableForm = data.respBossFloorSpuList || []
             }
+            this.onFindList()
         }
 }
 </script>
 
 <style lang='scss' scoped>
-@import "./css.scss"
+@import "./css.scss";
 </style>

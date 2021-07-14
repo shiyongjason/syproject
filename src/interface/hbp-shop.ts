@@ -58,18 +58,18 @@ export interface BrandShopExtendUpdateRequest {
     brandId: number | string
 
     /**
-     *
-     * @type {JsonNode}
+     * 品牌logo
+     * @type {string}
      * @memberof BrandShopExtendUpdateRequest
      */
-    brandLogoUrls: JsonNode
+    brandLogoUrl: string
 
     /**
-     *
-     * @type {JsonNode}
+     * 品牌banner
+     * @type {string}
      * @memberof BrandShopExtendUpdateRequest
      */
-    brandBannerUrls: JsonNode
+    brandBannerUrl: string
 
     /**
      * 品牌描述
@@ -165,14 +165,14 @@ export interface ReqBossSpuUpdate {
     priceVisible?: number | string
 
     /**
-     * 编辑状态 0：草稿 1：已提交
+     * 编辑状态 1：草稿 2：已提交
      * @type {number | string}
      * @memberof ReqBossSpuUpdate
      */
     status?: number | string
 
     /**
-     * 0:下架 1:上架
+     * 1:下架 2:上架
      * @type {number | string}
      * @memberof ReqBossSpuUpdate
      */
@@ -431,7 +431,7 @@ export interface ReqSkuShelfStatus {
     skuIdList?: Array<number | string>
 
     /**
-     * 是否上架  0:下架 1:上架
+     * 是否上架  1:下架 2:上架
      * @type {number | string}
      * @memberof ReqSkuShelfStatus
      */
@@ -484,7 +484,7 @@ export interface ReqSpuShelfStatus {
     id?: number | string
 
     /**
-     * 0:下架 1:上架
+     * 1:下架 2:上架
      * @type {number | string}
      * @memberof ReqSpuShelfStatus
      */
@@ -530,11 +530,11 @@ export interface BossFrontCategoryRecommendAddRequest {
     frontCategoryId: number | string
 
     /**
-     *
-     * @type {JsonNode}
+     * 品类图标
+     * @type {string}
      * @memberof BossFrontCategoryRecommendAddRequest
      */
-    imageUrl: JsonNode
+    imageUrl: string
 
 }
 
@@ -645,16 +645,267 @@ export interface ShopFloorBrandPromptResponse {
 /**
 *
 * @export
+* @interface BossSkuPageReq
+*/
+export interface BossSkuPageReq {
+
+    /**
+     * 名称
+     * @type {string}
+     * @memberof BossSkuPageReq
+     */
+    name?: string
+
+    /**
+     * 类目id
+     * @type {string}
+     * @memberof BossSkuPageReq
+     */
+    categoryIds?: string
+
+    /**
+     * 商品品牌
+     * @type {string}
+     * @memberof BossSkuPageReq
+     */
+    brandName?: string
+
+    /**
+     * 商品型号
+     * @type {string}
+     * @memberof BossSkuPageReq
+     */
+    model?: string
+
+    /**
+     * spu编码
+     * @type {string}
+     * @memberof BossSkuPageReq
+     */
+    spuCode?: string
+
+    /**
+     * sku编码
+     * @type {string}
+     * @memberof BossSkuPageReq
+     */
+    skuCode?: string
+
+    /**
+     * 是否上架  1:下架 2:上架
+     * @type {number | string}
+     * @memberof BossSkuPageReq
+     */
+    isOnShelf?: number | string
+
+    /**
+     * 编辑状态 1：待编辑 2：已提交
+     * @type {number | string}
+     * @memberof BossSkuPageReq
+     */
+    status?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface IPageRespBossSku
+*/
+export interface IPageRespBossSku {
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPageRespBossSku
+     */
+    searchCount: boolean
+
+    /**
+     *
+     * @type {Array<RespBossSku>}
+     * @memberof IPageRespBossSku
+     */
+    records: Array<RespBossSku>
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespBossSku
+     */
+    total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespBossSku
+     */
+    pages: number | string
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPageRespBossSku
+     */
+    hitCount: boolean
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespBossSku
+     */
+    size: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespBossSku
+     */
+    current: number | string
+
+}
+
+/**
+*
+* @export
+* @interface RespBossSku
+*/
+export interface RespBossSku {
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof RespBossSku
+     */
+    id?: number | string
+
+    /**
+     * spuId
+     * @type {number | string}
+     * @memberof RespBossSku
+     */
+    spuId?: number | string
+
+    /**
+     * sku编码
+     * @type {string}
+     * @memberof RespBossSku
+     */
+    code?: string
+
+    /**
+     * spu编码
+     * @type {string}
+     * @memberof RespBossSku
+     */
+    spuCode?: string
+
+    /**
+     * 类目1->类目2->类目3
+     * @type {string}
+     * @memberof RespBossSku
+     */
+    categoryPath?: string
+
+    /**
+     * 名称
+     * @type {string}
+     * @memberof RespBossSku
+     */
+    name?: string
+
+    /**
+     * 品牌名称
+     * @type {string}
+     * @memberof RespBossSku
+     */
+    brandName?: string
+
+    /**
+     * 商品型号
+     * @type {string}
+     * @memberof RespBossSku
+     */
+    model?: string
+
+    /**
+     * 图片
+     * @type {string}
+     * @memberof RespBossSku
+     */
+    imageUrls?: string
+
+    /**
+     * 销售属性值
+     * @type {string}
+     * @memberof RespBossSku
+     */
+    specifications?: string
+
+    /**
+     * 该sku规格信息
+     * @type {string}
+     * @memberof RespBossSku
+     */
+    optionValues?: string
+
+    /**
+     * 最小销售价
+     * @type {number | string}
+     * @memberof RespBossSku
+     */
+    minSalePrice?: number | string
+
+    /**
+     * 最大销售价
+     * @type {number | string}
+     * @memberof RespBossSku
+     */
+    maxSalePrice?: number | string
+
+    /**
+     * 是否上架  1:下架 2:上架
+     * @type {number | string}
+     * @memberof RespBossSku
+     */
+    isOnShelf?: number | string
+
+    /**
+     * 状态 0：待编辑 1：已提交
+     * @type {number | string}
+     * @memberof RespBossSku
+     */
+    status?: number | string
+
+    /**
+     * 推荐位置
+     * @type {string}
+     * @memberof RespBossSku
+     */
+    recommendLocation?: string
+
+    /**
+     * 是否有可售区域 true：有 false：无
+     * @type {boolean}
+     * @memberof RespBossSku
+     */
+    salesAreaStatus?: boolean
+
+}
+
+/**
+*
+* @export
 * @interface IPageRespBossB2bSkuPage
 */
 export interface IPageRespBossB2bSkuPage {
 
     /**
      *
-     * @type {number | string}
+     * @type {boolean}
      * @memberof IPageRespBossB2bSkuPage
      */
-    pages: number | string
+    searchCount: boolean
 
     /**
      *
@@ -668,28 +919,21 @@ export interface IPageRespBossB2bSkuPage {
      * @type {number | string}
      * @memberof IPageRespBossB2bSkuPage
      */
-    total: number | string
-
-    /**
-     *
-     * @type {boolean}
-     * @memberof IPageRespBossB2bSkuPage
-     */
-    hitCount: boolean
-
-    /**
-     *
-     * @type {boolean}
-     * @memberof IPageRespBossB2bSkuPage
-     */
-    searchCount: boolean
+    status?: number | string
 
     /**
      *
      * @type {number | string}
      * @memberof IPageRespBossB2bSkuPage
      */
-    current: number | string
+    recommendLocation?: string
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPageRespBossB2bSkuPage
+     */
+    salesAreaStatus?: boolean
 
     /**
      *
@@ -697,6 +941,13 @@ export interface IPageRespBossB2bSkuPage {
      * @memberof IPageRespBossB2bSkuPage
      */
     size: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespBossB2bSkuPage
+     */
+    current: number | string
 
 }
 
@@ -824,257 +1075,6 @@ export interface RespBossB2bSkuPage {
 /**
 *
 * @export
-* @interface BossSkuPageReq
-*/
-export interface BossSkuPageReq {
-
-    /**
-     * 名称
-     * @type {string}
-     * @memberof BossSkuPageReq
-     */
-    name?: string
-
-    /**
-     * 类目id
-     * @type {string}
-     * @memberof BossSkuPageReq
-     */
-    categoryIds?: string
-
-    /**
-     * 商品品牌
-     * @type {string}
-     * @memberof BossSkuPageReq
-     */
-    brandName?: string
-
-    /**
-     * 商品型号
-     * @type {string}
-     * @memberof BossSkuPageReq
-     */
-    model?: string
-
-    /**
-     * spu编码
-     * @type {string}
-     * @memberof BossSkuPageReq
-     */
-    spuCode?: string
-
-    /**
-     * sku编码
-     * @type {string}
-     * @memberof BossSkuPageReq
-     */
-    skuCode?: string
-
-    /**
-     * 是否上架  0:下架 1:上架
-     * @type {number | string}
-     * @memberof BossSkuPageReq
-     */
-    isOnShelf?: number | string
-
-    /**
-     * 编辑状态 0：待编辑 1：已提交
-     * @type {number | string}
-     * @memberof BossSkuPageReq
-     */
-    status?: number | string
-
-}
-
-/**
-*
-* @export
-* @interface IPageRespBossSku
-*/
-export interface IPageRespBossSku {
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageRespBossSku
-     */
-    pages: number | string
-
-    /**
-     *
-     * @type {Array<RespBossSku>}
-     * @memberof IPageRespBossSku
-     */
-    records: Array<RespBossSku>
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageRespBossSku
-     */
-    total: number | string
-
-    /**
-     *
-     * @type {boolean}
-     * @memberof IPageRespBossSku
-     */
-    hitCount: boolean
-
-    /**
-     *
-     * @type {boolean}
-     * @memberof IPageRespBossSku
-     */
-    searchCount: boolean
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageRespBossSku
-     */
-    current: number | string
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageRespBossSku
-     */
-    size: number | string
-
-}
-
-/**
-*
-* @export
-* @interface RespBossSku
-*/
-export interface RespBossSku {
-
-    /**
-     * 主键id
-     * @type {number | string}
-     * @memberof RespBossSku
-     */
-    id?: number | string
-
-    /**
-     * spuId
-     * @type {number | string}
-     * @memberof RespBossSku
-     */
-    spuId?: number | string
-
-    /**
-     * sku编码
-     * @type {string}
-     * @memberof RespBossSku
-     */
-    code?: string
-
-    /**
-     * spu编码
-     * @type {string}
-     * @memberof RespBossSku
-     */
-    spuCode?: string
-
-    /**
-     * 类目1->类目2->类目3
-     * @type {string}
-     * @memberof RespBossSku
-     */
-    categoryPath?: string
-
-    /**
-     * 名称
-     * @type {string}
-     * @memberof RespBossSku
-     */
-    name?: string
-
-    /**
-     * 品牌名称
-     * @type {string}
-     * @memberof RespBossSku
-     */
-    brandName?: string
-
-    /**
-     * 商品型号
-     * @type {string}
-     * @memberof RespBossSku
-     */
-    model?: string
-
-    /**
-     * 图片
-     * @type {string}
-     * @memberof RespBossSku
-     */
-    imageUrls?: string
-
-    /**
-     * 销售属性值
-     * @type {string}
-     * @memberof RespBossSku
-     */
-    specifications?: string
-
-    /**
-     * 该sku规格信息
-     * @type {string}
-     * @memberof RespBossSku
-     */
-    optionValues?: string
-
-    /**
-     * 最小销售价
-     * @type {number | string}
-     * @memberof RespBossSku
-     */
-    minSalePrice?: number | string
-
-    /**
-     * 最大销售价
-     * @type {number | string}
-     * @memberof RespBossSku
-     */
-    maxSalePrice?: number | string
-
-    /**
-     * 是否上架  0:下架 1:上架
-     * @type {number | string}
-     * @memberof RespBossSku
-     */
-    isOnShelf?: number | string
-
-    /**
-     * 状态 0：待编辑 1：已提交
-     * @type {number | string}
-     * @memberof RespBossSku
-     */
-    status?: number | string
-
-    /**
-     * 推荐位置
-     * @type {string}
-     * @memberof RespBossSku
-     */
-    recommendLocation?: string
-
-    /**
-     * 是否有可售区域 true：有 false：无
-     * @type {boolean}
-     * @memberof RespBossSku
-     */
-    salesAreaStatus?: boolean
-
-}
-
-/**
-*
-* @export
 * @interface FavoriteResponse
 */
 export interface FavoriteResponse {
@@ -1087,14 +1087,14 @@ export interface FavoriteResponse {
     id?: number | string
 
     /**
-     * userId
+     * 商品最大销售价
      * @type {number | string}
      * @memberof FavoriteResponse
      */
     userId?: number | string
 
     /**
-     * 商品spuId
+     * 0:下架 1:上架
      * @type {number | string}
      * @memberof FavoriteResponse
      */
@@ -1129,7 +1129,7 @@ export interface FavoriteResponse {
     maxSalePrice?: number | string
 
     /**
-     * 0:下架 1:上架
+     * 1:下架 2:上架
      * @type {number | string}
      * @memberof FavoriteResponse
      */
@@ -1153,10 +1153,10 @@ export interface IPageFavoriteResponse {
 
     /**
      *
-     * @type {number | string}
+     * @type {boolean}
      * @memberof IPageFavoriteResponse
      */
-    pages: number | string
+    searchCount: boolean
 
     /**
      *
@@ -1174,6 +1174,13 @@ export interface IPageFavoriteResponse {
 
     /**
      *
+     * @type {number | string}
+     * @memberof IPageFavoriteResponse
+     */
+    pages: number | string
+
+    /**
+     *
      * @type {boolean}
      * @memberof IPageFavoriteResponse
      */
@@ -1181,10 +1188,10 @@ export interface IPageFavoriteResponse {
 
     /**
      *
-     * @type {boolean}
+     * @type {number | string}
      * @memberof IPageFavoriteResponse
      */
-    searchCount: boolean
+    size: number | string
 
     /**
      *
@@ -1193,12 +1200,135 @@ export interface IPageFavoriteResponse {
      */
     current: number | string
 
+}
+
+/**
+*
+* @export
+* @interface MyStatistics
+*/
+export interface MyStatistics {
+
+    /**
+     * 用户收藏数量
+     * @type {number | string}
+     * @memberof MyStatistics
+     */
+    totalFavorite: number | string
+
+    /**
+     * 企业账单数量
+     * @type {number | string}
+     * @memberof MyStatistics
+     */
+    fundNumber: number | string
+
+    /**
+     * 企业员工数量
+     * @type {number | string}
+     * @memberof MyStatistics
+     */
+    userNumber: number | string
+
+}
+
+/**
+*
+* @export
+* @interface CategoryTreeResponse
+*/
+export interface CategoryTreeResponse {
+
+    /**
+     * 类目id
+     * @type {number | string}
+     * @memberof CategoryTreeResponse
+     */
+    id?: number | string
+
+    /**
+     * 类目code
+     * @type {string}
+     * @memberof CategoryTreeResponse
+     */
+    code?: string
+
+    /**
+     * 类目名称
+     * @type {string}
+     * @memberof CategoryTreeResponse
+     */
+    name?: string
+
     /**
      *
      * @type {number | string}
-     * @memberof IPageFavoriteResponse
+     * @memberof CategoryTreeResponse
      */
-    size: number | string
+    parentId?: number | string
+
+    /**
+     *
+     * @type {string}
+     * @memberof CategoryTreeResponse
+     */
+    path?: string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof CategoryTreeResponse
+     */
+    sort?: number | string
+
+    /**
+     * 类目层级
+     * @type {number | string}
+     * @memberof CategoryTreeResponse
+     */
+    level?: number | string
+
+    /**
+     *
+     * @type {string}
+     * @memberof CategoryTreeResponse
+     */
+    imgUrl?: string
+
+    /**
+     *
+     * @type {string}
+     * @memberof CategoryTreeResponse
+     */
+    operator?: string
+
+    /**
+     *
+     * @type {string}
+     * @memberof CategoryTreeResponse
+     */
+    createTime?: string
+
+    /**
+     *
+     * @type {string}
+     * @memberof CategoryTreeResponse
+     */
+    lastModifyTime?: string
+
+    /**
+     * sup数量
+     * @type {number | string}
+     * @memberof CategoryTreeResponse
+     */
+    spuNumber?: number | string
+
+    /**
+     *
+     * @type {Array<CategoryTreeResponse>}
+     * @memberof CategoryTreeResponse
+     */
+    subCategoryList?: Array<CategoryTreeResponse>
 
 }
 
@@ -1239,17 +1369,17 @@ export interface BrandDetailResponse {
 
     /**
      * 品牌logo
-     * @type {Array<object>}
+     * @type {string}
      * @memberof BrandDetailResponse
      */
-    brandLogoUrls: Array<object>
+    brandLogoUrl: string
 
     /**
      * 品牌banner
-     * @type {Array<object>}
+     * @type {string}
      * @memberof BrandDetailResponse
      */
-    brandBannerUrls: Array<object>
+    brandBannerUrl: string
 
     /**
      * 品牌描述
@@ -1408,17 +1538,17 @@ export interface BrandShopExtendResponse {
 
     /**
      * 品牌logo
-     * @type {Array<object>}
+     * @type {string}
      * @memberof BrandShopExtendResponse
      */
-    brandLogoUrls?: Array<object>
+    brandLogoUrl?: string
 
     /**
      * 品牌banner
-     * @type {Array<object>}
+     * @type {string}
      * @memberof BrandShopExtendResponse
      */
-    brandBannerUrls?: Array<object>
+    brandBannerUrl?: string
 
     /**
      * 品牌描述
@@ -1445,10 +1575,10 @@ export interface IPageBrandShopExtendResponse {
 
     /**
      *
-     * @type {number | string}
+     * @type {boolean}
      * @memberof IPageBrandShopExtendResponse
      */
-    pages: number | string
+    searchCount: boolean
 
     /**
      *
@@ -1466,6 +1596,13 @@ export interface IPageBrandShopExtendResponse {
 
     /**
      *
+     * @type {number | string}
+     * @memberof IPageBrandShopExtendResponse
+     */
+    pages: number | string
+
+    /**
+     *
      * @type {boolean}
      * @memberof IPageBrandShopExtendResponse
      */
@@ -1473,10 +1610,10 @@ export interface IPageBrandShopExtendResponse {
 
     /**
      *
-     * @type {boolean}
+     * @type {number | string}
      * @memberof IPageBrandShopExtendResponse
      */
-    searchCount: boolean
+    size: number | string
 
     /**
      *
@@ -1484,13 +1621,6 @@ export interface IPageBrandShopExtendResponse {
      * @memberof IPageBrandShopExtendResponse
      */
     current: number | string
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageBrandShopExtendResponse
-     */
-    size: number | string
 
 }
 
@@ -1544,7 +1674,7 @@ export interface BossSpuPageReq {
     spuCode?: string
 
     /**
-     * 是否上架  0:下架 1:上架
+     * 是否上架  1:下架 2:上架
      * @type {number | string}
      * @memberof BossSpuPageReq
      */
@@ -1568,10 +1698,10 @@ export interface IPageRespBossSpuPage {
 
     /**
      *
-     * @type {number | string}
+     * @type {boolean}
      * @memberof IPageRespBossSpuPage
      */
-    pages: number | string
+    total: number | string
 
     /**
      *
@@ -1585,20 +1715,6 @@ export interface IPageRespBossSpuPage {
      * @type {number | string}
      * @memberof IPageRespBossSpuPage
      */
-    total: number | string
-
-    /**
-     *
-     * @type {boolean}
-     * @memberof IPageRespBossSpuPage
-     */
-    hitCount: boolean
-
-    /**
-     *
-     * @type {boolean}
-     * @memberof IPageRespBossSpuPage
-     */
     searchCount: boolean
 
     /**
@@ -1610,10 +1726,24 @@ export interface IPageRespBossSpuPage {
 
     /**
      *
+     * @type {boolean}
+     * @memberof IPageRespBossSpuPage
+     */
+    size: number | string
+
+    /**
+     *
      * @type {number | string}
      * @memberof IPageRespBossSpuPage
      */
     size: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespBossSpuPage
+     */
+    current: number | string
 
 }
 
@@ -1702,25 +1832,25 @@ export interface RespBossSpuPage {
     maxSalePrice?: number | string
 
     /**
-     * 编辑状态 0：草稿 1：已提交
+     * 编辑状态 1：草稿 2：已提交
      * @type {number | string}
      * @memberof RespBossSpuPage
      */
     status?: number | string
 
     /**
-     * 0:下架 1:上架
+     * 1:下架 2:上架
      * @type {number | string}
      * @memberof RespBossSpuPage
      */
     isOnShelf?: number | string
 
     /**
-     *  是否推荐 0：否 1:是
-     * @type {number | string}
+     * true：是 false：否
+     * @type {boolean}
      * @memberof RespBossSpuPage
      */
-    recommend?: number | string
+    recommend?: boolean
 
     /**
      * 创建时间
@@ -1851,14 +1981,14 @@ export interface RespBossSpuDetail {
     priceVisible: number | string
 
     /**
-     * 编辑状态 0：草稿 1：已提交
+     * 编辑状态 1：草稿 2：已提交
      * @type {number | string}
      * @memberof RespBossSpuDetail
      */
     status: number | string
 
     /**
-     * 0:下架 1:上架
+     * 1:下架 2:上架
      * @type {number | string}
      * @memberof RespBossSpuDetail
      */
@@ -1956,6 +2086,27 @@ export interface SpuSalesArea {
      * @memberof SpuSalesArea
      */
     areaId?: string
+
+    /**
+     * 省名称
+     * @type {string}
+     * @memberof SpuSalesArea
+     */
+    provinceName?: string
+
+    /**
+     * 市名称
+     * @type {string}
+     * @memberof SpuSalesArea
+     */
+    cityName?: string
+
+    /**
+     * 区名称
+     * @type {string}
+     * @memberof SpuSalesArea
+     */
+    areaName?: string
 
     /**
      * 售卖规则，省id|市id|区id
@@ -2105,10 +2256,10 @@ export interface IPageRespBossShopFloorPage {
 
     /**
      *
-     * @type {number | string}
+     * @type {boolean}
      * @memberof IPageRespBossShopFloorPage
      */
-    pages: number | string
+    total: number | string
 
     /**
      *
@@ -2122,20 +2273,6 @@ export interface IPageRespBossShopFloorPage {
      * @type {number | string}
      * @memberof IPageRespBossShopFloorPage
      */
-    total: number | string
-
-    /**
-     *
-     * @type {boolean}
-     * @memberof IPageRespBossShopFloorPage
-     */
-    hitCount: boolean
-
-    /**
-     *
-     * @type {boolean}
-     * @memberof IPageRespBossShopFloorPage
-     */
     searchCount: boolean
 
     /**
@@ -2147,10 +2284,24 @@ export interface IPageRespBossShopFloorPage {
 
     /**
      *
+     * @type {boolean}
+     * @memberof IPageRespBossShopFloorPage
+     */
+    size: number | string
+
+    /**
+     *
      * @type {number | string}
      * @memberof IPageRespBossShopFloorPage
      */
     size: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespBossShopFloorPage
+     */
+    current: number | string
 
 }
 
@@ -2292,11 +2443,11 @@ export interface BossFrontCategoryRecommendResponse {
     sort?: number | string
 
     /**
-     *
-     * @type {JsonNode}
+     * 品类图标
+     * @type {string}
      * @memberof BossFrontCategoryRecommendResponse
      */
-    imageUrl?: JsonNode
+    imageUrl?: string
 
     /**
      * 更新时间
@@ -2323,10 +2474,10 @@ export interface IPageBossFrontCategoryRecommendResponse {
 
     /**
      *
-     * @type {number | string}
+     * @type {boolean}
      * @memberof IPageBossFrontCategoryRecommendResponse
      */
-    pages: number | string
+    searchCount: boolean
 
     /**
      *
@@ -2344,6 +2495,13 @@ export interface IPageBossFrontCategoryRecommendResponse {
 
     /**
      *
+     * @type {number | string}
+     * @memberof IPageBossFrontCategoryRecommendResponse
+     */
+    pages: number | string
+
+    /**
+     *
      * @type {boolean}
      * @memberof IPageBossFrontCategoryRecommendResponse
      */
@@ -2351,10 +2509,10 @@ export interface IPageBossFrontCategoryRecommendResponse {
 
     /**
      *
-     * @type {boolean}
+     * @type {number | string}
      * @memberof IPageBossFrontCategoryRecommendResponse
      */
-    searchCount: boolean
+    size: number | string
 
     /**
      *
@@ -2363,12 +2521,35 @@ export interface IPageBossFrontCategoryRecommendResponse {
      */
     current: number | string
 
+}
+
+/**
+* 类目信息
+* @export
+* @interface BossCategorySpuDetailResponse
+*/
+export interface BossCategorySpuDetailResponse {
+
     /**
-     *
-     * @type {number | string}
-     * @memberof IPageBossFrontCategoryRecommendResponse
+     * 类目编码
+     * @type {string}
+     * @memberof BossCategorySpuDetailResponse
      */
-    size: number | string
+    code?: string
+
+    /**
+     * 类目信息
+     * @type {string}
+     * @memberof BossCategorySpuDetailResponse
+     */
+    categoryPath?: string
+
+    /**
+     * 类目上架商品数量
+     * @type {number | string}
+     * @memberof BossCategorySpuDetailResponse
+     */
+    onShelfSpuNum?: number | string
 
 }
 
@@ -2394,11 +2575,18 @@ export interface BossFrontCategoryDetailResp {
     frontCategoryName: string
 
     /**
-     * 关联类目列表
-     * @type {Array<number | string>}
+     * 排序
+     * @type {number | string}
      * @memberof BossFrontCategoryDetailResp
      */
-    categoryIdList: Array<number | string>
+    sort: number | string
+
+    /**
+     * 类目信息
+     * @type {Array<BossCategorySpuDetailResponse>}
+     * @memberof BossFrontCategoryDetailResp
+     */
+    bossCategorySpuDetailResponseList: Array<BossCategorySpuDetailResponse>
 
 }
 
@@ -2526,18 +2714,18 @@ export interface BossFrontCategoryPageResponse {
     updateBy?: string
 
     /**
-     * 类目关联spu的数量列表
-     * @type {Array<RespFrontCategorySpuNum>}
+     * 类目关联spu的名称数量
+     * @type {string}
      * @memberof BossFrontCategoryPageResponse
      */
-    frontCategorySkuNumList?: Array<RespFrontCategorySpuNum>
+    categoryNameAndSpuNum?: string
 
     /**
      * 品类上架商品数量
      * @type {number | string}
      * @memberof BossFrontCategoryPageResponse
      */
-    onShelfSkuNum?: number | string
+    onShelfSpuNum?: number | string
 
 }
 
@@ -2550,10 +2738,10 @@ export interface IPageBossFrontCategoryPageResponse {
 
     /**
      *
-     * @type {number | string}
+     * @type {boolean}
      * @memberof IPageBossFrontCategoryPageResponse
      */
-    pages: number | string
+    searchCount: boolean
 
     /**
      *
@@ -2571,6 +2759,13 @@ export interface IPageBossFrontCategoryPageResponse {
 
     /**
      *
+     * @type {number | string}
+     * @memberof IPageBossFrontCategoryPageResponse
+     */
+    pages: number | string
+
+    /**
+     *
      * @type {boolean}
      * @memberof IPageBossFrontCategoryPageResponse
      */
@@ -2578,10 +2773,10 @@ export interface IPageBossFrontCategoryPageResponse {
 
     /**
      *
-     * @type {boolean}
+     * @type {number | string}
      * @memberof IPageBossFrontCategoryPageResponse
      */
-    searchCount: boolean
+    size: number | string
 
     /**
      *
@@ -2589,13 +2784,6 @@ export interface IPageBossFrontCategoryPageResponse {
      * @memberof IPageBossFrontCategoryPageResponse
      */
     current: number | string
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageBossFrontCategoryPageResponse
-     */
-    size: number | string
 
 }
 
@@ -2738,10 +2926,10 @@ export interface IPageShopBannerResponse {
 
     /**
      *
-     * @type {number | string}
+     * @type {boolean}
      * @memberof IPageShopBannerResponse
      */
-    pages: number | string
+    total: number | string
 
     /**
      *
@@ -2755,20 +2943,6 @@ export interface IPageShopBannerResponse {
      * @type {number | string}
      * @memberof IPageShopBannerResponse
      */
-    total: number | string
-
-    /**
-     *
-     * @type {boolean}
-     * @memberof IPageShopBannerResponse
-     */
-    hitCount: boolean
-
-    /**
-     *
-     * @type {boolean}
-     * @memberof IPageShopBannerResponse
-     */
     searchCount: boolean
 
     /**
@@ -2780,10 +2954,24 @@ export interface IPageShopBannerResponse {
 
     /**
      *
+     * @type {boolean}
+     * @memberof IPageShopBannerResponse
+     */
+    size: number | string
+
+    /**
+     *
      * @type {number | string}
      * @memberof IPageShopBannerResponse
      */
     size: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageShopBannerResponse
+     */
+    current: number | string
 
 }
 
@@ -2858,7 +3046,7 @@ export interface AppletSkuResponse {
     maxSalePrice?: number | string
 
     /**
-     * 是否上架  0:下架 1:上架
+     * 是否上架  1:下架 2:上架
      * @type {number | string}
      * @memberof AppletSkuResponse
      */
@@ -2958,14 +3146,14 @@ export interface AppletSpuDetailResponse {
     maxSalePrice: number | string
 
     /**
-     * 编辑状态 0：草稿 1：已提交
+     * 编辑状态 1：草稿 2：已提交
      * @type {number | string}
      * @memberof AppletSpuDetailResponse
      */
     status: number | string
 
     /**
-     * 0:下架 1:上架
+     * 1:下架 2:上架
      * @type {number | string}
      * @memberof AppletSpuDetailResponse
      */
@@ -3030,6 +3218,27 @@ export interface AppletSpuSalesAreaResponse {
     areaId?: string
 
     /**
+     * 省名称
+     * @type {string}
+     * @memberof AppletSpuSalesAreaResponse
+     */
+    provinceName?: string
+
+    /**
+     * 市名称
+     * @type {string}
+     * @memberof AppletSpuSalesAreaResponse
+     */
+    cityName?: string
+
+    /**
+     * 区名称
+     * @type {string}
+     * @memberof AppletSpuSalesAreaResponse
+     */
+    areaName?: string
+
+    /**
      * 售卖规则，省id|市id|区id
      * @type {string}
      * @memberof AppletSpuSalesAreaResponse
@@ -3088,11 +3297,11 @@ export interface AppletSpuPageRequest {
     userId?: number | string
 
     /**
-     * 是否推荐 0：否 1：是
-     * @type {number | string}
+     * true：是 false：否
+     * @type {boolean}
      * @memberof AppletSpuPageRequest
      */
-    recommend?: number | string
+    recommend?: boolean
 
 }
 
@@ -3188,14 +3397,14 @@ export interface AppletSpuPageResponse {
     maxSalePrice?: number | string
 
     /**
-     * 编辑状态 0：草稿 1：已提交
+     * 编辑状态 1：草稿 2：已提交
      * @type {number | string}
      * @memberof AppletSpuPageResponse
      */
     status?: number | string
 
     /**
-     * 0:下架 1:上架
+     * 1:下架 2:上架
      * @type {number | string}
      * @memberof AppletSpuPageResponse
      */
@@ -3219,10 +3428,10 @@ export interface IPageAppletSpuPageResponse {
 
     /**
      *
-     * @type {number | string}
+     * @type {boolean}
      * @memberof IPageAppletSpuPageResponse
      */
-    pages: number | string
+    total: number | string
 
     /**
      *
@@ -3236,20 +3445,6 @@ export interface IPageAppletSpuPageResponse {
      * @type {number | string}
      * @memberof IPageAppletSpuPageResponse
      */
-    total: number | string
-
-    /**
-     *
-     * @type {boolean}
-     * @memberof IPageAppletSpuPageResponse
-     */
-    hitCount: boolean
-
-    /**
-     *
-     * @type {boolean}
-     * @memberof IPageAppletSpuPageResponse
-     */
     searchCount: boolean
 
     /**
@@ -3261,10 +3456,24 @@ export interface IPageAppletSpuPageResponse {
 
     /**
      *
-     * @type {number | string}
+     * @type {boolean}
      * @memberof IPageAppletSpuPageResponse
      */
     size: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageAppletSpuPageResponse
+     */
+    pages: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageAppletSpuPageResponse
+     */
+    records: Array<ShopFloorSpuResponse>
 
 }
 
@@ -3277,35 +3486,21 @@ export interface IPageShopFloorSpuResponse {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageShopFloorSpuResponse
-     */
-    pages: number | string
-
-    /**
-     *
-     * @type {Array<ShopFloorSpuResponse>}
-     * @memberof IPageShopFloorSpuResponse
-     */
-    records: Array<ShopFloorSpuResponse>
-
-    /**
-     *
-     * @type {number | string}
+     * @type {boolean}
      * @memberof IPageShopFloorSpuResponse
      */
     total: number | string
 
     /**
      *
-     * @type {boolean}
+     * @type {Array<ShopFloorSpuResponse>}
      * @memberof IPageShopFloorSpuResponse
      */
     hitCount: boolean
 
     /**
      *
-     * @type {boolean}
+     * @type {number | string}
      * @memberof IPageShopFloorSpuResponse
      */
     searchCount: boolean
@@ -3319,10 +3514,24 @@ export interface IPageShopFloorSpuResponse {
 
     /**
      *
+     * @type {boolean}
+     * @memberof IPageShopFloorSpuResponse
+     */
+    size: number | string
+
+    /**
+     *
      * @type {number | string}
      * @memberof IPageShopFloorSpuResponse
      */
     size: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageShopFloorSpuResponse
+     */
+    current: number | string
 
 }
 
@@ -3529,7 +3738,7 @@ export interface ShopFloorSpuResponse {
     maxSalePrice?: number | string
 
     /**
-     * 是否上架  0:下架 1:上架
+     * 是否上架  1:下架 2:上架
      * @type {number | string}
      * @memberof ShopFloorSpuResponse
      */
@@ -3631,11 +3840,11 @@ export interface AppletFrontCategoryRecommendResponse {
     sort?: number | string
 
     /**
-     *
-     * @type {JsonNode}
+     * 品类图标
+     * @type {string}
      * @memberof AppletFrontCategoryRecommendResponse
      */
-    imageUrl?: JsonNode
+    imageUrl?: string
 
 }
 
@@ -3654,7 +3863,7 @@ export interface ShopFrontCategoryResponse {
     id?: number | string
 
     /**
-     * 前端品类名称
+     * 品类名称
      * @type {string}
      * @memberof ShopFrontCategoryResponse
      */
@@ -3668,11 +3877,125 @@ export interface ShopFrontCategoryResponse {
     sort?: number | string
 
     /**
-     * 类目id集合
-     * @type {Array<number | string>}
+     * 品类商品信息
+     * @type {Array<ShopFrontCategorySpuResponse>}
      * @memberof ShopFrontCategoryResponse
      */
-    categoryIds?: Array<number | string>
+    shopFrontCategorySpuResponseList?: Array<ShopFrontCategorySpuResponse>
+
+}
+
+/**
+* 品类商品信息
+* @export
+* @interface ShopFrontCategorySpuResponse
+*/
+export interface ShopFrontCategorySpuResponse {
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof ShopFrontCategorySpuResponse
+     */
+    id?: number | string
+
+    /**
+     * 楼层id
+     * @type {number | string}
+     * @memberof ShopFrontCategorySpuResponse
+     */
+    floorId?: number | string
+
+    /**
+     * 排序
+     * @type {number | string}
+     * @memberof ShopFrontCategorySpuResponse
+     */
+    sort?: number | string
+
+    /**
+     * spuId
+     * @type {number | string}
+     * @memberof ShopFrontCategorySpuResponse
+     */
+    spuId?: number | string
+
+    /**
+     * spu编码
+     * @type {string}
+     * @memberof ShopFrontCategorySpuResponse
+     */
+    spuCode?: string
+
+    /**
+     * spu名称
+     * @type {string}
+     * @memberof ShopFrontCategorySpuResponse
+     */
+    spuName?: string
+
+    /**
+     * 销售名称
+     * @type {string}
+     * @memberof ShopFrontCategorySpuResponse
+     */
+    showName?: string
+
+    /**
+     * 图片
+     * @type {string}
+     * @memberof ShopFrontCategorySpuResponse
+     */
+    imageUrls?: string
+
+    /**
+     * 销售属性值
+     * @type {string}
+     * @memberof ShopFrontCategorySpuResponse
+     */
+    specifications?: string
+
+    /**
+     * 最小销售价
+     * @type {number | string}
+     * @memberof ShopFrontCategorySpuResponse
+     */
+    minSalePrice?: number | string
+
+    /**
+     * 最大销售价
+     * @type {number | string}
+     * @memberof ShopFrontCategorySpuResponse
+     */
+    maxSalePrice?: number | string
+
+    /**
+     * 是否上架  1:下架 2:上架
+     * @type {number | string}
+     * @memberof ShopFrontCategorySpuResponse
+     */
+    isOnShelf?: number | string
+
+    /**
+     * 类目id
+     * @type {number | string}
+     * @memberof ShopFrontCategorySpuResponse
+     */
+    categoryId?: number | string
+
+    /**
+     * 品类id
+     * @type {number | string}
+     * @memberof ShopFrontCategorySpuResponse
+     */
+    frontCategoryId?: number | string
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof ShopFrontCategorySpuResponse
+     */
+    favorites?: boolean
 
 }
 

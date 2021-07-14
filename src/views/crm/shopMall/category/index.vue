@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="query-cont__row mb20">
-                <h-button type="primary" >新增品类</h-button>
+                <h-button type="primary" @click="onAdd">新增品类</h-button>
             </div>
             <!-- end search bar -->
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center"  border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0' >
@@ -88,6 +88,9 @@ export default class Bannertabs extends Vue {
 
         onReset () {
 
+        }
+        onAdd () {
+            this.$router.push({ path: '/goodwork/categoryedit' })
         }
 }
 </script>
