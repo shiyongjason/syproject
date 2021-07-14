@@ -165,8 +165,8 @@
                         <el-input style="width: 500px" type="textarea" v-model="detailData.description" maxlength="500" show-word-limit :rows="2" placeholder="请输入问题描述" />
                     </el-form-item>
                     <el-form-item label="问题图片：" ref="payImgs">
-                        <el-upload :action="imageUploadAction" :data="imageUploadData" accept='image/jpeg, image/jpg, image/png, audio/mp4, video/mp4' name='multiFile' :on-preview="handlePreview" :file-list="imgs" :multiple='true' :on-success="handleUploadImageSuccess" :limit="8"
-                            :on-exceed="uploadImageExceptMessage" :before-upload="beforeImageUpload" :on-remove="handleImageRemove">
+                        <el-upload :action="imageUploadAction" :data="imageUploadData" name='multiFile' :on-preview="handlePreview" :file-list="imgs" :multiple='true' :on-success="handleUploadImageSuccess" :limit="8" :on-exceed="uploadImageExceptMessage" :before-upload="beforeImageUpload"
+                            :on-remove="handleImageRemove">
                             <el-button size="small" type="primary">点击上传</el-button>
                             <div slot="tip" class="el-upload__tip">不超过8张（支持JPEG、PNG、MP4格式）</div>
                         </el-upload>
