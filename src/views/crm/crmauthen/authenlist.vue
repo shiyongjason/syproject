@@ -1,44 +1,43 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
                 <div class="query-cont-col">
-                    <div class="query-col-title">企业名称：</div>
-                    <div class="query-col-input">
+                    <div class="query-col__label">企业名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">管理员账号：</div>
-                    <div class="query-col-input">
+                    <div class="query-col__label">管理员账号：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.userAccount" placeholder="请输入管理员账号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">管理员姓名：</div>
-                    <div class="query-col-input">
+                    <div class="query-col__label">管理员姓名：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.userName" placeholder="请输入管理员姓名" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">所属分部：</div>
-                    <div class="query-col-input">
-                         <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true  @change="onChooseDep">
+                    <div class="query-col__label">所属分部：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true @change="onChooseDep">
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">经营区域：</div>
-                    <div class="query-col-input">
-                        <el-cascader placeholder="试试搜索： 南京" :options="options" v-model="optarr"  ref="myCascader" :clearable=true :collapse-tags=true
-                        :show-all-levels="true" @change="cityChange" :props="{ multiple: true ,value:'countryId',label:'name',children:'cities'}" filterable>
+                    <div class="query-col__label">经营区域：</div>
+                    <div class="query-col__input">
+                        <el-cascader placeholder="试试搜索： 南京" :options="options" v-model="optarr" ref="myCascader" :clearable=true :collapse-tags=true :show-all-levels="true" @change="cityChange" :props="{ multiple: true ,value:'countryId',label:'name',children:'cities'}" filterable>
                         </el-cascader>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">企业类型：</div>
-                    <div class="query-col-input">
+                    <div class="query-col__label">企业类型：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.companyType">
                             <el-option label="全部" value="">
                             </el-option>
@@ -48,8 +47,8 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">客户分类：</div>
-                    <div class="query-col-input">
+                    <div class="query-col__label">客户分类：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.customerType">
                             <el-option label="全部" value="">
                             </el-option>
@@ -59,8 +58,8 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">认证状态：</div>
-                    <div class="query-col-input">
+                    <div class="query-col__label">认证状态：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.authenticationStatus">
                             <el-option label="全部" value="">
                             </el-option>
@@ -69,39 +68,68 @@
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">关联/认证时间：</div>
-                    <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.authenticationEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
+                  <div class="query-cont-col">
+                    <div class="query-col__label">会员标签：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.memberTag">
+                            <el-option label="全部" value="">
+                            </el-option>
+                            <el-option v-for="item in memberTagArr" :key="item.key" :label="item.value" :value="item.key">
+                            </el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">
-                            查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest()">
-                            重置
-                        </el-button>
+                    <div class="query-col__label">关联/认证时间：</div>
+                    <div class="query-col__input">
+                        <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="authOptions">
+                        </HDatePicker>
                     </div>
+                </div>
+                 <div class="query-cont-col">
+                    <div class="query-col__label">橙工采会员：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.chengGongCaiLable">
+                            <el-option label="全部" value="">
+                            </el-option>
+                            <el-option v-for="item in chengArr" :key="item.key" :label="item.value" :value="item.key">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col__label">客户经理：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.customerManager" placeholder="请输入客户经理" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <h-button type="primary" @click="()=>searchList(1)">
+                        查询
+                    </h-button>
+                    <h-button @click="onRest">
+                        重置
+                    </h-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选 {{businessData.total}} 项,体系内 <b>{{crmauthLoan.inSystemNum||0}}</b>; 体系外 <b>{{crmauthLoan.outSystemNum||0}}
                 </b>; 白名单 <b>{{crmauthLoan.whiteListNum||0}}</b>; 黑名单 <b>{{crmauthLoan.blackListNum||0}}</b>; 待审核 <b>{{crmauthLoan.waitToAuditNum||0}}</b></el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
-             @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120
-             ::rowKey="rowKey" :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 ::rowKey="rowKey" :isShowIndex='true'>
                 <template slot="userAccount" slot-scope="scope">
-                   <span class="colblue" @click="onLinkship(scope.data.row.userAccount)"> {{scope.data.row.userAccount}}</span>
+                    <span class="colblue" @click="onLinkship(scope.data.row.userAccount)"> {{scope.data.row.userAccount}}</span>
+                </template>
+                 <template slot="memberTag" slot-scope="scope">
+                     {{memberTagArr[scope.data.row.memberTag-1].value}}
+                </template>
+                 <template slot="chengGongCaiLable" slot-scope="scope">
+                     {{chengLabel[scope.data.row.chengGongCaiLable]}}
+                </template>
+                <template slot="customerManager" slot-scope="scope">
+                     <p>{{scope.data.row.customerManager||'-'}}</p>
+                     <p>{{scope.data.row.customerManagerPhone||'-'}}</p>
                 </template>
                 <template slot="userName" slot-scope="scope">
-                   <span class="colblue" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
+                    <span class="colblue" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
                 </template>
                 <template slot="areaname" slot-scope="scope">
                     {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName}}
@@ -116,15 +144,14 @@
                     <span :class="scope.data.row.isAuthentication==1?'colgry':'colred'"> {{scope.data.row.isAuthentication==1?'已认证':'未认证'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onLookauthen(scope.data.row.companyCode)" v-if="hosAuthCheck(authen_detail)">查看详情</el-button>
+                    <h-button table @click="onLookauthen(scope.data.row.companyCode)" v-if="hosAuthCheck(authen_detail)">查看详情</h-button>
                 </template>
             </basicTable>
         </div>
-        <businessDrawer :drawer=drawer @backEvent='restDrawer' ref="drawercom"></businessDrawer>
+        <businessDrawer  :drawer=drawer @backEvent='restDrawer' ref="drawercom"></businessDrawer>
     </div>
 </template>
 <script>
-// import { findProducts, findBossSource, changeSpustatus, getBrands } from './api/index'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import businessDrawer from './components/businessDrawer'
@@ -135,6 +162,12 @@ export default {
     data () {
         return {
             authen_detail: Auths.CRM_AUTHEN_DETAIL,
+            chengLabel: {
+                0: '橙工采会员(未激活)',
+                1: '橙工采初级会员',
+                2: '橙工采橙级会员'
+            },
+            chengArr: [{ key: 0, value: '橙工采会员(未激活)' }, { key: 1, value: '橙工采初级会员' }, { key: 2, value: '橙工采橙级会员' }],
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -143,7 +176,7 @@ export default {
                 authenticationTimeOrder: '',
                 customerType: '',
                 customerTypeOrder: '',
-                companyName: this.$route.params.name || '',
+                companyName: this.$route.query.name || '',
                 companyType: '',
                 userAccount: '',
                 userName: '',
@@ -152,20 +185,25 @@ export default {
                 areaIds: '',
                 deptDoc: '',
                 jobNumber: '',
-                authCode: ''
+                authCode: '',
+                memberTag: '',
+                customerManager: ''
             },
             copyParams: {},
             tableData: [],
             paginationInfo: {},
             tableLabel: [
-                { label: '企业名称', prop: 'companyName' },
+                { label: '企业名称', prop: 'companyName', width: '200' },
                 { label: '管理员账号', prop: 'userAccount', width: '120' },
                 { label: '管理员姓名', prop: 'userName', width: '120' },
                 { label: '所属分部', prop: 'subsectionName', width: '150' },
                 { label: '经营区域', prop: 'areaname', width: '150' },
                 { label: '企业类型', prop: 'companyType', width: '100' },
                 { label: '客户分类', prop: 'customerType', width: '100', sortable: 'custom' },
-                { label: '认证状态', prop: 'isAuthentication', width: '100' },
+                { label: '橙工采会员', prop: 'chengGongCaiLable' },
+                { label: '认证状态', prop: 'isAuthentication' },
+                { label: '客户经理', prop: 'customerManager', width: '100' },
+                { label: '会员标签', prop: 'memberTag' },
                 { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: 'custom' },
                 { label: '关联认证时间', prop: 'authenticationTime', width: '150', formatters: 'dateTimes' }
             ],
@@ -177,31 +215,21 @@ export default {
             riskTypelist: RISK_TYPE_LIST,
             authenList: AUTEHEN_LIST,
             drawer: false,
-            branchArr: []
+            branchArr: [],
+            memberTagArr: [ { key: 1, value: '一般会员' }, { key: 2, value: '认证会员' }, { key: 3, value: '评级会员' }, { key: 4, value: '签约会员' }, { key: 5, value: '交易会员' } ]
         }
     },
     components: {
         businessDrawer
     },
     computed: {
-        pickerOptionsStart () {
+        authOptions () {
             return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.authenticationEndTime
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.authenticationStartTime
-                    if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                }
+                valueFormat: 'yyyy-MM-dd HH:mm',
+                format: 'yyyy-MM-dd HH:mm',
+                type: 'datetime',
+                startTime: this.queryParams.authenticationStartTime,
+                endTime: this.queryParams.authenticationEndTime
             }
         },
         ...mapGetters({
@@ -221,8 +249,8 @@ export default {
         this.copyParams = deepCopy(this.queryParams)
         this.getFindNest()
         this.getFindbranch()
-        if (this.$route.params.name) {
-            this.onLookauthen(this.$route.params.code)
+        if (this.$route.query.name) {
+            this.searchList()
         }
     },
     methods: {
@@ -234,6 +262,12 @@ export default {
         ...mapActions({
             findNest: 'findNest'
         }),
+        onStartChange (val) {
+            this.queryParams.authenticationStartTime = val
+        },
+        onEndChange (val) {
+            this.queryParams.authenticationEndTime = val
+        },
         onChooseDep () {
 
         },
@@ -276,7 +310,7 @@ export default {
         productCategoryChange (val) {
             this.queryParams.categoryId = val
         },
-        async  searchList (val) {
+        async searchList (val) {
             if (val) this.queryParams.pageNumber = val
             const { ...params } = this.queryParams
             await this.findBusinesspage(params)
@@ -304,9 +338,13 @@ export default {
             }
             this.searchList()
         },
-        onLookauthen (val) {
+        async onLookauthen (val) {
             this.drawer = true
-            this.$refs.drawercom.getMerchtMemberDetail(val)
+            this.$refs.drawercom.getAuthenticationDetail(val)
+            await this.$refs.drawercom.getMerchtMemberDetail(val)
+            this.$nextTick(() => {
+                this.$refs.drawercom.onClearV()
+            })
         },
         restDrawer () {
             this.drawer = false
@@ -324,7 +362,7 @@ export default {
     color: #ff0000;
 }
 .colgry {
-    color:#06c306;
+    color: #06c306;
 }
 .colblue {
     color: #50b7f7;

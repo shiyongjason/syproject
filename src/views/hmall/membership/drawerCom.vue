@@ -1,12 +1,12 @@
 <template>
     <div class="drawer-wrap">
-        <el-drawer :title="type==='merchant'?'商家详情':'会员详情'" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' :before-close="handleClose">
-            <div class="drawer-content">
+        <h-drawer :title="type==='merchant'?'商家详情':'会员详情'" :visible.sync="drawer" direction='rtl' size='50%' :beforeClose="handleClose">
+            <template #connect>
                 <el-tabs v-model="activeName">
                     <el-tab-pane label="功能管理" name="first"></el-tab-pane>
-                    <!-- <el-tab-pane label="基本信息" name="second"></el-tab-pane> -->
+                    <el-tab-pane label="开户信息" name="second"></el-tab-pane>
                 </el-tabs>
-                <el-form :model="bossDetail" :rules="rules" ref="ruleForm">
+                <el-form v-if="activeName=='first'" :model="bossDetail" :rules="rules" ref="ruleForm">
                     <el-form-item :label="type==='merchant'?'商家账号：':'会员账号：'" :label-width="formLabelWidth">
                         <span v-if="type==='merchant'">{{bossDetail.merchantAccount?bossDetail.merchantAccount:'-'}}</span>
                         <span v-if="type==='member'">{{bossDetail.memberAccount?bossDetail.memberAccount:'-'}}</span>
@@ -14,13 +14,16 @@
                     <el-form-item label="企业名称：" :label-width="formLabelWidth">
                         {{bossDetail.companyName?bossDetail.companyName:'-'}}
                     </el-form-item>
+                    <el-form-item label="店铺名称：" :label-width="formLabelWidth" v-if="type == 'merchant'">
+                        <el-input v-model="bossDetail.shopName" maxLength="60" placeholder="请输入"></el-input>
+                    </el-form-item>
                     <el-form-item label="所属分部：" :label-width="formLabelWidth" v-if="type==='merchant'">
                         <el-select v-model="bossDetail.subsectionCode" placeholder="请选择" :clearable=true>
                             <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="所属商家：" :label-width="formLabelWidth" v-if="type==='member'">
-                        <HAutocomplete :placeholder="'输入商家'" :maxlength=30  @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
+                        <HAutocomplete :placeholder="'输入商家'" :maxlength=30 @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
                     </el-form-item>
                     <el-form-item label="经营区域：" :label-width="formLabelWidth" required>
                         <el-col :span="6">
@@ -102,80 +105,172 @@
                 </el-form>
                 <div class="drawer-footer" v-if="activeName=='first'">
                     <div class="drawer-button">
-                        <el-button @click="cancelForm">取 消</el-button>
-                        <el-button type="primary" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
+                        <h-button @click="cancelForm">取 消</h-button>
+                        <h-button type="primary" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</h-button>
                     </div>
                 </div>
-                <!-- <div class="" v-if="activeName=='second'">
-                    <el-form :model="form">
+                <div class="" v-if="activeName=='second'&&!bossDetail.isAuthentication&&!bossDetail.authenticationTime">
+                    暂无认证信息
+                </div>
+                <div class="" v-if="activeName=='second'&&bossDetail.authenticationTime">
+                    <el-form :model="bossDetail">
                         <el-form-item label="企业名称：" :label-width="formLabelWidth">
-                            江苏舒适云信息技术有限公司
+                            {{bossDetail.companyName||'-'}}
                         </el-form-item>
                         <el-form-item label="企业类型：" :label-width="formLabelWidth">
-                            个体工商户
+                            <!-- 11=个人，12=企业，13=个体工商户 -->
+                            {{bossDetail.userType?userType[bossDetail.userType]:'-'}}
                         </el-form-item>
                         <el-form-item label="统一社会信用代码：" :label-width="formLabelWidth">
-                            2716986423661687QAZ
+                            {{
+                                bossDetail.corporation
+                                ?
+                                bossDetail.corporation.unifiedSocialCreditCode?bossDetail.corporation.unifiedSocialCreditCode:'-'
+                                :'-'
+                            }}
                         </el-form-item>
                         <el-form-item label="营业执照照片：" :label-width="formLabelWidth">
-                            <div>
-                                <img src="../../../assets/images/img_0.png" alt="">
+                            <div v-if="bossDetail.corporation&&bossDetail.corporation.businessLicensePhoto">
+                                <el-image class="yyzzpic" fit="contain" style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;" :src="bossDetail.corporation.businessLicensePhoto" :preview-src-list="[`${bossDetail.corporation.businessLicensePhoto}`]">
+                                </el-image>
                             </div>
+                            <div v-else>-</div>
                         </el-form-item>
-                        <el-form-item label="法人姓名：" :label-width="formLabelWidth">
-                            韦小宝
+
+                        <el-form-item v-if="bossDetail.userType==12" label="法人姓名：" :label-width="formLabelWidth">
+                            {{
+                                bossDetail.corporation
+                                ?
+                                bossDetail.corporation.legalPersonName?bossDetail.corporation.legalPersonName:'-'
+                                :'-'
+                            }}
                         </el-form-item>
-                        <el-form-item label="法人手机号：" :label-width="formLabelWidth">
-                            3778765678
+                        <el-form-item v-if="bossDetail.userType==11" label="法人姓名：" :label-width="formLabelWidth">
+                            {{
+                                bossDetail.individual
+                                ?
+                                bossDetail.individual.userName?bossDetail.individual.userName:'-'
+                                :'-'
+                            }}
                         </el-form-item>
-                        <el-form-item label="法人身份证号：" :label-width="formLabelWidth">
-                            320121199997897797979
+
+                        <el-form-item v-if="bossDetail.userType==12" label="法人身份证号：" :label-width="formLabelWidth">
+                            {{
+                                bossDetail.corporation
+                                ?
+                                bossDetail.corporation.legalCredentialNumber?bossDetail.corporation.legalCredentialNumber:'-'
+                                :'-'
+                            }}
                         </el-form-item>
-                        <el-form-item label="法人身份证照片：" :label-width="formLabelWidth">
+                        <el-form-item v-if="bossDetail.userType==11" label="法人身份证号：" :label-width="formLabelWidth">
+                            {{
+                                bossDetail.individual
+                                ?
+                                bossDetail.individual.credentialNumber?bossDetail.individual.credentialNumber:'-'
+                                :'-'
+                            }}
+                        </el-form-item>
+
+                        <el-form-item v-if="bossDetail.userType==12" label="法人身份证照片：" :label-width="formLabelWidth">
                             <div style="float:left">
-                                <img src="../../../assets/images/img_0.png" alt="">
+                                <el-image v-if="bossDetail.corporation&&bossDetail.corporation.certPhotoA" class="yyzzpic" fit="contain" style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;" :src="bossDetail.corporation.certPhotoA"
+                                    :preview-src-list="[`${bossDetail.corporation.certPhotoA}`]">
+                                </el-image>
+                                <font v-else>-</font>
                             </div>
                             <div style="float:left;margin-left:10px">
-                                <img src="../../../assets/images/img_0.png" alt="">
+                                <el-image v-if="bossDetail.corporation&&bossDetail.corporation.certPhotoB" class="yyzzpic" fit="contain" style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;" :src="bossDetail.corporation.certPhotoB"
+                                    :preview-src-list="[`${bossDetail.corporation.certPhotoB}`]">
+                                </el-image>
+                                <font v-else>-</font>
                             </div>
                         </el-form-item>
-                        <el-form-item label="开户名：" :label-width="formLabelWidth">
-                            320121199997897797979
-                        </el-form-item>
-                        <el-form-item label="银行卡号：" :label-width="formLabelWidth">
-                            320121199997897797979
-                        </el-form-item>
-                        <el-form-item label="联行号：" :label-width="formLabelWidth">
-                            320121199997897797979
-                        </el-form-item>
-                        <el-form-item label="开户许可证图片：" :label-width="formLabelWidth">
-                            <div>
-                                <img src="../../../assets/images/img_0.png" alt="">
+                        <el-form-item v-if="bossDetail.userType==11" label="法人身份证照片：" :label-width="formLabelWidth">
+                            <div style="float:left">
+                                <el-image v-if="bossDetail.individual&&bossDetail.individual.certPhotoA" class="yyzzpic" fit="contain" style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;" :src="bossDetail.individual.certPhotoA"
+                                    :preview-src-list="[`${bossDetail.individual.certPhotoA}`]">
+                                </el-image>
+                                <font v-else>-</font>
+                            </div>
+                            <div style="float:left;margin-left:10px">
+                                <el-image v-if="bossDetail.individual&&bossDetail.individual.certPhotoB" class="yyzzpic" fit="contain" style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;" :src="bossDetail.individual.certPhotoB"
+                                    :preview-src-list="[`${bossDetail.individual.certPhotoB}`]">
+                                </el-image>
+                                <font v-else>-</font>
                             </div>
                         </el-form-item>
-                        <el-form-item label="门头照：" :label-width="formLabelWidth">
-                            <div>
-                                <img src="../../../assets/images/img_0.png" alt="">
-                            </div>
+
+                        <el-form-item label="开户许可证核准号：" :label-width="formLabelWidth">
+                            {{
+                                bossDetail.corporation
+                                ?
+                                bossDetail.corporation.approvalNo?bossDetail.corporation.approvalNo:'-'
+                                :'-'
+                            }}
                         </el-form-item>
-                        <el-form-item label="门店内景：" :label-width="formLabelWidth">
-                            <div>
-                                <img src="../../../assets/images/img_0.png" alt="">
-                            </div>
+                        <el-form-item label="开户银行ID：" :label-width="formLabelWidth">
+                            {{
+                                bossDetail.bankAccount
+                                ?
+                                bossDetail.bankAccount.bankId?bossDetail.bankAccount.bankId:'-'
+                                :'-'
+                            }}
+                        </el-form-item>
+                        <el-form-item label="开户银行卡号：" :label-width="formLabelWidth">
+                            {{
+                                bossDetail.bankAccount
+                                ?
+                                bossDetail.bankAccount.bankAccountNumber?bossDetail.bankAccount.bankAccountNumber:'-'
+                                :'-'
+                            }}
+                        </el-form-item>
+                        <el-form-item label="开户银行支行名称：" :label-width="formLabelWidth">
+                            {{
+                                bossDetail.bankAccount
+                                ?
+                                bossDetail.bankAccount.branchName?bossDetail.bankAccount.branchName:'-'
+                                :'-'
+                            }}
+                        </el-form-item>
+                        <el-form-item label="认证状态：" :label-width="formLabelWidth">
+                            <!-- 0：未认证 1：已认证 -->
+                            {{
+                                bossDetail.isAuthentication==0?'未认证':bossDetail.isAuthentication==1?"已认证":'-'
+                            }}
+                            <span v-if="bossDetail.authenticationFailureReason&&bossDetail.isAuthentication!=1">（{{bossDetail.authenticationFailureReason}}）</span>
+                        </el-form-item>
+                        <el-form-item label="认证方式：" :label-width="formLabelWidth">
+                            <!-- 1：e签宝-企业四要素/e签宝-个人二要素 2：中金-开户 -->
+                            {{
+                                bossDetail.authenticationType==1?'e签宝':bossDetail.authenticationType==2?"中金":'-'
+                            }}
+                        </el-form-item>
+                        <el-form-item label="认证时间：" :label-width="formLabelWidth">
+                            {{formatTime(bossDetail.authenticationTime)}}
+                        </el-form-item>
+                        <el-form-item label="开户状态：" :label-width="formLabelWidth">
+                            {{
+                                bossDetail.openStatus==1?'未开户':bossDetail.openStatus==2?'开户中':bossDetail.openStatus==3?'开户成功':bossDetail.openStatus==4?'开户失败':'-'
+                            }}
+                            <span v-if="bossDetail.openStatus==4">（{{bossDetail.openFailureReason}}）</span>
+                        </el-form-item>
+                        <el-form-item label="开户时间：" :label-width="formLabelWidth">
+                            {{formatTime(bossDetail.openTime)}}
                         </el-form-item>
                     </el-form>
-                </div> -->
-            </div>
-        </el-drawer>
+                </div>
+            </template>
+        </h-drawer>
     </div>
 </template>
 <script>
+import moment from 'moment'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { putMerchantDetail, putMemberDetail } from './api/index'
 import { deepCopy } from '@/utils/utils'
 export default {
-    name: 'account',
+    name: 'membershipDrawerCom',
     props: {
         drawer: {
             type: Boolean,
@@ -184,6 +279,11 @@ export default {
     },
     data () {
         return {
+            options: {
+                direction: 'rtl',
+                size: '50%'
+            },
+            userType: { 11: '个人', 12: '企业', 13: '个体工商户' },
             type: '',
             removeValue: true,
             merchantArr: [],
@@ -296,6 +396,7 @@ export default {
                     this.$emit('backEvent')
                 })
             } else {
+                this.activeName = 'first'
                 this.$emit('backEvent')
             }
         },
@@ -389,6 +490,10 @@ export default {
         },
         backFindbrand (val) {
             this.bossDetail.merchantCode = val.value ? val.value.selectCode : ''
+        },
+        formatTime (val) {
+            if (!val) return '-'
+            return moment(val).format('YYYY-MM-DD HH:mm:ss')
         }
     },
     mounted () {
@@ -443,9 +548,11 @@ export default {
         width: 300px !important;
     }
 }
-/deep/.el-form .el-input {
-}
+
 .el-form-item__content .el-input {
     width: 200px !important;
+}
+.yyzzpic {
+    margin-right: 10px;
 }
 </style>

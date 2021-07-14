@@ -1,6 +1,6 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
+    <div class="page-body amount">
+        <div v-show="toggle"  class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col" v-if="region">
                     <div class="query-col-title">大区：</div>
@@ -16,15 +16,16 @@
                 </div>
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
-                    <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <el-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(branchOverdueSumExport)">导出表格</el-button>
+                    <el-button type="default" class="ml20" @click="onReset">重置</el-button>
+                    <el-button type="default" class="ml20" @click="onExport" v-if="hosAuthCheck(branchOverdueSumExport)">导出表格</el-button>
                 </div>
             </div>
         </div>
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-body-cont">
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
+                <hosJoyTable :amountResetTable="toggle" ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
@@ -46,6 +47,7 @@ export default {
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
+            toggle: true,
             branchOverdueSumExport: BRANCH_OVERDUE_SUM_EXPORT,
             selectAuth: {
                 regionObj: {
@@ -176,13 +178,12 @@ export default {
 }
 .overdueTable {
     position: relative;
-    margin-top: 10px;
 }
 .util {
     font-size: 10px;
-    position: absolute;
-    top: -16px;
-    right: 0;
+    text-align: right;
+    line-height: 12px;
+    margin-bottom: 8px;
 }
 /deep/.el-table__header .repaymentStyle {
     background-color: rgba($color: #c65911, $alpha: 1) !important;

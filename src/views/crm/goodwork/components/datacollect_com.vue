@@ -1,14 +1,34 @@
 <template>
     <div class="collect-wrap">
+        <div class="fullbg" v-if="showPacking">
+            <div class="fullbg-img">
+                <img src="https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20201027/01791ef9-5a1f-4e26-8b52-d6ab69548e3b.png" width="100px">
+                <p>
+                    <i class="el-icon-loading" style="font-size:23px;margin-right:3px"></i>
+                    <font>文件打包中，请耐心等待，请勿关闭页面...</font>
+                </p>
+            </div>
+        </div>
         <el-form :model="colForm" :rules="colFormrules" ref="colForm" label-width="" class="demo-ruleForm">
-            <el-button size="small" type="primary" @click="onGetrefuse">打回记录</el-button>
+            <div class="collect-wrap_btnflex">
+                <p>
+                    <h-button table @click="onGetrefuse">打回记录</h-button>
+                </p>
+                <template v-if="hosAuthCheck(Auths.CRM_ZL_DOWN)">
+                    <p>
+                        <h-button table @click="onDownzip" v-if="showPacking==null">一键下载</h-button>
+                        <span v-if="showPacking!=null&&showPacking">文件打包中，请稍等</span>
+                        <span v-if="showPacking!=null&&!showPacking">打包完成</span>
+                    </p>
+                </template>
+            </div>
             <div class="collect-wrapbox" v-for="item in colForm.projectDocList" :key="item.firstCatagoryId">
                 <div class="collect-title">{{item.firstCatagoryName}}</div>
                 <template v-for="obj in item.respRiskCheckDocTemplateList">
                     <el-form-item label="" prop="type" :key="'item'+obj.templateId">
                         <div class="collect-box">
                             <div class="collect-boxflex">
-                                <div v-if="activeName=='2'&&status==3">
+                                <div v-if="activeName=='2'&&status==12">
                                     <el-checkbox label="" name="type" size="medium" v-model="obj.callback" :disabled=obj.refuse></el-checkbox>
                                 </div>
                                 <div class="collect-boxtxt">
@@ -18,22 +38,24 @@
                                 </div>
                             </div>
                             <div class="upload-file_list" v-for="(item,index) in obj.riskCheckProjectDocPos" :key="index">
-                                <p>
+                                <div>
                                     <span class="posrtv">
                                         <template v-if="item&&item.fileUrl">
                                             <i class="el-icon-document"></i>
-                                            <a :href="item.fileUrl" target="_blank">
-                                                <font>{{item.fileName}}</font>
-                                            </a>
+                                            <downloadFileAddToken isPreview :file-name="item.fileName" :file-url="item.fileUrl" :a-link-words="item.fileName" is-type="main"/>
                                         </template>
                                     </span>
-                                </p>
-                                <p style="flex:0.5"> {{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
-                                <p>
-                                    <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font>
-                                    <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
-                                </p>
+                                </div>
+                                <div> {{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</div>
+                                <div>
+                                    <downloadFileAddToken :file-name="item.fileName" :file-url="item.fileUrl" :a-link-words="'下载'" is-type="btn"/>
+                                </div>
+
                             </div>
+                            <OssFileHosjoyUpload v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=100 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}"
+                                style="margin:10px 0 0 5px">
+                                <el-button type="primary">上 传</el-button>
+                            </OssFileHosjoyUpload>
                         </div>
 
                     </el-form-item>
@@ -57,7 +79,7 @@
                 </template>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="recordsVisible = false">取 消</el-button>
+                <h-button @click="recordsVisible = false">取消</h-button>
             </span>
         </el-dialog>
         <el-dialog title="打回原因" :visible.sync="reasonVisible" width="30%" :before-close="onCloseCol" :modal=false>
@@ -67,28 +89,85 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="onCloseCol">取 消</el-button>
-                <el-button type="primary" @click="onRefuse" :loading=loading>{{loading?'确 定':'保 存'}}</el-button>
+                <el-button @click="onCloseCol">取消</el-button>
+                <el-button type="primary" @click="onRefuse" :loading=loading>{{loading?'确定':'保存'}}</el-button>
             </span>
         </el-dialog>
         <el-dialog :title="collectTitle" :visible.sync="collectVisible" width="30%" :before-close="onCloseCol" :modal=false :close-on-click-modal=false>
             <el-form ref="approveForm" :model="coldataForm" :rules="collectRules" label-width="100px" style="margin-top:20px">
+                <el-form-item label="审核结果：" prop="submitStatus">
+                    <el-radio-group v-model="coldataForm.submitStatus">
+                        <el-radio :label=2>通过</el-radio>
+                        <el-radio :label=3>不通过</el-radio>
+                    </el-radio-group>
+                </el-form-item>
                 <el-form-item label="审核意见：" prop="remark">
                     <el-input type="textarea" v-model.trim="coldataForm.remark" maxlength="500" :rows="5" show-word-limit></el-input>
                 </el-form-item>
+                <template v-if="coldataForm.submitStatus == 2">
+                    <div class="subTitle">项目评级</div>
+                    <div class="horizontalLayout">
+                        <el-form-item label="项目级别：">
+                            <el-select v-model="coldataForm.levels" placeholder="请选择项目级别">
+                                <el-option label="A+" value="A+"></el-option>
+                                <el-option label="A" value="A"></el-option>
+                                <el-option label="B+" value="B+"></el-option>
+                                <el-option label="B" value="B"></el-option>
+                                <el-option label="C+" value="C+"></el-option>
+                                <el-option label="C" value="C"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <div class="special">
+                            <el-form-item label="项目服务费：" prop="serviceCharge">
+                                <el-input v-model="coldataForm.serviceCharge"></el-input>
+                            </el-form-item>
+                        </div>
+                    </div>
+                </template>
+                <div class="subTitle">经销商评级
+                    <span v-if="projectLevels.expired">（评级已过期）</span>
+                    <span v-else-if="!projectLevels.companyCreditLevel">（待评级）</span>
+                    <span v-else>
+                        （信用有效期：
+                        {{ projectLevels.startTime ? moment(projectLevels.startTime).format('YYYY-MM-DD') : '-'}}
+                        至
+                        {{ projectLevels.endTime ? moment(projectLevels.endTime).format('YYYY-MM-DD') : '-'}}
+                        ）
+                    </span>
+                </div>
+                <div class="horizontalLayout">
+                    <!-- 评级过期不显示 -->
+                    <template v-if="projectLevels.expired"></template>
+                    <template v-else>
+                        <template v-if="projectLevels.companyCreditLevel">
+                            <el-form-item label="经销商级别：">
+                                <el-input placeholder="请输入内容" :value="projectLevels.companyCreditLevel || '-'" :disabled="true"></el-input>
+                            </el-form-item>
+                            <el-form-item label="企业服务费：">
+                                <el-input placeholder="请输入内容" :value="projectLevels.companyServiceCharge || ''" :disabled="true"></el-input>
+                            </el-form-item>
+                        </template>
+                        <el-form-item label="资料状态：">
+                            <el-input placeholder="请输入内容" :value="getcompanyServiceCharge(projectLevels.companyDocumentStatus)" :disabled="true"></el-input>
+                        </el-form-item>
+                    </template>
+                </div>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="onCloseCol">取 消</el-button>
-                <el-button type="primary" @click="onUpdatecolApprove">确 定</el-button>
+                <h-button @click="onCloseCol">取消</h-button>
+                <h-button type="primary" @click="onUpdatecolApprove">确定</h-button>
             </span>
         </el-dialog>
     </div>
 </template>
 <script>
+import * as Auths from '@/utils/auth_const'
 import moment from 'moment'
-import { refuseDoc, submitProjectdoc } from '../api/index'
+import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
+import { refuseDoc, submitProjectdoc, checkTemplatedoc, getProjectLevels, setProjectLevels } from '../api/index'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { handleImgDownload } from '../../projectInformation/utils'
+import { ccpBaseUrl, ossBucket, ossRegion, ossOldBucket } from '@/api/config'
+import downloadFileAddToken from '@/components/downloadFileAddToken'
 export default {
     name: 'datacollectcom',
     props: {
@@ -103,11 +182,25 @@ export default {
         status: {
             type: Number,
             default: 0
+        },
+        showPacking: {
+            default: null
         }
+    },
+    components: {
+        OssFileHosjoyUpload,
+        downloadFileAddToken
     },
     data () {
         return {
-            handleImgDownload,
+            // 经销商信息
+            projectLevels: {},
+            Auths,
+            action: ccpBaseUrl + 'common/files/upload-old',
+            uploadParameters: {
+                updateUid: '',
+                reservedName: false
+            },
             moment,
             colFormrules: {},
             recordsVisible: false,
@@ -118,7 +211,8 @@ export default {
                 projectId: '',
                 remark: '',
                 status: 1,
-                templateIds: ''
+                templateIds: '',
+                createMobile: ''
             },
             refuseFormRules: {
                 remark: [
@@ -131,10 +225,42 @@ export default {
             collectRules: {
                 remark: [
                     { required: true, message: '请输入意见', trigger: 'blur' }
+                ],
+                submitStatus: [
+                    { required: true, message: '请选择审核结果', trigger: 'blur' }
+                ],
+                serviceCharge: [
+                    {
+                        validator: (r, v, callback) => {
+                            const reg = /^\d+(\.\d{1})?$/
+                            const abs = Math.abs(v)
+                            if (isNaN(abs)) {
+                                callback(new Error('请输入数字值'))
+                            } else if (!reg.test(abs)) {
+                                callback(new Error('请输入有1位小数的数字'))
+                            } else if (abs > 10) {
+                                callback(new Error('请输入-10到10的数字'))
+                            } else {
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
                 ]
             },
             coldataForm: {
-                remark: ''
+                remark: '',
+                submitStatus: 2,
+                // 项目评级
+                serviceCharge: '',
+                levels: ''
+            },
+            isDownLoad: false,
+            powerLimitObj: {
+                ossOldBucket,
+                ossRegion,
+                ossBucket,
+                ossUrl: 'http://192.168.20.168:30300/oss/credentials' // interfaceUrl+
             }
         }
     },
@@ -150,9 +276,34 @@ export default {
         ...mapActions({
             findRefuseData: 'crmmanage/findRefuseData'
         }),
-        onShowcollect () {
+        getcompanyServiceCharge (val) {
+            if (val == 1 || !val) {
+                return '未提交'
+            }
+            if (val == 2) {
+                return '已提交'
+            }
+            if (val == 3) {
+                return '已通过'
+            }
+            if (val == 4) {
+                return '已打回'
+            }
+            return '-'
+        },
+        async onShowcollect () {
+            // 获取经销商信息
+            const { data } = await getProjectLevels(this.colForm.projectId)
+            console.log('data: ', data)
+            this.projectLevels = data
             this.collectVisible = true
             this.collectTitle = '材料审核'
+            this.coldataForm.levels = data.levels
+            this.coldataForm.serviceCharge = data.serviceCharge
+        },
+        onDownzip () {
+            this.isDownLoad = true
+            this.$emit('onBackDownzip')
         },
         onCallback () {
             const newTempid = []
@@ -172,6 +323,7 @@ export default {
         onRefuse () {
             this.loading = true
             this.refuseForm.createBy = this.userInfo.employeeName
+            this.refuseForm.createMobile = this.userInfo.phoneNumber
             this.refuseForm.projectId = this.colForm.projectId
             this.$refs.refuseForm.validate(async (valid) => {
                 if (valid) {
@@ -189,7 +341,7 @@ export default {
                 }
             })
         },
-        onUpdatecolApprove () {
+        async onUpdatecolApprove () {
             const projectDocList = this.colForm.projectDocList
             let riskCheckProjectDocPoList = []
             const params = {}
@@ -198,14 +350,25 @@ export default {
                     if (obj.mondatoryFlag) { riskCheckProjectDocPoList = riskCheckProjectDocPoList.concat(obj.riskCheckProjectDocPos) }
                 })
             })
-            params.submitStatus = 2
             params.bizType = 1
             params.projectId = this.colForm.projectId
             params.riskCheckProjectDocPoList = riskCheckProjectDocPoList
+            params.submitStatus = this.coldataForm.submitStatus
             params.remark = this.coldataForm.remark
             this.$refs.approveForm.validate(async (valid) => {
                 if (valid) {
                     try {
+                        if (!this.coldataForm.levels === !this.coldataForm.serviceCharge) {
+                            const setParams = {
+                                serviceCharge: this.coldataForm.serviceCharge,
+                                levels: this.coldataForm.levels,
+                                id: this.colForm.projectId,
+                                updateBy: this.userInfo.employeeName
+                            }
+                            // 设置项目评级
+                            await setProjectLevels(setParams)
+                        }
+                        // 审核
                         await submitProjectdoc(params)
                         this.$message({
                             message: `材料审核成功`,
@@ -229,23 +392,86 @@ export default {
             this.collectVisible = false
             this.refuseForm.remark = ''
             this.reasonVisible = false
+        },
+        handleSuccessCb (row) {
+            console.log('row', row)
+            row.riskCheckProjectDocPos.map(item => {
+                item.templateId = row.templateId
+                item.createTime = item.createTime || moment().format('YYYY-MM-DD HH:mm:ss')
+                item.projectId = this.colForm.projectId
+            })
+        },
+        handleSuccessArg (val) {
+            checkTemplatedoc({ projectTemplateDocList: [val] })
         }
     }
 }
 </script>
 <style lang="scss" scoped>
+.fullbg {
+    background-color: #211f1f;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    opacity: 0.5;
+    position: fixed;
+    top: 0;
+    z-index: 9999;
+    .fullbg-img {
+        width: 377px;
+        position: absolute;
+        text-align: center;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%);
+        p {
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
 /deep/.el-form {
     padding: 0;
+}
+/deep/.el-form-item__content {
+    line-height: 24px;
 }
 .collect-wrap {
     padding: 0 10px 100px 10px;
     margin-left: 15px;
+    &_btnflex {
+        width: 140px;
+        text-align: right;
+        margin: 0 10px;
+        display: flex;
+        justify-content: flex-end;
+        position: fixed;
+        top: 130px;
+        right: 0;
+        z-index: 11;
+        background: #fff;
+        flex-direction: column;
+        p {
+            margin-bottom: 10px;
+        }
+        span {
+            color: #ff7a45;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+    }
+}
+.collect-wrapbox {
+    margin-top: 80px;
 }
 .collect-title {
     font-size: 20px;
-    line-height: 45px;
     border-bottom: 1px solid #e5e5e5;
-    margin-top: 10px;
+    padding: 20px 0;
     font-weight: bold;
 }
 .collect-box {
@@ -258,13 +484,24 @@ export default {
 .collect-boxflex {
     display: flex;
     flex-direction: row;
+    padding: 30px 0 0 0;
 }
 .collect-boxtxt {
+    h3 {
+        font-size: 16px;
+        margin: 0;
+    }
     i {
         color: #ff0000;
         vertical-align: middle;
         padding: 0 2 0 0px;
         font-style: normal;
+    }
+    p {
+        font-size: 14px;
+        margin: 0;
+        padding: 16px 0 0 0;
+        line-height: auto;
     }
 }
 .collect-call {
@@ -277,9 +514,34 @@ export default {
 }
 .upload-file_list {
     display: flex;
-    p {
+    justify-content: space-between;
+    align-items: center;
+    margin: 16px 0 0 0;
+    div {
         &:first-child {
-            flex: 1;
+            display: flex;
+            flex: 5;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 10px;
+            white-space: nowrap;
+        }
+        &:nth-child(2) {
+            display: flex;
+            flex: 2;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 10px;
+            white-space: nowrap;
+        }
+        &:nth-child(3) {
+            word-break: keep-all;
         }
     }
 }
@@ -300,21 +562,63 @@ export default {
 .posrtv {
     position: relative;
     color: #ff7a45;
+    display: flex;
+    align-items: center;
+
+    overflow: hidden;
     a {
         color: #ff7a45;
         margin-left: 10px;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 10px;
+        white-space: nowrap;
+        display: flex;
     }
     font {
         font-size: 14px;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 10px;
+        white-space: nowrap;
+        display: flex;
     }
 }
 .project-record {
     margin-top: 15px;
 }
+
 /deep/.el-card__body {
     padding: 5px;
     p {
         line-height: 30px;
     }
+}
+/deep/ .special .el-input {
+    width: 180px;
+    margin-left: 0 !important;
+}
+.subTitle {
+    margin: 20px 0;
+    font-weight: 700;
+    font-size: 15px;
+}
+.horizontalLayout {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    .el-form-item {
+        width: 50%;
+    }
+}
+/deep/ .is-error {
+    width: 100% !important;
 }
 </style>

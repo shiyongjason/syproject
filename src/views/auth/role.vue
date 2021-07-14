@@ -177,10 +177,9 @@ export default {
         this.tableList = []
         this.jobNumber = this.$route.query.jobNumber
         const { data } = await findMenuList(this.jobNumber)
-        var shy = JSON.parse(JSON.stringify(data))
-        this.handleData(shy)
-        // console.log(shy)
-        this.tableList = this.handlerTableList(shy, 0)
+        var copyData = JSON.parse(JSON.stringify(data))
+        this.handleData(copyData)
+        this.tableList = this.handlerTableList(copyData, 0)
         // console.log(this.tableList)
         this.newTableList = JSON.parse(JSON.stringify(this.tableList))
         const { data: roleInfo } = await getRoleInfo(this.jobNumber)
@@ -206,7 +205,6 @@ export default {
                     }
                 })
                 const employeeSubsections = { authCode: this.currentEmployeeSubsectionsAuthCode, subsectionCodes: subArr }
-                console.log(employeeSubsections)
                 this.newItem.employeeSubsections = employeeSubsections
                 this.$refs.treetable.setCheckedKeys([])
             }
@@ -345,7 +343,9 @@ export default {
                         })
                         // 全选 0 时候 不传任何  1 时候传配置的数据范围
                         if (authType.status == 1 && authType.authType == 2) {
-                            authType.employeeSubsections && resourceObj.employeeSubsections.push(authType.employeeSubsections)
+                            if (JSON.stringify(authType.employeeSubsections) != '{}') {
+                                authType.employeeSubsections && resourceObj.employeeSubsections.push(authType.employeeSubsections)
+                            }
                         }
                     })
                 }
@@ -383,7 +383,9 @@ export default {
                 positionCodeList: this.positionCodeList,
                 userCode: this.jobNumber
             }
-            console.log(params)
+            if (params.authCodes.length < 1) {
+                this.$message({ message: '请勾选数据范围配置', type: 'warning' })
+            }
             await saveAuthRole(params)
             this.$message({ message: '权限保存成功', type: 'success' })
             this.$router.push({ path: '/auth/organization' })
@@ -404,7 +406,6 @@ export default {
             }
         },
         onShowFieldConfig (val, item) {
-            console.log(val, item)
             // 当选择全部的时候，设置所有的配置都是选中状态
             if (val == 0) {
                 item.authResourceList && item.authResourceList.filter(item => {
@@ -414,17 +415,22 @@ export default {
             if (val == 1) {
                 this.currentEmployeeSubsectionsAuthCode = item.authCode
             }
-            console.log(this.checkedkeys)
             // 用于在取消的时候，返回原来的选中状态
             if (item.authType == 2 && item.employeeSubsections) {
-                console.log(item.employeeSubsections)
-                this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
+                if (JSON.stringify(item.employeeSubsections) != '{}') {
+                    this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
+                }
             } else if (item.authType == 2 && !item.employeeSubsections) {
                 this.checkedkeys = []
             }
-            this.$nextTick(() => {
-                this.$refs['treetable'].setCheckedKeys(this.checkedkeys)
-            })
+            if (this.$refs.treetable) {
+                this.$nextTick(() => {
+                    setTimeout(() => {
+                        this.$refs.treetable.setCheckedKeys(this.checkedkeys)
+                    }, 100)
+                })
+            }
+
             this.layerType = item.authType
             // 设置页面敏感信息的高亮是在全部还是配置上
             item.status = val

@@ -1,42 +1,44 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-col">
-                <div class="query-col-title"> 查询期间：</div>
-                <div class="query-col-input">
-                    <el-date-picker v-model="params.selectTime" type="month"  value-format='yyyyMM' placeholder="请选择时间">
-                    </el-date-picker>
+    <div class="page-body amount">
+        <div v-show="toggle">
+            <div class="page-body-cont query-cont">
+                <div class="query-cont-col">
+                    <div class="query-col-title"> 查询期间：</div>
+                    <div class="query-col-input">
+                        <el-date-picker v-model="params.selectTime" type="month"  value-format='yyyyMM' placeholder="请选择时间">
+                        </el-date-picker>
+                    </div>
                 </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">分部：</div>
-                <div class="query-col-input">
-                    <HAutocomplete :selectArr="branchList" :disabled='!this.branch' @back-event="backPlat"
-                                   placeholder="请选择分部" :selectObj="selectPlatObj" :maxlength='30'
-                                   :canDoBlurMethos='false'></HAutocomplete>
+                <div class="query-cont-col" v-if="this.branch">
+                    <div class="query-col-title">分部：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat"
+                                       placeholder="请选择分部" :selectObj="selectPlatObj" :maxlength='30'
+                                       :canDoBlurMethos='false'></HAutocomplete>
+                    </div>
                 </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="queryAndChangeTime(params)">
-                        搜索
-                    </el-button>
-                    <el-button type="primary" class="ml20" @click="onReset">
-                        重置
-                    </el-button>
-                    <el-button type="primary" class="ml20" @click="onExport">
-                        导出汇总表
-                    </el-button>
+                <div class="query-cont-col">
+                    <div class="query-col-title">
+                        <el-button type="primary" class="ml20" @click="queryAndChangeTime(params)">
+                            查询
+                        </el-button>
+                        <el-button type="default" class="ml20" @click="onReset">
+                            重置
+                        </el-button>
+                        <el-button type="default" class="ml20" @click="onExport">
+                            导出汇总表
+                        </el-button>
+                    </div>
                 </div>
             </div>
         </div>
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="tips">
             <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
         </div>
         <div class="page-body-cont">
-            <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="planTotalList" align="center"
-                         :total="page.total" collapseShow :localName="localName"
-                         @updateLabel="updateLabel" :toggleTable="toggleTable" @toggleTableHandler="toggleTableHandler">
+            <hosJoyTable :amountResetTable="toggle" ref="hosjoyTable" border stripe :column="columnData" :data="planTotalList" align="center"
+                         :total="page.total" collapseShow :localName="localName">
                 <template slot="organizationName" slot-scope="scope">
                     <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
                 </template>
@@ -64,6 +66,7 @@ export default {
     },
     data () {
         return {
+            toggle: true,
             params: {
                 selectTime: '',
                 subsectionCode: ''
@@ -81,8 +84,7 @@ export default {
                 mouth: ''
             },
             columnData: [],
-            localName: 'planTotalTable::',
-            toggleTable: false
+            localName: '`planTotalTable`::'
         }
     },
     computed: {
@@ -111,9 +113,9 @@ export default {
                 mouth: params.selectTime.slice(4)
             }
             if (params.subsectionCode) {
-                this.columnData = summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth, false)
+                this.columnData = summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth, false, true)
             } else {
-                this.columnData = summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth, true)
+                this.columnData = summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth, true, !this.branch)
             }
 
             try {
@@ -124,9 +126,6 @@ export default {
                     mouth: params.selectTime.slice(4)
                 }
             }
-            const haveLabel = JSON.parse(localStorage.getItem(this.localName + this.userInfo.user_name))
-            haveLabel && haveLabel.length > 0 && this.updateLabel(haveLabel)
-            // this.$refs.hosjoyTable.doLayout()
         },
         backPlat (val) {
             this.params.subsectionCode = val.value.selectCode
@@ -138,6 +137,7 @@ export default {
             }
             this.params.subsectionCode = ''
             this.params.selectTime = this.targetTime
+            this.newBossAuth(['F'])
             this.queryAndChangeTime(this.params)
         },
         onExport () {
@@ -150,28 +150,7 @@ export default {
         ...mapActions({
             findPlanTotalList: 'fundsPlan/findPlanTotalList',
             findTargetTime: 'fundsPlan/findTargetTime'
-        }),
-        toggleTableHandler () {
-            this.toggleTable = false
-        },
-        updateLabel (showColumnLabel) {
-            this.columnData.forEach(value => {
-                value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
-                if (value.children) {
-                    let number = 0
-                    value.children.forEach(value1 => {
-                        value1.isHidden = showColumnLabel.indexOf(value1.prop) === -1
-                        if (!value1.isHidden) number++
-                    })
-                    value.isHidden = !(number > 0)
-                }
-            })
-            this.toggleTable = true
-            console.log(this.columnData)
-            this.$nextTick(() => {
-                this.$refs.hosjoyTable.doLayout()
-            })
-        }
+        })
     },
     async mounted () {
         await this.findTargetTime()
@@ -199,9 +178,9 @@ export default {
         p {
             max-width: 1000px;
             margin: auto;
-            line-height: 100px;
+            line-height: 25px;
             text-align: center;
-
+            padding-top: 5px;
             b {
                 color: red;
                 padding: 0 5px;

@@ -14,7 +14,7 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="供货商名称：">
-                            <el-input v-model.trim="detailData.supplier" placeholder="请输入供货商名称" maxlength='100' :disabled='detailData.isRepayment' show-word-limit></el-input>
+                            <el-input v-model.trim="detailData.supplier" placeholder="请输入供货商名称" maxlength='2000' :disabled='detailData.isRepayment' show-word-limit></el-input>
                         </el-form-item>
                     </div>
                 </div>
@@ -27,8 +27,9 @@
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
+<!--                        :disabled='detailData.isRepayment' 1.2优化删除-->
                         <el-form-item label="年利率：" prop="yearRate">
-                            <el-input v-model.trim="detailData.yearRate" v-isNum="detailData.yearRate" maxlength='20' placeholder="请输入年利率" :disabled='detailData.isRepayment'>
+                            <el-input v-model.trim="detailData.yearRate" v-isNum="detailData.yearRate" maxlength='20' placeholder="请输入年利率">
                                 <template slot="append">%</template>
                             </el-input>
                         </el-form-item>
@@ -72,7 +73,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
-            <el-button v-if='!detailData.isRepayment' type="primary" @click="onSave" :loading='loading'>保 存</el-button>
+            <el-button type="primary" @click="onSave" :loading='loading'>保 存</el-button>
         </span>
     </el-dialog>
 </template>
@@ -80,6 +81,7 @@
 <script>
 import moment from 'moment'
 import { setLoan } from '../../../api'
+import { IsThanZero } from '../../../../../../utils/rules'
 export default {
     name: 'pointsCreditBillingDialog',
     data () {
@@ -90,7 +92,8 @@ export default {
                     { required: true, message: '请输入借款金额', trigger: 'blur' }
                 ],
                 yearRate: [
-                    { required: true, message: '请输入年利率', trigger: 'blur' }
+                    { required: true, message: '请输入年利率', trigger: 'blur' },
+                    { validator: IsThanZero, trigger: 'blur', message: '不能小于0' }
                 ],
                 loanStartTime: [
                     { required: true, message: '请输入借款日期', trigger: 'blur' }

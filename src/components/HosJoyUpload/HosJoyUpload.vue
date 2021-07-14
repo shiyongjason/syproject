@@ -10,16 +10,16 @@
                         </div>
                     </div>
                     <!-- TODO:在tab切换存在一开始有数据，图片渲染不出来情况 暂时父组件用v-if控制-->
-                    <div class="pdfimg" v-if="(item.fileUrl).indexOf('.pdf') != -1">
+                    <div class="pdfimg" v-if="_checkPicType(item,['.pdf'])">
                         <img :src="pdfbase">
                     </div>
-                    <div class="pdfimg" v-else-if="(item.fileUrl).indexOf('.xls') != -1||(item.fileUrl).indexOf('.xlxs') != -1">
+                    <div class="pdfimg" v-else-if="_checkPicType(item,['.xls','.xlsx'])">
                         <img :src="xlsbase">
                     </div>
-                    <div class="pdfimg" v-else-if="(item.fileUrl).indexOf('.zip') != -1||(item.fileUrl).indexOf('.rar') != -1">
+                    <div class="pdfimg" v-else-if="_checkPicType(item,['.zip','.rar'])">
                         <img :src="zipbase">
                     </div>
-                    <div class="pdfimg" v-else-if="(item.fileUrl).indexOf('.doc') != -1||(item.fileUrl).indexOf('.docx') != -1||(item.fileUrl).indexOf('.word') != -1">
+                    <div class="pdfimg" v-else-if="_checkPicType(item,['.doc','.docx','.word'])">
                         <img :src="worldbase">
                     </div>
                     <el-image v-else :ref="`preview_${index}`" class="default-pre-view-image" fit="contain" :src="item.fileUrl" :preview-src-list="previewSrcList"></el-image>
@@ -74,7 +74,7 @@ export default {
     name: 'HosJoyUpload',
     props: {
         value: Array, // 双向绑定的list
-        limit: { type: Number, default: 1000 }, // 最大允许上传个数
+        limit: { type: Number, default: 1000 }, // 最大允许上传个数，勿用
         disabled: { type: Boolean, default: false }, // 是否禁用
         multiple: { type: Boolean, default: true }, // 是否支持多图上传
         uploadParameters: { type: Object, default () { return {} } }, // 上传时附带的额外参数同el-upload 的 data
@@ -118,7 +118,6 @@ export default {
     },
     methods: {
         handleError (err) {
-            // console.log(JSON.parse(err.message))
             let errMessage = (JSON.parse(err.message)).message || ''
             this.$message.error(`上传失败：` + errMessage)
             this.progressFlag = false
@@ -153,6 +152,7 @@ export default {
                     this.progressFlag = false
                     this.loading = false
                     this.$emit('successCb')
+                    this.$emit('successArg', obj)
                 }, 500)
             }
         },
@@ -160,6 +160,13 @@ export default {
             this.fileList.splice(this.index, 1)
             this.$set(this, 'fileList', this.fileList)
             this.deleteVisible = false
+        },
+        // 校验大小
+        _checkPicType (item, typePic) {
+            if (item && typePic.indexOf(item.fileUrl.slice(item.fileUrl.lastIndexOf('.')).toLowerCase()) > -1) {
+                return true
+            }
+            return false
         },
         remove (index) {
             this.deleteVisible = true
@@ -173,7 +180,7 @@ export default {
         },
         onExceed (files, fileList) {
             console.log(files, fileList)
-            this.$message.error(`一次性上传数量超出限制！最大允许上传个数：${this.limit}`)
+            this.$message.error(`最大允许上传个数：${this.limit}`)
         },
         handleCheckedSize (files, fileList) {
             this.isBeyond = true
@@ -193,13 +200,15 @@ export default {
             }
         },
         beforeAvatarUpload (file) {
+            // eslint-disable-next-line no-useless-escape
+            // file.name = file.name.replace(/[^\w\u4e00-\u9fa5\.\+\-\uFF08\uFF09\(\)\[\]\{\}]/g, '_')
             let arr = this.accept.split(',')
             let flag = false
             arr.map(item => {
                 if (item === `.${this.getFileType(file.name)}`) flag = true
             })
             if (!flag) {
-                this.$message.error(`上传错误，暂不支持${file.name.split('.')[1]}格式上传`)
+                this.$message.error(`上传错误，暂不支持该文件格式上传`)
                 return false
             }
             if (this.isBeyond) {
@@ -208,7 +217,7 @@ export default {
             }
         },
         open (index, item = null) {
-            if ((item.fileName).indexOf('.png') > -1 || (item.fileName).indexOf('.jpg') > -1 || (item.fileName).indexOf('.jpeg') > -1) {
+            if ((item.fileName).toLowerCase().indexOf('.png') > -1 || (item.fileName).toLowerCase().indexOf('.jpg') > -1 || (item.fileName).toLowerCase().indexOf('.jpeg') > -1) {
                 let temp = this.fileList[index]
                 let tempArr = JSON.parse(JSON.stringify(this.fileList))
                 tempArr.splice(index, 1)
@@ -356,6 +365,7 @@ export default {
     flex-wrap: wrap;
     margin-right: 8px;
     margin-top: 13px;
+    position: relative;
     &-mask {
         position: absolute;
         display: flex;
@@ -392,7 +402,7 @@ export default {
     margin-top: 13px;
 }
 .pdfimg {
-    width: 130px;
+    width: 120px;
     height: 120px;
     text-align: center;
     display: flex;

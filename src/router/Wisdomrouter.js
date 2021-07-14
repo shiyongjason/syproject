@@ -19,7 +19,7 @@ export default [
                 meta: {
                     title: '合资业务经营分析',
                     isMenu: true,
-                    icon: 'hosjoy_operation'
+                    icon: ''
                 },
                 component: InterlayerContainer,
                 children: [
@@ -154,7 +154,7 @@ export default [
                 meta: {
                     title: '资金数据分析',
                     isMenu: true,
-                    icon: 'hosjoy_operation'
+                    icon: ''
                 },
                 component: InterlayerContainer,
                 children: [
@@ -186,13 +186,25 @@ export default [
                         path: 'importData',
                         name: 'importData',
                         meta: {
-                            title: '历史数据导入',
-                            tagName: '历史数据导入',
+                            title: '台账线下数据导入',
+                            tagName: '台账线下数据导入',
                             parentName: '好智慧-资金数据',
                             isMenu: true,
                             icon: ''
                         },
                         component: () => import('@/views/wisdom/importData.vue')
+                    },
+                    {
+                        path: 'importDataSplit',
+                        name: 'importDataSplit',
+                        meta: {
+                            title: '注资信息导入',
+                            tagName: '注资信息导入',
+                            parentName: '好智慧-资金数据',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/importDataSplit.vue')
                     },
                     {
                         path: 'capitalEfficiency',
@@ -242,7 +254,31 @@ export default [
                         },
                         component: () => import('@/views/wisdom/fundsOverdue/overdueDetailTable.vue')
                     },
-                    ...tabAuth
+                    ...tabAuth,
+                    {
+                        path: 'backMoneyTrack',
+                        name: 'backMoneyTrack',
+                        meta: {
+                            title: '回款跟踪',
+                            tagName: '回款跟踪',
+                            parentName: '好智慧-资金数据',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/fundsOverdue/backMoneyTrack.vue')
+                    },
+                    {
+                        path: 'timelyOfPayment',
+                        name: 'timelyOfPayment',
+                        meta: {
+                            title: '月度回款及时率',
+                            tagName: '月度回款及时率',
+                            parentName: '好智慧-资金数据',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/timelyOfPayment/list.vue')
+                    }
                 ]
             }
         ]
@@ -252,7 +288,7 @@ export default [
         meta: {
             title: '资金用款计划',
             isMenu: true,
-            icon: 'hosjoy_operation'
+            icon: 'hosjoy_money'
         },
         component: Layout,
         children: [
@@ -268,6 +304,17 @@ export default [
                 component: () => import('@/views/wisdom/fundsPlan/planToDeclare')
             },
             {
+                path: 'approvalList',
+                name: 'approvalList',
+                meta: {
+                    title: '计划审批',
+                    tagName: '计划审批',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundsPlan/approvalList')
+            },
+            {
                 path: 'planTotal',
                 name: 'planTotal',
                 meta: {
@@ -279,6 +326,17 @@ export default [
                 component: () => import('@/views/wisdom/fundsPlan/planTotal')
             },
             {
+                path: 'platformPlan',
+                name: 'platformPlan',
+                meta: {
+                    title: '平台公司计划分析表',
+                    tagName: '平台公司计划分析表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundsPlan/platformPlan')
+            },
+            {
                 path: 'addDeclare',
                 name: 'addDeclare',
                 meta: {
@@ -288,17 +346,6 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/wisdom/fundsPlan/pages/declareAdd')
-            },
-            {
-                path: 'approvalList',
-                name: 'approvalList',
-                meta: {
-                    title: '计划审批',
-                    tagName: '计划审批',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/wisdom/fundsPlan/approvalList')
             },
             {
                 path: 'planCredit',
@@ -321,17 +368,6 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/wisdom/fundsPlan/planApproval')
-            },
-            {
-                path: 'platformPlan',
-                name: 'platformPlan',
-                meta: {
-                    title: '平台公司计划分析表',
-                    tagName: '平台公司计划分析表',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/wisdom/fundsPlan/platformPlan')
             },
             {
                 path: 'approveDeclare',

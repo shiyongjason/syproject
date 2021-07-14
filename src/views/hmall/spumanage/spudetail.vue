@@ -1,12 +1,18 @@
 <template>
-    <div class="page-body">
+    <div class="page-body B2b">
         <div class="page-body-cont">
-            <el-form ref="formmain" :model="form" :rules="rules" label-width="110px">
-                <div class="page-body-title">
-                    <h3> {{ operate=='modify'||operate=='add' ? '模板信息' : '商品信息（spu）'}}</h3>
+            <Detail :form="form" :pictureContainer="pictureContainer" v-if="operate == 'show'">
+                <el-form-item style="text-align: center">
+                    <el-button @click="onBack()">返回</el-button>
+                    <el-button @click="onSetSpuTemplate()">设置为SPU模板</el-button>
+                </el-form-item>
+            </Detail>
+            <el-form ref="formmain" :model="form" :rules="rules" label-width="110px" v-else>
+                <div class="title-cont">
+                    <span class="title-cont__label"> {{ operate=='modify'||operate=='add' ? '模板信息' : '商品信息（spu）'}}</span>
                 </div>
                 <!-- 更新或者审核 start  -->
-                <div v-if="operate=='modify'||operate=='audit'" style="margin-bottom: 20px">
+                <div v-if="operate=='modify'||operate=='audit'" style="margin-bottom:20px">
                     <el-form-item label="商品类目：" style="width: 460px;">
                         {{form.categoryPathName}}
                     </el-form-item>
@@ -20,17 +26,13 @@
                 <!-- 更新或者审核 end  -->
 
                 <!-- 新增 start -->
-                <div v-if="operate=='add'" style="margin-bottom: 20px">
+                <div v-if="operate=='add'" style="margin:10px 0 20px 0">
                     <el-form-item label="商品类目：" prop="categoryId" style="width: 460px;" v-if="operate=='add'">
-                        <el-cascader :options="categoryOptions" v-model="categoryIdArr" @change="productCategoryChange" ></el-cascader>
+                        <el-cascader :options="categoryOptions" v-model="categoryIdArr" @change="productCategoryChange"></el-cascader>
                     </el-form-item>
                     <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;" v-if="operate=='add'" ref="brandId">
                         <el-select v-model="form.brandId" filterable placeholder="请选择">
-                            <el-option
-                            v-for="item in brandOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+                            <el-option v-for="item in brandOptions" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -67,15 +69,12 @@
                     </div>
                 </el-form-item>
 
-                <div class="page-body-title" v-if="form.specifications.length>0">
-                    <h3>商品参数信息</h3>
+                <div class="title-cont" v-if="form.specifications.length>0">
+                    <span class="title-cont__label">商品参数信息</span>
                 </div>
                 <div :key="index" v-for="(item,index) in form.specifications" class="el-form-item" style="width: 460px;">
                     <!--  -->
-                    <el-form-item
-                        :label="item.k"
-                        :prop="'specifications.'+ index + '.v'"
-                        :rules="{
+                    <el-form-item :label="item.k" :prop="'specifications.'+ index + '.v'" :rules="{
                             required: item.isRequired === 1 ? true : false ,
                             whitespace: true,
                             message: '请输入'+ item.k,
@@ -93,17 +92,17 @@
                     </el-form-item>
                 </div>
 
-                <div class="page-body-title">
-                    <h3>商品详情</h3>
+                <div class="title-cont">
+                    <span class="title-cont__label">商品详情</span>
                 </div>
-                <div style="padding-left: 110px">
+                <div style="padding-left: 110px;">
                     <RichEditor v-model="form.reqDetailList[0].content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
                 </div>
                 <el-row v-if="operate=='modify'||operate=='add'">
                     <el-form-item style="text-align: center">
-                        <el-button type="primary" @click="onSave(1)" v-if="operate=='add'">保存</el-button>
-                        <el-button type="primary" @click="onSave(2)" v-if="operate=='modify'">保存</el-button>
-                        <el-button @click="onBack()">返回</el-button>
+                        <h-button type="primary" @click="onSave(1)" v-if="operate=='add'">保存</h-button>
+                        <h-button type="primary" @click="onSave(2)" v-if="operate=='modify'">保存</h-button>
+                        <h-button @click="onBack()">返回</h-button>
                     </el-form-item>
                 </el-row>
                 <el-form ref="auditForm" :model="auditForm" :rules="auditrules" label-width="110px">
@@ -117,8 +116,9 @@
                             </el-input>
                         </el-form-item>
                         <el-form-item style="text-align: center">
-                            <el-button type="primary" @click="onAudit()">确定</el-button>
-                            <el-button @click="onBack()">返回</el-button>
+                            <h-button type="primary" @click="onAudit()">确定</h-button>
+                            <h-button @click="onBack()">返回</h-button>
+                            <h-button @click="onSetSpuTemplate()">设置为SPU模板</h-button>
                         </el-form-item>
                     </el-row>
                 </el-form>
@@ -132,8 +132,12 @@ import { interfaceUrl } from '@/api/config'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { findSpuAttr, saveSpuTemplate, findSpuTemplateDetail, putSpuTemplate, findSpudetail, AuditSpu } from './api/index'
 import { deepCopy } from '@/utils/utils'
+import Detail from './component/detail.vue'
 export default {
     name: 'spudetail',
+    components: {
+        Detail
+    },
     data () {
         return {
             form: {
@@ -214,9 +218,11 @@ export default {
             this.form.imgUrls = val.map(v => v.url).join()
         },
         'form.imgUrls' (value) {
-            this.$refs['formmain'].validateField('imgUrls')
-            if (value) {
-                this.$refs['formmain'].clearValidate('imgUrls')
+            if (this.$refs['formmain']) {
+                this.$refs['formmain'].validateField('imgUrls')
+                if (value) {
+                    this.$refs['formmain'].clearValidate('imgUrls')
+                }
             }
         }
     },
@@ -272,9 +278,9 @@ export default {
         await this.findAllCategory()
         await this.findAllBrands()
         this.operate = this.$route.query.type
-        if (this.$route.query.type === 'modify' && this.$route.query.spuTemplateId) {
+        if (this.$route.query.spuTemplateId) {
             this.findSpuTemplateDetailAsync(this.$route.query.spuTemplateId)
-        } else if (this.$route.query.type === 'audit' && this.$route.query.spuId) {
+        } else if (this.$route.query.spuId) {
             this.findSpuDetailAsync(this.$route.query.spuId)
         } else {
             this.resetForm()
@@ -282,7 +288,7 @@ export default {
     },
 
     // 因为keepAlive的原因，需要做很多重置工作
-    activated () {
+    /* activated () {
         // this.operate = this.$route.query.type
         // if (this.$route.query.type === 'modify' && this.$route.query.spuTemplateId) {
         //     this.findSpuTemplateDetailAsync(this.$route.query.spuTemplateId)
@@ -291,13 +297,16 @@ export default {
         // } else {
         //     this.resetForm()
         // }
-    },
+    }, */
     methods: {
         ...mapActions('category', [
             'findAllCategory'
         ]),
         ...mapActions('brand', [
             'findAllBrands'
+        ]),
+        ...mapActions('spumanage', [
+            'setSpuTemplate'
         ]),
         ...mapActions({
             findCategoryList: 'findCategoryList',
@@ -386,7 +395,7 @@ export default {
                             type: 'success',
                             message: '商品新建成功！'
                         })
-                        this.$router.push({ path: '/b2b/commodity/spumange' })
+                        this.$router.push({ path: '/b2b/product/spumange' })
                     } else if (this.operate == 'modify') {
                         await putSpuTemplate(this.spuTemplateBo)
                         this.resetForm()
@@ -394,7 +403,7 @@ export default {
                             type: 'success',
                             message: '商品更新成功！'
                         })
-                        this.$router.push({ path: '/b2b/commodity/spumange' })
+                        this.$router.push({ path: '/b2b/product/spumange' })
                     } else {
                         if (this.auditForm.auditStatus == 1) {
                             this.auditForm.auditOpinion = ''
@@ -513,22 +522,16 @@ export default {
                 })
             })
             this.$forceUpdate()
+        },
+        async onSetSpuTemplate () {
+            await this.setSpuTemplate(this.$route.query.spuId)
+            this.$message.success(`设置模板成功`)
         }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-.page-body-title {
-    background: #f5f7fa;
-    height: 40px;
-    line-height: 40px;
-    padding-left: 10px;
-    margin-bottom: 10px;
-    h3 {
-        font-size: 20px;
-    }
-}
 .picture-container {
     float: left;
 }

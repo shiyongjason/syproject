@@ -12,8 +12,8 @@ export const hasDeclareLabel = [
     { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
     { label: '资金支持类型', prop: 'fundTypeName' }
 ]
-// 资金计划汇总表
-export const summarySheet = function (targetYear, targetMonth, isF) {
+// 计划汇总分析表
+export const summarySheet = function (targetYear, targetMonth, isF, isHideCompanyCounts) {
     return [
         {
             prop: 'organizationName',
@@ -25,19 +25,18 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
         },
         {
             label: '申报公司数',
+            selfSettingHidden: isHideCompanyCounts,
             children: [
                 {
                     prop: 'companyCounts',
                     label: '总平台数',
                     minWidth: '150',
-                    displayAs: 'fundMoney',
                     align: 'center'
                 },
                 {
                     prop: 'declareCounts',
                     label: '已申报家数',
                     minWidth: '150',
-                    displayAs: 'fundMoney',
                     align: 'center'
                 }
             ]
@@ -50,13 +49,15 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
                     label: `${targetYear}年责任状目标`,
                     minWidth: '150',
                     displayAs: 'fundMoney',
+                    isTHNoTranslate: true,
                     align: 'right'
                 },
                 {
                     prop: 'currentMonthCommitment',
                     label: `${targetYear}年${targetMonth}月责任状目标`,
-                    minWidth: '150',
+                    minWidth: '160',
                     displayAs: 'fundMoney',
+                    isTHNoTranslate: true,
                     align: 'right'
                 },
                 {
@@ -64,6 +65,7 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
                     label: `${targetYear - 1}年${targetMonth}月实际销售`,
                     minWidth: '150',
                     displayAs: 'fundMoney',
+                    isTHNoTranslate: true,
                     align: 'right'
                 },
                 {
@@ -71,6 +73,7 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
                     label: `${targetYear}年${targetMonth}月预计销售`,
                     minWidth: '150',
                     displayAs: 'fundMoney',
+                    isTHNoTranslate: true,
                     align: 'right'
                 }
             ]
@@ -80,21 +83,29 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
             children: [
                 {
                     prop: 'loanBalance',
-                    label: '在贷余额',
-                    minWidth: '150',
+                    label: '在贷余额（含逾期金额）',
+                    minWidth: '160',
                     displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'totalOverdue',
-                    label: '逾期余额',
-                    minWidth: '150',
+                    label: '逾期金额',
+                    minWidth: '100',
+                    displayAs: 'fundMoney',
+                    align: 'right'
+                },
+                {
+                    prop: 'hxjFundAmount',
+                    label: '好享家注资占用额',
+                    minWidth: '120',
                     displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'estimateRepayment',
                     label: `${targetYear}年${targetMonth}月预计还款`,
+                    isTHNoTranslate: true,
                     minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
@@ -102,6 +113,7 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
                 {
                     prop: 'lastYearActualUse',
                     label: `${targetYear - 1}年${targetMonth}月实际用款`,
+                    isTHNoTranslate: true,
                     minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
@@ -109,6 +121,7 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
                 {
                     prop: 'preBorrowCurrentMonth',
                     label: `${targetYear}年${targetMonth}月预计用款`,
+                    isTHNoTranslate: true,
                     minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
@@ -134,7 +147,7 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
                 },
                 {
                     prop: 'overduePercent',
-                    label: '逾期率=（逾期余额/在贷余额）',
+                    label: '逾期率=（逾期金额/在贷余额）',
                     align: 'right',
                     className: 'wisdom-total-background',
                     minWidth: '200'
@@ -146,14 +159,16 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
             children: [
                 {
                     prop: 'subsectionManagerApproveAmount',
-                    label: '分总审批额度',
+                    label: '分总审批金额',
                     align: 'right',
+                    displayAs: 'fundMoney',
                     minWidth: '100'
                 },
                 {
                     prop: 'regionManagerApproveAmount',
                     label: '大区总审批金额',
                     align: 'right',
+                    displayAs: 'fundMoney',
                     minWidth: '120'
                 }
             ]
@@ -217,8 +232,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
             children: [
                 {
                     prop: 'annualCommitment',
-                    label: `${targetYear}shy年责任状目标`,
-                    displayAs: 'fundMoney',
+                    label: `${targetYear}年责任状目标`,
                     align: 'center',
                     isHidden: true,
                     children: [
@@ -233,7 +247,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 {
                     prop: 'currentMonthCommitment',
                     label: `${targetYear}年${targetMonth}月责任状目标`,
-                    displayAs: 'fundMoney',
                     align: 'center',
                     children: [
                         {
@@ -247,8 +260,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 {
                     prop: 'lastYearActualSales',
                     label: `${targetYear - 1}年${targetMonth}月实际销售`,
-                    width: '150',
-                    displayAs: 'fundMoney',
                     align: 'center',
                     children: [
                         {
@@ -263,7 +274,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     prop: 'estimateSales',
                     label: `${targetYear}年${targetMonth}月预计销售`,
                     width: '150',
-                    displayAs: 'fundMoney',
                     align: 'center',
                     children: [
                         {
@@ -281,15 +291,14 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
             children: [
                 {
                     prop: 'loanBalance',
-                    label: '在贷余额',
-                    minWidth: '150',
-                    displayAs: 'fundMoney',
+                    label: '在贷余额（含逾期金额）',
+                    minWidth: '170',
                     align: 'center',
                     children: [
                         {
                             prop: 'loanBalance',
                             displayAs: 'fundMoney',
-                            minWidth: '150',
+                            minWidth: '170',
                             align: 'center',
                             label: `-`
                         }
@@ -297,9 +306,8 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 },
                 {
                     prop: 'totalOverdue',
-                    label: '逾期余额',
-                    minWidth: '150',
-                    displayAs: 'fundMoney',
+                    label: '逾期金额',
+                    minWidth: '100',
                     align: 'center',
                     children: [
                         {
@@ -312,9 +320,23 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     ]
                 },
                 {
+                    prop: 'hxjFundAmount',
+                    label: '好享家注资占用额',
+                    minWidth: '150',
+                    align: 'center',
+                    children: [
+                        {
+                            prop: 'hxjFundAmount',
+                            displayAs: 'fundMoney',
+                            align: 'center',
+                            minWidth: '150',
+                            label: `-`
+                        }
+                    ]
+                },
+                {
                     prop: 'estimateRepayment',
                     label: `${targetYear}年${targetMonth}月预计还款`,
-                    displayAs: 'fundMoney',
                     align: 'right',
                     children: [
                         {
@@ -328,7 +350,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 {
                     prop: 'lastYearActualUse',
                     label: `${targetYear - 1}年${targetMonth}月实际用款`,
-                    displayAs: 'fundMoney',
                     align: 'right',
                     children: [
                         {
@@ -342,7 +363,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 {
                     prop: 'preBorrowCurrentMonth',
                     label: `${targetYear}年${targetMonth}月预计用款`,
-                    displayAs: 'fundMoney',
                     align: 'right',
                     children: [
                         {
@@ -384,7 +404,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 },
                 {
                     prop: 'overduePercent',
-                    label: '逾期率=（逾期余额/在贷余额）',
+                    label: '逾期率=（逾期金额/在贷余额）',
                     align: 'right',
                     children: [
                         {
@@ -430,7 +450,12 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                                     },
                                     style: {
                                         color: '#FF7A45',
-                                        cursor: 'pointer'
+                                        cursor: 'pointer',
+                                        width: '100%',
+                                        overflow: 'hidden',
+                                        display: '-webkit-box',
+                                        WebkitBoxOrient: 'vertical',
+                                        webkitLineClamp: 1
                                     },
                                     on: {
                                         'click': function () {
@@ -454,10 +479,8 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     children: [
                         {
                             prop: 'subsectionFinanceHealthPercentage',
-                            displayAs: 'fundMoney',
                             align: 'center',
-                            minWidth: '100',
-                            label: `-`
+                            minWidth: '100'
                         }
                     ]
                 },
@@ -468,7 +491,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     children: [
                         {
                             prop: 'subsectionFinanceRemark',
-                            displayAs: 'fundMoney',
                             align: 'center',
                             width: '150',
                             render: (h, scope) => {
@@ -480,7 +502,12 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                                     },
                                     style: {
                                         color: '#FF7A45',
-                                        cursor: 'pointer'
+                                        cursor: 'pointer',
+                                        width: '100%',
+                                        overflow: 'hidden',
+                                        display: '-webkit-box',
+                                        WebkitBoxOrient: 'vertical',
+                                        webkitLineClamp: 1
                                     },
                                     on: {
                                         'click': function () {
@@ -504,8 +531,8 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     children: [
                         {
                             prop: 'subsectionManagerApproveAmount',
-                            displayAs: 'fundMoney',
                             align: 'center',
+                            displayAs: 'fundMoney',
                             width: '120',
                             label: `-`
                         }
@@ -518,7 +545,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     children: [
                         {
                             prop: 'subsectionManagerRemark',
-                            displayAs: 'fundMoney',
                             align: 'center',
                             minWidth: '150',
                             render: (h, scope) => {
@@ -530,7 +556,12 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                                     },
                                     style: {
                                         color: '#FF7A45',
-                                        cursor: 'pointer'
+                                        cursor: 'pointer',
+                                        width: '100%',
+                                        overflow: 'hidden',
+                                        display: '-webkit-box',
+                                        WebkitBoxOrient: 'vertical',
+                                        webkitLineClamp: 1
                                     },
                                     on: {
                                         'click': function () {
@@ -554,10 +585,9 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     children: [
                         {
                             prop: 'regionManagerApproveAmount',
-                            displayAs: 'fundMoney',
                             align: 'center',
                             minWidth: '120',
-                            label: `-`
+                            displayAs: 'fundMoney'
                         }
                     ]
                 },
@@ -568,7 +598,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     children: [
                         {
                             prop: 'regionManagerRemark',
-                            displayAs: 'fundMoney',
                             align: 'center',
                             minWidth: '150',
                             render: (h, scope) => {
@@ -580,7 +609,12 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                                     },
                                     style: {
                                         color: '#FF7A45',
-                                        cursor: 'pointer'
+                                        cursor: 'pointer',
+                                        width: '100%',
+                                        overflow: 'hidden',
+                                        display: '-webkit-box',
+                                        WebkitBoxOrient: 'vertical',
+                                        webkitLineClamp: 1
                                     },
                                     on: {
                                         'click': function () {
@@ -625,6 +659,7 @@ export const planApproval = function (targetYear) {
             children: [
                 {
                     prop: 'regionName',
+                    width: '100',
                     label: `合计`
                 }
             ]
@@ -818,6 +853,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             label: '公司编码',
             prop: 'misCode',
             isHidden: tabCheck,
+            coderHidden: tabCheck,
             width: 100,
             fixed: true
         },
@@ -825,6 +861,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             label: '公司名称',
             prop: 'companyName',
             isHidden: tabCheck,
+            coderHidden: tabCheck,
             width: 120,
             fixed: true
         },
@@ -832,6 +869,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             label: '区域',
             prop: 'subRegionName',
             isHidden: tabCheck,
+            coderHidden: tabCheck,
             width: 150,
             fixed: true
         },
@@ -864,6 +902,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 150,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'annualTotalSale'
                 }
             ]
@@ -890,6 +929,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 150,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'annualTotalProfit'
                 }
             ]
@@ -916,27 +956,43 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 150,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'annualTotalLoan'
                 }
             ]
         },
         {
-            label: '累计资金支持效率比',
+            label: '本年累计资金支持效率比',
             prop: 'annualTotalEffectiveRate',
-            width: 150,
+            width: 160,
             children: [
                 {
                     label: '-',
-                    width: 150,
-                    isUseCommonRenderHeader: true,
+                    width: 160,
+                    // isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
                     prop: 'annualTotalEffectiveRate'
                 }
             ]
         },
         {
-            label: '当月申报用款额',
-            prop: 'currentApplyFund',
+            label: '去年累计资金支持效率比',
+            prop: 'lastYearTotalEffectiveRate',
+            width: 160,
+            children: [
+                {
+                    label: '-',
+                    width: 160,
+                    // isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
+                    prop: 'lastYearTotalEffectiveRate'
+                }
+            ]
+        },
+        {
+            label: '好享家注资占用额',
+            prop: 'hxjFundAmount',
+            displayAs: 'fundMoney',
             width: 150,
             children: [
                 {
@@ -944,6 +1000,22 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 150,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
+                    prop: 'hxjFundAmount'
+                }
+            ]
+        },
+        {
+            label: '当月申报用款额',
+            prop: 'currentApplyFund',
+            width: 120,
+            children: [
+                {
+                    label: '-',
+                    width: 120,
+                    isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'currentApplyFund'
                 }
             ]
@@ -958,6 +1030,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 150,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'currentApproveFund'
                 }
             ]
@@ -971,6 +1044,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 120,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'currentActualLoan'
                 }
             ]
@@ -984,6 +1058,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 120,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'currentRemainingRepayment'
                 }
             ]
@@ -997,12 +1072,13 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 120,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'totalUnpaidAmount'
                 }
             ]
         },
         {
-            label: '剩余逾期',
+            label: '逾期合计',
             prop: 'totalRemainingOverdue',
             children: [
                 {
@@ -1010,6 +1086,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 120,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'totalRemainingOverdue'
                 }
             ]
@@ -1023,6 +1100,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 120,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'totalRemainingOverdueExist'
                 }
             ]
@@ -1036,6 +1114,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 120,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'totalRemainingOverdueIncrement'
                 }
             ]
@@ -1049,6 +1128,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 120,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'currentOverdueAmount'
                 }
             ]

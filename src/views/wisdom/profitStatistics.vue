@@ -1,6 +1,6 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
+    <div class="page-body amount">
+        <div v-show="toggle" class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col" v-if="branch">
                     <div class="query-col-title">分部：</div>
@@ -42,15 +42,19 @@
                     <el-button type="primary" class="ml20" @click="getList(1)">
                         查询
                     </el-button>
-                    <el-button v-if="hosAuthCheck(AUTH_PROFIT_STATISTICS_EXPORT)" type="primary" class="ml20" @click="onExport(queryParams)">
+                    <el-button type="default" class="ml20" @click="onReset">
+                        重置
+                    </el-button>
+                    <el-button v-if="hosAuthCheck(AUTH_PROFIT_STATISTICS_EXPORT)" type="default" class="ml20" @click="onExport(queryParams)">
                         导出
                     </el-button>
                 </div>
             </div>
         </div>
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-body-cont">
             <div class="page-table">
-                <hosJoyTable v-if="changeTable" ref="hosjoyTable" border stripe showPagination :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
+                <hosJoyTable :amountResetTable="toggle" v-if="changeTable" ref="hosjoyTable" border stripe showPagination :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
@@ -72,6 +76,7 @@ export default {
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
+            toggle: true,
             AUTH_PROFIT_STATISTICS_EXPORT,
             selectAuth: {
                 branchObj: {
@@ -107,7 +112,7 @@ export default {
                     fixed: true
                 },
                 { prop: 'companyShortName', label: '平台公司名', fixed: true, width: '120' },
-                { prop: 'subsectionName', label: '分部', fixed: true },
+                { prop: 'subsectionName', label: '分部', fixed: true, width: '120' },
                 {
                     label: '销售收入与成本/万',
                     renderHeader: (h, scope) => {
@@ -169,8 +174,8 @@ export default {
                         )
                     },
                     children: [
-                        { prop: 'totalProfit', label: '利润总额/万' },
-                        { prop: 'netProfit', label: '净利润额/万' },
+                        { prop: 'totalProfit', label: '利润总额/万', width: 100 },
+                        { prop: 'netProfit', label: '净利润额/万', width: 100 },
                         {
                             prop: 'netProfitAchievementRate',
                             label: '达成率',
@@ -183,7 +188,8 @@ export default {
                             label: '销售利润率/万',
                             render: (h, scope) => {
                                 return <span>{scope.row.returnOnSales == 0 ? 0 : scope.row.returnOnSales ? `${scope.row.returnOnSales}%` : '-'}</span>
-                            }
+                            },
+                            width: 100
                         }
                     ]
                 },
@@ -194,13 +200,15 @@ export default {
                             <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.expandNetProfitRate, 1) }}></i></span>
                         )
                     },
+                    width: 120,
                     children: [
                         {
                             prop: 'netProfitRate',
                             label: '净利润率',
                             render: (h, scope) => {
                                 return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}</span>
-                            }
+                            },
+                            width: 120
                         }
                     ]
                 }
@@ -394,8 +402,13 @@ export default {
             } else {
                 this.column[scope.$index].children = this.column[scope.$index].children.slice(0, num)
                 this.changeTable = false
-                this.$nextTick(() => { this.changeTable = true })
+                this.$nextTick(() => {
+                    this.changeTable = true
+                })
             }
+            this.$nextTick(() => {
+                this.$refs.hosjoyTable && this.$refs.hosjoyTable.doLayout()
+            })
         },
         async onGetList (query) {
             const { data } = await getProfitList(query)
@@ -452,6 +465,22 @@ export default {
         },
         async onExport (params) {
             location.href = interfaceUrl + `rms/platform/profit-statistics/export?subsectionCode=${this.queryParams.subsectionCode}&startDate=${this.queryParams.startDate}&endDate=${this.queryParams.endDate}&startDate=${this.queryParams.startDate}&onLineStatus=${this.queryParams.onLineStatus}&companyCode=${this.queryParams.companyCode}&misCode=${this.queryParams.misCode}`
+        },
+        onReset () {
+            this.queryParams = { ...this.queryParamsReset }
+            this.selectAuth = {
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            }
+            this.onLineStatusTemp = ['1']
+            this.getList()
+            this.newBossAuth(['F', 'P'])
         }
     },
     async mounted () {
@@ -459,6 +488,7 @@ export default {
         this.queryParams.endDate = moment().endOf('days').format('YYYY-MM-DD')
         this.getList()
         await this.newBossAuth(['F', 'P'])
+        this.queryParamsReset = { ...this.queryParams }
     }
 }
 </script>

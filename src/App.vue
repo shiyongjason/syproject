@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <router-view/>
+        <router-view />
     </div>
 </template>
 
@@ -9,12 +9,12 @@
     font-family: "Microsoft YaHei", "PingFang SC";
     font-size: 14px;
     color: #000000;
-    font-weight:400;
+    font-weight: 400;
 }
-.el-popper[x-placement^=bottom]{
+.el-popper[x-placement^="bottom"] {
     margin-top: 0 !important;
 }
-.el-autocomplete-suggestion{
+.el-autocomplete-suggestion {
     margin-top: 0 !important;
 }
 </style>

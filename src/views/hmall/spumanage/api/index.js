@@ -87,7 +87,7 @@ export const AuditSpu = (params) => axios.put(B2bUrl + `product/api/spu/audit`, 
 export const findBazaarLists = (params) => axios.get(B2bUrl + 'product/api/spu/boss/manage-page', { params })
 
 // (集市)商品批量下架
-export const offShlef = (params) => axios.put(B2bUrl + 'product/api/spu/off-shelves', params)
+export const offShlef = (params) => axios.patch(B2bUrl + 'product/admin/spu/batch-off-shelf', params)
 
 // spu模板库列表
 export const findProductsTemplate = (params) => axios.get(B2bUrl + 'product/api/spu/template/page', { params })
@@ -105,3 +105,6 @@ export const findSpuTemplateDetail = (params) => axios.get(B2bUrl + `product/api
 export const putSpuTemplate = (params) => axios.put(B2bUrl + `product/api/spu/template`, params)
 
 /* 2020-05 商品改造 end */
+
+// 修改spu模板
+export const setSpuTemplate = (params) => axios.post(B2bUrl + `product/api/spu/join/template/${params}`)

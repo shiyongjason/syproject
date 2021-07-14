@@ -73,7 +73,7 @@
         <div class="preliminaryreview-col">
             <h2 class="preliminaryreview-title">工程项目回款方式</h2>
             <p class="preliminaryreview-p">
-                <span>预付款比例</span>
+                <span>首付款比例</span>
                 {{tabPreliminaryReview.advancePaymentProportion?`${tabPreliminaryReview.advancePaymentProportion}%`:'-'}}
             </p>
             <p class="preliminaryreview-p">
@@ -104,11 +104,8 @@
         <div class="preliminaryreview-annex">
             <h2 class="preliminaryreview-title">附件</h2>
             <div class="preliminaryreview-annex-annexs" v-if="srcList&&srcList.length>0">
-                <!-- <template v-for="(item,index) in srcList">
-                    <el-image :key="index" style="width: 80px; height: 80px;margin-right:8px" :src="item.fileUrl" :preview-src-list="srcList" />
-                </template> -->
-                  <hosjoyUpload v-model="srcList" accept='.jpeg,.jpg,.png,.BMP,.pdf' :fileSize='20' :fileNum='15'  >
-                    </hosjoyUpload>
+                <OssFileHosjoyUpload v-model="srcList" accept='.jpeg,.jpg,.png,.BMP,.pdf' :fileSize='20' :fileNum='15'>
+                </OssFileHosjoyUpload>
             </div>
             <div v-else>-</div>
         </div>
@@ -118,7 +115,7 @@
 <script>
 import { TYPE_LIST, COOPERATION_PROGRESS_LIST, DEVICE_LIST, UPSTREAMSUPPLIERTYPE, UPSTREAMPAYTYPE } from '../../const'
 import utils from '@/utils/filters'
-import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
 export default {
     name: 'tabPreliminaryReview',
     props: ['tabPreliminaryReview'],
@@ -132,7 +129,7 @@ export default {
         }
     },
     components: {
-        hosjoyUpload
+        OssFileHosjoyUpload
     },
     computed: {
         srcList () {
@@ -208,10 +205,10 @@ export default {
         margin-top: 10px;
     }
 }
-/deep/.el-icon-delete-solid{
+/deep/.el-icon-delete-solid {
     display: none;
 }
-/deep/.elupload{
+/deep/.elupload {
     display: none;
 }
 </style>

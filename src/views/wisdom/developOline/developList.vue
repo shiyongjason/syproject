@@ -53,16 +53,16 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-button type="primary" @click="getList('onSearch')">搜索</el-button>
+                <el-button type="primary" @click="getList('onSearch')">查询</el-button>
             </div>
         </div>
         <div class="page-body-cont ">
             <div class="query-cont-col">
-                <el-button type="primary" @click="editPlatform()">添加平台公司</el-button>
+                <el-button type="default" @click="editPlatform()">添加平台公司</el-button>
             </div>
             <div class="query-cont-col">
                 <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'develop/developbasicinfo/import'" :data="{createUser: userInfo.employeeName}" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload>
-                    <el-button type="primary" :loading='uploadLoading'>批量导入</el-button>
+                    <el-button type="default" :loading='uploadLoading'>批量导入</el-button>
                 </el-upload>
             </div>
             <div class="query-cont-col">
@@ -86,7 +86,7 @@
                         <el-button type="primary" @click="capitalExportFile" size='small' v-if="dialog.type==2">导出</el-button>
                         <el-button type="primary" @click="importoldExcel" size='small' v-if="dialog.type==3">导出</el-button>
                         <hosJoyTable size='small' ref="hosjoyTable" border stripe showPagination :column="dialog.column" :data="dialog.tableData" align="center" :total="dialog.total" :pageNumber.sync="dialog.pageNumber" :pageSize.sync="dialog.pageSize" @pagination="getDialogList"
-                            style="margin-top:20px">
+                            style="margin-top:20px" :height=400>
                         </hosJoyTable>
                         <el-form ref="dialogForm" :model="scale_formData" :rules="scale_formData_Rules" v-if="dialog.type==1">
                             <div class="query-cont-col" style="margin:20px 0">

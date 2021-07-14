@@ -9,11 +9,7 @@
                     <el-input v-model.trim="cloudForm.question" show-word-limit placeholder="请输入问题标题" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
                 <el-form-item label="所属类目：" prop="selectedOptions">
-                    <el-cascader
-                            :options="options"
-                            v-model="cloudForm.selectedOptions"
-                            :props="defaultProps"
-                            @change="handleChange">
+                    <el-cascader :options="options" v-model="cloudForm.selectedOptions" :props="defaultProps" @change="handleChange">
                     </el-cascader>
                 </el-form-item>
                 <div class="page-body-title">
@@ -21,7 +17,8 @@
                 </div>
                 <el-form-item label="详情：" prop="answer">
                     <el-button type="primary" icon="el-icon-video-camera-solid" @click="onAddvideo">插入视频</el-button>
-                    <RichEditor @blur="$refs['cloudForm'].validateField('answer')" tabindex="0" hidefocus="true" ref="editors" v-model="cloudForm.answer" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="outline: 0;margin-bottom: 12px;width:100%"></RichEditor>
+                    <RichEditor @blur="$refs['cloudForm'].validateField('answer')" tabindex="0" hidefocus="true" ref="editors" v-model="cloudForm.answer" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams"
+                        style="outline: 0;margin-bottom: 12px;width:100%"></RichEditor>
                 </el-form-item>
                 <el-form-item style="text-align: center">
                     <el-button type="primary" @click="onSaveact()" :loading="loading">{{ loading ? '提交中 ...' : '确 定' }}</el-button>
@@ -46,7 +43,7 @@
 </template>
 <script>
 import { interfaceUrl } from '@/api/config'
-import { saveActdetail, editActdetail, saveQuestion } from '../api'
+import { saveQuestion } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     name: 'cloudActedit',
@@ -55,9 +52,9 @@ export default {
             cloudForm: {
                 answer: '',
                 question: '',
-                selectedOptions:''
+                selectedOptions: ''
             },
-            id:this.$route.query.id||'',
+            id: this.$route.query.id || '',
             menus: [
                 'head', // 标题
                 'bold', // 粗体
@@ -83,15 +80,15 @@ export default {
             videoimageUrl: '',
             defaultProps: {
                 children: 'children',
-                value:'type',
-                label:'deviceName'
+                value: 'type',
+                label: 'deviceName'
             },
-            options:[],
+            options: [],
             rules: {
                 question: [
                     { required: true, message: '请输入问题标题', trigger: 'blur' }
                 ],
-                selectedOptions:[
+                selectedOptions: [
                     { required: true, message: '请选择目录', trigger: 'blur' }
                 ],
                 answer: [
@@ -113,7 +110,7 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo
         }),
-        ...mapGetters(['klCatalogueList','klQuestionDetail']),
+        ...mapGetters(['klCatalogueList', 'klQuestionDetail']),
         videoUpload () {
             return {
                 action: interfaceUrl + 'tms/files/upload',
@@ -154,13 +151,6 @@ export default {
             }
         }
     },
-    /*watch: {
-        'cloudForm.picture' (val) {
-            this.$nextTick(() => {
-                if (val) this.$refs['picture'].clearValidate()
-            })
-        }
-    },*/
     mounted () {
         this.initCatalogueData()
         if (this.id) {
@@ -173,13 +163,12 @@ export default {
             await this.getCatalogueListAct()
             // console.log(2323,this.klCatalogueList)
             let _opts = this.klCatalogueList.map((item, index) => {
-
                 return item.respdeviceBOList.length > 0 ? {
                     ...item,
                     type: item.questionId,
                     deviceName: item.questionDescription,
                     children: item.respdeviceBOList
-                }:{
+                } : {
                     ...item,
                     deviceName: item.questionDescription,
                     type: item.questionId
@@ -193,7 +182,7 @@ export default {
         videoUrl (val) {
             this.$message.success('视频上传成功')
             this.uploadedUrl = val.imageUrl
-            this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/share_icon.png'
+            this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
         },
         onAddvideo () {
             this.uploadedUrl = ''
@@ -205,12 +194,16 @@ export default {
             this.dialogVisible = false
         },
         onInsertVideo () {
+            if (!this.uploadedUrl) {
+                this.$message.error('请选择上传视频')
+                return false
+            }
             this.$refs.editors.onInsertUrl(`</br><video src="${this.uploadedUrl}"  poster="" controls controlsList="nofullscreen nodownload noremote footbar" width="450" height="300" style="border:1px solid #f5f5f5;"></video></br>`)
             this.dialogVisible = false
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/comfortCloud/knowledge')
+            this.$router.push('/comfortCloud/operationsManagement/knowledge')
         },
         async getActivityDetail (id) {
             await this.getQuestionDetailAct(id)
@@ -244,7 +237,7 @@ export default {
                         await saveQuestion(params)
                         this.$message.success('问题保存成功')
                         this.setNewTags((this.$route.fullPath).split('?')[0])
-                        this.$router.push('/comfortCloud/knowledge')
+                        this.$router.push('/comfortCloud/operationsManagement/knowledge')
                         this.loading = false
                     } catch (error) {
                         this.loading = false
@@ -256,6 +249,7 @@ export default {
         },
         handleChange (value) {
             this.cloudForm.selectedOptions = value
+            this.$refs['cloudForm'].validateField('selectedOptions')
         }
     }
 }
@@ -282,7 +276,7 @@ export default {
     // z-index: 99999 !important;
 }
 /deep/.newTitle {
-    width: 500px!important;
+    width: 500px !important;
 }
 .el-picker-panel {
     z-index: 99999 !important;
@@ -293,7 +287,10 @@ export default {
 /deep/.w-e-menu {
     z-index: 99 !important;
 }
-/deep/.editor-wrap{
-    margin-bottom: 23px  !important;
+/deep/.editor-wrap {
+    margin-bottom: 23px !important;
+}
+/deep/.w-e-toolbar {
+    z-index: 99 !important;
 }
 </style>

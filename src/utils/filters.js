@@ -1,3 +1,6 @@
+
+import moment from 'moment'
+
 // new Data()过后的时间转YYYY-MM-DD HH:mm
 const formatterTime = function (time) {
     const data = new Date(time)
@@ -30,24 +33,65 @@ const formatterDate = function (time) {
 }
 
 // 金额格式化
-const money = function (val, int) {
-    if (val) {
-        const res = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-        return res
+const money = function (value, int) {
+    // if (val) {
+    //     const res = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    //     return res
+    // }
+    // if (val == 0) {
+    //     return 0
+    // }
+    // return '-'
+    if (value == null) return '-'
+    let money = ''
+    let pointNum = ''
+    let val = value.toString()
+    if (val.indexOf('.') > 0) {
+        money = val.split('.')[0]
+        pointNum = val.split('.')[1]
+        return money.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '.' + pointNum
+    } else {
+        money = val.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        return money
     }
-    if (val == 0) {
-        return 0
-    }
-    return '-'
 }
 // 资金台账金额格式
 const fundMoney = function (val, int) {
     if (val) {
-        const res = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-        return res
+        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    } else if (val === 0) {
+        return val
     } else {
-        return 0
+        return '-'
     }
+}
+// 资金台账金额格式 11.11
+const fundMoneyHasTail = function (val, int) {
+    if (val) {
+        const _val = Number(val).toFixed(2)
+        return (_val + '').replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    } else if (val === 0) {
+        return Number(val).toFixed(2)
+    } else {
+        return '-'
+    }
+}
+// 资金台账金额格式
+const fundMoneyHaveSpot = function (val, int) {
+    if (val) {
+        let head = ''
+        let foot = ''
+        if (val.toString().indexOf('.') > -1) {
+            head = (val.toString().slice(0, val.toString().indexOf('.'))).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            foot = val.toString().substr(val.toString().indexOf('.'), 3)
+        } else {
+            head = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        }
+        return `${head}${foot}`
+    } else if (val === 0) {
+        return val
+    }
+    return '-'
 }
 const formatDateDuration = function (time) {
     if (!time) return '-'
@@ -77,6 +121,48 @@ const moneyShow = function (val) {
     }
 }
 
+// *
+//  * @name formatTime 时间格式化工具，二次封装moment
+//  *
+//  * @param {date} [value=new Date()] 时间格式参数
+//  * @param {string} [type='YYYY-MM-DD HH:mm'] 格式化类型
+//  *
+
+const momentFormat = function (value = new Date(), type = 'YYYY-MM-DD HH:mm:ss') {
+    if (value) {
+        return moment(value).format(type)
+    } else {
+        return '-'
+    }
+}
+
+const percentageShow = function (value) {
+    if (value) {
+        let str = Number(value).toFixed(2)
+        str += '%'
+        return str
+    }
+    return '--'
+}
+const percenShow = function (value) {
+    let str = Number(value)
+    if (value) {
+        str += '%'
+        return str
+    }
+    return '-'
+}
+const attributeComputed = function (key, list) {
+    if (key === null) return '-'
+    let value = ''
+    list.forEach(val => {
+        if (val.key === key) {
+            value = val.value
+        }
+    })
+    return value || '-'
+}
+
 export default {
     formatterTime,
     formatterTimes,
@@ -84,6 +170,12 @@ export default {
     formatDateDuration,
     money,
     isNotBlank,
+    fundMoneyHasTail,
     fundMoney,
-    moneyShow
+    moneyShow,
+    fundMoneyHaveSpot,
+    momentFormat,
+    percentageShow,
+    percenShow,
+    attributeComputed
 }

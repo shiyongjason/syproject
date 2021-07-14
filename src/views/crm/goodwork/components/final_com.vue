@@ -18,22 +18,23 @@
                                 <span class="posrtv">
                                     <template v-if="item&&item.fileUrl">
                                         <i class="el-icon-document"></i>
-                                        <a :href="item.fileUrl" target="_blank">
-                                            <font>{{item.fileName}}</font>
-                                        </a>
+                                        <downloadFileAddToken isPreview
+                                                              :file-name="item.fileName"
+                                                              :file-url="item.fileUrl"
+                                                              :a-link-words="item.fileName"
+                                                              is-type="main" />
                                     </template>
                                 </span>
                             </p>
                             <p style="flex:0.5">{{item.date}}</p>
                             <p>
                                 <font class="fileItemDownLoad" @click="onDelete">删除</font>
-                                <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font>
-                                <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
+                                <downloadFileAddToken :file-name="item.fileName" :file-url="item.fileUrl" :a-link-words="'下载'" is-type="btn"></downloadFileAddToken>
                             </p>
                         </div>
-                        <hosjoyUpload v-model="fileList" :showPreView=false :fileSize='200' :fileNum='15' :action='action' :uploadParameters='uploadParameters' @successCb="onSuccessCb()" style="margin-top:10px">
-                            <el-button type="primary">上 传</el-button>
-                        </hosjoyUpload>
+                        <OssFileHosjoyUpload v-model="fileList" :showPreView=false :fileSize='200' :fileNum='15' :action='action' :uploadParameters='uploadParameters' @successCb="onSuccessCb()" style="margin-top:10px">
+                            <el-button>上传</el-button>
+                        </OssFileHosjoyUpload>
                     </el-form-item>
                 </template>
             </div>
@@ -41,9 +42,9 @@
     </div>
 </template>
 <script>
-import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
-import { interfaceUrl } from '@/api/config'
-import { handleImgDownload } from '../../projectInformation/utils'
+import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
+import downloadFileAddToken from '@/components/downloadFileAddToken/index'
+import { ccpBaseUrl } from '@/api/config'
 export default {
     props: {
         finalForm: {
@@ -52,20 +53,20 @@ export default {
         }
     },
     components: {
-        hosjoyUpload
+        OssFileHosjoyUpload,
+        downloadFileAddToken
     },
     data () {
         return {
-            handleImgDownload,
             dd: [{
                 fileUrl: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
                 fileName: 'asd.jpeg'
             }],
             colForm: {},
-            action: interfaceUrl + 'tms/files/upload',
+            action: ccpBaseUrl + 'common/files/upload-old',
             uploadParameters: {
                 updateUid: '',
-                reservedName: true
+                reservedName: false
             },
             fileList: []
         }

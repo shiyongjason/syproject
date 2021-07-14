@@ -1,7 +1,7 @@
 <template>
     <div class="regionalManager">
         <h3>大区总经理审批</h3>
-        <el-form :model="fundDetail.regionManagerFundPlanApprove" :rules="rules" ref="form" label-width="200px" class="demo-ruleForm">
+        <el-form :model="fundDetail.regionManagerFundPlanApprove" :rules="rules" ref="form" label-width="200px" class="demo-ruleForm" @submit.native.prevent>
             <el-form-item label="大区总审批金额：" prop="approveAmount">
                 <el-input v-model.trim="fundDetail.regionManagerFundPlanApprove.approveAmount" v-isNum:2="fundDetail.regionManagerFundPlanApprove.approveAmount" maxlength='20' placeholder="请输入金额" :disabled='disabled'>
                     <template slot="append">万元</template>

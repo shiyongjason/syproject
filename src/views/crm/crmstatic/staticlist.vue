@@ -1,63 +1,62 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="page-tilte">好橙工台账</div>
-            <div class="page-body-cont">
-                <basicTable :tableData="tableData" :tableLabel="tableLabel" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='false'>
-                    <template slot="type" slot-scope="scope">
-                        {{onAccountType(scope.data.row.type)}}
-                    </template>
-                    <template slot="totalValue" slot-scope="scope">
-                        {{scope.data.row.totalValue?fundMoneys(scope.data.row.totalValue):'-'}}
-                    </template>
-                    <template slot="retainValue" slot-scope="scope">
-                        {{scope.data.row.retainValue?fundMoneys(scope.data.row.retainValue):'-'}}
-                    </template>
-                    <template slot="dataCollectValue" slot-scope="scope">
-                        {{scope.data.row.dataCollectValue?fundMoneys(scope.data.row.dataCollectValue):'-'}}
-                    </template>
-                        <template slot="infoToBeImprovedValue" slot-scope="scope">
-                        {{scope.data.row.infoToBeImprovedValue?fundMoneys(scope.data.row.infoToBeImprovedValue):'-'}}
-                    </template>
-                    <template slot="trustTrialValue" slot-scope="scope">
-                        {{scope.data.row.trustTrialValue?fundMoneys(scope.data.row.trustTrialValue):'-'}}
-                    </template>
-                    <template slot="pendingLoanValue" slot-scope="scope">
-                        {{scope.data.row.pendingLoanValue?fundMoneys(scope.data.row.pendingLoanValue):'-'}}
-                    </template>
-                    <template slot="toReturnLoanValue" slot-scope="scope">
-                        {{scope.data.row.toReturnLoanValue?fundMoneys(scope.data.row.toReturnLoanValue):'-'}}
-                    </template>
-                    <template slot="cooperCloseValue" slot-scope="scope">
-                        {{scope.data.row.cooperCloseValue?fundMoneys(scope.data.row.cooperCloseValue):'-'}}
-                    </template>
-                          <template slot="toBeSignedValue" slot-scope="scope">
-                        {{scope.data.row.toBeSignedValue?fundMoneys(scope.data.row.toBeSignedValue):'-'}}
-                    </template>
-                    <template slot="cooperCompleteValue" slot-scope="scope">
-                        {{scope.data.row.cooperCompleteValue?fundMoneys(scope.data.row.cooperCompleteValue):'-'}}
-                    </template>
-                      <template slot="finalApproveValue" slot-scope="scope">
-                        {{scope.data.row.finalApproveValue?fundMoneys(scope.data.row.finalApproveValue):'-'}}
-                    </template>
-                    <template slot="action" slot-scope="scope">
-                        <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)">查看详情</el-button>
-                    </template>
-                </basicTable>
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <h-title>
+                <template #label>好橙工台账</template>
+            </h-title>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='false'>
+                <template slot="type" slot-scope="scope">
+                    {{onAccountType(scope.data.row.type)}}
+                </template>
+                <template slot="totalValue" slot-scope="scope">
+                    {{scope.data.row.totalValue?fundMoneys(scope.data.row.totalValue):'-'}}
+                </template>
+                <template slot="retainValue" slot-scope="scope">
+                    {{scope.data.row.retainValue?fundMoneys(scope.data.row.retainValue):'-'}}
+                </template>
+                <template slot="dataCollectValue" slot-scope="scope">
+                    {{scope.data.row.dataCollectValue?fundMoneys(scope.data.row.dataCollectValue):'-'}}
+                </template>
+                <template slot="docAuditValue" slot-scope="scope">
+                    {{scope.data.row.docAuditValue?fundMoneys(scope.data.row.docAuditValue):'-'}}
+                </template>
+
+                <template slot="infoToBeImprovedValue" slot-scope="scope">
+                    {{scope.data.row.infoToBeImprovedValue?fundMoneys(scope.data.row.infoToBeImprovedValue):'-'}}
+                </template>
+                <template slot="trustTrialValue" slot-scope="scope">
+                    {{scope.data.row.trustTrialValue?fundMoneys(scope.data.row.trustTrialValue):'-'}}
+                </template>
+                <template slot="finalApproveNoValue" slot-scope="scope">
+                    {{scope.data.row.finalApproveNoValue?fundMoneys(scope.data.row.finalApproveNoValue):'-'}}
+                </template>
+                <template slot="cooperCloseValue" slot-scope="scope">
+                    {{scope.data.row.cooperCloseValue?fundMoneys(scope.data.row.cooperCloseValue):'-'}}
+                </template>
+                <template slot="finalApproveYesValue" slot-scope="scope">
+                    {{scope.data.row.finalApproveYesValue?fundMoneys(scope.data.row.finalApproveYesValue):'-'}}
+                </template>
+                <template slot="finalApproveValue" slot-scope="scope">
+                    {{scope.data.row.finalApproveValue?fundMoneys(scope.data.row.finalApproveValue):'-'}}
+                </template>
+                <template slot="action" slot-scope="scope">
+                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)">查看详情</el-button>
+                </template>
+            </basicTable>
+
+            <h-title>
+                <template #label>概览</template>
+            </h-title>
+            <div class="page-tabs">
+                <el-radio-group v-model="tabPosition" style="margin-bottom:20px" @change="handleClick">
+                    <el-radio-button :label=1>项目数量</el-radio-button>
+                    <el-radio-button :label=2>工程合同金额</el-radio-button>
+                    <el-radio-button :label=3>设备总金额</el-radio-button>
+                    <el-radio-button :label=4>赊销总金额</el-radio-button>
+                </el-radio-group>
             </div>
-            <div class="page-tilte">概览</div>
-            <div class="page-body-cont">
-                <div class="page-tabs">
-                    <el-radio-group v-model="tabPosition" style="margin-bottom:20px" @change="handleClick">
-                        <el-radio-button :label=1>项目数量</el-radio-button>
-                        <el-radio-button :label=2>工程合同金额</el-radio-button>
-                        <el-radio-button :label=3>设备总金额</el-radio-button>
-                        <el-radio-button :label=4>赊销总金额</el-radio-button>
-                    </el-radio-group>
-                </div>
-                <p>单位：{{barUnit}}</p>
-                <div id="barchart" style="height:500px"></div>
-            </div>
+            <p>单位：{{barUnit}}</p>
+            <div id="barchart" style="height:600px"></div>
         </div>
     </div>
 </template>
@@ -78,16 +77,15 @@ export default {
             tableLabel: [
                 { label: '按项目进度分类', prop: 'type' },
                 { label: '合计', prop: 'totalValue' },
-                { label: '蓄水阶段', prop: 'retainValue' },
                 { label: '信息待完善', prop: 'infoToBeImprovedValue' },
-                { label: '资料收集', prop: 'dataCollectValue' },
-                { label: '立项阶段', prop: 'trustTrialValue' },
-                { label: '终审阶段', prop: 'finalApproveValue' },
-                { label: '待签约', prop: 'toBeSignedValue' },
-                { label: '待放款', prop: 'pendingLoanValue' },
-                { label: '待回款', prop: 'toReturnLoanValue' },
-                { label: '合作关闭', prop: 'cooperCloseValue' },
-                { label: '合作完成', prop: 'cooperCompleteValue' }
+                { label: '初审中', prop: 'retainValue' },
+                { label: '资料收集中', prop: 'dataCollectValue' },
+                { label: '资料待审核', prop: 'docAuditValue' },
+                { label: '待立项', prop: 'trustTrialValue' },
+                { label: '待终审', prop: 'finalApproveValue' },
+                { label: '终审通过', prop: 'finalApproveYesValue' },
+                { label: '终审未通过', prop: 'finalApproveNoValue' },
+                { label: '审核未通过', prop: 'cooperCloseValue' }
             ],
             rowKey: '',
             tabPosition: 1,
@@ -135,14 +133,17 @@ export default {
             findProjetstatic: 'findProjetstatic'
 
         }),
-        async  searchList () {
+        async searchList () {
             const { ...params } = this.queryParams
             await this.findProjetpage(params)
             this.tableData = this.projectData
         },
         async onFindBar (val) {
             await this.findProjetstatic(val)
-            this.drawBar(this.projectStatic)
+            const nameArr = ['待签约', '待放款', '待回款', '合作完成']
+            const projectStatic = this.projectStatic.filter(item => !nameArr.includes(item.name))
+            this.drawBar(projectStatic)
+            this.searchList()
         },
         handleClick (tab) {
             this.barUnit = this.tabPosition == 1 ? '个' : '元'
@@ -359,7 +360,7 @@ export default {
                         normal: {
                             // color:'#ffc938', // 图表颜色
                             color: function (params) { // 颜色定制显示（按顺序）
-                                var colorList = ['#A47CB7', '#7BA1D2', '#63CBE0', '#F69573', '#F3BA5B', '#F3EB57', '#91E56E']
+                                var colorList = ['#A47CB7', '#7BA1D2', '#63CBE0', '#F69573', '#F3BA5B', '#F3EB57', '#91E56E', '#63CBE0', '#F69573', '#7BA1D2', '#F3BA5B']
                                 return colorList[params.dataIndex]
                             }
                             // barBorderRadius: [0, 17, 17, 0]  //圆角

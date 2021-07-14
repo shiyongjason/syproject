@@ -1,6 +1,6 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
+    <div class="page-body query-cont amount">
+        <div v-show="toggle"  class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col" v-if="region">
                     <div class="query-col-title">大区：</div>
@@ -52,20 +52,21 @@
                 </div>
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
-                    <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
+                    <el-button type="default" class="ml20" @click="onReset">重置</el-button>
                     <el-upload v-if="hosAuthCheck(overdueDetailTableImport)" class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/company/annual-repayment-plan/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='{state: 2}'>
-                        <el-button type="primary" class='ml20' :loading='loading'>
+                        <el-button type="default" class='ml20' :loading='loading'>
                             导入表格
                         </el-button>
                     </el-upload>
-                    <el-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(overdueDetailTableExport)">导出表格</el-button>
+                    <el-button type="default" class="ml20" @click="onExport" v-if="hosAuthCheck(overdueDetailTableExport)">导出表格</el-button>
                 </div>
             </div>
         </div>
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-body-cont">
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
+                <hosJoyTable :amountResetTable="toggle" ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
@@ -87,6 +88,7 @@ export default {
     components: { hosJoyTable, HAutocomplete },
     data () {
         return {
+            toggle: true,
             overdueDetailTableExport: OVERDUE_DETAIL_TABLE_EXPORT,
             overdueDetailTableImport: OVERDUE_DETAIL_TABLE_IMPORT,
             tableType: '0',
@@ -99,8 +101,8 @@ export default {
                 ]
             },
             headersData: {
-                'refreshToken': sessionStorage.getItem('refreshToken'),
-                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+                'refreshToken': localStorage.getItem('refreshToken'),
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
             accept: '.xlsx,.xls',
             loading: false,
@@ -214,6 +216,7 @@ export default {
             this.onQuery()
         },
         async onQuery () {
+            console.log(' 🚗 🚕 🚙 🚌 🚎 onQuery')
             const promiseArr = [getOverdueIncrementDetailList(this.searchParams), getOverdueIncrementDetailTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
                 for (let key in res[1].data) {
@@ -221,7 +224,8 @@ export default {
                         if (value.prop === key && res[1].data[key] != null) {
                             value.children.forEach(value1 => {
                                 if (key === 'planProportion') {
-                                    value1.label = String(res[1].data[key] * 100) + '%'
+                                    let valTemp = this.$multipliedBy(res[1].data[key], 100)
+                                    value1.label = String(valTemp) + '%'
                                 } else {
                                     value1.label = String(res[1].data[key])
                                 }
@@ -329,13 +333,12 @@ export default {
 }
 .overdueTable {
     position: relative;
-    margin-top: 10px;
 }
 .util {
     font-size: 10px;
-    position: absolute;
-    top: -16px;
-    right: 0;
+    text-align: right;
+    line-height: 12px;
+    margin-bottom: 8px;
 }
 /deep/.el-table__header .repaymentStyle {
     background-color: rgba($color: #c65911, $alpha: 1) !important;
@@ -346,6 +349,6 @@ export default {
     color: #fff !important;
 }
     /deep/.overdueTable td{
-        height: 71px;
+        height: 38px;
     }
 </style>

@@ -1,10 +1,25 @@
 <template>
     <div class="drawer-wrap">
         <el-form :model="projectForm" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
-            <p class="drawer-by">项目提交人：{{projectForm.createBy}}</p>
+            <p class="drawer-by">项目提交人：{{projectForm.submitUser}}</p>
             <el-form-item label="经销商：">
-                {{projectForm.companyName}} <el-button type="primary" size="mini" @click="onLinkBus(projectForm)">查看详情</el-button>
+                {{projectForm.companyName}} <h-button table @click="onLinkBus(projectForm)">查看详情</h-button>
             </el-form-item>
+            <div class="el-form-item">
+                <el-col :span="8">
+                    <el-form-item label="项目等级：">
+                        {{projectForm.levels || '-'}}
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="项目服务费：">
+                        {{projectForm.serviceCharge || '-'}}
+                    </el-form-item>
+                </el-col>
+                <span class="posiStyle">
+                    <h-button class="btn" table @click="onEditCridtle(projectForm)" v-if="hosAuthCheck(newAuth.CRM_WORK_EDIT)">编辑</h-button>
+                </span>
+            </div>
             <el-form-item label="分部：">
                 <el-select v-model="projectForm.pkDeptDoc" placeholder="请选择" :clearable=true>
                     <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
@@ -58,11 +73,11 @@
             </el-form-item>
             <el-form-item label="上游接受付款方式：" prop="upstreamPayTypearr">
                 <el-checkbox-group v-model="projectForm.upstreamPayTypearr" @change="onCRemarkTxt">
-                    <el-checkbox label="1" name="type">现金</el-checkbox>
+                    <el-checkbox label="1" name="type">银行转账</el-checkbox>
                     <el-checkbox label="2" name="type">承兑</el-checkbox>
                 </el-checkbox-group>
                 <el-form-item prop="payAcceptanceRemarkTxt" ref="remarkTxt">
-                    <el-input v-if="projectForm.upstreamPayTypearr.indexOf('2')>-1" type="textarea" placeholder="请输入厂商接受承兑是否有指定银行，如有指定，则标明指定的银行" v-model="form.payAcceptanceRemark" maxlength="200" show-word-limit></el-input>
+                    <el-input v-if="projectForm.upstreamPayTypearr.indexOf('2')>-1" type="textarea" placeholder="请输入厂商接受承兑是否有指定银行，如有指定，则标明指定的银行" v-model="projectForm.payAcceptanceRemark" maxlength="200" show-word-limit></el-input>
                 </el-form-item>
             </el-form-item>
             <el-form-item label="上游接受付款的周期：" prop="upstreamPromiseMonth">
@@ -77,11 +92,11 @@
                 <el-input v-model="projectForm.predictLoanAmount" placeholder="请输入预估赊销金额" maxlength="18" v-isNum:2="form.predictLoanAmount"> <template slot="append">￥</template></el-input>
             </el-form-item>
             <el-form-item label="预估赊销周期：" prop="loanMonth">
-                <el-input-number v-model="projectForm.loanMonth" controls-position="right" @change="handleChange" :min="1" :max="6"></el-input-number>
+                <el-input-number v-model="projectForm.loanMonth" controls-position="right" @change="handleChange" :min="3" :max="6"></el-input-number>
                 个月
             </el-form-item>
             <el-form-item label="工程项目回款方式：" prop="loanPayTypeRate">
-                <el-form-item label="预付款比例">
+                <el-form-item label="首付款比例">
                     <el-input v-model="projectForm.advancePaymentProportion" maxlength="10" v-isNum:2="form.advancePaymentProportion"><template slot="append">%</template></el-input>
                 </el-form-item>
                 <el-form-item label="货到付款比例">
@@ -103,19 +118,41 @@
                     <el-input v-model.trim="projectForm.payOtherText" maxlength="100"></el-input>
                 </el-form-item>
             </el-form-item>
+            <el-form-item label="预估签约时间：" prop="estimateSignTime">
+                <el-date-picker v-model="projectForm.estimateSignTime" value-format="yyyy-MM-dd" type="date" placeholder="请选择预计可签约的时间">
+                </el-date-picker>
+            </el-form-item>
             <el-form-item label="附件：" prop="projectUpload" ref="projectUpload">
-                <hosjoyUpload v-model="projectForm.projectUpload" accept='.jpeg,.jpg,.png,.BMP,.pdf,.xls,.xlsx,.zip,.rar' :fileSize='20' :fileNum='15' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
-                </hosjoyUpload>
+                <OssFileHosJoyUpload v-model="projectForm.projectUpload" accept='.jpeg,.jpg,.png,.BMP,.pdf,.xls,.xlsx,.zip,.rar' :fileSize='20' :fileNum='20' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
+                </OssFileHosJoyUpload>
             </el-form-item>
         </el-form>
+        <el-dialog title="设置" :visible.sync="dialogVisible" width="30%" :before-close="()=>{dialogVisible = false}" :close-on-click-modal=false :modal=false>
+            <el-form :model="levelsForm" :rules="levelsRule" ref="levelsForm" label-width="150px" class="demo-ruleForm ">
+                <el-form-item label="项目等级：" prop="levels">
+                    <el-select v-model="levelsForm.levels" placeholder="请选择">
+                        <el-option v-for="item in droplist" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="项目服务费：" prop="serviceCharge">
+                    <el-input v-model="levelsForm.serviceCharge"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="onSaveCreditLevel">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
 import { mapGetters, mapState } from 'vuex'
-import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
-import { interfaceUrl } from '@/api/config'
-import { putProjectDetail } from './../api/index'
-import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, STATUS_TYPE, NEW_STATUS_TYPE } from '../../const'
+import * as newAuth from '@/utils/auth_const'
+import OssFileHosJoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
+import { ccpBaseUrl } from '@/api/config'
+import { putProjectDetail, saveCreditLevel } from './../api/index'
+import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, NEW_STATUS_TYPE, CREDITLEVEL } from '../../const'
 export default {
     name: 'projectcom',
     props: {
@@ -125,24 +162,22 @@ export default {
         }
     },
     components: {
-        hosjoyUpload
+        OssFileHosJoyUpload
     },
     data () {
         return {
-
+            newAuth,
+            droplist: CREDITLEVEL,
             loading: false,
             statusTxt: '',
             dialogVisible: false,
-
             aduitTitle: '',
-            statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '资料收集中' }, { 4: '立项' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' },
-                { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }],
-            statusType: STATUS_TYPE,
+            // statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '资料收集中' }, { 4: '立项' }, { 5: '审核未通过' }, { 6: '签约' }, { 7: '放款' }, { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }],
             newstatusType: NEW_STATUS_TYPE,
-            action: interfaceUrl + 'tms/files/upload',
+            action: ccpBaseUrl + 'common/files/upload-old',
             uploadParameters: {
                 updateUid: '',
-                reservedName: true
+                reservedName: false
             },
             form: {},
             copyForm: {},
@@ -197,6 +232,9 @@ export default {
                 estimatedLoanTime: [
                     { required: true, message: '请选择预估借款时间', trigger: 'change' }
                 ],
+                estimateSignTime: [
+                    { required: true, message: '请选择预计可签约的时间', trigger: 'change' }
+                ],
                 upstreamPayTypearr: [
                     { type: 'array', required: true, message: '请至少选择一个上游接受付款方式', trigger: 'change' }
                 ],
@@ -209,6 +247,36 @@ export default {
                                 return callback(new Error('必填一项'))
                             }
                             return callback()
+                        }
+                    }
+                ]
+
+            },
+            levelsForm: {
+                id: '',
+                levels: '',
+                serviceCharge: '',
+                updateBy: ''
+            },
+            levelsRule: {
+                levels: [
+                    { required: true, message: '请选择项目等级', trigger: 'change' }
+                ],
+                serviceCharge: [
+                    { required: true, message: '请输入项目服务费' },
+                    {
+                        validator: (r, v, callback) => {
+                            const reg = /^\d+(\.\d{1})?$/
+                            const abs = Math.abs(v)
+                            if (isNaN(abs)) {
+                                callback(new Error('请输入数字值'))
+                            } else if (!reg.test(abs)) {
+                                callback(new Error('请输入有1位小数的数字'))
+                            } else if (abs > 10) {
+                                callback(new Error('请输入-10到10的数字'))
+                            } else {
+                                callback()
+                            }
                         }
                     }
                 ]
@@ -236,7 +304,7 @@ export default {
     },
     methods: {
         onLinkBus (val) {
-            this.$router.push({ name: 'authenlist', params: { name: val.companyName, code: val.companyCode } })
+            this.$router.push({ name: 'authenlist', query: { name: val.companyName, code: val.companyCode } })
         },
         handleChange (value) {
 
@@ -270,6 +338,32 @@ export default {
                 return true
             }
         },
+        onEditCridtle (val) {
+            this.dialogVisible = true
+            this.levelsForm.levels = val.levels
+            this.levelsForm.serviceCharge = val.serviceCharge
+            this.levelsForm.id = val.id
+            this.levelsForm.updateBy = this.userInfo.employeeName
+        },
+        handleClose () {
+
+        },
+        onSaveCreditLevel () {
+            this.$refs.levelsForm.validate(async (valid) => {
+                if (valid) {
+                    await saveCreditLevel(this.levelsForm)
+                    this.$message({
+                        message: '修改成功',
+                        type: 'success'
+                    })
+                    this.projectForm.levels = this.levelsForm.levels
+                    this.projectForm.serviceCharge = this.levelsForm.serviceCharge
+                    this.dialogVisible = false
+                } else {
+
+                }
+            })
+        },
         // cancelForm () {
         //     if (JSON.stringify(this.projectForm) != JSON.stringify(this.copyForm)) {
         //         this.$confirm('取消则不会保存修改的内容，你还要继续吗？', '是否确认取消修改？', {
@@ -295,6 +389,7 @@ export default {
                 this.projectForm.deptName = this.crmdepList.find(v => v.pkDeptDoc == this.projectForm.pkDeptDoc).deptName || ''
             }
             this.$refs.ruleForm.validate(async (valid) => {
+                console.log(valid)
                 if (valid) {
                     try {
                         await putProjectDetail(this.projectForm)
@@ -302,6 +397,7 @@ export default {
                             message: '数据保存成功',
                             type: 'success'
                         })
+                        this.$emit('onCompsback')
                         this.$emit('onBackLoad', false)
                     } catch (error) {
                         this.$emit('onBackLoad', false)
@@ -322,6 +418,9 @@ export default {
 }
 .project-form {
     padding: 10px 10px 150px 10px;
+}
+.drawer-wrap {
+    margin-top: 50px;
 }
 
 .drawer-footer {
@@ -360,5 +459,15 @@ export default {
 }
 /deep/ .el-radio {
     margin-bottom: 10px;
+}
+.el-form-item {
+    position: relative;
+}
+.posiStyle {
+    position: absolute;
+    height: 40px;
+    line-height: 40px;
+    top: 0;
+    right: 15%;
 }
 </style>

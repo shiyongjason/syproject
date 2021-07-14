@@ -1,5 +1,17 @@
 <template>
     <div class="tags-wrapper page-body">
+        <div class="page-body-cont query-cont spanflex">
+            <div>知识库管理
+                <el-popover
+                    placement="right"
+                    title=""
+                    width="200"
+                    trigger="hover"
+                    content="知识库维护的问题同步在舒适云APP端-我的-帮助中心展示">
+                    <i slot="reference" class="el-icon-question"></i>
+                </el-popover>
+            </div>
+        </div>
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
                 <div class="query-col-title">问题标题：</div>
@@ -11,7 +23,7 @@
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onSearch()">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onAddcloud()" :disabled="isMultipled">新建知识</el-button>
-                    <el-button type="primary" class="ml20" @click="onExport()" :disabled="isMultipled">批量导入</el-button>
+                    <el-button type="primary" class="ml20" @click="onExport()" :disabled="isMultipled || isCatalog">批量导入</el-button>
                     <el-button type="primary" class="ml20" @click="batchOpt()">{{isMultipled?"取消批量操作":"批量操作"}}</el-button>
                 </div>
             </div>
@@ -67,7 +79,7 @@
                 <p slot="tip" class="el-upload__tip">2.批量导入的知识库仅支持文字描述，不支持图片和视频等格式</p>
                 <p slot="tip" class="el-upload__tip">3.请按照知识库模板内容导入问题和答案，否则可能会出现导入异常</p>
             </el-upload>
-            <el-button type="primary" @click="onDownload" class="download-template">下载导入帮助中心模板</el-button>
+            <el-button type="primary" @click="onDownload" class="download-template">下载导入知识库模板</el-button>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="onImport" :loading="loading">上传</el-button>
             </span>
@@ -94,6 +106,7 @@ export default {
                 questionId: '',
                 type: ''
             },
+            visible: false,
             searchParams: {},
             tableData: [],
             pagination: {
@@ -116,6 +129,7 @@ export default {
                 }
             },
             isMultipled: false,
+            isCatalog: true,
             ids: [],
             fileList: [],
             uploadShow: false,
@@ -125,8 +139,8 @@ export default {
                 limit: 1,
                 autoUpload: false,
                 headers: { // todo I'm need a config file
-                    refreshToken: sessionStorage.getItem('refreshToken'),
-                    token: `Bearer ` + sessionStorage.getItem('token'),
+                    refreshToken: localStorage.getItem('refreshToken'),
+                    token: `Bearer ` + localStorage.getItem('token'),
                     AccessKeyId: '5ksbfewexbfc'
                 },
                 data: {
@@ -141,29 +155,7 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo
         }),
-        ...mapGetters(['cloudActicitylist', 'klCatalogueList', 'klQuestionList']),
-        pickerOptionsStart () {
-            return {
-                disabledDate: time => {
-                    let endDateVal = this.queryParams.endTime
-                    if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
-                    }
-                    // return time.getTime() <= Date.now() - 8.64e7
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.startTime
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                    // return time.getTime() <= Date.now() - 8.64e7
-                }
-            }
-        }
+        ...mapGetters(['cloudActicitylist', 'klCatalogueList', 'klQuestionList'])
     },
     mounted () {
         // this.tableData = [{ productN: '123' }]
@@ -263,6 +255,8 @@ export default {
             if (val.length > 0) {
                 let _ids = val.map(item => item.id)
                 this.ids = _ids
+            } else {
+                this.ids = []
             }
         },
         handleNodeClick (data) {
@@ -272,8 +266,11 @@ export default {
                     const { questionId } = data
                     this.queryParams = {
                         ...this.queryParams,
-                        questionId
+                        questionId,
+                        type: ''
                     }
+                    this.onSearch()
+                    this.isCatalog = true
                 } else {
                     const { questionId } = data
                     this.queryParams = {
@@ -284,17 +281,20 @@ export default {
                         type: ''
                     }
                     this.onSearch()
+                    this.isCatalog = false
                 }
             } else if (type) {
+                const { questionId } = data
                 this.queryParams = {
                     ...this.queryParams,
                     question: '',
                     pageNumber: 1,
+                    questionId,
                     type
                 }
                 this.onSearch()
+                this.isCatalog = false
             }
-            console.log(data)
         },
 
         async onImport () {
@@ -382,7 +382,7 @@ export default {
                     })
                 }).catch(() => {
                     this.$message({
-                        type: 'info',
+                        type: 'success',
                         message: '已取消删除'
                     })
                 })
@@ -442,15 +442,19 @@ export default {
     display: flex;
     justify-content: space-between;
     padding-bottom: 10px;
+    font-size: 16px;
     span {
         flex: 1;
         &:first-child {
             font-size: 16px;
         }
         &:last-child {
-            text-align: right;
+            text-align: left;
         }
     }
+}
+.upload-fault {
+    margin-bottom: 10px;
 }
 .colred {
     color: #ff7a45;
@@ -462,6 +466,10 @@ export default {
 /deep/.el-button.is-disabled{
     font-size: 14px;
     font-weight: 500;
+}
+/deep/.el-tree {
+    height: 600px;
+    overflow: auto;
 }
 /deep/.el-tree-node__label{
     width: 250px;

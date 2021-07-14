@@ -7,7 +7,7 @@
             </div>
             <div v-for="(item,index) in detail.projectDocList" :key="index">
                 <div class="firstclass">{{item.firstCatagoryName}}</div>
-                <div class="secondclass" v-for="(jtem,jndex) in item.respRiskCheckDocTemplateList" :key="jndex">
+                <div class="secondclass" v-for="(jtem,jndex) in item.respRiskCheckDocTemplateList" :key="jndex" :id="`second_${jtem.templateId}`">
                     <div class="secondclass-title">
                         <span class="secondclass-start" v-if="jtem.mondatoryFlag==1">*</span>
                         <font class="secondclass-title_font">{{jtem.secondCatagoryName}}</font>
@@ -29,39 +29,37 @@
                                     <span class="posrtv">
                                         <template v-if="ktem&&ktem.fileUrl">
                                             <i class="el-icon-document"></i>
-                                            <a :href="ktem.fileUrl" target="_blank">
-                                                <font>{{ktem.fileName}}</font>
-                                            </a>
+                                            <downloadFileAddToken :file-url="ktem.fileUrl" :file-name="ktem.fileName" is-preview :a-link-words="ktem.fileName" is-type="main" />
                                         </template>
                                     </span>
                                 </p>
                                 <p style="flex:0.5">{{formatMoment(ktem.createTime)}}</p>
                                 <p>
                                     <font class="fileItemDownLoad" @click="()=>{onDelete(jtem,kndex)}" v-if="$route.query.docAfterStatus!=2">删除</font>
-                                    <font class="fileItemDownLoad" v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(ktem.fileUrl, ktem.fileName)">下载</font>
-                                    <font v-else><a class='fileItemDownLoad' :href="ktem.fileUrl" target='_blank'>下载</a></font>
+                                    <downloadFileAddToken :file-url="ktem.fileUrl" :file-name="ktem.fileName" a-link-words="下载" is-type="btn" />
                                 </p>
                             </div>
                         </template>
                         <p v-else>-</p>
                     </div>
                     <div class="secondclass-documents_upload" v-if="$route.query.docAfterStatus!=2">
-                        <hosjoyUpload :fileSize=20 :fileNum=100 :limit=100 v-model="jtem.riskCheckProjectDocPos" :showPreView=false :action='action' :uploadParameters='uploadParameters' @successCb='()=>{handleSuccessCb(jtem)}'>
+                        <OssFileHosjoyUpload :fileSize=20 :fileNum=100 :limit=100 v-model="jtem.riskCheckProjectDocPos" :showPreView=false :action='action' :uploadParameters='uploadParameters' @successCb='()=>{handleSuccessCb(jtem)}'>
                             <el-button type="primary" style="width:130px">上传</el-button>
-                        </hosjoyUpload>
+                        </OssFileHosjoyUpload>
                     </div>
                 </div>
             </div>
+
             <!-- bottom button -->
             <div class="bottom-button">
                 <p>
-                    <el-button style="width:130px;" @click="onBack">返回</el-button>
+                    <h-button style="width:130px;" @click="onBack">返回</h-button>
                 </p>
                 <p v-if="$route.query.docAfterStatus!=2">
-                    <el-button type="primary" style="width:130px" @click="onSave">保存</el-button>
+                    <h-button type="primary" style="width:130px" @click="onSave" v-if="hosAuthCheck(auths.CRM_MEATE_SAVE)">保存</h-button>
                 </p>
                 <p v-if="$route.query.docAfterStatus!=2">
-                    <el-button type="primary" style="width:130px" @click="onSubmit">提交</el-button>
+                    <h-button type="primary" style="width:130px" @click="onSubmit" v-if="hosAuthCheck(auths.CRM_MEATE_SUBMIT)">提交</h-button>
                 </p>
             </div>
         </div>
@@ -72,49 +70,56 @@
                 <p>待补充类目：{{item.secondCategoryNames}}</p>
                 <p>待补充原因：</p>
                 <p>
-                  {{item.remark}}
+                    {{item.remark}}
                 </p>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <h-button @click="dialogVisible = false">取 消</h-button>
+                <h-button type="primary" @click="dialogVisible = false">确 定</h-button>
             </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
+import * as auths from '@/utils/auth_const'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { interfaceUrl } from '@/api/config'
-import { handleImgDownload } from './utils'
-import { saveDoc, submitDoc } from './api/index'
+import { ccpBaseUrl } from '@/api/config'
+import { saveDoc, submitDoc, getProjectLevels } from './api/index'
 import moment from 'moment'
+import DefaultImage from '@/assets/images/img_403@2x.png'
+import OssFileUtils from '@/utils/OssFileUtils'
+import downloadFileAddToken from '@/components/downloadFileAddToken'
 const _reqRiskCheckProjectDoc = {
     bizType: 1, // 业务类型 1：项目材料 2：立项材料 3：终审材料
     projectId: '', // 工程项目id
     riskCheckProjectDocPoList: [],
     submitStatus: ''// 提交状态 1：提交 2：材料审核通过 3：立项结果提交 4：终审结果提交
 }
+
 export default {
     name: 'detail',
     components: {
-        hosjoyUpload: () => import('@/components/HosJoyUpload/HosJoyUpload')
+        OssFileHosjoyUpload: () => import('@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'),
+        downloadFileAddToken
     },
     data () {
         return {
+            auths,
             moment,
             detail: '',
-            handleImgDownload,
+            tempDetail: '',
             dialogVisible: false,
-            action: interfaceUrl + 'tms/files/upload',
+            action: ccpBaseUrl + 'common/files/upload-old',
             // 上传时附带的额外参数同el-upload 的 data
             uploadParameters: {
                 updateUid: '',
-                reservedName: true
+                reservedName: false
             },
             reqRiskCheckProjectDoc: JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc)),
             mondatoryFlagRes: [],
-            refuseInfos: []
+            refuseInfos: [],
+            DefaultImage
         }
     },
     computed: {
@@ -133,10 +138,7 @@ export default {
         }),
         srcList (item, index) {
             if (item.riskCheckDocTemplateSamplePos) {
-                const res = item.riskCheckDocTemplateSamplePos.filter(item => {
-                    return item.fileUrl
-                })
-                console.log(res)
+                const res = item.riskCheckDocTemplateSamplePos
                 return res.length > 0 && [res[index].fileUrl]
             }
             return []
@@ -150,7 +152,6 @@ export default {
                 item.templateId = row.templateId
                 item.createTime = item.createTime || moment().format('YYYY-MM-DD HH:mm:ss')
             })
-            console.log('this.detail', this.detail)
         },
         onDelete (item, index) {
             this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
@@ -168,6 +169,10 @@ export default {
             })
         },
         onBack () {
+            if (JSON.stringify(this.tempDetail) === JSON.stringify(this.detail)) {
+                this.$router.go(-1)
+                return
+            }
             // 资料状态 1：待提交 2：已提交 4：审核驳回
             if (this.$route.query.docAfterStatus != 2) {
                 this.$confirm('如信息发生修改，退出后信息将不会保存', '确认退出', {
@@ -191,14 +196,20 @@ export default {
             }
             await this.findInformationEditDetail(query)
             this.detail = this.listDetail
-            this.detail.projectDocList.map(item => {
-                item.respRiskCheckDocTemplateList.map(jtem => {
+            this.detail.projectDocList.forEach(item => {
+                item.respRiskCheckDocTemplateList.forEach(jtem => {
                     if (!jtem.riskCheckProjectDocPos) {
                         jtem.riskCheckProjectDocPos = []
+                    } else {
+                        jtem.riskCheckProjectDocPos.forEach(kitem => {
+                            kitem.riskCheckDocTemplateSamplePos && kitem.riskCheckDocTemplateSamplePos.forEach(async value => {
+                                value.fileUrl = await OssFileUtils.getUrl(value.fileUrl)
+                            })
+                        })
                     }
                 })
             })
-            console.log('this.detail: ', this.detail)
+
             // 筛选出需要必填
             this.detail.projectDocList.map(item => {
                 item.respRiskCheckDocTemplateList.map(jtem => {
@@ -207,6 +218,7 @@ export default {
                     }
                 })
             })
+            this.tempDetail = JSON.parse(JSON.stringify(this.detail))
         },
         // 处理保存、提交资料入参
         dealReqRiskCheckProjectDoc (submitStatus = '') {
@@ -243,24 +255,60 @@ export default {
             }
             return res
         },
-        async onSave () {
+        async onSave (state) {
             this.dealReqRiskCheckProjectDoc()
             await saveDoc(this.reqRiskCheckProjectDoc)
-            this.$message.success('保存成功')
             this.reqRiskCheckProjectDoc = JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc))
+            this.$message.success('保存成功')
             this.$router.go(-1)
         },
         async onSubmit () {
             this.dealReqRiskCheckProjectDoc(1)
+            // 提交前先保存----需求要这样做
+            this.dealReqRiskCheckProjectDoc()
+            await saveDoc(this.reqRiskCheckProjectDoc)
             let res = this.checkForm()
+            console.log('res: ', res)
             if (res) {
                 this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
+                console.log(document.getElementById(`second_${res.templateId}`))
+                document.getElementById(`second_${res.templateId}`).scrollIntoView({
+                    behavior: 'smooth', // 平滑过渡
+                    block: 'center' // 上边框与视窗顶部平齐。默认值
+                })
             } else {
-                await submitDoc(this.reqRiskCheckProjectDoc)
-                this.$message.success('提交成功')
-                this.reqRiskCheckProjectDoc = JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc))
-                this.$router.go(-1)
+                this.reqRiskCheckProjectDoc.submitStatus = 1
+                const { data } = await getProjectLevels(this.reqRiskCheckProjectDoc.projectId)
+                // 提交前先判断企业是否授信，未授信不能上传项目资料
+                if (data.companyDocumentStatus == 2 || data.companyDocumentStatus == 3) {
+                    await submitDoc(this.reqRiskCheckProjectDoc)
+                    this.$message.success('提交成功')
+                    this.reqRiskCheckProjectDoc = JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc))
+                    this.$router.go(-1)
+                } else {
+                    this.onCreditDetail()
+                }
             }
+        },
+        // 去企业授信
+        onCreditDetail () {
+            const h = this.$createElement
+            this.$msgbox({
+                title: '',
+                message: h('p', null, [
+                    h('div', null, '您当前未提交企业授信材料，项目资料提交失败'),
+                    h('i', { style: 'color: #FF7A45;fontStyle: normal' }, '注：当前页面资料已为您自动保存')
+                ]),
+                showCancelButton: true,
+                confirmButtonText: '去提交企业授信资料',
+                cancelButtonText: '我知道了'
+            }).then(action => {
+                console.log(this)
+                // 跳转上传企业授信资料
+                this.$router.push({ path: '/goodwork/creditDetail', query: { companyId: this.detail.companyId } })
+            }).catch(() => {
+                // do nothing
+            })
         },
         async onLookRefuse (val) {
             this.dialogVisible = true
@@ -294,7 +342,7 @@ export default {
         color: #ff0000;
         font-size: 16px;
     }
-    &-reason{
+    &-reason {
         background: #ff0000;
         color: #ffff;
         margin-left: 20px;
@@ -386,5 +434,8 @@ export default {
     p {
         line-height: 2;
     }
+}
+.download {
+    cursor: pointer;
 }
 </style>

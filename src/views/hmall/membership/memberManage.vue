@@ -1,38 +1,44 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">会员账号：</div>
-                    <div class="query-col-input">
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">会员账号：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.adminAccount" placeholder="请输入账号" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">企业名称：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">企业名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" maxlength="50"></el-input>
                     </div>
                 </div>
 
-                <div class="query-cont-col">
-                    <div class="query-col-title">所属商家：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">企业类型：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.userType">
+                            <el-option v-for="item in userTypeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">所属商家：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.merchantName" placeholder="请输入商家" maxlength="50"></el-input>
                     </div>
                 </div>
-            </div>
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">经营区域：</div>
-                    <div class="query-col-title">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">经营区域：</div>
+                    <div class="query-col__input">
                         <el-cascader placeholder="试试搜索： 南京" :options="options" v-model="optarr" :clearable=true :collapse-tags=true :show-all-levels="true" @change="cityChange" :props="{ multiple: true ,value:'countryId',label:'name',children:'cities'}" filterable>
                         </el-cascader>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">创建时间：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">创建时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.registrationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
@@ -40,12 +46,19 @@
                         </el-date-picker>
                     </div>
                 </div>
-
-            </div>
-            <div class="query-cont-row">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">认证时间：</div>
+                    <div class="query-col__input">
+                        <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        </el-date-picker>
+                        <span class="ml10">-</span>
+                        <el-date-picker v-model="queryParams.authenticationEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        </el-date-picker>
+                    </div>
+                </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">认证状态：</div>
-                    <div class="query-col-input">
+                    <div class="query-col__lable">认证状态：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.isAuthentication">
                             <el-option label="全部" value="">
                             </el-option>
@@ -56,36 +69,33 @@
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">认证时间：</div>
-                    <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.authenticationEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
+                <div class="query-cont__col">
+                    <div class="query-col__title">开户状态：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.openStatus">
+                            <el-option :label="item.txt" :value="item.val" v-for="(item,index) in openStatus.values()" :key=index></el-option>
+                        </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont__col">
                     <el-checkbox v-model="queryParams.isEnabled" :true-label=1 :false-label=0>只看启用</el-checkbox>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="onFindMlist(1)">
-                            查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest()">
-                            重置
-                        </el-button>
-                    </div>
+                <div class="query-cont__col">
+                    <h-button type="primary" @click="onFindMlist(1)">
+                        查询
+                    </h-button>
+                    <h-button @click="onRest()">
+                        重置
+                    </h-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">
                 已筛选 {{memberData.total}} 项 | 未认证：{{bossStatic.unAuthenticationNum?bossStatic.unAuthenticationNum:0}}；已认证：{{bossStatic.authenticationNum?bossStatic.authenticationNum:0}}；启用：{{bossStatic.enabledNum?bossStatic.enabledNum:0}}；禁用：{{bossStatic.forbiddenNum?bossStatic.forbiddenNum:0}}；
             </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
+                <template slot="userType" slot-scope="scope">
+                    {{userTypeMap.get(scope.data.row.userType) || '-'}}
+                </template>
                 <template slot="source" slot-scope="scope">
                     {{memberSource[scope.data.row.source-1]}}
                 </template>
@@ -101,9 +111,13 @@
                 <template slot="isEnabled" slot-scope="scope">
                     {{scope.data.row.isEnabled==0?'禁用':'启用'}}
                 </template>
+
+                <template slot="openStatus" slot-scope="scope">
+                    <font :style="{color:openStatus.get(scope.data.row.openStatus)?openStatus.get(scope.data.row.openStatus).color:''}">{{openStatus.get(scope.data.row.openStatus)?openStatus.get(scope.data.row.openStatus).txt:'-'}}</font>
+                </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button size="mini" :type="scope.data.row.isEnabled==0?'success':'danger'" plain @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</el-button>
-                    <el-button type="primary" size="mini" plain @click="onFindInfo(scope.data.row.companyCode,'member')">查看详情</el-button>
+                    <h-button table @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</h-button>
+                    <h-button table @click="onFindInfo(scope.data.row.companyCode,'member')">查看详情</h-button>
                 </template>
             </basicTable>
         </div>
@@ -115,14 +129,37 @@ import drawerCom from './drawerCom'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import { changeMemberState } from './api/index'
+const OPENSTATUS = new Map([
+    [0, { txt: '全部', color: '#606266', val: '' }],
+    [1, { txt: '未开户', color: '#606266', val: 1 }],
+    [2, { txt: '开户中', color: '#606266', val: 2 }],
+    [3, { txt: '开户成功', color: '#67c23a', val: 3 }],
+    [4, { txt: '开户失败', color: '#f00000', val: 4 }]
+])
+const USER_TYPE_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '个人', value: '11' },
+    { label: '企业', value: '12' },
+    { label: '其他', value: '0' }
+]
+const USER_TYPE_MAP = new Map([
+    [11, '个人'],
+    [12, '企业'],
+    [0, '其他']
+])
 export default {
-    name: 'membermanage',
+    name: 'membershipMembermanage',
     data () {
         return {
+            openStatus: OPENSTATUS,
+            userTypeOptions: USER_TYPE_OPTIONS,
+            userTypeMap: USER_TYPE_MAP,
             queryParams: {
+                openStatus: '',
                 authenticationEndTime: '',
                 authenticationStartTime: '',
                 companyName: '',
+                userType: '',
                 isAuthentication: '',
                 isEnabled: '',
                 adminAccount: '',
@@ -139,9 +176,11 @@ export default {
             tableLabel: [
                 { label: '企业名称', prop: 'companyName', width: '180px' },
                 { label: '管理员账号', prop: 'adminAccount', width: '150px' },
+                { label: '企业类型', prop: 'userType', width: '150px' },
                 { label: '所属商家', prop: 'merchantName', width: '150px' },
                 { label: '省市区', prop: 'addressName', width: '150px' },
                 // { label: '会员来源', prop: 'source' },
+                { label: '开户状态', prop: 'openStatus' },
                 { label: '创建时间', prop: 'registrationTime', formatters: 'dateTimes', width: '150px', sortable: true },
                 {
                     label: '认证状态',

@@ -177,7 +177,7 @@ export default {
         videoUrl (val) {
             this.$message.success('视频上传成功')
             this.uploadedUrl = val.imageUrl
-            this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/share_icon.png'
+            this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
         },
         onAddvideo () {
             this.uploadedUrl = ''
@@ -264,5 +264,8 @@ export default {
     }
     /deep/.editor-wrap{
         margin-bottom: 23px  !important;
+    }
+    /deep/.w-e-toolbar {
+        z-index: 99 !important;
     }
 </style>

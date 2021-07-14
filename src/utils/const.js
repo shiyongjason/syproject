@@ -57,7 +57,8 @@ export const PAY_METHOD_OPTIONS = [
     { label: '支付宝支付', value: 50 },
     { label: '账期支付', value: 1 },
     { label: '公司转账', value: 2 },
-    { label: '余额支付', value: 10 }
+    { label: '余额支付', value: 10 },
+    { label: '活动钱包支付', value: 11 }
 ]
 
 export const PAY_METHOD_MAP = new Map([
@@ -68,5 +69,6 @@ export const PAY_METHOD_MAP = new Map([
     [50, '支付宝支付'],
     [1, '账期支付'],
     [2, '公司转账'],
-    [10, '余额支付']
+    [10, '余额支付'],
+    [11, '活动钱包支付']
 ])

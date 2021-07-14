@@ -19,7 +19,7 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="onSearch">搜索</el-button>
+                    <el-button type="primary" class="ml20" @click="onSearch">查 询</el-button>
                 </div>
             </div>
         </div>
@@ -48,9 +48,8 @@ export default {
                 disabledDate: time => {
                     let endDateVal = this.queryParams.endTime
                     if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
+                        return time.getTime() > new Date(endDateVal).getTime()
                     }
-                    // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         },
@@ -59,9 +58,8 @@ export default {
                 disabledDate: time => {
                     let beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
-                    // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         }

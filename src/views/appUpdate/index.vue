@@ -32,7 +32,7 @@
 
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="onSearch">搜索</el-button>
+                    <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                 </div>
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
@@ -67,7 +67,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item v-show='uploadAPK' label="上传apk：" label-width='120px'>
+                 <el-form-item  label="上传apk：" label-width='120px'>
                     <div>
                         <el-upload ref="upload" class="upload-demo" v-bind="uploadInfo" :on-remove="handleRemove" :before-upload='befUpload' :on-exceed='onExceed' :on-success='onSuccess'>
                             <el-button size="small" type="primary">点击上传</el-button>
@@ -81,7 +81,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="版本号:" label-width='120px' prop='versionCode'>
-                    <el-input v-model="dueForm.versionCode" :placeholder="placeholder" maxlength="25" :disabled='disabled'></el-input>
+                    <el-input v-model="dueForm.versionCode" :placeholder="placeholder" maxlength="25"></el-input>
                 </el-form-item>
                 <el-form-item label="是否强制更新:" label-width='120px' prop='forced'>
                     <el-switch v-model="dueForm.forced"></el-switch>
@@ -147,7 +147,7 @@ export default {
             return {
                 action: interfaceUrl + 'tms/files/upload',
                 data: {
-                    reservedName: true
+                    reservedName: false
                 },
                 accept: '.apk',
                 name: 'multiFile',
@@ -210,23 +210,8 @@ export default {
             dueForm: {
                 platformType: ''
             },
-            disabled: true,
-            placeholder: '请上传apk',
-            uploadAPK: true,
+            placeholder: '请输入版本号',
             title: '新建版本'
-        }
-    },
-    watch: {
-        'dueForm.platformType': function (val) {
-            if (val == '2') {
-                this.disabled = false
-                this.placeholder = '请输入版本号'
-                this.uploadAPK = false
-            } else {
-                this.disabled = true
-                this.placeholder = '请上传apk'
-                this.uploadAPK = true
-            }
         }
     },
     mounted () {

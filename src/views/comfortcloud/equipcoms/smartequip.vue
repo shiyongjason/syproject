@@ -5,10 +5,10 @@
                 <span :class="index==tabindex?'active':''" @click="onTabs(index,item.key)" v-for="(item,index) in smartList" :key=index>{{item.name}}</span>
             </div>
             <div class="echart-time">
-                <el-date-picker type="date" :editable="false" :clearable="false" v-model="smartparams.startDate" value-format="yyyy-MM-dd" placeholder="开始日期"  :picker-options="pickerOptionsStart">
+                <el-date-picker type="date" :editable="false" :clearable="false" v-model="smartparams.startDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart">
                 </el-date-picker>
                 <span class="">-</span>
-                <el-date-picker type="date" :editable="false" :clearable="false" v-model="smartparams.endDate " value-format="yyyy-MM-dd" placeholder="结束日期"  :picker-options="pickerOptionsEnd">
+                <el-date-picker type="date" :editable="false" :clearable="false" v-model="smartparams.endDate " value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                 </el-date-picker>
                 <el-button type="primary" class="ml20" @click="onFindHistoryR()">
                     查询
@@ -19,7 +19,7 @@
             <div ref="chart" style="height:500px"></div>
         </div>
         <div class="page-body-cont query-cont">
-            <h3>设备明细</h3>
+            <h3 class="home-detail-title">设备明细</h3>
             <div class="query-cont-row">
                 <div class="query-cont-col">
                     <div class="query-col-title">手机号：</div>
@@ -28,18 +28,24 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">网关号：</div>
+                    <div class="query-col-title">设备ID：</div>
                     <div class="query-col-input">
-                        <el-input v-model="deviceDetailParams.iotId" placeholder="输入网关号" maxlength="20"></el-input>
+                        <el-input v-model="deviceDetailParams.subIotId" placeholder="输入设备ID" maxlength="20"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">网关ID：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="deviceDetailParams.iotId" placeholder="输入网关ID" maxlength="20"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">入网时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker type="date" v-model="deviceDetailParams.startDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerDeviceStart">
+                        <el-date-picker type="date" :editable="false" clearable v-model="deviceDetailParams.startDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerDeviceStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker type="date" v-model="deviceDetailParams.endDate" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerDeviceEnd">
+                        <el-date-picker type="date" :editable="false" clearable v-model="deviceDetailParams.endDate" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerDeviceEnd">
                         </el-date-picker>
                     </div>
                 </div>
@@ -51,8 +57,10 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :tableLabel="tableLabel" :tableData="cloudDeviceDetailList" :pagination="cloudDeviceDetailPagination"
-                        @onSortChange="onSortChange" isShowIndex @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'>
+            <basicTable :tableLabel="tableLabel" :tableData="cloudDeviceDetailList" :pagination="cloudDeviceDetailPagination" @onSortChange="onSortChange" isShowIndex @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth="80">
+                <template slot="action" slot-scope="scope">
+                    <el-button class="orangeBtn" @click="onDetail(scope.data.row)">详情</el-button>
+                </template>
             </basicTable>
         </div>
     </div>
@@ -84,11 +92,16 @@ export default {
                 startDate: '',
                 endDate: '',
                 phone: '',
+                subIotId: '',
                 pageSize: 10,
                 pageNumber: 1
             },
-            smartList: [{ key: 'smartHost', name: '智能主机' }, { key: 'smartCont', name: '智能控制器' }, { key: 'sensor', name: '传感器' }, { key: 'smartAppliance', name: '智能家电' },
-                { key: 'switchPanel', name: '开关面板' }, { key: 'lvs', name: '腾亚智能新风机' }],
+            smartList: [{ key: 'smartHost', name: '智能主机' },
+                { key: 'airCondition', name: '空调控制' },
+                { key: 'heating', name: '采暖控制' },
+                { key: 'freshAir', name: '新风控制' },
+                { key: 'sensor', name: '传感器' },
+                { key: 'switchPanel', name: '开关面板' }],
             smartData: {}
         }
     },
@@ -103,9 +116,8 @@ export default {
                 disabledDate: time => {
                     let endDateVal = this.smartparams.endDate
                     if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
+                        return time.getTime() > new Date(endDateVal).getTime()
                     }
-                    // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         },
@@ -114,9 +126,8 @@ export default {
                 disabledDate: time => {
                     let beginDateVal = this.smartparams.startDate
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
-                    // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         },
@@ -125,7 +136,7 @@ export default {
                 disabledDate: time => {
                     let endDateVal = this.deviceDetailParams.endDate
                     if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
+                        return time.getTime() > new Date(endDateVal).getTime()
                     }
                 }
             }
@@ -135,7 +146,7 @@ export default {
                 disabledDate: time => {
                     let beginDateVal = this.deviceDetailParams.startDate
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
@@ -151,6 +162,7 @@ export default {
             findHistoryReport: 'findHistoryReport',
             findCloudDeviceDetailList: 'findCloudDeviceDetailList'
         }),
+
         onSortChange (val) {
             if (val.order) {
                 this.queryParams.createTimeSortType = val.order === 'descending' ? '2' : '1'
@@ -175,10 +187,22 @@ export default {
             this.smartData = this.cloudHistoryReport
             this.drawLine(this.smartData)
         },
+        onDetail (val) {
+            let date = new Date(val.createTime) // 传入一个时间格式，如果不传入就是获取现在的时间了，这样做不兼容火狐。
+            this.$router.push({
+                path: '/comfortcloud/equipmentOverview/deviceDetail',
+                query: {
+                    iotId: val.iotId,
+                    subIotId: val.subIotId,
+                    deviceClass: val.deviceClass,
+                    createTime: Date.parse(date)
+                }
+            })
+        },
         drawLine (data) {
             // 绘制图表
             var charts = {
-                unit: '单位/台',
+                unit: '在线设备/台',
                 names: [],
                 lineX: [],
                 value: []
@@ -191,9 +215,9 @@ export default {
                     if (index === 0) charts.lineX.push(value1.dateTime)
                 })
             })
-            var color = ['rgba(23, 255, 243', 'rgba(255,100,97', 'rgba(71,100,197', 'rgba(255,158,37', 'rgba(255,135,97']
+            var color = ['rgba(23, 255, 243', 'rgba(255,100,97', 'rgba(71,100,197', 'rgba(255,158,37', 'rgba(255,135,97', 'rgba(45,207,182', 'rgba(2,188,111', 'rgba(175,153,255']
             var lineY = []
-            // 根据数据条数 渲染y轴数据
+            // 根据数据条数  渲染y轴数据
             for (var i = 0; i < charts.names.length; i++) {
                 var x = i
                 if (x > color.length - 1) {
@@ -296,3 +320,9 @@ export default {
     }
 }
 </script>
+
+<style lang="scss" scoped>
+.home-detail-title {
+    padding-bottom: 20px;
+}
+</style>

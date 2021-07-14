@@ -1,15 +1,14 @@
 <template>
     <div>
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-col">
-                <el-button type="primary" class="ml20" @click="openMark('add')">
-                    新增品牌
-                </el-button>
-                <el-button type="primary" class="ml20" @click="onUpdateBrandMultiStatus(selectId, 2)">批量生效</el-button>
-                <el-button type="primary" class="ml20" @click="onUpdateBrandMultiStatus(selectId, 1)">批量失效</el-button>
-            </div>
+        <div class="query-cont__row"></div>
+        <div class="button-cont">
+            <h-button type="create" @click="openMark('add')">
+                新增品牌
+            </h-button>
+            <h-button @click="onUpdateBrandMultiStatus(selectId, 2)">批量生效</h-button>
+            <h-button @click="onUpdateBrandMultiStatus(selectId, 1)">批量失效</h-button>
         </div>
-        <div class="page-body-cont">
+        <div>
             <el-table :data="tableData"
                     border
                     ref="brandTable"
@@ -64,12 +63,12 @@
                 <el-table-column
                     label="操作">
                     <template slot-scope="scope">
-                        <el-button @click="modify(scope.row)" class="orangeBtn">修改</el-button>
+                        <h-button table @click="modify(scope.row)">修改</h-button>
                         <!--:class="scope.row.status === 2 ? '' : 'status-on'"-->
-                        <el-button class="orangeBtn"
+                        <h-button table
                                 @click="onUpdateBrandStatus(scope.row)"
                                 v-text="scope.row.status === 2 ? '生效' : '失效'">
-                        </el-button>
+                        </h-button>
                     </template>
                 </el-table-column>
             </el-table>

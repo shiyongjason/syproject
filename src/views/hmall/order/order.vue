@@ -145,7 +145,7 @@
                                     <el-button type="primary" class="ml20" @click="onQueryOrder">
                                         搜索
                                     </el-button>
-                                    <el-button type="primary" class="ml20" @click="exportTabOrder">
+                                    <el-button class="ml20" @click="exportTabOrder">
                                         导出
                                     </el-button>
                                 </div>
@@ -327,7 +327,7 @@ import {
 } from './api/index'
 
 export default {
-    name: 'order',
+    name: 'orderRecordOrder',
     components: {
         orderTable,
         receivablesTable,
@@ -589,7 +589,7 @@ export default {
         },
         exportTabTotal () {
             const { ...params } = this.queryParamsProductTotal
-            params.access_token = '' || sessionStorage.getItem('token')
+            params.access_token = '' || localStorage.getItem('token')
             if (params.categoryId.length > 0) {
                 params.categoryId = params.categoryId[params.categoryId.length - 1]
             } else {
@@ -608,12 +608,12 @@ export default {
                 params.isParentOrder = 1
                 params.isSplit = 0
             }
-            params.access_token = '' || sessionStorage.getItem('token')
+            params.access_token = '' || localStorage.getItem('token')
             location.href = exportTabOrder(params)
         },
         exportTabReceivables () {
             const { ...params } = this.queryParamsReceivables
-            params.access_token = '' || sessionStorage.getItem('token')
+            params.access_token = '' || localStorage.getItem('token')
             location.href = exportTabReceivables(params)
         },
         onSizeChange (val, source) {

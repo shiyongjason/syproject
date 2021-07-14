@@ -179,7 +179,7 @@ export default {
         videoUrl (val) {
             this.$message.success('视频上传成功')
             this.uploadedUrl = val.imageUrl
-            this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/share_icon.png'
+            this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
         },
         onAddvideo () {
             this.uploadedUrl = ''
@@ -196,7 +196,7 @@ export default {
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/comfortCloud/operationsManagement/cloudList')
+            this.$router.go(-1)
         },
         async getActivityDetail (id) {
             await this.findcloudActDetail(id)
@@ -263,5 +263,8 @@ export default {
 }
 /deep/.editor-wrap{
     margin-bottom: 23px  !important;
+}
+/deep/.w-e-toolbar {
+    z-index: 99 !important;
 }
 </style>

@@ -97,9 +97,6 @@ export default {
         ...mapActions({
             findPaymentwhite: 'findPaymentwhite'
         }),
-        onCopy (id) {
-            this.$router.push({ path: '/b2b/marketing/createEditEvent', query: { copeId: id } })
-        },
         searchList () {
             this.queryParams.pageNumber = 1
             this.onFindPayment()
@@ -134,7 +131,7 @@ export default {
             }
             // console.log(url)
             location.href = B2bUrl + 'payment/api/accounts/offline-payment-white-list/export?' +
-                url + 'access_token=' + sessionStorage.getItem('tokenB2b')
+                url + 'access_token=' + localStorage.getItem('tokenB2b')
         }
     }
 }

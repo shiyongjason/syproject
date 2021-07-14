@@ -1,64 +1,48 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品品牌：</div>
-                    <div class="query-col-input">
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品品牌：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.brandId" filterable placeholder="请选择">
-                            <el-option
-                            label="全部"
-                            value="">
+                            <el-option label="全部" value="">
                             </el-option>
-                            <el-option
-                            v-for="item in brandOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+                            <el-option v-for="item in brandOptions" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品类目：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品类目：</div>
+                    <div class="query-col__input">
                         <el-cascader :options="categoryOptions" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品型号：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品型号：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.model" placeholder="请输入商品型号" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品名称：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.name" placeholder="请输入商品名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList">
-                            查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest">
-                            重置
-                        </el-button>
-                    </div>
+                <div class="query-cont__col">
+                    <h-button type="primary" @click="()=>searchList(1)">查询</h-button>
+                    <h-button @click="onRest">重置</h-button>
                 </div>
             </div>
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <el-button type="primary" class="ml20" @click="gotoProductAdd">
-                        新建SPU模板
-                    </el-button>
-                    <el-button type="primary" class="ml20" @click="onDisable()">批量禁用</el-button>
-                    <el-button type="primary" class="ml20" @click="onEnable()">批量启用</el-button>
-                </div>
+            <div class="button-cont">
+                <h-button type="create" @click="gotoProductAdd">
+                    新建SPU模板
+                </h-button>
+                <h-button @click="onDisable()">批量禁用</h-button>
+                <h-button @click="onEnable()">批量启用</h-button>
             </div>
-        </div>
-        <div class="page-body-cont">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
                 :isShowIndex='true'>
                 <template slot="brandName" slot-scope="scope">
@@ -68,12 +52,12 @@
                     <span :class="scope.data.row.isEnable===1?'colred':'colgry'">{{scope.data.row.isEnable===1?'启用':'禁用'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onEditSpu(scope.data.row)">编辑</el-button>
+                    <h-button table @click="onEditSpu(scope.data.row)">编辑</h-button>
                     <template v-if="scope.data.row.isEnable ===1">
-                        <el-button type="primary" size="mini" plain   @click="onDisable(scope.data.row.id)">禁用</el-button>
+                        <h-button table plain @click="onDisable(scope.data.row.id)">禁用</h-button>
                     </template>
                     <template v-else>
-                        <el-button size="mini" plain @click="onEnable(scope.data.row.id)">启用</el-button>
+                        <h-button table @click="onEnable(scope.data.row.id)">启用</h-button>
                     </template>
                 </template>
             </basicTable>
@@ -84,7 +68,8 @@
 import { templateDisable, templateEnable } from './api/index'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
-import { clearCache, newCache } from '@/utils/index'
+import { clearCache } from '@/utils/index'
+
 export default {
     name: 'spumange',
     data () {
@@ -113,7 +98,8 @@ export default {
                 { label: '状态', prop: 'isEnable' }
             ],
             rowKey: '',
-            multiSelection: []
+            multiSelection: [],
+            isPending: false
         }
     },
     computed: {
@@ -166,13 +152,25 @@ export default {
         productCategoryChange (val) {
             this.queryParams.categoryId = val[val.length - 1]
         },
-        async searchList () {
-            await this.findProductsTemplate(this.queryParams)
-            this.tableData = this.productsTemplateInfo.records
-            this.paginationInfo = {
-                pageNumber: this.productsTemplateInfo.current,
-                pageSize: this.productsTemplateInfo.size,
-                total: this.productsTemplateInfo.total
+        async searchList (val) {
+            try {
+                if (this.isPending) {
+                    return
+                }
+                this.isPending = true
+                if (val) {
+                    this.queryParams.pageNumber = val
+                }
+                await this.findProductsTemplate(this.queryParams)
+                this.tableData = this.productsTemplateInfo.records
+                this.paginationInfo = {
+                    pageNumber: this.productsTemplateInfo.current,
+                    pageSize: this.productsTemplateInfo.size,
+                    total: this.productsTemplateInfo.total
+                }
+                this.isPending = false
+            } catch (error) {
+                this.isPending = false
             }
         },
         // 批量禁用，根据是否传递单独id区分批量
@@ -196,13 +194,14 @@ export default {
             this.searchList()
         },
         gotoProductAdd () {
-            this.$router.push({ path: '/b2b/spudetail', query: { type: 'add' } })
+            this.$router.push({ path: '/b2b/product/spudetail', query: { type: 'add' } })
         },
         onEditSpu (val) {
-            this.$router.push({ path: '/b2b/spudetail', query: { type: 'modify', spuTemplateId: val.id } })
+            clearCache('spudetail')
+            this.$router.push({ path: '/b2b/product/spudetail', query: { type: 'modify', spuTemplateId: val.id } })
         }
-    },
-    beforeRouteEnter (to, from, next) {
+    }
+    /* beforeRouteEnter (to, from, next) {
         newCache('spumange')
         next()
     },
@@ -211,7 +210,7 @@ export default {
             clearCache('spumange')
         }
         next()
-    }
+    } */
 }
 </script>
 <style lang="scss" scoped>

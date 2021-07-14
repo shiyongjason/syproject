@@ -15,12 +15,14 @@ import Bestrouter from './router/Bestrouter'
 import Wisdomrouter from './router/Wisdomrouter'
 import Cloudrouter from './router/Cloudrouter'
 import Crmrouter from './router/Crmrouter'
+import Merchantrouter from "./router/Merchantrouter"
+import OssFileUtils from "@/utils/OssFileUtils"
+
 const originalPush = Router.prototype.push
-Router.prototype.push = function push (location) {
+Router.prototype.push = function (location) {
     return originalPush.call(this, location).catch(err => err)
 }
 Vue.use(Router)
-
 
 const routerMapping = [
     {
@@ -222,6 +224,7 @@ const routerMapping = [
     ...B2brouter,
     ...Jyrouter,
     ...Cloudrouter,
+    ...Merchantrouter,
     ...Crmrouter
 ]
 
@@ -237,7 +240,24 @@ const router = new Router({
         {
             path: '/403',
             name: '403',
-            component: () => import('./views/error/403'),
+            // component: () => import('./views/error/403'),
+            component: Layout,
+            meta: {
+                title: '403',
+                isMenu: false
+            },
+            children: [
+                {
+                    path: '',
+                    name: '403',
+                    meta: {
+                        title: '403',
+                        isMenu: false
+                    },
+                    component: () => import('./views/error/403'),
+                    hidden: true
+                }
+            ],
             hidden: true
         }
     ]
@@ -274,13 +294,12 @@ async function getMenu (to, next, isMakeIndex, query) {
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
     let menu = ''
     if (process.env.NODE_ENV == 'development') {
-        // menu = routerMapping
-        menu = makeMenus(routerMapping, resourceList)
+        menu = routerMapping
+        // menu = makeMenus(routerMapping, resourceList)
     } else {
         menu = makeMenus(routerMapping, resourceList)
     }
     sessionStorage.setItem('menuList', JSON.stringify(menu))
-
     router.addRoutes(menu)
     if (isMakeIndex) {
         makeIndex(menu, next, query)
@@ -292,20 +311,28 @@ async function getMenu (to, next, isMakeIndex, query) {
 router.beforeEach(async (to, from, next) => {
     let isFirst = store.state.isFirst
     const isLogin = to.name === 'login'
+    const token = localStorage.getItem('token')
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+    if (!userInfo && token) {
+        userInfo = jwtDecode(token)
+        sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
+    }
     // 非/login下需要验证
     if (!isLogin) {
         // 提供第三方凭条跳转内部系统
         const query = to.query
         if (to.path === '/redirect' && query.sale === 'hosjoy') {
-            sessionStorage.setItem('token', query.access_token)
+            localStorage.setItem('token', query.access_token)
             sessionStorage.setItem('userInfo', JSON.stringify(jwtDecode(query.access_token)))
             await getMenu(to, next, true, query)
         } else {
             // 非登录的情况下
             if (!userInfo) {
+                if (to.path === '/') {
+                    return next({ name: 'login' })
+                }
                 return next({
-                    name: 'login'
+                    path: '/login?backUrl=' + encodeURIComponent(to.path),
                 })
             } else {
                 if (isFirst) {
@@ -331,10 +358,28 @@ router.beforeEach(async (to, from, next) => {
         })
     }
     // TODO 获取B2b token 项目路径 hmall（重新获取token）
-    if (to.path.indexOf('b2b') > 0 || to.path.indexOf('paymentCentral') > 0 || to.path.indexOf('goodwork') > 0) {
+    if (to.path.indexOf('b2b') > 0 || to.path.indexOf('paymentCentral') > 0) {
         // 登录token带到请求的头部中，用于校验登录状态
-        const token = sessionStorage.getItem('tokenB2b')
-        if (token) {
+
+        // 临时解决BOSS登陆B2B菜单报错问题，待优化
+
+        const newInstance = axios.create({
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        const { data } = await newInstance.post(B2bUrl + 'uaa/oauth/token', qs.stringify({
+            'grant_type': 'client_credentials',
+            'client_id': 'boss',
+            'client_secret': 'boss',
+            'scope': 'boss'
+        }))
+        localStorage.setItem('tokenB2b', data.access_token)
+        axios.defaults.headers['Authorization'] = 'Bearer ' + data.access_token
+
+        // const token = localStorage.getItem('tokenB2b')
+
+        /*if (token) {
             axios.defaults.headers['Authorization'] = 'Bearer ' + token
         } else {
             const newInstance = axios.create({
@@ -348,9 +393,11 @@ router.beforeEach(async (to, from, next) => {
                 'client_secret': 'boss',
                 'scope': 'boss'
             }))
-            sessionStorage.setItem('tokenB2b', data.access_token)
+
+            console.log(data)
+            localStorage.setItem('tokenB2b', data.access_token)
             axios.defaults.headers['Authorization'] = 'Bearer ' + data.access_token
-        }
+        }*/
     }
     // 获取数据权限
     const authPath = to && to.path.split('/')

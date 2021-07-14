@@ -1,6 +1,6 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
+    <div class="page-body amount">
+        <div v-show="toggle"  class="page-body-cont query-cont">
             <div class="query-cont-col" v-if="region">
                 <div class="query-col-title">大区：</div>
                 <div class="query-col-input">
@@ -35,25 +35,26 @@
             <div class="query-cont-col">
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="btnQuery({...queryParams, pageSize:10, pageNumber: 1})">
-                        搜索
+                        查询
                     </el-button>
-                    <el-button type="primary" class="ml20" @click="onReset">
+                    <el-button type="default" class="ml20" @click="onReset">
                         重置
                     </el-button>
-                    <el-button type="primary" class="ml20" @click="onExport">
+                    <el-button type="default" class="ml20" @click="onExport">
                         导出汇总表
                     </el-button>
                 </div>
             </div>
         </div>
-        <div class="tips">
-            <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
-        </div>
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-body-cont">
+            <div class="table-tips">
+                <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
+            </div>
             <hosJoyTable ref="hosjoyTable" collapseShow border stripe showPagination :column="columnData"
                          :data="platformPlanList" align="center" :pageNumber.sync="queryParams.pageNumber"
                          :pageSize.sync="queryParams.pageSize" :total="platformPlanPagination.total" @pagination="getList"
-                         @updateLabel="updateLabel" :toggleTable="toggleTable" @toggleTableHandler="toggleTableHandler" :localName="localName">
+                         :localName="localName">
                 <template slot="organizationName" slot-scope="scope">
                     <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
                 </template>
@@ -64,7 +65,7 @@
         </div>
         <el-dialog :title="title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="450px">
             <h3 style="margin-bottom: 10px;"></h3>
-            <el-input type="textarea" :rows="2" maxlength="1000" show-word-limit v-model="remark" disabled></el-input>
+            <p class="tips">{{remark}}</p>
         </el-dialog>
     </div>
 </template>
@@ -102,6 +103,7 @@ export default {
     },
     data () {
         return {
+            toggle: true,
             localName: 'platformPlanTable::',
             toggleTable: false,
             queryParams: {
@@ -170,26 +172,6 @@ export default {
         getList (val) {
             this.onQuery({ ...this.queryParamsTemp, ...val })
         },
-        toggleTableHandler () {
-            this.toggleTable = false
-        },
-        updateLabel (showColumnLabel) {
-            this.columnData.forEach(value => {
-                value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
-                if (value.children) {
-                    let number = 0
-                    value.children.forEach(value1 => {
-                        value1.isHidden = showColumnLabel.indexOf(value1.prop) === -1
-                        if (!value1.isHidden) number++
-                    })
-                    value.isHidden = !(number > 0)
-                }
-            })
-            this.toggleTable = true
-            this.$nextTick(() => {
-                this.$refs.hosjoyTable.doLayout()
-            })
-        },
         showDialog (val, point) {
             if (!val) return
             this.dialogVisible = true
@@ -216,8 +198,6 @@ export default {
                 }
             })
             this.columnData = columnData
-            const haveLabel = JSON.parse(localStorage.getItem(this.localName + this.userInfo.user_name))
-            haveLabel && haveLabel.length > 0 && this.updateLabel(haveLabel)
         },
         linkage (dis) {
             let obj = {
@@ -339,15 +319,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.tips {
+.table-tips {
     background: #ffffff;
 
     p {
         max-width: 1000px;
         margin: auto;
-        line-height: 100px;
+        line-height: 25px;
         text-align: center;
-
+        padding-top: 5px;
         b {
             color: red;
             padding: 0 5px;
@@ -361,5 +341,16 @@ export default {
 .light {
     color: #ff7a45;
     cursor: pointer;
+}
+/deep/ .el-dialog__body {
+    min-height: 120px;
+}
+.tips {
+    display: flex;
+    padding: 10px 0;
+    text-align: justify;
+    line-height: 20px;
+    overflow: hidden;
+    overflow-y: scroll;
 }
 </style>

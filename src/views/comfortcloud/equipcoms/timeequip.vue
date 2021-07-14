@@ -7,40 +7,22 @@
                 <h3>总运行时长: {{totalTime ? totalTime : '0'}} 小时</h3>
             </div>
             <div class="echart-time">
-                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="开始日期" v-model="smartparams.startDate"
-                                :picker-options="pickerOptionsStart" :clearable="false" :editable="false">
+                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="开始日期" v-model="smartparams.startDate" :picker-options="pickerOptionsStart" :clearable="false" :editable="false">
                 </el-date-picker>
                 <span class="ml10 mr10">-</span>
-                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="结束日期" v-model="smartparams.endDate"
-                                :picker-options="pickerOptionsEnd" :clearable="false" :editable="false">
+                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="结束日期" v-model="smartparams.endDate" :picker-options="pickerOptionsEnd" :clearable="false" :editable="false">
                 </el-date-picker>
-                <el-button type="primary" class="ml20" @click="onFindRuntimeR(smartparams.runTimeModuleName + 'Line',
-                smartparams.runTimeModuleName + 'Bar')">
+                <el-button type="primary" class="ml20" @click="onFindRuntimeR(smartparams.modeType + 'Line',
+                smartparams.modeType + 'Bar')">
                     查询
                 </el-button>
             </div>
         </div>
         <div class="tab-container">
-            <el-tabs v-model="homeParams.runTimeModuleName" @tab-click="handleClick">
-                <el-tab-pane label="所有设备" name="all" class="echart-wrap">
-                    <div class="chart-flex2" id="allLine" style="height:500px"></div>
-                    <div class="chart-flex1" id="allBar" style="height:500px"></div>
-                </el-tab-pane>
-                <el-tab-pane label="中央空调控制器WC-03" name="Op" class="echart-wrap">
-                    <div class="chart-flex2" id="OpLine" style="height:500px"></div>
-                    <div class="chart-flex1" id="OpBar" style="height:500px"></div>
-                </el-tab-pane>
-                <el-tab-pane label="中央空调控制器LC-305" name="Co" class="echart-wrap">
-                    <div class="chart-flex2" id="CoLine" style="height:500px"></div>
-                    <div class="chart-flex1" id="CoBar" style="height:500px"></div>
-                </el-tab-pane>
-                <el-tab-pane label="地暖智控面板WH-04" name="Ap" class="echart-wrap">
-                    <div class="chart-flex2" id="ApLine" style="height:500px"></div>
-                    <div class="chart-flex1" id="ApBar" style="height:500px"></div>
-                </el-tab-pane>
-                <el-tab-pane label="智能温控阀LR-307" name="Rt" class="echart-wrap">
-                    <div class="chart-flex2" id="RtLine" style="height:500px"></div>
-                    <div class="chart-flex1" id="RtBar" style="height:500px"></div>
+            <el-tabs v-model="homeParams.modeType" @tab-click="handleClick">
+                <el-tab-pane :key="item.name" v-for="item in cloudHomeModeTypeList" :label="item.name" :name="item.type" class="echart-wrap">
+                    <div class="chart-flex2" :id="item.type + 'Line'" style="height:500px"></div>
+                    <div class="chart-flex1" :id="item.type + 'Bar'" style="height:500px"></div>
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -53,26 +35,27 @@
                         <el-input v-model="homeParams.phone" placeholder="输入手机号" maxlength="11"></el-input>
                     </div>
                 </div>
+                <div class="query-cont-col" v-if="homeParams.modeType != 'all'">
+                    <div class="query-col-title">设备ID：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="homeParams.subIotId" placeholder="输入设备ID"></el-input>
+                    </div>
+                </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">注册时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="homeParams.startDate"
-                                        value-format="yyyy-MM-dd" placeholder="开始日期"
-                                        :picker-options="pickerHomeDetailStart">
+                        <el-date-picker type="date" clearable v-model="homeParams.startDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerHomeDetailStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="homeParams.endDate"
-                                        value-format="yyyy-MM-dd" placeholder="结束日期"
-                                        :picker-options="pickerHomeDetailEnd">
+                        <el-date-picker type="date" clearable v-model="homeParams.endDate" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerHomeDetailEnd">
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col" v-if="homeParams.runTimeModuleName === 'all'">
+                <div class="query-cont-col" v-if="homeParams.modeType === 'all'">
                     <div class="query-col-title">设备种类：</div>
                     <div class="query-col-input">
                         <el-select v-model="homeParams.type" clearable>
-                            <el-option :label="item.name" :value="item.type" v-for="item in cloudHomeDetailDict"
-                                       :key="item.type"></el-option>
+                            <el-option :label="item.name" :value="item.type" v-for="item in cloudHomeDetailDict" :key="item.type"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -84,11 +67,8 @@
             </div>
         </div>
         <div class="page-body-cont">
-<!--            @onSortChange="onSortChange"-->
-            <basicTable :tableLabel="tableLabelSwitch" :tableData="tablePaginationListSwitch"
-                        :pagination="cloudHomeDetailPagination"
-                        isShowIndex @onCurrentChange='onCurrentChange'
-                        @onSizeChange='onSizeChange'>
+            <!--            @onSortChange="onSortChange"-->
+            <basicTable :tableLabel="tableLabelSwitch" :tableData="cloudHomeDetailList" :pagination="cloudHomeDetailPagination" isShowIndex @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'>
             </basicTable>
         </div>
     </div>
@@ -108,22 +88,18 @@ export default {
             smartparams: {
                 startDate: moment().subtract(7, 'days').format('YYYY-MM-DD'),
                 endDate: moment().format('YYYY-MM-DD'),
-                runTimeModuleName: 'all'
+                modeType: 'all'
             },
-            smartList: [{ key: 'smartHost', name: '智能主机' }, { key: 'smartCont', name: '智能控制器' }, {
-                key: 'sensor',
-                name: '传感器'
-            }, { key: 'smartAppliance', name: '智能家电' },
-            { key: 'switchPanel', name: '开关面板' }],
             smartData: {},
             homeParams: {
                 pageSize: 10,
                 pageNumber: 1,
                 phone: '',
+                subIotId: '',
                 startDate: '',
                 endDate: '',
                 type: '',
-                runTimeModuleName: 'all'
+                modeType: 'all'
             }
         }
     },
@@ -132,18 +108,15 @@ export default {
             cloudRuntimeReport: 'cloudRuntimeReport',
             cloudHomeDetailList: 'cloudHomeDetailList',
             cloudHomeDetailPagination: 'cloudHomeDetailPagination',
-            cloudHomeOpDetailList: 'cloudHomeOpDetailList',
-            cloudHomeCoDetailList: 'cloudHomeCoDetailList',
-            cloudHomeApDetailList: 'cloudHomeApDetailList',
-            cloudHomeRtDetailList: 'cloudHomeRtDetailList',
-            cloudHomeDetailDict: 'cloudHomeDetailDict'
+            cloudHomeDetailDict: 'cloudHomeDetailDict',
+            cloudHomeModeTypeList: 'cloudHomeModeTypeList'
         }),
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
                     let endDateVal = this.smartparams.endDate
                     if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
+                        return time.getTime() > new Date(endDateVal).getTime()
                     }
                 }
             }
@@ -153,7 +126,7 @@ export default {
                 disabledDate: time => {
                     let beginDateVal = this.smartparams.startDate
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
@@ -163,7 +136,7 @@ export default {
                 disabledDate: time => {
                     let endDateVal = this.homeParams.endDate
                     if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
+                        return time.getTime() > new Date(endDateVal).getTime()
                     }
                 }
             }
@@ -173,50 +146,43 @@ export default {
                 disabledDate: time => {
                     let beginDateVal = this.homeParams.startDate
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
         },
         tableLabelSwitch () {
             let temp
-            switch (this.homeParams.runTimeModuleName) {
+            switch (this.homeParams.modeType) {
                 case 'all':
                     temp = Const.totalTableLabel
                     break
                 case 'Op':
-                    temp = Const.wuLianTableLabel
-                    break
                 case 'Co':
-                    temp = Const.zeroKeMiTableLabel
+                case 'Zco':
+                case 'Lco':
+                    temp = Const.OpTableLabel
                     break
                 case 'Ap':
-                    temp = Const.floorTableLabel
+                case 'Th':
+                    temp = Const.ApTableLabel
+                    break
+                case 'Lth':
+                case 'Lwh':
+                case 'Lhs':
+                    temp = Const.lthTableLabel
                     break
                 case 'Rt':
-                    temp = Const.smartTableLabel
+                    temp = Const.rtTableLabel
                     break
-            }
-            return temp
-        },
-        tablePaginationListSwitch () {
-            let temp = []
-            switch (this.homeParams.runTimeModuleName) {
-                case 'all':
-                    temp = this.cloudHomeDetailList
+                case 'Lct':
+                case 'Lyk':
+                case 'Lyg':
+                case 'Lyt':
+                    temp = Const.lctTableLabel
                     break
-                case 'Op':
-                    temp = this.cloudHomeOpDetailList
-                    break
-                case 'Co':
-                    temp = this.cloudHomeCoDetailList
-                    break
-                case 'Ap':
-                    temp = this.cloudHomeApDetailList
-                    break
-                case 'Rt':
-                    temp = this.cloudHomeRtDetailList
-                    break
+                default:
+                    temp = Const.totalTableLabel
             }
             return temp
         }
@@ -225,16 +191,14 @@ export default {
         this.onFindRuntimeR('allLine', 'allBar')
         this.findCloudHomeDetailList(this.homeParams)
         this.findCloudHomeDetailSearchDict()
+        this.getCloudHomeModeTypeList()
     },
     methods: {
         ...mapActions({
             findRuntimeReport: 'findRuntimeReport',
             findCloudHomeDetailList: 'findCloudHomeDetailList',
-            findCloudHomeOpDetailList: 'findCloudHomeOpDetailList',
-            findCloudHomeCoDetailList: 'findCloudHomeCoDetailList',
-            findCloudHomeApDetailList: 'findCloudHomeApDetailList',
-            findCloudHomeRtDetailList: 'findCloudHomeRtDetailList',
-            findCloudHomeDetailSearchDict: 'findCloudHomeDetailSearchDict'
+            findCloudHomeDetailSearchDict: 'findCloudHomeDetailSearchDict',
+            getCloudHomeModeTypeList: 'getCloudHomeModeTypeList'
         }),
         onSortChange (val) {
             if (val.order) {
@@ -243,23 +207,7 @@ export default {
             }
         },
         onQuery () {
-            switch (this.homeParams.runTimeModuleName) {
-                case 'all':
-                    this.findCloudHomeDetailList(this.homeParams)
-                    break
-                case 'Op':
-                    this.findCloudHomeOpDetailList(this.homeParams)
-                    break
-                case 'Co':
-                    this.findCloudHomeCoDetailList(this.homeParams)
-                    break
-                case 'Ap':
-                    this.findCloudHomeApDetailList(this.homeParams)
-                    break
-                case 'Rt':
-                    this.findCloudHomeRtDetailList(this.homeParams)
-                    break
-            }
+            this.findCloudHomeDetailList(this.homeParams)
         },
         onCurrentChange (val) {
             this.homeParams.pageNumber = val.pageNumber
@@ -277,7 +225,9 @@ export default {
             this.$emit('queryTotalTime', {
                 startDate: this.smartparams.startDate,
                 endDate: this.smartparams.endDate,
-                type: this.homeParams.runTimeModuleName === 'all' ? '' : this.homeParams.runTimeModuleName
+                type: this.homeParams.modeType === 'all' ? '' : this.homeParams.modeType,
+                networkType: ''
+
             })
         },
         drawLine (data, id) {
@@ -296,7 +246,9 @@ export default {
                     if (index === 0) charts.lineX.push(value1.dateTime)
                 })
             })
-            var color = ['rgba(23, 255, 243', 'rgba(255,100,97', 'rgba(71,100,197', 'rgba(255,158,37', 'rgba(255,35,67', 'rgba(25,135,67']
+            var color = ['rgba(23, 255, 243', 'rgba(255,100,97', 'rgba(71,100,197', 'rgba(255,158,37', 'rgba(255,35,67', 'rgba(25,135,67',
+                'rgba(7,128,207', 'rgba(118,80,5', 'rgba(250,109,29', 'rgba(14,44,130', 'rgba(182,181,31', 'rgba(218,31,24', 'rgba(112,24,102',
+                'rgba(244,122,117', 'rgba(0,157,178', 'rgba(2,75,81', 'rgba(7,128,207', 'rgba(118,80,5']
             var lineY = []
             // 根据数据条数 渲染y轴数据
             for (var i = 0; i < charts.names.length; i++) {
@@ -345,7 +297,7 @@ export default {
                     // right: '4%'
                 },
                 grid: {
-                    top: '10%',
+                    top: '17%',
                     left: '3%',
                     right: '8%',
                     bottom: '3%',
@@ -428,38 +380,24 @@ export default {
             this.drawChart(option, id)
         },
         handleClick () {
-            this.smartparams.runTimeModuleName = this.homeParams.runTimeModuleName
-            this.onFindRuntimeR(this.smartparams.runTimeModuleName + 'Line',
-                this.smartparams.runTimeModuleName + 'Bar')
+            this.smartparams.modeType = this.homeParams.modeType
+            this.onFindRuntimeR(this.smartparams.modeType + 'Line',
+                this.smartparams.modeType + 'Bar')
             Object.assign(this.homeParams, {
                 pageSize: 10,
                 pageNumber: 1,
                 phone: '',
+                subIotId: '',
                 type: '',
                 startDate: '',
-                endDate: ''
+                endDate: '',
+                modeType: this.homeParams.modeType
             })
-            switch (this.homeParams.runTimeModuleName) {
-                case 'all':
-                    this.findCloudHomeDetailList(this.homeParams)
-                    break
-                case 'Op':
-                    this.findCloudHomeOpDetailList(this.homeParams)
-                    break
-                case 'Co':
-                    this.findCloudHomeCoDetailList(this.homeParams)
-                    break
-                case 'Ap':
-                    this.findCloudHomeApDetailList(this.homeParams)
-                    break
-                case 'Rt':
-                    this.findCloudHomeRtDetailList(this.homeParams)
-                    break
-            }
+            this.findCloudHomeDetailList(this.homeParams)
             this.$emit('queryTotalTime', {
                 startDate: this.smartparams.startDate,
                 endDate: this.smartparams.endDate,
-                type: this.homeParams.runTimeModuleName === 'all' ? '' : this.homeParams.runTimeModuleName
+                type: this.homeParams.modeType === 'all' ? '' : this.homeParams.modeType
             })
         },
         drawChart (option, id) {
@@ -470,41 +408,41 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-    .echart-wrap {
+.echart-wrap {
+    display: flex;
+    padding: 20px 10px;
+    min-height: 500px;
+
+    .chart-flex2 {
+        flex: 1.8;
+    }
+
+    .chart-flex1 {
+        flex: 1;
+    }
+}
+
+.smart-time {
+    display: flex;
+    padding: 30px 12px;
+
+    div {
         display: flex;
-        padding: 20px 10px;
-        min-height: 500px;
-
-        .chart-flex2 {
-            flex: 1.8;
-        }
-
-        .chart-flex1 {
-            flex: 1;
-        }
+        flex: 1;
+        align-items: center;
     }
+}
 
-    .smart-time {
-        display: flex;
-        padding: 30px 12px;
+.home-detail-title {
+    padding-bottom: 20px;
+}
 
-        div {
-            display: flex;
-            flex: 1;
-            align-items: center;
-        }
-    }
+/deep/ .el-tabs__item.is-active {
+    color: #333;
+    background: transparent;
+}
 
-    .home-detail-title {
-        padding-bottom: 20px;
-    }
-
-    /deep/ .el-tabs__item.is-active {
-        color: #333;
-        background: transparent;
-    }
-
-    /deep/ .el-tabs__header {
-        margin: 0
-    }
+/deep/ .el-tabs__header {
+    margin: 0;
+}
 </style>

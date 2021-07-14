@@ -1,50 +1,48 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-col">
-                <div class="query-col-title">供应商：</div>
-                <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入商家名称">
-                    </el-input>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">品牌名称：</div>
-                <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.brandName" placeholder="请输入品牌名称">
-                    </el-input>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">申请时间：</div>
-                <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.applicationTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                    </el-date-picker>
-                    <span class="ml10 mr10">-</span>
-                    <el-date-picker v-model="queryParams.applicationTimeEnd" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
-                    </el-date-picker>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="flex-wrap-title">审核状态：</div>
-                <div class="flex-wrap-cont">
-                    <el-select v-model="queryParams.status" style="width: 100%">
-                        <el-option label="全部" value=""></el-option>
-                        <el-option label="待审核" value="0"></el-option>
-                        <el-option label="审核通过" value="1"></el-option>
-                        <el-option label="审核未通过" value="2"></el-option>
-                        <el-option label="过期失效" value="3"></el-option>
-                    </el-select>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="onQuery">搜索</el-button>
-                    <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                </div>
-            </div>
-        </div>
+    <div class="page-body B2b">
         <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">供应商：</div>
+                    <div class="query-col__input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入商家名称">
+                        </el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">品牌名称：</div>
+                    <div class="query-col__input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.brandName" placeholder="请输入品牌名称">
+                        </el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">申请时间：</div>
+                    <div class="query-col__input">
+                        <el-date-picker v-model="queryParams.applicationTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker v-model="queryParams.applicationTimeEnd" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="flex-wrap-title">审核状态：</div>
+                    <div class="flex-wrap-cont">
+                        <el-select v-model="queryParams.status" style="width: 100%">
+                            <el-option label="全部" value=""></el-option>
+                            <el-option label="待审核" value="0"></el-option>
+                            <el-option label="审核通过" value="1"></el-option>
+                            <el-option label="审核未通过" value="2"></el-option>
+                            <el-option label="过期失效" value="3"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <h-button type="primary" @click="onQuery">查询</h-button>
+                    <h-button @click="onReset">重置</h-button>
+                </div>
+            </div>
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
                 <template slot="status" slot-scope="scope">
                     {{ auditStatusMap.get(scope.data.row.status) || '-' }}
@@ -53,78 +51,80 @@
                     {{ scope.data.row.status == 0 ? '-' : scope.data.row.auditTime }}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button v-if="scope.data.row.status == 0 || scope.data.row.status == 3" class="orangeBtn" @click="showDrawer(scope.data.row, 'review')">审核</el-button>
-                    <el-button v-else class="orangeBtn" @click="showDrawer(scope.data.row, 'watch')">查看</el-button>
+                    <h-button table v-if="scope.data.row.status == 0 || scope.data.row.status == 3" @click="showDrawer(scope.data.row, 'review')">审核</h-button>
+                    <h-button table v-else @click="showDrawer(scope.data.row, 'watch')">查看</h-button>
                 </template>
             </basicTable>
         </div>
-        <el-drawer class="page-body-drawer brand-drawer" :title="drawerMsg.title" :visible.sync="drawerShow" :before-close="onCancel" direction="rtl" size='580px'>
-            <el-form ref="suggest" :rules="rules" :model="suggest" class="suggest" label-width="100px">
-                <el-form-item label="供应商：" class="mb-5">
-                    {{drawerMsg.merchantName}}
-                </el-form-item>
-                <el-form-item label="品牌名称：" class="mb-5">
-                    {{drawerMsg.brandName}}
-                </el-form-item>
-                <el-form-item label="代理证书：" class="mb-5">
-                    <div class="proxyCert">
-                        <a :href="drawerMsg.certification" target="_blank">
-                            <img :src="drawerMsg.certification" alt="">
-                        </a>
-                    </div>
-                </el-form-item>
-                <el-form-item label="到期日：" class="mb-5">
-                    {{drawerMsg.expiryDate}}
-                </el-form-item>
-                <el-form-item label="关联类目：" class="mb-20 area-cascader">
-                    <!-- <div>
-                        <span class="category-tip">一级类目</span>
-                        <span class="category-tip">二级类目</span>
-                        <span class="category-tip">三级类目</span>
-                    </div> -->
-                    <!-- <el-cascader-panel
-                        v-model="drawerMsg.categoryIdsArr"
-                        @change="cascaderPanelChange"
-                        :options="categoryOptions"
-                        :props="categoryProps">
-                    </el-cascader-panel> -->
-                    <el-cascader :options="categoryOptions" :props="categoryProps" v-model="drawerMsg.categoryIdsArr" disabled>
-                    </el-cascader>
-                </el-form-item>
-                <el-form-item label="售卖区域：" class="mb-20 area-cascader">
-                    <el-cascader :options="areaOptions" :props="areaProps" v-model="drawerMsg.areaArr" disabled>
-                    </el-cascader>
-                </el-form-item>
-                <p class="audit-opinion">审核意见</p>
-                <template v-if="drawerMsg.type === 'review'">
-                    <el-form-item label="审核结果：" prop="auditResult" ref="auditResult">
-                        <el-radio v-model="suggest.auditResult" label="1" @change="onChangeAudio">审核通过</el-radio>
-                        <el-radio v-model="suggest.auditResult" label="2" @change="onChangeAudio">审核不通过</el-radio>
+        <h-drawer :title="drawerMsg.title" :visible="drawerShow" :beforeClose="onCancel">
+            <template #connect>
+                <el-form ref="suggest" :rules="rules" :model="suggest" class="suggest" label-width="100px">
+                    <el-form-item label="供应商：" class="mb-5">
+                        {{drawerMsg.merchantName}}
                     </el-form-item>
-                    <el-form-item label="备注原因：" :prop="suggest.auditResult == 1 ? '' : 'auditRemark' " ref="auditRemark">
-                        <el-input type="textarea" v-model.trim="suggest.auditRemark" rows="3" maxlength="50"></el-input>
+                    <el-form-item label="品牌名称：" class="mb-5">
+                        {{drawerMsg.brandName}}
                     </el-form-item>
-                </template>
-                <template v-else>
-                    <el-form-item label="审核结果：" class="mb-5">
-                        {{ auditStatusMap.get(drawerMsg.status) || '-'}}
+                    <el-form-item label="代理证书：" class="mb-5">
+                        <div class="proxyCert">
+                            <a :href="drawerMsg.certification" target="_blank">
+                                <img :src="drawerMsg.certification" alt="">
+                            </a>
+                        </div>
                     </el-form-item>
-                    <el-form-item label="备注原因：" class="mb-5">
-                        {{drawerMsg.remark || '-'}}
+                    <el-form-item label="到期日：" class="mb-5">
+                        {{drawerMsg.expiryDate}}
                     </el-form-item>
-                    <el-form-item label="审核人：" class="mb-5">
-                        {{drawerMsg.auditBy}}
+                    <el-form-item label="关联类目：" class="mb-20 area-cascader">
+                        <!-- <div>
+                            <span class="category-tip">一级类目</span>
+                            <span class="category-tip">二级类目</span>
+                            <span class="category-tip">三级类目</span>
+                        </div> -->
+                        <!-- <el-cascader-panel
+                            v-model="drawerMsg.categoryIdsArr"
+                            @change="cascaderPanelChange"
+                            :options="categoryOptions"
+                            :props="categoryProps">
+                        </el-cascader-panel> -->
+                        <el-cascader :options="categoryOptions" :props="categoryProps" v-model="drawerMsg.categoryIdsArr" disabled>
+                        </el-cascader>
                     </el-form-item>
-                    <el-form-item label="审核时间：" class="mb-5">
-                        {{drawerMsg.auditTime}}
+                    <el-form-item label="售卖区域：" class="mb-20 area-cascader">
+                        <el-cascader :options="areaOptions" :props="areaProps" v-model="drawerMsg.areaArr" disabled>
+                        </el-cascader>
                     </el-form-item>
-                </template>
-            </el-form>
-            <div class="drawer-footer">
-                <el-button name="white-color" @click="onCancel">{{ drawerMsg.type === 'review' ? '取消' : '关闭' }}</el-button>
-                <el-button name="hosjoy-color" @click="onConfirm" v-if="drawerMsg.type === 'review'">提交</el-button>
-            </div>
-        </el-drawer>
+                    <p class="audit-opinion">审核意见</p>
+                    <template v-if="drawerMsg.type === 'review'">
+                        <el-form-item label="审核结果：" prop="auditResult" ref="auditResult">
+                            <el-radio v-model="suggest.auditResult" label="1" @change="onChangeAudio">审核通过</el-radio>
+                            <el-radio v-model="suggest.auditResult" label="2" @change="onChangeAudio">审核不通过</el-radio>
+                        </el-form-item>
+                        <el-form-item label="备注原因：" :prop="suggest.auditResult == 1 ? '' : 'auditRemark' " ref="auditRemark">
+                            <el-input type="textarea" v-model.trim="suggest.auditRemark" rows="3" maxlength="50"></el-input>
+                        </el-form-item>
+                    </template>
+                    <template v-else>
+                        <el-form-item label="审核结果：" class="mb-5">
+                            {{ auditStatusMap.get(drawerMsg.status) || '-'}}
+                        </el-form-item>
+                        <el-form-item label="备注原因：" class="mb-5">
+                            {{drawerMsg.remark || '-'}}
+                        </el-form-item>
+                        <el-form-item label="审核人：" class="mb-5">
+                            {{drawerMsg.auditBy}}
+                        </el-form-item>
+                        <el-form-item label="审核时间：" class="mb-5">
+                            {{drawerMsg.auditTime}}
+                        </el-form-item>
+                    </template>
+                </el-form>
+            </template>
+            <template #btn>
+                <h-button @click="onCancel">{{ drawerMsg.type === 'review' ? '取消' : '关闭' }}</h-button>
+                <h-button type='primary' @click="onConfirm" v-if="drawerMsg.type === 'review'">提交</h-button>
+            </template>
+        </h-drawer>
     </div>
 </template>
 

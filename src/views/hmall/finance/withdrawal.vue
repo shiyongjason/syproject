@@ -1,10 +1,10 @@
 <template>
-    <div class="page-body">
+    <div class="page-body B2b">
         <div class="page-body-cont">
-            <div class="table-cont-title">
-                <span class="table-title-name">提现到银行卡</span>
+            <div class="title-cont">
+                <span class="title-cont__label">提现到银行卡</span>
             </div>
-            <div class="query-cont-row">
+            <div class="query-cont__row mb20">
                 <el-form
                     :model="withdrawalForm"
                     ref="withdrawalForm"
@@ -22,24 +22,26 @@
                     <el-form-item label="验证码" prop="smsCode">
                         <el-input v-model="withdrawalForm.smsCode" placeholder="请填写" maxlength="6"></el-input>
                         <span style="margin-left: 20px">{{phoneNumber}}</span>
-                        <el-button
-                            style="margin-left: 20px"
-                            size="mini"
+                        <h-button
+                            table
+                            class="ml20"
                             :disabled="after?false:true"
                             @click="onMobileVerifica"
-                        >{{content}}</el-button>
+                        >{{content}}</h-button>
                     </el-form-item>
                     <el-form-item>
-                        <el-button @click="onCancel">取消</el-button>
-                        <el-button type="primary" @click="onSubmit">确定</el-button>
+                        <h-button @click="onCancel">取消</h-button>
+                        <h-button type="primary" @click="onSubmit">确定</h-button>
                     </el-form-item>
                 </el-form>
             </div>
-            <div class="table-cont-title">提现明细</div>
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">提现时间：</div>
-                    <div class="query-col-input">
+            <div class="title-cont">
+                <span class="title-cont__label">提现明细</span>
+            </div>
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">提现时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.withdrawTimeStart" type="date" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
@@ -47,23 +49,20 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">操作人：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">操作人：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.operator" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">查询</el-button>
-                        <!-- <el-button type="primary" class="ml20" @click="onRest()">重置</el-button> -->
-                        <button type="button" class="el-button ml20 el-button--primary" @click="onExport"><span>导出</span></button>
+                <div class="query-cont__col">
+                    <div class="query-col__input">
+                        <h-button type="primary" @click="searchList()">查询</h-button>
+                        <!-- <h-button class="ml20" @click="onRest()">重置</h-button> -->
+                        <h-button @click="onExport">导出</h-button>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
-            <!-- :rowKey="rowKey" -->
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" @onSortChange="onSortChange"
                 :isShowIndex='true'>
                 <template slot-scope="scope" slot="status">
@@ -81,6 +80,7 @@ import { B2bUrl } from '@/api/config'
 import { getSmsCode, cashWithdrawal } from './api/index'
 import { VerificationCode } from '@/utils/rules.js'
 export default {
+    name: 'financewithdrawal',
     data () {
         return {
             cashWithdrawalMap: CASH_WITHDRAWAL_MAP,
@@ -266,7 +266,7 @@ export default {
             for (let key in this.queryParams) {
                 url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
             }
-            url += 'access_token=' + sessionStorage.getItem('token')
+            url += 'access_token=' + localStorage.getItem('token')
             location.href = B2bUrl + 'payment/api/boss/service-fee/withdraws/export?' + url
         },
         handleCurrentChange (val) {

@@ -1,4 +1,4 @@
-import { isNum, isNotInputTxt, isNegative, isPositiveInt, inputMAX } from './format'
+import { isNum, isNotInputTxt, isNegative, isPositiveInt, inputMAX, isAllNum } from './format'
 /*
     自定义指令中传递的三个参数:el: 指令所绑定的元素，可以用来直接操作DOM。binding:  一个对象，包含指令的很多信息。vnode: Vue编译生成的虚拟节点。
     自定义指令有五个生命周期（也叫钩子函数），分别是 bind,inserted,update,componentUpdated,unbind
@@ -10,6 +10,21 @@ import { isNum, isNotInputTxt, isNegative, isPositiveInt, inputMAX } from './for
  */
 export default {
     install (Vue) {
+        /**
+         * @description 只能输入数字,可限制后几位（小数）
+        * @example  <el-input v-model="form.a" v-isAllNum: 0></el-input> 只允许输入数字 01231423432
+        */
+        Vue.directive('isAllNum', {
+            bind (el, binding, vnode) {
+                const element = el.getElementsByTagName('input')[0]
+                element.addEventListener('keyup', () => {
+                    element.value = isAllNum(element.value, binding.arg)
+                    if (isNaN(element.value)) element.value = ''
+                    vnode.data.model && vnode.data.model.callback(element.value)
+                })
+            }
+        })
+
         /**
          * @description 只能输入数字,可限制后几位（小数）
          * @param 0 1 2...
@@ -82,7 +97,8 @@ export default {
         /**
          * @description 限制输入最大值
          * @param number 输入最大值
-         * @example  <el-input v-model="form.a" v-inputMax="100"></el-input>
+         * @example  <el-input v-model="form.a" v-inputMAX="100"></el-input>
+         * @example  v-isNum:0 v-inputMAX='100'  0到100，0位小数，可结合使用。
          */
         Vue.directive('inputMAX', {
             bind (el, binding, vnode) {
@@ -116,7 +132,7 @@ export default {
                 div.style.left = '20px'
                 div.style.position = 'fixed'
                 div.style.zIndex = '1990'
-                div.style.transform = 'rotate(-15deg)'
+                // div.style.transform = 'rotate(-15deg)'
                 div.style.width = document.documentElement.clientWidth - 50 + 'px'
                 div.style.height = document.documentElement.clientHeight - 100 + 'px'
                 div.style.background = 'url(' + can.toDataURL('image/png') + ') left top repeat'
@@ -124,6 +140,33 @@ export default {
             }
             if (!document.getElementById('watermark-dom')) {
                 addWaterMarker(binding.value, el)
+            }
+        })
+
+        Vue.directive('drag', {
+            bind: function (el) {
+                let oDiv = el
+                function run (e) {
+                    let disX = e.clientX - oDiv.offsetLeft
+                    let disY = e.clientY - oDiv.offsetTop
+                    function mousemoveRun (e) {
+                        let left = e.clientX - disX
+                        let top = e.clientY - disY
+                        oDiv.style.left = left + 'px'
+                        oDiv.style.top = top + 'px'
+                        e.stopPropagation()
+                        e.preventDefault()
+                    }
+                    function mouseupRun (e) {
+                        document.removeEventListener('mousemove', mousemoveRun, false)
+                        document.removeEventListener('mouseup', mouseupRun, false)
+                    }
+                    document.addEventListener('mousemove', mousemoveRun, false)
+                    document.addEventListener('mouseup', mouseupRun, false)
+                    e.stopPropagation()
+                    e.preventDefault()
+                }
+                oDiv.addEventListener('mousedown', run, false)
             }
         })
     }

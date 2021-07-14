@@ -16,7 +16,7 @@ export default [
                 meta: {
                     title: '合资业务尽调',
                     isMenu: true,
-                    icon: 'hosjoy_jindiao'
+                    icon: ''
                 },
                 component: InterlayerContainer,
                 children: [

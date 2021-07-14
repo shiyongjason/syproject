@@ -1,92 +1,88 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">项目名称：</div>
-                    <div class="query-col-input">
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__label">项目名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.projectName" placeholder="请输入项目名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">项目编号：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">项目编号：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.projectNo" placeholder="请输入项目编号" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">所属分部：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">所属分部：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">经销商：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">经销商：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.companyName" placeholder="请输入经销商" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">甲方名称：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">甲方名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.firstPartName" placeholder="请输入甲方名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">项目类别：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">项目类别：</div>
+                    <div class="query-col__input">
                         <el-select v-model="typeArr" multiple collapse-tags placeholder="请选择">
                             <el-option v-for="(item,index) in typeList" :key="index" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">合作进度：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">合作进度：</div>
+                    <div class="query-col__input">
                         <el-select v-model="status" multiple collapse-tags placeholder="请选择">
                             <el-option v-for="(item,index) in coopreation" :key="index" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">初审通过时间：</div>
-                    <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minFirstApproveTime" type="datetime"  value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFirstApproveTime)">
+                <div class="query-cont__col">
+                    <div class="query-col__label">初审通过时间：</div>
+                    <div class="query-col__input">
+                        <el-date-picker v-model="queryParams.minFirstApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFirstApproveTime)">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxFirstApproveTime" type="datetime"  value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd(queryParams.minFirstApproveTime)">
+                        <el-date-picker v-model="queryParams.maxFirstApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd(queryParams.minFirstApproveTime)">
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">材料审核通过时间：</div>
-                    <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minFinalApproveTime" type="datetime"  value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFinalApproveTime)">
+                <div class="query-cont__col">
+                    <div class="query-col__label">材料审核通过时间：</div>
+                    <div class="query-col__input">
+                        <el-date-picker v-model="queryParams.minFinalApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFinalApproveTime)">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxFinalApproveTime" type="datetime"  value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd(queryParams.minFinalApproveTime)">
+                        <el-date-picker v-model="queryParams.maxFinalApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd(queryParams.minFinalApproveTime)">
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">
+                <div class="query-cont__col">
+                        <h-button type="primary" @click="searchList()">
                             查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest()">
+                        </h-button>
+                        <h-button @click="onRest()">
                             重置
-                        </el-button>
-                    </div>
+                        </h-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):0}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):0}} 元 </el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="false" :isAction="true" :actionMinWidth=300 ::rowKey="rowKey"
+            <!-- <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="false" :isAction="true" :actionMinWidth=300 ::rowKey="rowKey"
                 :isShowIndex='true'>
                 <template slot="contractAmount" slot-scope="scope">
                     {{scope.data.row.contractAmount?fundMoneys(scope.data.row.contractAmount):0}}
@@ -99,11 +95,31 @@
 
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row)" >查看详情</el-button>
-                    <!--资料状态 1：待提交 2：已提交 3：审核通过 4：审核驳回 2的时候点进去能看到，但不能修改-->
+                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row)">查看详情</el-button>
                     <el-button type="warning" size="mini" plain @click="onEditproject(scope.data.row)" v-if="scope.data.row.docAfterStatus!=3&&scope.data.row.status==3">修改</el-button>
                 </template>
-            </basicTable>
+            </basicTable> -->
+            <!--  -->
+            <div class="page-table">
+                <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total"
+                    @pagination="searchList" actionWidth='260' isAction :isActionFixed='tableData&&tableData.length>0'>
+                    <template slot="contractAmount" slot-scope="scope">
+                        {{scope.data.row.contractAmount?fundMoneys(scope.data.row.contractAmount):0}}
+                    </template>
+                    <template slot="type" slot-scope="scope">
+                        {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']||'-'}}
+                    </template>
+                    <template slot="status" slot-scope="scope">
+                        {{onFiterStates(scope.data.row.status).length>0?onFiterStates(scope.data.row.status)[0].value:''}}
+
+                    </template>
+                    <template slot="action" slot-scope="scope">
+                        <h-button table @click="onLookproject(scope.data.row)">查看详情</h-button>
+                        <!--资料状态 1：待提交 2：已提交 3：审核通过 4：审核驳回 2的时候点进去能看到，但不能修改-->
+                        <h-button table @click="onEditproject(scope.data.row)" v-if="scope.data.row.docAfterStatus!=3&&scope.data.row.status==3">修改</h-button>
+                    </template>
+                </hosJoyTable>
+            </div>
         </div>
     </div>
 </template>
@@ -112,12 +128,17 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import filters from '@/utils/filters.js'
+import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { TYPE_LIST, PROCESS_LIST, STATUS_LIST, COOPERATION_PROGRESS_LIST } from '../const'
 import * as Auths from '@/utils/auth_const'
 export default {
     name: 'projectlist',
+    components: {
+        hosJoyTable
+    },
     data () {
         return {
+            sums: [],
             crm_goodwork_detail: Auths.CRM_GOODWORK_DETAIL,
             categoryIdArr: [],
             branchArr: [],
@@ -149,15 +170,22 @@ export default {
                 { label: '项目名称', prop: 'projectName', width: '150' },
                 { label: '项目编号', prop: 'projectNo', width: '150' },
                 { label: '所属分部', prop: 'deptName', width: '150' },
-                { label: '赊销总额', prop: 'contractAmount', width: '150' },
+                { label: '赊销总额', prop: 'contractAmount', width: '150', displayAs: 'money' },
                 { label: '经销商', prop: 'companyName', width: '180' },
-                { label: '甲方名', prop: 'firstPartName' },
-                { label: '项目类别', prop: 'type', width: '120' },
-                { label: '合作进度', prop: 'status', width: '120' },
-                { label: '初审通过时间', prop: 'firstApproveTime', width: '150', formatters: 'dateTimes' },
-                { label: '数据更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes' },
-                { label: '材料提交审核时间', prop: 'submitTime', width: '150', formatters: 'dateTimes' },
-                { label: '材料审核通过时间', prop: 'checkTime', width: '150', formatters: 'dateTimes' }
+                { label: '甲方名', prop: 'firstPartName', width: '180' },
+                { label: '项目类别', prop: 'type', width: '120', slot: 'type' },
+                {
+                    label: '合作进度',
+                    prop: 'status',
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.status ? this.getStatusList(scope.row.status, scope.row.docProgress).value : '-'}</span>
+                    }
+                },
+                { label: '初审通过时间', prop: 'firstApproveTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm' },
+                { label: '数据更新时间', prop: 'updateTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm' },
+                { label: '材料提交审核时间', prop: 'submitTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm' },
+                { label: '材料审核通过时间', prop: 'checkTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm' }
             ],
             rowKey: '',
             multiSelection: [],
@@ -176,9 +204,9 @@ export default {
         ...mapGetters({
             projectData: 'projectInformation/projectData',
             projectLoan: 'projectInformation/projectLoan',
-            crmdepList: 'crmmanage/crmdepList',
-            punchList: 'projectInformation/punchList',
-            projectRecord: 'projectInformation/projectRecord'
+            crmdepList: 'crmmanage/crmdepList'
+            // punchList: 'projectInformation/punchList',
+            // projectRecord: 'projectInformation/projectRecord'
         })
     },
     async mounted () {
@@ -248,7 +276,7 @@ export default {
             this.queryParams.pageNumber = val.pageNumber
             this.searchList()
         },
-        async  searchList () {
+        async searchList () {
             this.queryParams.statusList = this.status.toString()
             this.queryParams.typeList = this.typeArr.toString()
             const { ...params } = this.queryParams
@@ -266,6 +294,19 @@ export default {
             // 分部下拉接口
             await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
             this.branchArr = this.crmdepList
+        },
+        getStatusList (key, docProgress) {
+            const map = STATUS_LIST.reduce((res, item) => {
+                res[item.key] = item
+                return res
+            }, {})
+            if (key == 3) {
+                // let label = docProgress == null ? map[key].value : `${map[key].value}进度：${docProgress * 100}%`
+                let label = docProgress == null ? map[key].value : `${map[key].value}进度：${this.$multipliedBy(docProgress, 100)}%`
+                return { value: label }
+            } else {
+                return map[key]
+            }
         }
     }
 }

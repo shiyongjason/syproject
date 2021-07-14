@@ -1,5 +1,5 @@
 <template>
-    <div class="page-body-cont">
+    <div>
         <el-table :data="tableData"
                   border
                   style="width: 100%">
@@ -12,6 +12,13 @@
                 prop="couponName"
                 align="center"
                 label="优惠券名称">
+            </el-table-column>
+            <el-table-column
+                align="center"
+                label="是否可叠加">
+                <template slot-scope="scope">
+                    {{scope.row.stackable ? '是' : '否'}}
+                </template>
             </el-table-column>
             <el-table-column
                 align="center"
@@ -52,7 +59,7 @@
                 label="活动范围">
                 <!--(1,全部会员店 2,部分会员店)-->
                 <template slot-scope="scope">
-                    {{scope.row.targetRange === 1 ? '全部会员店' : '部分会员店'}}
+                    {{scope.row.targetRange === 1 ? '全部归属会员店' : scope.row.targetRange === 2 ? '指定会员店' : '全部平台会员店'}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -75,11 +82,11 @@
                     <!--当审核状态=审核通过时，展示查看-->
                     <!--当审核状态=审核不通过时，展示查看-->
                     <!--2.进行中 3.未审核 4.已结束 5.未通过-->
-                    <el-button class="orangeBtn" v-if="scope.row.status === 3"
+                    <h-button table v-if="scope.row.status === 3"
                                @click="showDialog(scope.row.id,'review')">审核
-                    </el-button>
-                    <el-button class="orangeBtn" @click="showDialog(scope.row.id,'watch')">查看
-                    </el-button>
+                    </h-button>
+                    <h-button table @click="showDialog(scope.row.id,'watch')">查看
+                    </h-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -97,7 +104,7 @@
                 :total="paginationData.totalElements">
             </el-pagination>
         </div>
-        <el-dialog :title="dialogParams.title" :visible.sync="dialogParams.show" width="650px" center
+        <el-dialog :title="dialogParams.title" :visible.sync="dialogParams.show" width="680px" center
                    :close-on-click-modal="false">
             <el-form class="base" :inline="true">
                 <div>
@@ -107,8 +114,9 @@
                     </el-form-item>
                     <el-form-item label="活动范围：">
                         <!--目标范围(1,全部会员店 2,部分会员店)-->
-                        <span v-if="couponDetails.targetRange === 1">全部会员店</span>
-                        <span v-if="couponDetails.targetRange === 2">部分会员店</span>
+                        <span v-if="couponDetails.targetRange === 1">全部归属会员店</span>
+                        <span v-if="couponDetails.targetRange === 2">指定会员店</span>
+                        <span v-if="couponDetails.targetRange === 3">全部平台会员店</span>
                     </el-form-item>
                     <el-form-item label="优惠券名称：">
                         {{couponDetails.couponName}}
@@ -137,6 +145,9 @@
                     </el-form-item>
                     <el-form-item label="有效时间：">
                         {{couponDetails.effectiveStartDate}} - {{ couponDetails.effectiveEndDate }}
+                    </el-form-item>
+                    <el-form-item label="是否可叠加：">
+                        <span v-text="couponDetails.stackable ? '是' : '否'"></span>
                     </el-form-item>
                     <el-form-item label="活动规则：">
                         {{couponDetails.rule}}
@@ -189,11 +200,11 @@
                 </div>
                 <div class="suggest-btn">
                     <el-form-item v-if="dialogParams.type === 'review'">
-                        <el-button name="hosjoy-color" @click="createCouponReview">确认</el-button>
-                        <el-button name="white-color" @click="cancel">取消</el-button>
+                        <h-button type='primary' @click="createCouponReview">确认</h-button>
+                        <h-button @click="cancel">取消</h-button>
                     </el-form-item>
                     <el-form-item v-if="dialogParams.type === 'watch'">
-                        <el-button name="white-color" @click="close">关闭</el-button>
+                        <h-button @click="close">关闭</h-button>
                     </el-form-item>
                 </div>
             </el-form>

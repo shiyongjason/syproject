@@ -1,6 +1,6 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
+    <div class="page-body amount">
+        <div v-show="toggle" class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">
                     <div class="query-cont-title">分部：</div>
@@ -61,14 +61,26 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <el-button type="primary" @click="onSearch()">搜索
+                    <el-button type="primary" @click="onSearch">查询
+                    </el-button>
+                    <el-button type="default" @click="onReset">重置
+                    </el-button>
+                    <el-button type="default" @click="onExport">导出表格
                     </el-button>
                 </div>
             </div>
         </div>
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-body-cont">
-            <div class="page-table">
-                <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange" :showCheckAll='false'>
+            <div class="page-table" ref="hosTable">
+                <basicTable :max-height="computedHeight"
+                             :tableData="tableData"
+                             :tableLabel="tableLabel"
+                             :pagination="paginationData"
+                             @onCurrentChange="onCurrentChange"
+                             @onSizeChange="onSizeChange" :isMultiple="false"
+                             :isAction="false" :actionMinWidth=250
+                             @field-change="onFieldChange" :showCheckAll='false'>
                     <template slot="remark" slot-scope="scope">
                         <span v-if="scope.data.row.misCode == '合计'">-</span>
                         <span v-else>{{scope.data.row.remark ? scope.data.row.remark.substring(0, 6) + '...' : '-'}}<i class="el-icon-edit cursor" @click="onRemark(scope.data.row)"></i></span>
@@ -88,16 +100,18 @@
 </template>
 <script>
 import moment from 'moment'
-import { getEfficiencyList, updataRemark, getEfficiencyTotal } from './api/index.js'
+import { getEfficiencyList, updataRemark, getEfficiencyTotal, exportEfficiencyList } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState } from 'vuex'
 import { CAPITAL_EFFICIENCY_TABLE, ONLINESTATUS, HOSJOYINJECTION, FINANCIALSUPPORT } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
+import { getOldTableTop } from '@/utils/getTableTop'
 export default {
     name: 'capitalEfficiency',
-    mixins: [departmentAuth],
+    mixins: [departmentAuth, getOldTableTop],
     data () {
         return {
+            toggle: true,
             selectAuth: {
                 branchObj: {
                     selectCode: '',
@@ -118,7 +132,6 @@ export default {
             onlineStatus: ONLINESTATUS,
             hosjoyInjection: HOSJOYINJECTION,
             financialSupport: FINANCIALSUPPORT,
-            searchParams: {},
             queryParams: {
                 misCode: '',
                 subsectionCode: '',
@@ -170,18 +183,38 @@ export default {
     },
     async mounted () {
         this.onSearch()
+        this.countHeight()
         await this.newBossAuth()
         if (this.userInfo.deptType == 2) {
             this.queryParams.subsectionCode = this.branchList[0].pkDeptDoc
         }
+        this.queryParamsReset = { ...this.queryParams }
     },
     methods: {
+        onReset () {
+            this.queryParams = { ...this.queryParamsReset }
+            this.selectAuth = {
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            }
+            this.newBossAuth()
+            this.onSearch()
+        },
+        onExport () {
+            exportEfficiencyList(this.queryParamsTemp)
+        },
         async onSearch () {
-            this.searchParams = { ...this.queryParams }
+            this.queryParamsTemp = { ...this.queryParams }
             this.onQuery()
         },
         async onQuery () {
-            const promiseArr = [getEfficiencyList(this.searchParams), getEfficiencyTotal(this.searchParams)]
+            const promiseArr = [getEfficiencyList(this.queryParamsTemp), getEfficiencyTotal(this.queryParamsTemp)]
             var data = await Promise.all(promiseArr).then((res) => {
                 res[1].data.misCode = '合计'
                 res[0].data.records.unshift(res[1].data)
@@ -200,22 +233,40 @@ export default {
             if (!val.includes('平台公司')) {
                 this.disabled = true
                 this.queryParams.companyType = 2
+                this.tempCompanyQuery = {
+                    loanCompanyCode: this.queryParams.loanCompanyCode,
+                    loanCompanyName: this.queryParams.loanCompanyName,
+                    selectCode: this.selectAuth.platformObj.selectCode,
+                    selectName: this.selectAuth.platformObj.selectName,
+                    misCode: this.queryParams.misCode
+                }
                 this.queryParams.loanCompanyCode = ''
                 this.queryParams.loanCompanyName = ''
+                this.selectAuth.platformObj = {
+                    selectCode: '',
+                    selectName: ''
+                }
                 this.queryParams.misCode = ''
             } else {
                 this.disabled = false
                 this.queryParams.companyType = 1
+                this.queryParams.loanCompanyCode = this.tempCompanyQuery.loanCompanyCode
+                this.queryParams.loanCompanyName = this.tempCompanyQuery.loanCompanyName
+                this.queryParams.misCode = this.tempCompanyQuery.misCode
+                this.selectAuth.platformObj = {
+                    selectCode: this.tempCompanyQuery.selectCode,
+                    selectName: this.tempCompanyQuery.selectName
+                }
             }
             this.tableData = []
             this.onSearch()
         },
         onCurrentChange (val) {
-            this.searchParams.pageNumber = val.pageNumber
+            this.queryParamsTemp.pageNumber = val.pageNumber
             this.onQuery()
         },
         onSizeChange (val) {
-            this.searchParams.pageSize = val
+            this.queryParamsTemp.pageSize = val
             this.onQuery()
         },
         backPlat (val, dis) {
