@@ -1,8 +1,9 @@
 import { IPageRespBossB2bSkuPage } from '@/interface/hbp-shop'
 import axios, { AxiosPromise } from 'axios'
 
+/** 商品sku管理列表（拉取列表） */
 export const getSkuList: (params: any) => AxiosPromise<IPageRespBossB2bSkuPage> = (params) => {
-    return axios.get(`shop/api/skus/boss/sku/page`, { params })
+    return axios.get(`shop/api/skus/boss/main-sku/page`, { params })
 }
 
 // 拉取
