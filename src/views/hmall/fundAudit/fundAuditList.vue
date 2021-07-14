@@ -178,7 +178,7 @@ export default {
                 { label: '审核状态', prop: 'auditStatus' },
                 { label: '审核时间', prop: 'auditTime', formatters: 'dateTime' }
             ],
-            drawer: true,
+            drawer: false,
             fundId: '',
             form: {},
             rules: {
