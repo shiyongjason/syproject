@@ -79,6 +79,27 @@ export const editBanner:(params:any)=>AxiosPromise<void> = (params) => {
     return axios.put(`/shop/api/boss/banners`, params)
 }
 // 品类列表
-export const findCategories:(params:any)=>AxiosPromise<Shops.IPageBossFrontCategoryPageResponse> = (params) => {
-    return axios.get(`/shop/api/boss/front-categories/page`, { params })
+export const findCategories:(params:any)=>AxiosPromise<Shops.IPageBossFrontCategoryRecommendResponse> = (params) => {
+    return axios.get(`/shop/api/boss/front-category/recommends/page`, { params })
+}
+// 上移品类
+export const categoryMoveUp: (params:any) => AxiosPromise<void> = (params) => {
+    return axios.patch(`/shop/api/boss/front-category/recommends/${params}/move-up`)
+}
+// 下移
+export const categoryMoveDown: (params:any) => AxiosPromise<void> = (params) => {
+    return axios.patch(`/shop/api/boss/front-category/recommends/${params}/move-down`)
+}
+// 所有品类
+export const findCategoriesList:()=>AxiosPromise<Shops.BossFrontCategoryResponse> = () => {
+    return axios.get(`/shop/api/boss/front-categories/list`)
+}
+//  新增
+export const addCategory:(param:any)=>AxiosPromise<void> = (params) => {
+    return axios.post(`/shop/api/boss/front-category/recommends/add`, params)
+}
+
+// 取消推荐
+export const cancelCategory:(param:any)=>AxiosPromise<void> = (params) => {
+    return axios.post(`/shop/api/boss/front-category/recommends/cancel/${params}`)
 }

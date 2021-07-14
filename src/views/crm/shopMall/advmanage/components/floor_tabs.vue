@@ -4,7 +4,8 @@
         <div class="baner-btn mb20">
             <el-button type="primary" @click="onAddFloor">新增楼层</el-button>
         </div>
-        <hosJoyTable isShowIndex ref="hosjoyTable" align="center"  border stripe :column="tableLabel" :data="tableData" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
+        <hosJoyTable isShowIndex ref="hosjoyTable" align="center"  showPagination border stripe :column="tableLabel" :data="tableData"
+        :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onGetFloorPage" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
             <template #action="slotProps">
                     <h-button table @click="onLook(slotProps.data.row)">查看</h-button>
                     <h-button table v-if="slotProps.data.row.status==1||slotProps.data.row.status==3" @click="onEnable(slotProps.data.row)">启用</h-button>
@@ -85,6 +86,7 @@ export default class Floortabs extends Vue {
         async onGetFloorPage () {
             const { data } = await getFloorPage(this.queryParams)
             this.tableData = data.records
+            this.page.total = data.total as number
         }
 
         onDelete (val) {
