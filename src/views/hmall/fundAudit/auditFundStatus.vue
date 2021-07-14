@@ -122,7 +122,7 @@ export default {
                 { label: 'mis订单号', prop: 'misOrderNo' },
                 { label: '提交时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '代采订单总金额', prop: 'totalAmount' },
-                { label: '首付款', prop: 'prepayAmount' },
+                { label: '预付款', prop: 'prepayAmount' },
                 { label: '代付款金额', prop: 'retainageAmount' },
                 { label: '企业名称', prop: 'companyName' },
                 { label: '管理员账号', prop: 'username' },
