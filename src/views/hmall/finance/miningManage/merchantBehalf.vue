@@ -224,7 +224,10 @@ export default {
             userInfo: state => state.userInfo,
             applyList: state => state.hmall.finance.applyList,
             prepayList: state => state.hmall.finance.prepayList,
-            occupationList: state => state.hmall.finance.occupationList
+            occupationList: state => state.hmall.finance.occupationList,
+            applyAllInfo: state => state.hmall.finance.applyAllInfo,
+            prepayAllInfo: state => state.hmall.finance.prepayAllInfo,
+            occupationAllInfo: state => state.hmall.finance.occupationAllInfo
         }),
         page () {
             return this.$route.query.page
@@ -274,10 +277,13 @@ export default {
         tabParam (tabName) {
             if (tabName == 'apply') {
                 this.getApplyList()
+                this.getApplyAll()
             } else if (tabName == 'returned') {
                 this.getOccupationList()
+                this.getOccupationAll()
             } else if (tabName == 'pay' || tabName == 'occupy') {
                 this.getPrepayList()
+                this.getPrepayAll()
             }
         },
         // 重置
@@ -301,7 +307,10 @@ export default {
         ...mapActions({
             findApplyList: 'finance/findApplyList',
             findPrepayList: 'finance/findPrepayList',
-            findOccupationList: 'finance/findOccupationList'
+            findOccupationList: 'finance/findOccupationList',
+            findApplyAll: 'finance/findApplyAll',
+            findPrepayAll: 'finance/findPrepayAll',
+            findOccupationAll: 'finance/findOccupationAll'
         }),
         async getApplyList () {
             this.tableLabel = [
@@ -321,6 +330,9 @@ export default {
                 pageNumber: this.applyList.current,
                 pageSize: this.applyList.size
             }
+        },
+        async getApplyAll () {
+            await this.findApplyAll(this.queryParams)
         },
         async getPrepayList () {
             this.tableLabel = [
@@ -354,6 +366,14 @@ export default {
                 pageSize: this.prepayList.size
             }
         },
+        async getPrepayAll () {
+            if (this.tabName == 'pay') {
+                this.queryParams.type = 1
+            } else if (this.tabName == 'occupy') {
+                this.queryParams.type = 2
+            }
+            await this.findPrepayAll(this.queryParams)
+        },
         async getOccupationList () {
             this.tableLabel = [
                 { label: '管理员账号', prop: 'username' },
@@ -381,6 +401,9 @@ export default {
                 pageSize: this.occupationList.size
             }
         },
+        async getOccupationAll () {
+            await this.findOccupationAll(this.queryParams)
+        },
         // 合计
         getSum (param) {
             const { columns, data } = param
@@ -391,24 +414,11 @@ export default {
                         sums[index] = '合计'
                     }
                     if (column.property == 'creditLimit') {
-                        const values = data.map(item => {
-                            return Number(item[column.property])
-                        })
-                        if (!values.every(value => isNaN(value))) {
-                            sums[index] = values.reduce((prev, curr) => {
-                                const value = Number(curr)
-                                if (!isNaN(value)) {
-                                    return prev + curr
-                                } else {
-                                    return prev
-                                }
-                            }, 0)
-                            sums[index] = sums[index] ? sums[index] : '-'
-                            if (sums[index] && sums[index] != '-') {
-                                sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                            } else {
-                                sums[index] = '-'
-                            }
+                        sums[index] = this.applyAllInfo
+                        if (sums[index] && sums[index] != '-') {
+                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        } else {
+                            sums[index] = '-'
                         }
                     }
                 })
@@ -418,25 +428,52 @@ export default {
                     if (index == 0) {
                         sums[index] = '合计'
                     }
-                    if (column.property == 'totalAmount' || column.property == 'prepayAmount' || column.property == 'retainageAmount' || column.property == 'repayedAmount' || column.property == 'occupationAmount' || column.property == 'overdueAmount') {
-                        const values = data.map(item => {
-                            return Number(item[column.property])
-                        })
-                        if (!values.every(value => isNaN(value))) {
-                            sums[index] = values.reduce((prev, curr) => {
-                                const value = Number(curr)
-                                if (!isNaN(value)) {
-                                    return prev + curr
-                                } else {
-                                    return prev
-                                }
-                            }, 0)
-                            sums[index] = sums[index] ? sums[index] : '-'
-                            if (sums[index] && sums[index] != '-') {
-                                sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                            } else {
-                                sums[index] = '-'
-                            }
+                    if (column.property == 'totalAmount') {
+                        sums[index] = this.prepayAllInfo.totalAmount
+                        if (sums[index] && sums[index] != '-') {
+                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        } else {
+                            sums[index] = '-'
+                        }
+                    }
+                    if (column.property == 'prepayAmount') {
+                        sums[index] = this.prepayAllInfo.prepayAmount
+                        if (sums[index] && sums[index] != '-') {
+                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        } else {
+                            sums[index] = '-'
+                        }
+                    }
+                    if (column.property == 'retainageAmount') {
+                        sums[index] = this.prepayAllInfo.retaingeAmount
+                        if (sums[index] && sums[index] != '-') {
+                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        } else {
+                            sums[index] = '-'
+                        }
+                    }
+                    if (column.property == 'repayedAmount') {
+                        sums[index] = this.prepayAllInfo.repayedAmount
+                        if (sums[index] && sums[index] != '-') {
+                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        } else {
+                            sums[index] = '-'
+                        }
+                    }
+                    if (column.property == 'occupationAmount') {
+                        sums[index] = this.prepayAllInfo.occupationAmount
+                        if (sums[index] && sums[index] != '-') {
+                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        } else {
+                            sums[index] = '-'
+                        }
+                    }
+                    if (column.property == 'overdueAmount') {
+                        sums[index] = this.prepayAllInfo.overdueAmount
+                        if (sums[index] && sums[index] != '-') {
+                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        } else {
+                            sums[index] = '-'
                         }
                     }
                 })
@@ -447,24 +484,11 @@ export default {
                         sums[index] = '合计'
                     }
                     if (column.property == 'repayAmount') {
-                        const values = data.map(item => {
-                            return Number(item[column.property])
-                        })
-                        if (!values.every(value => isNaN(value))) {
-                            sums[index] = values.reduce((prev, curr) => {
-                                const value = Number(curr)
-                                if (!isNaN(value)) {
-                                    return prev + curr
-                                } else {
-                                    return prev
-                                }
-                            }, 0)
-                            sums[index] = sums[index] ? sums[index] : '-'
-                            if (sums[index] && sums[index] != '-') {
-                                sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                            } else {
-                                sums[index] = '-'
-                            }
+                        sums[index] = this.occupationAllInfo.repayAmount
+                        if (sums[index] && sums[index] != '-') {
+                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        } else {
+                            sums[index] = '-'
                         }
                     }
                 })

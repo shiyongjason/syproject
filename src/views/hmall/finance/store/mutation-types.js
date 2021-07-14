@@ -32,6 +32,12 @@ export const APPLY_LIST = 'APPLY_LIST'
 export const PREPAY_LIST = 'PREPAY_LIST'
 // 资金回款详情
 export const OCCUPATION_LIST = 'OCCUPATION_LIST'
+// 资金申请详情 合计
+export const APPLY_ALL_INFO = 'APPLY_ALL_INFO'
+// 资金代付,占用详情 合计
+export const PREPAY_ALL_INFO = 'PREPAY_ALL_INFO'
+// 资金回款详情 合计
+export const OCCUPATION_ALL_INFO = 'OCCUPATION_ALL_INFO'
 // 代采资金提现明细
 export const AGENT_CHARGE = 'AGENT_CHARGE'
 // 代采资金提现

@@ -72,13 +72,25 @@ export const findRepayStatist = (params) => {
 export const findApplyList = (params) => {
     return axios.get(`${B2bUrl}fund/boss/fund/apply`, { params })
 }
+// 资金申请详情 合计
+export const findApplyAll = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/fund/apply/statistics`, { params })
+}
 // 资金代付,占用详情
 export const findPrepayList = (params) => {
     return axios.get(`${B2bUrl}fund/boss/agent/order/occupation`, { params })
 }
+// 资金代付,占用详情 合计
+export const findPrepayAll = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/agent/order/occupation/statistics`, { params })
+}
 // 资金回款详情
 export const findOccupationList = (params) => {
     return axios.get(`${B2bUrl}fund/boss/repay`, { params })
+}
+// 资金回款详情 合计
+export const findOccupationAll = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/repay/finance/overview`, { params })
 }
 // 回款 资金同步
 export const syncFundMis = (id, params) => {
