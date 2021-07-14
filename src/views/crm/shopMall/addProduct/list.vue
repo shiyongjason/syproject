@@ -54,7 +54,7 @@
                 <template #action="slotProps">
                     <h-button table v-if="!slotProps.data.row.isPullAble" @click="()=>handlePull(slotProps.data.row.id)">拉取</h-button>
                     <span style="marginRight:10px" v-if="slotProps.data.row.isPullAble">已拉取</span>
-                    <h-button table v-if="slotProps.data.row.isPullAble" @click="()=>onEditor(slotProps.data.row.id)">编辑商品</h-button>
+                    <h-button table v-if="slotProps.data.row.isPullAble" @click="()=>onEditor(slotProps.data.row)">编辑商品</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -164,8 +164,8 @@ export default class ShopMallAddProduct extends Vue {
     }
 
     // Edit
-    onEditor (id) {
-        this.$router.push({ path: '/goodwork/commodityManagement/spuEdit', query: { id } })
+    onEditor (row) {
+        this.$router.push({ path: '/goodwork/commodityManagement/spuEdit', query: { id: row.id, spuCode: row.code } })
     }
 
     mounted () {
