@@ -490,6 +490,7 @@ export default {
             if (this.tabName == 'detail') {
                 this.queryParams.pageNumber = 1
                 this.getMerchant()
+                this.getMerchantAllInfo()
             } else if (this.tabName == 'record') {
                 if (this.recordTabName == 'isOnline') {
                     this.repayQueryParams.pageNumber = 1
@@ -642,6 +643,7 @@ export default {
         }),
         async getMerchant () {
             await this.findMerchant(this.queryParams)
+            this.getMerchantAllInfo()
         },
         async getMerchantStatistInfo () {
             await this.findMerchantStatist()
