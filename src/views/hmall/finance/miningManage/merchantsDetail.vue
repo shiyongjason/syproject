@@ -572,6 +572,14 @@ export default {
                             sums[index] = '-'
                         }
                     }
+                    if (column.property == 'totalAmount') {
+                        sums[index] = this.merchantAllInfo.totalAmount
+                        if (sums[index] && sums[index] != '-') {
+                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        } else {
+                            sums[index] = '-'
+                        }
+                    }
                     if (column.property == 'totalPrepayAmount') {
                         sums[index] = this.merchantAllInfo.prepayAmount
                         if (sums[index] && sums[index] != '-') {
