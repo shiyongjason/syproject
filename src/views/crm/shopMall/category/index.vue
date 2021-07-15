@@ -29,7 +29,7 @@
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <h-button table>编辑</h-button>
+                    <h-button table @click="onEdit(slotProps.data.row)">编辑</h-button>
                     <h-button table @click="onDelete(slotProps.data.row)">删除</h-button>
                     <h-button table>查看</h-button>
                     <h-button table v-if="slotProps.data.$index!=0" @click="onMove(slotProps.data.row,'up')">上移</h-button>
@@ -89,7 +89,7 @@ export default class Categroies extends Vue {
             { label: '类目信息', prop: 'categoryNameAndSpuNum' },
             { label: '创建时间', prop: 'createTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
             { label: '更新时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
-            { label: '更新人', prop: 'pdateBy' },
+            { label: '更新人', prop: 'updateBy' },
             { label: '品类上架数量', prop: 'onShelfSpuNum' }
         ]
         dialogData:any[] | [] = []
@@ -116,6 +116,10 @@ export default class Categroies extends Vue {
 
         onGoJump () {
             this.$router.push({ path: '/goodwork/advmanage' })
+        }
+
+        onEdit (val) {
+            this.$router.push({ path: '/goodwork/categoryedit', query: { id: val.id } })
         }
 
         async onDelete (val) {

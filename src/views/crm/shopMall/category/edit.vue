@@ -6,7 +6,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">品类名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.searchContent" placeholder="请输入支付单号" maxlength="50"></el-input>
+                        <el-input v-model="cateGoryForm.frontCategoryName" placeholder="请输入" maxlength="10"></el-input>
                     </div>
                 </div>
             </div>
@@ -14,15 +14,19 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">品类名称：</div>
                     <div class="query_tag">
-                        <p v-for="(item) in checkList" :key="item.id">{{item.pcategoryName}}>{{item.scategoryName}}>{{item.name}}</p>
+                        <el-tag :key="index" v-for="(item,index) in checkList" closable :disable-transitions="false" @close="handleClose(item,index)">
+                            {{item.pcategoryName}}>{{item.scategoryName}}>{{item.name}}
+                        </el-tag>
                     </div>
                 </div>
             </div>
             <div class="query-cont-row">
                 <div class="query-cont__col">
                     <div class="query-col__label">类名搜索：</div>
-                    <div class="query-col__input">
-                        <el-input v-model="queryParams.paymentOrderNo" placeholder="可输入类目名称、类目编码进行搜索" maxlength="50"></el-input>
+                    <div class="query-col__input" style="width:500px">
+                        <el-input v-model="queryParams.searchContent" placeholder="可输入类目名称、类目编码进行搜索" maxlength="50">
+                            <el-button slot="append" icon="el-icon-search" @click="getList"></el-button>
+                        </el-input>
                     </div>
                 </div>
 
@@ -30,15 +34,17 @@
             <!-- end search bar -->
             <div class="block">
                 <p>使用 scoped slot</p>
-                <el-tree :data="data" @check="onChecked" show-checkbox default-expand-all node-key="code" ref="tree" highlight-current :props=defaultProps>
-                    <!-- <span class="custom-tree-node" slot-scope="{ node, data }">
+                <el-tree :data="data" @check="onChecked" show-checkbox default-expand-all node-key="id" ref="tree" highlight-current :props=defaultProps>
+                    <span class="custom-tree-node" slot-scope="{data }">
                         <span>{{ data.name }}</span>
-                    </span> -->
+                        <span>{{ data.id }}</span>
+                        <span>{{ data.spuNumber }}</span>
+                    </span>
                 </el-tree>
             </div>
-            <el-button @click="getCheckedNodes">通过 key 获取</el-button>
-            <el-button @click="setCheckedNodes">通过 111 获取</el-button>
-
+            <div>
+                <el-button type="primary" @click="onSave">确定</el-button>
+            </div>
         </div>
     </div>
 </template>
@@ -47,7 +53,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 // import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
 import { CreateElement } from 'vue'
-import { getTreeCateGroy } from './api/index'
+import { getTreeCateGroy, addCateGroy, getCateGroyDetail } from './api/index'
 
 @Component({
     name: 'Categoryedit',
@@ -70,29 +76,32 @@ export default class Categoryedit extends Vue {
         queryParams:object={
             searchContent: ''
         }
-        data:any[] = [{
-            id: 1,
-            name: '一级 1',
-            children: [{
-                id: 4,
-                name: '二级 1-1',
-                children: [{
-                    id: 9,
-                    name: '三级 1-1-1'
-                }, {
-                    id: 10,
-                    name: '三级 1-1-2'
-                }]
-            }]
-        }]
-
+        data:any[] = []
         expandCell:any[]=[]
         // checkList:any[]|[]=[]  这里有个类型定义问题 never
         checkList:any[]=[]
-
+        cateGoryForm={
+            frontCategoryName: '',
+            categoryIdList: []
+        }
         async getList () {
             const { data } = await getTreeCateGroy(this.queryParams)
-            this.data = data
+            this.data = this.resolveData(data)
+        }
+
+        async getDetail () {
+            let _tags = []
+            const { data } = await getCateGroyDetail(this.$route.query.id)
+            data.bossCategorySpuDetailResponseList && data.bossCategorySpuDetailResponseList.length > 0 && data.bossCategorySpuDetailResponseList.map((item:any) => {
+                _tags.push(item.categoryId)
+            })
+            this.$nextTick(async () => {
+                console.log(_tags)
+                this.$refs['tree'].setCheckedKeys(_tags)
+                let _nodes = this.$refs['tree'].getCheckedNodes()
+                this.checkList = _nodes.filter((item) => item.level == 3)
+                console.log(this.checkList)
+            })
         }
 
         findUnques (arr) {
@@ -110,13 +119,39 @@ export default class Categoryedit extends Vue {
         getCheckedNodes () {
             console.log(this.$refs['tree'].getCheckedNodes())
         }
-        setCheckedNodes () {
-            this.$refs['tree'].setCheckedKeys(['010101'])
+
+        handleClose (item, index) {
+            let _tags = []
+            this.checkList.splice(index, 1)
+            let newTags = this.checkList.filter(val => item.id != val.id)
+            console.log(newTags)
+            newTags.map(item => {
+                _tags.push(item.id)
+            })
+            this.$refs['tree'].setCheckedKeys(_tags)
         }
-        onChecked (row, checked) {
-            console.log(row, checked)
+
+        async onSave () {
+            this.cateGoryForm.categoryIdList = []
+            this.checkList.map(item => {
+                this.cateGoryForm.categoryIdList.push(item.id)
+            })
+            if (!this.cateGoryForm.frontCategoryName) {
+                this.$message.warning('请输入品类名称')
+                return
+            }
+            if (this.cateGoryForm.categoryIdList.length == 0) {
+                this.$message.warning('请选择类目')
+                return
+            }
+
+            await addCateGroy(this.cateGoryForm)
+        }
+
+        onChecked (row, cnode) {
+            let checkedNodes = cnode.checkedNodes
+            this.checkList = checkedNodes.filter((item) => item.level == 3)
             // if (row.level == 1 && checked) {
-            //     console.log(1)
             //     row.subCategoryList.length > 0 && row.subCategoryList.map(item => {
             //         item.subCategoryList && item.subCategoryList.map(jtem => {
             //             this.checkList.push(jtem)
@@ -126,7 +161,6 @@ export default class Categoryedit extends Vue {
             //     row.subCategoryList.length > 0 && row.subCategoryList.map(item => {
             //         item.subCategoryList && item.subCategoryList.map(jtem => {
             //             let one = this.checkList.filter(val => jtem.id == val.id)
-            //             console.log(233, one)
             //             one.length > 0 && one.map(e => {
             //                 this.checkList.splice(this.checkList.indexOf(e), 1)
             //             })
@@ -143,11 +177,15 @@ export default class Categoryedit extends Vue {
             //         one.length > 0 && this.checkList.splice(this.checkList.indexOf(one[0]), 1)
             //     })
             // }
-            // if (row.level == 3 && checked) {
-            //     this.checkList.push(row)
-            // } else if (row.level == 3) {
+            // if (row.level == 3) {
+            //     console.log(333)
             //     let one = this.checkList.filter(val => row.id == val.id)
-            //     one.length > 0 && this.checkList.splice(this.checkList.indexOf(one[0]), 1)
+            //     console.log(one)
+            //     if (one.length > 0) {
+            //         this.checkList.splice(this.checkList.indexOf(one[0]), 1)
+            //     } else {
+            //         this.checkList.push(row)
+            //     }
             // }
             // console.log(this.findUnques(this.checkList))
         }
@@ -180,6 +218,9 @@ export default class Categoryedit extends Vue {
 
         mounted () {
             this.getList()
+            if (this.$route.query.id) {
+                this.getDetail()
+            }
         }
 }
 </script>
