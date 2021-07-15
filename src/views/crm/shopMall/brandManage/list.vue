@@ -49,11 +49,11 @@
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
                 <el-form-item label="品牌名称：" prop="brandName">
                     <el-input v-model="ruleForm.brandName" disabled v-if="!isShowDetail"></el-input>
-                    <span v-else>{{ruleForm.brandName||'-'}}</span>
+                    <span v-else style="line-height: 22px;display: inline-block;">{{ruleForm.brandName||'-'}}</span>
                 </el-form-item>
                 <el-form-item label="品牌编码：" prop="brandCode">
                     <el-input v-model="ruleForm.brandCode" disabled v-if="!isShowDetail"></el-input>
-                    <span v-else>{{ruleForm.brandName||'-'}}</span>
+                    <span v-else style="line-height: 22px;display: inline-block;">{{ruleForm.brandName||'-'}}</span>
                 </el-form-item>
                 <el-form-item label="品牌logo：" prop="brandLogoUrl">
                     <HosJoyUpload class="crmshopMallSpuEdit" :showUpload='!isShowDetail' v-model="ruleForm.brandLogoUrl" showCrop :multiple='false' :showPreView='true' :fileSize=2 :action='action' :fileNum='1' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' autoCropWidth='110' autoCropHeight='110' autoCrop fixedBox :original='false' full :enlarge="1" :outputSize="0.8" outputType="jpeg"/>
@@ -70,7 +70,7 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="onCloseDialog">取 消</el-button>
+                <el-button @click="handleClose">取 消</el-button>
                 <el-button type="primary" @click="onSubmit">确 定</el-button>
             </span>
         </el-dialog>
@@ -213,12 +213,6 @@ export default class brandManage extends Vue {
     ];
 
     // methods:::
-    onCloseDialog () {
-        this.dialogVisible = false
-        if (this.isShowDetail) {
-            this.isShowDetail = false
-        }
-    }
 
     async onGetDetail (d) {
         const { data } = await getBrands(d.brandId)
@@ -245,6 +239,10 @@ export default class brandManage extends Vue {
         })
     }
     onEdit (data) {
+        this.$nextTick(() => {
+            // @ts-ignore
+            this.$refs['ruleForm'].clearValidate()
+        })
         this.ruleForm = JSON.parse(JSON.stringify(data))
         if (this.ruleForm.brandLogoUrl) {
             this.ruleForm.brandLogoUrl = [{
@@ -267,6 +265,9 @@ export default class brandManage extends Vue {
     }
     handleClose () {
         this.dialogVisible = false
+        if (this.isShowDetail) {
+            this.isShowDetail = false
+        }
         let ruleForm:any = this.$refs['ruleForm']
         ruleForm.clearValidate()
     }
