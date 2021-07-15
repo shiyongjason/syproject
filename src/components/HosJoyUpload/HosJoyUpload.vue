@@ -68,7 +68,7 @@
             </span>
         </el-dialog>
         <template v-if="showCrop">
-            <el-dialog title='图片裁剪' width='1000px' center :visible.sync='croppervisible' :modal='false' append-to-body :close-on-press-escape='false' :close-on-click-modal='false' :before-close="handleCropClose">
+            <el-dialog title='图片裁剪' width='1000px' center :visible.sync='croppervisible' append-to-body :close-on-press-escape='false' :close-on-click-modal='false' :before-close="handleCropClose">
                 <div style='widrh:600px;height:450px'>
                     <component
                         ref="cropper"

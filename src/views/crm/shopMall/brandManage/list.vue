@@ -5,17 +5,17 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">品牌编码：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.xxx" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.brandCode" placeholder="请输入" maxlength="13" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">品牌名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.xxx" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.brandName" placeholder="请输入" maxlength="13" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <h-button type="primary">
+                    <h-button type="primary" @click="getList">
                         查询
                     </h-button>
                     <h-button @click="onReset">
@@ -47,28 +47,31 @@
         </el-dialog>
         <el-dialog title="修改品牌信息" :visible.sync="dialogVisible" width="850px" :before-close="handleClose" :close-on-click-modal='false' :close-on-press-escape='false'>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
-                <el-form-item label="品牌名称：" prop="name">
-                    <el-input v-model="ruleForm.name"></el-input>
+                <el-form-item label="品牌名称：" prop="brandName">
+                    <el-input v-model="ruleForm.brandName" disabled v-if="!isShowDetail"></el-input>
+                    <span v-else>{{ruleForm.brandName||'-'}}</span>
                 </el-form-item>
-                <el-form-item label="品牌编码：" prop="name">
-                    <el-input v-model="ruleForm.name"></el-input>
+                <el-form-item label="品牌编码：" prop="brandCode">
+                    <el-input v-model="ruleForm.brandCode" disabled v-if="!isShowDetail"></el-input>
+                    <span v-else>{{ruleForm.brandName||'-'}}</span>
                 </el-form-item>
-                <el-form-item label="品牌logo：" prop="name">
-                    <HosJoyUpload class="crmshopMallSpuEdit" v-model="ruleForm.banner" showCrop :multiple='false' :showPreView='true' :fileSize=2 :action='action' :fileNum='1' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' autoCropWidth='750' autoCropHeight='350' autoCrop fixedBox :original='false' full :enlarge="1" :outputSize="0.8" outputType="jpeg"/>
-                    <p>图片尺寸为750*350，不超过2M，仅支持jpeg、jpg、png格式</p>
-                </el-form-item>
-                <el-form-item label="品牌bannar：" prop="name">
-                    <HosJoyUpload class="crmshopMallSpuEdit" v-model="ruleForm.banner" showCrop :multiple='false' :showPreView='true' :fileSize=2 :action='action' :fileNum='1' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' autoCropWidth='110' autoCropHeight='110' autoCrop fixedBox :original='false' full :enlarge="1" :outputSize="0.8" outputType="jpeg"/>
+                <el-form-item label="品牌logo：" prop="brandLogoUrl">
+                    <HosJoyUpload class="crmshopMallSpuEdit" :showUpload='!isShowDetail' v-model="ruleForm.brandLogoUrl" showCrop :multiple='false' :showPreView='true' :fileSize=2 :action='action' :fileNum='1' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' autoCropWidth='110' autoCropHeight='110' autoCrop fixedBox :original='false' full :enlarge="1" :outputSize="0.8" outputType="jpeg"/>
                     <p>图片尺寸为110*110，不超过2M，仅支持jpeg、jpg、png格式</p>
                 </el-form-item>
-                <el-form-item label="品牌描述：" prop="name" >
-                    <el-input type="textarea" rows="4" class="remark" maxlength="250" v-model="ruleForm.name">
+                <el-form-item label="品牌bannar：" prop="brandBannerUrl">
+                    <HosJoyUpload class="crmshopMallSpuEdit" :showUpload='!isShowDetail' v-model="ruleForm.brandBannerUrl" showCrop :multiple='false' :showPreView='true' :fileSize=2 :action='action' :fileNum='1' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' autoCropWidth='750' autoCropHeight='350' autoCrop fixedBox :original='false' full :enlarge="1" :outputSize="0.8" outputType="jpeg"/>
+                    <p>图片尺寸为750*350，不超过2M，仅支持jpeg、jpg、png格式</p>
+                </el-form-item>
+                <el-form-item label="品牌描述：" prop="brandRemark" >
+                    <el-input type="textarea" rows="4" class="remark" maxlength="250" v-model="ruleForm.brandRemark" v-if="!isShowDetail">
                     </el-input>
+                    <span v-else style="line-height: 22px;display: inline-block;">{{ruleForm.brandRemark||'-'}}</span>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button @click="onCloseDialog">取 消</el-button>
+                <el-button type="primary" @click="onSubmit">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -79,10 +82,12 @@ import { Vue, Component, Prop, Watch, Ref } from 'vue-property-decorator'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import { ccpBaseUrl } from '@/api/config'
 import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
+import { getListApi, postBrands, getBrands } from './api'
+import { BrandDetailResponse, BrandShopExtendResponse } from '@/interface/hbp-shop'
 
 const _queryParams = {
-    xxx: '',
-    categoryIdArr: [],
+    brandCode: '',
+    brandName: '',
     pageNumber: 1,
     pageSize: 10
 }
@@ -93,42 +98,48 @@ const _queryParams = {
 export default class brandManage extends Vue {
     // action = ccpBaseUrl + 'common/files/upload-old'
     action = ccpBaseUrl + 'common/files/upload-base64'
-
-    dialogVisible:boolean = true
+    isShowDetail:boolean = false
+    dialogVisible:boolean = false
     uploadParameters = {
         updateUid: '',
         reservedName: false
     };
     queryParams: any = JSON.parse(JSON.stringify(_queryParams));
-    page = {
+    page:any = {
         sizes: [10, 20, 50, 100],
         total: 0
     };
     ruleForm: any = {
-        name: '',
-        banner: []
+        brandCode: '',
+        brandId: '',
+        brandLogoUrl: '',
+        brandName: '',
+        brandRemark: '',
+        id: '',
+        brandBannerUrl: ''
     };
-    tableData: any = [
-        {
-            name: '西门子啦啦啦啦啦西门子啦啦啦啦啦西门子啦啦啦啦啦',
-            pic: 'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
-        }
-    ];
+    tableData: BrandShopExtendResponse[]= []
     onSureDialog: boolean = false;
     onCancelDialog: boolean = false;
 
     rules = {
-        name: [
-            { required: true, message: 'xxxx', trigger: 'change' }
+        brandLogoUrl: [
+            { required: true, message: '必填项不能为空', trigger: 'change' }
+        ],
+        brandBannerUrl: [
+            { required: true, message: '必填项不能为空', trigger: 'change' }
+        ],
+        brandRemark: [
+            { required: true, message: '必填项不能为空', trigger: 'change' }
         ]
     }
     //  列表
     tableLabel: tableLabelProps = [
-        { label: '品牌编码', prop: 'name' },
-        { label: '品牌名称', prop: 'name', width: '260px' },
+        { label: '品牌编码', prop: 'brandCode' },
+        { label: '品牌名称', prop: 'brandName', width: '260px' },
         {
             label: '品牌banner',
-            prop: 'pic',
+            prop: 'brandBannerUrl',
             width: '180px',
             render: (h, scope) => {
                 return (
@@ -147,7 +158,7 @@ export default class brandManage extends Vue {
         },
         {
             label: '品牌logo',
-            prop: 'pic',
+            prop: 'brandLogoUrl',
             width: '120px',
             render: (h, scope) => {
                 return (
@@ -164,8 +175,28 @@ export default class brandManage extends Vue {
                 )
             }
         },
-        { label: '品牌介绍', prop: 'name', minWidth: '260px' },
-        { label: '类目信息', prop: 'name' },
+        { label: '品牌介绍', prop: 'brandRemark', minWidth: '260px' },
+        {
+            label: '类目信息',
+            prop: 'name',
+            render: (h, scope) => {
+                return (
+                    <div>
+                        {
+                            scope.row.categorySpuNumList && scope.row.categorySpuNumList.length > 0
+                                ? scope.row.categorySpuNumList.map(item => {
+                                    return (
+                                        <span>
+                                            {item.frontCategoryName}({item.spuNumber})
+                                        </span>
+                                    )
+                                })
+                                : '-'
+                        }
+                    </div>
+                )
+            }
+        },
         {
             label: '操作',
             width: '250px',
@@ -173,8 +204,8 @@ export default class brandManage extends Vue {
             render: (h, scope) => {
                 return (
                     <div>
-                        <h-button table>修改品牌信息</h-button>
-                        <h-button table>查看</h-button>
+                        <h-button table onClick={() => this.onEdit(scope.row)}>修改品牌信息</h-button>
+                        <h-button table onClick={() => this.onGetDetail(scope.row)}>查看</h-button>
                     </div>
                 )
             }
@@ -182,7 +213,58 @@ export default class brandManage extends Vue {
     ];
 
     // methods:::
+    onCloseDialog () {
+        this.dialogVisible = false
+        if (this.isShowDetail) {
+            this.isShowDetail = false
+        }
+    }
 
+    async onGetDetail (d) {
+        const { data } = await getBrands(d.brandId)
+        this.isShowDetail = true
+        this.onEdit(data)
+    }
+
+    async onSubmit () {
+        // @ts-ignore
+        this.$refs['ruleForm'].validate(async (value, r) => {
+            if (value) {
+                let query = JSON.parse(JSON.stringify(this.ruleForm))
+                if (query.brandLogoUrl.length > 0) {
+                    query.brandLogoUrl = query.brandLogoUrl[0].fileUrl
+                }
+                if (query.brandBannerUrl.length > 0) {
+                    query.brandBannerUrl = query.brandBannerUrl[0].fileUrl
+                }
+                await postBrands(query)
+                this.$message.success('修改成功')
+                this.dialogVisible = false
+                this.getList()
+            }
+        })
+    }
+    onEdit (data) {
+        this.ruleForm = JSON.parse(JSON.stringify(data))
+        if (this.ruleForm.brandLogoUrl) {
+            this.ruleForm.brandLogoUrl = [{
+                fileName: this.ruleForm.brandLogoUrl,
+                fileUrl: this.ruleForm.brandLogoUrl
+            }]
+        } else {
+            this.ruleForm.brandLogoUrl = []
+        }
+        if (this.ruleForm.brandBannerUrl) {
+            this.ruleForm.brandBannerUrl = [{
+                fileName: this.ruleForm.brandBannerUrl,
+                fileUrl: this.ruleForm.brandBannerUrl
+            }]
+        } else {
+            this.ruleForm.brandBannerUrl = []
+        }
+        console.log('🚀 --- onEdit --- this.ruleForm', this.ruleForm)
+        this.dialogVisible = true
+    }
     handleClose () {
         this.dialogVisible = false
         let ruleForm:any = this.$refs['ruleForm']
@@ -217,7 +299,11 @@ export default class brandManage extends Vue {
     }
 
     // getList
-    getList () {}
+    async getList () {
+        const { data } = await getListApi(this.queryParams)
+        this.tableData = data.records
+        this.page.total = data.total
+    }
 
     // 初始化数据
         fileList1= []
@@ -306,7 +392,9 @@ export default class brandManage extends Vue {
             console.log('postFrom', this.fileList1)
         }
 
-        mounted () {}
+        mounted () {
+            this.getList()
+        }
 }
 </script>
 <style lang='scss' scoped>

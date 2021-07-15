@@ -67,7 +67,8 @@ import { State, namespace, Getter, Action } from 'vuex-class'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import elImageAddToken from '@/components/elImageAddToken/index.vue'
 import { getSkuList, pullSku, bulkPullSku } from './api/index'
-import { RespBossB2bSkuPage } from '@/interface/hbp-shop'
+import { CategoryTreeResponse, RespBossB2bSkuPage } from '@/interface/hbp-shop'
+import { getTreeCateGroy } from '../productLibrary/api'
 const _queryParams = {
     name: '',
     brandName: '',
@@ -84,9 +85,15 @@ const _queryParams = {
 })
 export default class ShopMallAddProduct extends Vue {
     // @Ref('searchForm') readonly searchForm: ElForm;
-    @Getter('category/categoryOptions') categoryOptions: any
-    @Action('category/findAllCategory') findAllCategory: Function
-    props = { multiple: true }
+    // @Getter('category/categoryOptions') categoryOptions: any
+    // @Action('category/findAllCategory') findAllCategory: Function
+    categoryOptions:CategoryTreeResponse[] = []
+    props = {
+        multiple: true,
+        children: 'subCategoryList',
+        label: 'name',
+        value: 'code'
+    }
     queryParams: typeof _queryParams = JSON.parse(JSON.stringify(_queryParams))
     page:any = {
         sizes: [10, 20, 50, 100],
@@ -133,9 +140,13 @@ export default class ShopMallAddProduct extends Vue {
     // getList
     async getList () {
         let query = JSON.parse(JSON.stringify(this.queryParams))
+        let temp = []
         if (query.categoryIds.length > 0) {
-            query.categoryIds = query.categoryIds.toString()
+            query.categoryIds.map(item => {
+                temp.push(item[item.length - 1])
+            })
         }
+        query.categoryIds = temp.toString()
         const { data } = await getSkuList(query)
         this.tableData = data.records
         this.page.total = data.total
@@ -168,8 +179,9 @@ export default class ShopMallAddProduct extends Vue {
         this.$router.push({ path: '/goodwork/commodityManagement/spuEdit', query: { id: row.id, spuCode: row.code } })
     }
 
-    mounted () {
-        this.findAllCategory()
+    async mounted () {
+        const { data } = await getTreeCateGroy({ searchContent: '' })
+        this.categoryOptions = data
         this.getList()
     }
 }

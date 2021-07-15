@@ -65,7 +65,8 @@ export default class Categoryedit extends Vue {
         }
         defaultProps={
             children: 'subCategoryList',
-            label: 'name'
+            label: 'name',
+            value: 'code'
         }
         queryParams:object={
             searchContent: ''
