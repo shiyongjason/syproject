@@ -17,7 +17,7 @@
     }
     /deep/.default-pre-view{
         margin-top: 0px;
-        margin-right: 0px;
+        // margin-right: 0px;
     }
 }
 /deep/.vicepics{
@@ -86,8 +86,7 @@
 }
 .submit-btns{
     margin:50px 0 30px;
-    display: flex;
-    justify-content: space-between;
+    text-align: center;
 }
 .tipsDialog{
     /deep/.el-dialog__body{
@@ -103,4 +102,15 @@
         width: unset;
     }
     
+}
+.productPicture{
+    /deep/.preViewExtends{
+        user-select: none;color: #ffffff;font-size: 12px;flex: 0 0 48px;text-align: center;display: flex;flex-direction: column;align-items: center;
+    }
+    /deep/.mainpic{
+        margin-left:36px;
+    }
+    /deep/.sidepic{
+        margin-left: 95px;
+    }
 }

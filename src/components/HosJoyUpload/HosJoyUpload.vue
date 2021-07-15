@@ -6,6 +6,7 @@
                     <div class="default-pre-view-warp">
                         <div class="default-pre-view-mask">
                             <i class="el-icon-zoom-in" style="color:#fff" @click="open(index,item)"></i>
+                            <slot name="preViewExtends" :data="{index,data:item}"></slot>
                             <i v-if="showUpload" class="el-icon-delete-solid" style="color:#fff" @click="remove(index)"></i>
                         </div>
                     </div>
@@ -48,7 +49,7 @@
                         <div class="default-upload-icon">
                             <i class="el-icon-upload"></i>
                             <span>点击或拖拽到这上传</span>
-                            <span v-if="multiple" style="margin-top:3px">（支持多图）</span>
+                            <span v-if="multiple" style="margin-top:5px">（支持多图）</span>
                         </div>
                     </div>
                 </slot>
