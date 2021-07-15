@@ -102,7 +102,6 @@ export default {
             this.onQuery()
         },
         onDetail (val) {
-            console.log(val)
             this.$router.push({
                 path: '/comfortcloud/equipmentOverview/deviceDetail',
                 query: {
@@ -121,7 +120,6 @@ export default {
             this.$router.push('/comfortCloud/equipmentOverview/unbindRecord')
         },
         async conformUnbind () {
-            console.log(this.userInfo)
             if (this.currentDevice) {
                 if (this.unBindDesc.length === 0) {
                     this.$message.error('请输入解绑备注')
@@ -131,6 +129,7 @@ export default {
                     iotId: this.currentDevice.iotId,
                     operator: this.userInfo.employeeName,
                     phone: this.currentDevice.phone,
+                    operatorPhone: this.userInfo.phoneNumber,
                     remark: this.unBindDesc,
                     typeName: this.currentDevice.typeName
                 }
