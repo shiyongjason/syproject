@@ -2063,6 +2063,9 @@ export default {
     /deep/.el-slider__marks-text{
         font-size: 12px;
     }
+    /deep/.el-slider__marks-text{
+        width:40px !important
+    }
 }
 .vsList {
     padding: 20px;
@@ -2174,4 +2177,5 @@ export default {
         }
     }
 }
+
 </style>
