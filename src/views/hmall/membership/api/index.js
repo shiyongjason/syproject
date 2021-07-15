@@ -23,7 +23,7 @@ export const putMerchantDetail = (params) => {
 // 分部列表
 export const findBrandsList = (params) => {
     // return axios.get(B2bUrl + 'common/api/organizations/branches', { params })
-    return axios.get('https://hbp.hosjoy.com/common/api/organizations/branches', { params })
+    return axios.get('https://b2b-gateway.hosjoy.com/common/api/organizations/branches', { params })
     // return axios.get('https://b2b-gateway-test.hosjoy.com/common/api/organizations/branches', { params })// 临时解决环境245环境无法获取分部，上线打包前需要切回原来代码
 }
 
