@@ -178,7 +178,7 @@ export default {
                 { label: '审核状态', prop: 'auditStatus' },
                 { label: '审核时间', prop: 'auditTime', formatters: 'dateTime' }
             ],
-            drawer: false,
+            drawer: true,
             fundId: '',
             form: {},
             rules: {
@@ -202,7 +202,7 @@ export default {
                     {
                         required: true,
                         validator: (rule, value, callback) => {
-                            const reg = /^(([0-9])|([1-9][0-9]{1})|100)$/
+                            const reg = /^(([1-9])|([1-9][0-9]{1})|100)$/
                             if (!value || value == '') {
                                 return callback(new Error('请输入比例'))
                             }
