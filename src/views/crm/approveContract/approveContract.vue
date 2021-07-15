@@ -718,7 +718,7 @@ export default {
          */
         onServiceFee (flage = false, _serviceFeeEstimate = '', _loanMonth = '') {
             return new Promise((resolve, reject) => {
-                // 务费分期表格 purch_service_fee_form // 采购批次：purch_order_purch_batch
+                // 务费分期表格 purch_service_fee_form  // 采购批次：purch_order_purch_batch
                 // service_fee_estimate 服务费预计 / loan_month 剩余货款支付周期
                 let serviceFeeEstimate = _serviceFeeEstimate || this.contractFieldsList.filter(item => item.paramKey === 'service_fee_estimate')[0]
                 let loanMonth = _loanMonth || this.contractFieldsList.filter(item => item.paramKey === 'loan_month')[0]
