@@ -136,7 +136,7 @@
                     <h-button type="primary" @click="distributorSubmit">确定</h-button>
                 </span>
             </el-dialog>
-            <el-dialog title="新增线索" :close-on-click-modal='false' :visible.sync="threadVisible" width="50%" :before-close="clearthreadFormData">
+            <el-dialog title="新增客户线索" :close-on-click-modal='false' :visible.sync="threadVisible" width="50%" :before-close="clearthreadFormData">
                 <el-form :model="threadForm" :rules="rules" ref="threadForm" label-width="130px">
                     <div class="add-cont__row">
                         <el-form-item prop='userMobile' label="客户手机号：">
