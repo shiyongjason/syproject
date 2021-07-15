@@ -167,7 +167,7 @@
                         </hosjoyUpload>
                     </div>
                     <div style="margin-bottom:10px;margin-top:-30px;text-indent: 3px;" v-if='imgArr.length > 1'>{{`+${imgArr.length-1} 张图 (多图)`}}</div>
-                    <div v-if="serviceFee" v-show='showServiceFee' v-html="serviceFee" style="margin-bottom:20px;margin-top:-10px;"></div>
+                    <div v-if="serviceFee" v-show='showServiceFee' v-html="serviceFee" style="margin-bottom:20px;margin-top:-10px;overflow-x: scroll;"></div>
                     <!-- <h-button v-if="imgArr.length == 0 && isRenderUpload&&currentKey.inputStyle==9&&!currentKey.required&&currentKey.paramValue" style="margin-top:10px" @click="emptyTheImg" type="editor">清空该图片</h-button> -->
                     <h-button v-if="imgArr.length == 0 && isRenderUpload && currentKey.inputStyle == 9 && currentKey.paramValue" style="margin-top:10px" @click="emptyTheImg" type="editor">清空该图片</h-button>
                     <h-button @click="onSaveContent('')" type="primary">保存</h-button>
@@ -584,9 +584,9 @@ export default {
                         bind: {
                             value: Number(this.currentKey.paramValue),
                             step: 1,
-                            max: 6,
+                            max: this.currentKey.paramKey == 'loan_month' ? 12 : 6,
                             min: 3,
-                            marks: { 3: '3个月', 4: '4个月', 5: '5个月', 6: '6个月' },
+                            marks: { 3: '3个月', 4: '4个月', 5: '5个月', 6: '6个月', 7: '7个月', 8: '8个月', 9: '9个月', 10: '10个月', 11: '11个月', 12: '12个月' },
                             style: { marginBottom: '30px' },
                             showTooltip: false
                         },
@@ -718,7 +718,7 @@ export default {
          */
         onServiceFee (flage = false, _serviceFeeEstimate = '', _loanMonth = '') {
             return new Promise((resolve, reject) => {
-                // 务费分期表格 purch_service_fee_form // 采购批次：purch_order_purch_batch
+                // 务费分期表格 purch_service_fee_form  // 采购批次：purch_order_purch_batch
                 // service_fee_estimate 服务费预计 / loan_month 剩余货款支付周期
                 let serviceFeeEstimate = _serviceFeeEstimate || this.contractFieldsList.filter(item => item.paramKey === 'service_fee_estimate')[0]
                 let loanMonth = _loanMonth || this.contractFieldsList.filter(item => item.paramKey === 'loan_month')[0]
@@ -730,7 +730,7 @@ export default {
                     return
                 }
                 let tableItem = this.$dividedBy(serviceFeeEstimate.paramValue, loanMonth.paramValue).toFixed(2)
-                const dayObj = { 0: '第一期', 1: '第二期', 2: '第三期', 3: '第四期', 4: '第五期', 5: '第六期' }
+                const dayObj = { 0: '第一期', 1: '第二期', 2: '第三期', 3: '第四期', 4: '第五期', 5: '第六期', 6: '第七期', 7: '第八期', 8: '第九期', 9: '第十期', 10: '第十一期', 11: '第十二期' }
                 // 表格数据渲染成服务费表格div
                 let tableHead = `<span style="border-top: 1px solid #3a3a3a; float: left; height: 80px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; width: 110px; word-break: break-all; padding: 0 3px; font-size: 13px; line-height: 80px; text-align: center;">支付日期</span>`
                 let tableBody = `<span style="float: left; height: 80px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; width: 110px; word-break: break-all; padding: 0 3px; font-size: 13px; line-height: 80px; text-align: center;">支付金额</span>`
@@ -2059,6 +2059,9 @@ export default {
     }
     /deep/.el-form-item {
         margin-bottom: 15px;
+    }
+    /deep/.el-slider__marks-text{
+        font-size: 12px;
     }
 }
 .vsList {

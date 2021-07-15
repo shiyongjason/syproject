@@ -59,7 +59,7 @@
                     </el-input>
                 </el-form-item>
                 <template v-if="check">
-                    <el-form-item label="订单最终回款日期：" prop="period" :rules="form.status=='20'?rules.period:falseRules.period">
+                    <el-form-item label="订单最终回款期限：" prop="period" :rules="form.status=='20'?rules.period:falseRules.period">
                         <el-input class="form-input_big" v-model="form.period" maxlength="10">
                             <template slot="suffix">天</template>
                         </el-input>

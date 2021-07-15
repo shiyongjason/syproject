@@ -176,6 +176,14 @@ export const UNIT_MAP = new Map([
     [4, '套']
 ])
 // 资金同步状态
+export const FUND_SYNC_STATUS_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '未同步', value: '10' },
+    { label: '同步中', value: '20' },
+    { label: '同步失败', value: '30' },
+    { label: '同步成功', value: '40' },
+    { label: '不处理', value: '50' }
+]
 export const FUND_SYNC_STATUS_MAP = new Map([
     [40, '同步成功'],
     [10, '未同步'],
