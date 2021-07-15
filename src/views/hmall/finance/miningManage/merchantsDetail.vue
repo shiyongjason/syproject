@@ -452,8 +452,8 @@ export default {
             this.getMerchant()
             this.getRepayStatist()
             this.getOnlineRepay()
-            this.getOfflineRepay()
-            this.getPrepayRepay()
+            // this.getOfflineRepay()
+            // this.getPrepayRepay()
             this.getMerchantStatistInfo()
             this.getMerchantAllInfo()
             this.getRepayAll()
@@ -673,6 +673,8 @@ export default {
                 pageNumber: this.onlineRepayList.current,
                 pageSize: this.onlineRepayList.size
             }
+            this.repayQueryParams.type = 1
+            this.getRepayAll()
         },
         async getOfflineRepay () {
             this.tableLabel = [
@@ -694,6 +696,8 @@ export default {
                 pageNumber: this.offlineRepayList.current,
                 pageSize: this.offlineRepayList.size
             }
+            this.repayQueryParams.type = 2
+            this.getRepayAll()
         },
         async getPrepayRepay () {
             this.tableLabel = [
@@ -715,6 +719,8 @@ export default {
                 pageNumber: this.prepayRepayList.current,
                 pageSize: this.prepayRepayList.size
             }
+            this.repayQueryParams.type = 3
+            this.getRepayAll()
         },
         async getRepayAll () {
             if (this.recordTabName == 'isOnline') {
