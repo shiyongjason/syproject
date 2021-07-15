@@ -1,6 +1,6 @@
 
 import * as types from './mutation-types'
-import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo, findFreightOrders, findFreightInfo, findFreightList, findFreightBankAccountInfo, findFreightWithdrawal, findFreightBankCardInfo, findOnlinefreightList, findBankInfo, findMerchant, findMerchantStatist, findMerchantAll, findOnlineRepay, findOfflineRepay, findPrepayRepay, findRepayStatist, findApplyList, findPrepayList, findOccupationList, findApplyAll, findPrepayAll, findOccupationAll, findAgentCharge, findAgentCashWithdrawal, findAgentBankAccountInfo, findAgentBankCardInfo } from '../api'
+import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo, findFreightOrders, findFreightInfo, findFreightList, findFreightBankAccountInfo, findFreightWithdrawal, findFreightBankCardInfo, findOnlinefreightList, findBankInfo, findMerchant, findMerchantStatist, findMerchantAll, findOnlineRepay, findOfflineRepay, findPrepayRepay, findRepayStatist, findApplyList, findPrepayList, findOccupationList, findApplyAll, findPrepayAll, findOccupationAll, findAgentCharge, findAgentCashWithdrawal, findAgentBankAccountInfo, findAgentBankCardInfo, findRepayAll } from '../api'
 
 const state = {
     // 服务费收取明细
@@ -31,6 +31,8 @@ const state = {
     offlineRepayList: [],
     // 交易记录预付款
     prepayRepayList: [],
+    // 交易记录线上回款 线下回款 预付款 合计
+    repayAll: {},
     // 交易记录统计
     repayStatistInfo: {},
     // 资金申请详情
@@ -105,7 +107,8 @@ const getters = {
     freightWithdrawalInfo: state => state.freightWithdrawalInfo,
     freightBankCardInfo: state => state.freightBankCardInfo,
     onlinefreightList: state => state.onlinefreightList,
-    bankInfo: state => state.bankInfo
+    bankInfo: state => state.bankInfo,
+    repayAll: state => state.repayAll
 }
 
 const mutations = {
@@ -204,6 +207,9 @@ const mutations = {
     },
     [types.BANK_INFO] (state, payload) {
         state.bankInfo = payload
+    },
+    [types.REPAY_ALL] (state, payload) {
+        state.repayAll = payload
     }
 }
 
@@ -335,6 +341,10 @@ const actions = {
     async findBankInfo ({ commit }, params) {
         const { data } = await findBankInfo(params)
         commit(types.BANK_INFO, data)
+    },
+    async findRepayAll ({ commit }, params) {
+        const { data } = await findRepayAll(params)
+        commit(types.REPAY_ALL, data)
     }
 }
 

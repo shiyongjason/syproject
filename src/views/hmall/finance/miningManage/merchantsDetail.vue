@@ -351,6 +351,7 @@ export default {
                 { label: '资金状态', prop: 'fundStatus' }
             ],
             repayQueryParams: {
+                type: '1',
                 status: '',
                 startTime: '',
                 endTime: '',
@@ -432,7 +433,8 @@ export default {
             onlineRepayList: state => state.hmall.finance.onlineRepayList,
             offlineRepayList: state => state.hmall.finance.offlineRepayList,
             prepayRepayList: state => state.hmall.finance.prepayRepayList,
-            repayStatistInfo: state => state.hmall.finance.repayStatistInfo
+            repayStatistInfo: state => state.hmall.finance.repayStatistInfo,
+            repayAll: state => state.hmall.finance.repayAll
         }),
         paginationDetail () {
             return {
@@ -454,6 +456,7 @@ export default {
             this.getPrepayRepay()
             this.getMerchantStatistInfo()
             this.getMerchantAllInfo()
+            this.getRepayAll()
         },
         onTab () {
             this.queryParams = { ...this.resetParams }
@@ -471,12 +474,15 @@ export default {
             if (this.recordTabName == 'isOnline') {
                 this.repayQueryParams.pageNumber = 1
                 this.getOnlineRepay()
+                this.getRepayAll()
             } else if (this.recordTabName == 'isOffline') {
                 this.repayQueryParams.pageNumber = 1
                 this.getOfflineRepay()
+                this.getRepayAll()
             } else if (this.recordTabName == 'isAdvance') {
                 this.repayQueryParams.pageNumber = 1
                 this.getPrepayRepay()
+                this.getRepayAll()
             }
             this.onReset()
         },
@@ -613,24 +619,11 @@ export default {
                         sums[index] = '合计'
                     }
                     if (column.property == 'amount') {
-                        const values = data.map(item => {
-                            return Number(item[column.property])
-                        })
-                        if (!values.every(value => isNaN(value))) {
-                            sums[index] = values.reduce((prev, curr) => {
-                                const value = Number(curr)
-                                if (!isNaN(value)) {
-                                    return prev + curr
-                                } else {
-                                    return prev
-                                }
-                            }, 0)
-                            sums[index] = sums[index] ? sums[index] : '-'
-                            if (sums[index] && sums[index] != '-') {
-                                sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                            } else {
-                                sums[index] = '-'
-                            }
+                        sums[index] = this.repayAll
+                        if (sums[index] && sums[index] != '-') {
+                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        } else {
+                            sums[index] = '-'
                         }
                     }
                 })
@@ -644,7 +637,8 @@ export default {
             findOnlineRepay: 'finance/findOnlineRepay',
             findOfflineRepay: 'finance/findOfflineRepay',
             findPrepayRepay: 'finance/findPrepayRepay',
-            findRepayStatist: 'finance/findRepayStatist'
+            findRepayStatist: 'finance/findRepayStatist',
+            findRepayAll: 'finance/findRepayAll'
         }),
         async getMerchant () {
             await this.findMerchant(this.queryParams)
@@ -669,6 +663,7 @@ export default {
                 { label: '回款代采订单号', prop: 'agentOrderNo' },
                 { label: 'MIS订单号', prop: 'misOrderNo' }
             ]
+            this.repayQueryParams.type = 1
             await this.findOnlineRepay(this.repayQueryParams)
             this.tableData = this.onlineRepayList.records
             this.pagination = {
@@ -689,6 +684,7 @@ export default {
                 { label: '回款代采订单号', prop: 'agentOrderNo' },
                 { label: 'MIS订单号', prop: 'misOrderNo' }
             ]
+            this.repayQueryParams.type = 2
             await this.findOfflineRepay(this.repayQueryParams)
             this.tableData = this.offlineRepayList.records
             this.pagination = {
@@ -709,6 +705,7 @@ export default {
                 { label: '代采订单号', prop: 'agentOrderNo' },
                 { label: 'MIS订单号', prop: 'misOrderNo' }
             ]
+            this.repayQueryParams.type = 3
             await this.findPrepayRepay(this.repayQueryParams)
             this.tableData = this.prepayRepayList.records
             this.pagination = {
@@ -716,6 +713,16 @@ export default {
                 pageNumber: this.prepayRepayList.current,
                 pageSize: this.prepayRepayList.size
             }
+        },
+        async getRepayAll () {
+            if (this.recordTabName == 'isOnline') {
+                this.repayQueryParams.type = 1
+            } else if (this.recordTabName == 'isOffline') {
+                this.repayQueryParams.type = 2
+            } else if (this.recordTabName == 'isAdvance') {
+                this.repayQueryParams.type = 3
+            }
+            await this.findRepayAll(this.repayQueryParams)
         }
     },
     mounted () {
