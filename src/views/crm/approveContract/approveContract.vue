@@ -584,7 +584,7 @@ export default {
                         bind: {
                             value: Number(this.currentKey.paramValue),
                             step: 1,
-                            max: 12,
+                            max: this.currentKey.paramKey == 'loan_month' ? 12 : 6,
                             min: 3,
                             marks: { 3: '3个月', 4: '4个月', 5: '5个月', 6: '6个月', 7: '7个月', 8: '8个月', 9: '9个月', 10: '10个月', 11: '11个月', 12: '12个月' },
                             style: { marginBottom: '30px' },
