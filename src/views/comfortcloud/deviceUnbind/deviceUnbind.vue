@@ -130,7 +130,7 @@ export default {
                 const params = {
                     iotId: this.currentDevice.iotId,
                     operator: this.userInfo.employeeName,
-                    phone: this.userInfo.phoneNumber,
+                    phone: this.currentDevice.phone,
                     remark: this.unBindDesc,
                     typeName: this.currentDevice.typeName
                 }
