@@ -12,6 +12,7 @@
                     <el-form-item label="商品型号：" style="width: 460px;">
                         {{form.model || '-'}}
                     </el-form-item>
+                    <div class="show-err" v-if="form.priceVisible==null"></div>
                     <el-form-item label="商品类目：" style="width: 460px;">
                         {{form.categoryPath || '-'}}
                     </el-form-item>
@@ -339,8 +340,10 @@ export default class SpuEdit extends Vue {
                 this.$message.success('编辑成功')
                 this.onBack()
             } else {
+                this.$message.error('必填项不得为空~')
                 this.$nextTick(() => {
-                    const dom = document.querySelector('.is-error')
+                    let className = this.form.priceVisible == null ? '.show-err' : '.is-error'
+                    const dom = document.querySelector(className)
                     dom && dom.scrollIntoView()
                 })
             }
