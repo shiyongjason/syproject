@@ -322,6 +322,9 @@ export default class SpuEdit extends Vue {
 
     async compore (row, index) {
         console.log('🚀 --- compore --- row', row)
+        if (!row.minSalePrice || !row.maxSalePrice) {
+            return
+        }
         let from:any = this.$refs.formmain
         let isError = false
         if (row.minSalePrice !== null) {
@@ -342,6 +345,7 @@ export default class SpuEdit extends Vue {
             return
         }
         from.validateField(`skuList.${index}.maxSalePrice`)
+        // sub
         row.minSalePrice = isNum(row.minSalePrice, 2)
         row.maxSalePrice = isNum(row.maxSalePrice, 2)
         if (row.minSalePrice * 1 > 100000000) {
@@ -350,23 +354,20 @@ export default class SpuEdit extends Vue {
         if (row.maxSalePrice * 1 > 100000000) {
             row.maxSalePrice = 100000000
         }
-        await putSKU(
-            {
-                'id': row.id,
-                'minSalePrice': row.minSalePrice || '',
-                'maxSalePrice': row.maxSalePrice || '',
-                'updateBy': this.userInfo.employeeName,
-                'updatePhone': this.userInfo.phoneNumber
-            }
-        )
+        // await putSKU(
+        //     {
+        //         'id': row.id,
+        //         'minSalePrice': row.minSalePrice,
+        //         'maxSalePrice': row.maxSalePrice,
+        //         'updateBy': this.userInfo.employeeName,
+        //         'updatePhone': this.userInfo.phoneNumber
+        //     }
+        // )
     }
 
     // 列表选择
     selectChange (val:any[]) {
-        this.Selection = []
-        val.map(i => {
-            this.Selection.push(i.id)
-        })
+        this.Selection = val
     }
     onCloseDialog () {
         console.log('log::::::before-close')
@@ -376,17 +377,28 @@ export default class SpuEdit extends Vue {
         this.queryParams = JSON.parse(JSON.stringify(_queryParams))
         this.dialogTableVisible = false
     }
+    // 确认新增sku
     async onChooseSku () {
         if (this.Selection.length == 0) {
             this.$message.error('请选择要新增的SKU')
             return
         }
         try {
-            await bulkPullSku({ skuIds: this.Selection }) // 拉取
+            // await bulkPullSku({ skuIds: this.Selection }) // 拉取
+            console.log('log::::::', this.Selection)
+            this.Selection.map(item => {
+                let obj = {
+                    id: '',
+                    mainSkuId: item.id,
+                    minSalePrice: '',
+                    maxSalePrice: ''
+                }
+            })
             let ref:any = this.$refs.hosjoyTableSKU
             ref.clearSelection()
             this.dialogTableVisible = false
             this.Selection = []
+            // 刷新列表
             this.onReloadTable()
         } catch (error) {
             console.log('error::::::', error)

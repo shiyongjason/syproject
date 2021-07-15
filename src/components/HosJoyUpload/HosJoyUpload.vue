@@ -509,8 +509,14 @@ export default {
         opacity: 0;
     }
     &-mask:hover {
-        cursor: pointer;
+        // cursor: pointer;
         opacity: 1;
+    }
+    &-mask:hover {
+        i{
+         cursor: pointer;
+        }
+
     }
     &-image {
         width: 120px;

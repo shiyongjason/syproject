@@ -105,7 +105,15 @@
 }
 .productPicture{
     /deep/.preViewExtends{
-        user-select: none;color: #ffffff;font-size: 12px;flex: 0 0 48px;text-align: center;display: flex;flex-direction: column;align-items: center;
+        cursor: pointer;
+        user-select: none;
+        color: #ffffff;
+        font-size: 12px;
+        flex: 0 0 48px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
     /deep/.mainpic{
         margin-left:36px;
