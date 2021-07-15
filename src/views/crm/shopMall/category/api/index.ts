@@ -27,3 +27,12 @@ export const getComfirCateGory: (params:any) => AxiosPromise<Shops.BossFrontCate
 export const getTreeCateGroy: (params:any) => AxiosPromise<Shops.CategoryTreeResponse[]> = (params) => {
     return axios.get(`/shop/api/categories/tree`, { params })
 }
+
+// 新增品类
+export const addCateGroy: (params:any) => AxiosPromise<void> = (params) => {
+    return axios.post(`/shop/api/boss/front-categories`, params)
+}
+// 查询品类详情
+export const getCateGroyDetail: (params:any) => AxiosPromise<Shops.BossFrontCategoryDetailResp> = (params) => {
+    return axios.get(`/shop/api/boss/front-categories/${params}`)
+}

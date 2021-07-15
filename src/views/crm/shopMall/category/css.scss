@@ -2,3 +2,27 @@
     display: flex;
     flex-direction: column;
 }
+.block{
+    max-height: 450px;
+    overflow-y: scroll;
+}
+.custom-tree-node{
+    display: flex;
+    width: 80%;
+    span{
+        &:first-child{
+            width: 300px;
+            display: block;
+        }
+        display: flex;
+        flex: 1;
+        justify-content: right;
+    }
+}
+/deep/.el-tree-node__content{
+    ~.custom-tree-node{
+        span{
+            padding-left: 36px;
+        }
+    }
+}
