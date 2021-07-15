@@ -48,6 +48,10 @@ export const findMerchant = (params) => {
 export const findMerchantStatist = (params) => {
     return axios.get(`${B2bUrl}fund/boss/fund/statistics`, { params })
 }
+// 资金代采 商家明细合计
+export const findMerchantAll = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/fund/finance/overview`, { params })
+}
 // 资金代采 交易记录线上回款
 export const findOnlineRepay = (params) => {
     return axios.get(`${B2bUrl}fund/boss/repay/online-page`, { params })
@@ -60,6 +64,10 @@ export const findOfflineRepay = (params) => {
 export const findPrepayRepay = (params) => {
     return axios.get(`${B2bUrl}fund/boss/repay/prepay-page`, { params })
 }
+// 资金代采 交易记录线上回款 线下回款 预付款合计
+export const findRepayAll = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/repay/trade-record/statistics`, { params })
+}
 // 资金代采 交易记录统计
 export const findRepayStatist = (params) => {
     return axios.get(`${B2bUrl}fund/boss/repay/statistics`, { params })
@@ -68,13 +76,25 @@ export const findRepayStatist = (params) => {
 export const findApplyList = (params) => {
     return axios.get(`${B2bUrl}fund/boss/fund/apply`, { params })
 }
+// 资金申请详情 合计
+export const findApplyAll = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/fund/apply/statistics`, { params })
+}
 // 资金代付,占用详情
 export const findPrepayList = (params) => {
     return axios.get(`${B2bUrl}fund/boss/agent/order/occupation`, { params })
 }
+// 资金代付,占用详情 合计
+export const findPrepayAll = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/agent/order/occupation/statistics`, { params })
+}
 // 资金回款详情
 export const findOccupationList = (params) => {
     return axios.get(`${B2bUrl}fund/boss/repay`, { params })
+}
+// 资金回款详情 合计
+export const findOccupationAll = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/repay/finance/overview`, { params })
 }
 // 回款 资金同步
 export const syncFundMis = (id, params) => {

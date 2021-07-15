@@ -16,12 +16,16 @@ export const PRODUCTS_INFO = 'PRODUCTS_INFO'
 export const MERCHANT_LIST = 'MERCHANT_LIST'
 // 资金代采 商家明细统计
 export const MERCHANT_STATIST_INFO = 'MERCHANT_STATIST_INFO'
+// 资金代采 商家明细合计
+export const MERCHANT_ALL_INFO = 'MERCHANT_ALL_INFO'
 // 资金代采 交易记录线上回款
 export const ONLINE_REPAY_LIST = 'ONLINE_REPAY_LIST'
 // 资金代采 交易记录线下回款
 export const OFFLINE_REPAY_LIST = 'OFFLINE_REPAY_LIST'
 // 资金代采 交易记录预付款
 export const PREPAY_REPAY_LIST = 'PREPAY_REPAY_LIST'
+// 资金代采 交易记录 线上回款 线下回款 预付款 合计
+export const REPAY_ALL = 'REPAY_ALL'
 // 资金代采 交易记录统计
 export const REPAY_STATIST_INFO = 'REPAY_STATIST_INFO'
 // 资金申请详情
@@ -30,6 +34,12 @@ export const APPLY_LIST = 'APPLY_LIST'
 export const PREPAY_LIST = 'PREPAY_LIST'
 // 资金回款详情
 export const OCCUPATION_LIST = 'OCCUPATION_LIST'
+// 资金申请详情 合计
+export const APPLY_ALL_INFO = 'APPLY_ALL_INFO'
+// 资金代付,占用详情 合计
+export const PREPAY_ALL_INFO = 'PREPAY_ALL_INFO'
+// 资金回款详情 合计
+export const OCCUPATION_ALL_INFO = 'OCCUPATION_ALL_INFO'
 // 代采资金提现明细
 export const AGENT_CHARGE = 'AGENT_CHARGE'
 // 代采资金提现
