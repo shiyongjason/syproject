@@ -14,7 +14,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">品类名称：</div>
                     <div class="query_tag">
-                        <p v-for="(item) in checkList" :key="item.id">{{item.pcategoryName}}>{{item.scategoryName}}>{{item.name}}</p>
+                      <p v-for="(item) in checkList" :key="item.id">{{item.pcategoryName}}>{{item.scategoryName}}>{{item.name}}</p>
                     </div>
                 </div>
             </div>
@@ -28,18 +28,10 @@
 
             </div>
             <!-- end search bar -->
-            <div class="block">
-                <p>使用 scoped slot</p>
-                <el-tree :data="data" @check="onChecked" show-checkbox default-expand-all node-key="code" ref="tree" highlight-current :props=defaultProps>
-                    <!-- <span class="custom-tree-node" slot-scope="{ node, data }">
-                        <span>{{ data.name }}</span>
-                    </span> -->
-                </el-tree>
-            </div>
-            <el-button @click="getCheckedNodes">通过 key 获取</el-button>
-            <el-button @click="setCheckedNodes">通过 111 获取</el-button>
-
+            <tree-table ref="treeTable" :data="data" :columns="columns"  :expand-type="false" @checkbox-click='onClickCheckbox' children-prop="subCategoryList" :selection-type="false" @clickRow='clickRow'  @cell-click="clickRow" >
+            </tree-table>
         </div>
+
     </div>
 </template>
 <script lang='tsx'>
@@ -63,36 +55,34 @@ export default class Categoryedit extends Vue {
             updateUid: '',
             reservedName: false
         }
-        defaultProps={
-            children: 'subCategoryList',
-            label: 'name'
-        }
         queryParams:object={
             searchContent: ''
         }
-        data:any[] = [{
-            id: 1,
-            name: '一级 1',
-            children: [{
-                id: 4,
-                name: '二级 1-1',
-                children: [{
-                    id: 9,
-                    name: '三级 1-1-1'
-                }, {
-                    id: 10,
-                    name: '三级 1-1-2'
-                }]
-            }]
-        }]
-
+        data:any[] = []
+        columns= [
+            {
+                title: '一级类目/二级类目/三级类目',
+                key: 'name',
+                width: '300px'
+            },
+            {
+                title: '类目编码',
+                key: 'code',
+                width: '100px'
+            },
+            {
+                title: '上架商品数量',
+                key: 'spuNumber',
+                width: '100px'
+            }
+        ]
         expandCell:any[]=[]
         // checkList:any[]|[]=[]  这里有个类型定义问题 never
         checkList:any[]=[]
 
         async getList () {
             const { data } = await getTreeCateGroy(this.queryParams)
-            this.data = data
+            this.data = this.resolveData(data, false, false, '', '')
         }
 
         findUnques (arr) {
@@ -107,49 +97,52 @@ export default class Categoryedit extends Vue {
             return result
         }
 
-        getCheckedNodes () {
-            console.log(this.$refs['tree'].getCheckedNodes())
+        onClickCheckbox (row, rowIndex, $event) {
+            console.log(row, rowIndex, $event)
+            console.log(this.$refs['treeTable'].getCheckedProp(['id', 'name']))
+            // if (val && val._isChecked) {
+
+            // }
+            // 先去查询有没有 没有在push
+            if (row.level == 1 && row._isChecked) {
+                console.log(1)
+                row.subCategoryList.length > 0 && row.subCategoryList.map(item => {
+                    item.subCategoryList && item.subCategoryList.map(jtem => {
+                        this.checkList.push(jtem)
+                    })
+                })
+            } else if (row.level == 1) {
+                row.subCategoryList.length > 0 && row.subCategoryList.map(item => {
+                    item.subCategoryList && item.subCategoryList.map(jtem => {
+                        let one = this.checkList.filter(val => jtem.id == val.id)
+                        console.log(233, one)
+                        one.length > 0 && one.map(e => {
+                            this.checkList.splice(this.checkList.indexOf(e), 1)
+                        })
+                    })
+                })
+            }
+            if (row.level == 2 && row._isChecked) {
+                row.subCategoryList.length > 0 && row.subCategoryList.map(jtem => {
+                    this.checkList.push(jtem)
+                })
+            } else if (row.level == 2) {
+                row.subCategoryList && row.subCategoryList.map(jtem => {
+                    let one = this.checkList.filter(val => jtem.id == val.id)
+                    one.length > 0 && this.checkList.splice(this.checkList.indexOf(one[0]), 1)
+                })
+            }
+            if (row.level == 3 && row._isChecked) {
+                this.checkList.push(row)
+            } else if (row.level == 3) {
+                let one = this.checkList.filter(val => row.id == val.id)
+                one.length > 0 && this.checkList.splice(this.checkList.indexOf(one[0]), 1)
+            }
+            console.log(this.findUnques(this.checkList))
+            console.log(1, this.data)
         }
-        setCheckedNodes () {
-            this.$refs['tree'].setCheckedKeys(['010101'])
-        }
-        onChecked (row, checked) {
-            console.log(row, checked)
-            // if (row.level == 1 && checked) {
-            //     console.log(1)
-            //     row.subCategoryList.length > 0 && row.subCategoryList.map(item => {
-            //         item.subCategoryList && item.subCategoryList.map(jtem => {
-            //             this.checkList.push(jtem)
-            //         })
-            //     })
-            // } else if (row.level == 1) {
-            //     row.subCategoryList.length > 0 && row.subCategoryList.map(item => {
-            //         item.subCategoryList && item.subCategoryList.map(jtem => {
-            //             let one = this.checkList.filter(val => jtem.id == val.id)
-            //             console.log(233, one)
-            //             one.length > 0 && one.map(e => {
-            //                 this.checkList.splice(this.checkList.indexOf(e), 1)
-            //             })
-            //         })
-            //     })
-            // }
-            // if (row.level == 2 && checked) {
-            //     row.subCategoryList.length > 0 && row.subCategoryList.map(jtem => {
-            //         this.checkList.push(jtem)
-            //     })
-            // } else if (row.level == 2) {
-            //     row.subCategoryList && row.subCategoryList.map(jtem => {
-            //         let one = this.checkList.filter(val => jtem.id == val.id)
-            //         one.length > 0 && this.checkList.splice(this.checkList.indexOf(one[0]), 1)
-            //     })
-            // }
-            // if (row.level == 3 && checked) {
-            //     this.checkList.push(row)
-            // } else if (row.level == 3) {
-            //     let one = this.checkList.filter(val => row.id == val.id)
-            //     one.length > 0 && this.checkList.splice(this.checkList.indexOf(one[0]), 1)
-            // }
-            // console.log(this.findUnques(this.checkList))
+
+        clickRow (row, rowIndex, column, columnIndex, $event) {
         }
 
         // 递归处理数据
@@ -169,6 +162,22 @@ export default class Categoryedit extends Vue {
                     item.pcategoryName = pcategoryName
                     item.scategoryName = scategoryName
                     item.dcategoryName = item.name
+                }
+                // 在数组中的数据，必定是非折叠的
+                if (this.expandCell.includes(item.id)) {
+                    item._isFold = false
+                }
+                // 如果祖父级是折叠的，则必定隐藏
+                if (grondIsFold) {
+                    item._isHide = true
+                }
+                // 如果祖父级是非折叠的，父级是折叠的，则隐藏
+                if (!grondIsFold && parentIsFold) {
+                    item._isHide = true
+                }
+                // 如果祖父级是非折叠的，父级是非折叠的，则显示
+                if (!grondIsFold && !parentIsFold) {
+                    item._isHide = false
                 }
 
                 if (item.subCategoryList && item.subCategoryList.length > 0) {
