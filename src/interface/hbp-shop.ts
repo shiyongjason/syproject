@@ -11,7 +11,7 @@ export interface ReqBossSkuUpdate {
      * @type {number | string}
      * @memberof ReqBossSkuUpdate
      */
-    id?: number | string
+    id: number | string
 
     /**
      * 最小销售价
@@ -258,6 +258,27 @@ export interface ReqSpuSalesRulesUpdate {
     areaId?: string
 
     /**
+     * 省名称
+     * @type {string}
+     * @memberof ReqSpuSalesRulesUpdate
+     */
+    provinceName?: string
+
+    /**
+     * 市名称
+     * @type {string}
+     * @memberof ReqSpuSalesRulesUpdate
+     */
+    cityName?: string
+
+    /**
+     * 区名称
+     * @type {string}
+     * @memberof ReqSpuSalesRulesUpdate
+     */
+    areaName?: string
+
+    /**
      * 售卖规则，省id|市id|区id
      * @type {string}
      * @memberof ReqSpuSalesRulesUpdate
@@ -412,7 +433,7 @@ export interface ReqBatchSkuIds {
      * @type {Array<number | string>}
      * @memberof ReqBatchSkuIds
      */
-    skuIds?: Array<number | string>
+    skuIds: Array<number | string>
 
 }
 
@@ -737,13 +758,6 @@ export interface IPageRespBossSku {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageRespBossSku
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {boolean}
      * @memberof IPageRespBossSku
      */
@@ -754,7 +768,7 @@ export interface IPageRespBossSku {
      * @type {number | string}
      * @memberof IPageRespBossSku
      */
-    size: number | string
+    pages: number | string
 
     /**
      *
@@ -762,6 +776,13 @@ export interface IPageRespBossSku {
      * @memberof IPageRespBossSku
      */
     current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespBossSku
+     */
+    size: number | string
 
 }
 
@@ -919,28 +940,21 @@ export interface IPageRespBossB2bSkuPage {
      * @type {number | string}
      * @memberof IPageRespBossB2bSkuPage
      */
-    status?: number | string
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageRespBossB2bSkuPage
-     */
-    recommendLocation?: string
+    total: number | string
 
     /**
      *
      * @type {boolean}
      * @memberof IPageRespBossB2bSkuPage
      */
-    salesAreaStatus?: boolean
+    hitCount: boolean
 
     /**
      *
      * @type {number | string}
      * @memberof IPageRespBossB2bSkuPage
      */
-    size: number | string
+    pages: number | string
 
     /**
      *
@@ -948,6 +962,13 @@ export interface IPageRespBossB2bSkuPage {
      * @memberof IPageRespBossB2bSkuPage
      */
     current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespBossB2bSkuPage
+     */
+    size: number | string
 
 }
 
@@ -1087,14 +1108,14 @@ export interface FavoriteResponse {
     id?: number | string
 
     /**
-     * 商品最大销售价
+     * userId
      * @type {number | string}
      * @memberof FavoriteResponse
      */
     userId?: number | string
 
     /**
-     * 0:下架 1:上架
+     * 商品spuId
      * @type {number | string}
      * @memberof FavoriteResponse
      */
@@ -1174,13 +1195,6 @@ export interface IPageFavoriteResponse {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageFavoriteResponse
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {boolean}
      * @memberof IPageFavoriteResponse
      */
@@ -1191,7 +1205,7 @@ export interface IPageFavoriteResponse {
      * @type {number | string}
      * @memberof IPageFavoriteResponse
      */
-    size: number | string
+    pages: number | string
 
     /**
      *
@@ -1199,6 +1213,13 @@ export interface IPageFavoriteResponse {
      * @memberof IPageFavoriteResponse
      */
     current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageFavoriteResponse
+     */
+    size: number | string
 
 }
 
@@ -1596,13 +1617,6 @@ export interface IPageBrandShopExtendResponse {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageBrandShopExtendResponse
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {boolean}
      * @memberof IPageBrandShopExtendResponse
      */
@@ -1613,7 +1627,7 @@ export interface IPageBrandShopExtendResponse {
      * @type {number | string}
      * @memberof IPageBrandShopExtendResponse
      */
-    size: number | string
+    pages: number | string
 
     /**
      *
@@ -1621,6 +1635,13 @@ export interface IPageBrandShopExtendResponse {
      * @memberof IPageBrandShopExtendResponse
      */
     current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageBrandShopExtendResponse
+     */
+    size: number | string
 
 }
 
@@ -1701,7 +1722,7 @@ export interface IPageRespBossSpuPage {
      * @type {boolean}
      * @memberof IPageRespBossSpuPage
      */
-    total: number | string
+    searchCount: boolean
 
     /**
      *
@@ -1715,28 +1736,21 @@ export interface IPageRespBossSpuPage {
      * @type {number | string}
      * @memberof IPageRespBossSpuPage
      */
-    searchCount: boolean
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageRespBossSpuPage
-     */
-    current: number | string
+    total: number | string
 
     /**
      *
      * @type {boolean}
      * @memberof IPageRespBossSpuPage
      */
-    size: number | string
+    hitCount: boolean
 
     /**
      *
      * @type {number | string}
      * @memberof IPageRespBossSpuPage
      */
-    size: number | string
+    pages: number | string
 
     /**
      *
@@ -1744,6 +1758,13 @@ export interface IPageRespBossSpuPage {
      * @memberof IPageRespBossSpuPage
      */
     current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespBossSpuPage
+     */
+    size: number | string
 
 }
 
@@ -2259,7 +2280,7 @@ export interface IPageRespBossShopFloorPage {
      * @type {boolean}
      * @memberof IPageRespBossShopFloorPage
      */
-    total: number | string
+    searchCount: boolean
 
     /**
      *
@@ -2273,28 +2294,21 @@ export interface IPageRespBossShopFloorPage {
      * @type {number | string}
      * @memberof IPageRespBossShopFloorPage
      */
-    searchCount: boolean
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageRespBossShopFloorPage
-     */
-    current: number | string
+    total: number | string
 
     /**
      *
      * @type {boolean}
      * @memberof IPageRespBossShopFloorPage
      */
-    size: number | string
+    hitCount: boolean
 
     /**
      *
      * @type {number | string}
      * @memberof IPageRespBossShopFloorPage
      */
-    size: number | string
+    pages: number | string
 
     /**
      *
@@ -2302,6 +2316,13 @@ export interface IPageRespBossShopFloorPage {
      * @memberof IPageRespBossShopFloorPage
      */
     current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespBossShopFloorPage
+     */
+    size: number | string
 
 }
 
@@ -2495,13 +2516,6 @@ export interface IPageBossFrontCategoryRecommendResponse {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageBossFrontCategoryRecommendResponse
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {boolean}
      * @memberof IPageBossFrontCategoryRecommendResponse
      */
@@ -2512,7 +2526,7 @@ export interface IPageBossFrontCategoryRecommendResponse {
      * @type {number | string}
      * @memberof IPageBossFrontCategoryRecommendResponse
      */
-    size: number | string
+    pages: number | string
 
     /**
      *
@@ -2520,6 +2534,13 @@ export interface IPageBossFrontCategoryRecommendResponse {
      * @memberof IPageBossFrontCategoryRecommendResponse
      */
     current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageBossFrontCategoryRecommendResponse
+     */
+    size: number | string
 
 }
 
@@ -2759,13 +2780,6 @@ export interface IPageBossFrontCategoryPageResponse {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageBossFrontCategoryPageResponse
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {boolean}
      * @memberof IPageBossFrontCategoryPageResponse
      */
@@ -2776,7 +2790,7 @@ export interface IPageBossFrontCategoryPageResponse {
      * @type {number | string}
      * @memberof IPageBossFrontCategoryPageResponse
      */
-    size: number | string
+    pages: number | string
 
     /**
      *
@@ -2784,6 +2798,13 @@ export interface IPageBossFrontCategoryPageResponse {
      * @memberof IPageBossFrontCategoryPageResponse
      */
     current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageBossFrontCategoryPageResponse
+     */
+    size: number | string
 
 }
 
@@ -2929,7 +2950,7 @@ export interface IPageShopBannerResponse {
      * @type {boolean}
      * @memberof IPageShopBannerResponse
      */
-    total: number | string
+    searchCount: boolean
 
     /**
      *
@@ -2943,28 +2964,21 @@ export interface IPageShopBannerResponse {
      * @type {number | string}
      * @memberof IPageShopBannerResponse
      */
-    searchCount: boolean
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageShopBannerResponse
-     */
-    current: number | string
+    total: number | string
 
     /**
      *
      * @type {boolean}
      * @memberof IPageShopBannerResponse
      */
-    size: number | string
+    hitCount: boolean
 
     /**
      *
      * @type {number | string}
      * @memberof IPageShopBannerResponse
      */
-    size: number | string
+    pages: number | string
 
     /**
      *
@@ -2972,6 +2986,13 @@ export interface IPageShopBannerResponse {
      * @memberof IPageShopBannerResponse
      */
     current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageShopBannerResponse
+     */
+    size: number | string
 
 }
 
@@ -3370,10 +3391,10 @@ export interface AppletSpuPageResponse {
 
     /**
      * 商品图片链接集合
-     * @type {string}
+     * @type {Array<string>}
      * @memberof AppletSpuPageResponse
      */
-    imageUrls?: string
+    imageUrls?: Array<string>
 
     /**
      * 销售价是否可见 0：否 1：是
@@ -3431,7 +3452,7 @@ export interface IPageAppletSpuPageResponse {
      * @type {boolean}
      * @memberof IPageAppletSpuPageResponse
      */
-    total: number | string
+    searchCount: boolean
 
     /**
      *
@@ -3445,21 +3466,14 @@ export interface IPageAppletSpuPageResponse {
      * @type {number | string}
      * @memberof IPageAppletSpuPageResponse
      */
-    searchCount: boolean
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageAppletSpuPageResponse
-     */
-    current: number | string
+    total: number | string
 
     /**
      *
      * @type {boolean}
      * @memberof IPageAppletSpuPageResponse
      */
-    size: number | string
+    hitCount: boolean
 
     /**
      *
@@ -3473,7 +3487,37 @@ export interface IPageAppletSpuPageResponse {
      * @type {number | string}
      * @memberof IPageAppletSpuPageResponse
      */
-    records: Array<ShopFloorSpuResponse>
+    current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageAppletSpuPageResponse
+     */
+    size: number | string
+
+}
+
+/**
+*
+* @export
+* @interface ShopFloorSalesAreaRequest
+*/
+export interface ShopFloorSalesAreaRequest {
+
+    /**
+     * 省份名称
+     * @type {string}
+     * @memberof ShopFloorSalesAreaRequest
+     */
+    provinceName: string
+
+    /**
+     * 城市名称
+     * @type {string}
+     * @memberof ShopFloorSalesAreaRequest
+     */
+    cityName: string
 
 }
 
@@ -3489,11 +3533,25 @@ export interface IPageShopFloorSpuResponse {
      * @type {boolean}
      * @memberof IPageShopFloorSpuResponse
      */
-    total: number | string
+    searchCount: boolean
 
     /**
      *
      * @type {Array<ShopFloorSpuResponse>}
+     * @memberof IPageShopFloorSpuResponse
+     */
+    records: Array<ShopFloorSpuResponse>
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageShopFloorSpuResponse
+     */
+    total: number | string
+
+    /**
+     *
+     * @type {boolean}
      * @memberof IPageShopFloorSpuResponse
      */
     hitCount: boolean
@@ -3503,7 +3561,7 @@ export interface IPageShopFloorSpuResponse {
      * @type {number | string}
      * @memberof IPageShopFloorSpuResponse
      */
-    searchCount: boolean
+    pages: number | string
 
     /**
      *
@@ -3514,24 +3572,10 @@ export interface IPageShopFloorSpuResponse {
 
     /**
      *
-     * @type {boolean}
-     * @memberof IPageShopFloorSpuResponse
-     */
-    size: number | string
-
-    /**
-     *
      * @type {number | string}
      * @memberof IPageShopFloorSpuResponse
      */
     size: number | string
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageShopFloorSpuResponse
-     */
-    current: number | string
 
 }
 
@@ -3711,10 +3755,10 @@ export interface ShopFloorSpuResponse {
 
     /**
      * 图片
-     * @type {string}
+     * @type {Array<string>}
      * @memberof ShopFloorSpuResponse
      */
-    imageUrls?: string
+    imageUrls?: Array<string>
 
     /**
      * 销售属性值
@@ -3802,6 +3846,20 @@ export interface ShopFloorSpuRequest {
      */
     brandId?: number | string
 
+    /**
+     * 省份名称
+     * @type {string}
+     * @memberof ShopFloorSpuRequest
+     */
+    provinceName: string
+
+    /**
+     * 城市名称
+     * @type {string}
+     * @memberof ShopFloorSpuRequest
+     */
+    cityName: string
+
 }
 
 /**
@@ -3827,10 +3885,10 @@ export interface AppletFrontCategoryRecommendResponse {
 
     /**
      * 品类名称
-     * @type {number | string}
+     * @type {string}
      * @memberof AppletFrontCategoryRecommendResponse
      */
-    frontCategoryName?: number | string
+    frontCategoryName?: string
 
     /**
      * 排序
@@ -3845,6 +3903,36 @@ export interface AppletFrontCategoryRecommendResponse {
      * @memberof AppletFrontCategoryRecommendResponse
      */
     imageUrl?: string
+
+}
+
+/**
+*
+* @export
+* @interface ShopFrontCategorySalesAreaRequest
+*/
+export interface ShopFrontCategorySalesAreaRequest {
+
+    /**
+     * 省份名称
+     * @type {string}
+     * @memberof ShopFrontCategorySalesAreaRequest
+     */
+    provinceName: string
+
+    /**
+     * 城市名称
+     * @type {string}
+     * @memberof ShopFrontCategorySalesAreaRequest
+     */
+    cityName: string
+
+    /**
+     * 用户id
+     * @type {number | string}
+     * @memberof ShopFrontCategorySalesAreaRequest
+     */
+    userId: number | string
 
 }
 
@@ -3893,27 +3981,6 @@ export interface ShopFrontCategoryResponse {
 export interface ShopFrontCategorySpuResponse {
 
     /**
-     * 主键id
-     * @type {number | string}
-     * @memberof ShopFrontCategorySpuResponse
-     */
-    id?: number | string
-
-    /**
-     * 楼层id
-     * @type {number | string}
-     * @memberof ShopFrontCategorySpuResponse
-     */
-    floorId?: number | string
-
-    /**
-     * 排序
-     * @type {number | string}
-     * @memberof ShopFrontCategorySpuResponse
-     */
-    sort?: number | string
-
-    /**
      * spuId
      * @type {number | string}
      * @memberof ShopFrontCategorySpuResponse
@@ -3943,10 +4010,10 @@ export interface ShopFrontCategorySpuResponse {
 
     /**
      * 图片
-     * @type {string}
+     * @type {Array<string>}
      * @memberof ShopFrontCategorySpuResponse
      */
-    imageUrls?: string
+    imageUrls?: Array<string>
 
     /**
      * 销售属性值
@@ -3982,13 +4049,6 @@ export interface ShopFrontCategorySpuResponse {
      * @memberof ShopFrontCategorySpuResponse
      */
     categoryId?: number | string
-
-    /**
-     * 品类id
-     * @type {number | string}
-     * @memberof ShopFrontCategorySpuResponse
-     */
-    frontCategoryId?: number | string
 
     /**
      *

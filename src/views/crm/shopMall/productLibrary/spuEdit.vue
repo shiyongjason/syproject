@@ -35,14 +35,21 @@
                     <el-form-item label="商品图片：" prop="pics">
                         <div class="productPicture">
                             <div style="margin-right:10px">
-                                <HosJoyUpload class="crmshopMallSpuEdit" v-model="form.mainPics" :multiple='false' :showPreView='true' :fileSize=20 :action='action' :fileNum='1' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' style="margin:10px 0 0 5px" />
-                                <div style="color:#ff7a45;textAlign:center">* 主图</div>
+                                <HosJoyUpload class="crmshopMallSpuEdit" v-model="form.imageUrls" :showPreView='true' :fileSize=20 :action='action' :fileNum='5' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' style="margin:10px 0 0 5px" >
+                                    <span slot="preViewExtends" @click="()=>setMainPic(scope.data)" class="preViewExtends" slot-scope="scope" v-if="scope.data&&scope.data.index!=0">
+                                        <img :src="require('@/assets/images/shuffling-banner-fill.png')" width="23" alt="设为主图">
+                                        <p style="line-height: 20px;">设为主图</p>
+                                    </span>
+                                </HosJoyUpload>
+                                <div>
+                                    <span style="color:#ff7a45" class="mainpic">* 主图</span>
+                                    <span style="color:#00000065" class="sidepic">* 副图</span>
+                                </div>
                             </div>
-                            <div style="margin-right:10px" class="vicepics">
+                            <!-- <div style="margin-right:10px" class="vicepics">
                                 <HosJoyUpload class="crmshopMallSpuEdit" v-model="form.sidePicture" :showPreView='true' :fileSize=20 :action='action' :fileNum='4' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' style="margin:10px 0 0 5px" />
                                 <div style="color:#00000065;marginLeft:40px">副图</div>
-                            </div>
-
+                            </div> -->
                         </div>
                         <div class="picture-prompt" style="width:100%">
                             <p>副图最多支持上传4张，大小不超过20M，仅支持jpeg，jpg，png格式</p>
@@ -92,11 +99,8 @@
                 <div class="addNew" @click="onAddSKU">+ 新增SKU</div>
             </el-form>
             <div class="submit-btns">
-                <h-button type="assist" @click="onTemporarySave">保存编辑</h-button>
-                <div>
-                    <h-button >取消</h-button>
-                    <h-button type="primary" >提交编辑</h-button>
-                </div>
+                <h-button >取消</h-button>
+                    <h-button type="primary" @click="onSubmit">提交编辑</h-button>
             </div>
         </div>
 
@@ -172,7 +176,7 @@ export default class SpuEdit extends Vue {
         updateUid: '',
         reservedName: true
     }
-    form:Partial<RespBossSpuDetail & {mainPics:any, sidePicture:any}> = {
+    form:Partial<RespBossSpuDetail> = {
         id: '',
         name: '',
         showName: '',
@@ -180,8 +184,6 @@ export default class SpuEdit extends Vue {
         model: '',
         priceVisible: '', // 销售价是否可见 0：否 1：是
         imageUrls: [], // 第一张为主图
-        mainPics: [], // 主图
-        sidePicture: [], // 副图
         status: '', // 编辑状态 1：草稿 2：已提交
         saleRules: [],
         skuList: [
@@ -268,19 +270,16 @@ export default class SpuEdit extends Vue {
         { label: '商品规格', prop: 'optionValues' },
         { label: 'SKU编码', prop: 'skuCode' }
     ]
-    // 临时保存
-    async onTemporarySave () {
-        // this.form.imageUrls = [...this.form.mainPics, ...this.form.sidePicture]
-        if (this.form.mainPics.length == 0) {
-            this.form.imageUrls.push('')
-        } else {
-            this.form.imageUrls = [...this.form.mainPics]
-        }
-        console.log('🚀 --- onTemporarySave --- this.form', this.form)
-        // await submitSpu(this.form)
-        // this.$message.success('保存成功')
-        // this.getDetail()
+
+    onSubmit () {
+        console.log('log::::::', this.form)
     }
+
+    // 设为主图
+    setMainPic ({ index, data }) {
+        this.form.imageUrls.unshift((this.form.imageUrls.splice(index, 1))[0])
+    }
+
     // 确认下架sku
     async onHandleRack () {
         await skuhelftatus({
@@ -323,6 +322,9 @@ export default class SpuEdit extends Vue {
 
     async compore (row, index) {
         console.log('🚀 --- compore --- row', row)
+        if (!row.minSalePrice || !row.maxSalePrice) {
+            return
+        }
         let from:any = this.$refs.formmain
         let isError = false
         if (row.minSalePrice !== null) {
@@ -343,6 +345,7 @@ export default class SpuEdit extends Vue {
             return
         }
         from.validateField(`skuList.${index}.maxSalePrice`)
+        // sub
         row.minSalePrice = isNum(row.minSalePrice, 2)
         row.maxSalePrice = isNum(row.maxSalePrice, 2)
         if (row.minSalePrice * 1 > 100000000) {
@@ -351,23 +354,20 @@ export default class SpuEdit extends Vue {
         if (row.maxSalePrice * 1 > 100000000) {
             row.maxSalePrice = 100000000
         }
-        await putSKU(
-            {
-                'id': row.id,
-                'minSalePrice': row.minSalePrice || '',
-                'maxSalePrice': row.maxSalePrice || '',
-                'updateBy': this.userInfo.employeeName,
-                'updatePhone': this.userInfo.phoneNumber
-            }
-        )
+        // await putSKU(
+        //     {
+        //         'id': row.id,
+        //         'minSalePrice': row.minSalePrice,
+        //         'maxSalePrice': row.maxSalePrice,
+        //         'updateBy': this.userInfo.employeeName,
+        //         'updatePhone': this.userInfo.phoneNumber
+        //     }
+        // )
     }
 
     // 列表选择
     selectChange (val:any[]) {
-        this.Selection = []
-        val.map(i => {
-            this.Selection.push(i.id)
-        })
+        this.Selection = val
     }
     onCloseDialog () {
         console.log('log::::::before-close')
@@ -377,17 +377,28 @@ export default class SpuEdit extends Vue {
         this.queryParams = JSON.parse(JSON.stringify(_queryParams))
         this.dialogTableVisible = false
     }
+    // 确认新增sku
     async onChooseSku () {
         if (this.Selection.length == 0) {
             this.$message.error('请选择要新增的SKU')
             return
         }
         try {
-            await bulkPullSku({ skuIds: this.Selection }) // 拉取
+            // await bulkPullSku({ skuIds: this.Selection }) // 拉取
+            console.log('log::::::', this.Selection)
+            this.Selection.map(item => {
+                let obj = {
+                    id: '',
+                    mainSkuId: item.id,
+                    minSalePrice: '',
+                    maxSalePrice: ''
+                }
+            })
             let ref:any = this.$refs.hosjoyTableSKU
             ref.clearSelection()
             this.dialogTableVisible = false
             this.Selection = []
+            // 刷新列表
             this.onReloadTable()
         } catch (error) {
             console.log('error::::::', error)
@@ -518,15 +529,16 @@ export default class SpuEdit extends Vue {
         this.form = Object.assign({}, this.form, data)
         this.form.createBy = this.userInfo.employeeName
         this.form.createPhone = this.userInfo.phoneNumber
+        let list = []
         if (this.form.imageUrls && this.form.imageUrls.length > 0) {
-            let mainPic = this.form.imageUrls.splice(0)[0]
-            let sidePicture = this.form.imageUrls
-            this.form.mainPics = [{
-                fileName: mainPic,
-                fileUrl: mainPic
-            }]
-            this.form.sidePicture = JSON.parse(JSON.stringify(sidePicture))
+            this.form.imageUrls.map((item:any) => {
+                list.push({
+                    fileName: item,
+                    fileUrl: item
+                })
+            })
         }
+        this.form.imageUrls = list
         console.log('🚀 --- getDetail --- this.form', this.form)
     }
 
