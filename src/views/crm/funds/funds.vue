@@ -111,7 +111,7 @@
                 </template>
             </basicTable>
             <FundsDialog :is-open="fundsDialogVisible" :detail="fundsDialogDetail" :status="queryParams.repaymentTypeArrays" @onClose="fundsDialogClose"></FundsDialog>
-            <UploadDialog ref="uploaddialog" @onBackSearch =findFundsList ></UploadDialog>
+            <UploadDialog ref="uploaddialog" @onBackSearch ="findFundsList(queryParams)" ></UploadDialog>
         </div>
     </div>
 </template>
