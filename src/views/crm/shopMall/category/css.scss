@@ -1,6 +1,14 @@
 .query_tag{
     display: flex;
     flex-direction: column;
+    max-height: 300px;
+    overflow-y: scroll;
+    /deep/.el-tag{
+        display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    }
 }
 .block{
     max-height: 450px;
@@ -42,4 +50,11 @@
         top: 0;
         left: 0;
     }
+}
+.category_bot{
+    margin-top: 20px;
+    text-align: center;
+}
+.B2b .query-col__input .el-input{
+    width: 100%;
 }

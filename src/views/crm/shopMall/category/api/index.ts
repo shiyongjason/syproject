@@ -32,6 +32,10 @@ export const getTreeCateGroy: (params:any) => AxiosPromise<Shops.CategoryTreeRes
 export const addCateGroy: (params:any) => AxiosPromise<void> = (params) => {
     return axios.post(`/shop/api/boss/front-categories`, params)
 }
+// 编辑品类
+export const editCateGroy: (params:any) => AxiosPromise<void> = (params) => {
+    return axios.post(`/shop/api/boss/front-categories`, params)
+}
 // 查询品类详情
 export const getCateGroyDetail: (params:any) => AxiosPromise<Shops.BossFrontCategoryDetailResp> = (params) => {
     return axios.get(`/shop/api/boss/front-categories/${params}`)

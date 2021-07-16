@@ -46,7 +46,7 @@
             </hosJoyTable>
             <div class="floor-tit mt20">已选择该楼层的商品</div>
             <!-- 表格操作 -->
-            <hosJoyTable ref="hosjoyTable" align="center" border stripe :column="formTableLabel" :data="tableForm" isAction>
+            <hosJoyTable ref="hosjoyTable" align="center" border isShowIndex stripe :column="formTableLabel" :data="tableForm" isAction>
                 <template #action="slotProps">
                     <h-button table @click="onMove(slotProps.data, 'up')" v-if="slotProps.data.$index!=0">上移</h-button>
                     <h-button table @click="onMove(slotProps.data, 'down')" v-if="slotProps.data.$index!=tableForm.length-1">下移</h-button>
@@ -69,10 +69,11 @@ import Bannertabs from './components/banner_tabs.vue' // 组件导入需要 .vue
 import Categorytabs from './components/category_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import Floortabs from './components/floor_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-import { getFloorDetail, getSpuPage, saveFloor, getListCategory } from './api/index'
+import { getFloorDetail, getSpuPage, saveFloor, getListCategory, editFloor } from './api/index'
 import filters from '@/utils/filters'
 import { RespBossShopFloorDetail } from '@/interface/hbp-shop'
 import moment from 'moment'
+import { deepCopy } from '@/utils/utils'
 
 @Component({
     name: 'Flooredit',
@@ -89,6 +90,8 @@ export default class Flooredit extends Vue {
             form: HTMLFormElement
         }
         @State('userInfo') userInfo: any
+        @Action('setNewTags') setNewTags!: Function
+
         uploadParameters = {
             updateUid: '',
             reservedName: false
@@ -131,8 +134,8 @@ export default class Flooredit extends Vue {
             return this._category
         }
         formTableLabel: tableLabelProps = [
-            { label: 'SPU编码', prop: 'spuCode' },
-            { label: '商品名称', prop: 'spuName' },
+            { label: 'SPU编码', prop: 'id' },
+            { label: '商品名称', prop: 'name' },
             { label: '商品类目', prop: 'categoryPath' },
             { label: '品牌', prop: 'brandName' },
             {
@@ -144,30 +147,32 @@ export default class Flooredit extends Vue {
                 render: (h: CreateElement, scope: TableRenderParam) => {
                     return (
                         <div>
+                            {
+                                this._category && <el-select
+                                    class="miniSelect"
+                                    size="mini"
 
-                            <el-select
-                                class="miniSelect"
-                                size="mini"
-
-                                placeholder="请选择"
-                                value={scope.row[scope.column.property]}
-                                onInput={(val) => {
-                                    scope.row[scope.column.property] = val
-                                }}
+                                    placeholder="请选择"
+                                    value={scope.row[scope.column.property]}
+                                    onInput={(val) => {
+                                        scope.row[scope.column.property] = val
+                                    }}
                                 // v-model={scope.row[scope.column.frontCategoryId]}
-                            >
-                                {this.category().map((item, index) => {
-                                    return (
-                                        <el-option
-                                            key={index + 'option'}
-                                            value={item.id}
-                                            label={item.frontCategoryName}
-                                        >
-                                            {item.frontCategoryName}
-                                        </el-option>
-                                    )
-                                })}
-                            </el-select>
+                                >
+                                    {this.category().map((item, index) => {
+                                        return (
+                                            <el-option
+                                                key={index + 'option'}
+                                                value={item.id}
+                                                label={item.frontCategoryName}
+                                            >
+                                                {item.frontCategoryName}
+                                            </el-option>
+                                        )
+                                    })}
+                                </el-select>
+                            }
+
                         </div>
                     )
                 }
@@ -214,6 +219,11 @@ export default class Flooredit extends Vue {
             if (row.checked) {
                 return 'slecleRowColor '
             }
+        }
+
+        onRest () {
+            this.queryParams = deepCopy(this._queryParams)
+            this.onFindList()
         }
 
         async onFindList () {
@@ -290,13 +300,17 @@ export default class Flooredit extends Vue {
         }
 
         onSave () {
+            // 保存楼层检验
             this.floorForm.reqBossFloorSpuList = this.tableForm
             console.log(this.floorForm)
             saveFloor(this.floorForm)
+
+            this.setNewTags((this.$route.fullPath).split('?')[0])
         }
 
         onCancel () {
             this.$router.push('/goodwork/advmanage')
+            this.setNewTags((this.$route.fullPath).split('?')[0])
         }
         async mounted () {
             if (this.$route.query.id) {
@@ -305,6 +319,7 @@ export default class Flooredit extends Vue {
             }
             this.onFindList()
             this.onFindCateList()
+            this._queryParams = deepCopy(this.queryParams)
         }
 }
 </script>

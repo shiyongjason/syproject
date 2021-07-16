@@ -33,16 +33,17 @@
             </div>
             <!-- end search bar -->
             <div class="block">
-                <p>使用 scoped slot</p>
-                <el-tree :data="data" @check="onChecked" show-checkbox default-expand-all node-key="id" ref="tree" highlight-current :props=defaultProps>
+                <p>品类</p>
+                <el-tree :data="data" @check="onChecked" show-checkbox  node-key="id" ref="tree" highlight-current :props=defaultProps>
                     <span class="custom-tree-node" slot-scope="{data }">
                         <span>{{ data.name }}</span>
-                        <span>{{ data.id }}</span>
-                        <span>{{ data.spuNumber }}</span>
+                        <span>类目编码：{{ data.id }}</span>
+                        <span>上架商品数量：{{ data.spuNumber }}</span>
                     </span>
                 </el-tree>
             </div>
-            <div>
+            <div class="category_bot">
+                <el-button  @click="onCancel">取消</el-button>
                 <el-button type="primary" @click="onSave">确定</el-button>
             </div>
         </div>
@@ -53,7 +54,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 // import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
 import { CreateElement } from 'vue'
-import { getTreeCateGroy, addCateGroy, getCateGroyDetail } from './api/index'
+import { getTreeCateGroy, addCateGroy, getCateGroyDetail, editCateGroy } from './api/index'
 
 @Component({
     name: 'Categoryedit',
@@ -81,7 +82,7 @@ export default class Categoryedit extends Vue {
         expandCell:any[]=[]
         // checkList:any[]|[]=[]  这里有个类型定义问题 never
         checkList:any[]=[]
-        cateGoryForm={
+        cateGoryForm:any={
             frontCategoryName: '',
             categoryIdList: []
         }
@@ -93,6 +94,7 @@ export default class Categoryedit extends Vue {
         async getDetail () {
             let _tags = []
             const { data } = await getCateGroyDetail(this.$route.query.id)
+            this.cateGoryForm = { ...data }
             data.bossCategorySpuDetailResponseList && data.bossCategorySpuDetailResponseList.length > 0 && data.bossCategorySpuDetailResponseList.map((item:any) => {
                 _tags.push(item.categoryId)
             })
@@ -147,7 +149,16 @@ export default class Categoryedit extends Vue {
                 this.$message.warning('请选择类目')
                 return
             }
-            await addCateGroy(this.cateGoryForm)
+            if (this.$route.query.id) {
+                await editCateGroy(this.cateGoryForm)
+            } else {
+                await addCateGroy(this.cateGoryForm)
+            }
+            this.$router.push({ path: '/goodwork/category' })
+        }
+
+        onCancel () {
+            this.$router.push({ path: '/goodwork/category' })
         }
 
         onChecked (row, cnode) {

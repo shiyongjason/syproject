@@ -69,13 +69,10 @@ export default class Flooredit extends Vue {
 
         ]
         formTableLabel: tableLabelProps = [
-            { label: 'SPU编码', prop: 'paymentOrderNo' },
-            { label: '商品名称', prop: 'deptName' },
-            { label: '品牌', prop: 'supplierCompanyName' }
+            { label: 'SPU编码', prop: 'spuCode' },
+            { label: '商品名称', prop: 'spuName' },
+            { label: '品牌', prop: 'brandName' }
         ]
-        onFindList () {
-
-        }
 
         async mounted () {
             if (this.$route.query.id) {

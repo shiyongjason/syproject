@@ -12,7 +12,7 @@ export const onDeleteFloor: (params: any) => AxiosPromise<void> = (params) => {
     return axios.delete(`/shop/api/boss/shop/floor/${params}`)
 }
 // 启用
-export const onEnableFloor: (params: any) => AxiosPromise<void> = (params) => {
+export const onEnableFloor: (params: any) => AxiosPromise<Shops.ShopFloorBrandPromptResponse[]> = (params) => {
     return axios.patch(`/shop/api/boss/shop/floor/${params}/enable`)
 }
 
@@ -39,9 +39,12 @@ export const getSpuPage: (params:any) => AxiosPromise<Shops.IPageRespBossSpuPage
 }
 // 新增楼层
 export const saveFloor: (params:any) => AxiosPromise<Shops.ReqBossFloorAdd> = (params) => {
-    return axios.get(`/shop/api/boss/shop/floor`, params)
+    return axios.post(`/shop/api/boss/shop/floor`, params)
 }
-
+//  更新楼层
+export const editFloor: (params:any) => AxiosPromise<Shops.ReqBossFloorUpdate> = (params) => {
+    return axios.post(`/shop/api/boss/shop/floor`, params)
+}
 // bananerlist
 export const getBannerPage: (params:any) => AxiosPromise<Shops.IPageShopBannerResponse > = (params) => {
     return axios.get(`/shop/api/boss/banners/page`, { params })

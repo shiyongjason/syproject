@@ -4,19 +4,27 @@
         <div class="baner-btn mb20">
             <el-button type="primary" @click="onAddFloor">新增楼层</el-button>
         </div>
-        <hosJoyTable isShowIndex ref="hosjoyTable" align="center"  showPagination border stripe :column="tableLabel" :data="tableData"
-        :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onGetFloorPage" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
+        <hosJoyTable isShowIndex ref="hosjoyTable" align="center" showPagination border stripe :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onGetFloorPage" actionWidth='250' isAction
+            :isActionFixed='tableData&&tableData.length>0'>
             <template #action="slotProps">
-                    <h-button table @click="onLook(slotProps.data.row)">查看</h-button>
-                    <h-button table v-if="slotProps.data.row.status==1||slotProps.data.row.status==3" @click="onEnable(slotProps.data.row)">启用</h-button>
-                    <h-button table v-if="slotProps.data.row.status!=3" @click="onDisable(slotProps.data.row)">停用</h-button>
-                    <h-button table @click="onEdit(slotProps.data.row)">编辑</h-button>
-                    <h-button table @click="onDelete(slotProps.data.row)">删除</h-button>
-                    <h-button table @click="onMoveFloor(slotProps.data.row,1)" v-if="slotProps.data.row.$index==0">上移</h-button>
-                    <h-button table @click="onMoveFloor(slotProps.data.row,2)"  v-if="slotProps.data.row.$index==tableData.length-1">下移</h-button>
+                <h-button table @click="onLook(slotProps.data.row)">查看</h-button>
+                <h-button table v-if="slotProps.data.row.status==1||slotProps.data.row.status==3" @click="onEnable(slotProps.data.row)">启用</h-button>
+                <h-button table v-if="slotProps.data.row.status!=3" @click="onDisable(slotProps.data.row)">停用</h-button>
+                <h-button table @click="onEdit(slotProps.data.row)">编辑</h-button>
+                <h-button table @click="onDelete(slotProps.data.row)">删除</h-button>
+                <h-button table @click="onMoveFloor(slotProps.data.row,1)" v-if="slotProps.data.$index!=0">上移</h-button>
+                <h-button table @click="onMoveFloor(slotProps.data.row,2)" v-if="slotProps.data.row.$index!=tableData.length-1">下移</h-button>
             </template>
         </hosJoyTable>
-
+        <el-dialog title="启用失败通知" :visible.sync="dialogVisible" width="40%" :before-close="()=>{dialogVisible = false}">
+            <p class="mb20" style="color:red">当前楼层所关联的商品存在以下品牌信息不完整，您可点击品牌名称去维护品牌信息</p>
+            <div class="floor_tag">
+                <el-tag v-for="(item,index) in tags" :key="index" @click="onMaintain(item)">{{item.brandName}}</el-tag>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">暂不维护</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script lang='tsx'>
@@ -39,12 +47,12 @@ export default class Floortabs extends Vue {
         $refs!: {
             form: HTMLFormElement
         }
-
+        dialogVisible:boolean = false
         page = {
             sizes: [10, 20, 50, 100],
             total: 0
         }
-
+        tags:any[]|[]=[]
         tableData:RespBossShopFloorPage[] | [] = []
 
         tableLabel: tableLabelProps = [
@@ -100,15 +108,39 @@ export default class Floortabs extends Vue {
                     type: 'success',
                     message: '删除成功!'
                 })
+                this.onGetFloorPage()
             }).catch(() => {
 
             })
-            this.onGetFloorPage()
         }
 
-        onEnable () {
-            // 校验
+        async onEnable (val) {
+            // 校验 是否需要维护
+            const { data } = await onEnableFloor(val.id)
+            if (data.length > 0) {
+                this.dialogVisible = true
+                this.tags = data
+            } else {
+                this.dialogVisible = false
+                this.$confirm('确定启用当前楼层吗？', '启用确认', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(async () => {
+                    await onDisableFloor(val.id)
+                    this.$message({
+                        type: 'success',
+                        message: '楼层已启用~!'
+                    })
+                    this.onGetFloorPage()
+                }).catch(() => {
 
+                })
+            }
+        }
+
+        onMaintain (val) {
+            this.$router.push({ path: '/goodwork/brandManage', query: { id: val.id } })
         }
 
         onDisable (val) {
@@ -122,10 +154,10 @@ export default class Floortabs extends Vue {
                     type: 'success',
                     message: '楼层已停用~!'
                 })
+                this.onGetFloorPage()
             }).catch(() => {
 
             })
-            this.onGetFloorPage()
         }
 
         // 上下移动
@@ -151,5 +183,5 @@ export default class Floortabs extends Vue {
 }
 </script>
 <style lang='scss' scoped>
-// @import "./css.scss";
+@import "../css.scss";
 </style>
