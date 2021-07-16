@@ -157,7 +157,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="设备ID" label-width="100px" :prop="'deviceInfoList.' + index + '.deviceId'" :rules="addOrderRules.deviceId">
-                            <el-input style="width: 150px" v-model="productItem.deviceId" maxlength="100" :rows="1" @blur='()=>{deviceIDonBlur(index)}' placeholder="请输入设备ID" />
+                            <el-input style="width: 150px" v-model="productItem.deviceId" maxlength="45" :rows="1" @blur='()=>{deviceIDonBlur(index)}' placeholder="请输入设备ID" />
                         </el-form-item>
                         <el-button style="align-self: flex-start;margin-left: 20px;" type="primary" @click="()=> { onRemoveProduct(index) }">删除</el-button>
                     </div>
