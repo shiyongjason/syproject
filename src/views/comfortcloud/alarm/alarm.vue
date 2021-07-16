@@ -68,7 +68,7 @@ const ringChartOption = {
             normal: {
                 show: true,
                 textStyle: {
-                    fontWeight: 100,
+                    fontWeight: 500,
                     fontSize: 12 // 文字的字体大小
                 },
                 formatter: '{d}%'
@@ -77,10 +77,10 @@ const ringChartOption = {
         },
         data: [ // #4472c3 #4472c3 #4472c3 #4472c3 #4472c3
             { value: 0, name: '30分钟内', selfLabel: 'innerThirtyCount', itemStyle: { color: '#4472c3' } },
-            { value: 0, name: '30-60分钟', selfLabel: 'thirtyToSixtyCount', itemStyle: { color: '#FEC109' } },
+            { value: 0, name: '30-60分钟', selfLabel: 'thirtyToSixtyCount', itemStyle: { color: '#FE6169' } },
             { value: 0, name: '60-90分钟', selfLabel: 'sixtyToNinetyCount', itemStyle: { color: '#209FFF' } },
             { value: 0, name: '90-120分钟', selfLabel: 'ninetyToOneHundredAndTwentyCount', itemStyle: { color: '#FFBF6A' } },
-            { value: 0, name: '超120分钟', selfLabel: 'overOneHundredAndTwentyCount', itemStyle: { color: '#ffbff5' } }
+            { value: 0, name: '超120分钟', selfLabel: 'overOneHundredAndTwentyCount', itemStyle: { color: '#22bff5' } }
         ]
     }
 }
