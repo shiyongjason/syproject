@@ -98,9 +98,11 @@ export default class Categoryedit extends Vue {
             this.$nextTick(async () => {
                 console.log(_tags)
                 this.$refs['tree'].setCheckedKeys(_tags)
-                let _nodes = this.$refs['tree'].getCheckedNodes()
-                this.checkList = _nodes.filter((item) => item.level == 3)
-                console.log(this.checkList)
+                // 渲染时候会有个先后
+                setTimeout(() => {
+                    let _nodes = this.$refs['tree'].getCheckedNodes()
+                    this.checkList = _nodes.filter((item) => item.level == 3)
+                }, 0)
             })
         }
 
@@ -144,7 +146,6 @@ export default class Categoryedit extends Vue {
                 this.$message.warning('请选择类目')
                 return
             }
-
             await addCateGroy(this.cateGoryForm)
         }
 

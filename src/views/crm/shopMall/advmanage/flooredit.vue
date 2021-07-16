@@ -69,7 +69,7 @@ import Bannertabs from './components/banner_tabs.vue' // 组件导入需要 .vue
 import Categorytabs from './components/category_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import Floortabs from './components/floor_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-import { getFloorDetail, getSpuPage, saveFloor } from './api/index'
+import { getFloorDetail, getSpuPage, saveFloor, getListCategory } from './api/index'
 import filters from '@/utils/filters'
 import { RespBossShopFloorDetail } from '@/interface/hbp-shop'
 import moment from 'moment'
@@ -93,7 +93,7 @@ export default class Flooredit extends Vue {
             updateUid: '',
             reservedName: false
         }
-
+        category=[]
         selectRow = []
         selectData = []
         private _queryParams = {}
@@ -120,16 +120,16 @@ export default class Flooredit extends Vue {
         tableLabel:tableLabelProps = [
             { label: 'SPU编码', prop: 'code' },
             { label: '商品名称', prop: 'name' },
-            { label: '商品类目', prop: 'categoryContent' },
+            { label: '商品类目', prop: 'categoryPath' },
             { label: '品牌', prop: 'brandName' }
         ]
 
         tableForm: any[] = [
         ]
         formTableLabel: tableLabelProps = [
-            { label: 'SPU编码', prop: 'code' },
-            { label: '商品名称', prop: 'name' },
-            { label: '商品类目', prop: 'categoryContent' },
+            { label: 'SPU编码', prop: 'spuCode' },
+            { label: '商品名称', prop: 'spuName' },
+            { label: '商品类目', prop: 'categoryPath' },
             { label: '品牌', prop: 'brandName' },
             {
                 label: '类目关联品类',
@@ -140,6 +140,7 @@ export default class Flooredit extends Vue {
                 render: (h: CreateElement, scope: TableRenderParam) => {
                     return (
                         <div>
+                          123  {this.category}
                             <el-select
                                 class="miniSelect"
                                 size="mini"
@@ -149,9 +150,17 @@ export default class Flooredit extends Vue {
                                     scope.row[scope.column.frontCategoryId] = val
                                 }}
                             >
-                                <el-option key="1" value={1} label="厂商">厂商</el-option>
-                                <el-option key="2" value={2} label="代理商">代理商</el-option>
-                                <el-option key="3" value={3} label="经销商">经销商</el-option>
+                                {this.category.map((item, index) => {
+                                    return (
+                                        <el-option
+                                            key={index + 'option'}
+                                            value={item.id}
+                                            label={item.frontCategoryName}
+                                        >
+                                            {item.frontCategoryName}
+                                        </el-option>
+                                    )
+                                })}
                             </el-select>
                         </div>
                     )
@@ -190,46 +199,48 @@ export default class Flooredit extends Vue {
 
             if (this.tableForm.length > 0) {
                 this.tableData && this.tableData.map((item, index) => {
-                    this.tableForm.indexOf(item)
+                    console.log(22)
+                    this.tableForm.map((jtem, index) => {
+                        if (jtem.id == item.id) {
+                            item.checked = true
+                        }
+                    })
                 })
             }
         }
 
+        async onFindCateList () {
+            const { data } = await getListCategory()
+            this.category = data
+            console.log(this.category)
+        }
+
         onSelect (val) {
+            console.log('spuCode', val)
             // val.row.checked = true
             this.$set(this.tableData[val.$index], 'checked', true)
             this.tableForm.push(val.row)
+            setTimeout(() => {
+                this.onFindCateList()
+            }, 0)
         }
         onNoSelect (val) {
             this.$set(val.row, 'checked', false)
-            let one = this.tableForm.indexOf(this.tableForm.filter(i => val.id == i.id)[0])
+            let _arr = this.tableForm.filter(i => val.id == i.id)
+            let one = _arr.length > 0 && this.tableForm.indexOf(_arr[0])
             console.log('one', one)
             this.tableForm.splice(one, 1)
         }
         onMove (val, type) {
             let index = val.$index
             if (type == 'up') {
-                if (index === 0) {
-                    this.$message({
-                        message: '已经是列表中第一个素材！',
-                        type: 'warning'
-                    })
-                } else {
-                    let temp = this.tableForm[index - 1]
-                    this.$set(this.tableForm, index - 1, this.tableForm[index])
-                    this.$set(this.tableForm, index, temp)
-                }
+                let temp = this.tableForm[index - 1]
+                this.$set(this.tableForm, index - 1, this.tableForm[index])
+                this.$set(this.tableForm, index, temp)
             } else {
-                if (index === (this.tableForm.length - 1)) {
-                    this.$message({
-                        message: '已经是列表中最后一个素材！',
-                        type: 'warning'
-                    })
-                } else {
-                    let i = this.tableForm[index + 1]
-                    this.$set(this.tableForm, index + 1, this.tableForm[index])
-                    this.$set(this.tableForm, index, i)
-                }
+                let i = this.tableForm[index + 1]
+                this.$set(this.tableForm, index + 1, this.tableForm[index])
+                this.$set(this.tableForm, index, i)
             }
         }
 
@@ -244,11 +255,12 @@ export default class Flooredit extends Vue {
         // }
         onCancelChoose (val) {
             console.log(val)
-            console.log(this.tableData.filter(i => val.id == i.id)[0])
-            let one = this.tableData.indexOf(this.tableData.filter(i => val.id == i.id)[0])
-            console.log('00', one)
-            this.$set(this.tableData[one], 'checked', false)
-            this.tableForm.splice(val.$index, 1)
+            let _arr = this.tableData.filter(i => val.id == i.id)
+            if (_arr.length > 0) {
+                let one = this.tableData.indexOf(_arr[0])
+                this.$set(this.tableData[one], 'checked', false)
+                this.tableForm.splice(val.$index, 1)
+            }
         }
 
         onSave () {
