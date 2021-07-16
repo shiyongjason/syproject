@@ -97,10 +97,10 @@
                     ></component>
                 </div>
                 <div style="margin-top:20px;display: flex;align-items: center;">
-                    <h-button type="assist" plain @click="()=>$refs.cropper.$refs.cropper.rotateLeft()"><span class='el-icon-refresh-left'></span>左旋转</h-button>
-                    <h-button type="assist" plain @click="()=>$refs.cropper.$refs.cropper.rotateRight()"><span class='el-icon-refresh-right'></span>右旋转</h-button>
-                    <h-button type="assist" plain @click="()=>$refs.cropper.$refs.cropper.changeScale(1)"><span class='el-icon-zoom-in'></span>放大</h-button>
-                    <h-button type="assist" plain @click="()=>$refs.cropper.$refs.cropper.changeScale(-1)"><span class='el-icon-zoom-out'></span>缩小</h-button>
+                    <el-button size="medium" @click="()=>$refs.cropper.$refs.cropper.rotateLeft()"><span class='el-icon-refresh-left'></span> 左旋转</el-button>
+                    <el-button size="medium" @click="()=>$refs.cropper.$refs.cropper.rotateRight()"><span class='el-icon-refresh-right'></span> 右旋转</el-button>
+                    <el-button size="medium" @click="()=>$refs.cropper.$refs.cropper.changeScale(1)"><span class='el-icon-zoom-in'></span> 放大</el-button>
+                    <el-button size="medium" @click="()=>$refs.cropper.$refs.cropper.changeScale(-1)"><span class='el-icon-zoom-out'></span> 缩小</el-button>
                     <div style="display: flex;align-items: center;">
                         <img src="https://hosjoy-hbp.oss-cn-hangzhou.aliyuncs.com/application/test/mouse.png" width="30" style="transform: rotate(329deg);margin:6px 10px 0 6px;">
                         鼠标滚轮也可以进行图片缩放

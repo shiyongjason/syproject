@@ -5,7 +5,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">商品名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.name" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.name" placeholder="请输入" maxlength="50" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -17,19 +17,19 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">商品品牌：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.brandName" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.brandName" placeholder="请输入" maxlength="50" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">商品型号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.model" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.model" placeholder="请输入" maxlength="50" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">SPU编码：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.spuCode" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.spuCode" placeholder="请输入" maxlength="50" clearable></el-input>
                     </div>
                 </div>
 
@@ -101,8 +101,6 @@ const _queryParams = {
     components: { hosJoyTable, elImageAddToken }
 })
 export default class ProductLabel extends Vue {
-    // @Getter('category/categoryOptions') categoryOptions: any
-    // @Action('category/findAllCategory') findAllCategory: Function
     categoryOptions:CategoryTreeResponse[] = []
     checkList = [] // 赛选
     Selection = [] // 列表选择
