@@ -35,9 +35,9 @@
                 </div>
             </div>
             <div class="mb20">
-                <h-button type="primary">批量选择</h-button>
+                <h-button type="primary" @click="onBatch">批量选择</h-button>
             </div>
-            <hosJoyTable ref="hosjoyTable" align="center" border showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" :tableRowClassName="rowClass"  :selectable="selectable"   :pageSizes='page.sizes'
+            <hosJoyTable ref="multipleTable" align="center" isShowIndex border showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" :tableRowClassName="rowClass"  :selectable="selectable"   :pageSizes='page.sizes'
                actionWidth='250' isAction :height="500" @selection-change="handleSelectionChange" isShowselection :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
                     <h-button table v-if="!slotProps.data.row.checked" @click="onSelect(slotProps.data)">选择</h-button>
@@ -50,7 +50,7 @@
                 <template #action="slotProps">
                     <h-button table @click="onMove(slotProps.data, 'up')" v-if="slotProps.data.$index!=0">上移</h-button>
                     <h-button table @click="onMove(slotProps.data, 'down')" v-if="slotProps.data.$index!=tableForm.length-1">下移</h-button>
-                    <h-button table @click="onCancelChoose(slotProps.data.row)">取消选择</h-button>
+                    <h-button table @click="onCancelChoose(slotProps.data)">取消选择</h-button>
                 </template>
             </hosJoyTable>
             <div class="floot-bot">
@@ -93,7 +93,7 @@ export default class Flooredit extends Vue {
             updateUid: '',
             reservedName: false
         }
-        category=[]
+        _category=[]
         selectRow = []
         selectData = []
         private _queryParams = {}
@@ -105,7 +105,7 @@ export default class Flooredit extends Vue {
             brandName: ''
         }
 
-        floorForm:object={
+        floorForm:any={
             floorName: '',
             reqBossFloorSpuList: []
         }
@@ -126,6 +126,10 @@ export default class Flooredit extends Vue {
 
         tableForm: any[] = [
         ]
+
+        category () {
+            return this._category
+        }
         formTableLabel: tableLabelProps = [
             { label: 'SPU编码', prop: 'spuCode' },
             { label: '商品名称', prop: 'spuName' },
@@ -133,24 +137,26 @@ export default class Flooredit extends Vue {
             { label: '品牌', prop: 'brandName' },
             {
                 label: '类目关联品类',
-                prop: 'frontCategoryName',
+                prop: 'frontCategoryId',
                 width: '300',
                 className: 'form-table-header',
                 showOverflowTooltip: false,
                 render: (h: CreateElement, scope: TableRenderParam) => {
                     return (
                         <div>
-                          123  {this.category}
+
                             <el-select
                                 class="miniSelect"
                                 size="mini"
+
                                 placeholder="请选择"
-                                value={scope.row[scope.column.frontCategoryId]}
+                                value={scope.row[scope.column.property]}
                                 onInput={(val) => {
-                                    scope.row[scope.column.frontCategoryId] = val
+                                    scope.row[scope.column.property] = val
                                 }}
+                                // v-model={scope.row[scope.column.frontCategoryId]}
                             >
-                                {this.category.map((item, index) => {
+                                {this.category().map((item, index) => {
                                     return (
                                         <el-option
                                             key={index + 'option'}
@@ -183,6 +189,25 @@ export default class Flooredit extends Vue {
 
         handleSelectionChange (val) {
             this.selectData = val
+            console.log(val)
+        }
+        onBatch () {
+            if (this.selectData.length > 0) {
+                let _data = this.selectData
+                _data.map((item) => {
+                    let _index = this.tableForm.findIndex(val => val.id == item.id)
+                    if (this.tableForm.length > 0) {
+                        console.log('index', this.tableForm.findIndex(val => val.id == item.id))
+                        if (_index == -1) {
+                            // 去重 push 到下面的table表格里面
+                            this.tableForm.push(item)
+                        }
+                    } else {
+                        this.tableForm.push(item)
+                    }
+                    this.$set(item, 'checked', true)
+                })
+            }
         }
         // 选中行 换色
         rowClass ({ row, rowIndex }) {
@@ -199,7 +224,6 @@ export default class Flooredit extends Vue {
 
             if (this.tableForm.length > 0) {
                 this.tableData && this.tableData.map((item, index) => {
-                    console.log(22)
                     this.tableForm.map((jtem, index) => {
                         if (jtem.id == item.id) {
                             item.checked = true
@@ -211,25 +235,25 @@ export default class Flooredit extends Vue {
 
         async onFindCateList () {
             const { data } = await getListCategory()
-            this.category = data
-            console.log(this.category)
+            this._category = data
         }
 
         onSelect (val) {
-            console.log('spuCode', val)
             // val.row.checked = true
             this.$set(this.tableData[val.$index], 'checked', true)
             this.tableForm.push(val.row)
-            setTimeout(() => {
-                this.onFindCateList()
-            }, 0)
+            this.$refs['multipleTable'].toggleRowSelection(val.row)
         }
         onNoSelect (val) {
             this.$set(val.row, 'checked', false)
-            let _arr = this.tableForm.filter(i => val.id == i.id)
-            let one = _arr.length > 0 && this.tableForm.indexOf(_arr[0])
-            console.log('one', one)
-            this.tableForm.splice(one, 1)
+            let _arr = this.tableForm.filter(i => val.row.id == i.id)
+            if (_arr.length > 0) {
+                let one = this.tableForm.findIndex(value => {
+                    return value.id == _arr[0].id
+                })
+                this.tableForm.splice(one, 1)
+            }
+            this.$refs['multipleTable'].clearSelection()
         }
         onMove (val, type) {
             let index = val.$index
@@ -254,16 +278,20 @@ export default class Flooredit extends Vue {
         //     }
         // }
         onCancelChoose (val) {
-            console.log(val)
-            let _arr = this.tableData.filter(i => val.id == i.id)
+            let _arr = this.tableData.filter(i => val.row.id == i.id)
             if (_arr.length > 0) {
-                let one = this.tableData.indexOf(_arr[0])
+                let one = this.tableData.findIndex(value => {
+                    return value.id == _arr[0].id
+                })
                 this.$set(this.tableData[one], 'checked', false)
                 this.tableForm.splice(val.$index, 1)
             }
+            this.$refs['multipleTable'].clearSelection()
         }
 
         onSave () {
+            this.floorForm.reqBossFloorSpuList = this.tableForm
+            console.log(this.floorForm)
             saveFloor(this.floorForm)
         }
 
@@ -276,6 +304,7 @@ export default class Flooredit extends Vue {
                 this.tableForm = data.respBossFloorSpuList || []
             }
             this.onFindList()
+            this.onFindCateList()
         }
 }
 </script>
