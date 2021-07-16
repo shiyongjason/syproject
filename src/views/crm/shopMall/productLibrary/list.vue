@@ -150,9 +150,9 @@ import { Vue, Component, Prop, Watch, Ref } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import elImageAddToken from '@/components/elImageAddToken/index.vue'
-import { getSpuList, getSkuList, batchDelete, skuhelftatus } from './api/index'
+import { getSpuList, getSkuList, batchDelete, skuhelftatus, getTreeCateGroy } from './api/index'
 import utils from '@/utils/filters'
-import { RespBossSku } from '@/interface/hbp-shop'
+import { CategoryTreeResponse, RespBossSku } from '@/interface/hbp-shop'
 const _queryParams = {
     name: '',
     categoryIds: [],
@@ -162,6 +162,7 @@ const _queryParams = {
     skuCode: '',
     status: '',
     isOnShelf: '',
+    editStatus: false, // 要查待编辑的，传个true
     pageNumber: 1,
     pageSize: 10
 }
@@ -170,18 +171,22 @@ const _queryParams = {
     components: { hosJoyTable, elImageAddToken }
 })
 export default class ProductLibrary extends Vue {
-    @Getter('category/categoryOptions') categoryOptions: any
-    @Action('category/findAllCategory') findAllCategory: Function
+    categoryOptions:CategoryTreeResponse[] = []
     rackDialogTitle:string = ''
     BulkDialog:boolean = false
     resetTable:boolean = true
     delDialogTitle:string = ''
     checkList = []
-    spuCheckboxOptions = [{ label: '只看上架SPU', value: 'isOnShelf:1' }, { label: '只看下架SPU', value: 'isOnShelf:0' }, { label: '只看待编辑SPU', value: 'status:0' }]
-    skuCheckboxOptions = [{ label: '只看上架SKU', value: 'isOnShelf:1' }, { label: '只看下架SKU', value: 'isOnShelf:0' }, { label: '只看待编辑SKU', value: 'status:0' }]
+    spuCheckboxOptions = [{ label: '只看上架SPU', value: 'isOnShelf:2' }, { label: '只看下架SPU', value: 'isOnShelf:1' }, { label: '只看待编辑SPU', value: 'editStatus:true' }]
+    skuCheckboxOptions = [{ label: '只看上架SKU', value: 'isOnShelf:2' }, { label: '只看下架SKU', value: 'isOnShelf:1' }, { label: '只看待编辑SKU', value: 'editStatus:true' }]
     checkboxOptions = this.spuCheckboxOptions
     activeName = 'SPU'
-    props = { multiple: true }
+    props = {
+        multiple: true,
+        children: 'subCategoryList',
+        label: 'name',
+        value: 'code'
+    }
     queryParams: typeof _queryParams = JSON.parse(JSON.stringify(_queryParams))
     page:any = {
         sizes: [10, 20, 50, 100],
@@ -200,7 +205,7 @@ export default class ProductLibrary extends Vue {
     tableLabel: tableLabelProps = [
         { label: 'SPU编码', prop: 'code' },
         { label: '商品名称', prop: 'name' },
-        { label: '商品类目', prop: 'categoryContent' },
+        { label: '商品类目', prop: 'categoryPath' },
         { label: '商品品牌', prop: 'brandName' },
         { label: '商品型号', prop: 'model' },
         {
@@ -225,7 +230,7 @@ export default class ProductLibrary extends Vue {
                         {
                             scope.row.isOnShelf === null ? '待编辑SPU'
                                 : scope.row.isOnShelf == 2 ? '上架SPU'
-                                    : scope.row.isOnShelf == 1 ? '下架SPU' : ''
+                                    : scope.row.isOnShelf == 1 ? '下架SPU' : '-'
                         }
                     </div>
                 )
@@ -259,7 +264,7 @@ export default class ProductLibrary extends Vue {
                         {
                             scope.row.isOnShelf === null ? '待编辑SPU'
                                 : scope.row.isOnShelf == 2 ? '上架SKU'
-                                    : scope.row.isOnShelf == 1 ? '下架SKU' : ''
+                                    : scope.row.isOnShelf == 1 ? '下架SKU' : '-'
                         }
                     </div>
                 )
@@ -378,6 +383,7 @@ export default class ProductLibrary extends Vue {
     handleCheckBox () {
         this.queryParams.status = ''
         this.queryParams.isOnShelf = ''
+        this.queryParams.editStatus = false
         if (this.checkList.length == 0) {
             return
         }
@@ -501,9 +507,13 @@ export default class ProductLibrary extends Vue {
     // getList
     async getList () {
         let query = JSON.parse(JSON.stringify(this.queryParams))
+        let temp = []
         if (query.categoryIds.length > 0) {
-            query.categoryIds = query.categoryIds.toString()
+            query.categoryIds.map(item => {
+                temp.push(item[item.length - 1])
+            })
         }
+        query.categoryIds = temp.toString()
         if (this.activeName == 'SKU') {
             const { data } = await getSkuList(query)
             this.tableData = data.records
@@ -515,8 +525,9 @@ export default class ProductLibrary extends Vue {
         }
     }
 
-    mounted () {
-        this.findAllCategory()
+    async mounted () {
+        const { data } = await getTreeCateGroy({ searchContent: '' })
+        this.categoryOptions = data
         this.getList()
     }
 }

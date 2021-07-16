@@ -35,3 +35,7 @@ export const submitSpu: (params: ReqBossSpuUpdate) => AxiosPromise<any> = (param
 export const putSKU: (params: ReqBossSkuUpdate) => AxiosPromise<any> = (params) => {
     return axios.put(`shop/api/skus/boss/sku`, params)
 }
+// 类目tree
+export const getTreeCateGroy: (params: any) => AxiosPromise<any> = (params) => {
+    return axios.get(`shop/api/categories/tree`, { params })
+}
