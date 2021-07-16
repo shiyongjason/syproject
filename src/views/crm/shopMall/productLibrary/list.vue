@@ -1,7 +1,6 @@
 <template>
     <div class="page-body B2b ProductLibrary">
         <div class="page-body-cont">
-
             <!--  -->
             <el-tabs v-model="activeName" type="card" @tab-click="handleTabsClick">
                 <el-tab-pane label="SPU" name="SPU"></el-tab-pane>
@@ -11,7 +10,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">商品名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.name" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.name" placeholder="请输入" maxlength="50" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -23,25 +22,25 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">商品品牌：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.brandName" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.brandName" placeholder="请输入" maxlength="50" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">商品型号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.model" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.model" placeholder="请输入" maxlength="50" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">SPU编码：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.spuCode" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.spuCode" placeholder="请输入" maxlength="50" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col" v-if="activeName=='SKU'">
                     <div class="query-col__label">SKU编码：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.skuCode" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.skuCode" placeholder="请输入" maxlength="50" clearable></el-input>
                     </div>
                 </div>
 
@@ -176,7 +175,7 @@ export default class ProductLibrary extends Vue {
     BulkDialog:boolean = false
     resetTable:boolean = true
     delDialogTitle:string = ''
-    checkList = []
+    checkList:any[] = []
     spuCheckboxOptions = [{ label: '只看上架SPU', value: 'isOnShelf:2' }, { label: '只看下架SPU', value: 'isOnShelf:1' }, { label: '只看待编辑SPU', value: 'editStatus:true' }]
     skuCheckboxOptions = [{ label: '只看上架SKU', value: 'isOnShelf:2' }, { label: '只看下架SKU', value: 'isOnShelf:1' }, { label: '只看待编辑SKU', value: 'editStatus:true' }]
     checkboxOptions = this.spuCheckboxOptions
@@ -256,7 +255,7 @@ export default class ProductLibrary extends Vue {
         { label: '商品型号', prop: 'model' },
         { label: '商品规格', prop: 'optionValues' },
         {
-            label: '商品类别', // status 编辑状态 0：草稿 1：已提交     isOnShelf 1:下架 2:上架
+            label: '商品类别', // isOnShelf 1:下架 2:上架
             prop: 'status',
             render: (h, scope) => {
                 return (

@@ -25,7 +25,7 @@
                             <el-radio :label="1">展示</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="商品销售名称：" prop="showName" style="width: 460px;">
+                    <el-form-item label="商品销售名称：" prop="showName" style="width: 460px;" maxlength='30'>
                         <el-input  v-model="form.showName" ></el-input>
                     </el-form-item>
                 </div>
@@ -47,10 +47,6 @@
                                     <span style="color:#00000065" class="sidepic" v-if="form.imageUrls.length>0">* 副图</span>
                                 </div>
                             </div>
-                            <!-- <div style="margin-right:10px" class="vicepics">
-                                <HosJoyUpload class="crmshopMallSpuEdit" v-model="form.sidePicture" :showPreView='true' :fileSize=20 :action='action' :fileNum='4' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' style="margin:10px 0 0 5px" />
-                                <div style="color:#00000065;marginLeft:40px">副图</div>
-                            </div> -->
                         </div>
                         <div class="picture-prompt" style="width:100%">
                             <p>副图最多支持上传4张，大小不超过20M，仅支持jpeg，jpg，png格式</p>
@@ -74,9 +70,9 @@
                         </el-tree>
                     </div>
                 </el-form-item>
-                <hosJoyTable  ref="hosjoyTable"  align="center" border stripe  :column="tableLabel" :data="form.skuList"  actionWidth='100' isAction >
+                <hosJoyTable  ref="hosjoyTable"  align="center" border stripe  :column="tableLabel" :data="form.skuList"  actionWidth='70' isAction >
                     <template slot="price" slot-scope="scope">
-                        <div class="skutableForm" v-if="form.priceVisible==1&&scope.data.row.isOnShelf!=2">
+                        <div class="skutableForm" v-if="form.priceVisible==1">
                             <el-form-item label="" :prop="`skuList.${scope.data.$index}.minSalePrice`" :rules="rules.minSalePrice">
                                 <el-input style="width:150px" placeholder="请输入" v-model="scope.data.row.minSalePrice"  v-isNum:2 v-inputMAX='100000000' size="mini" @blur="()=>compore(scope.data.row,scope.data.$index)"><template slot="append">元</template></el-input>
                             </el-form-item>
@@ -85,11 +81,8 @@
                                 <el-input style="width:150px" placeholder="请输入"  v-model="scope.data.row.maxSalePrice" v-isNum:2 v-inputMAX='100000000' size="mini" @blur="()=>compore(scope.data.row,scope.data.$index)"><template slot="append">元</template></el-input>
                             </el-form-item>
                         </div>
-                        <div v-if="form.priceVisible==1&&scope.data.row.isOnShelf==2" class="skutableForm" >
-                            {{scope.data.row.minSalePrice}} - {{scope.data.row.maxSalePrice}}
-                        </div>
                         <div v-if="!form.priceVisible" class="skutableForm" >
-                            -
+                            不展示
                         </div>
                     </template>
                     <template #action="slotProps">
@@ -117,7 +110,7 @@
         <el-dialog title="下架确认" :visible.sync="rackDialog" :close-on-click-modal="false" :before-close="() => rackDialog = false" width="450px" class="tipsDialog">
             <div style="text-align:center;padding:20px 0">
                 确定下架当前商品SKU吗？
-                <div style="color:#f00;marginTop:10px" v-if="rackData.recommendLocation">当前商品在【{{rackData.recommendLocation.toString()}}】被选用</div>
+                <div style="color:#f00;marginTop:10px" v-if="rackData.recommendLocation">提醒：当前商品在【{{rackData.recommendLocation.toString()}}】被选用，确定下架后，该SKU在以上位置不可见。</div>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="() => {rackDialog = false}">取 消</el-button>
@@ -128,13 +121,13 @@
 </template>
 <script lang='tsx'>
 import { ElForm } from 'element-ui/types/form'
+import { ElTree } from 'element-ui/types/tree'
 import { Vue, Component, Prop, Watch, Ref } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import { ccpBaseUrl } from '@/api/config'
 import { getChiness, getSpudetail, putSKU, skuhelftatus, batchDelete, submitSpu } from './api/index'
-import { ElTree } from 'element-ui/types/tree'
 import { errorTxt } from './const'
 import { RespBossB2bSkuPage, RespBossSku, RespBossSpuDetail } from '@/interface/hbp-shop'
 import { bulkPullSku, getSkuList } from '../addProduct/api'
@@ -156,9 +149,12 @@ const _queryParams = {
     components: { hosJoyTable, HosJoyUpload }
 })
 export default class SpuEdit extends Vue {
+    @Ref('formmain') $refFormmain: ElForm & { fields:any[] }
+    @Ref('selectCityTree') $refSelectCityTree: ElTree<any, any>;
     @State('userInfo') userInfo: any
     @Action('setNewTags') setNewTags: Function
-    provinceLen:number|string = ''
+
+    provinceLen:number = 0
     rackDialog:boolean = false
     rackData:RespBossSku = '' as RespBossSku
     queryParams: typeof _queryParams = JSON.parse(JSON.stringify(_queryParams))
@@ -277,14 +273,15 @@ export default class SpuEdit extends Vue {
 
     onSubmit () {
         console.log('提交前::::::this.form', this.form)
-        let from:any = this.$refs.formmain
+        if (this.form.skuList.length == 0) {
+            this.$message.error('请至少选择一个SKU信息~')
+            return
+        }
         /** start  format saleRules */
         let allProvince = []
         let allCity = []
-        // @ts-ignore
-        this.nodeList = this.$refs.selectCityTree.getCheckedNodes()
+        this.nodeList = this.$refSelectCityTree.getCheckedNodes()
         let provinceID:any = ''
-        // 提交
         for (let i = 0, len = this.nodeList.length; i < len; i++) {
             let item = this.nodeList[i]
             // level == 1 全省
@@ -314,7 +311,7 @@ export default class SpuEdit extends Vue {
         }
         this.form.saleRules = result
         /** end  */
-        from.validate(async (value, r) => {
+        this.$refFormmain.validate(async (value, r) => {
             if (value) {
                 let query = JSON.parse(JSON.stringify(this.form)) // 防止修改imageUrls导致页面渲染失败
                 let temp = []
@@ -322,8 +319,9 @@ export default class SpuEdit extends Vue {
                     temp.push(item.fileUrl)
                 })
                 query.imageUrls = temp
-                if (query.priceVisible == 1) {
-                    query.skuList.map(row => {
+                query.skuList.map(row => {
+                    // 0 展示 1不展示
+                    if (query.priceVisible == 1) {
                         // TODO fix 表格编辑bug，后期优化
                         row.minSalePrice = isNum(row.minSalePrice, 2)
                         row.maxSalePrice = isNum(row.maxSalePrice, 2)
@@ -333,14 +331,15 @@ export default class SpuEdit extends Vue {
                         if (Number(row.maxSalePrice) > 100000000) {
                             row.maxSalePrice = 100000000
                         }
-                    })
-                }
-                console.log('log::::::fffff', query)
+                    } else {
+                        row.minSalePrice = null
+                        row.maxSalePrice = null
+                    }
+                })
                 await submitSpu(query)
-                this.$message.success('编辑成功')
+                this.$message.success('提交编辑成功~')
                 this.onBack()
             } else {
-                this.$message.error('必填项不得为空~')
                 this.$nextTick(() => {
                     let className = this.form.priceVisible == null ? '.show-err' : '.is-error'
                     const dom = document.querySelector(className)
@@ -358,7 +357,7 @@ export default class SpuEdit extends Vue {
     // 确认下架sku
     async onHandleRack () {
         this.rackData.isOnShelf = 1
-        this.$message.success('下架成功')
+        this.$message.success('操作成功~')
         this.rackDialog = false
     }
 
@@ -369,15 +368,13 @@ export default class SpuEdit extends Vue {
     }
     // 上架sku
     async onTheShelves (data, index) {
-        console.log('🚀 --- onTheShelves --- index', index)
-        let from:any = this.$refs.formmain
         let isError = false
-        from.validateField(`skuList.${index}.minSalePrice`, message => {
+        this.$refFormmain.validateField(`skuList.${index}.minSalePrice`, message => {
             if (message) {
                 isError = true
             }
         })
-        from.validateField(`skuList.${index}.maxSalePrice`, message => {
+        this.$refFormmain.validateField(`skuList.${index}.maxSalePrice`, message => {
             if (message) {
                 isError = true
             }
@@ -386,10 +383,12 @@ export default class SpuEdit extends Vue {
             return
         }
         data.isOnShelf = 2
+        this.$message.success('操作成功~')
     }
     // 删除sku
     async onDel (index) {
         this.form.skuList.splice(index, 1)
+        this.$message.success('操作成功~')
     }
 
     async onReloadTable () {
@@ -402,13 +401,11 @@ export default class SpuEdit extends Vue {
         if (!row.minSalePrice || !row.maxSalePrice) {
             return
         }
-        let from:any = this.$refs.formmain
-        let isError = false
         if (row.minSalePrice !== null) {
-            from.validateField(`skuList.${index}.minSalePrice`)
+            this.$refFormmain.validateField(`skuList.${index}.minSalePrice`)
         }
         if (row.maxSalePrice !== null) {
-            from.validateField(`skuList.${index}.maxSalePrice`)
+            this.$refFormmain.validateField(`skuList.${index}.maxSalePrice`)
         }
     }
 
@@ -441,15 +438,13 @@ export default class SpuEdit extends Vue {
                     minSalePrice: null,
                     maxSalePrice: null,
                     isOnShelf: null,
+                    isPullAble: item.isPullAble,
                     updateBy: this.userInfo.employeeName,
                     updatePhone: this.userInfo.phoneNumber
                 }
                 this.form.skuList.push(sku)
             })
-            let ref:any = this.$refs.hosjoyTableSKU
-            ref.clearSelection()
-            this.dialogTableVisible = false
-            this.Selection = []
+            this.onCloseDialog()
             // 刷新列表
             // this.onReloadTable()
         } catch (error) {
@@ -522,39 +517,18 @@ export default class SpuEdit extends Vue {
     }
 
     treeChangeHandler () {
-        // @ts-ignore 通过 node 获取
-        this.nodeList = this.$refs.selectCityTree.getCheckedNodes()
-        let from:any = this.$refs.formmain
+        // 通过 node 获取
+        this.nodeList = this.$refSelectCityTree.getCheckedNodes()
         if (this.nodeList.length > 0) {
-            from.fields.map(i => {
+            this.$refFormmain.fields.map(i => {
                 if (i.prop === 'saleRules') {
                     i.clearValidate()
                 }
             })
         } else {
-            from.validateField(`saleRules`)
+            this.$refFormmain.validateField(`saleRules`)
         }
     }
-
-    /* log () {
-        let apiRes = [{ provinceId: '120000000000', cityId: '', areaId: '' }, { provinceId: '130000000000', cityId: '130100000000', areaId: '' }, { provinceId: '130000000000', cityId: '130200000000', areaId: '' }, { provinceId: '140000000000', cityId: '', areaId: '' }]
-        let checkedNodes = []
-        for (let item of apiRes) {
-            // 全省
-            if (!item.cityId) {
-                checkedNodes.push(item.provinceId)
-                continue
-            }
-            if (item.cityId) {
-                checkedNodes.push(item.cityId)
-            }
-        }
-        // @ts-ignore
-        this.$refs.selectCityTree.setCheckedKeys(
-            checkedNodes
-        )
-        console.log('log::::::form', this.form)
-    } */
 
     async getDetail () {
         const { data } = await getSpudetail(this.$route.query.id)
@@ -576,8 +550,7 @@ export default class SpuEdit extends Vue {
             let checkedNodes = []
             for (let item of this.form.saleRules) {
                 if (item.provinceId == '0' && item.cityId == '0' && item.areaId == '0') {
-                    // @ts-ignore
-                    this.$refs.selectCityTree.setCheckedKeys([''])
+                    this.$refSelectCityTree.setCheckedKeys([''])
                     break
                 }
                 // 全省
@@ -589,8 +562,7 @@ export default class SpuEdit extends Vue {
                     checkedNodes.push(item.cityId)
                 }
             }
-            // @ts-ignore
-            this.$refs.selectCityTree.setCheckedKeys(
+            this.$refSelectCityTree.setCheckedKeys(
                 checkedNodes
             )
         }
@@ -606,8 +578,7 @@ export default class SpuEdit extends Vue {
         await this.getDetail()
         this.queryParams.spuCode = this.$route.query.spuCode as string
         this.$nextTick(() => {
-            // @ts-ignore
-            this.$refs['formmain'].clearValidate()
+            this.$refFormmain.clearValidate()
         })
     }
 }

@@ -5,7 +5,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">商品名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.name" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.name" placeholder="请输入" maxlength="50" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -17,25 +17,25 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">商品品牌：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.brandName" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.brandName" placeholder="请输入" maxlength="50" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">商品型号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.model" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.model" placeholder="请输入" maxlength="50" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">SPU编码：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.spuCode" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.spuCode" placeholder="请输入" maxlength="50" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">SKU编码：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.skuCode" placeholder="请输入" maxlength="13" clearable></el-input>
+                        <el-input v-model="queryParams.skuCode" placeholder="请输入" maxlength="50" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -84,9 +84,6 @@ const _queryParams = {
     components: { hosJoyTable, elImageAddToken }
 })
 export default class ShopMallAddProduct extends Vue {
-    // @Ref('searchForm') readonly searchForm: ElForm;
-    // @Getter('category/categoryOptions') categoryOptions: any
-    // @Action('category/findAllCategory') findAllCategory: Function
     categoryOptions:CategoryTreeResponse[] = []
     props = {
         multiple: true,
@@ -176,7 +173,8 @@ export default class ShopMallAddProduct extends Vue {
 
     // Edit
     onEditor (row) {
-        this.$router.push({ path: '/goodwork/commodityManagement/spuEdit', query: { id: row.id, spuCode: row.code } })
+        console.log('log::::::', row)
+        this.$router.push({ path: '/goodwork/commodityManagement/spuEdit', query: { id: row.spuId, spuCode: row.spuCode } })
     }
 
     async mounted () {
