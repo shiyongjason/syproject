@@ -454,7 +454,8 @@ export default {
                 type: 'warning'
             }).then(async () => {
                 await deleteComplaintProcessOrder({ id: val, operateUserName: this.userInfo.employeeName })
-                this.onQueryComplaintRecord()
+                this.createRecordCancel()
+                this.cancelAddOrderClick()
                 this.onQuery()
                 this.$message.success('删除成功')
             })
