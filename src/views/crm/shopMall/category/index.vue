@@ -31,7 +31,7 @@
                 <template #action="slotProps">
                     <h-button table @click="onEdit(slotProps.data.row)">编辑</h-button>
                     <h-button table @click="onDelete(slotProps.data.row)">删除</h-button>
-                    <h-button table>查看</h-button>
+                    <h-button table @click="onLook(slotProps.data.row)">查看</h-button>
                     <h-button table v-if="slotProps.data.$index!=0" @click="onMove(slotProps.data.row,'up')">上移</h-button>
                     <h-button table v-if="slotProps.data.$index!=tableData.length-1" @click="onMove(slotProps.data.row,'down')">下移</h-button>
                 </template>
@@ -120,6 +120,10 @@ export default class Categroies extends Vue {
 
         onEdit (val) {
             this.$router.push({ path: '/goodwork/categoryedit', query: { id: val.id } })
+        }
+
+        onLook (val) {
+            this.$router.push({ path: '/goodwork/categorydetail', query: { id: val.id } })
         }
 
         async onDelete (val) {

@@ -35,9 +35,9 @@
                 </div>
             </div>
             <div class="mb20">
-                <h-button type="primary">批量选择</h-button>
+                <h-button type="primary" @click="onBatch">批量选择</h-button>
             </div>
-            <hosJoyTable ref="hosjoyTable" align="center" border showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" :tableRowClassName="rowClass"  :selectable="selectable"   :pageSizes='page.sizes'
+            <hosJoyTable ref="multipleTable" align="center" isShowIndex border showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" :tableRowClassName="rowClass"  :selectable="selectable"   :pageSizes='page.sizes'
                actionWidth='250' isAction :height="500" @selection-change="handleSelectionChange" isShowselection :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
                     <h-button table v-if="!slotProps.data.row.checked" @click="onSelect(slotProps.data)">选择</h-button>
@@ -50,7 +50,7 @@
                 <template #action="slotProps">
                     <h-button table @click="onMove(slotProps.data, 'up')" v-if="slotProps.data.$index!=0">上移</h-button>
                     <h-button table @click="onMove(slotProps.data, 'down')" v-if="slotProps.data.$index!=tableForm.length-1">下移</h-button>
-                    <h-button table @click="onCancelChoose(slotProps.data.row)">取消选择</h-button>
+                    <h-button table @click="onCancelChoose(slotProps.data)">取消选择</h-button>
                 </template>
             </hosJoyTable>
             <div class="floot-bot">
@@ -69,7 +69,7 @@ import Bannertabs from './components/banner_tabs.vue' // 组件导入需要 .vue
 import Categorytabs from './components/category_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import Floortabs from './components/floor_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-import { getFloorDetail, getSpuPage, saveFloor } from './api/index'
+import { getFloorDetail, getSpuPage, saveFloor, getListCategory } from './api/index'
 import filters from '@/utils/filters'
 import { RespBossShopFloorDetail } from '@/interface/hbp-shop'
 import moment from 'moment'
@@ -93,7 +93,7 @@ export default class Flooredit extends Vue {
             updateUid: '',
             reservedName: false
         }
-
+        _category=[]
         selectRow = []
         selectData = []
         private _queryParams = {}
@@ -105,7 +105,7 @@ export default class Flooredit extends Vue {
             brandName: ''
         }
 
-        floorForm:object={
+        floorForm:any={
             floorName: '',
             reqBossFloorSpuList: []
         }
@@ -120,38 +120,53 @@ export default class Flooredit extends Vue {
         tableLabel:tableLabelProps = [
             { label: 'SPU编码', prop: 'code' },
             { label: '商品名称', prop: 'name' },
-            { label: '商品类目', prop: 'categoryContent' },
+            { label: '商品类目', prop: 'categoryPath' },
             { label: '品牌', prop: 'brandName' }
         ]
 
         tableForm: any[] = [
         ]
+
+        category () {
+            return this._category
+        }
         formTableLabel: tableLabelProps = [
-            { label: 'SPU编码', prop: 'code' },
-            { label: '商品名称', prop: 'name' },
-            { label: '商品类目', prop: 'categoryContent' },
+            { label: 'SPU编码', prop: 'spuCode' },
+            { label: '商品名称', prop: 'spuName' },
+            { label: '商品类目', prop: 'categoryPath' },
             { label: '品牌', prop: 'brandName' },
             {
                 label: '类目关联品类',
-                prop: 'frontCategoryName',
+                prop: 'frontCategoryId',
                 width: '300',
                 className: 'form-table-header',
                 showOverflowTooltip: false,
                 render: (h: CreateElement, scope: TableRenderParam) => {
                     return (
                         <div>
+
                             <el-select
                                 class="miniSelect"
                                 size="mini"
+
                                 placeholder="请选择"
-                                value={scope.row[scope.column.frontCategoryId]}
+                                value={scope.row[scope.column.property]}
                                 onInput={(val) => {
-                                    scope.row[scope.column.frontCategoryId] = val
+                                    scope.row[scope.column.property] = val
                                 }}
+                                // v-model={scope.row[scope.column.frontCategoryId]}
                             >
-                                <el-option key="1" value={1} label="厂商">厂商</el-option>
-                                <el-option key="2" value={2} label="代理商">代理商</el-option>
-                                <el-option key="3" value={3} label="经销商">经销商</el-option>
+                                {this.category().map((item, index) => {
+                                    return (
+                                        <el-option
+                                            key={index + 'option'}
+                                            value={item.id}
+                                            label={item.frontCategoryName}
+                                        >
+                                            {item.frontCategoryName}
+                                        </el-option>
+                                    )
+                                })}
                             </el-select>
                         </div>
                     )
@@ -174,6 +189,25 @@ export default class Flooredit extends Vue {
 
         handleSelectionChange (val) {
             this.selectData = val
+            console.log(val)
+        }
+        onBatch () {
+            if (this.selectData.length > 0) {
+                let _data = this.selectData
+                _data.map((item) => {
+                    let _index = this.tableForm.findIndex(val => val.id == item.id)
+                    if (this.tableForm.length > 0) {
+                        console.log('index', this.tableForm.findIndex(val => val.id == item.id))
+                        if (_index == -1) {
+                            // 去重 push 到下面的table表格里面
+                            this.tableForm.push(item)
+                        }
+                    } else {
+                        this.tableForm.push(item)
+                    }
+                    this.$set(item, 'checked', true)
+                })
+            }
         }
         // 选中行 换色
         rowClass ({ row, rowIndex }) {
@@ -190,46 +224,47 @@ export default class Flooredit extends Vue {
 
             if (this.tableForm.length > 0) {
                 this.tableData && this.tableData.map((item, index) => {
-                    this.tableForm.indexOf(item)
+                    this.tableForm.map((jtem, index) => {
+                        if (jtem.id == item.id) {
+                            item.checked = true
+                        }
+                    })
                 })
             }
+        }
+
+        async onFindCateList () {
+            const { data } = await getListCategory()
+            this._category = data
         }
 
         onSelect (val) {
             // val.row.checked = true
             this.$set(this.tableData[val.$index], 'checked', true)
             this.tableForm.push(val.row)
+            this.$refs['multipleTable'].toggleRowSelection(val.row)
         }
         onNoSelect (val) {
             this.$set(val.row, 'checked', false)
-            let one = this.tableForm.indexOf(this.tableForm.filter(i => val.id == i.id)[0])
-            console.log('one', one)
-            this.tableForm.splice(one, 1)
+            let _arr = this.tableForm.filter(i => val.row.id == i.id)
+            if (_arr.length > 0) {
+                let one = this.tableForm.findIndex(value => {
+                    return value.id == _arr[0].id
+                })
+                this.tableForm.splice(one, 1)
+            }
+            this.$refs['multipleTable'].clearSelection()
         }
         onMove (val, type) {
             let index = val.$index
             if (type == 'up') {
-                if (index === 0) {
-                    this.$message({
-                        message: '已经是列表中第一个素材！',
-                        type: 'warning'
-                    })
-                } else {
-                    let temp = this.tableForm[index - 1]
-                    this.$set(this.tableForm, index - 1, this.tableForm[index])
-                    this.$set(this.tableForm, index, temp)
-                }
+                let temp = this.tableForm[index - 1]
+                this.$set(this.tableForm, index - 1, this.tableForm[index])
+                this.$set(this.tableForm, index, temp)
             } else {
-                if (index === (this.tableForm.length - 1)) {
-                    this.$message({
-                        message: '已经是列表中最后一个素材！',
-                        type: 'warning'
-                    })
-                } else {
-                    let i = this.tableForm[index + 1]
-                    this.$set(this.tableForm, index + 1, this.tableForm[index])
-                    this.$set(this.tableForm, index, i)
-                }
+                let i = this.tableForm[index + 1]
+                this.$set(this.tableForm, index + 1, this.tableForm[index])
+                this.$set(this.tableForm, index, i)
             }
         }
 
@@ -243,15 +278,20 @@ export default class Flooredit extends Vue {
         //     }
         // }
         onCancelChoose (val) {
-            console.log(val)
-            console.log(this.tableData.filter(i => val.id == i.id)[0])
-            let one = this.tableData.indexOf(this.tableData.filter(i => val.id == i.id)[0])
-            console.log('00', one)
-            this.$set(this.tableData[one], 'checked', false)
-            this.tableForm.splice(val.$index, 1)
+            let _arr = this.tableData.filter(i => val.row.id == i.id)
+            if (_arr.length > 0) {
+                let one = this.tableData.findIndex(value => {
+                    return value.id == _arr[0].id
+                })
+                this.$set(this.tableData[one], 'checked', false)
+                this.tableForm.splice(val.$index, 1)
+            }
+            this.$refs['multipleTable'].clearSelection()
         }
 
         onSave () {
+            this.floorForm.reqBossFloorSpuList = this.tableForm
+            console.log(this.floorForm)
             saveFloor(this.floorForm)
         }
 
@@ -264,6 +304,7 @@ export default class Flooredit extends Vue {
                 this.tableForm = data.respBossFloorSpuList || []
             }
             this.onFindList()
+            this.onFindCateList()
         }
 }
 </script>

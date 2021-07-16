@@ -685,11 +685,24 @@ export default [
                     title: '品类新增/编辑',
                     tagName: '品类新增/编辑',
                     parentName: '好橙工',
-                    isMenu: true,
+                    isMenu: false,
                     icon: '',
                     showMenuAs: '/goodwork/category'
                 },
                 component: () => import('@/views/crm/shopMall/category/edit.vue')
+            },
+            {
+                path: 'categorydetail',
+                name: 'categorydetail',
+                meta: {
+                    title: '品类详情',
+                    tagName: '品类详情',
+                    parentName: '好橙工',
+                    isMenu: false,
+                    icon: '',
+                    showMenuAs: '/goodwork/category'
+                },
+                component: () => import('@/views/crm/shopMall/category/detail.vue')
             }
         ]
     }

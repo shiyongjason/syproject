@@ -103,3 +103,8 @@ export const addCategory:(param:any)=>AxiosPromise<void> = (params) => {
 export const cancelCategory:(param:any)=>AxiosPromise<void> = (params) => {
     return axios.post(`/shop/api/boss/front-category/recommends/cancel/${params}`)
 }
+
+// 查询所有品类
+export const getListCategory:()=>AxiosPromise<Shops.BossFrontCategoryResponse[]> = () => {
+    return axios.get(`/shop/api/boss/front-categories/list`)
+}
