@@ -84,6 +84,7 @@ import { ccpBaseUrl } from '@/api/config'
 import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import { getListApi, postBrands, getBrands } from './api'
 import { BrandDetailResponse, BrandShopExtendResponse } from '@/interface/hbp-shop'
+import { CRM_SHOPP_PRODUCTLABEL_VIEW, CRM_SHOPP_PRODUCTLABEL_EDIT } from '@/utils/auth_const'
 
 const _queryParams = {
     brandCode: '',
@@ -97,6 +98,8 @@ const _queryParams = {
 })
 export default class brandManage extends Vue {
     @Ref('ruleForm') $refRuleForm: ElForm;
+    authView = CRM_SHOPP_PRODUCTLABEL_VIEW
+    authEdit = CRM_SHOPP_PRODUCTLABEL_EDIT
     // action = ccpBaseUrl + 'common/files/upload-old'
     action = ccpBaseUrl + 'common/files/upload-base64'
     isShowDetail:boolean = false
@@ -204,8 +207,8 @@ export default class brandManage extends Vue {
             render: (h, scope) => {
                 return (
                     <div>
-                        <h-button table onClick={() => this.onEdit(scope.row)}>修改品牌信息</h-button>
-                        <h-button table onClick={() => this.onGetDetail(scope.row)}>查看</h-button>
+                        {this.hosAuthCheck(this.authEdit) && <h-button table onClick={() => this.onEdit(scope.row)}>修改品牌信息</h-button>}
+                        {this.hosAuthCheck(this.authView) && <h-button table onClick={() => this.onGetDetail(scope.row)}>查看</h-button>}
                     </div>
                 )
             }

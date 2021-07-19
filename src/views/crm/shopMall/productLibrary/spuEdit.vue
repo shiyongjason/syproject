@@ -86,11 +86,11 @@
                         </div>
                     </template>
                     <template #action="slotProps">
-                        <h-button table v-if="slotProps.data.row.isOnShelf==2" @click="()=>onRack(slotProps.data.row)">下架</h-button>
-                        <div v-else><h-button table @click="()=>onTheShelves(slotProps.data.row,slotProps.data.$index)">上架</h-button><h-button table @click="()=>onDel(slotProps.data.$index)">删除</h-button></div>
+                        <h-button table v-if="slotProps.data.row.isOnShelf==2&&hosAuthCheck(authOff)" @click="()=>onRack(slotProps.data.row)">下架</h-button>
+                        <div v-else><h-button v-if="hosAuthCheck(authOn)" table @click="()=>onTheShelves(slotProps.data.row,slotProps.data.$index)">上架</h-button><h-button v-if="hosAuthCheck(authDel)" table @click="()=>onDel(slotProps.data.$index)">删除</h-button></div>
                     </template>
                 </hosJoyTable>
-                <div class="addNew" @click="onAddSKU">+ 新增SKU</div>
+                <div class="addNew" @click="onAddSKU" v-if="hosAuthCheck(authAdd)">+ 新增SKU</div>
             </el-form>
             <div class="submit-btns">
                 <h-button @click="onBack">取消</h-button>
@@ -132,6 +132,7 @@ import { errorTxt } from './const'
 import { ReqBossSkuUpdate, RespBossB2bSkuPage, RespBossSku, RespBossSpuDetail } from '@/interface/hbp-shop'
 import { bulkPullSku, getSkuList } from '../addProduct/api'
 import { isNum } from '@/utils/validate/format'
+import { CRM_SHOPP_SPUEDIT_ONTHESHELVES, CRM_SHOPP_SPUEDIT_RACK, CRM_SHOPP_SPUEDIT_ADD, CRM_SHOPP_SPUEDIT_DEL } from '@/utils/auth_const'
 
 const _queryParams = {
     spuCode: '',
@@ -148,7 +149,10 @@ export default class SpuEdit extends Vue {
     @Ref('selectCityTree') $refSelectCityTree: ElTree<any, any>;
     @State('userInfo') userInfo: any
     @Action('setNewTags') setNewTags: Function
-
+    authOn = CRM_SHOPP_SPUEDIT_ONTHESHELVES
+    authOff = CRM_SHOPP_SPUEDIT_RACK
+    authAdd = CRM_SHOPP_SPUEDIT_ADD
+    authDel = CRM_SHOPP_SPUEDIT_DEL
     provinceLen:number = 0
     rackDialog:boolean = false
     rackData:RespBossSku = '' as RespBossSku
