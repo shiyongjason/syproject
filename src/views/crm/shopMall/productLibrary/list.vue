@@ -181,6 +181,7 @@ export default class ProductLibrary extends Vue {
     checkboxOptions = this.spuCheckboxOptions
     activeName = 'SPU'
     props = {
+        emitPath: false,
         multiple: true,
         children: 'subCategoryList',
         label: 'name',
@@ -506,13 +507,7 @@ export default class ProductLibrary extends Vue {
     // getList
     async getList () {
         let query = JSON.parse(JSON.stringify(this.queryParams))
-        let temp = []
-        if (query.categoryIds.length > 0) {
-            query.categoryIds.map(item => {
-                temp.push(item[item.length - 1])
-            })
-        }
-        query.categoryIds = temp.toString()
+        query.categoryIds = query.categoryIds.toString()
         if (this.activeName == 'SKU') {
             const { data } = await getSkuList(query)
             this.tableData = data.records
@@ -525,9 +520,9 @@ export default class ProductLibrary extends Vue {
     }
 
     async mounted () {
+        this.getList()
         const { data } = await getTreeCateGroy({ searchContent: '' })
         this.categoryOptions = data
-        this.getList()
     }
 }
 </script>

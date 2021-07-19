@@ -106,6 +106,7 @@ export default class ProductLabel extends Vue {
     Selection = [] // 列表选择
     checkboxOptions = [{ label: '只看严选产品', value: 'recommend:true' }, { label: '只看非严选产品', value: 'recommend:false' }]
     props = {
+        emitPath: false,
         multiple: true,
         children: 'subCategoryList',
         label: 'name',
@@ -255,11 +256,6 @@ export default class ProductLabel extends Vue {
         this.queryParams[key] = val
     }
 
-    // 商品类目Change
-    productCategoryChange () {
-        console.log('log::::::')
-    }
-
     // 搜索重置
     onReset () {
         this.queryParams = JSON.parse(JSON.stringify(_queryParams))
@@ -269,29 +265,22 @@ export default class ProductLabel extends Vue {
 
     // 列表选择
     selectChange (val:any[]) {
-        console.log('🚀 --- selectChange --- val', val)
         this.Selection = val
     }
 
     // getList
     async getList () {
         let query = JSON.parse(JSON.stringify(this.queryParams))
-        let temp = []
-        if (query.categoryIds.length > 0) {
-            query.categoryIds.map(item => {
-                temp.push(item[item.length - 1])
-            })
-        }
-        query.categoryIds = temp.toString()
+        query.categoryIds = query.categoryIds.toString()
         const { data } = await getSpuList(query)
         this.tableData = data.records
         this.page.total = data.total
     }
 
     async mounted () {
+        this.getList()
         const { data } = await getTreeCateGroy({ searchContent: '' })
         this.categoryOptions = data
-        this.getList()
     }
 }
 </script>
