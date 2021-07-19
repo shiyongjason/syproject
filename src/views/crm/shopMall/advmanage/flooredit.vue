@@ -217,7 +217,7 @@ export default class Flooredit extends Vue {
     // 选中行 换色
     rowClass ({ row, rowIndex }) {
         if (row.checked) {
-            return 'slecleRowColor '
+            return 'slectRowColor '
         }
     }
 
@@ -301,24 +301,23 @@ export default class Flooredit extends Vue {
 
     async onSave () {
         this.floorForm.reqBossFloorSpuList = this.tableForm
-
-        // 保存楼层检验
-        if (!this.floorForm.floorName) {
-            this.$message.warning('请输入楼层名称')
-            return false
-        }
-        if (this.floorForm.reqBossFloorSpuList.length == 0) {
-            this.$message.warning('请选择楼层的商品')
-            return false
-        }
         console.log(this.floorForm)
-        if (this.$route.query.id) {
-            await editFloor(this.floorForm)
-        } else {
-            await saveFloor(this.floorForm)
-        }
-        this.$router.push('/goodwork/advmanage')
-        this.setNewTags((this.$route.fullPath).split('?')[0])
+        this.$refs['floorForm'].validate(async (valid) => {
+            if (valid) {
+                // 保存楼层检验
+                if (this.floorForm.reqBossFloorSpuList.length == 0) {
+                    this.$message.warning('请选择楼层的商品')
+                    return false
+                }
+                if (this.$route.query.id) {
+                    await editFloor(this.floorForm)
+                } else {
+                    await saveFloor(this.floorForm)
+                }
+                this.$router.push('/goodwork/advmanage')
+                this.setNewTags((this.$route.fullPath).split('?')[0])
+            }
+        })
     }
 
     onCancel () {
