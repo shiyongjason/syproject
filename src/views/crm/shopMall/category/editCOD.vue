@@ -39,7 +39,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 // import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
 import { CreateElement } from 'vue'
-import { getTreeCateGroy } from './api/index'
+import { getTreeCategroy } from './api/index'
 
 @Component({
     name: 'Categoryedit',
@@ -81,7 +81,7 @@ export default class Categoryedit extends Vue {
         checkList:any[]=[]
 
         async getList () {
-            const { data } = await getTreeCateGroy(this.queryParams)
+            const { data } = await getTreeCategroy(this.queryParams)
             this.data = this.resolveData(data, false, false, '', '')
         }
 

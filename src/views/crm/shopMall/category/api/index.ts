@@ -19,22 +19,22 @@ export const deleteCategory: (params:any) => AxiosPromise<void> = (params) => {
     return axios.delete(`/shop/api/boss/front-categories/${params}`)
 }
 // 删除品类校验接口
-export const getComfirCateGory: (params:any) => AxiosPromise<Shops.BossFrontCategoryFloorSpuResponse[]> = (params) => {
+export const getComfirCategory: (params:any) => AxiosPromise<Shops.BossFrontCategoryFloorSpuResponse[]> = (params) => {
     return axios.get(`/shop/api/boss/front-categories/${params}/confirm-deleting/list`)
 }
 
 // 类目tree
-export const getTreeCateGroy: (params:any) => AxiosPromise<Shops.CategoryTreeResponse[]> = (params) => {
+export const getTreeCategroy: (params:any) => AxiosPromise<Shops.CategoryTreeResponse[]> = (params) => {
     return axios.get(`/shop/api/categories/tree`, { params })
 }
 
 // 新增品类
-export const addCateGroy: (params:any) => AxiosPromise<void> = (params) => {
+export const addCategroy: (params:any) => AxiosPromise<void> = (params) => {
     return axios.post(`/shop/api/boss/front-categories`, params)
 }
 // 编辑品类
-export const editCateGroy: (params:any) => AxiosPromise<void> = (params) => {
-    return axios.post(`/shop/api/boss/front-categories`, params)
+export const editCategroy: (params:any) => AxiosPromise<void> = (params) => {
+    return axios.put(`/shop/api/boss/front-categories`, params)
 }
 // 查询品类详情
 export const getCateGroyDetail: (params:any) => AxiosPromise<Shops.BossFrontCategoryDetailResp> = (params) => {

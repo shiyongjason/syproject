@@ -9,7 +9,7 @@
                 </el-tab-pane>
                 <el-tab-pane label="楼层管理" name="floor">
                     <!-- <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation> -->
-                    <Floortabs v-if="activeName=='floor'" />
+                    <Floortabs v-if="activeName=='floor'" ref="floors"/>
                 </el-tab-pane>
                 <el-tab-pane label="品类推荐" name="category">
                     <!-- <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation> -->
@@ -28,9 +28,8 @@ import { CreateElement } from 'vue'
 import Bannertabs from './components/banner_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import Categorytabs from './components/category_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import Floortabs from './components/floor_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-
+import { clearCache, newCache } from '@/utils/index'
 import filters from '@/utils/filters'
-
 import moment from 'moment'
 
 @Component({
@@ -50,6 +49,27 @@ export default class Advmanage extends Vue {
     activeName: string='banner'
 
     handleTabClick (tab, event): void {
+    }
+    activated () {
+        if (this.activeName == 'floor') {
+            this.$nextTick(() => {
+                this.$refs['floors'].onGetFloorPage()
+            })
+        }
+    }
+
+    beforeRouteEnter (to, from, next) {
+        newCache('Advmanage')
+        next()
+    }
+
+    beforeRouteLeave (to, from, next) {
+        if (to.name == 'flooredit' || to.name == 'floordetail') {
+            //
+        } else {
+            clearCache('Advmanage')
+        }
+        next()
     }
 }
 </script>

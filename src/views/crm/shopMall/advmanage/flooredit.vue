@@ -89,7 +89,6 @@ export default class Flooredit extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
-    @State('userInfo') userInfo: any
     @Action('setNewTags') setNewTags!: Function
 
     uploadParameters = {
@@ -149,7 +148,7 @@ export default class Flooredit extends Vue {
                 return (
                     <div>
                         {
-                            this._category && <el-select
+                            <el-select
                                 class="miniSelect"
                                 size="mini"
 
@@ -232,9 +231,10 @@ export default class Flooredit extends Vue {
         this.page.total = spu.total as number
         // 查询时候 查下最新的是否选中状态
         if (this.tableForm.length > 0) {
-            this.tableData && this.tableData.map((item, index) => {
+            this.tableData.length > 0 && this.tableData.map((item, index) => {
                 this.tableForm.map((jtem, index) => {
                     if (jtem.id == item.id) {
+                        console.log('car')
                         item.checked = true
                     }
                 })

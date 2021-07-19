@@ -6,7 +6,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label"><i>*</i>品类名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model.trim="cateGoryForm.frontCategoryName" placeholder="请输入" maxlength="10"></el-input>
+                        <el-input v-model.trim="categoryForm.frontCategoryName" placeholder="请输入" maxlength="10"></el-input>
                     </div>
                 </div>
             </div>
@@ -54,7 +54,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 // import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
 import { CreateElement } from 'vue'
-import { getTreeCateGroy, addCateGroy, getCateGroyDetail, editCateGroy } from './api/index'
+import { getTreeCategroy, addCategroy, getCateGroyDetail, editCategroy } from './api/index'
 
 @Component({
     name: 'Categoryedit',
@@ -82,19 +82,19 @@ export default class Categoryedit extends Vue {
     expandCell:any[]=[]
     // checkList:any[]|[]=[]  这里有个类型定义问题 never
     checkList:any[]=[]
-    cateGoryForm:any={
+    categoryForm:any={
         frontCategoryName: '',
         categoryIdList: []
     }
     async getList () {
-        const { data } = await getTreeCateGroy(this.queryParams)
+        const { data } = await getTreeCategroy(this.queryParams)
         this.data = this.resolveData(data)
     }
 
     async getDetail () {
         let _tags = []
         const { data } = await getCateGroyDetail(this.$route.query.id)
-        this.cateGoryForm = { ...data }
+        this.categoryForm = { ...data }
         data.bossCategorySpuDetailResponseList && data.bossCategorySpuDetailResponseList.length > 0 && data.bossCategorySpuDetailResponseList.map((item:any) => {
             _tags.push(item.categoryId)
         })
@@ -137,22 +137,22 @@ export default class Categoryedit extends Vue {
     }
 
     async onSave () {
-        this.cateGoryForm.categoryIdList = []
+        this.categoryForm.categoryIdList = []
         this.checkList.map(item => {
-            this.cateGoryForm.categoryIdList.push(item.id)
+            this.categoryForm.categoryIdList.push(item.id)
         })
-        if (!this.cateGoryForm.frontCategoryName) {
+        if (!this.categoryForm.frontCategoryName) {
             this.$message.warning('请输入品类名称')
             return
         }
-        if (this.cateGoryForm.categoryIdList.length == 0) {
+        if (this.categoryForm.categoryIdList.length == 0) {
             this.$message.warning('请选择关联类目')
             return
         }
         if (this.$route.query.id) {
-            await editCateGroy(this.cateGoryForm)
+            await editCategroy(this.categoryForm)
         } else {
-            await addCateGroy(this.cateGoryForm)
+            await addCategroy(this.categoryForm)
         }
         this.$router.push({ path: '/goodwork/categorymanage' })
     }

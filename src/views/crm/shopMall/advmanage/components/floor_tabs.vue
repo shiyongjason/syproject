@@ -2,18 +2,18 @@
 <template>
     <div class="banner-tab">
         <div class="baner-btn mb20">
-            <el-button type="primary" @click="onAddFloor" v-if="hosAuthCheck(flooradd)">新增楼层</el-button>
+            <el-button type="primary" @click="onAddFloor" v-if="hosAuthCheck(floorAdd)">新增楼层</el-button>
         </div>
         <hosJoyTable isShowIndex ref="hosjoyTable" align="center" showPagination border stripe :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onGetFloorPage" actionWidth='250' isAction
             :isActionFixed='tableData&&tableData.length>0'>
             <template #action="slotProps">
-                <h-button table @click="onLook(slotProps.data.row)" v-if="hosAuthCheck(floorlook)">查看</h-button>
+                <h-button table @click="onLook(slotProps.data.row)" v-if="hosAuthCheck(floorLook)">查看</h-button>
                 <h-button table v-if="(slotProps.data.row.status==1||slotProps.data.row.status==3)&&hosAuthCheck(flooroperate)" @click="onEnable(slotProps.data.row)">启用</h-button>
-                <h-button table v-if="slotProps.data.row.status==2&&hosAuthCheck(flooroperate)" @click="onDisable(slotProps.data.row)">停用</h-button>
-                <h-button table @click="onEdit(slotProps.data.row)" v-if="hosAuthCheck(flooredit)">编辑</h-button>
-                <h-button table @click="onDelete(slotProps.data.row)" v-if="hosAuthCheck(floordelete)">删除</h-button>
-                <h-button table @click="onMoveFloor(slotProps.data.row,1)" v-if="slotProps.data.$index!=0&&hosAuthCheck(floormove)">上移</h-button>
-                <h-button table @click="onMoveFloor(slotProps.data.row,2)" v-if="slotProps.data.row.$index!=tableData.length-1&&hosAuthCheck(floormove)">下移</h-button>
+                <h-button table v-if="slotProps.data.row.status==2&&hosAuthCheck(floorOperate)" @click="onDisable(slotProps.data.row)">停用</h-button>
+                <h-button table @click="onEdit(slotProps.data.row)" v-if="(slotProps.data.row.status==1||slotProps.data.row.status==3)&&hosAuthCheck(floorEdit)">编辑</h-button>
+                <h-button table @click="onDelete(slotProps.data.row)" v-if="(slotProps.data.row.status==1||slotProps.data.row.status==3)&&hosAuthCheck(floorEelete)">删除</h-button>
+                <h-button table @click="onMoveFloor(slotProps.data.row,1)" v-if="slotProps.data.$index!=0&&hosAuthCheck(floorMove)">上移</h-button>
+                <h-button table @click="onMoveFloor(slotProps.data.row,2)" v-if="(slotProps.data.$index!=tableData.length-1)&&hosAuthCheck(floorMove)">下移</h-button>
             </template>
         </hosJoyTable>
         <el-dialog title="启用失败通知" :visible.sync="dialogVisible" width="40%" :before-close="()=>{dialogVisible = false}">
@@ -45,12 +45,12 @@ export default class Floortabs extends Vue {
         $refs!: {
             form: HTMLFormElement
         }
-        flooradd = CRM_ADV_FLOOR_ADD
-        floorlook = CRM_ADV_FLOOR_LOOK
-        flooroperate = CRM_ADV_FLOOR_OPERATE
-        flooredit = CRM_ADV_FLOOR_EDIT
-        floormove= CRM_ADV_FLOOR_MOVE
-        floordelete = CRM_ADV_FLOOR_DELETE
+        floorAdd = CRM_ADV_FLOOR_ADD
+        floorLook = CRM_ADV_FLOOR_LOOK
+        floorOperate = CRM_ADV_FLOOR_OPERATE
+        floorEdit = CRM_ADV_FLOOR_EDIT
+        floorMove= CRM_ADV_FLOOR_MOVE
+        floorDelete = CRM_ADV_FLOOR_DELETE
 
         dialogVisible: boolean = false
         page = {

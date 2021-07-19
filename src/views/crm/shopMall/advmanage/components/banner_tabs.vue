@@ -2,20 +2,20 @@
 <template>
     <div class="banner-tab">
         <div class="baner-btn mb20">
-            <el-button type="primary" @click="onAddBanner" v-if="hosAuthCheck(banneradd)">新增banner</el-button>
+            <el-button type="primary" @click="onAddBanner" v-if="hosAuthCheck(bannerAdd)">新增banner</el-button>
         </div>
         <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border showPagination stripe :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" actionWidth='250' isAction
             :isActionFixed='tableData&&tableData.length>0'>
             <template #action="slotProps">
                 <div v-if="slotProps.data.row.status==2">
-                    <h-button table @click="onEdit(slotProps.data.row)" v-if="hosAuthCheck(banneredit)">编辑</h-button>
-                    <h-button table @click="onDelete(slotProps.data.row)" v-if="hosAuthCheck(bannerdelete)">删除</h-button>
-                    <h-button table @click="onOperate(slotProps.data.row,'enable')" v-if="hosAuthCheck(banneroperate)&&slotProps.data.row.status!=1">启用</h-button>
-                    <h-button table @click="onMove(slotProps.data.row,'up')" v-if="slotProps.data.$index!=0&&hosAuthCheck(bannermove)">上移</h-button>
-                    <h-button table @click="onMove(slotProps.data.row,'down')" v-if="slotProps.data.$index!=tableData.length-1&&hosAuthCheck(bannermove)">下移</h-button>
+                    <h-button table @click="onEdit(slotProps.data.row)" v-if="hosAuthCheck(bannerEdit)">编辑</h-button>
+                    <h-button table @click="onDelete(slotProps.data.row)" v-if="hosAuthCheck(bannerDelete)">删除</h-button>
+                    <h-button table @click="onOperate(slotProps.data.row,'enable')" v-if="hosAuthCheck(bannerOperate)&&slotProps.data.row.status!=1">启用</h-button>
+                    <h-button table @click="onMove(slotProps.data.row,'up')" v-if="slotProps.data.$index!=0&&hosAuthCheck(bannerMove)">上移</h-button>
+                    <h-button table @click="onMove(slotProps.data.row,'down')" v-if="slotProps.data.$index!=tableData.length-1&&hosAuthCheck(bannerMove)">下移</h-button>
                 </div>
                 <div v-else>
-                    <h-button table @click="onOperate(slotProps.data.row,'disable')" v-if="slotProps.data.row.status==1&&hosAuthCheck(banneroperate)">停用</h-button>
+                    <h-button table @click="onOperate(slotProps.data.row,'disable')" v-if="slotProps.data.row.status==1&&hosAuthCheck(bannerOperate)">停用</h-button>
                 </div>
             </template>
         </hosJoyTable>
@@ -68,11 +68,11 @@ export default class Bannertabs extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
-    banneradd = CRM_ADV_BANNER_ADD
-    banneredit = CRM_ADV_BANNER_EDIT
-    banneroperate = CRM_ADV_BANNER_OPERATE
-    bannerdelete = CRM_ADV_BANNER_DELETE
-    bannermove = CRM_ADV_BANNER_MOVE
+    bannerAdd = CRM_ADV_BANNER_ADD
+    bannerEdit = CRM_ADV_BANNER_EDIT
+    bannerOperate = CRM_ADV_BANNER_OPERATE
+    bannerDelete = CRM_ADV_BANNER_DELETE
+    bannerMove = CRM_ADV_BANNER_MOVE
     queryParams: object={
         pageNumber: 1,
         pageSize: 10
