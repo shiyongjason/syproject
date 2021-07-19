@@ -38,7 +38,7 @@
                 <h-button type="primary" @click="onBatch">批量选择</h-button>
             </div>
             <hosJoyTable ref="multipleTable" align="center" isShowIndex border showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" :tableRowClassName="rowClass"  :selectable="selectable"   :pageSizes='page.sizes'
-               actionWidth='250' isAction :height="500" @selection-change="handleSelectionChange" isShowselection :isActionFixed='tableData&&tableData.length>0'>
+               actionWidth='100' isAction :height="500" @selection-change="handleSelectionChange" isShowselection :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
                     <h-button table v-if="!slotProps.data.row.checked" @click="onSelect(slotProps.data)">选择</h-button>
                     <h-button table v-if="slotProps.data.row.checked" @click="onNoSelect(slotProps.data)">取消选择</h-button>
@@ -46,7 +46,7 @@
             </hosJoyTable>
             <div class="floor-tit mt20">已选择该楼层的商品</div>
             <!-- 表格操作 -->
-            <hosJoyTable ref="hosjoyTable" align="center" border isShowIndex stripe :column="formTableLabel" :data="tableForm" isAction>
+            <hosJoyTable ref="hosjoyTable2"  v-if="show" align="center" border isShowIndex stripe :column="formTableLabel" :data="tableForm" actionWidth='200' isAction>
                 <template #action="slotProps">
                     <h-button table @click="onMove(slotProps.data, 'up')" v-if="slotProps.data.$index!=0">上移</h-button>
                     <h-button table @click="onMove(slotProps.data, 'down')" v-if="slotProps.data.$index!=tableForm.length-1">下移</h-button>
@@ -96,6 +96,7 @@ export default class Flooredit extends Vue {
             updateUid: '',
             reservedName: false
         }
+        show:boolean = false
         _category=[]
         selectRow = []
         selectData = []
@@ -114,8 +115,8 @@ export default class Flooredit extends Vue {
         }
 
         page = {
-            // sizes: [15, 25, 50, 100],
-            sizes: [10, 15, 50, 100],
+            sizes: [15, 25, 50, 100],
+            // sizes: [10, 15, 50, 100],
             total: 0
         }
 
@@ -123,7 +124,7 @@ export default class Flooredit extends Vue {
         tableLabel:tableLabelProps = [
             { label: 'SPU编码', prop: 'code' },
             { label: '商品名称', prop: 'name' },
-            { label: '商品类目', prop: 'categoryPath' },
+            { label: '商品类目', prop: 'categoryPath', width: '300px' },
             { label: '品牌', prop: 'brandName' }
         ]
 
@@ -134,7 +135,7 @@ export default class Flooredit extends Vue {
             return this._category
         }
         formTableLabel: tableLabelProps = [
-            { label: 'SPU编码', prop: 'id' },
+            { label: 'SPU编码', prop: 'code' },
             { label: '商品名称', prop: 'name' },
             { label: '商品类目', prop: 'categoryPath' },
             { label: '品牌', prop: 'brandName' },
@@ -230,8 +231,7 @@ export default class Flooredit extends Vue {
             const { data: spu } = await getSpuPage(this.queryParams)
             this.tableData = spu.records
             this.page.total = spu.total as number
-            // 查询时候 查下状态
-
+            // 查询时候 查下最新的是否选中状态
             if (this.tableForm.length > 0) {
                 this.tableData && this.tableData.map((item, index) => {
                     this.tableForm.map((jtem, index) => {
@@ -246,6 +246,7 @@ export default class Flooredit extends Vue {
         async onFindCateList () {
             const { data } = await getListCategory()
             this._category = data
+            this.show = true
         }
 
         onSelect (val) {
@@ -299,12 +300,25 @@ export default class Flooredit extends Vue {
             this.$refs['multipleTable'].clearSelection()
         }
 
-        onSave () {
-            // 保存楼层检验
+        async onSave () {
             this.floorForm.reqBossFloorSpuList = this.tableForm
-            console.log(this.floorForm)
-            saveFloor(this.floorForm)
 
+            // 保存楼层检验
+            if (!this.floorForm.floorName) {
+                this.$message.warning('请输入楼层名称')
+                return false
+            }
+            if (this.floorForm.reqBossFloorSpuList.length == 0) {
+                this.$message.warning('请选择楼层的商品')
+                return false
+            }
+            console.log(this.floorForm)
+            if (this.$route.query.id) {
+                await editFloor(this.floorForm)
+            } else {
+                await saveFloor(this.floorForm)
+            }
+            this.$router.push('/goodwork/advmanage')
             this.setNewTags((this.$route.fullPath).split('?')[0])
         }
 
@@ -316,6 +330,7 @@ export default class Flooredit extends Vue {
             if (this.$route.query.id) {
                 const { data } = await getFloorDetail(this.$route.query.id)
                 this.tableForm = data.respBossFloorSpuList || []
+                this.floorForm = { ...data }
             }
             this.onFindList()
             this.onFindCateList()

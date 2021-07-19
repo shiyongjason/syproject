@@ -16,6 +16,10 @@ export const onEnableFloor: (params: any) => AxiosPromise<Shops.ShopFloorBrandPr
     return axios.patch(`/shop/api/boss/shop/floor/${params}/enable`)
 }
 
+export const onConfirmFloor: (params: any) => AxiosPromise<Shops.ShopFloorBrandPromptResponse[]> = (params) => {
+    return axios.patch(`/shop/api/boss/shop/floor/${params}/enable/confirm`)
+}
+
 // 停用
 export const onDisableFloor: (params: any) => AxiosPromise<void> = (params) => {
     return axios.patch(`/shop/api/boss/shop/floor/${params}/disable`)
@@ -43,7 +47,7 @@ export const saveFloor: (params:any) => AxiosPromise<Shops.ReqBossFloorAdd> = (p
 }
 //  更新楼层
 export const editFloor: (params:any) => AxiosPromise<Shops.ReqBossFloorUpdate> = (params) => {
-    return axios.post(`/shop/api/boss/shop/floor`, params)
+    return axios.put(`/shop/api/boss/shop/floor`, params)
 }
 // bananerlist
 export const getBannerPage: (params:any) => AxiosPromise<Shops.IPageShopBannerResponse > = (params) => {
@@ -104,7 +108,7 @@ export const addCategory:(param:any)=>AxiosPromise<void> = (params) => {
 
 // 取消推荐
 export const cancelCategory:(param:any)=>AxiosPromise<void> = (params) => {
-    return axios.post(`/shop/api/boss/front-category/recommends/cancel/${params}`)
+    return axios.delete(`/shop/api/boss/front-category/recommends/cancel/${params}`)
 }
 
 // 查询所有品类
