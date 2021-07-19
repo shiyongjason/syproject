@@ -16,7 +16,6 @@
                         <el-input type="text" v-model="queryParams.categoryName" maxlength="" placeholder="请输入"></el-input>
                     </div>
                 </div>
-
                 <div class="query-cont__col">
                     <h-button type="primary" @click="getList">查询</h-button>
                     <h-button @click="onReset">重置</h-button>

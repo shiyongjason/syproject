@@ -1,11 +1,11 @@
-.floor-tit{
+.floor-tit {
     background: #e5e5e5;
     opacity: 0.8;
-    font-size:18px;
-    padding:5px 10px;
-    margin-bottom:20px;
+    font-size: 18px;
+    padding: 5px 10px;
+    margin-bottom: 20px;
     position: relative;
-    &::before{
+    &::before {
         content: '';
         width: 5px;
         height: 100%;
@@ -15,20 +15,20 @@
         left: 0;
     }
 }
-/deep/.slecleRowColor{
-    background: #e5e5e5;;
+/deep/.slectRowColor {
+    background: #e5e5e5;
 }
-/deep/.label_img{
+/deep/.label_img {
     width: 40px;
     height: 40px;
-img{
-    width: 40px;
-    height: 40px;
+    img {
+        width: 40px;
+        height: 40px;
+    }
 }
-}
-.floor_tag{
-    .el-tag{
-        margin :5px;
+.floor_tag {
+    .el-tag {
+        margin: 5px;
         cursor: pointer;
     }
 }

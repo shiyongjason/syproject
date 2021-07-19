@@ -29,9 +29,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
 import { CreateElement } from 'vue'
-
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-
 import filters from '@/utils/filters'
 import { BossFrontCategoryDetailResp } from '@/interface/hbp-shop'
 import { getCateGroyDetail } from './api/index'
@@ -47,24 +45,7 @@ export default class Categorydetail extends Vue {
         $refs!: {
             form: HTMLFormElement
         }
-        @State('userInfo') userInfo: any
-        uploadParameters = {
-            updateUid: '',
-            reservedName: false
-        }
-
-        private _queryParams = {}
-        queryParams: any = {
-            roomName: '',
-            roomId: ''
-        }
-
-        floorForm:BossFrontCategoryDetailResp={ } as BossFrontCategoryDetailResp
-
-        page = {
-            sizes: [10, 20, 50, 100],
-            total: 0
-        }
+        floorForm: BossFrontCategoryDetailResp = { } as BossFrontCategoryDetailResp
 
         tableForm: any[] = [
 
