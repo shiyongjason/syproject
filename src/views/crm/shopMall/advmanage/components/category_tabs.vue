@@ -65,13 +65,13 @@ export default class Categorytabs extends Vue {
         updateUid: '',
         reservedName: false
     }
-    options:any=[]
-    queryParams:object={
+    options: any=[]
+    queryParams: object={
         pageNumber: 1,
         pageSize: 10
     }
-    dialogVisible:boolean = false
-    categoryForm:BossFrontCategoryRecommendAddRequest & {imageUrls:any[]}={
+    dialogVisible: boolean = false
+    categoryForm: BossFrontCategoryRecommendAddRequest & {imageUrls:any[]}={
         imageUrls: [],
         frontCategoryId: '',
         imageUrl: ''
@@ -81,7 +81,7 @@ export default class Categorytabs extends Vue {
         total: 0
     }
 
-    tableData:any[] | [] = []
+    tableData: any[] | [] = []
 
     tableLabel: tableLabelProps = [
         { label: '品类顺序', prop: 'sort' },

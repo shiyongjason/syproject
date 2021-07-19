@@ -2,20 +2,20 @@
     <div class="page-body B2b">
         <div class="page-body-cont">
             <!-- tab页签 -->
-                 <el-tabs v-model="activeName" @tab-click="handleTabClick">
-                    <el-tab-pane label="banner管理" name="banner">
-                        <!-- <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest' @requestBack='getList' :paymentOrderId='paymentOrderId'></loanHandoverInformation> -->
-                        <Bannertabs v-if="activeName=='banner'"/>
-                    </el-tab-pane>
-                    <el-tab-pane label="楼层管理" name="floor" >
-                        <!-- <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation> -->
-                        <Floortabs v-if="activeName=='floor'"/>
-                    </el-tab-pane>
-                    <el-tab-pane label="品类推荐" name="category" >
-                        <!-- <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation> -->
-                        <Categorytabs v-if="activeName=='category'"/>
-                    </el-tab-pane>
-                </el-tabs>
+            <el-tabs v-model="activeName" @tab-click="handleTabClick">
+                <el-tab-pane label="banner管理" name="banner">
+                    <!-- <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest' @requestBack='getList' :paymentOrderId='paymentOrderId'></loanHandoverInformation> -->
+                    <Bannertabs v-if="activeName=='banner'" />
+                </el-tab-pane>
+                <el-tab-pane label="楼层管理" name="floor">
+                    <!-- <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation> -->
+                    <Floortabs v-if="activeName=='floor'" />
+                </el-tab-pane>
+                <el-tab-pane label="品类推荐" name="category">
+                    <!-- <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation> -->
+                    <Categorytabs v-if="activeName=='category'" />
+                </el-tab-pane>
+            </el-tabs>
             <!-- end search bar -->
         </div>
     </div>
@@ -47,36 +47,7 @@ export default class Advmanage extends Vue {
         form: HTMLFormElement
     }
 
-    uploadParameters = {
-        updateUid: '',
-        reservedName: false
-    }
-    activeName:string='banner'
-    innerVisible:boolean = false
-    brandVideoUrl:string = ''
-    page = {
-        sizes: [10, 20, 50, 100],
-        total: 0
-    }
-
-    tableData:any[] | [] = []
-
-    private _queryParams = {}
-    queryParams: any = {
-        roomName: '',
-        roomId: ''
-
-    }
-
-    PAYMENTSTATUS: Map<number | null, string> = new Map([
-        [null, '-'],
-        [1, '待支付'],
-        [2, '部分支付']
-    ])
-    @State('userInfo') userInfo: any
-
-    handleTabClick (tab, event): void {
-    }
+    handleTabClick (tab, event): void { }
 }
 </script>
 

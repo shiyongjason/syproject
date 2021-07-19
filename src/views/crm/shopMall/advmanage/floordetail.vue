@@ -3,18 +3,17 @@
         <div class="page-body-cont">
             <div class="floor-tit">楼层信息</div>
             <div class="query-cont-row">
-                  <div class="query-cont__col">
+                <div class="query-cont__col">
                     <div class="query-col__label">楼层名称：</div>
                     <div class="query-col__input">
-                      {{floorForm.floorName}}
+                        {{floorForm.floorName}}
                     </div>
                 </div>
             </div>
             <div class="floor-tit">已选择该楼层的商品</div>
             <!-- 表格操作 -->
-            <hosJoyTable ref="hosjoyTable" align="center" border stripe :column="formTableLabel" :data="tableForm"  :isAction=false>
+            <hosJoyTable ref="hosjoyTable" align="center" border stripe :column="formTableLabel" :data="tableForm" :isAction=false>
             </hosJoyTable>
-
         </div>
     </div>
 </template>
@@ -43,47 +42,47 @@ import moment from 'moment'
 })
 
 export default class Floordetail extends Vue {
-        $refs!: {
-            form: HTMLFormElement
+    $refs!: {
+        form: HTMLFormElement
+    }
+    @State('userInfo') userInfo: any
+    uploadParameters = {
+        updateUid: '',
+        reservedName: false
+    }
+
+    private _queryParams = {}
+    queryParams: any = {
+        roomName: '',
+        roomId: ''
+    }
+
+    floorForm: RespBossShopFloorDetail = { } as RespBossShopFloorDetail
+
+    page = {
+        sizes: [15, 25, 50, 100],
+        total: 0
+    }
+
+    tableForm: any[] = [
+
+    ]
+    formTableLabel: tableLabelProps = [
+        { label: 'SPU编码', prop: 'spuCode' },
+        { label: '商品名称', prop: 'spuName' },
+        { label: '品牌', prop: 'brandName' }
+    ]
+
+    async mounted () {
+        if (this.$route.query.id) {
+            const { data } = await getFloorDetail(this.$route.query.id)
+            this.floorForm = data
+            this.tableForm = data.respBossFloorSpuList || []
         }
-        @State('userInfo') userInfo: any
-        uploadParameters = {
-            updateUid: '',
-            reservedName: false
-        }
-
-        private _queryParams = {}
-        queryParams: any = {
-            roomName: '',
-            roomId: ''
-        }
-
-        floorForm:RespBossShopFloorDetail={ } as RespBossShopFloorDetail
-
-        page = {
-            sizes: [15, 25, 50, 100],
-            total: 0
-        }
-
-        tableForm: any[] = [
-
-        ]
-        formTableLabel: tableLabelProps = [
-            { label: 'SPU编码', prop: 'spuCode' },
-            { label: '商品名称', prop: 'spuName' },
-            { label: '品牌', prop: 'brandName' }
-        ]
-
-        async mounted () {
-            if (this.$route.query.id) {
-                const { data } = await getFloorDetail(this.$route.query.id)
-                this.floorForm = data
-                this.tableForm = data.respBossFloorSpuList || []
-            }
-        }
+    }
 }
 </script>
 
 <style lang='scss' scoped>
-@import "./css.scss"
+@import "./css.scss";
 </style>

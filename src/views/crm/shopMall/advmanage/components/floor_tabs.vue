@@ -52,13 +52,13 @@ export default class Floortabs extends Vue {
         floormove= CRM_ADV_FLOOR_MOVE
         floordelete = CRM_ADV_FLOOR_DELETE
 
-        dialogVisible:boolean = false
+        dialogVisible: boolean = false
         page = {
             sizes: [10, 20, 50, 100],
             total: 0
         }
-        tags:any[]|[]=[]
-        tableData:RespBossShopFloorPage[] | [] = []
+        tags: any[]|[]=[]
+        tableData: RespBossShopFloorPage[] | [] = []
         tableLabel: tableLabelProps = [
             { label: '楼层名称', prop: 'floorName' },
             { label: '品类名称及商品数量',
@@ -86,7 +86,7 @@ export default class Floortabs extends Vue {
             { label: '更新时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
             { label: '楼层状态', prop: 'status', dicData: [{ value: 1, label: '草稿' }, { value: 2, label: '启用' }, { value: 3, label: '停用' }] }
         ]
-        queryParams:any = {
+        queryParams: any = {
             pageNumber: 1,
             pageSize: 10
         }

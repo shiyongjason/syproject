@@ -73,7 +73,7 @@ export default class Bannertabs extends Vue {
     banneroperate = CRM_ADV_BANNER_OPERATE
     bannerdelete = CRM_ADV_BANNER_DELETE
     bannermove = CRM_ADV_BANNER_MOVE
-    queryParams:object={
+    queryParams: object={
         pageNumber: 1,
         pageSize: 10
     }
@@ -81,7 +81,7 @@ export default class Bannertabs extends Vue {
         updateUid: '',
         reservedName: false
     }
-    dialogVisible:boolean = false
+    dialogVisible: boolean = false
     action=ccpBaseUrl + 'common/files/upload-old'
     bannerForm:ShopBannerAddRequest & {bannerArr?:any[], id?:any} ={
         'bannerName': '',
@@ -97,7 +97,7 @@ export default class Bannertabs extends Vue {
         total: 0
     }
 
-    tableData:any[] | [] = []
+    tableData: any[] | [] = []
 
     tableLabel: tableLabelProps = [
         { label: 'banner名称', prop: 'bannerName' },
