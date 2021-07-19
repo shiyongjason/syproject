@@ -117,9 +117,9 @@
         <!-- 下架 -->
         <el-dialog :title="rackDialogTitle" :visible.sync="rackDialog" :close-on-click-modal="false" :before-close="() => rackDialog = false" width="450px" class="tipsDialog">
             <div style="text-align:center;padding:20px 0" v-if="dialogSKU.length==0">
-                确定下架当前商品吗？
+                确定下架当前商品SKU吗？
                 <!-- 红色提示文字：若当前商品不存在任何推荐位置时，不展示此内容。1 当前商品在【楼层管理】、【品牌管理】、【严选推荐】被选用  2 当前商品在【楼层管理】严选推荐】被选用 3当前商品在【严选推荐】被选用 -->
-                <div style="color:#f00;marginTop:10px" v-if="itemSKU.recommendLocation">当前商品在【{{itemSKU.recommendLocation.toString()}}】被选用</div>
+                <div style="color:#f00;marginTop:10px" v-if="itemSKU.recommend||itemSKU.existFloor">当前商品在{{itemSKU.recommend?'【严选推荐】':''}}{{itemSKU.existFloor?'【楼层管理】':''}}被选用，确定下架后，该SKU在以上位置不可见。</div>
             </div>
             <div v-else>
                 确定下架这{{dialogSKU.length}}条SKU吗？
@@ -130,9 +130,10 @@
                                 <span style="margin-left: 10px">{{ scope.row.code||'-' }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="recommendLocation" label="商品推荐位置" min-width="180" show-overflow-tooltip align='center'>
+                        <el-table-column label="商品推荐位置" min-width="180" show-overflow-tooltip align='center'>
                             <template slot-scope="scope">
-                                <span style="margin-left: 10px">{{ scope.row.recommendLocation||'-' }}</span>
+                                <span style="margin-left: 10px" v-if="scope.row.recommend||scope.row.existFloor">{{scope.row.recommend?'【严选推荐】':''}}{{scope.row.existFloor?'【楼层管理】':''}}</span>
+                                <span v-else>-</span>
                             </template>
                         </el-table-column>
                     </el-table>

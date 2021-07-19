@@ -648,18 +648,18 @@ export interface ShopFloorBrandPromptResponse {
     brandName?: string
 
     /**
-     *
+     * 品牌logo
      * @type {string}
      * @memberof ShopFloorBrandPromptResponse
      */
-    brandLogoUrls?: string
+    brandLogoUrl?: string
 
     /**
-     *
+     * 品牌banner
      * @type {string}
      * @memberof ShopFloorBrandPromptResponse
      */
-    brandBannerUrls?: string
+    brandBannerUrl?: string
 
     /**
      * 品牌描述
@@ -744,6 +744,27 @@ export interface IPageRespBossSku {
 
     /**
      *
+     * @type {number | string}
+     * @memberof IPageRespBossSku
+     */
+    current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespBossSku
+     */
+    total: number | string
+
+    /**
+     *
+     * @type {Array<RespBossSku>}
+     * @memberof IPageRespBossSku
+     */
+    records: Array<RespBossSku>
+
+    /**
+     *
      * @type {boolean}
      * @memberof IPageRespBossSku
      */
@@ -765,31 +786,10 @@ export interface IPageRespBossSku {
 
     /**
      *
-     * @type {Array<RespBossSku>}
-     * @memberof IPageRespBossSku
-     */
-    records: Array<RespBossSku>
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageRespBossSku
-     */
-    total: number | string
-
-    /**
-     *
      * @type {number | string}
      * @memberof IPageRespBossSku
      */
     size: number | string
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageRespBossSku
-     */
-    current: number | string
 
 }
 
@@ -919,6 +919,20 @@ export interface RespBossSku {
      */
     priceVisible?: number | string
 
+    /**
+     * spu是否推荐
+     * @type {boolean}
+     * @memberof RespBossSku
+     */
+    recommend?: boolean
+
+    /**
+     * spu是否在楼层
+     * @type {boolean}
+     * @memberof RespBossSku
+     */
+    existFloor?: boolean
+
 }
 
 /**
@@ -927,6 +941,27 @@ export interface RespBossSku {
 * @interface IPageRespBossB2bSkuPage
 */
 export interface IPageRespBossB2bSkuPage {
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespBossB2bSkuPage
+     */
+    current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespBossB2bSkuPage
+     */
+    total: number | string
+
+    /**
+     *
+     * @type {Array<RespBossB2bSkuPage>}
+     * @memberof IPageRespBossB2bSkuPage
+     */
+    records: Array<RespBossB2bSkuPage>
 
     /**
      *
@@ -951,31 +986,10 @@ export interface IPageRespBossB2bSkuPage {
 
     /**
      *
-     * @type {Array<RespBossB2bSkuPage>}
-     * @memberof IPageRespBossB2bSkuPage
-     */
-    records: Array<RespBossB2bSkuPage>
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageRespBossB2bSkuPage
-     */
-    total: number | string
-
-    /**
-     *
      * @type {number | string}
      * @memberof IPageRespBossB2bSkuPage
      */
     size: number | string
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageRespBossB2bSkuPage
-     */
-    current: number | string
 
 }
 
@@ -1181,6 +1195,27 @@ export interface IPageFavoriteResponse {
 
     /**
      *
+     * @type {number | string}
+     * @memberof IPageFavoriteResponse
+     */
+    current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageFavoriteResponse
+     */
+    total: number | string
+
+    /**
+     *
+     * @type {Array<FavoriteResponse>}
+     * @memberof IPageFavoriteResponse
+     */
+    records: Array<FavoriteResponse>
+
+    /**
+     *
      * @type {boolean}
      * @memberof IPageFavoriteResponse
      */
@@ -1202,31 +1237,10 @@ export interface IPageFavoriteResponse {
 
     /**
      *
-     * @type {Array<FavoriteResponse>}
-     * @memberof IPageFavoriteResponse
-     */
-    records: Array<FavoriteResponse>
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageFavoriteResponse
-     */
-    total: number | string
-
-    /**
-     *
      * @type {number | string}
      * @memberof IPageFavoriteResponse
      */
     size: number | string
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageFavoriteResponse
-     */
-    current: number | string
 
 }
 
@@ -1724,6 +1738,27 @@ export interface IPageBrandShopExtendResponse {
 
     /**
      *
+     * @type {number | string}
+     * @memberof IPageBrandShopExtendResponse
+     */
+    current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageBrandShopExtendResponse
+     */
+    total: number | string
+
+    /**
+     *
+     * @type {Array<BrandShopExtendResponse>}
+     * @memberof IPageBrandShopExtendResponse
+     */
+    records: Array<BrandShopExtendResponse>
+
+    /**
+     *
      * @type {boolean}
      * @memberof IPageBrandShopExtendResponse
      */
@@ -1745,31 +1780,10 @@ export interface IPageBrandShopExtendResponse {
 
     /**
      *
-     * @type {Array<BrandShopExtendResponse>}
-     * @memberof IPageBrandShopExtendResponse
-     */
-    records: Array<BrandShopExtendResponse>
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageBrandShopExtendResponse
-     */
-    total: number | string
-
-    /**
-     *
      * @type {number | string}
      * @memberof IPageBrandShopExtendResponse
      */
     size: number | string
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageBrandShopExtendResponse
-     */
-    current: number | string
 
 }
 
@@ -1854,6 +1868,27 @@ export interface IPageRespBossSpuPage {
 
     /**
      *
+     * @type {number | string}
+     * @memberof IPageRespBossSpuPage
+     */
+    current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespBossSpuPage
+     */
+    total: number | string
+
+    /**
+     *
+     * @type {Array<RespBossSpuPage>}
+     * @memberof IPageRespBossSpuPage
+     */
+    records: Array<RespBossSpuPage>
+
+    /**
+     *
      * @type {boolean}
      * @memberof IPageRespBossSpuPage
      */
@@ -1875,31 +1910,10 @@ export interface IPageRespBossSpuPage {
 
     /**
      *
-     * @type {Array<RespBossSpuPage>}
-     * @memberof IPageRespBossSpuPage
-     */
-    records: Array<RespBossSpuPage>
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageRespBossSpuPage
-     */
-    total: number | string
-
-    /**
-     *
      * @type {number | string}
      * @memberof IPageRespBossSpuPage
      */
     size: number | string
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageRespBossSpuPage
-     */
-    current: number | string
 
 }
 
@@ -2295,18 +2309,18 @@ export interface SpuSalesArea {
 export interface RespBossFloorSpu {
 
     /**
-     * 主键id
-     * @type {number | string}
-     * @memberof RespBossFloorSpu
-     */
-    id?: number | string
-
-    /**
      * 排序
      * @type {number | string}
      * @memberof RespBossFloorSpu
      */
     sort?: number | string
+
+    /**
+     * spuId
+     * @type {number | string}
+     * @memberof RespBossFloorSpu
+     */
+    id?: number | string
 
     /**
      * 编码
@@ -2419,6 +2433,27 @@ export interface IPageRespBossShopFloorPage {
 
     /**
      *
+     * @type {number | string}
+     * @memberof IPageRespBossShopFloorPage
+     */
+    current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespBossShopFloorPage
+     */
+    total: number | string
+
+    /**
+     *
+     * @type {Array<RespBossShopFloorPage>}
+     * @memberof IPageRespBossShopFloorPage
+     */
+    records: Array<RespBossShopFloorPage>
+
+    /**
+     *
      * @type {boolean}
      * @memberof IPageRespBossShopFloorPage
      */
@@ -2440,31 +2475,10 @@ export interface IPageRespBossShopFloorPage {
 
     /**
      *
-     * @type {Array<RespBossShopFloorPage>}
-     * @memberof IPageRespBossShopFloorPage
-     */
-    records: Array<RespBossShopFloorPage>
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageRespBossShopFloorPage
-     */
-    total: number | string
-
-    /**
-     *
      * @type {number | string}
      * @memberof IPageRespBossShopFloorPage
      */
     size: number | string
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageRespBossShopFloorPage
-     */
-    current: number | string
 
 }
 
@@ -2637,6 +2651,27 @@ export interface IPageBossFrontCategoryRecommendResponse {
 
     /**
      *
+     * @type {number | string}
+     * @memberof IPageBossFrontCategoryRecommendResponse
+     */
+    current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageBossFrontCategoryRecommendResponse
+     */
+    total: number | string
+
+    /**
+     *
+     * @type {Array<BossFrontCategoryRecommendResponse>}
+     * @memberof IPageBossFrontCategoryRecommendResponse
+     */
+    records: Array<BossFrontCategoryRecommendResponse>
+
+    /**
+     *
      * @type {boolean}
      * @memberof IPageBossFrontCategoryRecommendResponse
      */
@@ -2658,31 +2693,10 @@ export interface IPageBossFrontCategoryRecommendResponse {
 
     /**
      *
-     * @type {Array<BossFrontCategoryRecommendResponse>}
-     * @memberof IPageBossFrontCategoryRecommendResponse
-     */
-    records: Array<BossFrontCategoryRecommendResponse>
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageBossFrontCategoryRecommendResponse
-     */
-    total: number | string
-
-    /**
-     *
      * @type {number | string}
      * @memberof IPageBossFrontCategoryRecommendResponse
      */
     size: number | string
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageBossFrontCategoryRecommendResponse
-     */
-    current: number | string
 
 }
 
@@ -2908,6 +2922,27 @@ export interface IPageBossFrontCategoryPageResponse {
 
     /**
      *
+     * @type {number | string}
+     * @memberof IPageBossFrontCategoryPageResponse
+     */
+    current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageBossFrontCategoryPageResponse
+     */
+    total: number | string
+
+    /**
+     *
+     * @type {Array<BossFrontCategoryPageResponse>}
+     * @memberof IPageBossFrontCategoryPageResponse
+     */
+    records: Array<BossFrontCategoryPageResponse>
+
+    /**
+     *
      * @type {boolean}
      * @memberof IPageBossFrontCategoryPageResponse
      */
@@ -2929,31 +2964,10 @@ export interface IPageBossFrontCategoryPageResponse {
 
     /**
      *
-     * @type {Array<BossFrontCategoryPageResponse>}
-     * @memberof IPageBossFrontCategoryPageResponse
-     */
-    records: Array<BossFrontCategoryPageResponse>
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageBossFrontCategoryPageResponse
-     */
-    total: number | string
-
-    /**
-     *
      * @type {number | string}
      * @memberof IPageBossFrontCategoryPageResponse
      */
     size: number | string
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageBossFrontCategoryPageResponse
-     */
-    current: number | string
 
 }
 
@@ -3096,6 +3110,27 @@ export interface IPageShopBannerResponse {
 
     /**
      *
+     * @type {number | string}
+     * @memberof IPageShopBannerResponse
+     */
+    current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageShopBannerResponse
+     */
+    total: number | string
+
+    /**
+     *
+     * @type {Array<ShopBannerResponse>}
+     * @memberof IPageShopBannerResponse
+     */
+    records: Array<ShopBannerResponse>
+
+    /**
+     *
      * @type {boolean}
      * @memberof IPageShopBannerResponse
      */
@@ -3117,31 +3152,10 @@ export interface IPageShopBannerResponse {
 
     /**
      *
-     * @type {Array<ShopBannerResponse>}
-     * @memberof IPageShopBannerResponse
-     */
-    records: Array<ShopBannerResponse>
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageShopBannerResponse
-     */
-    total: number | string
-
-    /**
-     *
      * @type {number | string}
      * @memberof IPageShopBannerResponse
      */
     size: number | string
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageShopBannerResponse
-     */
-    current: number | string
 
 }
 
@@ -3288,11 +3302,11 @@ export interface AppletSpuDetailResponse {
     model: string
 
     /**
-     *
-     * @type {string}
+     * 商品图片链接集合
+     * @type {Array<string>}
      * @memberof AppletSpuDetailResponse
      */
-    imageUrls: string
+    imageUrls: Array<string>
 
     /**
      * 销售价是否可见 0：否 1：是
@@ -3473,6 +3487,13 @@ export interface AppletSpuPageRequest {
      */
     recommend?: boolean
 
+    /**
+     * 三级类目id列表
+     * @type {Array<number | string>}
+     * @memberof AppletSpuPageRequest
+     */
+    categoryIds?: Array<number | string>
+
 }
 
 /**
@@ -3481,6 +3502,27 @@ export interface AppletSpuPageRequest {
 * @interface IPageAppletSpuPageResponse
 */
 export interface IPageAppletSpuPageResponse {
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageAppletSpuPageResponse
+     */
+    current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageAppletSpuPageResponse
+     */
+    total: number | string
+
+    /**
+     *
+     * @type {Array<AppletSpuPageResponse>}
+     * @memberof IPageAppletSpuPageResponse
+     */
+    records: Array<AppletSpuPageResponse>
 
     /**
      *
@@ -3505,31 +3547,10 @@ export interface IPageAppletSpuPageResponse {
 
     /**
      *
-     * @type {Array<AppletSpuPageResponse>}
-     * @memberof IPageAppletSpuPageResponse
-     */
-    records: Array<AppletSpuPageResponse>
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageAppletSpuPageResponse
-     */
-    total: number | string
-
-    /**
-     *
      * @type {number | string}
      * @memberof IPageAppletSpuPageResponse
      */
     size: number | string
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageAppletSpuPageResponse
-     */
-    current: number | string
 
 }
 
@@ -3632,6 +3653,27 @@ export interface IPageShopFloorSpuResponse {
 
     /**
      *
+     * @type {number | string}
+     * @memberof IPageShopFloorSpuResponse
+     */
+    current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageShopFloorSpuResponse
+     */
+    total: number | string
+
+    /**
+     *
+     * @type {Array<ShopFloorSpuResponse>}
+     * @memberof IPageShopFloorSpuResponse
+     */
+    records: Array<ShopFloorSpuResponse>
+
+    /**
+     *
      * @type {boolean}
      * @memberof IPageShopFloorSpuResponse
      */
@@ -3653,31 +3695,10 @@ export interface IPageShopFloorSpuResponse {
 
     /**
      *
-     * @type {Array<ShopFloorSpuResponse>}
-     * @memberof IPageShopFloorSpuResponse
-     */
-    records: Array<ShopFloorSpuResponse>
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageShopFloorSpuResponse
-     */
-    total: number | string
-
-    /**
-     *
      * @type {number | string}
      * @memberof IPageShopFloorSpuResponse
      */
     size: number | string
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPageShopFloorSpuResponse
-     */
-    current: number | string
 
 }
 

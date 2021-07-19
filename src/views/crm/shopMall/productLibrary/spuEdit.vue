@@ -110,7 +110,7 @@
         <el-dialog title="下架确认" :visible.sync="rackDialog" :close-on-click-modal="false" :before-close="() => rackDialog = false" width="450px" class="tipsDialog">
             <div style="text-align:center;padding:20px 0">
                 确定下架当前商品SKU吗？
-                <div style="color:#f00;marginTop:10px" v-if="rackData.recommendLocation">提醒：当前商品在【{{rackData.recommendLocation.toString()}}】被选用，确定下架后，该SKU在以上位置不可见。</div>
+                <div style="color:#f00;marginTop:10px" v-if="rackData.recommend||rackData.existFloor">提醒：当前商品在{{rackData.recommend?'【严选推荐】':''}}{{rackData.existFloor?'【楼层管理】':''}}被选用，确定下架后，该SKU在以上位置不可见。</div>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="() => {rackDialog = false}">取 消</el-button>
