@@ -112,12 +112,9 @@ export default class ShopMallAddProduct extends Vue {
 
     // methods:::
 
+    // 处理勾选状态
     handleSelectable (row, index) {
-        if (row.isPullAble) {
-            return false
-        } else {
-            return true
-        }
+        return !row.isPullAble
     }
 
     // 搜索重置
