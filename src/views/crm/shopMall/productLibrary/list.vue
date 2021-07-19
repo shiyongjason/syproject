@@ -58,10 +58,12 @@
                     </h-button>
                 </div>
             </div>
-            <h-button type="create" class="bulkPull" @click="onAddNew">新增商品</h-button>
-            <h-button type="primary" class="bulkPull" style="margin:0 10px" v-if="activeName=='SKU'" @click="Bulk">批量上架</h-button>
-            <h-button type="assist" class="bulkPull"  v-if="activeName=='SKU'" @click="Batch">批量下架</h-button>
-            <h-button class="bulkPull" style="margin-left:10px"  v-if="activeName=='SKU'" @click="Del">批量删除</h-button>
+            <div>
+                <h-button type="create" class="bulkPull" @click="onAddNew" v-show="activeName=='SPU'" v-if="hosAuthCheck(authSpuAdd)" >新增商品</h-button>
+                <h-button type="primary" class="bulkPull" style="margin:0 10px" v-show="activeName=='SKU'" @click="Bulk" v-if="hosAuthCheck(authSkuOn)">批量上架</h-button>
+                <h-button type="assist" class="bulkPull"  v-show="activeName=='SKU'" @click="Batch" v-if="hosAuthCheck(authSkuOff)">批量下架</h-button>
+                <h-button class="bulkPull" style="margin-left:10px"  v-show="activeName=='SKU'" @click="Del" v-if="hosAuthCheck(authSkuDel)">批量删除</h-button>
+            </div>
             <hosJoyTable v-if="resetTable" :isShowselection="activeName=='SKU'" @selection-change="selectChange" :localName="activeName=='SPU'?'V3.10.SPU.*':'V3.10.SKu.*'" ref="hosjoyTable" collapseShow align="center" border stripe showPagination :column="activeName=='SPU'?tableLabel:tableLabelOfSku" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='100' :pageSizes='page.sizes'>
             </hosJoyTable>
             <!-- 「编辑」：下架SPU、待编辑SPU可编辑，上架SPU的「编辑」按钮置灰，点击「编辑」按钮，进入SKU详情页； -->
@@ -152,6 +154,7 @@ import elImageAddToken from '@/components/elImageAddToken/index.vue'
 import { getSpuList, getSkuList, batchDelete, skuhelftatus, getTreeCateGroy } from './api/index'
 import utils from '@/utils/filters'
 import { CategoryTreeResponse, RespBossSku } from '@/interface/hbp-shop'
+import { CRM_SHOPP_PRODUCTLIBRARY_EDITOR, CRM_SHOPP_PRODUCTLIBRARY_ADD, CRM_SHOPP_PRODUCTLIBRARY_SKU_ONTHESHELVES, CRM_SHOPP_PRODUCTLIBRARY_SKU_RACK, CRM_SHOPP_PRODUCTLIBRARY_SKU_DEL } from '@/utils/auth_const'
 const _queryParams = {
     name: '',
     categoryIds: [],
@@ -170,6 +173,12 @@ const _queryParams = {
     components: { hosJoyTable, elImageAddToken }
 })
 export default class ProductLibrary extends Vue {
+    authSpuEdit = CRM_SHOPP_PRODUCTLIBRARY_EDITOR
+    authSpuAdd = CRM_SHOPP_PRODUCTLIBRARY_ADD
+
+    authSkuOn = CRM_SHOPP_PRODUCTLIBRARY_SKU_ONTHESHELVES
+    authSkuOff = CRM_SHOPP_PRODUCTLIBRARY_SKU_RACK
+    authSkuDel = CRM_SHOPP_PRODUCTLIBRARY_SKU_DEL
     categoryOptions:CategoryTreeResponse[] = []
     rackDialogTitle:string = ''
     BulkDialog:boolean = false
@@ -241,7 +250,11 @@ export default class ProductLibrary extends Vue {
             width: '150px',
             // 「编辑」：下架SPU、待编辑SPU可编辑，上架SPU的「编辑」按钮置灰，点击「编辑」按钮，进入SPU详情页；
             render: (h, scope) => {
-                return <h-button table disabled={scope.row.isOnShelf == 2} onClick={() => this.onEditSPU(scope.row)}>编辑</h-button>
+                return (
+                    <div>
+                        {this.hosAuthCheck(this.authSpuEdit) && <h-button table disabled={scope.row.isOnShelf == 2} onClick={() => this.onEditSPU(scope.row)}>编辑</h-button>}
+                    </div>
+                )
             }
         }
     ]
@@ -291,10 +304,14 @@ export default class ProductLibrary extends Vue {
                 return (
                     <div>
                         {
-                            scope.row.isOnShelf == 2 && <h-button table onClick={() => this.onRackSKU(scope.row)}>下架</h-button>
+                            scope.row.isOnShelf == 2 && this.hosAuthCheck(this.authSkuOff) && <h-button table onClick={() => this.onRackSKU(scope.row)}>下架</h-button>
                         }
                         {
-                            scope.row.isOnShelf != 2 && <span><h-button table onClick={() => this.onOPenSell(scope.row)}>上架</h-button><h-button table onClick={() => this.onDelDialog(scope.row)}>删除</h-button></span>
+                            scope.row.isOnShelf != 2 &&
+                            <span>
+                                {this.hosAuthCheck(this.authSkuOn) && <h-button table onClick={() => this.onOPenSell(scope.row)}>上架</h-button>}
+                                {this.hosAuthCheck(this.authSkuDel) && <h-button table onClick={() => this.onDelDialog(scope.row)}>删除</h-button>}
+                            </span>
                         }
                     </div>
                 )

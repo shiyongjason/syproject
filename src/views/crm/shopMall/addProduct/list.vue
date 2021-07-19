@@ -48,13 +48,13 @@
                 </div>
             </div>
             <!-- 没有选择列表项，点击「批量拉取」，提示：“请先选择需要拉取的数据” -->
-            <h-button type="primary" class="bulkPull" @click="bulkPull">批量拉取</h-button>
+            <h-button type="primary" class="bulkPull" @click="bulkPull" v-if="hosAuthCheck(authBatchPull)">批量拉取</h-button>
             <!--  -->
             <hosJoyTable isShowselection @selection-change="selectChange" localName="V3.*" ref="hosjoyTable" collapseShow align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='200' isAction :isActionFixed='tableData&&tableData.length>0' :selectable='handleSelectable'>
                 <template #action="slotProps">
-                    <h-button table v-if="!slotProps.data.row.isPullAble" @click="()=>handlePull(slotProps.data.row.id)">拉取</h-button>
+                    <h-button table v-if="!slotProps.data.row.isPullAble&&hosAuthCheck(authPull)" @click="()=>handlePull(slotProps.data.row.id)">拉取</h-button>
                     <span style="marginRight:10px" v-if="slotProps.data.row.isPullAble">已拉取</span>
-                    <h-button table v-if="slotProps.data.row.isPullAble" @click="()=>onEditor(slotProps.data.row)">编辑商品</h-button>
+                    <h-button table v-if="slotProps.data.row.isPullAble&&hosAuthCheck(authEdit)" @click="()=>onEditor(slotProps.data.row)">编辑商品</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -69,6 +69,8 @@ import elImageAddToken from '@/components/elImageAddToken/index.vue'
 import { getSkuList, pullSku, bulkPullSku } from './api/index'
 import { CategoryTreeResponse, RespBossB2bSkuPage } from '@/interface/hbp-shop'
 import { getTreeCateGroy } from '../productLibrary/api'
+import { CRM_SHOPP_ADDPRODUCT_PULL, CRM_SHOPP_ADDPRODUCT_BATCH_PULL, CRM_SHOPP_ADDPRODUCT_EDITOR } from '@/utils/auth_const'
+
 const _queryParams = {
     name: '',
     brandName: '',
@@ -85,6 +87,9 @@ const _queryParams = {
 })
 export default class ShopMallAddProduct extends Vue {
     categoryOptions:CategoryTreeResponse[] = []
+    authPull = CRM_SHOPP_ADDPRODUCT_PULL
+    authBatchPull = CRM_SHOPP_ADDPRODUCT_BATCH_PULL
+    authEdit = CRM_SHOPP_ADDPRODUCT_EDITOR
     props = {
         emitPath: false,
         multiple: true,

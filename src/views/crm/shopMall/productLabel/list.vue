@@ -47,8 +47,8 @@
                     </h-button>
                 </div>
             </div>
-            <h-button type="create" class="bulkPull" @click="onOPenSureDialog">批量推荐</h-button>
-            <h-button type="primary" class="bulkPull" style="margin:0 10px" @click="onOPenCancelDialog" >批量取消</h-button>
+            <h-button v-if="hosAuthCheck(authBatchRecommend)" type="create" class="bulkPull" @click="onOPenSureDialog">批量推荐</h-button>
+            <h-button v-if="hosAuthCheck(authBatchCancel)" type="primary" class="bulkPull" style="margin:0 10px" @click="onOPenCancelDialog" >批量取消</h-button>
             <hosJoyTable isShowselection @selection-change="selectChange" :localName="'V3.10.*'" ref="hosjoyTable" collapseShow align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='100' >
             </hosJoyTable>
         </div>
@@ -82,6 +82,7 @@ import { getSpuList, getTreeCateGroy } from '../productLibrary/api'
 import { CategoryTreeResponse, RespBossSku } from '@/interface/hbp-shop'
 import utils from '@/utils/filters'
 import { cancelRecommend, recommend } from './api'
+import { CRM_SHOPP_PRODUCTLABEL_RECOMMEND, CRM_SHOPP_PRODUCTLABEL_CANCELRECOMMEND, CRM_SHOPP_PRODUCTLABEL_BATCH_RECOMMEND, CRM_SHOPP_PRODUCTLABEL_BATCH_CANCEL } from '@/utils/auth_const'
 
 const _queryParams = {
     name: '',
@@ -101,6 +102,10 @@ const _queryParams = {
     components: { hosJoyTable, elImageAddToken }
 })
 export default class ProductLabel extends Vue {
+    authRecommend = CRM_SHOPP_PRODUCTLABEL_RECOMMEND
+    authCancelRecommend = CRM_SHOPP_PRODUCTLABEL_CANCELRECOMMEND
+    authBatchRecommend = CRM_SHOPP_PRODUCTLABEL_BATCH_RECOMMEND
+    authBatchCancel = CRM_SHOPP_PRODUCTLABEL_BATCH_CANCEL
     categoryOptions:CategoryTreeResponse[] = []
     checkList = [] // 赛选
     Selection = [] // 列表选择
@@ -174,8 +179,8 @@ export default class ProductLabel extends Vue {
             render: (h, scope) => {
                 return (
                     <div>
-                        {scope.row.recommend && <h-button table onClick={() => this.onCancelRecommend(scope.row)}>取消推荐</h-button>}
-                        {!scope.row.recommend && <h-button table onClick={() => this.onRecommend(scope.row)}>推荐</h-button>}
+                        {scope.row.recommend && this.hosAuthCheck(this.authCancelRecommend) && <h-button table onClick={() => this.onCancelRecommend(scope.row)}>取消推荐</h-button>}
+                        {!scope.row.recommend && this.hosAuthCheck(this.authRecommend) && <h-button table onClick={() => this.onRecommend(scope.row)}>推荐</h-button>}
                     </div>
                 )
             }
