@@ -425,10 +425,12 @@ export default class SpuEdit extends Vue {
             return
         }
         this.Selection.map(item => {
-            let sku:ReqBossSkuUpdate = {
+            let sku:ReqBossSkuUpdate&{optionValues:any, isPullAble:boolean} = {
                 id: '',
                 name: item.name,
                 code: item.skuCode,
+                optionValues: item.optionValues,
+                isPullAble: item.isPullAble,
                 mainSkuId: item.id,
                 minSalePrice: null,
                 maxSalePrice: null,

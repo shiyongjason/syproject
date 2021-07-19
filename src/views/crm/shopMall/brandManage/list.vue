@@ -267,11 +267,8 @@ export default class brandManage extends Vue {
     // dialog-before-close
     handleClose () {
         this.dialogVisible = false
-        if (this.isShowDetail) {
-            this.isShowDetail = false
-        }
-        let ruleForm:any = this.$refs['ruleForm']
-        ruleForm.clearValidate()
+        this.isShowDetail = false
+        this.$refRuleForm.clearValidate()
     }
     // 推荐提醒 Dialog
     onOPenSureDialog () {
