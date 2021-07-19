@@ -154,11 +154,11 @@ export default class Categoryedit extends Vue {
         } else {
             await addCateGroy(this.cateGoryForm)
         }
-        this.$router.push({ path: '/goodwork/category' })
+        this.$router.push({ path: '/goodwork/categorymanage' })
     }
 
     onCancel () {
-        this.$router.push({ path: '/goodwork/category' })
+        this.$router.push({ path: '/goodwork/categorymanage' })
     }
 
     onChecked (row, cnode) {
