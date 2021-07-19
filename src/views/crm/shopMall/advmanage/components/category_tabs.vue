@@ -2,14 +2,14 @@
 <template>
     <div class="banner-tab">
         <div class="baner-btn mb20">
-            <el-button type="primary" @click="onAdd" v-if="hosAuthCheck(advcategoryadd)">新增品类推荐</el-button>
+            <el-button type="primary" @click="onAdd" v-if="hosAuthCheck(advcategoryAdd)">新增品类推荐</el-button>
         </div>
         <hosJoyTable isShowIndex ref="hosjoyTable" align="center" showPagination border stripe :column="tableLabel" :data="tableData" actionWidth='250' :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" isAction
             :isActionFixed='tableData&&tableData.length>0'>
             <template #action="slotProps">
-                <h-button table @click="onMove(slotProps.data.row,'up')" v-if="slotProps.data.$index!=0&&hosAuthCheck(advcategorymove)">上移</h-button>
-                <h-button table @click="onMove(slotProps.data.row,'down')" v-if="slotProps.data.$index!=tableData.length-1&&hosAuthCheck(advcategorymove)">下移</h-button>
-                <h-button table @click="onCancelRemmend(slotProps.data.row)" v-if="hosAuthCheck(advcategorycancel)">取消推荐</h-button>
+                <h-button table @click="onMove(slotProps.data.row,'up')" v-if="slotProps.data.$index!=0&&hosAuthCheck(advcategoryMove)">上移</h-button>
+                <h-button table @click="onMove(slotProps.data.row,'down')" v-if="slotProps.data.$index!=tableData.length-1&&hosAuthCheck(advcategoryMove)">下移</h-button>
+                <h-button table @click="onCancelRemmend(slotProps.data.row)" v-if="hosAuthCheck(advcategoryCancel)">取消推荐</h-button>
             </template>
         </hosJoyTable>
         <el-dialog title="新增品类" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
@@ -56,9 +56,9 @@ export default class Categorytabs extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
-    advcategoryadd = CRM_ADV_CATEGORY_ADD
-    advcategorymove = CRM_ADV_CATEGORY_MOVE
-    advcategorycancel = CRM_ADV_CATEGORY_CANCEL
+    advcategoryAdd = CRM_ADV_CATEGORY_ADD
+    advcategoryMove = CRM_ADV_CATEGORY_MOVE
+    advcategoryCancel = CRM_ADV_CATEGORY_CANCEL
 
     action=ccpBaseUrl + 'common/files/upload-old'
     uploadParameters = {
