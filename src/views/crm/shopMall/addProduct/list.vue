@@ -86,6 +86,7 @@ const _queryParams = {
 export default class ShopMallAddProduct extends Vue {
     categoryOptions:CategoryTreeResponse[] = []
     props = {
+        emitPath: false,
         multiple: true,
         children: 'subCategoryList',
         label: 'name',
@@ -112,12 +113,9 @@ export default class ShopMallAddProduct extends Vue {
 
     // methods:::
 
+    // 处理勾选状态
     handleSelectable (row, index) {
-        if (row.isPullAble) {
-            return false
-        } else {
-            return true
-        }
+        return !row.isPullAble
     }
 
     // 搜索重置
@@ -137,13 +135,7 @@ export default class ShopMallAddProduct extends Vue {
     // getList
     async getList () {
         let query = JSON.parse(JSON.stringify(this.queryParams))
-        let temp = []
-        if (query.categoryIds.length > 0) {
-            query.categoryIds.map(item => {
-                temp.push(item[item.length - 1])
-            })
-        }
-        query.categoryIds = temp.toString()
+        query.categoryIds = query.categoryIds.toString()
         const { data } = await getSkuList(query)
         this.tableData = data.records
         this.page.total = data.total
@@ -178,9 +170,9 @@ export default class ShopMallAddProduct extends Vue {
     }
 
     async mounted () {
+        this.getList()
         const { data } = await getTreeCateGroy({ searchContent: '' })
         this.categoryOptions = data
-        this.getList()
     }
 }
 </script>

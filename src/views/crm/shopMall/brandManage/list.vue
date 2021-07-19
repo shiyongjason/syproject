@@ -105,11 +105,11 @@ export default class brandManage extends Vue {
         updateUid: '',
         reservedName: false
     };
-    queryParams: any = JSON.parse(JSON.stringify(_queryParams));
+    queryParams: any = JSON.parse(JSON.stringify(_queryParams))
     page:any = {
         sizes: [10, 20, 50, 100],
         total: 0
-    };
+    }
     ruleForm: any = {
         brandCode: '',
         brandId: '',
@@ -118,10 +118,10 @@ export default class brandManage extends Vue {
         brandRemark: '',
         id: '',
         brandBannerUrl: ''
-    };
+    }
     tableData: BrandShopExtendResponse[]= []
-    onSureDialog: boolean = false;
-    onCancelDialog: boolean = false;
+    onSureDialog: boolean = false
+    onCancelDialog: boolean = false
 
     rules = {
         brandLogoUrl: [
@@ -213,13 +213,13 @@ export default class brandManage extends Vue {
     ];
 
     // methods:::
-
+    // 查看详情
     async onGetDetail (d) {
         const { data } = await getBrands(d.brandId)
         this.isShowDetail = true
         this.onEdit(data)
     }
-
+    // 修改品牌信息确认提交
     async onSubmit () {
         this.$refRuleForm.validate(async (value, r) => {
             if (value) {
@@ -237,6 +237,7 @@ export default class brandManage extends Vue {
             }
         })
     }
+    // 修改品牌信息
     onEdit (data) {
         this.ruleForm = JSON.parse(JSON.stringify(data))
         if (this.ruleForm.brandLogoUrl) {
@@ -260,6 +261,7 @@ export default class brandManage extends Vue {
             this.$refRuleForm.clearValidate()
         })
     }
+    // dialog-before-close
     handleClose () {
         this.dialogVisible = false
         if (this.isShowDetail) {

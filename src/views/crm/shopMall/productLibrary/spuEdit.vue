@@ -129,17 +129,12 @@ import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import { ccpBaseUrl } from '@/api/config'
 import { getChiness, getSpudetail, putSKU, skuhelftatus, batchDelete, submitSpu } from './api/index'
 import { errorTxt } from './const'
-import { RespBossB2bSkuPage, RespBossSku, RespBossSpuDetail } from '@/interface/hbp-shop'
+import { ReqBossSkuUpdate, RespBossB2bSkuPage, RespBossSku, RespBossSpuDetail } from '@/interface/hbp-shop'
 import { bulkPullSku, getSkuList } from '../addProduct/api'
 import { isNum } from '@/utils/validate/format'
 
 const _queryParams = {
-    name: '',
-    brandName: '',
-    model: '',
     spuCode: '',
-    skuCode: '',
-    categoryIds: [],
     pageNumber: 1,
     pageSize: 10
 }
@@ -272,7 +267,6 @@ export default class SpuEdit extends Vue {
     ]
 
     onSubmit () {
-        console.log('提交前::::::this.form', this.form)
         if (this.form.skuList.length == 0) {
             this.$message.error('请至少选择一个SKU信息~')
             return
@@ -418,7 +412,6 @@ export default class SpuEdit extends Vue {
         ref.clearSelection()
         this.Selection = []
         this.queryParams = JSON.parse(JSON.stringify(_queryParams))
-        this.queryParams.spuCode = this.$route.query.spuCode as string
         this.dialogTableVisible = false
     }
     // 确认新增sku
@@ -427,37 +420,27 @@ export default class SpuEdit extends Vue {
             this.$message.error('请选择要新增的SKU')
             return
         }
-        try {
-            // await bulkPullSku({ skuIds: this.Selection }) // 拉取
-            this.Selection.map(item => {
-                let sku = {
-                    id: '',
-                    code: item.skuCode,
-                    optionValues: item.optionValues,
-                    mainSkuId: item.id,
-                    minSalePrice: null,
-                    maxSalePrice: null,
-                    isOnShelf: null,
-                    isPullAble: item.isPullAble,
-                    updateBy: this.userInfo.employeeName,
-                    updatePhone: this.userInfo.phoneNumber
-                }
-                this.form.skuList.push(sku)
-            })
-            this.onCloseDialog()
-            // 刷新列表
-            // this.onReloadTable()
-        } catch (error) {
-            console.log('error::::::', error)
-        }
+        this.Selection.map(item => {
+            let sku:ReqBossSkuUpdate = {
+                id: '',
+                name: item.name,
+                code: item.skuCode,
+                mainSkuId: item.id,
+                minSalePrice: null,
+                maxSalePrice: null,
+                isOnShelf: null,
+                updateBy: this.userInfo.employeeName,
+                updatePhone: this.userInfo.phoneNumber
+            }
+            this.form.skuList.push(sku)
+        })
+        this.onCloseDialog()
     }
 
     // getList
     async getList () {
+        this.queryParams.spuCode = this.$route.query.spuCode as string
         let query = JSON.parse(JSON.stringify(this.queryParams))
-        if (query.categoryIds.length > 0) {
-            query.categoryIds = query.categoryIds.toString()
-        }
         const { data } = await getSkuList(query)
         this.addSKUlist = data.records
         this.page.total = data.total
@@ -481,23 +464,18 @@ export default class SpuEdit extends Vue {
 
     // 处理勾选状态
     handleSelectable (row, index) {
-        if (row.isPullAble) {
-            return false
-        } else {
-            return true
-        }
+        return !row.isPullAble
     }
 
     // 构造省市2级数据
     recursiveChineseArea (array = [], frequency = 0) {
-        let level = frequency + 1 // MARK 0代表全国，1代表省，2代表市
+        let level = frequency + 1 // MARK level 0代表全国，1代表省，2代表市
         if (frequency < 2) {
             return array.map(item => {
-                let n = frequency == 0 ? item.provinceId : item.cityId
                 return {
                     level,
                     value: item.countryId || item.cityId || item.provinceId, // 区域ID
-                    label: item.name, // + n
+                    label: item.name,
                     children: this.recursiveChineseArea(item.cities || item.countries, frequency + 1),
                     parentID: (level == 0 || level == 1) ? '' : item.provinceId || item.cityId || item.countryId // 父级ID
                 }
@@ -513,11 +491,11 @@ export default class SpuEdit extends Vue {
         this.provinceLen = data.length
         this.areaList = data
         this.areaList = this.recursiveChineseArea(this.areaList)
-        this.areaList = [{ level: 0, value: '', label: '全国', children: [...this.areaList] }]
+        this.areaList = [{ level: 0, value: '', label: '全国', children: [...this.areaList] }] // 添加全国item
     }
 
     treeChangeHandler () {
-        // 通过 node 获取
+        // 获取CheckedNodes
         this.nodeList = this.$refSelectCityTree.getCheckedNodes()
         if (this.nodeList.length > 0) {
             this.$refFormmain.fields.map(i => {
@@ -550,16 +528,15 @@ export default class SpuEdit extends Vue {
             let checkedNodes = []
             for (let item of this.form.saleRules) {
                 if (item.provinceId == '0' && item.cityId == '0' && item.areaId == '0') {
-                    this.$refSelectCityTree.setCheckedKeys([''])
+                    this.$refSelectCityTree.setCheckedKeys(['']) // 全国
                     break
                 }
-                // 全省
                 if (!item.cityId) {
-                    checkedNodes.push(item.provinceId)
+                    checkedNodes.push(item.provinceId)// 某省全部
                     continue
                 }
                 if (item.cityId) {
-                    checkedNodes.push(item.cityId)
+                    checkedNodes.push(item.cityId) // 某市
                 }
             }
             this.$refSelectCityTree.setCheckedKeys(
@@ -576,7 +553,6 @@ export default class SpuEdit extends Vue {
     async mounted () {
         await this.getAreacode()
         await this.getDetail()
-        this.queryParams.spuCode = this.$route.query.spuCode as string
         this.$nextTick(() => {
             this.$refFormmain.clearValidate()
         })
