@@ -119,6 +119,9 @@ export default class Categoryedit extends Vue {
             }
         }
         return result
+
+        //         const map = new Map()
+        //   return arr.filter((item) => !map.has(item[id] + '') && map.set(item[key] + '', 1))
     }
 
     getCheckedNodes () {
@@ -206,6 +209,7 @@ export default class Categoryedit extends Vue {
     // 递归处理数据
     resolveData (data, parentIsFold = true, grondIsFold = true, pcategoryName = '', scategoryName = '', dcategoryName = '') {
         return data.map((item, index, arr) => {
+            item.disabled = item.relation
             if (item.level == 1) {
                 item.pcategoryName = item.name
                 item.scategoryName = ''
