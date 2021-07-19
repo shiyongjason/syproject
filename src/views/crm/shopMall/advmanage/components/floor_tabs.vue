@@ -9,7 +9,7 @@
             <template #action="slotProps">
                 <h-button table @click="onLook(slotProps.data.row)">查看</h-button>
                 <h-button table v-if="slotProps.data.row.status==1||slotProps.data.row.status==3" @click="onEnable(slotProps.data.row)">启用</h-button>
-                <h-button table v-if="slotProps.data.row.status!=3" @click="onDisable(slotProps.data.row)">停用</h-button>
+                <h-button table v-if="slotProps.data.row.status==2" @click="onDisable(slotProps.data.row)">停用</h-button>
                 <h-button table @click="onEdit(slotProps.data.row)">编辑</h-button>
                 <h-button table @click="onDelete(slotProps.data.row)">删除</h-button>
                 <h-button table @click="onMoveFloor(slotProps.data.row,1)" v-if="slotProps.data.$index!=0">上移</h-button>
@@ -31,7 +31,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import { CreateElement } from 'vue'
-import { getFloorPage, onDeleteFloor, onEnableFloor, onDisableFloor, onMoveUpFloor, onMoveDownFloor } from '../api/index'
+import { getFloorPage, onDeleteFloor, onEnableFloor, onDisableFloor, onMoveUpFloor, onMoveDownFloor, onConfirmFloor } from '../api/index'
 import { RespBossShopFloorPage } from '@/interface/hbp-shop'
 
 @Component({
@@ -116,7 +116,8 @@ export default class Floortabs extends Vue {
 
         async onEnable (val) {
             // 校验 是否需要维护
-            const { data } = await onEnableFloor(val.id)
+            const { data } = await onConfirmFloor(val.id)
+
             if (data.length > 0) {
                 this.dialogVisible = true
                 this.tags = data
@@ -127,7 +128,8 @@ export default class Floortabs extends Vue {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(async () => {
-                    await onDisableFloor(val.id)
+                    const { data } = await onEnableFloor(val.id)
+
                     this.$message({
                         type: 'success',
                         message: '楼层已启用~!'

@@ -33,7 +33,7 @@ import { RespBossShopFloorDetail } from '@/interface/hbp-shop'
 import moment from 'moment'
 
 @Component({
-    name: 'Flooredit',
+    name: 'Floordetail',
     components: {
         Bannertabs,
         Categorytabs,
@@ -42,7 +42,7 @@ import moment from 'moment'
     }
 })
 
-export default class Flooredit extends Vue {
+export default class Floordetail extends Vue {
         $refs!: {
             form: HTMLFormElement
         }

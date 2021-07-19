@@ -649,17 +649,17 @@ export interface ShopFloorBrandPromptResponse {
 
     /**
      *
-     * @type {JsonNode}
+     * @type {string}
      * @memberof ShopFloorBrandPromptResponse
      */
-    brandLogoUrls?: JsonNode
+    brandLogoUrls?: string
 
     /**
      *
-     * @type {JsonNode}
+     * @type {string}
      * @memberof ShopFloorBrandPromptResponse
      */
-    brandBannerUrls?: JsonNode
+    brandBannerUrls?: string
 
     /**
      * 品牌描述
@@ -3289,10 +3289,10 @@ export interface AppletSpuDetailResponse {
 
     /**
      *
-     * @type {JsonNode}
+     * @type {string}
      * @memberof AppletSpuDetailResponse
      */
-    imageUrls: JsonNode
+    imageUrls: string
 
     /**
      * 销售价是否可见 0：否 1：是
