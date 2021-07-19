@@ -2,15 +2,14 @@
 <template>
     <div class="banner-tab">
         <div class="baner-btn mb20">
-            <el-button type="primary" @click="onAdd">新增品类推荐</el-button>
+            <el-button type="primary" @click="onAdd" v-if="hosAuthCheck(advcategoryadd)">新增品类推荐</el-button>
         </div>
         <hosJoyTable isShowIndex ref="hosjoyTable" align="center" showPagination border stripe :column="tableLabel" :data="tableData" actionWidth='250' :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" isAction
             :isActionFixed='tableData&&tableData.length>0'>
             <template #action="slotProps">
-                <h-button table @click="onMove(slotProps.data.row,'up')" v-if="slotProps.data.$index!=0">上移</h-button>
-                <h-button table @click="onMove(slotProps.data.row,'down')" v-if="slotProps.data.$index!=tableData.length-1">下移</h-button>
-                <h-button table @click="onCancelRemmend(slotProps.data.row)">取消推荐</h-button>
-
+                <h-button table @click="onMove(slotProps.data.row,'up')" v-if="slotProps.data.$index!=0&&hosAuthCheck(advcategorymove)">上移</h-button>
+                <h-button table @click="onMove(slotProps.data.row,'down')" v-if="slotProps.data.$index!=tableData.length-1&&hosAuthCheck(advcategorymove)">下移</h-button>
+                <h-button table @click="onCancelRemmend(slotProps.data.row)" v-if="hosAuthCheck(advcategorycancel)">取消推荐</h-button>
             </template>
         </hosJoyTable>
         <el-dialog title="新增banner" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
@@ -44,6 +43,7 @@ import { BossFrontCategoryRecommendAddRequest } from '@/interface/hbp-shop'
 import { CreateElement } from 'vue'
 import { findCategories, categoryMoveUp, categoryMoveDown, findCategoriesList, addCategory, cancelCategory } from '../api'
 import { ccpBaseUrl } from '@/api/config'
+import { CRM_ADV_CATEGORY_ADD, CRM_ADV_CATEGORY_MOVE, CRM_ADV_CATEGORY_CANCEL } from '@/utils/auth_const'
 
 @Component({
     name: 'Categorytabs',
@@ -53,117 +53,121 @@ import { ccpBaseUrl } from '@/api/config'
     }
 })
 export default class Categorytabs extends Vue {
-        $refs!: {
-            form: HTMLFormElement
-        }
-        action=ccpBaseUrl + 'common/files/upload-old'
-        uploadParameters = {
-            updateUid: '',
-            reservedName: false
-        }
-        options:any=[]
-        queryParams:object={
-            pageNumber: 1,
-            pageSize: 10
-        }
-        dialogVisible:boolean = false
-        categoryForm:BossFrontCategoryRecommendAddRequest & {imageUrls:any[]}={
-            imageUrls: [],
-            frontCategoryId: '',
-            imageUrl: ''
-        }
-        page = {
-            sizes: [10, 20, 50, 100],
-            total: 0
-        }
+    $refs!: {
+        form: HTMLFormElement
+    }
+    advcategoryadd = CRM_ADV_CATEGORY_ADD
+    advcategorymove = CRM_ADV_CATEGORY_MOVE
+    advcategorycancel = CRM_ADV_CATEGORY_CANCEL
 
-        tableData:any[] | [] = []
+    action=ccpBaseUrl + 'common/files/upload-old'
+    uploadParameters = {
+        updateUid: '',
+        reservedName: false
+    }
+    options: any=[]
+    queryParams: object={
+        pageNumber: 1,
+        pageSize: 10
+    }
+    dialogVisible: boolean = false
+    categoryForm: BossFrontCategoryRecommendAddRequest & {imageUrls:any[]}={
+        imageUrls: [],
+        frontCategoryId: '',
+        imageUrl: ''
+    }
+    page = {
+        sizes: [10, 20, 50, 100],
+        total: 0
+    }
 
-        tableLabel: tableLabelProps = [
-            { label: '品类顺序', prop: 'sort' },
-            { label: '品类名称', prop: 'frontCategoryName' },
-            { label: '品类图标',
-                prop: 'imageUrl',
-                render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
-                    return (
-                        <span class="label_img">
-                            {
-                                scope.row.imageUrl
-                                    ? <a href={scope.row.imageUrl} target="_blank"><img src={scope.row.imageUrl}/></a>
-                                    : '-'
-                            }
-                        </span>
-                    )
-                }
-            },
-            { label: '更新人', prop: 'updateBy' },
-            { label: '更新时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss' }
-        ]
+    tableData: any[] | [] = []
 
-        get rules () {
-            let rules = {
-                frontCategoryId: [
-                    { required: true, message: '请选择品类名称', trigger: 'change' }
-                ],
-                imageUrls: [
-                    { required: true, message: '请上传品类图标' }
-                ]
+    tableLabel: tableLabelProps = [
+        { label: '品类顺序', prop: 'sort' },
+        { label: '品类名称', prop: 'frontCategoryName' },
+        { label: '品类图标',
+            prop: 'imageUrl',
+            render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
+                return (
+                    <span class="label_img">
+                        {
+                            scope.row.imageUrl
+                                ? <a href={scope.row.imageUrl} target="_blank"><img src={scope.row.imageUrl}/></a>
+                                : '-'
+                        }
+                    </span>
+                )
             }
-            return rules
-        }
+        },
+        { label: '更新人', prop: 'updateBy' },
+        { label: '更新时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss' }
+    ]
 
-        handleClose () {
-            this.dialogVisible = false
-            this.$refs['ruleForm'].clearValidate()
+    get rules () {
+        let rules = {
+            frontCategoryId: [
+                { required: true, message: '请选择品类名称', trigger: 'change' }
+            ],
+            imageUrls: [
+                { required: true, message: '请上传品类图标' }
+            ]
         }
+        return rules
+    }
 
-        async onFindList () {
-            const { data } = await findCategories(this.queryParams)
-            this.tableData = data.records
-            this.page.total = data.total as number
-        }
+    handleClose () {
+        this.dialogVisible = false
+        this.$refs['ruleForm'].clearValidate()
+    }
 
-        onAdd () {
-            this.dialogVisible = true
-        }
+    async onFindList () {
+        const { data } = await findCategories(this.queryParams)
+        this.tableData = data.records
+        this.page.total = data.total as number
+    }
 
-        async onMove (val, type) {
-            if (type == 'up') {
-                await categoryMoveUp(val.id)
-            } else {
-                await categoryMoveDown(val.id)
-            }
-            this.onFindList()
-        }
-        onSave () {
-            this.$refs['ruleForm'].validate(async (valid) => {
-                if (valid) {
-                    this.categoryForm.imageUrl = this.categoryForm.imageUrls[0].fileUrl
-                    await addCategory(this.categoryForm)
-                    this.onFindList()
-                    this.dialogVisible = false
-                }
-            })
-        }
+    onAdd () {
+        this.dialogVisible = true
+    }
 
-        onCancelRemmend (val) {
-            this.$confirm('确定取消当前品类推荐吗？取消后，当前品类在小程序首页不可见', '取消品类推荐', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(async () => {
-                await cancelCategory(val.id)
+    async onMove (val, type) {
+        if (type == 'up') {
+            await categoryMoveUp(val.id)
+        } else {
+            await categoryMoveDown(val.id)
+        }
+        this.onFindList()
+    }
+    onSave () {
+        this.$refs['ruleForm'].validate(async (valid) => {
+            if (valid) {
+                this.categoryForm.imageUrl = this.categoryForm.imageUrls[0].fileUrl
+                await addCategory(this.categoryForm)
                 this.onFindList()
-            }).catch(() => {
+                this.dialogVisible = false
+            }
+        })
+    }
 
-            })
-        }
-
-        async mounted () {
+    onCancelRemmend (val) {
+        this.$confirm('确定取消当前品类推荐吗？取消后，当前品类在小程序首页不可见', '取消品类推荐', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(async () => {
+            await cancelCategory(val.id)
             this.onFindList()
-            const { data } = await findCategoriesList()
-            this.options = data
-        }
+        }).catch(() => {
+
+        })
+    }
+
+    async mounted () {
+        this.onFindList()
+        const { data } = await findCategoriesList()
+        this.options = data
+    }
 }
 </script>
 <style lang='scss' scoped>
