@@ -2,19 +2,20 @@
 <template>
     <div class="banner-tab">
         <div class="baner-btn mb20">
-            <el-button type="primary" @click="onAddBanner">新增banner</el-button>
+            <el-button type="primary" @click="onAddBanner" v-if="hosAuthCheck(banneradd)">新增banner</el-button>
         </div>
-        <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border showPagination stripe :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList"  actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
+        <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border showPagination stripe :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" actionWidth='250' isAction
+            :isActionFixed='tableData&&tableData.length>0'>
             <template #action="slotProps">
                 <div v-if="slotProps.data.row.status==2">
-                    <h-button table @click="onEdit(slotProps.data.row)">编辑</h-button>
-                    <h-button table @click="onDelete(slotProps.data.row)">删除</h-button>
-                    <h-button table @click="onOperate(slotProps.data.row,'enable')">启用</h-button>
-                    <h-button table @click="onMove(slotProps.data.row,'up')" v-if="slotProps.data.$index!=0">上移</h-button>
-                    <h-button table @click="onMove(slotProps.data.row,'down')" v-if="slotProps.data.$index!=tableData.length-1">下移</h-button>
+                    <h-button table @click="onEdit(slotProps.data.row)" v-if="hosAuthCheck(banneredit)">编辑</h-button>
+                    <h-button table @click="onDelete(slotProps.data.row)" v-if="hosAuthCheck(bannerdelete)">删除</h-button>
+                    <h-button table @click="onOperate(slotProps.data.row,'enable')" v-if="hosAuthCheck(banneroperate)&&slotProps.data.row.status!=1">启用</h-button>
+                    <h-button table @click="onMove(slotProps.data.row,'up')" v-if="slotProps.data.$index!=0&&hosAuthCheck(bannermove)">上移</h-button>
+                    <h-button table @click="onMove(slotProps.data.row,'down')" v-if="slotProps.data.$index!=tableData.length-1&&hosAuthCheck(bannermove)">下移</h-button>
                 </div>
                 <div v-else>
-                    <h-button table @click="onOperate(slotProps.data.row,'disable')" v-if="slotProps.data.row.status==1">停用</h-button>
+                    <h-button table @click="onOperate(slotProps.data.row,'disable')" v-if="slotProps.data.row.status==1&&hosAuthCheck(banneroperate)">停用</h-button>
                 </div>
             </template>
         </hosJoyTable>
@@ -54,6 +55,8 @@ import { getBannerPage, bannerEnable, bannerDisable, bannerMoveDown, bannerMoveU
 import { ShopBannerAddRequest } from '@/interface/hbp-shop'
 import { deepCopy } from '@/utils/utils'
 import { ccpBaseUrl } from '@/api/config'
+import { CRM_ADV_BANNER_ADD, CRM_ADV_BANNER_EDIT, CRM_ADV_BANNER_OPERATE, CRM_ADV_BANNER_DELETE, CRM_ADV_BANNER_MOVE } from '@/utils/auth_const'
+
 @Component({
     name: 'Bannertabs',
     components: {
@@ -62,181 +65,185 @@ import { ccpBaseUrl } from '@/api/config'
     }
 })
 export default class Bannertabs extends Vue {
-        $refs!: {
-            form: HTMLFormElement
-        }
+    $refs!: {
+        form: HTMLFormElement
+    }
+    banneradd = CRM_ADV_BANNER_ADD
+    banneredit = CRM_ADV_BANNER_EDIT
+    banneroperate = CRM_ADV_BANNER_OPERATE
+    bannerdelete = CRM_ADV_BANNER_DELETE
+    bannermove = CRM_ADV_BANNER_MOVE
+    queryParams:object={
+        pageNumber: 1,
+        pageSize: 10
+    }
+    uploadParameters = {
+        updateUid: '',
+        reservedName: false
+    }
+    dialogVisible:boolean = false
+    action=ccpBaseUrl + 'common/files/upload-old'
+    bannerForm:ShopBannerAddRequest & {bannerArr?:any[], id?:any} ={
+        'bannerName': '',
+        'bannerPicUrl': '',
+        'linkUrl': '',
+        'location': '',
+        bannerArr: []
 
-        queryParams:object={
-            pageNumber: 1,
-            pageSize: 10
-        }
-        uploadParameters = {
-            updateUid: '',
-            reservedName: false
-        }
-        dialogVisible:boolean = false
-        action=ccpBaseUrl + 'common/files/upload-old'
-        bannerForm:ShopBannerAddRequest & {bannerArr?:any[], id?:any} ={
-            'bannerName': '',
-            'bannerPicUrl': '',
-            'linkUrl': '',
-            'location': '',
-            bannerArr: []
+    }
+    private _bannerForm = {}
+    page = {
+        sizes: [10, 20, 50, 100],
+        total: 0
+    }
 
-        }
-        private _bannerForm = {}
-        page = {
-            sizes: [10, 20, 50, 100],
-            total: 0
-        }
+    tableData:any[] | [] = []
 
-        tableData:any[] | [] = []
-
-        tableLabel: tableLabelProps = [
-            { label: 'banner名称', prop: 'bannerName' },
-            { label: 'banner图',
-                prop: 'bannerPicUrl',
-                render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
-                    return (
-                        <span class="label_img">
-                            {
-                                scope.row.bannerPicUrl
-                                    ? <a href={scope.row.bannerPicUrl} target="_blank"><img src={scope.row.bannerPicUrl}/></a>
-                                    : '-'
-                            }
-                        </span>
-                    )
-                }
-            },
-            { label: '跳转链接', prop: 'linkUrl' },
-            { label: 'banner位置', prop: 'location', dicData: [{ value: 1, label: '商城首页' }] },
-            { label: '创建时间',
-                prop: 'createTime',
-                displayAs: 'YYYY-MM-DD HH:mm:ss'
-            },
-            { label: 'banner状态', prop: 'status', dicData: [{ value: 1, label: '启用' }, { value: 2, label: '停用' }] }
-        ]
-
-        get rules () {
-            let rules = {
-                bannerName: [
-                    { required: true, message: '请输入banner名称', trigger: 'blur' }
-                ],
-                location: [
-                    { required: true, message: '请选择banner位置', trigger: 'change' }
-                ],
-                bannerArr: [
-                    { required: true, message: '请上传banner图' }
-                ]
+    tableLabel: tableLabelProps = [
+        { label: 'banner名称', prop: 'bannerName' },
+        { label: 'banner图',
+            prop: 'bannerPicUrl',
+            render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
+                return (
+                    <span class="label_img">
+                        {
+                            scope.row.bannerPicUrl
+                                ? <a href={scope.row.bannerPicUrl} target="_blank"><img src={scope.row.bannerPicUrl}/></a>
+                                : '-'
+                        }
+                    </span>
+                )
             }
-            return rules
-        }
+        },
+        { label: '跳转链接', prop: 'linkUrl' },
+        { label: 'banner位置', prop: 'location', dicData: [{ value: 1, label: '商城首页' }] },
+        { label: '创建时间',
+            prop: 'createTime',
+            displayAs: 'YYYY-MM-DD HH:mm:ss'
+        },
+        { label: 'banner状态', prop: 'status', dicData: [{ value: 1, label: '启用' }, { value: 2, label: '停用' }] }
+    ]
 
-        @Watch('bannerArr') private getBArr (val) {
-            if (val.length > 0) {
-                // if (this.$refs['bannerArrs']) {
-                //     this.$refs['ruleForm'].clearValidate('bannerArr')
-                // }
-            }
+    get rules () {
+        let rules = {
+            bannerName: [
+                { required: true, message: '请输入banner名称', trigger: 'blur' }
+            ],
+            location: [
+                { required: true, message: '请选择banner位置', trigger: 'change' }
+            ],
+            bannerArr: [
+                { required: true, message: '请上传banner图' }
+            ]
         }
+        return rules
+    }
 
-        handleClose () {
-            this.dialogVisible = false
+    @Watch('bannerArr') private getBArr (val) {
+        if (val.length > 0) {
+            // if (this.$refs['bannerArrs']) {
+            //     this.$refs['ruleForm'].clearValidate('bannerArr')
+            // }
+        }
+    }
+
+    handleClose () {
+        this.dialogVisible = false
+        this.$refs['ruleForm'].clearValidate()
+    }
+    onAddBanner () {
+        this.bannerForm = deepCopy(this._bannerForm)
+
+        this.dialogVisible = true
+        this.$nextTick(() => {
             this.$refs['ruleForm'].clearValidate()
-        }
-        onAddBanner () {
-            this.bannerForm = deepCopy(this._bannerForm)
+        })
+    }
 
-            this.dialogVisible = true
-            this.$nextTick(() => {
-                this.$refs['ruleForm'].clearValidate()
-            })
-        }
+    async onFindList () {
+        const { data } = await getBannerPage(this.queryParams)
+        this.tableData = data.records
+        this.page.total = data.total as number
+    }
 
-        async onFindList () {
-            const { data } = await getBannerPage(this.queryParams)
-            this.tableData = data.records
-            this.page.total = data.total as number
-        }
-
-        async onEdit (val) {
-            const { data } = await getBannerDetail(val.id)
-            this.bannerForm = { ...this.bannerForm, ...data }
-            this.bannerForm.bannerArr = [{ fileUrl: data.bannerPicUrl, fileName: data.bannerPicUrl }]
-            this.dialogVisible = true
-        }
-        onSave () {
-            this.$refs['ruleForm'].validate(async (valid) => {
-                if (valid) {
-                    this.bannerForm.bannerPicUrl = this.bannerForm.bannerArr[0].fileUrl
-                    if (this.bannerForm.id) {
-                        await editBanner(this.bannerForm)
-                    } else {
-                        await addBanner(this.bannerForm)
-                        this.$message.success('bannar新增成功~')
-                    }
-
-                    this.dialogVisible = false
-                    this.onFindList()
+    async onEdit (val) {
+        const { data } = await getBannerDetail(val.id)
+        this.bannerForm = { ...this.bannerForm, ...data }
+        this.bannerForm.bannerArr = [{ fileUrl: data.bannerPicUrl, fileName: data.bannerPicUrl }]
+        this.dialogVisible = true
+    }
+    onSave () {
+        this.$refs['ruleForm'].validate(async (valid) => {
+            if (valid) {
+                this.bannerForm.bannerPicUrl = this.bannerForm.bannerArr[0].fileUrl
+                if (this.bannerForm.id) {
+                    await editBanner(this.bannerForm)
+                } else {
+                    await addBanner(this.bannerForm)
+                    this.$message.success('bannar新增成功~')
                 }
-            })
-        }
 
-        onOperate (val, type) {
-            if (type == 'enable') {
-                this.$confirm('确定启用该条banner吗？启用后该条信息将展示在小程序端对应的位置', '启用确认', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(async () => {
-                    await bannerEnable(val.id)
-                    this.$message.success('banner启用成功~')
-                    this.onFindList()
-                }).catch(() => {
-
-                })
-            } else {
-                this.$confirm('确定停用该条banner吗？停用后该条信息在小程序端不可见', '停用确认', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(async () => {
-                    await bannerDisable(val.id)
-                    this.$message.success('banner停用成功~')
-                    this.onFindList()
-                }).catch(() => {
-
-                })
+                this.dialogVisible = false
+                this.onFindList()
             }
-        }
+        })
+    }
 
-        async onMove (val, type) {
-            if (type == 'up') {
-                await bannerMoveUp(val.id)
-            } else {
-                await bannerMoveDown(val.id)
-            }
-            this.onFindList()
-        }
-
-        onDelete (val) {
-            this.$confirm('确定删除该条bannar吗？', '删除确认', {
+    onOperate (val, type) {
+        if (type == 'enable') {
+            this.$confirm('确定启用该条banner吗？启用后该条信息将展示在小程序端对应的位置', '启用确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                await bannerDelete(val.id)
-                this.$message.success('bannar删除成功~')
+                await bannerEnable(val.id)
+                this.$message.success('banner启用成功~')
+                this.onFindList()
+            }).catch(() => {
+
+            })
+        } else {
+            this.$confirm('确定停用该条banner吗？停用后该条信息在小程序端不可见', '停用确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await bannerDisable(val.id)
+                this.$message.success('banner停用成功~')
                 this.onFindList()
             }).catch(() => {
 
             })
         }
+    }
 
-        mounted () {
-            this.onFindList()
-            this._bannerForm = deepCopy(this.bannerForm)
+    async onMove (val, type) {
+        if (type == 'up') {
+            await bannerMoveUp(val.id)
+        } else {
+            await bannerMoveDown(val.id)
         }
+        this.onFindList()
+    }
+
+    onDelete (val) {
+        this.$confirm('确定删除该条bannar吗？', '删除确认', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(async () => {
+            await bannerDelete(val.id)
+            this.$message.success('bannar删除成功~')
+            this.onFindList()
+        }).catch(() => {
+
+        })
+    }
+
+    mounted () {
+        this.onFindList()
+        this._bannerForm = deepCopy(this.bannerForm)
+    }
 }
 </script>
 <style lang='scss' scoped>

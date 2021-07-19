@@ -23,23 +23,23 @@
                 </div>
             </div>
             <div class="query-cont__row mb20">
-                <h-button type="primary" @click="onAdd">新增品类</h-button>
+                <h-button type="primary" v-if="hosAuthCheck(categoryadd)" @click="onAdd">新增品类</h-button>
             </div>
             <!-- end search bar -->
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <h-button table @click="onEdit(slotProps.data.row)">编辑</h-button>
-                    <h-button table @click="onDelete(slotProps.data.row)">删除</h-button>
-                    <h-button table @click="onLook(slotProps.data.row)">查看</h-button>
-                    <h-button table v-if="slotProps.data.$index!=0" @click="onMove(slotProps.data.row,'up')">上移</h-button>
-                    <h-button table v-if="slotProps.data.$index!=tableData.length-1" @click="onMove(slotProps.data.row,'down')">下移</h-button>
+                    <h-button table @click="onEdit(slotProps.data.row)" v-if="hosAuthCheck(categoryedit)">编辑</h-button>
+                    <h-button table @click="onDelete(slotProps.data.row)" v-if="hosAuthCheck(categorydelete)">删除</h-button>
+                    <h-button table @click="onLook(slotProps.data.row)" v-if="hosAuthCheck(categorylook)">查看</h-button>
+                    <h-button table v-if="slotProps.data.$index!=0&&hosAuthCheck(categorymove)" @click="onMove(slotProps.data.row,'up')">上移</h-button>
+                    <h-button table v-if="slotProps.data.$index!=tableData.length-1&&hosAuthCheck(categorymove)" @click="onMove(slotProps.data.row,'down')">下移</h-button>
                 </template>
             </hosJoyTable>
         </div>
         <el-dialog title="删除确认" :visible.sync="dialogVisible" width="40%" :before-close="()=>{dialogVisible = false}">
             <p class="mb20" style="color:red">当前品类所关联的类目中，存在以下商品被使用在启用中的楼层，若仍要删除品类，请先从对应楼层中移出该商品或停用楼层</p>
-            <hosJoyTable  ref="hosjoyTable" align="center" border :column="dialogLabel" :data="dialogData">
+            <hosJoyTable ref="hosjoyTable" align="center" border :column="dialogLabel" :data="dialogData">
             </hosJoyTable>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
@@ -55,6 +55,7 @@ import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import { getCateGoryList, moveUpCategroy, moveDownCategroy, deleteCategory, getComfirCateGory } from './api/index'
 import { CreateElement } from 'vue'
 import { deepCopy } from '@/utils/utils'
+import { CRM_CATEGORY_ADD, CRM_CATEGORY_EDIT, CRM_CATEGORY_DETELE, CRM_CATEGORY_LOOK, CRM_CATEGORY_MOVE } from '@/utils/auth_const'
 
 @Component({
     name: 'Categroies',
@@ -64,101 +65,106 @@ import { deepCopy } from '@/utils/utils'
     }
 })
 export default class Categroies extends Vue {
-        $refs!: {
-            form: HTMLFormElement
-        }
-        dialogVisible:boolean = false
-        uploadParameters = {
-            updateUid: '',
-            reservedName: false
-        }
-        queryParams:object={
-            pageNumber: 1,
-            pageSize: 10,
-            frontCategoryName: '',
-            categoryName: ''
-        }
-        private _queryParams={}
-        page = {
-            sizes: [10, 20, 50, 100],
-            total: 0
-        }
-        tableData:any[] | [] = []
-        tableLabel: tableLabelProps = [
-            { label: '品类名称', prop: 'frontCategoryName' },
-            { label: '类目信息', prop: 'categoryNameAndSpuNum' },
-            { label: '创建时间', prop: 'createTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
-            { label: '更新时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
-            { label: '更新人', prop: 'updateBy' },
-            { label: '品类上架数量', prop: 'onShelfSpuNum' }
-        ]
-        dialogData:any[] | [] = []
-        dialogLabel: tableLabelProps = [
-            { label: '商品名称', prop: 'spuName' },
-            { label: '类目信息', prop: 'categoryPath' },
-            { label: '楼层名称', prop: 'floorName' }
-        ]
+    $refs!: {
+        form: HTMLFormElement
+    }
+    categoryadd = CRM_CATEGORY_ADD
+    categoryedit = CRM_CATEGORY_EDIT
+    categorydelete = CRM_CATEGORY_DETELE
+    categorylook = CRM_CATEGORY_LOOK
+    categorymove = CRM_CATEGORY_MOVE
+    dialogVisible:boolean = false
+    uploadParameters = {
+        updateUid: '',
+        reservedName: false
+    }
+    queryParams:object={
+        pageNumber: 1,
+        pageSize: 10,
+        frontCategoryName: '',
+        categoryName: ''
+    }
+    private _queryParams={}
+    page = {
+        sizes: [10, 20, 50, 100],
+        total: 0
+    }
+    tableData:any[] | [] = []
+    tableLabel: tableLabelProps = [
+        { label: '品类名称', prop: 'frontCategoryName' },
+        { label: '类目信息', prop: 'categoryNameAndSpuNum' },
+        { label: '创建时间', prop: 'createTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+        { label: '更新时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+        { label: '更新人', prop: 'updateBy' },
+        { label: '品类上架数量', prop: 'onShelfSpuNum' }
+    ]
+    dialogData:any[] | [] = []
+    dialogLabel: tableLabelProps = [
+        { label: '商品名称', prop: 'spuName' },
+        { label: '类目信息', prop: 'categoryPath' },
+        { label: '楼层名称', prop: 'floorName' }
+    ]
 
-        async getList () {
-            const { data } = await getCateGoryList(this.queryParams)
-            this.tableData = data.records
-            this.page.total = data.total as number
-        }
+    async getList () {
+        const { data } = await getCateGoryList(this.queryParams)
+        this.tableData = data.records
+        this.page.total = data.total as number
+    }
 
-        onReset () {
-            this.queryParams = deepCopy(this._queryParams)
-            this.getList()
-        }
+    onReset () {
+        this.queryParams = deepCopy(this._queryParams)
+        this.getList()
+    }
 
-        onAdd () {
-            this.$router.push({ path: '/goodwork/categoryedit' })
-        }
+    onAdd () {
+        this.$router.push({ path: '/goodwork/categoryedit' })
+    }
 
-        onGoJump () {
-            this.$router.push({ path: '/goodwork/advmanage' })
-        }
+    onGoJump () {
+        this.$router.push({ path: '/goodwork/advmanage' })
+    }
 
-        onEdit (val) {
-            this.$router.push({ path: '/goodwork/categoryedit', query: { id: val.id } })
-        }
+    onEdit (val) {
+        this.$router.push({ path: '/goodwork/categoryedit', query: { id: val.id } })
+    }
 
-        onLook (val) {
-            this.$router.push({ path: '/goodwork/categorydetail', query: { id: val.id } })
-        }
+    onLook (val) {
+        this.$router.push({ path: '/goodwork/categorydetail', query: { id: val.id } })
+    }
 
-        async onDelete (val) {
-            // 先校验 删除的品类
-            const { data } = await getComfirCateGory(val.id)
-            this.dialogData = data
-            if (data.length > 0) {
-                this.dialogVisible = true
-            } else {
-                this.$confirm('确定删除该品类信息吗？', '删除确认', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(async () => {
-                    await deleteCategory(val.id)
-                    this.getList()
-                }).catch(() => {
+    async onDelete (val) {
+        // 先校验 删除的品类
+        const { data } = await getComfirCateGory(val.id)
+        this.dialogData = data
+        if (data.length > 0) {
+            this.dialogVisible = true
+        } else {
+            this.$confirm('确定删除该品类信息吗？', '删除确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await deleteCategory(val.id)
+                this.getList()
+            }).catch(() => {
 
-                })
-            }
+            })
         }
+    }
 
-        async onMove (val, type) {
-            if (type == 'up') {
-                await moveUpCategroy(val.id)
-            } else {
-                await moveDownCategroy(val.id)
-            }
-            this.getList()
+    async onMove (val, type) {
+        if (type == 'up') {
+            await moveUpCategroy(val.id)
+        } else {
+            await moveDownCategroy(val.id)
         }
+        this.getList()
+    }
 
-        mounted () {
-            this.getList()
-            this._queryParams = deepCopy(this.queryParams)
-        }
+    mounted () {
+        this.getList()
+        this._queryParams = deepCopy(this.queryParams)
+    }
 }
 </script>
 <style lang='scss' scoped>

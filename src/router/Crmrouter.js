@@ -666,8 +666,8 @@ export default [
                 component: () => import('@/views/crm/shopMall/advmanage/floordetail.vue')
             },
             {
-                path: 'category',
-                name: 'category',
+                path: 'categorymanage',
+                name: 'categorymanage',
                 meta: {
                     title: '品类管理',
                     tagName: '品类管理',

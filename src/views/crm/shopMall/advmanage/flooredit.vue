@@ -31,14 +31,14 @@
                 </div>
                 <div class="query-cont__col">
                     <h-button type="primary" @click="onFindList">查询</h-button>
-                    <h-button>重置</h-button>
+                    <h-button @click="onReset">重置</h-button>
                 </div>
             </div>
             <div class="mb20">
                 <h-button type="primary" @click="onBatch">批量选择</h-button>
             </div>
-            <hosJoyTable ref="multipleTable" align="center" isShowIndex border showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" :tableRowClassName="rowClass"  :selectable="selectable"   :pageSizes='page.sizes'
-               actionWidth='100' isAction :height="500" @selection-change="handleSelectionChange" isShowselection :isActionFixed='tableData&&tableData.length>0'>
+            <hosJoyTable ref="multipleTable" align="center" isShowIndex border showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" :tableRowClassName="rowClass"
+                :selectable="selectable" :pageSizes='page.sizes' actionWidth='100' isAction :height="500" @selection-change="handleSelectionChange" isShowselection :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
                     <h-button table v-if="!slotProps.data.row.checked" @click="onSelect(slotProps.data)">选择</h-button>
                     <h-button table v-if="slotProps.data.row.checked" @click="onNoSelect(slotProps.data)">取消选择</h-button>
@@ -46,7 +46,7 @@
             </hosJoyTable>
             <div class="floor-tit mt20">已选择该楼层的商品</div>
             <!-- 表格操作 -->
-            <hosJoyTable ref="hosjoyTable2"  v-if="show" align="center" border isShowIndex stripe :column="formTableLabel" :data="tableForm" actionWidth='200' isAction>
+            <hosJoyTable ref="hosjoyTable2" v-if="show" align="center" border isShowIndex stripe :column="formTableLabel" :data="tableForm" actionWidth='200' isAction>
                 <template #action="slotProps">
                     <h-button table @click="onMove(slotProps.data, 'up')" v-if="slotProps.data.$index!=0">上移</h-button>
                     <h-button table @click="onMove(slotProps.data, 'down')" v-if="slotProps.data.$index!=tableForm.length-1">下移</h-button>
@@ -54,8 +54,8 @@
                 </template>
             </hosJoyTable>
             <div class="floot-bot">
-                    <h-button type="" @click="onCancel">取消</h-button>
-                    <h-button type="primary" @click="onSave">保存</h-button>
+                <h-button type="" @click="onCancel">取消</h-button>
+                <h-button type="primary" @click="onSave">保存</h-button>
             </div>
         </div>
     </div>
@@ -222,7 +222,7 @@ export default class Flooredit extends Vue {
             }
         }
 
-        onRest () {
+        onReset () {
             this.queryParams = deepCopy(this._queryParams)
             this.onFindList()
         }
@@ -295,8 +295,8 @@ export default class Flooredit extends Vue {
                     return value.id == _arr[0].id
                 })
                 this.$set(this.tableData[one], 'checked', false)
-                this.tableForm.splice(val.$index, 1)
             }
+            this.tableForm.splice(val.$index, 1)
             this.$refs['multipleTable'].clearSelection()
         }
 

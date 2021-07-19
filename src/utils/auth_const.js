@@ -348,3 +348,28 @@ export const CRM_LIVE_EDIT = 108702
 export const CRM_LIVE_ONTOP = 108703
 export const CRM_LIVE_NOTOP = 108704
 export const CRM_LIVE_DELETE = 108705
+
+// 品类管理
+export const CRM_CATEGORY_ADD = 117601
+export const CRM_CATEGORY_EDIT = 117602
+export const CRM_CATEGORY_DETELE = 117603
+export const CRM_CATEGORY_LOOK = 117604
+export const CRM_CATEGORY_MOVE = 117605
+
+// 广告位管理
+export const CRM_ADV_BANNER_ADD = 117611
+export const CRM_ADV_BANNER_EDIT = 117612
+export const CRM_ADV_BANNER_DELETE = 117613
+export const CRM_ADV_BANNER_OPERATE = 117614
+export const CRM_ADV_BANNER_MOVE = 117615
+
+export const CRM_ADV_CATEGORY_ADD = 117621
+export const CRM_ADV_CATEGORY_CANCEL = 117622
+export const CRM_ADV_CATEGORY_MOVE = 117623
+
+export const CRM_ADV_FLOOR_ADD = 117631
+export const CRM_ADV_FLOOR_LOOK = 117632
+export const CRM_ADV_FLOOR_OPERATE = 117633
+export const CRM_ADV_FLOOR_EDIT = 117634
+export const CRM_ADV_FLOOR_DELETE = 117635
+export const CRM_ADV_FLOOR_MOVE = 117636
