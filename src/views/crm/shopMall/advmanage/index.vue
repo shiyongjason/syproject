@@ -47,7 +47,10 @@ export default class Advmanage extends Vue {
         form: HTMLFormElement
     }
 
-    handleTabClick (tab, event): void { }
+    activeName: string='banner'
+
+    handleTabClick (tab, event): void {
+    }
 }
 </script>
 
