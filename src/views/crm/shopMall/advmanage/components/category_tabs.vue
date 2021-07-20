@@ -129,6 +129,11 @@ export default class Categorytabs extends Vue {
 
     onAdd () {
         this.dialogVisible = true
+        this.categoryForm.imageUrls = []
+        this.categoryForm.frontCategoryId = ''
+        this.$nextTick(() => {
+            this.$refs['ruleForm'].clearValidate()
+        })
     }
 
     async onMove (val, type) {
@@ -140,7 +145,7 @@ export default class Categorytabs extends Vue {
         this.onFindList()
     }
     onSave () {
-        this.$refs['ruleForm'].validate(async (valid) => {
+        this.$refs['categoryForm'].validate(async (valid) => {
             if (valid) {
                 this.categoryForm.imageUrl = this.categoryForm.imageUrls[0].fileUrl
                 await addCategory(this.categoryForm)
