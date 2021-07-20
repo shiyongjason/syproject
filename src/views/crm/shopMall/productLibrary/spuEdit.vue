@@ -312,43 +312,44 @@ export default class SpuEdit extends Vue {
             result = [{ provinceId: '0', cityId: '0', areaId: '0' }] // 全国
         }
         this.form.saleRules = result
+        console.log('🚀 --- onSubmit --- this.form.saleRules', this.form.saleRules)
         /** end  */
-        this.$refFormmain.validate(async (value, r) => {
-            if (value) {
-                let query = JSON.parse(JSON.stringify(this.form)) // 防止修改imageUrls导致页面渲染失败
-                let temp = []
-                query.imageUrls.map(item => {
-                    temp.push(item.fileUrl)
-                })
-                query.imageUrls = temp
-                query.skuList.map(row => {
-                    // 0 展示 1不展示
-                    if (query.priceVisible == 1) {
-                        // TODO fix 表格编辑bug，后期优化
-                        row.minSalePrice = isNum(row.minSalePrice, 2)
-                        row.maxSalePrice = isNum(row.maxSalePrice, 2)
-                        if (Number(row.minSalePrice) > 100000000) {
-                            row.minSalePrice = 100000000
-                        }
-                        if (Number(row.maxSalePrice) > 100000000) {
-                            row.maxSalePrice = 100000000
-                        }
-                    } else {
-                        row.minSalePrice = null
-                        row.maxSalePrice = null
-                    }
-                })
-                await submitSpu(query)
-                this.$message.success('提交编辑成功~')
-                this.onBack()
-            } else {
-                this.$nextTick(() => {
-                    let className = this.form.priceVisible == null ? '.show-err' : '.is-error'
-                    const dom = document.querySelector(className)
-                    dom && dom.scrollIntoView()
-                })
-            }
-        })
+        // this.$refFormmain.validate(async (value, r) => {
+        //     if (value) {
+        //         let query = JSON.parse(JSON.stringify(this.form)) // 防止修改imageUrls导致页面渲染失败
+        //         let temp = []
+        //         query.imageUrls.map(item => {
+        //             temp.push(item.fileUrl)
+        //         })
+        //         query.imageUrls = temp
+        //         query.skuList.map(row => {
+        //             // 0 展示 1不展示
+        //             if (query.priceVisible == 1) {
+        //                 // TODO fix 表格编辑bug，后期优化
+        //                 row.minSalePrice = isNum(row.minSalePrice, 2)
+        //                 row.maxSalePrice = isNum(row.maxSalePrice, 2)
+        //                 if (Number(row.minSalePrice) > 100000000) {
+        //                     row.minSalePrice = 100000000
+        //                 }
+        //                 if (Number(row.maxSalePrice) > 100000000) {
+        //                     row.maxSalePrice = 100000000
+        //                 }
+        //             } else {
+        //                 row.minSalePrice = null
+        //                 row.maxSalePrice = null
+        //             }
+        //         })
+        //         await submitSpu(query)
+        //         this.$message.success('提交编辑成功~')
+        //         this.onBack()
+        //     } else {
+        //         this.$nextTick(() => {
+        //             let className = this.form.priceVisible == null ? '.show-err' : '.is-error'
+        //             const dom = document.querySelector(className)
+        //             dom && dom.scrollIntoView()
+        //         })
+        //     }
+        // })
     }
 
     // 设为主图
@@ -478,7 +479,7 @@ export default class SpuEdit extends Vue {
     }
 
     // 构造省市2级数据
-    recursiveChineseArea (array = [], frequency = 0, val = false) {
+    recursiveChineseArea (array = [], frequency = 0, name = '') {
         let level = frequency + 1 // MARK level 0代表全国，1代表省，2代表市
         if (frequency < 2) {
             return array.map(item => {
@@ -488,7 +489,7 @@ export default class SpuEdit extends Vue {
                     label: item.name,
                     children: this.recursiveChineseArea(item.cities || item.countries, frequency + 1, item.name || ''),
                     parentID: (level == 0 || level == 1) ? '' : item.provinceId || item.cityId || item.countryId, // 父级ID
-                    parentName: val // 父级Name
+                    parentName: name // 父级Name
 
                 }
             })
