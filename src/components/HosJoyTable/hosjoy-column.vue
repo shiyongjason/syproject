@@ -41,8 +41,9 @@
         </template>
 
         <template slot-scope="scope">
-            <hosjoy-render :scope="scope" :render="column.render">
-            </hosjoy-render>
+            <div class="hosjoyRender">
+                <hosjoy-render :scope="scope" :render="column.render"></hosjoy-render>
+            </div>
         </template>
 
         <template v-if="column.children">

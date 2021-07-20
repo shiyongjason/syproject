@@ -188,11 +188,11 @@ export default class brandManage extends Vue {
                     <div>
                         {
                             // scope.row.categorySpuNumList && scope.row.categorySpuNumList.length > 0
-                            scope.row.categorySpuNumList?.length > 0
-                                ? scope.row.categorySpuNumList.map(item => {
+                            scope.row.brandCategoryResponseList?.length > 0
+                                ? scope.row.brandCategoryResponseList.map(item => {
                                     return (
                                         <span>
-                                            {item.frontCategoryName}({item.spuNumber})
+                                            {item.categoryName}({item.categorySpuNumber})
                                         </span>
                                     )
                                 })

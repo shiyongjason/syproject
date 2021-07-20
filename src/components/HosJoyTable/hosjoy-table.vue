@@ -491,6 +491,10 @@ export default {
 
 </script>
 <style scoped>
+.hosjoy-table >>> .hosjoyRender >:first-child{
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
 .hosjoy-table >>> .el-table .cell {
     font-size: 12px;
 }
@@ -529,6 +533,7 @@ export default {
 }
 </style>
 <style scoped lang="scss">
+
 .hosjoy-table {
     position: relative;
 }
