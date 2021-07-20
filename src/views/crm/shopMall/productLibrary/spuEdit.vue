@@ -523,7 +523,8 @@ export default class SpuEdit extends Vue {
 
     async getDetail () {
         const { data } = await getSpudetail(this.$route.query.id)
-        this.form = Object.assign({}, this.form, data)
+        // this.form = Object.assign({}, this.form, data)
+        Object.assign(this.form, data)
         this.form.createBy = this.userInfo.employeeName
         this.form.createPhone = this.userInfo.phoneNumber
         let list = []

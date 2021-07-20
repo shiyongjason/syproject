@@ -18,7 +18,7 @@
             </div>
             <div class="floor-tit">已选择该品类的类目</div>
             <!-- 表格操作 -->
-            <hosJoyTable ref="hosjoyTable" align="center" border :isShowIndex="true" stripe :column="formTableLabel" :data="tableForm" :isAction=false>
+            <hosJoyTable ref="hosjoyTable" align="center" border :isShowIndex="true" stripe :column="formTableLabel" :data="tableForm" :isAction='false'>
             </hosJoyTable>
 
         </div>
@@ -45,7 +45,7 @@ export default class Categorydetail extends Vue {
         $refs!: {
             form: HTMLFormElement
         }
-        floorForm: BossFrontCategoryDetailResp = { } as BossFrontCategoryDetailResp
+        floorForm: Partial<BossFrontCategoryDetailResp> = { }
 
         tableForm: any[] = [
 
