@@ -55,9 +55,6 @@ export default class Categorydetail extends Vue {
             { label: '类目信息', prop: 'categoryPath' },
             { label: '上架商品数量', prop: 'onShelfSpuNum' }
         ]
-        onFindList () {
-
-        }
 
         async mounted () {
             if (this.$route.query.id) {

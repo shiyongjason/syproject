@@ -50,10 +50,9 @@
     </div>
 </template>
 <script lang='tsx'>
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 // import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
-import { CreateElement } from 'vue'
 import { getTreeCategroy, addCategroy, getCateGroyDetail, editCategroy } from './api/index'
 
 @Component({
