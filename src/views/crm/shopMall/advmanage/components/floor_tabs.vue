@@ -11,7 +11,7 @@
                 <h-button table v-if="(slotProps.data.row.status==1||slotProps.data.row.status==3)&&hosAuthCheck(floorOperate)" @click="onEnable(slotProps.data.row)">启用</h-button>
                 <h-button table v-if="slotProps.data.row.status==2&&hosAuthCheck(floorOperate)" @click="onDisable(slotProps.data.row)">停用</h-button>
                 <h-button table @click="onEdit(slotProps.data.row)" v-if="(slotProps.data.row.status==1||slotProps.data.row.status==3)&&hosAuthCheck(floorEdit)">编辑</h-button>
-                <h-button table @click="onDelete(slotProps.data.row)" v-if="(slotProps.data.row.status==1||slotProps.data.row.status==3)&&hosAuthCheck(floorEelete)">删除</h-button>
+                <h-button table @click="onDelete(slotProps.data.row)" v-if="(slotProps.data.row.status==1||slotProps.data.row.status==3)&&hosAuthCheck(floorDelete)">删除</h-button>
                 <h-button table @click="onMoveFloor(slotProps.data.row,1)" v-if="slotProps.data.$index!=0&&hosAuthCheck(floorMove)">上移</h-button>
                 <h-button table @click="onMoveFloor(slotProps.data.row,2)" v-if="(slotProps.data.$index!=tableData.length-1)&&hosAuthCheck(floorMove)">下移</h-button>
             </template>
@@ -69,10 +69,10 @@ export default class Floortabs extends Vue {
                         <div>
                             {
                                 scope.row.categorySpuNumList && scope.row.categorySpuNumList.length > 0
-                                    ? scope.row.categorySpuNumList.map(item => {
+                                    ? scope.row.categorySpuNumList.map((item, index) => {
                                         return (
                                             <span>
-                                                {item.frontCategoryName}({item.spuNumber})
+                                                {item.frontCategoryName}({item.spuNumber})  {index < scope.row.categorySpuNumList.length - 1 ? ',' : ''}
                                             </span>
                                         )
                                     })
