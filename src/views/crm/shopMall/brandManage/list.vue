@@ -148,14 +148,14 @@ export default class brandManage extends Vue {
             render: (h, scope) => {
                 return (
                     <div class="rowcss">
-                        <el-image
+                        {scope.row[scope.column.property] ? <el-image
                             fit="contain"
                             style="width: 130px"
                             src={scope.row[scope.column.property]}
                             preview-src-list={[
                                 scope.row[scope.column.property]
                             ]}
-                        ></el-image>
+                        ></el-image> : '-'}
                     </div>
                 )
             }
@@ -167,14 +167,14 @@ export default class brandManage extends Vue {
             render: (h, scope) => {
                 return (
                     <div class="rowcss">
-                        <el-image
+                        {scope.row[scope.column.property] ? <el-image
                             fit="contain"
                             style="width: 80px;heigth:80px"
                             src={scope.row[scope.column.property]}
                             preview-src-list={[
                                 scope.row[scope.column.property]
                             ]}
-                        ></el-image>
+                        ></el-image> : '-'}
                     </div>
                 )
             }
