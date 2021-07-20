@@ -551,7 +551,8 @@ export default class SpuEdit extends Vue {
             for (let item of this.form.saleRules) {
                 if (item.provinceId == '0' && item.cityId == '0' && item.areaId == '0') {
                     this.$refSelectCityTree.setCheckedKeys(['']) // 全国
-                    break
+                    // break
+                    return
                 }
                 if (!item.cityId) {
                     checkedNodes.push(item.provinceId)// 某省全部
@@ -561,6 +562,7 @@ export default class SpuEdit extends Vue {
                     checkedNodes.push(item.cityId) // 某市
                 }
             }
+            console.log('log::::::', 1)
             this.$refSelectCityTree.setCheckedKeys(
                 checkedNodes
             )
