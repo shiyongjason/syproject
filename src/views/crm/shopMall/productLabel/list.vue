@@ -134,7 +134,7 @@ export default class ProductLabel extends Vue {
             prop: 'name',
             render: (h, scope) => {
                 return (
-                    <div class="rowcss">
+                    <div>
                         {scope.row.recommend && <span class="selection">严选</span>}
                         <font>{scope.row[scope.column.property]}</font>
                     </div>
