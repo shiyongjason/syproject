@@ -58,7 +58,7 @@ export default class Floortabs extends Vue {
             total: 0
         }
         tags: any[]|[]=[]
-        tableData: RespBossShopFloorPage[] | [] = []
+        tableData: RespBossShopFloorPage[] = []
         tableLabel: tableLabelProps = [
             { label: '楼层名称', prop: 'floorName' },
             { label: '品类名称及商品数量',

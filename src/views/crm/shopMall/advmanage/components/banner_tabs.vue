@@ -97,7 +97,7 @@ export default class Bannertabs extends Vue {
         total: 0
     }
 
-    tableData: any[] | [] = []
+    tableData: any[] = []
 
     tableLabel: tableLabelProps = [
         { label: 'banner名称', prop: 'bannerName' },

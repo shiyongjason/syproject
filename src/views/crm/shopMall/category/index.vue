@@ -88,7 +88,7 @@ export default class Categroies extends Vue {
         sizes: [10, 20, 50, 100],
         total: 0
     }
-    tableData:any[] | [] = []
+    tableData:any[] = []
     tableLabel: tableLabelProps = [
         { label: '品类名称', prop: 'frontCategoryName' },
         { label: '类目信息', prop: 'categoryNameAndSpuNum' },
@@ -97,7 +97,7 @@ export default class Categroies extends Vue {
         { label: '更新人', prop: 'updateBy' },
         { label: '品类上架数量', prop: 'onShelfSpuNum' }
     ]
-    dialogData:any[] | [] = []
+    dialogData:any[] = []
     dialogLabel: tableLabelProps = [
         { label: '商品名称', prop: 'spuName' },
         { label: '类目信息', prop: 'categoryPath' },

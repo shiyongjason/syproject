@@ -81,7 +81,7 @@ export default class Categorytabs extends Vue {
         total: 0
     }
 
-    tableData: any[] | [] = []
+    tableData: any[]= []
 
     tableLabel: tableLabelProps = [
         { label: '品类顺序', prop: 'sort' },
