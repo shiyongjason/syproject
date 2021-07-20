@@ -38,7 +38,7 @@
                 <h-button type="primary" @click="onBatch">批量选择</h-button>
             </div>
             <hosJoyTable ref="multipleTable" align="center" isShowIndex border showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" :tableRowClassName="rowClass"
-                :selectable="selectable" :pageSizes='page.sizes' actionWidth='100' isAction :height="500" @selection-change="handleSelectionChange" isShowselection :isActionFixed='tableData&&tableData.length>0'>
+                :selectable="selectable" :pageSizes='page.sizes' actionWidth='100' isAction :max-height="500" @selection-change="handleSelectionChange" isShowselection :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
                     <h-button table v-if="!slotProps.data.row.checked" @click="onSelect(slotProps.data)">选择</h-button>
                     <h-button table v-if="slotProps.data.row.checked" @click="onNoSelect(slotProps.data)">取消选择</h-button>
@@ -105,7 +105,8 @@ export default class Flooredit extends Vue {
         pageNumber: 1,
         name: '',
         categoryContent: '',
-        brandName: ''
+        brandName: '',
+        isOnShelf: 2
     }
 
     floorForm: any={
