@@ -87,7 +87,7 @@
                     </template>
                     <template #action="slotProps">
                         <h-button table v-if="slotProps.data.row.isOnShelf==2&&hosAuthCheck(authOff)" @click="()=>onRack(slotProps.data.row)">下架</h-button>
-                        <div v-else><h-button v-if="hosAuthCheck(authOn)" table @click="()=>onTheShelves(slotProps.data.row,slotProps.data.$index)">上架</h-button><h-button v-if="hosAuthCheck(authDel)" table @click="()=>onDel(slotProps.data.$index)">删除</h-button></div>
+                        <div v-else><h-button v-if="hosAuthCheck(authOn)" table @click="()=>onTheShelves(slotProps.data.row,slotProps.data.$index)">上架</h-button><h-button v-if="hosAuthCheck(authDel)" table @click="()=>onDel(slotProps.data.row,slotProps.data.$index)">删除</h-button></div>
                     </template>
                 </hosJoyTable>
                 <div class="addNew" @click="onAddSKU" v-if="hosAuthCheck(authAdd)">+ 新增SKU</div>
@@ -312,7 +312,7 @@ export default class SpuEdit extends Vue {
             result = [{ provinceId: '0', cityId: '0', areaId: '0' }] // 全国
         }
         this.form.saleRules = result
-        console.log('🚀 --- onSubmit --- this.form.saleRules', this.form.saleRules)
+        console.log('🚀 --- onSubmit --- this.form.saleRules', this.form)
         /** end  */
         this.$refFormmain.validate(async (value, r) => {
             if (value) {
@@ -343,6 +343,9 @@ export default class SpuEdit extends Vue {
                 this.$message.success('提交编辑成功~')
                 this.onBack()
             } else {
+                if (this.form.saleRules.length == 0 || this.form.priceVisible === null || !this.form.showName) {
+                    this.$message.error('必填项不得为空~')
+                }
                 this.$nextTick(() => {
                     let className = this.form.priceVisible == null ? '.show-err' : '.is-error'
                     const dom = document.querySelector(className)
@@ -389,9 +392,11 @@ export default class SpuEdit extends Vue {
         this.$message.success('操作成功~')
     }
     // 删除sku
-    async onDel (index) {
+    async onDel (data, index) {
         this.form.skuList.splice(index, 1)
         this.$message.success('操作成功~')
+        this.$refFormmain.validateField(`skuList.${index}.minSalePrice`)
+        this.$refFormmain.validateField(`skuList.${index}.maxSalePrice`)
     }
 
     async onReloadTable () {
@@ -430,12 +435,12 @@ export default class SpuEdit extends Vue {
             return
         }
         this.Selection.map(item => {
-            let sku:ReqBossSkuUpdate&{optionValues:any, isPullAble:boolean} = {
+            let sku:ReqBossSkuUpdate&{optionValues:any, isPullAble?:boolean} = {
                 id: '',
                 name: item.name,
                 code: item.skuCode,
                 optionValues: item.optionValues,
-                isPullAble: item.isPullAble,
+                // isPullAble: item.isPullAble,
                 mainSkuId: item.id,
                 minSalePrice: null,
                 maxSalePrice: null,
@@ -455,11 +460,13 @@ export default class SpuEdit extends Vue {
         const { data } = await getSkuList(query)
         this.addSKUlist = data.records
         this.page.total = data.total
-        let res:any[] = []
-        this.form.skuList.map((item:any) => {
-            res = this.addSKUlist.filter(jtem => item.mainSkuId && jtem.id == item.mainSkuId)
-            if (res && res.length > 0) {
+        let res:RespBossB2bSkuPage[] = []
+        this.addSKUlist.map(item => {
+            res = this.form.skuList.filter(jtem => jtem.code == item.skuCode)
+            if (res.length > 0) {
                 res[0].isPullAble = true
+            } else {
+                item.isPullAble = false
             }
         })
         if (!this.dialogTableVisible) {

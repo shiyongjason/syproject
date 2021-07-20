@@ -276,7 +276,7 @@ export default class ProductLibrary extends Vue {
                 return (
                     <div>
                         {
-                            scope.row.isOnShelf === null ? '待编辑SPU'
+                            scope.row.isOnShelf === null ? '待编辑SKU'
                                 : scope.row.isOnShelf == 2 ? '上架SKU'
                                     : scope.row.isOnShelf == 1 ? '下架SKU' : '-'
                         }
