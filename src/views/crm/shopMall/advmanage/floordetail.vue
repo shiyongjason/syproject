@@ -68,8 +68,8 @@ export default class Floordetail extends Vue {
 
     ]
     formTableLabel: tableLabelProps = [
-        { label: 'SPU编码', prop: 'spuCode' },
-        { label: '商品名称', prop: 'spuName' },
+        { label: 'SPU编码', prop: 'code' },
+        { label: '商品名称', prop: 'name' },
         { label: '品牌', prop: 'brandName' }
     ]
 
