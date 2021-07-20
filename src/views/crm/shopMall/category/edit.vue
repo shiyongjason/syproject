@@ -2,24 +2,24 @@
 <template>
     <div class="page-body B2b">
         <div class="page-body-cont">
-            <div class="query-cont-row">
-                <div class="query-cont__col">
-                    <div class="query-col__label"><i>*</i>品类名称：</div>
-                    <div class="query-col__input">
+            <el-form ref="formmain" :model="categoryForm" :rules="rules">
+                <div class="query-col__label">
+                    <el-form-item label="品类名称：" prop="frontCategoryName">
                         <el-input v-model.trim="categoryForm.frontCategoryName" placeholder="请输入" maxlength="10"></el-input>
+                    </el-form-item>
+                </div>
+                <div class="query-cont-row">
+                    <div class="query-cont__col">
+                        <el-form-item label="关联类目：" prop="categoryIdList">
+                        </el-form-item>
+                        <div class="query_tag">
+                            <el-tag :key="index" v-for="(item,index) in checkList" closable :disable-transitions="false" @close="handleClose(item,index)">
+                                {{item.pcategoryName}}>{{item.scategoryName}}>{{item.name}}
+                            </el-tag>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="query-cont-row">
-                <div class="query-cont__col">
-                    <div class="query-col__label"><i>*</i>关联类目：</div>
-                    <div class="query_tag">
-                        <el-tag :key="index" v-for="(item,index) in checkList" closable :disable-transitions="false" @close="handleClose(item,index)">
-                            {{item.pcategoryName}}>{{item.scategoryName}}>{{item.name}}
-                        </el-tag>
-                    </div>
-                </div>
-            </div>
+            </el-form>
             <div class="query-cont-row">
                 <div class="query-cont__col">
                     <div class="query-col__label">类名搜索：</div>
@@ -50,10 +50,9 @@
     </div>
 </template>
 <script lang='tsx'>
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 // import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
-import { CreateElement } from 'vue'
 import { getTreeCategroy, addCategroy, getCateGroyDetail, editCategroy } from './api/index'
 
 @Component({
@@ -86,6 +85,19 @@ export default class Categoryedit extends Vue {
         frontCategoryName: '',
         categoryIdList: []
     }
+    // 校验
+    get rules () {
+        let rules = {
+            frontCategoryName: [
+                { required: true, message: '请输入楼层名称', trigger: 'blur' }
+            ],
+            categoryIdList: [
+                { required: true, message: '请选择关联类目', trigger: 'blur' }
+            ]
+        }
+        return rules
+    }
+
     async getList () {
         const { data } = await getTreeCategroy(this.queryParams)
         this.data = this.resolveData(data)
@@ -144,20 +156,21 @@ export default class Categoryedit extends Vue {
         this.checkList.map(item => {
             this.categoryForm.categoryIdList.push(item.id)
         })
-        if (!this.categoryForm.frontCategoryName) {
-            this.$message.warning('请输入品类名称')
-            return
-        }
-        if (this.categoryForm.categoryIdList.length == 0) {
-            this.$message.warning('请选择关联类目')
-            return
-        }
-        if (this.$route.query.id) {
-            await editCategroy(this.categoryForm)
-        } else {
-            await addCategroy(this.categoryForm)
-        }
-        this.$router.push({ path: '/goodwork/categorymanage' })
+        // if (!this.categoryForm.frontCategoryName) {
+        //     this.$message.warning('请输入品类名称')
+        //     return
+        // }
+
+        this.$refs['formmain'].validate(async (valid) => {
+            if (valid) {
+                if (this.$route.query.id) {
+                    await editCategroy(this.categoryForm)
+                } else {
+                    await addCategroy(this.categoryForm)
+                }
+                this.$router.push({ path: '/goodwork/categorymanage' })
+            }
+        })
     }
 
     onCancel () {
@@ -167,6 +180,9 @@ export default class Categoryedit extends Vue {
     onChecked (row, cnode) {
         let checkedNodes = cnode.checkedNodes
         this.checkList = checkedNodes.filter((item) => item.level == 3)
+        if (this.checkList.length > 0) {
+            this.$refs['formmain'].clearValidate('categoryIdList')
+        }
         // if (row.level == 1 && checked) {
         //     row.subCategoryList.length > 0 && row.subCategoryList.map(item => {
         //         item.subCategoryList && item.subCategoryList.map(jtem => {

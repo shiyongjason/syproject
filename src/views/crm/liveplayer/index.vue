@@ -83,7 +83,7 @@ export default class Liveplayer extends Vue {
         total: 0
     }
 
-    tableData:LiveRoomResponse[] | [] = []
+    tableData:LiveRoomResponse[]= []
 
     private _queryParams = {}
     queryParams: any = {
