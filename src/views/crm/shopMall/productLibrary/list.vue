@@ -341,13 +341,14 @@ export default class ProductLibrary extends Vue {
     // 确定下架
     async onDetermine () {
         await skuhelftatus({
-            'skuIdList': this.Selection,
+            'skuIdList': this.itemSKU ? [this.itemSKU.id] : this.Selection,
             'isOnShelf': 1 // 1:下架 2:上架
         })
         this.getList()
         this.$message.success('下架成功')
         this.Selection = []
         this.rackDialog = false
+        this.itemSKU = ''
     }
 
     onRackSKU (d) {
