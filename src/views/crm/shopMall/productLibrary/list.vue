@@ -61,7 +61,7 @@
             <div>
                 <h-button type="create" class="bulkPull" @click="onAddNew" v-show="activeName=='SPU'" v-if="hosAuthCheck(authSpuAdd)" >新增商品</h-button>
                 <h-button type="primary" class="bulkPull" style="margin:0 10px" v-show="activeName=='SKU'" @click="Bulk" v-if="hosAuthCheck(authSkuOn)">批量上架</h-button>
-                <h-button type="assist" class="bulkPull"  v-show="activeName=='SKU'" @click="Batch" v-if="hosAuthCheck(authSkuOff)">批量下架</h-button>
+                <h-button type="assist" class="bulkPull"  v-show="activeName=='SKU'" @click="onBatch" v-if="hosAuthCheck(authSkuOff)">批量下架</h-button>
                 <h-button class="bulkPull" style="margin-left:10px"  v-show="activeName=='SKU'" @click="Del" v-if="hosAuthCheck(authSkuDel)">批量删除</h-button>
             </div>
             <hosJoyTable v-if="resetTable" :isShowselection="activeName=='SKU'" @selection-change="selectChange" :localName="activeName=='SPU'?'V3.10.SPU.*':'V3.10.SKu.*'" ref="hosjoyTable" collapseShow align="center" border stripe showPagination :column="activeName=='SPU'?tableLabel:tableLabelOfSku" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='100' :pageSizes='page.sizes'>
@@ -310,7 +310,7 @@ export default class ProductLibrary extends Vue {
                         {
                             scope.row.isOnShelf != 2 &&
                             <span>
-                                {this.hosAuthCheck(this.authSkuOn) && <h-button table onClick={() => this.onOPenSell(scope.row)}>上架</h-button>}
+                                {this.hosAuthCheck(this.authSkuOn) && <h-button table onClick={() => this.onOpenSell(scope.row)}>上架</h-button>}
                                 {this.hosAuthCheck(this.authSkuDel) && <h-button table onClick={() => this.onDelDialog(scope.row)}>删除</h-button>}
                             </span>
                         }
@@ -361,7 +361,7 @@ export default class ProductLibrary extends Vue {
     }
 
     // 上架提醒 Dialog
-    onOPenSell (d) {
+    onOpenSell (d) {
         // （未编辑销售价格、可售卖区域...)
         if (d.minSalePrice === null || d.maxSalePrice === null || d.salesAreaStatus === null) {
             this.sellDialog = true
@@ -429,7 +429,7 @@ export default class ProductLibrary extends Vue {
         })
     }
     // 批量下架
-    async Batch () {
+    async onBatch () {
         this.dialogSKU = []
         if (this.Selection.length == 0) {
             this.$message.error('请先选择需要下架的SKU~')

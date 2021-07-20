@@ -187,7 +187,8 @@ export default class brandManage extends Vue {
                 return (
                     <div>
                         {
-                            scope.row.categorySpuNumList && scope.row.categorySpuNumList.length > 0
+                            // scope.row.categorySpuNumList && scope.row.categorySpuNumList.length > 0
+                            scope.row.categorySpuNumList?.length > 0
                                 ? scope.row.categorySpuNumList.map(item => {
                                     return (
                                         <span>
