@@ -56,11 +56,11 @@
                     <span v-else style="line-height: 22px;display: inline-block;">{{ruleForm.brandName||'-'}}</span>
                 </el-form-item>
                 <el-form-item label="品牌logo：" prop="brandLogoUrl">
-                    <HosJoyUpload class="crmshopMallSpuEdit" :showUpload='!isShowDetail' v-model="ruleForm.brandLogoUrl" showCrop :multiple='false' :showPreView='true' :fileSize=2 :action='action' :fileNum='1' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' centerBox autoCropWidth='110' autoCropHeight='110' autoCrop fixedBox :original='false' full :enlarge="1" :outputSize="0.8" outputType="jpeg"/>
-                    <p>图片尺寸为110*110，不超过2M，仅支持jpeg、jpg、png格式</p>
+                    <HosJoyUpload class="crmshopMallSpuEdit" :showUpload='!isShowDetail' v-model="ruleForm.brandLogoUrl" showCrop :multiple='false' :showPreView='true' :fileSize=2 :action='action' :fileNum='1' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' autoCropWidth='200' autoCropHeight='64' autoCrop fixedBox :original='false' :enlarge="1" :outputSize="0.8" outputType="jpeg"/>
+                    <p>图片尺寸为200*64，不超过2M，仅支持jpeg、jpg、png格式</p>
                 </el-form-item>
                 <el-form-item label="品牌bannar：" prop="brandBannerUrl">
-                    <HosJoyUpload class="crmshopMallSpuEdit" :showUpload='!isShowDetail' v-model="ruleForm.brandBannerUrl" showCrop :multiple='false' :showPreView='true' :fileSize=2 :action='action' :fileNum='1' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' autoCropWidth='750' autoCropHeight='350' autoCrop fixedBox :original='false' full :enlarge="1" :outputSize="0.8" outputType="jpeg"/>
+                    <HosJoyUpload class="crmshopMallSpuEdit" :showUpload='!isShowDetail' v-model="ruleForm.brandBannerUrl" showCrop :multiple='false' :showPreView='true' :fileSize=2 :action='action' :fileNum='1' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' autoCropWidth='750' autoCropHeight='350' autoCrop fixedBox :original='false'  :enlarge="1" :outputSize="0.8" outputType="jpeg"/>
                     <p>图片尺寸为750*350，不超过2M，仅支持jpeg、jpg、png格式</p>
                 </el-form-item>
                 <el-form-item label="品牌描述：" prop="brandRemark" >
@@ -169,7 +169,7 @@ export default class brandManage extends Vue {
                     <div class="rowcss">
                         {scope.row[scope.column.property] ? <el-image
                             fit="contain"
-                            style="width: 80px;heigth:80px"
+                            style="width: 80px;"
                             src={scope.row[scope.column.property]}
                             preview-src-list={[
                                 scope.row[scope.column.property]
