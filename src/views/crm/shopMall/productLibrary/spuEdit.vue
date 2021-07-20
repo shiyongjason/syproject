@@ -463,11 +463,12 @@ export default class SpuEdit extends Vue {
         let res:RespBossB2bSkuPage[] = []
         this.addSKUlist.map(item => {
             res = this.form.skuList.filter(jtem => jtem.code == item.skuCode)
-            if (res.length > 0) {
-                res[0].isPullAble = true
-            } else {
-                item.isPullAble = false
-            }
+            item.isPullAble = res.length > 0
+            // if (res.length > 0) {
+            //     res[0].isPullAble = true
+            // } else {
+            //     item.isPullAble = false
+            // }
         })
         if (!this.dialogTableVisible) {
             this.dialogTableVisible = true
