@@ -8,7 +8,7 @@
             :isActionFixed='tableData&&tableData.length>0'>
             <template #action="slotProps">
                 <h-button table @click="onLook(slotProps.data.row)" v-if="hosAuthCheck(floorLook)">查看</h-button>
-                <h-button table v-if="(slotProps.data.row.status==1||slotProps.data.row.status==3)&&hosAuthCheck(flooroperate)" @click="onEnable(slotProps.data.row)">启用</h-button>
+                <h-button table v-if="(slotProps.data.row.status==1||slotProps.data.row.status==3)&&hosAuthCheck(floorOperate)" @click="onEnable(slotProps.data.row)">启用</h-button>
                 <h-button table v-if="slotProps.data.row.status==2&&hosAuthCheck(floorOperate)" @click="onDisable(slotProps.data.row)">停用</h-button>
                 <h-button table @click="onEdit(slotProps.data.row)" v-if="(slotProps.data.row.status==1||slotProps.data.row.status==3)&&hosAuthCheck(floorEdit)">编辑</h-button>
                 <h-button table @click="onDelete(slotProps.data.row)" v-if="(slotProps.data.row.status==1||slotProps.data.row.status==3)&&hosAuthCheck(floorEelete)">删除</h-button>
