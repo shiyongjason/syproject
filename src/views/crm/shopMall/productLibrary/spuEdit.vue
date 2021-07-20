@@ -287,7 +287,8 @@ export default class SpuEdit extends Vue {
                 allProvince.push({
                     provinceId: item.value,
                     cityId: '',
-                    areaId: ''
+                    areaId: '',
+                    provinceName: item.label
                 })
                 provinceID = item.value // 获取省ID
                 continue
@@ -297,7 +298,10 @@ export default class SpuEdit extends Vue {
                 allCity.push({
                     provinceId: item.parentID,
                     cityId: item.value,
-                    areaId: ''
+                    areaId: '',
+                    cityName: item.label,
+                    provinceName: item.parentName
+
                 })
             }
         }
@@ -474,7 +478,7 @@ export default class SpuEdit extends Vue {
     }
 
     // 构造省市2级数据
-    recursiveChineseArea (array = [], frequency = 0) {
+    recursiveChineseArea (array = [], frequency = 0, val = false) {
         let level = frequency + 1 // MARK level 0代表全国，1代表省，2代表市
         if (frequency < 2) {
             return array.map(item => {
@@ -482,8 +486,10 @@ export default class SpuEdit extends Vue {
                     level,
                     value: item.countryId || item.cityId || item.provinceId, // 区域ID
                     label: item.name,
-                    children: this.recursiveChineseArea(item.cities || item.countries, frequency + 1),
-                    parentID: (level == 0 || level == 1) ? '' : item.provinceId || item.cityId || item.countryId // 父级ID
+                    children: this.recursiveChineseArea(item.cities || item.countries, frequency + 1, item.name || ''),
+                    parentID: (level == 0 || level == 1) ? '' : item.provinceId || item.cityId || item.countryId, // 父级ID
+                    parentName: val // 父级Name
+
                 }
             })
         } else {
