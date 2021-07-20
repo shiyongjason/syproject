@@ -86,12 +86,12 @@
                 <el-button @click="() => {BulkDialog = false;dialogSKU=[]}">我知道了</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="上架提醒" :visible.sync="sellDialog" :close-on-click-modal="false" :before-close="()=>sellDialog=false" width="450px" class="tipsDialog">
+        <el-dialog title="上架提醒" :visible.sync="sellDialog" :close-on-click-modal="false" :before-close="()=>{sellDialog=false;itemSKU=''}" width="450px" class="tipsDialog">
             <div style="text-align:center;padding:20px 0">
                 请先完善SPU信息，再尝试上架当前商品
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="()=>sellDialog=false">取 消</el-button>
+                <el-button @click="()=>{sellDialog=false;itemSKU=''}">取 消</el-button>
                 <el-button type="primary" @click="onGoToEditSPU">去完善</el-button>
             </span>
         </el-dialog>
@@ -364,16 +364,16 @@ export default class ProductLibrary extends Vue {
     // 上架提醒 Dialog
     onOpenSell (d) {
         // （未编辑销售价格、可售卖区域...)
+        this.itemSKU = d
         if (d.minSalePrice === null || d.maxSalePrice === null || d.salesAreaStatus === null) {
             this.sellDialog = true
             return
         }
-        this.itemSKU = d
         this.onTheShelvesDialog = true
     }
     // 去完善SPU
     onGoToEditSPU () {
-        //
+        this.$router.push({ path: '/goodwork/commodityManagement/spuEdit', query: { id: this.itemSKU.spuId, spuCode: this.itemSKU.spuCode } })
     }
 
     // 打开删除确认 Dialog
