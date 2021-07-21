@@ -110,7 +110,7 @@ export default class Floortabs extends Vue {
                 await onDeleteFloor(val.id)
                 this.$message({
                     type: 'success',
-                    message: '删除成功!'
+                    message: '楼层已删除~'
                 })
                 this.onGetFloorPage()
             }).catch(() => {
@@ -150,7 +150,7 @@ export default class Floortabs extends Vue {
         }
 
         onDisable (val) {
-            this.$confirm('确定停用当前楼层吗？停用后该楼层信息在小程序不可见', '提示', {
+            this.$confirm('确定停用当前楼层吗？停用后该楼层信息在小程序不可见', '停用确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
