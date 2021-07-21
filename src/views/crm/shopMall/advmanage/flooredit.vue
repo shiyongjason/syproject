@@ -37,11 +37,11 @@
             <div class="mb20">
                 <h-button type="primary" @click="onBatch">批量选择</h-button>
             </div>
-            <hosJoyTable ref="multipleTable" align="center" isShowIndex border showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" :tableRowClassName="rowClass"
+            <hosJoyTable ref="multipleTable" v-if="tableData" align="center" isShowIndex border showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" :tableRowClassName="rowClass"
                 :selectable="selectable" :pageSizes='page.sizes' actionWidth='100' isAction :max-height="500" @selection-change="handleSelectionChange" isShowselection :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <h-button table v-if="!slotProps.data.row.checked" @click="onSelect(slotProps.data)">选择</h-button>
-                    <h-button table v-if="slotProps.data.row.checked" @click="onNoSelect(slotProps.data)">取消选择</h-button>
+                    <el-button  size="mini" type="primary" v-if="!slotProps.data.row.checked" @click="onSelect(slotProps.data)">选择{{slotProps.data.row.checked}}</el-button>
+                    <el-button  size="mini"  v-if="slotProps.data.row.checked" @click="onNoSelect(slotProps.data)">取消选择{{slotProps.data.row.checked}}</el-button>
                 </template>
             </hosJoyTable>
             <div class="floor-tit mt20">已选择该楼层的商品</div>
@@ -195,7 +195,6 @@ export default class Flooredit extends Vue {
 
     handleSelectionChange (val) {
         this.selectData = val
-        console.log(val)
     }
     onBatch () {
         if (this.selectData.length > 0) {
@@ -212,6 +211,8 @@ export default class Flooredit extends Vue {
                 }
                 this.$set(item, 'checked', true)
             })
+        } else {
+            this.$message.warning('请选择商品')
         }
     }
     // 选中行 换色
@@ -235,8 +236,9 @@ export default class Flooredit extends Vue {
             this.tableData.length > 0 && this.tableData.map((item, index) => {
                 this.tableForm.map((jtem, index) => {
                     if (jtem.id == item.id) {
-                        console.log('car')
                         item.checked = true
+                    } else {
+                        item.checked = false
                     }
                 })
             })
@@ -250,13 +252,15 @@ export default class Flooredit extends Vue {
     }
 
     onSelect (val) {
-        // val.row.checked = true
         this.$set(this.tableData[val.$index], 'checked', true)
         this.tableForm.push(val.row)
         this.$refs['multipleTable'].toggleRowSelection(val.row)
+        this.$forceUpdate()
     }
     onNoSelect (val) {
-        this.$set(val.row, 'checked', false)
+        console.log(val)
+        this.$set(this.tableData[val.$index], 'checked', false)
+        // this.$set(val.row, 'checked', false)
         let _arr = this.tableForm.filter(i => val.row.id == i.id)
         if (_arr.length > 0) {
             let one = this.tableForm.findIndex(value => {
@@ -265,6 +269,7 @@ export default class Flooredit extends Vue {
             this.tableForm.splice(one, 1)
         }
         this.$refs['multipleTable'].clearSelection()
+        this.$forceUpdate()
     }
     onMove (val, type) {
         let index = val.$index
@@ -294,10 +299,12 @@ export default class Flooredit extends Vue {
             let one = this.tableData.findIndex(value => {
                 return value.id == _arr[0].id
             })
+            console.log('one', one)
             this.$set(this.tableData[one], 'checked', false)
         }
         this.tableForm.splice(val.$index, 1)
         this.$refs['multipleTable'].clearSelection()
+        this.$forceUpdate()
     }
 
     async onSave () {
