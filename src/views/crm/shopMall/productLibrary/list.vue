@@ -195,7 +195,7 @@ export default class ProductLibrary extends Vue {
         multiple: true,
         children: 'subCategoryList',
         label: 'name',
-        value: 'code'
+        value: 'id'
     }
     queryParams: typeof _queryParams = JSON.parse(JSON.stringify(_queryParams))
     page:any = {

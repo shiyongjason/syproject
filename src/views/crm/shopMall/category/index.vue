@@ -77,7 +77,7 @@ export default class Categroies extends Vue {
         updateUid: '',
         reservedName: false
     }
-    queryParams:object={
+    queryParams:any={
         pageNumber: 1,
         pageSize: 10,
         frontCategoryName: '',
@@ -91,7 +91,14 @@ export default class Categroies extends Vue {
     tableData:any[] = []
     tableLabel: tableLabelProps = [
         { label: '品类名称', prop: 'frontCategoryName' },
-        { label: '类目信息', prop: 'categoryNameAndSpuNum' },
+        { label: '类目信息',
+            prop: 'categoryNameAndSpuNum',
+            width: '300px',
+            render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
+                return (
+                    <div>{scope.row.categoryNameAndSpuNum }</div>
+                )
+            } },
         { label: '创建时间', prop: 'createTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '更新时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '更新人', prop: 'updateBy' },

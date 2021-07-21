@@ -11,7 +11,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">商品类目：</div>
                     <div class="query-col__input">
-                        <el-cascader :options="categoryOptions" :props="props" multiple collapse-tags v-model="queryParams.categoryIds" clearable></el-cascader>
+                        <el-cascader :options="categoryOptions" :props="props" multiple collapse-tags v-model="queryParams.categoryIdList" clearable></el-cascader>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -77,7 +77,7 @@ const _queryParams = {
     model: '',
     spuCode: '',
     skuCode: '',
-    categoryIds: [],
+    categoryIdList: [],
     pageNumber: 1,
     pageSize: 10
 }
@@ -95,7 +95,7 @@ export default class ShopMallAddProduct extends Vue {
         multiple: true,
         children: 'subCategoryList',
         label: 'name',
-        value: 'code'
+        value: 'id'
     }
     queryParams: typeof _queryParams = JSON.parse(JSON.stringify(_queryParams))
     page:any = {
@@ -140,7 +140,7 @@ export default class ShopMallAddProduct extends Vue {
     // getList
     async getList () {
         let query = JSON.parse(JSON.stringify(this.queryParams))
-        query.categoryIds = query.categoryIds.toString()
+        query.categoryIdList = query.categoryIdList.toString()
         const { data } = await getSkuList(query)
         this.tableData = data.records
         this.page.total = data.total
