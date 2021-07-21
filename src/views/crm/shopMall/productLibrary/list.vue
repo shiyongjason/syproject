@@ -224,7 +224,7 @@ export default class ProductLibrary extends Vue {
             render: (h, scope) => {
                 return (
                     <div>
-                        {!scope.row.priceVisible ? '不展示'
+                        {scope.row.priceVisible === null ? '-' : scope.row.priceVisible == 0 ? '不展示'
                             : scope.row.minSalePrice === null && scope.row.maxSalePrice === null ? '-' : <span>{utils.money(scope.row.minSalePrice)}-{utils.money(scope.row.maxSalePrice)}</span>
                         }
                     </div>
@@ -290,8 +290,9 @@ export default class ProductLibrary extends Vue {
             render: (h, scope) => {
                 return (
                     <div>
-                        {!scope.row.priceVisible ? '不展示'
-                            : scope.row.minSalePrice === null && scope.row.maxSalePrice === null ? '-' : <span>{utils.money(scope.row.minSalePrice)}-{utils.money(scope.row.maxSalePrice)}</span>
+                        {
+                            scope.row.priceVisible === null ? '-' : scope.row.priceVisible == 0 ? '不展示'
+                                : scope.row.minSalePrice === null && scope.row.maxSalePrice === null ? '-' : <span>{utils.money(scope.row.minSalePrice)}-{utils.money(scope.row.maxSalePrice)}</span>
                         }
                     </div>
                 )
