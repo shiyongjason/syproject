@@ -1035,3 +1035,30 @@ export const addCloudMerchantProjectScheme = params => axios.post(iotUrl + '/mal
 
 // 删除工程方案
 export const deleteProjectScheme = params => axios.delete(iotUrl + '/mall/boss/project-scheme/' + params.id)
+
+// 获取boss端可解绑设备列表
+export const getBossCanUnbindDeviceList = params => axios.get(iotUrl + '/api/boss/device-unbind', { params })
+// 获取boss端解绑设备记录
+export const getBossBindRecords = params => axios.get(iotUrl + '/api/boss/device-unbind/record', { params })
+// boss端设备解绑
+export const bossDeviceUnbind = params => axios.post(iotUrl + '/api/boss/device-unbind', params)
+
+// 获取投诉工单列表
+export const getComplaintOrderList = params => axios.get(iotUrl + '/mall/boss/complaint', { params })
+// 获取投诉工单详情
+export const getComplaintOrderDetail = params => axios.get(iotUrl + '/mall/boss/complaint/detail', { params })
+// 创建投诉工单
+export const createComplaintOrder = params => axios.post(iotUrl + '/mall/boss/complaint', params)
+// 修改投诉工单
+export const editComplaintOrder = params => axios.put(iotUrl + '/mall/boss/complaint', params)
+
+// 获取投诉工单解决记录列表
+export const getComplaintProcessOrderList = params => axios.get(iotUrl + '/mall/boss/complaint/process', { params })
+// 编辑工单解决记录
+export const editComplaintProcessOrder = params => axios.put(iotUrl + '/mall/boss/complaint/process', params)
+// 创建工单解决记录
+export const createComplaintProcessOrder = params => axios.post(iotUrl + '/mall/boss/complaint/process', params)
+// 删除工单解决记录
+export const deleteComplaintProcessOrder = params => axios.delete(iotUrl + '/mall/boss/complaint/process', { data: params })
+// 获取工单解决记录详情
+export const getComplaintProcessOrderDetail = params => axios.get(iotUrl + '/mall/boss/complaint/process/detail', { params })
