@@ -81,7 +81,10 @@
                                 <el-input style="width:150px" placeholder="请输入"  v-model="scope.data.row.maxSalePrice" v-isNum:2 v-inputMAX='100000000' size="mini" @blur="()=>compore(scope.data.row,scope.data.$index)"><template slot="append">元</template></el-input>
                             </el-form-item>
                         </div>
-                        <div v-if="!form.priceVisible" class="skutableForm" >
+                        <div v-if="form.priceVisible===null" class="skutableForm" >
+                            -
+                        </div>
+                        <div v-if="form.priceVisible==0" class="skutableForm" >
                             不展示
                         </div>
                     </template>
