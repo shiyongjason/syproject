@@ -145,7 +145,7 @@ export default class Categorytabs extends Vue {
         this.onFindList()
     }
     onSave () {
-        this.$refs['categoryForm'].validate(async (valid) => {
+        this.$refs['ruleForm'].validate(async (valid) => {
             if (valid) {
                 this.categoryForm.imageUrl = this.categoryForm.imageUrls[0].fileUrl
                 await addCategory(this.categoryForm)
