@@ -562,7 +562,6 @@ export default class SpuEdit extends Vue {
                     checkedNodes.push(item.cityId) // 某市
                 }
             }
-            console.log('log::::::', 1)
             this.$refSelectCityTree.setCheckedKeys(
                 checkedNodes
             )
