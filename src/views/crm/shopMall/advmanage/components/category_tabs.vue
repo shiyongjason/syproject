@@ -12,7 +12,7 @@
                 <h-button table @click="onCancelRemmend(slotProps.data.row)" v-if="hosAuthCheck(advcategoryCancel)">取消推荐</h-button>
             </template>
         </hosJoyTable>
-        <el-dialog title="新增品类" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+        <el-dialog title="新增品类推荐" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
             <el-form :model="categoryForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
                 <el-form-item label="选择品类：" prop="frontCategoryId">
                     <el-select v-model="categoryForm.frontCategoryId" placeholder="请选择">
