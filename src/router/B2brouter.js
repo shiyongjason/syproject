@@ -764,8 +764,7 @@ export default [
                             icon: '',
                             showMenuAs: '/b2b/warehouse/warehouseProductList'
                         },
-                        component: () =>
-							import('@/views/hmall/warehouseManage/warehouseProduct/addWarehouseProducts.vue')
+                        component: () => import('@/views/hmall/warehouseManage/warehouseProduct/addWarehouseProducts.vue')
                     }
                 ]
             }
