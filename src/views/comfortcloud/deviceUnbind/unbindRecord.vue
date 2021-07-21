@@ -38,6 +38,7 @@ export default {
     name: 'unbindRecord',
     data () {
         return {
+
             queryParams: {
                 iotId: '',
                 pageNumber: 1,

@@ -72,7 +72,7 @@
                     {{orderStatus(scope.data.row.status)}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onDetail(scope.data.row.id)">查看详情</el-button>
+                    <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
@@ -157,7 +157,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="设备ID" label-width="100px" :prop="'deviceInfoList.' + index + '.deviceId'" :rules="addOrderRules.deviceId">
-                            <el-input style="width: 150px" v-model="productItem.deviceId" maxlength="100" :rows="1" @blur='()=>{deviceIDonBlur(index)}' placeholder="请输入设备ID" />
+                            <el-input style="width: 150px" v-model="productItem.deviceId" maxlength="45" :rows="1" @blur='()=>{deviceIDonBlur(index)}' placeholder="请输入设备ID" />
                         </el-form-item>
                         <el-button style="align-self: flex-start;margin-left: 20px;" type="primary" @click="()=> { onRemoveProduct(index) }">删除</el-button>
                     </div>
@@ -183,7 +183,7 @@
                 </el-form>
                 <div v-else>
                     <div class="query-cont-col">
-                        <div class="query-col-title" v-if="hiddenAddRecord">
+                        <div class="query-col-title" v-if="currentData.status !== 20">
                             <el-button type="primary" plain class="ml20" @click="addResloveRecord">+新增解决记录</el-button>
                         </div>
                     </div>
@@ -298,6 +298,7 @@ export default {
             },
             radio: '投诉信息',
             imgs: [],
+            currentData: null,
             loading: false,
             searchParams: {},
             categoryTypes: [],
@@ -424,7 +425,7 @@ export default {
                         }
                         this.loading = false
                         this.createRecordCancel()
-                        this.onQueryComplaintRecord()
+                        this.cancelAddOrderClick()
                         this.onQuery()
                         this.$message({
                             message: `操作成功`,
@@ -453,18 +454,19 @@ export default {
                 type: 'warning'
             }).then(async () => {
                 await deleteComplaintProcessOrder({ id: val, operateUserName: this.userInfo.employeeName })
-                this.onQueryComplaintRecord()
+                this.createRecordCancel()
+                this.cancelAddOrderClick()
                 this.onQuery()
                 this.$message.success('删除成功')
             })
         },
         createRecordCancel () {
+            this.recordData = JSON.parse(JSON.stringify(_recordData))
             if (this.$refs['addRecordForm']) {
                 this.$nextTick(() => {
                     this.$refs['addRecordForm'].clearValidate()
                 })
             }
-            this.recordData = JSON.parse(JSON.stringify(_recordData))
             this.addRecordDialogVisible = false
         },
         onAddProduct () {
@@ -552,7 +554,8 @@ export default {
         },
         async onDetail (val) {
             this.categoryTypes = []
-            await this.getComplaintOrderDetail({ id: val })
+            this.currentData = val
+            await this.getComplaintOrderDetail({ id: val.id })
             this.detailData = this.complaintOrderDetail
             for (let i = 0; i < this.detailData.deviceInfoList.length; i++) {
                 const device = this.detailData.deviceInfoList[i]
@@ -652,6 +655,7 @@ export default {
         },
         cancelAddOrderClick () {
             this.imgs = []
+            this.currentData = null
             if (this.$refs['addOrderForm']) {
                 this.$nextTick(() => {
                     this.$refs['addOrderForm'].clearValidate()
@@ -714,12 +718,6 @@ export default {
         showDetailForm () {
             if (this.detailData.id > 0 && this.radio === '解决记录') {
                 return false
-            }
-            return true
-        },
-        hiddenAddRecord () {
-            if (this.recordTableData.length > 0) {
-                return this.recordTableData[0].status !== 20
             }
             return true
         },

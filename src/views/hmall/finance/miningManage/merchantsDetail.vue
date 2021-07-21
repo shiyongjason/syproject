@@ -18,7 +18,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>当前额度<span>（元）</span></p>
-                            <p>{{fundDetil.creditLimit|| 0}}</p>
+                            <p>{{fundDetil.creditLimit|| 0 | moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -27,7 +27,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总代采<span>（元）</span></p>
-                            <p>{{fundDetil.totalAmount || 0}}</p>
+                            <p>{{fundDetil.totalAmount || 0 | moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -36,7 +36,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总预付<span>（元）</span></p>
-                            <p>{{fundDetil.totalPrepayAmount|| 0}}</p>
+                            <p>{{fundDetil.totalPrepayAmount|| 0 | moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -45,7 +45,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总代付<span>（元）</span></p>
-                            <p>{{fundDetil.totalRetainageAmount || 0}}</p>
+                            <p>{{fundDetil.totalRetainageAmount || 0 | moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -54,7 +54,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总回款<span>（元）</span></p>
-                            <p>{{fundDetil.totalRepayAmount|| 0}}</p>
+                            <p>{{fundDetil.totalRepayAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -63,7 +63,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>当前占用<span>（元）</span></p>
-                            <p>{{fundDetil.occupationAmount|| 0}}</p>
+                            <p>{{fundDetil.occupationAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -72,7 +72,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>当前逾期未还<span>（元）</span></p>
-                            <p>{{fundDetil.overdueAmount || 0}}</p>
+                            <p>{{fundDetil.overdueAmount || 0| moneyShow}}</p>
                         </div>
                     </div>
                 </div>
@@ -160,7 +160,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总回款<span>（元）</span></p>
-                            <p>{{detail.totalRepayAmount|| 0}}</p>
+                            <p>{{detail.totalRepayAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -169,7 +169,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>线下回款<span>（元）</span></p>
-                            <p>{{detail.offlineRepayAmount|| 0}}</p>
+                            <p>{{detail.offlineRepayAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -178,7 +178,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>线上回款<span>（元）</span></p>
-                            <p>{{detail.onlineRepayAmount|| 0}}</p>
+                            <p>{{detail.onlineRepayAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -187,7 +187,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>已提现<span>（元）</span></p>
-                            <p>{{detail.withdrawAmount|| 0}}</p>
+                            <p>{{detail.withdrawAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -196,7 +196,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>可提现<span>（元）</span></p>
-                            <p>{{detail.availableWithdrawAmount|| 0}}</p>
+                            <p>{{detail.availableWithdrawAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -205,7 +205,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>预付款<span>（元）</span></p>
-                            <p>{{detail.prepayAmount|| 0}}</p>
+                            <p>{{detail.prepayAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                 </div>
@@ -351,6 +351,7 @@ export default {
                 { label: '资金状态', prop: 'fundStatus' }
             ],
             repayQueryParams: {
+                type: '1',
                 status: '',
                 startTime: '',
                 endTime: '',
@@ -432,7 +433,8 @@ export default {
             onlineRepayList: state => state.hmall.finance.onlineRepayList,
             offlineRepayList: state => state.hmall.finance.offlineRepayList,
             prepayRepayList: state => state.hmall.finance.prepayRepayList,
-            repayStatistInfo: state => state.hmall.finance.repayStatistInfo
+            repayStatistInfo: state => state.hmall.finance.repayStatistInfo,
+            repayAll: state => state.hmall.finance.repayAll
         }),
         paginationDetail () {
             return {
@@ -450,10 +452,11 @@ export default {
             this.getMerchant()
             this.getRepayStatist()
             this.getOnlineRepay()
-            this.getOfflineRepay()
-            this.getPrepayRepay()
+            // this.getOfflineRepay()
+            // this.getPrepayRepay()
             this.getMerchantStatistInfo()
             this.getMerchantAllInfo()
+            this.getRepayAll()
         },
         onTab () {
             this.queryParams = { ...this.resetParams }
@@ -471,12 +474,15 @@ export default {
             if (this.recordTabName == 'isOnline') {
                 this.repayQueryParams.pageNumber = 1
                 this.getOnlineRepay()
+                this.getRepayAll()
             } else if (this.recordTabName == 'isOffline') {
                 this.repayQueryParams.pageNumber = 1
                 this.getOfflineRepay()
+                this.getRepayAll()
             } else if (this.recordTabName == 'isAdvance') {
                 this.repayQueryParams.pageNumber = 1
                 this.getPrepayRepay()
+                this.getRepayAll()
             }
             this.onReset()
         },
@@ -484,6 +490,7 @@ export default {
             if (this.tabName == 'detail') {
                 this.queryParams.pageNumber = 1
                 this.getMerchant()
+                this.getMerchantAllInfo()
             } else if (this.tabName == 'record') {
                 if (this.recordTabName == 'isOnline') {
                     this.repayQueryParams.pageNumber = 1
@@ -565,6 +572,14 @@ export default {
                             sums[index] = '-'
                         }
                     }
+                    if (column.property == 'totalAmount') {
+                        sums[index] = this.merchantAllInfo.totalAmount
+                        if (sums[index] && sums[index] != '-') {
+                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        } else {
+                            sums[index] = '-'
+                        }
+                    }
                     if (column.property == 'totalPrepayAmount') {
                         sums[index] = this.merchantAllInfo.prepayAmount
                         if (sums[index] && sums[index] != '-') {
@@ -613,24 +628,11 @@ export default {
                         sums[index] = '合计'
                     }
                     if (column.property == 'amount') {
-                        const values = data.map(item => {
-                            return Number(item[column.property])
-                        })
-                        if (!values.every(value => isNaN(value))) {
-                            sums[index] = values.reduce((prev, curr) => {
-                                const value = Number(curr)
-                                if (!isNaN(value)) {
-                                    return prev + curr
-                                } else {
-                                    return prev
-                                }
-                            }, 0)
-                            sums[index] = sums[index] ? sums[index] : '-'
-                            if (sums[index] && sums[index] != '-') {
-                                sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                            } else {
-                                sums[index] = '-'
-                            }
+                        sums[index] = this.repayAll
+                        if (sums[index] && sums[index] != '-') {
+                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        } else {
+                            sums[index] = '-'
                         }
                     }
                 })
@@ -644,10 +646,12 @@ export default {
             findOnlineRepay: 'finance/findOnlineRepay',
             findOfflineRepay: 'finance/findOfflineRepay',
             findPrepayRepay: 'finance/findPrepayRepay',
-            findRepayStatist: 'finance/findRepayStatist'
+            findRepayStatist: 'finance/findRepayStatist',
+            findRepayAll: 'finance/findRepayAll'
         }),
         async getMerchant () {
             await this.findMerchant(this.queryParams)
+            this.getMerchantAllInfo()
         },
         async getMerchantStatistInfo () {
             await this.findMerchantStatist()
@@ -669,6 +673,7 @@ export default {
                 { label: '回款代采订单号', prop: 'agentOrderNo' },
                 { label: 'MIS订单号', prop: 'misOrderNo' }
             ]
+            this.repayQueryParams.type = 1
             await this.findOnlineRepay(this.repayQueryParams)
             this.tableData = this.onlineRepayList.records
             this.pagination = {
@@ -676,6 +681,8 @@ export default {
                 pageNumber: this.onlineRepayList.current,
                 pageSize: this.onlineRepayList.size
             }
+            this.repayQueryParams.type = 1
+            this.getRepayAll()
         },
         async getOfflineRepay () {
             this.tableLabel = [
@@ -689,6 +696,7 @@ export default {
                 { label: '回款代采订单号', prop: 'agentOrderNo' },
                 { label: 'MIS订单号', prop: 'misOrderNo' }
             ]
+            this.repayQueryParams.type = 2
             await this.findOfflineRepay(this.repayQueryParams)
             this.tableData = this.offlineRepayList.records
             this.pagination = {
@@ -696,6 +704,8 @@ export default {
                 pageNumber: this.offlineRepayList.current,
                 pageSize: this.offlineRepayList.size
             }
+            this.repayQueryParams.type = 2
+            this.getRepayAll()
         },
         async getPrepayRepay () {
             this.tableLabel = [
@@ -709,6 +719,7 @@ export default {
                 { label: '代采订单号', prop: 'agentOrderNo' },
                 { label: 'MIS订单号', prop: 'misOrderNo' }
             ]
+            this.repayQueryParams.type = 3
             await this.findPrepayRepay(this.repayQueryParams)
             this.tableData = this.prepayRepayList.records
             this.pagination = {
@@ -716,6 +727,18 @@ export default {
                 pageNumber: this.prepayRepayList.current,
                 pageSize: this.prepayRepayList.size
             }
+            this.repayQueryParams.type = 3
+            this.getRepayAll()
+        },
+        async getRepayAll () {
+            if (this.recordTabName == 'isOnline') {
+                this.repayQueryParams.type = 1
+            } else if (this.recordTabName == 'isOffline') {
+                this.repayQueryParams.type = 2
+            } else if (this.recordTabName == 'isAdvance') {
+                this.repayQueryParams.type = 3
+            }
+            await this.findRepayAll(this.repayQueryParams)
         }
     },
     mounted () {
@@ -757,14 +780,19 @@ export default {
 }
 .balance-cont-row {
     display: flex;
-    padding: 10px 10px 40px 10px;
+    flex-wrap: wrap;
+    padding: 10px 10px 20px 10px;
 }
 .balance-cont-col {
     display: inline-flex;
-    flex: 1;
+    // flex: 1;
+    width: 250px;
+    margin-right: 10px;
+    margin-bottom: 20px;
     align-items: center;
 
     .balance-col-icon {
+        flex-shrink: 0;
         display: inline-block;
         width: 64px;
         height: 64px;
@@ -849,7 +877,7 @@ export default {
 
         p:last-child {
             line-height: 45px;
-            font-size: 32px;
+            font-size: 24px;
         }
         p:first-child {
             line-height: 20px;

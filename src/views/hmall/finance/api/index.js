@@ -64,6 +64,10 @@ export const findOfflineRepay = (params) => {
 export const findPrepayRepay = (params) => {
     return axios.get(`${B2bUrl}fund/boss/repay/prepay-page`, { params })
 }
+// 资金代采 交易记录线上回款 线下回款 预付款合计
+export const findRepayAll = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/repay/trade-record/statistics`, { params })
+}
 // 资金代采 交易记录统计
 export const findRepayStatist = (params) => {
     return axios.get(`${B2bUrl}fund/boss/repay/statistics`, { params })
