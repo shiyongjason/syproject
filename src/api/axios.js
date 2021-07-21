@@ -73,7 +73,7 @@ axios.interceptors.response.use(
             store.commit('LOAD_STATE', false)
             return response
         }
-        if (response.data && response.data.code && response.data.code != 200 && !config.url.includes(B2bUrl)) {
+        if (response.data && response.data.code && response.data.code != 200 && !config.url.includes(B2bUrl) && (response.data.msg || response.data.message)) {
             Message({
                 message: response.data.msg || response.data.message,
                 type: 'error'
