@@ -115,7 +115,7 @@ export default class ProductLabel extends Vue {
         multiple: true,
         children: 'subCategoryList',
         label: 'name',
-        value: 'code'
+        value: 'id'
     }
     queryParams: any = JSON.parse(JSON.stringify(_queryParams))
     page:any = {
