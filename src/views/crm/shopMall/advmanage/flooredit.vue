@@ -35,13 +35,13 @@
                 </div>
             </div>
             <div class="mb20">
-                <h-button type="primary" @click="onBatch">批量选择</h-button>
+                <h-button type="primary" @click="onBatch" :disabled=isDisabled>批量选择</h-button>
             </div>
             <hosJoyTable ref="multipleTable" v-if="tableData" align="center" isShowIndex border showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" :tableRowClassName="rowClass"
                 :selectable="selectable" :pageSizes='page.sizes' actionWidth='100' isAction :max-height="500" @selection-change="handleSelectionChange" isShowselection :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <el-button  size="mini" type="primary" v-if="!slotProps.data.row.checked" @click="onSelect(slotProps.data)">选择{{slotProps.data.row.checked}}</el-button>
-                    <el-button  size="mini"  v-if="slotProps.data.row.checked" @click="onNoSelect(slotProps.data)">取消选择{{slotProps.data.row.checked}}</el-button>
+                    <el-button  size="mini" type="primary" v-if="!slotProps.data.row.checked" @click="onSelect(slotProps.data)">选择</el-button>
+                    <el-button  size="mini"  v-if="slotProps.data.row.checked" @click="onNoSelect(slotProps.data)">取消选择</el-button>
                 </template>
             </hosJoyTable>
             <div class="floor-tit mt20">已选择该楼层的商品</div>
@@ -96,6 +96,7 @@ export default class Flooredit extends Vue {
         reservedName: false
     }
     show: boolean = false
+    isDisabled: boolean = true
     _category=[]
     selectRow = []
     selectData = []
@@ -195,6 +196,7 @@ export default class Flooredit extends Vue {
 
     handleSelectionChange (val) {
         this.selectData = val
+        this.isDisabled = !(val.length > 0)
     }
     onBatch () {
         if (this.selectData.length > 0) {
@@ -229,20 +231,19 @@ export default class Flooredit extends Vue {
 
     async onFindList () {
         const { data: spu } = await getSpuPage(this.queryParams)
-        this.tableData = spu.records
         this.page.total = spu.total as number
         // 查询时候 查下最新的是否选中状态
         if (this.tableForm.length > 0) {
-            this.tableData.length > 0 && this.tableData.map((item, index) => {
-                this.tableForm.map((jtem, index) => {
+            this.tableForm.map((jtem, jndex) => {
+                spu.records.length > 0 && spu.records.map((item:any, index) => {
                     if (jtem.id == item.id) {
                         item.checked = true
-                    } else {
-                        item.checked = false
                     }
                 })
             })
         }
+        this.tableData = [...spu.records]
+        console.log(this.tableData)
     }
 
     async onFindCateList () {
@@ -258,7 +259,6 @@ export default class Flooredit extends Vue {
         this.$forceUpdate()
     }
     onNoSelect (val) {
-        console.log(val)
         this.$set(this.tableData[val.$index], 'checked', false)
         // this.$set(val.row, 'checked', false)
         let _arr = this.tableForm.filter(i => val.row.id == i.id)
@@ -269,7 +269,6 @@ export default class Flooredit extends Vue {
             this.tableForm.splice(one, 1)
         }
         this.$refs['multipleTable'].clearSelection()
-        this.$forceUpdate()
     }
     onMove (val, type) {
         let index = val.$index
@@ -304,7 +303,6 @@ export default class Flooredit extends Vue {
         }
         this.tableForm.splice(val.$index, 1)
         this.$refs['multipleTable'].clearSelection()
-        this.$forceUpdate()
     }
 
     async onSave () {
