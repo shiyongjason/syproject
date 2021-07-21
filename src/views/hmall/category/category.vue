@@ -354,6 +354,7 @@ export default {
         async refresh () {
             await this.findAllCategory()
             this.data = this.resolveData(this.categoriesTree, false, false)
+            console.log(this.data)
         }
     },
     mounted () {
