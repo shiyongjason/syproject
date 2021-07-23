@@ -117,7 +117,7 @@ export default class Categoryedit extends Vue {
             setTimeout(() => {
                 let _nodes = this.$refs['tree'].getCheckedNodes()
                 this.checkList = _nodes.filter((item) => item.level == 3)
-            }, 0)
+            }, 100)
         })
     }
 
