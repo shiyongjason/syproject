@@ -444,7 +444,7 @@ export default class ProductLibrary extends Vue {
         let temp:any = ''
         for (const item of this.Selection) {
             let res = this.tableData.find(jtem => jtem.id == item)
-            if (res && res.isOnShelf == 1) {
+            if (res && res.isOnShelf != 2) {
                 temp = res
                 break
             }
