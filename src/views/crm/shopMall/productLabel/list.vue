@@ -92,7 +92,7 @@ const _queryParams = {
     spuCode: '',
     skuCode: '',
     status: '',
-    isOnShelf: '',
+    isOnShelf: 2,
     recommend: '',
     pageNumber: 1,
     pageSize: 10
