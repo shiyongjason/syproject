@@ -54,3 +54,37 @@
     text-overflow: ellipsis;
     overflow: hidden;
 }
+/deep/.crmshopMall-logo{
+    .elupload{
+        height: 64px;
+    }
+    .el-upload-dragger{
+        width: 196px;
+        height: 64px;
+    }
+    .default-pre-view-image{
+        width: 196px;
+        height: 64px;
+    }
+    .default-pre-view-mask{
+        width: 196px;
+        height: 64px;
+    }
+}
+/deep/.crmshopMall-banner{
+    .elupload{
+        height: 93.3px;
+    }
+    .el-upload-dragger{
+        width: 196px;
+        height: 93.3px;
+    }
+    .default-pre-view-image{
+        width: 196px;
+        height: 93.3px;
+    }
+    .default-pre-view-mask{
+        width: 196px;
+        height: 93.3px;
+    }
+}
