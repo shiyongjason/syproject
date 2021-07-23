@@ -66,7 +66,7 @@ import { Vue, Component, Prop, Watch, Ref } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import elImageAddToken from '@/components/elImageAddToken/index.vue'
-import { getSkuList, pullSku, bulkPullSku } from './api/index'
+import { getSkuList, pullSku, bulkPullSku, getCategoryList } from './api/index'
 import { CategoryTreeResponse, RespBossB2bSkuPage } from '@/interface/hbp-shop'
 import { getTreeCateGroy } from '../productLibrary/api'
 import { CRM_SHOPP_ADDPRODUCT_PULL, CRM_SHOPP_ADDPRODUCT_BATCH_PULL, CRM_SHOPP_ADDPRODUCT_EDITOR } from '@/utils/auth_const'
@@ -86,7 +86,7 @@ const _queryParams = {
     components: { hosJoyTable, elImageAddToken }
 })
 export default class ShopMallAddProduct extends Vue {
-    categoryOptions:CategoryTreeResponse[] = []
+    categoryOptions:any[] = []
     authPull = CRM_SHOPP_ADDPRODUCT_PULL
     authBatchPull = CRM_SHOPP_ADDPRODUCT_BATCH_PULL
     authEdit = CRM_SHOPP_ADDPRODUCT_EDITOR
@@ -176,7 +176,7 @@ export default class ShopMallAddProduct extends Vue {
 
     async mounted () {
         this.getList()
-        const { data } = await getTreeCateGroy({ searchContent: '' })
+        const { data } = await getCategoryList({ searchContent: '' })
         this.categoryOptions = data
     }
 }

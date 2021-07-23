@@ -14,3 +14,8 @@ export const pullSku: (params: any) => AxiosPromise<any> = (params) => {
 export const bulkPullSku: (params: any) => AxiosPromise<any> = (params) => {
     return axios.post(`shop/api/skus/boss/batch-sku`, params)
 }
+
+// 类目
+export const getCategoryList: (params: any) => AxiosPromise<any> = (params) => {
+    return axios.get(`shop/api/categories/main/tree`, { params })
+}
