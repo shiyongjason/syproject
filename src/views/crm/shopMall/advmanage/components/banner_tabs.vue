@@ -180,7 +180,7 @@ export default class Bannertabs extends Vue {
                     await editBanner(this.bannerForm)
                 } else {
                     await addBanner(this.bannerForm)
-                    this.$message.success('bannar新增成功~')
+                    this.$message.success('banner新增成功~')
                 }
 
                 this.dialogVisible = false
@@ -227,13 +227,13 @@ export default class Bannertabs extends Vue {
     }
 
     onDelete (val) {
-        this.$confirm('确定删除该条bannar吗？', '删除确认', {
+        this.$confirm('确定删除该条banner吗？', '删除确认', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
         }).then(async () => {
             await bannerDelete(val.id)
-            this.$message.success('bannar删除成功~')
+            this.$message.success('banner删除成功~')
             this.onFindList()
         }).catch(() => {
 
