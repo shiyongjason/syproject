@@ -366,11 +366,15 @@ export default class ProductLibrary extends Vue {
     onOpenSell (d) {
         // （未编辑销售价格、可售卖区域...)
         this.itemSKU = d
-        if (d.minSalePrice === null || d.maxSalePrice === null || d.salesAreaStatus === null) {
+        if (d.salesAreaStatus === null) {
             this.sellDialog = true
             return
         }
-        this.onTheShelvesDialog = true
+        if (d.priceVisible == 1 && (d.minSalePrice === null || d.maxSalePrice === null)) {
+            this.sellDialog = true
+        } else {
+            this.onTheShelvesDialog = true
+        }
     }
     // 去完善SPU
     onGoToEditSPU () {
@@ -469,8 +473,14 @@ export default class ProductLibrary extends Vue {
                 break
             }
             // （未编辑销售价格、可售卖区域...)
-            if (res && (res.minSalePrice === null || res.maxSalePrice === null || res.salesAreaStatus === null)) {
-                this.dialogSKU.push(res)
+            if (res) {
+                if (res.salesAreaStatus === null) {
+                    this.dialogSKU.push(res)
+                    continue
+                }
+                if (res.priceVisible == 1 && (res.minSalePrice === null || res.maxSalePrice === null)) {
+                    this.dialogSKU.push(res)
+                }
             }
         }
         if (temp) {
