@@ -366,7 +366,7 @@ export default class ProductLibrary extends Vue {
     onOpenSell (d) {
         // （未编辑销售价格、可售卖区域...)
         this.itemSKU = d
-        if (d.salesAreaStatus === null) {
+        if (!d.salesAreaStatus) {
             this.sellDialog = true
             return
         }
@@ -474,7 +474,7 @@ export default class ProductLibrary extends Vue {
             }
             // （未编辑销售价格、可售卖区域...)
             if (res) {
-                if (res.salesAreaStatus === null) {
+                if (!res.salesAreaStatus) {
                     this.dialogSKU.push(res)
                     continue
                 }
