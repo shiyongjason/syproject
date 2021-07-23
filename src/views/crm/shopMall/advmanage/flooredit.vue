@@ -229,20 +229,32 @@ export default class Flooredit extends Vue {
 
     async onFindList () {
         const { data: spu } = await getSpuPage(this.queryParams)
-        this.tableData = spu.records
+        // this.tableData = spu.records
         this.page.total = spu.total as number
         // 查询时候 查下最新的是否选中状态
         if (this.tableForm.length > 0) {
-            this.tableData.length > 0 && this.tableData.map((item, index) => {
-                this.tableForm.map((jtem, index) => {
+            spu.records.length > 0 && spu.records.map((item:any, index) => {
+                for (const jtem of this.tableForm) {
                     if (jtem.id == item.id) {
+                        console.log('log::::::item', item)
                         item.checked = true
                     } else {
                         item.checked = false
+                        console.log('log::::::itemsss', item)
                     }
-                })
+                }
+
+                // 可break 终止
+                // this.tableForm.map((jtem, index) => {
+                //     if (jtem.id == item.id) {
+                //         item.checked = true
+                //     } else {
+                //         item.checked = false
+                //     }
+                // })
             })
         }
+        this.tableData = spu.records
     }
 
     async onFindCateList () {

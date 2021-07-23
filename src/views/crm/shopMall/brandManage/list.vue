@@ -53,14 +53,14 @@
                 </el-form-item>
                 <el-form-item label="品牌编码：" prop="brandCode">
                     <el-input v-model="ruleForm.brandCode" disabled v-if="!isShowDetail" maxlength="50"></el-input>
-                    <span v-else style="line-height: 22px;display: inline-block;">{{ruleForm.brandName||'-'}}</span>
+                    <span v-else style="line-height: 22px;display: inline-block;">{{ruleForm.brandCode||'-'}}</span>
                 </el-form-item>
                 <el-form-item label="品牌logo：" prop="brandLogoUrl">
-                    <HosJoyUpload class="crmshopMallSpuEdit" :showUpload='!isShowDetail' v-model="ruleForm.brandLogoUrl" showCrop :multiple='false' :showPreView='true' :fileSize=2 :action='action' :fileNum='1' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' autoCropWidth='200' autoCropHeight='64' autoCrop fixedBox :original='false' :enlarge="1" :outputSize="0.8" outputType="jpeg"/>
+                    <HosJoyUpload class="crmshopMall-logo" :showUpload='!isShowDetail' v-model="ruleForm.brandLogoUrl" showCrop :multiple='false' :showPreView='true' :fileSize=2 :action='action' :fileNum='1' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' autoCropWidth='200' autoCropHeight='64' autoCrop fixedBox :original='false' :enlarge="1" :outputSize="0.8" outputType="jpeg"/>
                     <p>图片尺寸为200*64，不超过2M，仅支持jpeg、jpg、png格式</p>
                 </el-form-item>
-                <el-form-item label="品牌bannar：" prop="brandBannerUrl">
-                    <HosJoyUpload class="crmshopMallSpuEdit" :showUpload='!isShowDetail' v-model="ruleForm.brandBannerUrl" showCrop :multiple='false' :showPreView='true' :fileSize=2 :action='action' :fileNum='1' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' autoCropWidth='750' autoCropHeight='350' autoCrop fixedBox :original='false'  :enlarge="1" :outputSize="0.8" outputType="jpeg"/>
+                <el-form-item label="品牌banner：" prop="brandBannerUrl">
+                    <HosJoyUpload class="crmshopMall-banner" :showUpload='!isShowDetail' v-model="ruleForm.brandBannerUrl" showCrop :multiple='false' :showPreView='true' :fileSize=2 :action='action' :fileNum='1' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' autoCropWidth='750' autoCropHeight='350' autoCrop fixedBox :original='false'  :enlarge="1" :outputSize="0.8" outputType="jpeg"/>
                     <p>图片尺寸为750*350，不超过2M，仅支持jpeg、jpg、png格式</p>
                 </el-form-item>
                 <el-form-item label="品牌描述：" prop="brandRemark" >
