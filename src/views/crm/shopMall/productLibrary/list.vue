@@ -366,11 +366,15 @@ export default class ProductLibrary extends Vue {
     onOpenSell (d) {
         // （未编辑销售价格、可售卖区域...)
         this.itemSKU = d
-        if (d.minSalePrice === null || d.maxSalePrice === null || d.salesAreaStatus === null) {
+        if (!d.salesAreaStatus) {
             this.sellDialog = true
             return
         }
-        this.onTheShelvesDialog = true
+        if (d.priceVisible == 1 && (d.minSalePrice === null || d.maxSalePrice === null)) {
+            this.sellDialog = true
+        } else {
+            this.onTheShelvesDialog = true
+        }
     }
     // 去完善SPU
     onGoToEditSPU () {
@@ -440,7 +444,7 @@ export default class ProductLibrary extends Vue {
         let temp:any = ''
         for (const item of this.Selection) {
             let res = this.tableData.find(jtem => jtem.id == item)
-            if (res && res.isOnShelf == 1) {
+            if (res && res.isOnShelf != 2) {
                 temp = res
                 break
             }
@@ -469,14 +473,30 @@ export default class ProductLibrary extends Vue {
                 break
             }
             // （未编辑销售价格、可售卖区域...)
-            if (res && (res.minSalePrice === null || res.maxSalePrice === null || res.salesAreaStatus === null)) {
-                this.dialogSKU.push(res)
+            if (res) {
+                if (!res.salesAreaStatus) {
+                    this.dialogSKU.push(res)
+                    continue
+                }
+                if (res.priceVisible == 1 && (res.minSalePrice === null || res.maxSalePrice === null)) {
+                    this.dialogSKU.push(res)
+                }
             }
         }
         if (temp) {
             this.$message.error('已上架SKU不可再上架，请重新选择')
             return
         }
+        let tempDialogSKU = {}
+        this.dialogSKU = this.dialogSKU.reduce((prev, curv) => {
+            if (tempDialogSKU[curv.spuCode]) {
+                // do nothing
+            } else {
+                tempDialogSKU[curv.spuCode] = true
+                prev.push(curv)
+            }
+            return prev
+        }, [])
         this.BulkDialog = true
     }
     // 确定批量上架
