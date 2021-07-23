@@ -204,7 +204,8 @@ export default class ProductLabel extends Vue {
     }
     // 推荐提醒 Dialog
     onOPenSureDialog () {
-        if (this.Selection.length == 0) {
+        let res = this.Selection.find(item => !item.recommend)
+        if (this.Selection.length == 0 || !res) {
             this.$message.error('请选择需要推荐的商品')
             return
         }
@@ -213,7 +214,9 @@ export default class ProductLabel extends Vue {
 
     // 打开取消确认 Dialog
     onOPenCancelDialog () {
-        if (this.Selection.length == 0) {
+        let res = this.Selection.find(item => item.recommend)
+        console.log('🚀 --- onOPenCancelDialog --- res', res)
+        if (this.Selection.length == 0 || !res) {
             this.$message.error('请选择需要取消推荐的商品')
             return
         }
