@@ -487,6 +487,16 @@ export default class ProductLibrary extends Vue {
             this.$message.error('已上架SKU不可再上架，请重新选择')
             return
         }
+        let tempDialogSKU = {}
+        this.dialogSKU = this.dialogSKU.reduce((prev, curv) => {
+            if (tempDialogSKU[curv.spuCode]) {
+                // do nothing
+            } else {
+                tempDialogSKU[curv.spuCode] = true
+                prev.push(curv)
+            }
+            return prev
+        }, [])
         this.BulkDialog = true
     }
     // 确定批量上架
