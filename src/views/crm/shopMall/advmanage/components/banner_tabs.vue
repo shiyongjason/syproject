@@ -19,7 +19,7 @@
                 </div>
             </template>
         </hosJoyTable>
-        <el-dialog title="新增banner" :visible.sync="dialogVisible" width="30%" :before-close="handleClose" :close-on-click-modal=false>
+        <el-dialog :title=bannerTitle :visible.sync="dialogVisible" width="30%" :before-close="handleClose" :close-on-click-modal=false>
             <el-form :model="bannerForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
                 <el-form-item label="banner名称：" prop="bannerName">
                     <el-input v-model.trim="bannerForm.bannerName" maxlength="20"></el-input>
@@ -91,6 +91,7 @@ export default class Bannertabs extends Vue {
         bannerArr: []
 
     }
+    bannerTitle: string = '新增banner'
     private _bannerForm = {}
     page = {
         sizes: [10, 20, 50, 100],
@@ -153,7 +154,7 @@ export default class Bannertabs extends Vue {
     }
     onAddBanner () {
         this.bannerForm = deepCopy(this._bannerForm)
-
+        this.bannerTitle = '新增banner'
         this.dialogVisible = true
         this.$nextTick(() => {
             this.$refs['ruleForm'].clearValidate()
@@ -167,6 +168,7 @@ export default class Bannertabs extends Vue {
     }
 
     async onEdit (val) {
+        this.bannerTitle = '编辑banner'
         const { data } = await getBannerDetail(val.id)
         this.bannerForm = { ...this.bannerForm, ...data }
         this.bannerForm.bannerArr = [{ fileUrl: data.bannerPicUrl, fileName: data.bannerPicUrl }]
@@ -180,7 +182,7 @@ export default class Bannertabs extends Vue {
                     await editBanner(this.bannerForm)
                 } else {
                     await addBanner(this.bannerForm)
-                    this.$message.success('bannar新增成功~')
+                    this.$message.success('banner新增成功~')
                 }
 
                 this.dialogVisible = false
@@ -227,13 +229,13 @@ export default class Bannertabs extends Vue {
     }
 
     onDelete (val) {
-        this.$confirm('确定删除该条bannar吗？', '删除确认', {
+        this.$confirm('确定删除该条banner吗？', '删除确认', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
         }).then(async () => {
             await bannerDelete(val.id)
-            this.$message.success('bannar删除成功~')
+            this.$message.success('banner删除成功~')
             this.onFindList()
         }).catch(() => {
 
