@@ -45,7 +45,7 @@
                 <el-button type="primary" @click="onHandleDel">继 续</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="修改品牌信息" :visible.sync="dialogVisible" width="850px" :before-close="handleClose" :close-on-click-modal='false' :close-on-press-escape='false'>
+        <el-dialog :title="isShowDetail?'品牌信息':'修改品牌信息'" :visible.sync="dialogVisible" width="850px" :before-close="handleClose" :close-on-click-modal='false' :close-on-press-escape='false'>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
                 <el-form-item label="品牌名称：" prop="brandName">
                     <el-input v-model="ruleForm.brandName" disabled v-if="!isShowDetail" maxlength="50"></el-input>
