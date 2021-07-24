@@ -115,3 +115,7 @@ export const cancelCategory:(param:any)=>AxiosPromise<void> = (params) => {
 export const getListCategory:()=>AxiosPromise<Shops.BossFrontCategoryResponse[]> = () => {
     return axios.get(`/shop/api/boss/front-categories/list`)
 }
+// 楼层 banner 数量
+export const getEnableNum:()=>AxiosPromise<Shops.FloorAndBannerEnableNumResponse> = () => {
+    return axios.get(`/shop/api/boss/shop/floor/enable-num`)
+}
