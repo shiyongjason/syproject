@@ -7,7 +7,7 @@
                     <!-- <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest' @requestBack='getList' :paymentOrderId='paymentOrderId'></loanHandoverInformation> -->
                     <Bannertabs v-if="activeName=='banner'" />
                 </el-tab-pane>
-                <el-tab-pane :label='"楼层管理"+(`${numInfo.floorNum}`)' name="floor">
+                <el-tab-pane :label='"楼层管理("+`${numInfo.floorNum}`+")"' name="floor">
                     <!-- <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation> -->
                     <Floortabs v-if="activeName=='floor'" ref="floors"/>
                 </el-tab-pane>
