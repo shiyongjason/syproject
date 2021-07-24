@@ -32,6 +32,7 @@ import { clearCache, newCache } from '@/utils/index'
 import filters from '@/utils/filters'
 import moment from 'moment'
 import { getEnableNum } from './api/index'
+import { FloorAndBannerEnableNumResponse } from '@/interface/hbp-shop'
 
 @Component({
     name: 'Advmanage',
@@ -46,7 +47,7 @@ export default class Advmanage extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
-    numInfo:{bannerNum:string|number, floorNum:string|number}={
+    numInfo:FloorAndBannerEnableNumResponse={
         bannerNum: '',
         floorNum: ''
     }
