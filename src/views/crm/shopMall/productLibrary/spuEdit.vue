@@ -25,8 +25,8 @@
                             <el-radio :label="1">展示</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="商品销售名称：" prop="showName" style="width: 460px;" maxlength='30'>
-                        <el-input  v-model="form.showName" ></el-input>
+                    <el-form-item label="商品销售名称：" prop="showName" style="width: 460px;" >
+                        <el-input  v-model="form.showName" maxlength='30'></el-input>
                     </el-form-item>
                 </div>
                 <div class="title-cont">
@@ -142,6 +142,13 @@ const _queryParams = {
     pageNumber: 1,
     pageSize: 10
 }
+const showNameValidator = (rule, value, callback) => {
+    let Reg = /^[\u4e00-\u9fa50-9a-zA-Z ]+$/
+    if (value && !Reg.test(value)) {
+        return callback(new Error())
+    }
+    return callback()
+}
 
 @Component({
     name: 'crmshopMallSpuEdit',
@@ -209,9 +216,13 @@ export default class SpuEdit extends Vue {
             { required: true, message: '必填项不能为空', trigger: 'blur' }
         ],
         showName: [
-            { required: true, message: '必填项不能为空', trigger: 'blur' }
+            { required: true, message: '必填项不能为空', trigger: 'blur' },
+            { validator: showNameValidator, message: '限中西文字、数字以及空格', trigger: 'blur' }
         ],
         priceVisible: [
+            { required: true, message: '必填项不能为空', trigger: 'change' }
+        ],
+        pics: [
             { required: true, message: '必填项不能为空', trigger: 'change' }
         ],
         minSalePrice: [
@@ -346,7 +357,7 @@ export default class SpuEdit extends Vue {
                 this.$message.success('提交编辑成功~')
                 this.onBack()
             } else {
-                if (this.form.saleRules.length == 0 || this.form.priceVisible === null || !this.form.showName) {
+                if (this.form.saleRules.length == 0 || this.form.priceVisible === null || !this.form.showName || this.form.imageUrls.length == 0) {
                     this.$message.error('必填项不得为空~')
                 }
                 this.$nextTick(() => {
