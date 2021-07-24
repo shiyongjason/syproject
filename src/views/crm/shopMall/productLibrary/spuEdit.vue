@@ -33,7 +33,7 @@
                     <span class="title-cont__label">销售信息</span>
                 </div>
                 <div>
-                    <el-form-item label="商品图片：" prop="pics">
+                    <el-form-item label="商品图片：" prop="imageUrls">
                         <div class="productPicture">
                             <div style="margin-right:10px">
                                 <HosJoyUpload class="crmshopMallSpuEdit" v-model="form.imageUrls" :showPreView='true' :fileSize=20 :action='action' :fileNum='5' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' style="margin:10px 0 0 5px" >
@@ -74,11 +74,11 @@
                     <template slot="price" slot-scope="scope">
                         <div class="skutableForm" v-if="form.priceVisible==1">
                             <el-form-item label="" :prop="`skuList.${scope.data.$index}.minSalePrice`" :rules="rules.minSalePrice">
-                                <el-input style="width:150px" placeholder="请输入" v-model="scope.data.row.minSalePrice"  v-isNum:2 v-inputMAX='100000000' size="mini" @blur="()=>compore(scope.data.row,scope.data.$index)"><template slot="append">元</template></el-input>
+                                <el-input style="width:150px" placeholder="请输入" v-model="scope.data.row.minSalePrice"  v-isNum:2 v-inputMAX='9999999.99' size="mini" @blur="()=>compore(scope.data.row,scope.data.$index)"><template slot="append">元</template></el-input>
                             </el-form-item>
                             <font style="margin:0 10px">-</font>
                             <el-form-item label="" :prop="`skuList.${scope.data.$index}.maxSalePrice`" :rules="rules.maxSalePrice">
-                                <el-input style="width:150px" placeholder="请输入"  v-model="scope.data.row.maxSalePrice" v-isNum:2 v-inputMAX='100000000' size="mini" @blur="()=>compore(scope.data.row,scope.data.$index)"><template slot="append">元</template></el-input>
+                                <el-input style="width:150px" placeholder="请输入"  v-model="scope.data.row.maxSalePrice" v-isNum:2 v-inputMAX='9999999.99' size="mini" @blur="()=>compore(scope.data.row,scope.data.$index)"><template slot="append">元</template></el-input>
                             </el-form-item>
                         </div>
                         <div v-if="form.priceVisible===null" class="skutableForm" >
@@ -198,14 +198,31 @@ export default class SpuEdit extends Vue {
         createPhone: '' // this.userInfo.phoneNumber
     }
     // 自定义校验规则
-    checkPrice (rule, value, callback) {
+    checkPrice (rule, value, callback, type) {
+        let errorTxt = {
+            minSalePrice: '前一个数不能大于后一个数',
+            maxSalePrice: '后一个数不能小于前一个数'
+        }
         let fieldList = rule.field.split('.') // ["skuList", "1", "maxSalePrice"]
         let key = fieldList[0]
         let index = fieldList[1]
+        let field = fieldList[2]
         let min = this.form[key][index]['minSalePrice']
         let max = this.form[fieldList[0]][fieldList[1]]['maxSalePrice']
+        // 根据字段判断只校验对应的输入框的值
+        if (field === 'minSalePrice') {
+            if (min && min * 1 == 0) {
+                callback(new Error('不能为0'))
+                return
+            }
+        } else if (field === 'maxSalePrice') {
+            if (max && max * 1 == 0) {
+                callback(new Error('不能为0'))
+                return
+            }
+        }
         if (min !== null && max !== null && min * 1 >= max * 1) {
-            callback(new Error('后一个数不能小于前一个数'))
+            callback(new Error(errorTxt[field]))
         } else {
             callback()
         }
@@ -222,12 +239,12 @@ export default class SpuEdit extends Vue {
         priceVisible: [
             { required: true, message: '必填项不能为空', trigger: 'change' }
         ],
-        pics: [
+        imageUrls: [
             { required: true, message: '必填项不能为空', trigger: 'change' }
         ],
         minSalePrice: [
             { required: true, message: '必填项不能为空', trigger: 'blur' },
-            { validator: this.checkPrice, message: '前一个数不能大于后一个数', trigger: 'blur' }
+            { validator: this.checkPrice, trigger: 'blur' }
         ],
         maxSalePrice: [
             { required: true, message: '必填项不能为空', trigger: 'blur' },
@@ -342,11 +359,11 @@ export default class SpuEdit extends Vue {
                         // TODO fix 表格编辑bug，后期优化
                         row.minSalePrice = isNum(row.minSalePrice, 2)
                         row.maxSalePrice = isNum(row.maxSalePrice, 2)
-                        if (Number(row.minSalePrice) > 100000000) {
-                            row.minSalePrice = 100000000
+                        if (Number(row.minSalePrice) > 9999999.99) {
+                            row.minSalePrice = 9999999.99
                         }
-                        if (Number(row.maxSalePrice) > 100000000) {
-                            row.maxSalePrice = 100000000
+                        if (Number(row.maxSalePrice) > 9999999.99) {
+                            row.maxSalePrice = 9999999.99
                         }
                     } else {
                         row.minSalePrice = null
