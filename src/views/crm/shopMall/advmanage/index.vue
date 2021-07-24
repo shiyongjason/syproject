@@ -7,7 +7,7 @@
                     <!-- <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest' @requestBack='getList' :paymentOrderId='paymentOrderId'></loanHandoverInformation> -->
                     <Bannertabs v-if="activeName=='banner'" />
                 </el-tab-pane>
-                <el-tab-pane :label='"楼层管理"+(`${numInfo.floorNum}`)' name="floor">
+                <el-tab-pane :label='"楼层管理("+`${numInfo.floorNum}`+")"' name="floor">
                     <!-- <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation> -->
                     <Floortabs v-if="activeName=='floor'" ref="floors"/>
                 </el-tab-pane>
@@ -32,6 +32,7 @@ import { clearCache, newCache } from '@/utils/index'
 import filters from '@/utils/filters'
 import moment from 'moment'
 import { getEnableNum } from './api/index'
+import { FloorAndBannerEnableNumResponse } from '@/interface/hbp-shop'
 
 @Component({
     name: 'Advmanage',
@@ -46,7 +47,7 @@ export default class Advmanage extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
-    numInfo:{bannerNum:string|number, floorNum:string|number}={
+    numInfo:FloorAndBannerEnableNumResponse={
         bannerNum: '',
         floorNum: ''
     }

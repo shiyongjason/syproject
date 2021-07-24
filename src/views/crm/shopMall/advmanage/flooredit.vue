@@ -5,7 +5,7 @@
             <div class="query-cont-row">
                 <el-form :model="floorForm" :rules="rules" ref="floorForm" label-width="100px" class="demo-ruleForm">
                     <el-form-item label="楼层名称：" prop="floorName">
-                        <el-input v-model="floorForm.floorName"></el-input>
+                        <el-input v-model.trim="floorForm.floorName" maxlength="10"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
