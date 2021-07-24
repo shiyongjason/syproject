@@ -214,6 +214,9 @@ export default class SpuEdit extends Vue {
         priceVisible: [
             { required: true, message: '必填项不能为空', trigger: 'change' }
         ],
+        pics: [
+            { required: true, message: '必填项不能为空', trigger: 'change' }
+        ],
         minSalePrice: [
             { required: true, message: '必填项不能为空', trigger: 'blur' },
             { validator: this.checkPrice, message: '前一个数不能大于后一个数', trigger: 'blur' }
@@ -346,7 +349,7 @@ export default class SpuEdit extends Vue {
                 this.$message.success('提交编辑成功~')
                 this.onBack()
             } else {
-                if (this.form.saleRules.length == 0 || this.form.priceVisible === null || !this.form.showName) {
+                if (this.form.saleRules.length == 0 || this.form.priceVisible === null || !this.form.showName || this.form.imageUrls.length == 0) {
                     this.$message.error('必填项不得为空~')
                 }
                 this.$nextTick(() => {
