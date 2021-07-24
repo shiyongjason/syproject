@@ -16,7 +16,7 @@
             <el-form :model="categoryForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
                 <el-form-item label="选择品类：" prop="frontCategoryId">
                     <el-select v-model="categoryForm.frontCategoryId" placeholder="请选择">
-                        <el-option v-for="item in options" :key="item.id" :label="item.frontCategoryName" :value="item.id">
+                        <el-option v-for="item in options" :key="item.id" :label="item.frontCategoryName" :disabled="item.recommend" :value="item.id">
                         </el-option>
                     </el-select>
                 </el-form-item>
