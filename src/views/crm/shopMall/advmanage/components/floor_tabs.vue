@@ -146,7 +146,7 @@ export default class Floortabs extends Vue {
         }
 
         onMaintain (val) {
-            this.$router.push({ path: '/goodwork/brandManage', query: { id: val.id } })
+            this.$router.push({ name: 'brandManage', params: { brandName: val.brandName } })
         }
 
         onDisable (val) {

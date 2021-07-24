@@ -296,11 +296,16 @@ export default class brandManage extends Vue {
     // 搜索重置
     onReset () {
         this.queryParams = JSON.parse(JSON.stringify(_queryParams))
+        this.$route.params.brandName = ''
         this.getList()
     }
 
     // getList
     async getList () {
+        console.log(this.$route)
+        if (this.$route.params.brandName) {
+            this.queryParams.brandName = this.$route.params.brandName
+        }
         const { data } = await getListApi(this.queryParams)
         this.tableData = data.records
         this.page.total = data.total
