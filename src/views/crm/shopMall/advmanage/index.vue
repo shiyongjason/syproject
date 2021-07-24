@@ -46,9 +46,9 @@ export default class Advmanage extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
-    numInfo={
-        bannerNum: 0,
-        floorNum: 0
+    numInfo:{bannerNum:string|number, floorNum:string|number}={
+        bannerNum: '',
+        floorNum: ''
     }
     activeName: string='banner'
 
