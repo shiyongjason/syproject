@@ -113,6 +113,7 @@ export default class Floortabs extends Vue {
                     message: '楼层已删除~'
                 })
                 this.onGetFloorPage()
+                this.$emit('backEvent')
             }).catch(() => {
 
             })
@@ -139,6 +140,7 @@ export default class Floortabs extends Vue {
                         message: '楼层已启用~!'
                     })
                     this.onGetFloorPage()
+                    this.$emit('backEvent')
                 }).catch(() => {
 
                 })
@@ -161,6 +163,7 @@ export default class Floortabs extends Vue {
                     message: '楼层已停用~!'
                 })
                 this.onGetFloorPage()
+                this.$emit('backEvent')
             }).catch(() => {
 
             })

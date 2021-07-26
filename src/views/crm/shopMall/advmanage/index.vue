@@ -5,11 +5,11 @@
             <el-tabs v-model="activeName" @tab-click="handleTabClick">
                 <el-tab-pane :label='"banner管理("+`${numInfo.bannerNum}`+")"' name="banner">
                     <!-- <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest' @requestBack='getList' :paymentOrderId='paymentOrderId'></loanHandoverInformation> -->
-                    <Bannertabs v-if="activeName=='banner'" />
+                    <Bannertabs v-if="activeName=='banner'" @backEvent = onFindNum />
                 </el-tab-pane>
                 <el-tab-pane :label='"楼层管理("+`${numInfo.floorNum}`+")"' name="floor">
                     <!-- <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation> -->
-                    <Floortabs v-if="activeName=='floor'" ref="floors"/>
+                    <Floortabs v-if="activeName=='floor'" @backEvent = onFindNum ref="floors"/>
                 </el-tab-pane>
                 <el-tab-pane label="品类推荐" name="category">
                     <!-- <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation> -->
@@ -55,10 +55,13 @@ export default class Advmanage extends Vue {
 
     handleTabClick (tab, event): void {
     }
-
-    async mounted () {
+    async onFindNum () {
         const { data } = await getEnableNum()
         this.numInfo = data
+    }
+
+    mounted () {
+        this.onFindNum()
     }
     activated () {
         if (this.activeName == 'floor') {
