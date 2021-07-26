@@ -203,6 +203,7 @@ export default class Bannertabs extends Vue {
                 await bannerEnable(val.id)
                 this.$message.success('banner启用成功~')
                 this.onFindList()
+                this.$emit('backEvent')
             }).catch(() => {
 
             })
@@ -215,6 +216,7 @@ export default class Bannertabs extends Vue {
                 await bannerDisable(val.id)
                 this.$message.success('banner停用成功~')
                 this.onFindList()
+                this.$emit('backEvent')
             }).catch(() => {
 
             })
@@ -228,6 +230,7 @@ export default class Bannertabs extends Vue {
             await bannerMoveDown(val.id)
         }
         this.onFindList()
+        this.$emit('backEvent')
     }
 
     onDelete (val) {

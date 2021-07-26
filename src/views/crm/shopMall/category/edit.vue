@@ -183,6 +183,7 @@ export default class Categoryedit extends Vue {
         if (this.checkList.length > 0) {
             this.$refs['formmain'].clearValidate('categoryIdList')
         }
+        console.log(this.checkList)
         // if (row.level == 1 && checked) {
         //     row.subCategoryList.length > 0 && row.subCategoryList.map(item => {
         //         item.subCategoryList && item.subCategoryList.map(jtem => {
