@@ -7,8 +7,8 @@
         <hosJoyTable isShowIndex ref="hosjoyTable" align="center" showPagination border stripe :column="tableLabel" :data="tableData" actionWidth='250' :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" isAction
             :isActionFixed='tableData&&tableData.length>0'>
             <template #action="slotProps">
-                <h-button table @click="onMove(slotProps.data.row,'up')" v-if="slotProps.data.$index!=0&&hosAuthCheck(advcategoryMove)">上移</h-button>
-                <h-button table @click="onMove(slotProps.data.row,'down')" v-if="slotProps.data.$index!=tableData.length-1&&hosAuthCheck(advcategoryMove)">下移</h-button>
+                <h-button table @click="onMove(slotProps.data.row,'up')" v-if="slotProps.data.row.sort!=1&&hosAuthCheck(advcategoryMove)">上移</h-button>
+                <h-button table @click="onMove(slotProps.data.row,'down')" v-if="slotProps.data.row.sort!=page.total&&hosAuthCheck(advcategoryMove)">下移</h-button>
                 <h-button table @click="onCancelRemmend(slotProps.data.row)" v-if="hosAuthCheck(advcategoryCancel)">取消推荐</h-button>
             </template>
         </hosJoyTable>
