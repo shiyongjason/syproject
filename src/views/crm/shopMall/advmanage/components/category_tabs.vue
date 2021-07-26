@@ -21,7 +21,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="品类图标：" prop="imageUrls" ref="imageUrls">
-                    <HosJoyUpload v-model="categoryForm.imageUrls" :showPreView='true' :fileSize=1 :fileNum=1 :uploadParameters='uploadParameters' :action="action" @successCb="$refs['imageUrls'].clearValidate()" accept=".jpg,.png,.jpeg">
+                    <HosJoyUpload v-model="categoryForm.imageUrls" :multiple='false' :showPreView='true' :fileSize=1 :fileNum=1 :uploadParameters='uploadParameters' :action="action" @successCb="$refs['imageUrls'].clearValidate()" accept=".jpg,.png,.jpeg">
                     </HosJoyUpload>
                     <p>（品类图标格式为JGP/JPEG/PNG等主流格式图片，最大不超过1M）</p>
                     <p>注意：推荐后，该品类信息将出现在小程序首页~</p>

@@ -33,7 +33,9 @@
                     <el-input v-model.trim="bannerForm.linkUrl" maxlength="100"></el-input>
                 </el-form-item>
                 <el-form-item label="banner图：" prop="bannerArr" ref="bannerArrs">
-                    <HosJoyUpload v-model="bannerForm.bannerArr" :showPreView='true' :fileSize=2 :fileNum=1 :uploadParameters='uploadParameters' :action="action" @successCb="$refs['bannerArrs'].clearValidate()" accept=".jpg,.png,.jpeg">
+                    <HosJoyUpload v-model="bannerForm.bannerArr" showCrop :multiple='false' :showPreView='true' :fileSize=2 :fileNum=1 :uploadParameters='uploadParameters' :action="action" @successCb="$refs['bannerArrs'].clearValidate()" accept=".jpg,.png,.jpeg"
+                     autoCropWidth='750' autoCropHeight='350' autoCrop fixedBox :original='false'  :enlarge="1" :outputSize="0.8" outputType="jpeg"
+                    >
                     </HosJoyUpload>
                     <p>图片尺寸为750*300，不超过2M，仅支持jpeg、jpg、png格式</p>
                 </el-form-item>
