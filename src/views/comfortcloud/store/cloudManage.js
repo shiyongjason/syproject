@@ -1175,11 +1175,11 @@ const actions = {
     },
     async findCloudServiceMindList ({ commit }, params) {
         const { data } = await Api.getServiceRemindList(params)
-        commit(cloud.GET_CLOUD_SERVICE_REMIND_LIST, data.records)
+        commit(cloud.GET_CLOUD_SERVICE_REMIND_LIST, data.data.records)
         commit(cloud.GET_CLOUD_SERVICE_REMIND_LIST_PAGINATION, {
-            pageNumber: data.current,
-            pageSize: data.size,
-            total: data.total
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
         })
     }
 }

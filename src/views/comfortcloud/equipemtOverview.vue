@@ -76,7 +76,9 @@ export default {
             this.equipshow = this.$route.params.tab
         }
         if (this.$route.params.phone) {
-            this.$refs['timeequip'].queryByPhone(this.$route.params.phone)
+            this.$nextTick(() => {
+                this.$refs['timeequip'].queryByPhone(this.$route.params.phone)
+            })
         }
         this.findCloudDeviceCount()
     }

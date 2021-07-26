@@ -74,6 +74,9 @@
 
         <div class="page-body-cont">
             <basicTable :tableLabel="tableLabel" :tableData="cloudServiceMindList" :isShowIndex='true' :pagination="cloudServiceMindListPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                <template slot="serviceReminds" slot-scope="scope">
+                    <div class="remind" v-for="(info,index) in scope.data.row.serviceReminds" :key="index" v-html="info"></div>
+                </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看详情</el-button>
                 </template>
@@ -205,6 +208,11 @@ export default {
                 font-size: 16px;
             }
         }
+    }
+
+    .remind {
+        text-align: left;
+        white-space: normal;
     }
 
 </style>
