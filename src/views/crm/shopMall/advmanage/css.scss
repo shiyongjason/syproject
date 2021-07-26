@@ -26,6 +26,12 @@
     height: 35px;
     }
 }
+/deep/.category_img {
+    width: 40px;
+    img {
+        width: 40px;
+    }
+}
 .floor_tag {
     .el-tag {
         margin: 5px;

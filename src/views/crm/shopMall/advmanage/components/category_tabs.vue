@@ -90,7 +90,7 @@ export default class Categorytabs extends Vue {
             prop: 'imageUrl',
             render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
                 return (
-                    <span class="label_img">
+                    <span class="category_img">
                         {
                             scope.row.imageUrl
                                 ? <a href={scope.row.imageUrl} target="_blank"><img src={scope.row.imageUrl}/></a>
@@ -150,6 +150,7 @@ export default class Categorytabs extends Vue {
                 this.categoryForm.imageUrl = this.categoryForm.imageUrls[0].fileUrl
                 await addCategory(this.categoryForm)
                 this.onFindList()
+                this.onFindCategories()
                 this.dialogVisible = false
             }
         })
@@ -167,11 +168,13 @@ export default class Categorytabs extends Vue {
 
         })
     }
-
-    async mounted () {
-        this.onFindList()
+    async onFindCategories () {
         const { data } = await findCategoriesList()
         this.options = data
+    }
+    async mounted () {
+        this.onFindList()
+        this.onFindCategories()
     }
 }
 </script>
