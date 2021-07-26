@@ -31,8 +31,8 @@
                     <h-button table @click="onEdit(slotProps.data.row)" v-if="hosAuthCheck(categoryEdit)">编辑</h-button>
                     <h-button table @click="onDelete(slotProps.data.row)" v-if="hosAuthCheck(categoryDelete)">删除</h-button>
                     <h-button table @click="onLook(slotProps.data.row)" v-if="hosAuthCheck(categoryLook)">查看</h-button>
-                    <h-button table v-if="slotProps.data.$index!=0&&hosAuthCheck(categoryMove)" @click="onMove(slotProps.data.row,'up')">上移</h-button>
-                    <h-button table v-if="slotProps.data.$index!=tableData.length-1&&hosAuthCheck(categoryMove)" @click="onMove(slotProps.data.row,'down')">下移</h-button>
+                    <h-button table v-if="slotProps.data.row.sort!=1&&hosAuthCheck(categoryMove)" @click="onMove(slotProps.data.row,'up')">上移</h-button>
+                    <h-button table v-if="slotProps.data.row.sort!=page.total&&hosAuthCheck(categoryMove)" @click="onMove(slotProps.data.row,'down')">下移</h-button>
                 </template>
             </hosJoyTable>
         </div>

@@ -11,8 +11,8 @@
                     <h-button table @click="onEdit(slotProps.data.row)" v-if="hosAuthCheck(bannerEdit)">编辑</h-button>
                     <h-button table @click="onDelete(slotProps.data.row)" v-if="hosAuthCheck(bannerDelete)">删除</h-button>
                     <h-button table @click="onOperate(slotProps.data.row,'enable')" v-if="hosAuthCheck(bannerOperate)&&slotProps.data.row.status!=1">启用</h-button>
-                    <h-button table @click="onMove(slotProps.data.row,'up')" v-if="slotProps.data.$index!=0&&hosAuthCheck(bannerMove)">上移</h-button>
-                    <h-button table @click="onMove(slotProps.data.row,'down')" v-if="slotProps.data.$index!=tableData.length-1&&hosAuthCheck(bannerMove)">下移</h-button>
+                    <h-button table @click="onMove(slotProps.data.row,'up')" v-if="slotProps.data.row.sort!=1&&hosAuthCheck(bannerMove)">上移</h-button>
+                    <h-button table @click="onMove(slotProps.data.row,'down')" v-if="slotProps.data.row.sort!=page.total&&hosAuthCheck(bannerMove)">下移</h-button>
                 </div>
                 <div v-else>
                     <h-button table @click="onOperate(slotProps.data.row,'disable')" v-if="slotProps.data.row.status==1&&hosAuthCheck(bannerOperate)">停用</h-button>
