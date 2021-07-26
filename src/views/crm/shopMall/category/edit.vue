@@ -71,7 +71,7 @@ export default class Categoryedit extends Vue {
         label: 'name',
         value: 'code'
     }
-    queryParams:{searchContent:string, frontCategoryId:number}={
+    queryParams:any={
         searchContent: '',
         frontCategoryId: null
     }
@@ -97,7 +97,7 @@ export default class Categoryedit extends Vue {
     }
 
     async getList () {
-        this.queryParams.frontCategoryId = this.$route.query.id as number
+        this.queryParams.frontCategoryId = this.$route.query.id
         const { data } = await getTreeCategroy(this.queryParams)
         this.data = this.resolveData(data)
     }
