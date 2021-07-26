@@ -103,10 +103,10 @@ export default {
             },
             tableLabel: [
                 { label: '提醒时间', prop: 'time', formatters: 'dateTime' },
-                { label: '业主手机号', prop: 'agentPhone' },
+                { label: '业主手机号', prop: 'phone' },
                 { label: '服务机会', prop: 'serviceReminds' },
                 { label: '经销商名称', prop: 'agentCompanyName' },
-                { label: '经销商手机号', prop: 'phone' }
+                { label: '经销商手机号', prop: 'agentPhone' }
             ],
             pagination: {
                 pageNumber: 1,
