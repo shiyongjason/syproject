@@ -69,7 +69,7 @@
                     <span v-else style="line-height: 22px;display: inline-block;">{{ruleForm.brandRemark||'-'}}</span>
                 </el-form-item>
             </el-form>
-            <span slot="footer" class="dialog-footer">
+            <span slot="footer" class="dialog-footer" v-if="!isShowDetail">
                 <el-button @click="handleClose">取 消</el-button>
                 <el-button type="primary" @click="onSubmit">确 定</el-button>
             </span>
