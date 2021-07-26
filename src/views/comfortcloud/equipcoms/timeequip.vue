@@ -200,6 +200,10 @@ export default {
             findCloudHomeDetailSearchDict: 'findCloudHomeDetailSearchDict',
             getCloudHomeModeTypeList: 'getCloudHomeModeTypeList'
         }),
+        queryByPhone (phone) {
+            this.homeParams.phone = phone
+            this.findCloudHomeDetailList(this.homeParams)
+        },
         onSortChange (val) {
             if (val.order) {
                 this.queryParams.createTimeSortType = val.order === 'descending' ? '2' : '1'

@@ -8,8 +8,8 @@
                 <div class="query-col-title">经销商名称：</div>
                 <div class="query-col-input">
                     <el-input
-                        placeholder="请输入服务单号"
-                        v-model="queryParams.serviceNo"
+                        placeholder="请输入经销商名称"
+                        v-model="queryParams.agentCompanyName"
                         maxlength="50"
                         clearable
                     ></el-input>
@@ -20,8 +20,8 @@
                 <div class="query-col-title">经销商手机号：</div>
                 <div class="query-col-input">
                     <el-input
-                        v-model="queryParams.operator"
-                        placeholder="请输入申请人账号"
+                        v-model="queryParams.agentPhone"
+                        placeholder="请输入经销商手机号"
                         maxlength="11"
                         clearable
                     ></el-input>
@@ -32,8 +32,8 @@
                 <div class="query-col-title">业主手机号：</div>
                 <div class="query-col-input">
                     <el-input
-                        v-model="queryParams.operator"
-                        placeholder="请输入申请人账号"
+                        v-model="queryParams.ownerPhone"
+                        placeholder="请输入业主手机号"
                         maxlength="11"
                         clearable
                     ></el-input>
@@ -73,7 +73,7 @@
         </div>
 
         <div class="page-body-cont">
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+            <basicTable :tableLabel="tableLabel" :tableData="cloudServiceMindList" :isShowIndex='true' :pagination="cloudServiceMindListPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看详情</el-button>
                 </template>
@@ -90,20 +90,20 @@ export default {
     data () {
         return {
             queryParams: {
-                serviceNo: '',
+                agentCompanyName: '',
+                ownerPhone: '',
                 pageNumber: 1,
                 pageSize: 10,
-                operator: '',
+                agentPhone: '',
                 endTime: '',
                 startTime: ''
             },
-            tableData: [],
             tableLabel: [
-                { label: '提醒时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '业主手机号', prop: 'serviceNo' },
-                { label: '服务机会', prop: 'operator', width: '120px' },
-                { label: '经销商名称', prop: 'customerName' },
-                { label: '经销商手机号', prop: 'customerPhone' }
+                { label: '提醒时间', prop: 'time', formatters: 'dateTime' },
+                { label: '业主手机号', prop: 'agentPhone' },
+                { label: '服务机会', prop: 'serviceReminds' },
+                { label: '经销商名称', prop: 'agentCompanyName' },
+                { label: '经销商手机号', prop: 'phone' }
             ],
             pagination: {
                 pageNumber: 1,
@@ -114,30 +114,29 @@ export default {
     },
     methods: {
         ...mapActions({
-            getServiceManageHistoryList: 'getServiceManageHistoryList'
+            findCloudServiceMindList: 'findCloudServiceMindList'
         }),
         async onQuery () {
-            await this.getServiceManageHistoryList(this.searchParams)
-            this.tableData = this.serviceHistory.records
-            this.pagination = {
-                pageNumber: this.serviceHistory.current,
-                pageSize: this.serviceHistory.size,
-                total: this.serviceHistory.total
-            }
+            await this.findCloudServiceMindList(this.queryParams)
         },
         onSearch () {
-            this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
         onDetail (val) {
-
+            this.$router.push({
+                name: 'equipemtOverview',
+                params: {
+                    tab: 'RUNTIME_TAB',
+                    phone: val.agentPhone
+                }
+            })
         },
         onCurrentChange (val) {
-            this.searchParams.pageNumber = val.pageNumber
+            this.queryParams.pageNumber = val.pageNumber
             this.onQuery()
         },
         onSizeChange (val) {
-            this.searchParams.pageSize = val
+            this.queryParams.pageSize = val
             this.onQuery()
         }
     },
@@ -149,7 +148,8 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            serviceHistory: 'serviceManageHistoryList'
+            cloudServiceMindList: 'cloudServiceMindList',
+            cloudServiceMindListPagination: 'cloudServiceMindListPagination'
         }),
         pickerOptionsStart () {
             return {
