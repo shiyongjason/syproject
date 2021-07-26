@@ -83,6 +83,7 @@ import { CategoryTreeResponse, RespBossSku } from '@/interface/hbp-shop'
 import utils from '@/utils/filters'
 import { cancelRecommend, recommend } from './api'
 import { CRM_SHOPP_PRODUCTLABEL_RECOMMEND, CRM_SHOPP_PRODUCTLABEL_CANCELRECOMMEND, CRM_SHOPP_PRODUCTLABEL_BATCH_RECOMMEND, CRM_SHOPP_PRODUCTLABEL_BATCH_CANCEL } from '@/utils/auth_const'
+import { getCategoryList } from '../addProduct/api'
 
 const _queryParams = {
     name: '',
@@ -287,7 +288,7 @@ export default class ProductLabel extends Vue {
 
     async mounted () {
         this.getList()
-        const { data } = await getTreeCateGroy({ searchContent: '' })
+        const { data } = await getCategoryList({ searchContent: '' })
         this.categoryOptions = data
     }
 }
