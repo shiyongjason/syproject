@@ -168,7 +168,7 @@
                             <i class="iconfont hosjoy_order"></i>
                         </div>
                         <div class="balance-col-money">
-                            <p>线下回款<span>（元）</span></p>
+                            <p>线下提前还款<span>（元）</span></p>
                             <p>{{detail.offlineRepayAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
@@ -177,7 +177,7 @@
                             <i class="iconfont hosjoy_operation"></i>
                         </div>
                         <div class="balance-col-money">
-                            <p>线上回款<span>（元）</span></p>
+                            <p>单分享订单回款<span>（元）</span></p>
                             <p>{{detail.onlineRepayAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
@@ -204,16 +204,36 @@
                             <i class="iconfont hosjoy_jgzx"></i>
                         </div>
                         <div class="balance-col-money">
-                            <p>预付款<span>（元）</span></p>
+                            <p>线下转账预付款<span>（元）</span></p>
+                            <p>{{detail.prepayAmount|| 0| moneyShow}}</p>
+                        </div>
+                    </div>
+                    <div class="balance-cont-col">
+                        <div class="balance-col-icon">
+                            <i class="iconfont hosjoy_jgzx"></i>
+                        </div>
+                        <div class="balance-col-money">
+                            <p>网银支付预付款<span>（元）</span></p>
+                            <p>{{detail.prepayAmount|| 0| moneyShow}}</p>
+                        </div>
+                    </div>
+                    <div class="balance-cont-col">
+                        <div class="balance-col-icon">
+                            <i class="iconfont hosjoy_jgzx"></i>
+                        </div>
+                        <div class="balance-col-money">
+                            <p>网银支付提前还款<span>（元）</span></p>
                             <p>{{detail.prepayAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                 </div>
                 <div>
                     <el-tabs type="card" v-model="recordTabName" @tab-click="onRecordTab">
-                        <el-tab-pane label="线上回款" name="isOnline"></el-tab-pane>
-                        <el-tab-pane label="线下回款" name="isOffline"></el-tab-pane>
-                        <el-tab-pane label="预付款" name="isAdvance"></el-tab-pane>
+                        <el-tab-pane label="单分享订单回款" name="isOnline"></el-tab-pane>
+                        <el-tab-pane label="线下提前还款" name="isOffline"></el-tab-pane>
+                        <el-tab-pane label="线下转账预付款" name="isAdvance"></el-tab-pane>
+                        <el-tab-pane label="网银支付预付款" name="isOffline"></el-tab-pane>
+                        <el-tab-pane label="网银支付提前还款" name="isAdvance"></el-tab-pane>
                     </el-tabs>
                 </div>
                 <div class="query-cont-row mt20">
