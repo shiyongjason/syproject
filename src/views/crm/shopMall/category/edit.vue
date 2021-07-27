@@ -91,6 +91,7 @@ export default class Categoryedit extends Vue {
             categoryIdList: [
                 { required: true,
                     validator: (rule, value, callback) => {
+                        console.log(this.categoryForm.categoryIdList)
                         if ((this.categoryForm.categoryIdList && this.categoryForm.categoryIdList.length == 0) || !this.categoryForm.categoryIdList) {
                             callback(new Error('请选择关联类目'))
                         } else {
@@ -148,6 +149,7 @@ export default class Categoryedit extends Vue {
     }
 
     handleClose (item, index) {
+        this.categoryForm.categoryIdList = []
         let _tags = []
         this.checkList.splice(index, 1)
         this.checkList.map(item => {
@@ -198,43 +200,6 @@ export default class Categoryedit extends Vue {
         //     this.$refs['categoryIdList'].clearValidate('categoryIdList')
         // }
         console.log(this.categoryForm.categoryIdList)
-        // if (row.level == 1 && checked) {
-        //     row.subCategoryList.length > 0 && row.subCategoryList.map(item => {
-        //         item.subCategoryList && item.subCategoryList.map(jtem => {
-        //             this.checkList.push(jtem)
-        //         })
-        //     })
-        // } else if (row.level == 1) {
-        //     row.subCategoryList.length > 0 && row.subCategoryList.map(item => {
-        //         item.subCategoryList && item.subCategoryList.map(jtem => {
-        //             let one = this.checkList.filter(val => jtem.id == val.id)
-        //             one.length > 0 && one.map(e => {
-        //                 this.checkList.splice(this.checkList.indexOf(e), 1)
-        //             })
-        //         })
-        //     })
-        // }
-        // if (row.level == 2 && checked) {
-        //     row.subCategoryList.length > 0 && row.subCategoryList.map(jtem => {
-        //         this.checkList.push(jtem)
-        //     })
-        // } else if (row.level == 2) {
-        //     row.subCategoryList && row.subCategoryList.map(jtem => {
-        //         let one = this.checkList.filter(val => jtem.id == val.id)
-        //         one.length > 0 && this.checkList.splice(this.checkList.indexOf(one[0]), 1)
-        //     })
-        // }
-        // if (row.level == 3) {
-        //     console.log(333)
-        //     let one = this.checkList.filter(val => row.id == val.id)
-        //     console.log(one)
-        //     if (one.length > 0) {
-        //         this.checkList.splice(this.checkList.indexOf(one[0]), 1)
-        //     } else {
-        //         this.checkList.push(row)
-        //     }
-        // }
-        // console.log(this.findUnques(this.checkList))
     }
 
     // 递归处理数据
