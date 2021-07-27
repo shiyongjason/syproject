@@ -8,14 +8,13 @@
                         <el-input v-model.trim="categoryForm.frontCategoryName" placeholder="请输入" maxlength="10"></el-input>
                     </el-form-item>
                 </div>
-
-                        <el-form-item label="关联类目：" prop="categoryIdList">
-                        <div class="query_tag">
-                            <el-tag :key="index" v-for="(item,index) in checkList" closable :disable-transitions="false" @close="handleClose(item,index)">
-                                {{item.pcategoryName}}>{{item.scategoryName}}>{{item.name}}
-                            </el-tag>
-                        </div>
-                         </el-form-item>
+                <el-form-item label="关联类目：" prop="categoryIdList" ref="categoryIdList">
+                    <div class="query_tag">
+                        <el-tag :key="index" v-for="(item,index) in checkList" closable :disable-transitions="false" @close="handleClose(item,index)">
+                            {{item.pcategoryName}}>{{item.scategoryName}}>{{item.name}}
+                        </el-tag>
+                    </div>
+                </el-form-item>
             </el-form>
             <div class="query-cont-row">
                 <div class="query-cont__col">
@@ -90,7 +89,16 @@ export default class Categoryedit extends Vue {
                 { required: true, message: '请输入楼层名称', trigger: 'blur' }
             ],
             categoryIdList: [
-                { required: true, message: '请选择关联类目', trigger: 'blur' }
+                { required: true,
+                    validator: (rule, value, callback) => {
+                        if ((this.categoryForm.categoryIdList && this.categoryForm.categoryIdList.length == 0) || !this.categoryForm.categoryIdList) {
+                            callback(new Error('请选择关联类目'))
+                        } else {
+                            callback()
+                        }
+                    },
+                    trigger: 'blur'
+                }
             ]
         }
         return rules
@@ -142,6 +150,9 @@ export default class Categoryedit extends Vue {
     handleClose (item, index) {
         let _tags = []
         this.checkList.splice(index, 1)
+        this.checkList.map(item => {
+            this.categoryForm.categoryIdList.push(item.id)
+        })
         let newTags = this.checkList.filter(val => item.id != val.id)
         console.log(newTags)
         newTags.map(item => {
@@ -151,10 +162,6 @@ export default class Categoryedit extends Vue {
     }
 
     async onSave () {
-        this.categoryForm.categoryIdList = []
-        this.checkList.map(item => {
-            this.categoryForm.categoryIdList.push(item.id)
-        })
         // if (!this.categoryForm.frontCategoryName) {
         //     this.$message.warning('请输入品类名称')
         //     return
@@ -180,10 +187,17 @@ export default class Categoryedit extends Vue {
     onChecked (row, cnode) {
         let checkedNodes = cnode.checkedNodes
         this.checkList = checkedNodes.filter((item) => item.level == 3)
-        if (this.checkList.length > 0) {
-            this.$refs['formmain'].clearValidate('categoryIdList')
-        }
-        console.log(this.checkList)
+
+        this.categoryForm.categoryIdList = []
+        this.checkList.map(item => {
+            this.categoryForm.categoryIdList.push(item.id)
+        })
+        // if (this.categoryForm.categoryIdList.length > 0) {
+        //     this.$refs['formmain'].validateField('categoryIdList')
+        // } else {
+        //     this.$refs['categoryIdList'].clearValidate('categoryIdList')
+        // }
+        console.log(this.categoryForm.categoryIdList)
         // if (row.level == 1 && checked) {
         //     row.subCategoryList.length > 0 && row.subCategoryList.map(item => {
         //         item.subCategoryList && item.subCategoryList.map(jtem => {
