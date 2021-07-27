@@ -4,11 +4,11 @@
         <div class="baner-btn mb20">
             <el-button type="primary" @click="onAdd" v-if="hosAuthCheck(advcategoryAdd)">新增品类推荐</el-button>
         </div>
-        <hosJoyTable isShowIndex ref="hosjoyTable" align="center" showPagination border stripe :column="tableLabel" :data="tableData" actionWidth='250' :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" isAction
+        <hosJoyTable  ref="hosjoyTable" align="center" showPagination border stripe :column="tableLabel" :data="tableData" actionWidth='250' :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="onFindList" isAction
             :isActionFixed='tableData&&tableData.length>0'>
             <template #action="slotProps">
-                <h-button table @click="onMove(slotProps.data.row,'up')" v-if="slotProps.data.$index!=0&&hosAuthCheck(advcategoryMove)">上移</h-button>
-                <h-button table @click="onMove(slotProps.data.row,'down')" v-if="slotProps.data.$index!=tableData.length-1&&hosAuthCheck(advcategoryMove)">下移</h-button>
+                <h-button table @click="onMove(slotProps.data.row,'up')" v-if="slotProps.data.row.sort!=1&&hosAuthCheck(advcategoryMove)">上移</h-button>
+                <h-button table @click="onMove(slotProps.data.row,'down')" v-if="slotProps.data.row.sort!=page.total&&hosAuthCheck(advcategoryMove)">下移</h-button>
                 <h-button table @click="onCancelRemmend(slotProps.data.row)" v-if="hosAuthCheck(advcategoryCancel)">取消推荐</h-button>
             </template>
         </hosJoyTable>
@@ -90,7 +90,7 @@ export default class Categorytabs extends Vue {
             prop: 'imageUrl',
             render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
                 return (
-                    <span class="label_img">
+                    <span class="category_img">
                         {
                             scope.row.imageUrl
                                 ? <a href={scope.row.imageUrl} target="_blank"><img src={scope.row.imageUrl}/></a>
@@ -150,6 +150,7 @@ export default class Categorytabs extends Vue {
                 this.categoryForm.imageUrl = this.categoryForm.imageUrls[0].fileUrl
                 await addCategory(this.categoryForm)
                 this.onFindList()
+                this.onFindCategories()
                 this.dialogVisible = false
             }
         })
@@ -163,15 +164,18 @@ export default class Categorytabs extends Vue {
         }).then(async () => {
             await cancelCategory(val.id)
             this.onFindList()
+            this.onFindCategories()
         }).catch(() => {
 
         })
     }
-
-    async mounted () {
-        this.onFindList()
+    async onFindCategories () {
         const { data } = await findCategoriesList()
         this.options = data
+    }
+    async mounted () {
+        this.onFindList()
+        this.onFindCategories()
     }
 }
 </script>

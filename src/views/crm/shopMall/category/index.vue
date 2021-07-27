@@ -31,18 +31,18 @@
                     <h-button table @click="onEdit(slotProps.data.row)" v-if="hosAuthCheck(categoryEdit)">编辑</h-button>
                     <h-button table @click="onDelete(slotProps.data.row)" v-if="hosAuthCheck(categoryDelete)">删除</h-button>
                     <h-button table @click="onLook(slotProps.data.row)" v-if="hosAuthCheck(categoryLook)">查看</h-button>
-                    <h-button table v-if="slotProps.data.$index!=0&&hosAuthCheck(categoryMove)" @click="onMove(slotProps.data.row,'up')">上移</h-button>
-                    <h-button table v-if="slotProps.data.$index!=tableData.length-1&&hosAuthCheck(categoryMove)" @click="onMove(slotProps.data.row,'down')">下移</h-button>
+                    <h-button table v-if="slotProps.data.row.sort!=1&&hosAuthCheck(categoryMove)" @click="onMove(slotProps.data.row,'up')">上移</h-button>
+                    <h-button table v-if="slotProps.data.row.sort!=page.total&&hosAuthCheck(categoryMove)" @click="onMove(slotProps.data.row,'down')">下移</h-button>
                 </template>
             </hosJoyTable>
         </div>
         <el-dialog title="删除确认" :visible.sync="dialogVisible" width="40%" :before-close="()=>{dialogVisible = false}">
             <p class="mb20" style="color:red">当前品类所关联的类目中，存在以下商品被使用在启用中的楼层，若仍要删除品类，请先从对应楼层中移出该商品或停用楼层</p>
-            <hosJoyTable ref="hosjoyTable" align="center" border :column="dialogLabel" :data="dialogData">
+            <hosJoyTable ref="hosjoyTable" align="center" :maxHeight="500"  border :column="dialogLabel" :data="dialogData">
             </hosJoyTable>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="onGoJump">确 定</el-button>
+                <el-button type="primary" @click="onGoJump">去管理楼层</el-button>
             </span>
         </el-dialog>
     </div>
@@ -127,7 +127,7 @@ export default class Categroies extends Vue {
     }
 
     onGoJump () {
-        this.$router.push({ path: '/goodwork/advmanage' })
+        this.$router.push({ name: 'advmanage', params: { tabs: 'floor' } })
     }
 
     onEdit (val) {

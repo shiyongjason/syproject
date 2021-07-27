@@ -8,17 +8,14 @@
                         <el-input v-model.trim="categoryForm.frontCategoryName" placeholder="请输入" maxlength="10"></el-input>
                     </el-form-item>
                 </div>
-                <div class="query-cont-row">
-                    <div class="query-cont__col">
+
                         <el-form-item label="关联类目：" prop="categoryIdList">
-                        </el-form-item>
                         <div class="query_tag">
                             <el-tag :key="index" v-for="(item,index) in checkList" closable :disable-transitions="false" @close="handleClose(item,index)">
                                 {{item.pcategoryName}}>{{item.scategoryName}}>{{item.name}}
                             </el-tag>
                         </div>
-                    </div>
-                </div>
+                         </el-form-item>
             </el-form>
             <div class="query-cont-row">
                 <div class="query-cont__col">
@@ -74,8 +71,9 @@ export default class Categoryedit extends Vue {
         label: 'name',
         value: 'code'
     }
-    queryParams:object={
-        searchContent: ''
+    queryParams={
+        searchContent: '',
+        frontCategoryId: null
     }
     data:any[] = []
     expandCell:any[]=[]
@@ -99,6 +97,7 @@ export default class Categoryedit extends Vue {
     }
 
     async getList () {
+        this.queryParams.frontCategoryId = this.$route.query.id
         const { data } = await getTreeCategroy(this.queryParams)
         this.data = this.resolveData(data)
     }
@@ -163,6 +162,7 @@ export default class Categoryedit extends Vue {
 
         this.$refs['formmain'].validate(async (valid) => {
             if (valid) {
+                console.log(valid)
                 if (this.$route.query.id) {
                     await editCategroy(this.categoryForm)
                 } else {
@@ -183,6 +183,7 @@ export default class Categoryedit extends Vue {
         if (this.checkList.length > 0) {
             this.$refs['formmain'].clearValidate('categoryIdList')
         }
+        console.log(this.checkList)
         // if (row.level == 1 && checked) {
         //     row.subCategoryList.length > 0 && row.subCategoryList.map(item => {
         //         item.subCategoryList && item.subCategoryList.map(jtem => {
