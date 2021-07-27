@@ -235,16 +235,7 @@ export default class SpuEdit extends Vue {
         showName: [
             { required: true, message: '必填项不能为空', trigger: 'blur' },
             { message: '限中西文字、数字以及空格', trigger: 'blur', pattern: /^[\u4e00-\u9fa50-9a-zA-Z ]+$/ },
-            {
-                validator: (rule, value, callback) => {
-                    if (value && value.trim().length === 0) {
-                        callback(new Error('必填项不能为空'))
-                    } else {
-                        callback()
-                    }
-                },
-                trigger: 'blur'
-            }
+            { whitespace: true, message: '必填项不能为空', trigger: 'blur' }
         ],
         priceVisible: [
             { required: true, message: '必填项不能为空', trigger: 'change' }
@@ -323,14 +314,22 @@ export default class SpuEdit extends Vue {
         let provinceID:any = ''
         for (let i = 0, len = this.nodeList.length; i < len; i++) {
             let item = this.nodeList[i]
+            console.log('🚀 --- onSubmit --- item', item)
             // level == 1 全省
             if (item.level == 1) {
-                // console.log(' --- onSubmit --- item', item)
+                let cityList = []
+                item.children.map(child => {
+                    cityList.push({
+                        cityId: child.value,
+                        cityName: child.label
+                    })
+                })
                 allProvince.push({
                     provinceId: item.value,
                     cityId: '',
                     areaId: '',
-                    provinceName: item.label
+                    provinceName: item.label,
+                    cityList
                 })
                 provinceID = item.value // 获取省ID
                 continue
@@ -343,18 +342,32 @@ export default class SpuEdit extends Vue {
                     areaId: '',
                     cityName: item.label,
                     provinceName: item.parentName
-
                 })
             }
         }
         let result = []
         if (allProvince.length != this.provinceLen) {
-            result = [...allProvince, ...allCity]
+            let tempArr = []
+            let newArr = []
+            // 防止再改会平级数据，建议上面别动，现添加下面方法把市根据省再次重组成tree，
+            allCity.forEach((i, index) => {
+                if (tempArr.indexOf(i.provinceId) === -1) {
+                    newArr.push({
+                        provinceName: i.provinceName,
+                        provinceId: i.provinceId,
+                        cityList: [i]
+                    })
+                    tempArr.push(i.provinceId)
+                } else {
+                    newArr[tempArr.indexOf(i.provinceId)].cityList.push(i)
+                }
+            })
+            result = [...allProvince, ...newArr]
         } else {
             result = [{ provinceId: '0', cityId: '0', areaId: '0' }] // 全国
         }
         this.form.saleRules = result
-        // console.log('--- onSubmit --- this.form.saleRules', this.form)
+        console.log('--- onSubmit --- this.form.saleRules', this.form)
         /** end  */
         this.$refFormmain.validate(async (value, r) => {
             if (value) {
@@ -529,7 +542,7 @@ export default class SpuEdit extends Vue {
     }
 
     // 构造省市2级数据
-    recursiveChineseArea (array = [], frequency = 0, name = '') {
+    recursiveChineseArea (array = [], frequency = 0, name = '', parentChildren = null) {
         let level = frequency + 1 // MARK level 0代表全国，1代表省，2代表市
         if (frequency < 2) {
             return array.map(item => {
@@ -537,9 +550,10 @@ export default class SpuEdit extends Vue {
                     level,
                     value: item.countryId || item.cityId || item.provinceId, // 区域ID
                     label: item.name,
-                    children: this.recursiveChineseArea(item.cities || item.countries, frequency + 1, item.name || ''),
+                    children: this.recursiveChineseArea(item.cities || item.countries, frequency + 1, item.name || '', item.cities || item.countries),
                     parentID: (level == 0 || level == 1) ? '' : item.provinceId || item.cityId || item.countryId, // 父级ID
-                    parentName: name // 父级Name
+                    parentName: name, // 父级Name
+                    parentChildren: parentChildren
 
                 }
             })
@@ -591,18 +605,21 @@ export default class SpuEdit extends Vue {
         if (this.form.saleRules && this.form.saleRules.length > 0) {
             let checkedNodes = []
             for (let item of this.form.saleRules) {
-                if (item.provinceId == '0' && item.cityId == '0' && item.areaId == '0') {
+                if (item.provinceId == '0') {
                     this.$refSelectCityTree.setCheckedKeys(['']) // 全国
                     // break
                     return
                 }
-                if (!item.cityId) {
+                /* if (!item.cityId) {
                     checkedNodes.push(item.provinceId)// 某省全部
                     continue
                 }
                 if (item.cityId) {
                     checkedNodes.push(item.cityId) // 某市
-                }
+                } */
+                item.cityList.map(c => {
+                    checkedNodes.push(c.cityId)
+                })
             }
             this.$refSelectCityTree.setCheckedKeys(
                 checkedNodes

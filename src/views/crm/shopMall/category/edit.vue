@@ -47,6 +47,7 @@
 </template>
 <script lang='tsx'>
 import { Vue, Component } from 'vue-property-decorator'
+import { State, namespace, Getter, Action } from 'vuex-class'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 // import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
 import { getTreeCategroy, addCategroy, getCateGroyDetail, editCategroy } from './api/index'
@@ -61,6 +62,8 @@ export default class Categoryedit extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
+    @Action('setNewTags') setNewTags!: Function
+
     uploadParameters = {
         updateUid: '',
         reservedName: false
@@ -177,13 +180,17 @@ export default class Categoryedit extends Vue {
                 } else {
                     await addCategroy(this.categoryForm)
                 }
-                this.$router.push({ path: '/goodwork/categorymanage' })
+                this.$router.go(-1)
+
+                this.setNewTags((this.$route.fullPath).split('?')[0])
             }
         })
     }
 
     onCancel () {
-        this.$router.push({ path: '/goodwork/categorymanage' })
+        this.$router.go(-1)
+
+        this.setNewTags((this.$route.fullPath).split('?')[0])
     }
 
     onChecked (row, cnode) {
