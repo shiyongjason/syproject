@@ -159,8 +159,8 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 outboundType: '',
-                dealer: '',
-                dealerPhone: ''
+                dealer: this.$route.query.dealer ? this.$route.query.dealer : '',
+                dealerPhone: this.$route.query.phone ? this.$route.query.phone : ''
             },
             searchParams: {},
             tableData: [],
@@ -312,9 +312,12 @@ export default {
         })
     },
     mounted () {
-        if (this.$route.params.dealer && this.$route.params.dealer !== undefined) {
-            this.queryParams.dealer = decodeURIComponent(this.$route.params.dealer)
-        }
+        // if (this.$route.params.dealer && this.$route.params.dealer !== undefined) {
+        //     this.queryParams.dealer = decodeURIComponent(this.$route.params.dealer)
+        // }
+        // if (this.$route.params.phone && this.$route.params.phone !== undefined) {
+        //     this.queryParams.phone = decodeURIComponent(this.$route.params.phone)
+        // }
         this.onSearch()
         this.findCloudOutboundCategoryList()
     },

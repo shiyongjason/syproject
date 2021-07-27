@@ -18,7 +18,7 @@
         </div>
         <div class="cloud-echart">
             <smartequip v-if="equipshow === tabs.DEVICE_TAB" />
-            <timeequip :totalTime="cloudDeviceCount.runTimeCount" @queryTotalTime="queryTotalTime"  v-if="equipshow === tabs.RUNTIME_TAB"/>
+            <timeequip ref="timeequip" :totalTime="cloudDeviceCount.runTimeCount" @queryTotalTime="queryTotalTime"  v-if="equipshow === tabs.RUNTIME_TAB"/>
             <networkequip :totalNetworkCount="cloudDeviceCount.deviceNetworkCount" @queryTotalNetworkCount="queryNetworkCount" v-if="equipshow === tabs.NETWORK_TAB"/>
         </div>
 
@@ -72,6 +72,14 @@ export default {
         }
     },
     mounted () {
+        if (this.$route.params.tab) {
+            this.equipshow = this.$route.params.tab
+        }
+        if (this.$route.params.phone) {
+            this.$nextTick(() => {
+                this.$refs['timeequip'].queryByPhone(this.$route.params.phone)
+            })
+        }
         this.findCloudDeviceCount()
     }
 }
