@@ -71,7 +71,7 @@ export default class Categoryedit extends Vue {
         label: 'name',
         value: 'code'
     }
-    queryParams:any={
+    queryParams={
         searchContent: '',
         frontCategoryId: null
     }
