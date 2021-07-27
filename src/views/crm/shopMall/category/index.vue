@@ -38,7 +38,7 @@
         </div>
         <el-dialog title="删除确认" :visible.sync="dialogVisible" width="40%" :before-close="()=>{dialogVisible = false}">
             <p class="mb20" style="color:red">当前品类所关联的类目中，存在以下商品被使用在启用中的楼层，若仍要删除品类，请先从对应楼层中移出该商品或停用楼层</p>
-            <hosJoyTable ref="hosjoyTable" align="center" border :column="dialogLabel" :data="dialogData">
+            <hosJoyTable ref="hosjoyTable" align="center" :maxHeight="500"  border :column="dialogLabel" :data="dialogData">
             </hosJoyTable>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
@@ -127,7 +127,7 @@ export default class Categroies extends Vue {
     }
 
     onGoJump () {
-        this.$router.push({ path: '/goodwork/advmanage' })
+        this.$router.push({ name: 'advmanage', params: { tabs: 'floor' } })
     }
 
     onEdit (val) {

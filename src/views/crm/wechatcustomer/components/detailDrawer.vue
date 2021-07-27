@@ -53,7 +53,8 @@
                             <div class="drawer-table_col"><b>{{staticInfo.registerMemberNum}}</b>
                                 <p>注册用户（个）</p>
                             </div>
-                            <div class="drawer-table_col"><b> {{$multipliedBy(staticInfo.conversionRate, 100)}}</b>
+                            <div class="drawer-table_col">
+                                <b> {{$multipliedBy(staticInfo.conversionRate||0, 100)}}</b>
                                 <p>注册转化率（%）</p>
                             </div>
                         </div>
@@ -81,6 +82,7 @@
 import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
+
 export default {
     name: 'userOrdepart',
     data () {
@@ -272,7 +274,6 @@ export default {
         }
     },
     mounted () {
-
     }
 }
 </script>
