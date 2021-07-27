@@ -56,7 +56,7 @@
                 </template>
             </basicTable>
         </div>
-        <h-drawer :title="drawerMsg.title" :visible="drawerShow" :beforeClose="onCancel" size='500px'>
+        <h-drawer :title="drawerMsg.title" :visible="drawerShow" :beforeClose="onCancel" size='500px' @close="handleClose">
             <template #connect>
                 <el-form ref="suggest" :rules="rules" :model="suggest" class="suggest" label-width="100px">
                     <el-form-item label="供应商：" class="mb-5">
@@ -138,6 +138,7 @@ export default {
     data () {
         return {
             auditResult: '',
+            areaOptions: [],
             categoryProps: {
                 emitPath: false,
                 multiple: true
@@ -196,8 +197,11 @@ export default {
             brandAuthorizationInfo: 'brandAuthorizationInfo',
             brandAreaInfo: 'brandAreaInfo'
         }),
+        ...mapGetters({
+            nestDdata: 'nestDdata'
+        }),
         ...mapGetters('brand', {
-            areaOptions: 'cityOptions'
+            // areaOptions: 'cityOptions'
         }),
         ...mapState('category', {
             categoriesTree: 'categoriesTree'
@@ -232,6 +236,9 @@ export default {
             'findBrandAreaDetail',
             'getChiness'
         ]),
+        ...mapActions({
+            findNest: 'findNest'
+        }),
         ...mapActions('category', [
             'findAllCategory'
         ]),
@@ -239,7 +246,8 @@ export default {
             // 获取全类目
             await this.findAllCategory()
             // 获取省市区
-            await this.getChiness()
+            // await this.getChiness()
+            await this.getProvinceOptions()
         },
         onQuery () {
             const { ...params } = { ...this.queryParams }
@@ -271,23 +279,11 @@ export default {
             this.$refs.auditResult.clearValidate()
             this.$refs.auditRemark.resetField()
         },
-        // 级联面板回调
-        // cascaderPanelChange () {
-
-        // },
-
         async showDrawer (scope, type) {
             await this.findBrandAreaDetail({ id: scope.id })
             this.drawerMsg = {
                 ...this.brandAreaInfo,
                 categoryIdsArr: this.brandAreaInfo.categoryIds.split(',') || []
-                // ,
-                // areaArr: this.brandAreaInfo.brandAuthorizationSalesAreaList.map(item => {
-                //     if (item.cityId && item.cityId != '0') {
-                //         return [item.provinceId, item.cityId]
-                //     }
-                //     return [item.provinceId]
-                // })
             }
             this.drawerMsg.areaArr = this.dyadicArrToObjArr(this.brandAreaInfo.brandAuthorizationSalesAreaList)
             this.suggest = {
@@ -306,33 +302,51 @@ export default {
                 this.$refs['suggest'].clearValidate()
             })
         },
+        handleClose () {
+            this.drawerMsg.areaArr = []
+            this.drawerShow = false
+            this.$nextTick(() => {
+                this.$refs['suggest'].clearValidate()
+            })
+        },
         dyadicArrToObjArr (value) {
             let result = []
             const provinceObj = {}
-            const cityArr = this.areaOptions.map(item => {
-                provinceObj[item.value] = item.children.map(cItem => [item.value, cItem.value])
-                return item.children.map(cItem => [item.value, cItem.value])
-            })
             value.forEach(item => {
-                if (item.provinceId == '0') {
-                    result = result.concat(cityArr.flat())
-                } else if (item.cityId == '0') {
-                    result = result.concat(provinceObj[item.provinceId])
-                } else {
-                    let thisResult = []
-                    if (item.provinceId != null) {
-                        thisResult.push([item.provinceId])
-                    }
-                    if (item.cityId != null) {
-                        thisResult.push(item.cityId)
-                    }
-                    if (item.countryId != null) {
-                        thisResult.push(item.countryId)
-                    }
-                    result.push(thisResult)
+                let thisResult = []
+                if (item.provinceId != null && item.provinceId != '0') {
+                    thisResult = thisResult.concat([item.provinceId])
                 }
+                if (item.cityId != null && item.cityId != '0') {
+                    thisResult = thisResult.concat(item.cityId)
+                }
+                if (item.areaId != null && item.areaId != '0') {
+                    thisResult = thisResult.concat(item.areaId)
+                }
+                result.push(thisResult)
             })
             return result
+        },
+        async getProvinceOptions () {
+            await this.findNest()
+            this.areaOptions = this.nestDdata.map(i => {
+                return {
+                    label: i.name,
+                    value: i.provinceId,
+                    children: i.cities.map(j => {
+                        return {
+                            label: j.name,
+                            value: j.cityId,
+                            children: j.countries.map(r => {
+                                return {
+                                    label: r.name,
+                                    value: r.countryId
+                                }
+                            })
+                        }
+                    })
+                }
+            })
         },
         onSizeChange (val) {
             this.paginationData.pageSize = val
