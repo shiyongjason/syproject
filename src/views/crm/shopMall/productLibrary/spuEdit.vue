@@ -234,7 +234,17 @@ export default class SpuEdit extends Vue {
         ],
         showName: [
             { required: true, message: '必填项不能为空', trigger: 'blur' },
-            { message: '限中西文字、数字以及空格', trigger: 'blur', pattern: /^[\u4e00-\u9fa50-9a-zA-Z ]+$/ }
+            { message: '限中西文字、数字以及空格', trigger: 'blur', pattern: /^[\u4e00-\u9fa50-9a-zA-Z ]+$/ },
+            {
+                validator: (rule, value, callback) => {
+                    if (value && value.trim().length === 0) {
+                        callback(new Error('必填项不能为空'))
+                    } else {
+                        callback()
+                    }
+                },
+                trigger: 'blur'
+            }
         ],
         priceVisible: [
             { required: true, message: '必填项不能为空', trigger: 'change' }
@@ -315,6 +325,7 @@ export default class SpuEdit extends Vue {
             let item = this.nodeList[i]
             // level == 1 全省
             if (item.level == 1) {
+                // console.log(' --- onSubmit --- item', item)
                 allProvince.push({
                     provinceId: item.value,
                     cityId: '',
@@ -343,7 +354,7 @@ export default class SpuEdit extends Vue {
             result = [{ provinceId: '0', cityId: '0', areaId: '0' }] // 全国
         }
         this.form.saleRules = result
-        console.log('🚀 --- onSubmit --- this.form.saleRules', this.form)
+        // console.log('--- onSubmit --- this.form.saleRules', this.form)
         /** end  */
         this.$refFormmain.validate(async (value, r) => {
             if (value) {
