@@ -62,6 +62,9 @@ export default class Advmanage extends Vue {
 
     mounted () {
         this.onFindNum()
+        if (this.$route.params.tabs) {
+            this.activeName = this.$route.params.tabs
+        }
     }
     activated () {
         if (this.activeName == 'floor') {
