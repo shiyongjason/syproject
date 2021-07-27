@@ -126,7 +126,9 @@ const state = {
     complaintOrderList: [],
     complaintOrderDetail: {},
     complaintProcessOrderList: [],
-    complaintProcessOrderDetail: {}
+    complaintProcessOrderDetail: {},
+    cloudServiceMindList: [],
+    cloudServiceMindListPagination: {}
 }
 
 const getters = {
@@ -262,7 +264,9 @@ const getters = {
     complaintOrderList: state => state.complaintOrderList,
     complaintOrderDetail: state => state.complaintOrderDetail,
     complaintProcessOrderList: state => state.complaintProcessOrderList,
-    complaintProcessOrderDetail: state => state.complaintProcessOrderDetail
+    complaintProcessOrderDetail: state => state.complaintProcessOrderDetail,
+    cloudServiceMindList: state => state.cloudServiceMindList,
+    cloudServiceMindListPagination: state => state.cloudServiceMindListPagination
 }
 
 const mutations = {
@@ -627,6 +631,12 @@ const mutations = {
     },
     [cloud.GET_CLOUD_MERCHANT_COMPLAINT_PROCESS_ORDER_DETAIL] (state, payload) {
         state.complaintProcessOrderDetail = payload
+    },
+    [cloud.GET_CLOUD_SERVICE_REMIND_LIST] (state, payload) {
+        state.cloudServiceMindList = payload
+    },
+    [cloud.GET_CLOUD_SERVICE_REMIND_LIST_PAGINATION] (state, payload) {
+        state.cloudServiceMindListPagination = payload
     }
 }
 
@@ -1162,6 +1172,15 @@ const actions = {
     async getComplaintProcessOrderDetail ({ commit }, params) {
         const { data } = await Api.getComplaintProcessOrderDetail(params)
         commit(cloud.GET_CLOUD_MERCHANT_COMPLAINT_PROCESS_ORDER_DETAIL, data)
+    },
+    async findCloudServiceMindList ({ commit }, params) {
+        const { data } = await Api.getServiceRemindList(params)
+        commit(cloud.GET_CLOUD_SERVICE_REMIND_LIST, data.data.records)
+        commit(cloud.GET_CLOUD_SERVICE_REMIND_LIST_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
     }
 }
 export default {
