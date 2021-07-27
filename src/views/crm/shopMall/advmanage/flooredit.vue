@@ -320,14 +320,16 @@ export default class Flooredit extends Vue {
                 } else {
                     await saveFloor(this.floorForm)
                 }
-                this.$router.push('/goodwork/advmanage')
+                this.$router.go(-1)
+
                 this.setNewTags((this.$route.fullPath).split('?')[0])
             }
         })
     }
 
     onCancel () {
-        this.$router.push('/goodwork/advmanage')
+        this.$router.go(-1)
+
         this.setNewTags((this.$route.fullPath).split('?')[0])
     }
     async mounted () {
