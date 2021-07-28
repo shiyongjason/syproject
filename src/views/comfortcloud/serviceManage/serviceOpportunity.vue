@@ -130,7 +130,7 @@ export default {
                 name: 'equipemtOverview',
                 params: {
                     tab: 'RUNTIME_TAB',
-                    phone: val.agentPhone
+                    phone: val.phone
                 }
             })
         },
