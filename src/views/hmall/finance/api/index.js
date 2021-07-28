@@ -53,20 +53,44 @@ export const findMerchantAll = (params) => {
     return axios.get(`${B2bUrl}fund/boss/fund/finance/overview`, { params })
 }
 // 资金代采 交易记录线上回款
+// export const findOnlineRepay = (params) => {
+//     return axios.get(`${B2bUrl}fund/boss/repay/online-page`, { params })
+// }
+// 资金代采 交易记录单分享订单回款
 export const findOnlineRepay = (params) => {
-    return axios.get(`${B2bUrl}fund/boss/repay/online-page`, { params })
+    return axios.get(`${B2bUrl}fund/boss/repay/trade-record-sale`, { params })
 }
 // 资金代采 交易记录线下回款
+// export const findOfflineRepay = (params) => {
+//     return axios.get(`${B2bUrl}fund/boss/repay/offline-page`, { params })
+// }
+// 资金代采 交易记录线下提前还款、网银支付提前还款
 export const findOfflineRepay = (params) => {
-    return axios.get(`${B2bUrl}fund/boss/repay/offline-page`, { params })
+    return axios.get(`${B2bUrl}fund/boss/repay/trade-record-advance`, { params })
 }
 // 资金代采 交易记录预付款
+// export const findPrepayRepay = (params) => {
+//     return axios.get(`${B2bUrl}fund/boss/repay/prepay-page`, { params })
+// }
+// 资金代采 交易记录线下预付款、网银支付预付款
 export const findPrepayRepay = (params) => {
-    return axios.get(`${B2bUrl}fund/boss/repay/prepay-page`, { params })
+    return axios.get(`${B2bUrl}fund/boss/agent/order/trade-record-prepay`, { params })
 }
 // 资金代采 交易记录线上回款 线下回款 预付款合计
-export const findRepayAll = (params) => {
-    return axios.get(`${B2bUrl}fund/boss/repay/trade-record/statistics`, { params })
+// export const findRepayAll = (params) => {
+//     return axios.get(`${B2bUrl}fund/boss/repay/trade-record/statistics`, { params })
+// }
+// 资金代采 单分享订单回款金额合计
+export const findOnlineRepayAll = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/repay/trade-record-sale/total-amount`, { params })
+}
+// 资金代采 提前还款金额、网银支付提前还款合计
+export const findOfflineRepayAll = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/repay/trade-record-advance/total-amount`, { params })
+}
+// 资金代采 预付款金额合计、网银支付预付款合计
+export const findAdvanceRepayAll = (params) => {
+    return axios.get(`${B2bUrl}fund/boss/agent/order/trade-record-prepay/total-amount`, { params })
 }
 // 资金代采 交易记录统计
 export const findRepayStatist = (params) => {
