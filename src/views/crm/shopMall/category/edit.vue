@@ -123,6 +123,7 @@ export default class Categoryedit extends Vue {
         })
         this.$nextTick(async () => {
             console.log(_tags)
+            this.categoryForm.categoryIdList = _tags
             this.$refs['tree'].setCheckedKeys(_tags)
             // 渲染时候会有个先后
             setTimeout(() => {
