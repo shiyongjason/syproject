@@ -385,6 +385,29 @@ export default [
                         component: () => import('@/views/comfortcloud/merchant/merchantMemberCase.vue')
                     }
                 ]
+            },
+            {
+                path: 'merchantMemange',
+                meta: {
+                    title: '服务管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'serviceOpportunity',
+                        name: 'serviceOpportunity',
+                        meta: {
+                            title: '服务机会',
+                            tagName: '服务机会',
+                            parentName: '舒适云概览',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/serviceManage/serviceOpportunity.vue')
+                    }
+                ]
             }
         ]
     }
