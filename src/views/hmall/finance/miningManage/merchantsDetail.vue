@@ -169,7 +169,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>线下提前还款<span>（元）</span></p>
-                            <p>{{detail.offlineRepayAmount|| 0| moneyShow}}</p>
+                            <p>{{detail.offlineAdvanceRepayAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -178,7 +178,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>单分享订单回款<span>（元）</span></p>
-                            <p>{{detail.onlineRepayAmount|| 0| moneyShow}}</p>
+                            <p>{{detail.saleRepayAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -205,7 +205,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>线下转账预付款<span>（元）</span></p>
-                            <p>{{detail.prepayAmount|| 0| moneyShow}}</p>
+                            <p>{{detail.offlinePrepayAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -214,7 +214,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>网银支付预付款<span>（元）</span></p>
-                            <p>{{detail.prepayAmount|| 0| moneyShow}}</p>
+                            <p>{{detail.onlineBankingPrepayAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -223,7 +223,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>网银支付提前还款<span>（元）</span></p>
-                            <p>{{detail.prepayAmount|| 0| moneyShow}}</p>
+                            <p>{{detail.onlineBankingAdvanceRepayAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                 </div>
