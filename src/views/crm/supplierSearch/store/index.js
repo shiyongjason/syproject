@@ -1,4 +1,4 @@
-import * as Type from '@/views/crm/supplierSearch/stroe/types'
+import * as Type from '@/views/crm/supplierSearch/store/types'
 import * as Api from '@/views/crm/supplierSearch/api'
 
 const state = {
