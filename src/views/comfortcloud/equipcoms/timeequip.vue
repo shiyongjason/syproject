@@ -7,12 +7,10 @@
                 <h3>总运行时长: {{totalTime ? totalTime : '0'}} 小时</h3>
             </div>
             <div class="echart-time">
-                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="开始日期" v-model="smartparams.startDate"
-                                :picker-options="pickerOptionsStart" :clearable="false" :editable="false">
+                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="开始日期" v-model="smartparams.startDate" :picker-options="pickerOptionsStart" :clearable="false" :editable="false">
                 </el-date-picker>
                 <span class="ml10 mr10">-</span>
-                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="结束日期" v-model="smartparams.endDate"
-                                :picker-options="pickerOptionsEnd" :clearable="false" :editable="false">
+                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="结束日期" v-model="smartparams.endDate" :picker-options="pickerOptionsEnd" :clearable="false" :editable="false">
                 </el-date-picker>
                 <el-button type="primary" class="ml20" @click="onFindRuntimeR(smartparams.modeType + 'Line',
                 smartparams.modeType + 'Bar')">
@@ -37,17 +35,19 @@
                         <el-input v-model="homeParams.phone" placeholder="输入手机号" maxlength="11"></el-input>
                     </div>
                 </div>
+                <div class="query-cont-col" v-if="homeParams.modeType != 'all'">
+                    <div class="query-col-title">设备ID：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="homeParams.subIotId" placeholder="输入设备ID"></el-input>
+                    </div>
+                </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">注册时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker type="date" clearable v-model="homeParams.startDate"
-                                        value-format="yyyy-MM-dd" placeholder="开始日期"
-                                        :picker-options="pickerHomeDetailStart">
+                        <el-date-picker type="date" clearable v-model="homeParams.startDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerHomeDetailStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker type="date" clearable v-model="homeParams.endDate"
-                                        value-format="yyyy-MM-dd" placeholder="结束日期"
-                                        :picker-options="pickerHomeDetailEnd">
+                        <el-date-picker type="date" clearable v-model="homeParams.endDate" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerHomeDetailEnd">
                         </el-date-picker>
                     </div>
                 </div>
@@ -55,8 +55,7 @@
                     <div class="query-col-title">设备种类：</div>
                     <div class="query-col-input">
                         <el-select v-model="homeParams.type" clearable>
-                            <el-option :label="item.name" :value="item.type" v-for="item in cloudHomeDetailDict"
-                                       :key="item.type"></el-option>
+                            <el-option :label="item.name" :value="item.type" v-for="item in cloudHomeDetailDict" :key="item.type"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -68,11 +67,8 @@
             </div>
         </div>
         <div class="page-body-cont">
-<!--            @onSortChange="onSortChange"-->
-            <basicTable :tableLabel="tableLabelSwitch" :tableData="cloudHomeDetailList"
-                        :pagination="cloudHomeDetailPagination"
-                        isShowIndex @onCurrentChange='onCurrentChange'
-                        @onSizeChange='onSizeChange'>
+            <!--            @onSortChange="onSortChange"-->
+            <basicTable :tableLabel="tableLabelSwitch" :tableData="cloudHomeDetailList" :pagination="cloudHomeDetailPagination" isShowIndex @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'>
             </basicTable>
         </div>
     </div>
@@ -99,6 +95,7 @@ export default {
                 pageSize: 10,
                 pageNumber: 1,
                 phone: '',
+                subIotId: '',
                 startDate: '',
                 endDate: '',
                 type: '',
@@ -179,8 +176,13 @@ export default {
                     temp = Const.rtTableLabel
                     break
                 case 'Lct':
+                case 'Lyk':
+                case 'Lyg':
+                case 'Lyt':
                     temp = Const.lctTableLabel
                     break
+                default:
+                    temp = Const.totalTableLabel
             }
             return temp
         }
@@ -385,6 +387,7 @@ export default {
                 pageSize: 10,
                 pageNumber: 1,
                 phone: '',
+                subIotId: '',
                 type: '',
                 startDate: '',
                 endDate: '',
@@ -405,41 +408,41 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-    .echart-wrap {
+.echart-wrap {
+    display: flex;
+    padding: 20px 10px;
+    min-height: 500px;
+
+    .chart-flex2 {
+        flex: 1.8;
+    }
+
+    .chart-flex1 {
+        flex: 1;
+    }
+}
+
+.smart-time {
+    display: flex;
+    padding: 30px 12px;
+
+    div {
         display: flex;
-        padding: 20px 10px;
-        min-height: 500px;
-
-        .chart-flex2 {
-            flex: 1.8;
-        }
-
-        .chart-flex1 {
-            flex: 1;
-        }
+        flex: 1;
+        align-items: center;
     }
+}
 
-    .smart-time {
-        display: flex;
-        padding: 30px 12px;
+.home-detail-title {
+    padding-bottom: 20px;
+}
 
-        div {
-            display: flex;
-            flex: 1;
-            align-items: center;
-        }
-    }
+/deep/ .el-tabs__item.is-active {
+    color: #333;
+    background: transparent;
+}
 
-    .home-detail-title {
-        padding-bottom: 20px;
-    }
-
-    /deep/ .el-tabs__item.is-active {
-        color: #333;
-        background: transparent;
-    }
-
-    /deep/ .el-tabs__header {
-        margin: 0
-    }
+/deep/ .el-tabs__header {
+    margin: 0;
+}
 </style>

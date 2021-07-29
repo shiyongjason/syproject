@@ -4,8 +4,8 @@
             <span>告警分析</span>
         </div>
         <div class="page-body-cont chart-wrapper">
-            <div class="ring-chart" ref="ringChartOption" style="height: 420px;width: 300px;float: left"></div>
-            <div class="line-chart" ref="lineChartOption" style="height: 420px;width: 720px;float: left"></div>
+            <div class="ring-chart" ref="ringChartOption" style="height: 420px;width: 320px;float: left"></div>
+            <div class="line-chart" ref="lineChartOption" style="height: 420px;width: 1120px;float: left"></div>
         </div>
         <div class="page-body-cont query-cont spanflex">
             <span>告警明细</span>
@@ -61,15 +61,14 @@ const ringChartOption = {
     series: {
         name: '告警离线时长分布',
         type: 'pie',
-        radius: ['0', '80%'],
+        radius: ['0', '55%'],
         label: {
             show: false,
             position: 'center',
             normal: {
                 show: true,
-                position: 'inner', // 标签的位置
                 textStyle: {
-                    fontWeight: 100,
+                    fontWeight: 500,
                     fontSize: 12 // 文字的字体大小
                 },
                 formatter: '{d}%'
@@ -78,10 +77,10 @@ const ringChartOption = {
         },
         data: [ // #4472c3 #4472c3 #4472c3 #4472c3 #4472c3
             { value: 0, name: '30分钟内', selfLabel: 'innerThirtyCount', itemStyle: { color: '#4472c3' } },
-            { value: 0, name: '30-60分钟', selfLabel: 'thirtyToSixtyCount', itemStyle: { color: '#FEC109' } },
+            { value: 0, name: '30-60分钟', selfLabel: 'thirtyToSixtyCount', itemStyle: { color: '#FE6169' } },
             { value: 0, name: '60-90分钟', selfLabel: 'sixtyToNinetyCount', itemStyle: { color: '#209FFF' } },
             { value: 0, name: '90-120分钟', selfLabel: 'ninetyToOneHundredAndTwentyCount', itemStyle: { color: '#FFBF6A' } },
-            { value: 0, name: '超120分钟', selfLabel: 'overOneHundredAndTwentyCount', itemStyle: { color: '#ffbff5' } }
+            { value: 0, name: '超120分钟', selfLabel: 'overOneHundredAndTwentyCount', itemStyle: { color: '#22bff5' } }
         ]
     }
 }
@@ -111,7 +110,7 @@ const lineChartOption = {
             rotate: 28, // 文字逆时针旋转45°
             textStyle: { // 文字样式
                 color: 'black',
-                borderWidth: 10,
+                borderWidth: 1,
                 borderColor: '#fff',
                 fontSize: 9,
                 fontFamily: 'Microsoft YaHei'

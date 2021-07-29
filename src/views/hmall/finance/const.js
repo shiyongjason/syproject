@@ -323,3 +323,15 @@ export const DEA_TYPE_MAP = new Map([
     [2, '提前还款'],
     [4, '预付款']
 ])
+
+// 预付款付款方式
+export const PAY_METHOD = [
+    {
+        label: '网银支付',
+        value: 20
+    },
+    {
+        label: '线下转账',
+        value: 10
+    }
+]
