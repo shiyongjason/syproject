@@ -5,6 +5,8 @@ export const getPaymentOrderList = (params) => axios.get('/project/api/payment-o
 export const getPaymentOrderTotal = (params) => axios.get('/project/api/payment-orders/total-amount', { params })
 // 支付单详情
 export const getPaymentOrderDetail = (paymentOrderId) => axios.get(`/project/api/payment-orders/${paymentOrderId}`)
+// 支付单财务审核
+export const updatePaymentOrderStatusFinance = (params) => axios.post('/project/api/payment-orders/segment-finance/audit', params)
 // 支付单审核通过
 export const updatePaymentOrderStatusPass = (paymentOrderId, params) => axios.patch(`/project/api/payment-orders/${paymentOrderId}/examine-pass`, params)
 // 支付单审核不通过

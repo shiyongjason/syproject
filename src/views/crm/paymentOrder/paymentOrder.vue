@@ -176,7 +176,7 @@ import LoanTransferContent from './components/LoanTransferContent'
 import ViewHandoverRecords from './components/ViewHandoverRecords'
 import { getLoanTransferContent, getLoanTransferRecord, getLoanTransferCheck } from './api/index'
 import UploadPayDialog from '../funds/components/uploadPayDialog.vue'
-import { PAYMENT_ORDER_STATUS_OPTIONS, PAYMENT_ORDER_STATUS_KEY } from '@/views/crm/paymentOrder/const'
+import paymentOrderConst from '@/views/crm/paymentOrder/const'
 export default {
     name: 'payOrder',
     components: {
@@ -247,8 +247,8 @@ export default {
             paymentOrderId: '',
             LoanTransferContent: '',
             loanTransferRecord: '',
-            paymentOrderStatusOptions: PAYMENT_ORDER_STATUS_OPTIONS,
-            paymentOrderStatusKey: PAYMENT_ORDER_STATUS_KEY
+            paymentOrderStatusOptions: paymentOrderConst.PAYMENT_ORDER_STATUS_OPTIONS,
+            paymentOrderStatusKey: paymentOrderConst.PAYMENT_ORDER_STATUS_KEY
         }
     },
     computed: {
