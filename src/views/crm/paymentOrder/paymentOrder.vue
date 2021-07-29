@@ -50,7 +50,7 @@
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.status" placeholder="请选择" multiple :clearable=true>
-                            <el-option :label="item.value" :value="item.key" v-for="item in PaymentOrderDict.status.list" :key="item.key"></el-option>
+                            <el-option :label="value" :value="key" v-for="[key, value] of paymentOrderStatusOptions" :key="key"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -100,7 +100,7 @@
                     <span class="colblue">{{ scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
                 </template>
                 <template slot="status" slot-scope="scope">
-                    <span class="colblue">{{ scope.data.row.status | attributeComputed(PaymentOrderDict.status.list) }}</span>
+                    <span class="colblue">{{ paymentOrderStatusOptions.get(scope.data.row.status) }}</span>
                 </template>
                 <template slot="sign" slot-scope="scope">
                     <span>{{ scope.data.row.sign?'是':'否'}}</span>
@@ -117,9 +117,9 @@
                     <h-button v-if="scope.data.row.operateStatus&&hosAuthCheck(Auths.LENDER_HANDOVER)" table @click="()=>openLoanTransferContent(scope.data.row.id,scope.data.row.operateStatus)">
                         {{scope.data.row.operateStatus===1?'发起放款交接':'查看放款交接'}}
                     </h-button>
-                    <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW) && PaymentOrderDict.status.list[0].key === scope.data.row.status">审核</h-button>
+                    <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW) && (paymentOrderStatusKey.FINANCE_AUDIT === scope.data.row.status || paymentOrderStatusKey.OPERATE_AUDIT === scope.data.row.status)">审核</h-button>
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenFundsDialog(scope.data.row.id, scope.data.row.status)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM) &&
-                              (PaymentOrderDict.status.list[2].key === scope.data.row.status || PaymentOrderDict.status.list[5].key === scope.data.row.status)">
+                              (paymentOrderStatusKey.DOWN_PAYMENT_CONFIRM === scope.data.row.status || paymentOrderStatusKey.REMAINING_PAYMENT_CONFIRM === scope.data.row.status)">
                         支付确认
                     </h-button>
                     <!-- <h-button table @click="tableOpenPrevPayDialog(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV) && (
@@ -172,11 +172,11 @@ import ConfirmReceiptDialog from './components/confirmReceiptDialog'
 import LookReceiptDetail from './components/lookReceiptDetail'
 import FundsDialog from '@/views/crm/funds/components/fundsDialog'
 import * as Auths from '@/utils/auth_const'
-import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import LoanTransferContent from './components/LoanTransferContent'
 import ViewHandoverRecords from './components/ViewHandoverRecords'
 import { getLoanTransferContent, getLoanTransferRecord, getLoanTransferCheck } from './api/index'
 import UploadPayDialog from '../funds/components/uploadPayDialog.vue'
+import { PAYMENT_ORDER_STATUS_OPTIONS, PAYMENT_ORDER_STATUS_KEY } from '@/views/crm/paymentOrder/const'
 export default {
     name: 'payOrder',
     components: {
@@ -244,10 +244,11 @@ export default {
             paymentStatus: '',
             paymentParams: {}, // 公共
             fundsDialogDetail: {},
-            PaymentOrderDict,
             paymentOrderId: '',
             LoanTransferContent: '',
-            loanTransferRecord: ''
+            loanTransferRecord: '',
+            paymentOrderStatusOptions: PAYMENT_ORDER_STATUS_OPTIONS,
+            paymentOrderStatusKey: PAYMENT_ORDER_STATUS_KEY
         }
     },
     computed: {
