@@ -200,6 +200,10 @@ export default {
             findCloudHomeDetailSearchDict: 'findCloudHomeDetailSearchDict',
             getCloudHomeModeTypeList: 'getCloudHomeModeTypeList'
         }),
+        queryByPhone (phone) {
+            this.homeParams.phone = phone
+            this.findCloudHomeDetailList(this.homeParams)
+        },
         onSortChange (val) {
             if (val.order) {
                 this.queryParams.createTimeSortType = val.order === 'descending' ? '2' : '1'
@@ -381,8 +385,6 @@ export default {
         },
         handleClick () {
             this.smartparams.modeType = this.homeParams.modeType
-            this.onFindRuntimeR(this.smartparams.modeType + 'Line',
-                this.smartparams.modeType + 'Bar')
             Object.assign(this.homeParams, {
                 pageSize: 10,
                 pageNumber: 1,
@@ -394,11 +396,8 @@ export default {
                 modeType: this.homeParams.modeType
             })
             this.findCloudHomeDetailList(this.homeParams)
-            this.$emit('queryTotalTime', {
-                startDate: this.smartparams.startDate,
-                endDate: this.smartparams.endDate,
-                type: this.homeParams.modeType === 'all' ? '' : this.homeParams.modeType
-            })
+            this.onFindRuntimeR(this.smartparams.modeType + 'Line',
+                this.smartparams.modeType + 'Bar')
         },
         drawChart (option, id) {
             const chartDom = document.getElementById(id)
