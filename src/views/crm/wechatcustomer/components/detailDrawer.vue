@@ -53,7 +53,7 @@
                             <div class="drawer-table_col"><b>{{staticInfo.registerMemberNum}}</b>
                                 <p>注册用户（个）</p>
                             </div>
-                            <div class="drawer-table_col"><b> {{this.$multipliedBy(staticInfo.conversionRate, 100)}}</b>
+                            <div class="drawer-table_col"><b> {{$multipliedBy(staticInfo.conversionRate, 100)}}</b>
                                 <p>注册转化率（%）</p>
                             </div>
                         </div>

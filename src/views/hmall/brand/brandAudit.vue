@@ -56,7 +56,7 @@
                 </template>
             </basicTable>
         </div>
-        <h-drawer :title="drawerMsg.title" :visible="drawerShow" :beforeClose="onCancel">
+        <h-drawer :title="drawerMsg.title" :visible="drawerShow" :beforeClose="onCancel" size='500px' @close="handleClose">
             <template #connect>
                 <el-form ref="suggest" :rules="rules" :model="suggest" class="suggest" label-width="100px">
                     <el-form-item label="供应商：" class="mb-5">
@@ -75,7 +75,7 @@
                     <el-form-item label="到期日：" class="mb-5">
                         {{drawerMsg.expiryDate}}
                     </el-form-item>
-                    <el-form-item label="关联类目：" class="mb-20 area-cascader">
+                    <el-form-item label="关联类目：" class="mb-20">
                         <!-- <div>
                             <span class="category-tip">一级类目</span>
                             <span class="category-tip">二级类目</span>
@@ -87,11 +87,11 @@
                             :options="categoryOptions"
                             :props="categoryProps">
                         </el-cascader-panel> -->
-                        <el-cascader :options="categoryOptions" :props="categoryProps" v-model="drawerMsg.categoryIdsArr" disabled>
+                        <el-cascader class="area-cascader" :options="categoryOptions" :props="categoryProps" v-model="drawerMsg.categoryIdsArr" disabled>
                         </el-cascader>
                     </el-form-item>
-                    <el-form-item label="售卖区域：" class="mb-20 area-cascader">
-                        <el-cascader :options="areaOptions" :props="areaProps" v-model="drawerMsg.areaArr" disabled>
+                    <el-form-item label="售卖区域：" class="mb-20">
+                        <el-cascader class="area-cascader" :options="areaOptions" :props="areaProps" v-model="drawerMsg.areaArr" disabled>
                         </el-cascader>
                     </el-form-item>
                     <p class="audit-opinion">审核意见</p>
@@ -138,6 +138,7 @@ export default {
     data () {
         return {
             auditResult: '',
+            areaOptions: [],
             categoryProps: {
                 emitPath: false,
                 multiple: true
@@ -196,8 +197,11 @@ export default {
             brandAuthorizationInfo: 'brandAuthorizationInfo',
             brandAreaInfo: 'brandAreaInfo'
         }),
+        ...mapGetters({
+            nestDdata: 'nestDdata'
+        }),
         ...mapGetters('brand', {
-            areaOptions: 'cityOptions'
+            // areaOptions: 'cityOptions'
         }),
         ...mapState('category', {
             categoriesTree: 'categoriesTree'
@@ -232,6 +236,9 @@ export default {
             'findBrandAreaDetail',
             'getChiness'
         ]),
+        ...mapActions({
+            findNest: 'findNest'
+        }),
         ...mapActions('category', [
             'findAllCategory'
         ]),
@@ -239,7 +246,8 @@ export default {
             // 获取全类目
             await this.findAllCategory()
             // 获取省市区
-            await this.getChiness()
+            // await this.getChiness()
+            await this.getProvinceOptions()
         },
         onQuery () {
             const { ...params } = { ...this.queryParams }
@@ -271,23 +279,13 @@ export default {
             this.$refs.auditResult.clearValidate()
             this.$refs.auditRemark.resetField()
         },
-        // 级联面板回调
-        // cascaderPanelChange () {
-
-        // },
-
         async showDrawer (scope, type) {
             await this.findBrandAreaDetail({ id: scope.id })
             this.drawerMsg = {
                 ...this.brandAreaInfo,
-                categoryIdsArr: this.brandAreaInfo.categoryIds.split(',') || [],
-                areaArr: this.brandAreaInfo.brandAuthorizationSalesAreaList.map(item => {
-                    if (item.cityId && item.cityId != '0') {
-                        return [item.provinceId, item.cityId]
-                    }
-                    return [item.provinceId]
-                })
+                categoryIdsArr: this.brandAreaInfo.categoryIds.split(',') || []
             }
+            this.drawerMsg.areaArr = this.dyadicArrToObjArr(this.brandAreaInfo.brandAuthorizationSalesAreaList)
             this.suggest = {
                 auditResult: '',
                 auditRemark: ''
@@ -304,6 +302,52 @@ export default {
                 this.$refs['suggest'].clearValidate()
             })
         },
+        handleClose () {
+            this.drawerMsg.areaArr = []
+            this.drawerShow = false
+            this.$nextTick(() => {
+                this.$refs['suggest'].clearValidate()
+            })
+        },
+        dyadicArrToObjArr (value) {
+            let result = []
+            const provinceObj = {}
+            value.forEach(item => {
+                let thisResult = []
+                if (item.provinceId != null && item.provinceId != '0') {
+                    thisResult = thisResult.concat([item.provinceId])
+                }
+                if (item.cityId != null && item.cityId != '0') {
+                    thisResult = thisResult.concat(item.cityId)
+                }
+                if (item.areaId != null && item.areaId != '0') {
+                    thisResult = thisResult.concat(item.areaId)
+                }
+                result.push(thisResult)
+            })
+            return result
+        },
+        async getProvinceOptions () {
+            await this.findNest()
+            this.areaOptions = this.nestDdata.map(i => {
+                return {
+                    label: i.name,
+                    value: i.provinceId,
+                    children: i.cities.map(j => {
+                        return {
+                            label: j.name,
+                            value: j.cityId,
+                            children: j.countries.map(r => {
+                                return {
+                                    label: r.name,
+                                    value: r.countryId
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+        },
         onSizeChange (val) {
             this.paginationData.pageSize = val
             this.search()
@@ -318,7 +362,9 @@ export default {
         },
         onCancel () {
             this.drawerShow = false
-            this.$refs['suggest'].resetFields()
+            this.$nextTick(() => {
+                this.$refs['suggest'].clearValidate()
+            })
         },
         async auditBrandAreaAsync () {
             this.$refs['suggest'].validate(async (valid) => {
@@ -380,21 +426,6 @@ export default {
         margin-bottom: 0;
         border-bottom: 1px solid #e5e5ea;
     }
-    /deep/ .el-cascader-menu {
-        min-width: 160px;
-    }
-    .area-cascader {
-        /deep/ .el-cascader__tags {
-            max-height: 150px;
-            overflow-y: auto;
-        }
-        /deep/ .el-cascader {
-            max-height: 150px;
-        }
-        /deep/ .el-input {
-            width: 300px;
-        }
-    }
     .category-tip {
         box-sizing: border-box;
         display: inline-block;
@@ -412,5 +443,17 @@ export default {
     padding: 12px 24px;
     border-top: 1px solid #e5e5ea;
     text-align: right;
+}
+.area-cascader {
+    /deep/ .el-cascader__tags {
+        max-height: 100px !important;
+        overflow-y: auto !important;
+    }
+    /deep/ .el-cascader {
+        max-height: 100px !important;
+    }
+    /deep/ .el-input {
+        width: 300px !important;
+    }
 }
 </style>
