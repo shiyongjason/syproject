@@ -79,19 +79,21 @@
             <div class="right-items" v-html="cloudMerchantAgentDetail.agentContent"></div>
         </el-dialog>
 
-        <el-dialog title="提货进度" :modal-append-to-body=false :append-to-body=false :visible.sync="progressDialogVisible" width="50%">
+        <!-- <el-dialog title="提货进度" :modal-append-to-body=false :append-to-body=false :visible.sync="progressDialogVisible" width="50%">
             <basicTable :tableLabel="progressTableLabel" :tableData="progressTable">
 
             </basicTable>
             <el-button class="orangeBtn chckBtn" @click="checkShopManager(progressCompany)">查询提货明细</el-button>
-        </el-dialog>
-        <el-dialog  title="代理商代理详情" :modal-append-to-body=false :append-to-body=false :visible.sync="detailDialogVisible" width="1200px">
+        </el-dialog> -->
+        <el-dialog title="代理商代理详情" :modal-append-to-body=false :append-to-body=false :visible.sync="detailDialogVisible" width="1200px">
             <el-tag size="medium" class="eltagtop">
                 代理产品型号共计{{cloudMerchantDetailStats.agentSpecificationCount}}个,
                 其中履约中的共{{cloudMerchantDetailStats.effectiveCount}}个,
                 已过期的{{cloudMerchantDetailStats.expiredCount}}个,
                 支付押金共计{{cloudMerchantDetailStats.totalAgentAmount}}元,
-                支付提货预付款{{cloudMerchantDetailStats.totalPrepayAmount}}元。
+                支付提货预付款{{cloudMerchantDetailStats.totalPrepayAmount}}元,
+                已提货金额{{cloudMerchantDetailStats.alreadyPickAmount}}元,
+                剩余提货金额{{cloudMerchantDetailStats.totalPrepayAmount - cloudMerchantDetailStats.alreadyPickAmount}}元。
             </el-tag>
             <div>
                 <div class="query-cont-col">
@@ -127,7 +129,7 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn clipBtn" @click="onShowRights(scope.data.row)">查看权益</el-button>
-                    <el-button class="orangeBtn clipBtn" @click="onShowProgress(scope.data.row)" style="margin:10px 0 0 0">提货进度</el-button>
+                    <el-button class="orangeBtn clipBtn" @click="onShowProgress(scope.data.row)" style="margin:10px 0 0 0">提货明细</el-button>
                 </template>
             </basicTable>
         </el-dialog>
@@ -177,6 +179,10 @@ export default {
                 { label: '代理商等级', prop: 'level' },
                 { label: '代理品类', prop: 'categoryName' },
                 { label: '代理型号', prop: 'specificationName' },
+                { label: '年度提货额度', prop: 'agentCount' },
+                { label: '已提货数量', prop: 'alreadyPickCount' },
+                { label: '已提货金额', prop: 'alreadyPickAmount' },
+                { label: '待提货数量', prop: 'noPickCount' },
                 { label: '代理合同状态', prop: 'status' }],
             detailTableQueryParams: {
                 unionId: '',
@@ -306,12 +312,16 @@ export default {
             this.rightsDialogVisible = true
         },
         async onShowProgress (val) {
-            this.progressCompany = val
-            const data = await getCloudMerchantAgentProgress({ id: val.id })
-            if (data) {
-                this.progressTable = [data.data]
-                this.progressDialogVisible = true
-            }
+            // this.progressCompany = val
+            // const data = await getCloudMerchantAgentProgress({ id: val.id })
+            // if (data) {
+            //     this.progressTable = [data.data]
+            //     this.progressDialogVisible = true
+            // }
+            // console.log(val)
+            this.$router.push({
+                path: `/comfortCloud/equipmentOverview/warehouseManagement`, query: { phone: val.phone }
+            })
         },
         async queryStatistics (parms) {
             const data = await getCloudMerchantStatistics(parms)
@@ -327,12 +337,12 @@ export default {
             return year + '年' + month + '月' + day + '日'
         },
 
-        checkShopManager (val) {
-            console.log(val)
-            this.$router.push({
-                name: `warehouseManagement`, params: { dealer: this.focusDetailAgent.companyName }
-            })
-        },
+        // checkShopManager (val) {
+        //     console.log(val)
+        //     this.$router.push({
+        //         name: `warehouseManagement`, params: { dealer: this.focusDetailAgent.companyName }
+        //     })
+        // },
         queryDetailList (detailTableQueryParams) {
             this.findCloudMerchantDetailList(detailTableQueryParams)
         },

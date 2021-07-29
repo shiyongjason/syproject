@@ -22,12 +22,12 @@ module.exports = {
             )
         }
     },
-    // "webpack-bundle-analyzer": "^4.4.2" 添加到package.json
-    // chainWebpack: config => {
-    //     config
-    //         .plugin('webpack-bundle-analyzer')
-    //         .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
-    // },
+    /* // "webpack-bundle-analyzer": "^4.4.2" 添加到package.json,npm run build
+    chainWebpack: config => {
+        config
+            .plugin('webpack-bundle-analyzer')
+            .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
+    }, */
     css: {
         loaderOptions: {
             sass: {

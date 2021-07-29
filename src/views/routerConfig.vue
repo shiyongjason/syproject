@@ -238,8 +238,6 @@ export default {
             this.handleRouterData(routerMapping, '')
             // 处理库里的路由数据
             this.handleData(copyData, '')
-            console.log('resultData: ', copyData)
-            console.log('routerMapping: ', routerMapping)
             this.tableList = this.handlerTableList(copyData, 0)
         },
         // 计算table合并行数
