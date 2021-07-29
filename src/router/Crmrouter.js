@@ -552,6 +552,18 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/crm/liveplayer/edit.vue')
+            },
+            {
+                path: 'supplierSearch',
+                name: 'supplierSearch',
+                meta: {
+                    title: '供应商查询',
+                    tagName: '供应商查询',
+                    parentName: '好橙工',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/supplierSearch/index.vue')
             }
         ]
     }
