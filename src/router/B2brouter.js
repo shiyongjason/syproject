@@ -1,6 +1,6 @@
 import Layout from '@/views/layout/Default.vue'
 import InterlayerContainer from '@/views/layout/InterlayerContainer.vue'
-
+// 备注没用
 export default [
     {
         path: '/b2b',
@@ -708,7 +708,8 @@ export default [
                         component: () => import('@/views/hmall/finance/miningManage/merchantBehalf.vue')
                     }
                 ]
-            }, {
+            },
+            {
                 path: 'warehouse',
                 name: 'warehouse',
                 meta: {

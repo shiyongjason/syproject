@@ -1,0 +1,90 @@
+.brandManage{
+    .bulkPull{
+        margin: 15px 0;
+    }
+    .flexlayout{
+        display: flex;
+        align-items: center;
+    }
+    .search-btn{
+        margin-left: 25px;
+    }
+    
+}
+
+
+/deep/::-webkit-scrollbar-thumb {
+    background-color: #d6d1d1 !important;
+}
+
+.skutableForm{
+    display: flex;
+    // align-items: center;
+    /deep/.el-form-item__content{
+        margin-left: 0px !important;
+        line-height:unset !important;
+    }
+    /deep/.el-form-item{
+        margin-bottom: 0px !important;
+    }
+    /deep/.el-form-item__error{
+        position: unset;
+        text-align: left;
+    }
+}
+
+.tipsDialog{
+    /deep/.el-dialog__body{
+        min-height:120px;
+        box-sizing: border-box;
+    }
+}
+/deep/.selection{
+    color: #ff7a45;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 1px 8px;
+    border:1px solid #ff7a45;
+    border-radius: 3px;
+    line-height: normal;
+    margin-right: 5px;
+    
+}
+/deep/.rowcss{
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+/deep/.crmshopMall-logo{
+    .elupload{
+        height: 64px;
+    }
+    .el-upload-dragger{
+        width: 196px;
+        height: 64px;
+    }
+    .default-pre-view-image{
+        width: 196px;
+        height: 64px;
+    }
+    .default-pre-view-mask{
+        width: 196px;
+        height: 64px;
+    }
+}
+/deep/.crmshopMall-banner{
+    .elupload{
+        height: 93.3px;
+    }
+    .el-upload-dragger{
+        width: 196px;
+        height: 93.3px;
+    }
+    .default-pre-view-image{
+        width: 196px;
+        height: 93.3px;
+    }
+    .default-pre-view-mask{
+        width: 196px;
+        height: 93.3px;
+    }
+}

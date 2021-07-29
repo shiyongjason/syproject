@@ -20,7 +20,7 @@ import searchBarOpenAndClose from './components/SearchBarOpenAndClose/index'
 import moment from 'moment'
 import '@/utils/validate/index.js'
 import precisionMethods from '@/utils/bignumber.js'
-
+import './class-component-hooks'
 // 接入 sentry
 import * as Sentry from '@sentry/browser'
 import { Vue as VueIntegration } from '@sentry/integrations'

@@ -1,0 +1,40 @@
+.floor-tit {
+    background: #e5e5e5;
+    opacity: 0.8;
+    font-size: 18px;
+    padding: 5px 10px;
+    margin-bottom: 20px;
+    position: relative;
+    &::before {
+        content: '';
+        width: 5px;
+        height: 100%;
+        background: tomato;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
+/deep/.slectRowColor {
+    background: #e5e5e5;
+}
+/deep/.label_img {
+    width: 75px;
+    height: 30px;
+    img {
+        width: 75px;
+    height: 30px;
+    }
+}
+/deep/.category_img {
+    width: 40px;
+    img {
+        width: 40px;
+    }
+}
+.floor_tag {
+    .el-tag {
+        margin: 5px;
+        cursor: pointer;
+    }
+}

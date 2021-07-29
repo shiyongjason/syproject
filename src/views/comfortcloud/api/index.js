@@ -1062,3 +1062,5 @@ export const createComplaintProcessOrder = params => axios.post(iotUrl + '/mall/
 export const deleteComplaintProcessOrder = params => axios.delete(iotUrl + '/mall/boss/complaint/process', { data: params })
 // 获取工单解决记录详情
 export const getComplaintProcessOrderDetail = params => axios.get(iotUrl + '/mall/boss/complaint/process/detail', { params })
+// 获取服务机会列表
+export const getServiceRemindList = params => axios.get(iotUrl + '/api/service-reminds/boss', { params })

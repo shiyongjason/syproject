@@ -403,6 +403,18 @@ export default [
                         component: () => import('@/views/comfortcloud/serviceManage/serivceOrder.vue')
                     },
                     {
+                        path: 'serviceOpportunity',
+                        name: 'serviceOpportunity',
+                        meta: {
+                            title: '服务机会',
+                            tagName: '服务机会',
+                            parentName: '舒适云概览',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/serviceManage/serviceOpportunity.vue')
+                    },
+                    {
                         path: 'userFeedback',
                         name: 'userFeedback',
                         meta: {
