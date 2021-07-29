@@ -406,11 +406,13 @@ export default {
             ],
             detail: {
                 totalRepayAmount: '',
-                offlineRepayAmount: '',
-                onlineRepayAmount: '',
                 withdrawAmount: '',
                 availableWithdrawAmount: '',
-                prepayAmount: ''
+                offlinePrepayAmount: '',
+                offlineAdvanceRepayAmount: '',
+                saleRepayAmount: '',
+                onlineBankingPrepayAmount: '',
+                onlineBankingAdvanceRepayAmount: ''
             }
         }
     },
@@ -509,22 +511,18 @@ export default {
                 this.getRepayAll()
             } else if (this.recordTabName == 'isOffline') {
                 this.repayQueryParams.pageNumber = 1
-                this.repayQueryParams.advanceRepayWay = 10
                 this.getOfflineRepay()
                 this.getRepayAll()
             } else if (this.recordTabName == 'isAdvance') {
                 this.repayQueryParams.pageNumber = 1
-                this.repayQueryParams.payWay = 10
                 this.getPrepayRepay()
                 this.getRepayAll()
             } else if (this.recordTabName == 'isOnbank') {
                 this.repayQueryParams.pageNumber = 1
-                this.repayQueryParams.payWay = 20
                 this.getOnbankRepay()
                 this.getRepayAll()
             } else if (this.recordTabName == 'isOffbank') {
                 this.repayQueryParams.pageNumber = 1
-                this.repayQueryParams.advanceRepayWay = 20
                 this.getOffbankRepay()
                 this.getRepayAll()
             }
@@ -767,14 +765,13 @@ export default {
             await this.findMerchantAll(this.queryParams)
         },
         async getOnlineAllInfo () {
-            await this.findOnlineRepayAll(this.queryParams)
-            console.log(this.onlineRepayAll)
+            await this.findOnlineRepayAll(this.repayQueryParams)
         },
         async getOfflineAllInfo () {
-            await this.findOfflineRepayAll(this.queryParams)
+            await this.findOfflineRepayAll(this.repayQueryParams)
         },
         async getAdvanceAllInfo () {
-            await this.findAdvanceRepayAll(this.queryParams)
+            await this.findAdvanceRepayAll(this.repayQueryParams)
         },
         async getRepayStatist () {
             await this.findRepayStatist()
@@ -814,6 +811,7 @@ export default {
                 { label: 'MIS订单号', prop: 'misOrderNo' }
             ]
             this.repayQueryParams.type = 2
+            this.repayQueryParams.advanceRepayWay = 10
             await this.findOfflineRepay(this.repayQueryParams)
             this.tableData = this.offlineRepayList.records
             this.pagination = {
@@ -837,6 +835,7 @@ export default {
                 { label: 'MIS订单号', prop: 'misOrderNo' }
             ]
             this.repayQueryParams.type = 3
+            this.repayQueryParams.payWay = 10
             await this.findPrepayRepay(this.repayQueryParams)
             this.tableData = this.prepayRepayList.records
             this.pagination = {
@@ -858,6 +857,7 @@ export default {
                 { label: 'MIS订单号', prop: 'misOrderNo' }
             ]
             this.repayQueryParams.type = 4
+            this.repayQueryParams.payWay = 20
             await this.findPrepayRepay(this.repayQueryParams)
             this.tableData = this.prepayRepayList.records
             this.pagination = {
@@ -879,6 +879,7 @@ export default {
                 { label: 'MIS订单号', prop: 'misOrderNo' }
             ]
             this.repayQueryParams.type = 5
+            this.repayQueryParams.advanceRepayWay = 20
             await this.findOfflineRepay(this.repayQueryParams)
             this.tableData = this.offlineRepayList.records
             this.pagination = {
@@ -896,15 +897,19 @@ export default {
                 await this.findOnlineRepayAll(this.repayQueryParams)
             } else if (this.recordTabName == 'isOffline') {
                 this.repayQueryParams.type = 2
+                this.repayQueryParams.advanceRepayWay = 10
                 await this.findOfflineRepayAll(this.repayQueryParams)
             } else if (this.recordTabName == 'isAdvance') {
                 this.repayQueryParams.type = 3
+                this.repayQueryParams.payWay = 10
                 await this.findAdvanceRepayAll(this.repayQueryParams)
             } else if (this.recordTabName == 'isOnbank') {
                 this.repayQueryParams.type = 4
+                this.repayQueryParams.payWay = 20
                 await this.findAdvanceRepayAll(this.repayQueryParams)
             } else if (this.recordTabName == 'isOffbank') {
                 this.repayQueryParams.type = 5
+                this.repayQueryParams.advanceRepayWay = 20
                 await this.findOfflineRepayAll(this.repayQueryParams)
             }
         }
