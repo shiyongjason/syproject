@@ -33,7 +33,7 @@
                 <el-tree :data="data" @check="onChecked" show-checkbox node-key="id" ref="tree" highlight-current :props=defaultProps>
                     <span class="custom-tree-node" slot-scope="{data }">
                         <span>{{ data.name }}</span>
-                        <span>类目编码：{{ data.id }}</span>
+                        <span>类目编码：{{ data.code }}</span>
                         <span>上架商品数量：{{ data.spuNumber }}</span>
                     </span>
                 </el-tree>
