@@ -93,7 +93,7 @@
                 支付押金共计{{cloudMerchantDetailStats.totalAgentAmount}}元,
                 支付提货预付款{{cloudMerchantDetailStats.totalPrepayAmount}}元,
                 已提货金额{{cloudMerchantDetailStats.alreadyPickAmount}}元,
-                剩余提货金额{{cloudMerchantDetailStats.totalPrepayAmount - cloudMerchantDetailStats.alreadyPickAmount}}元。
+                剩余提货金额{{(cloudMerchantDetailStats.totalPrepayAmount - cloudMerchantDetailStats.alreadyPickAmount) > 0 ? cloudMerchantDetailStats.totalPrepayAmount - cloudMerchantDetailStats.alreadyPickAmount :0}}元。
             </el-tag>
             <div>
                 <div class="query-cont-col">
