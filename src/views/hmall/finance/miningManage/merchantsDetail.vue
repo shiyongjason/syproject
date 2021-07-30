@@ -92,7 +92,7 @@
                                 <el-option v-for="item in deadlineOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                             </el-select>
                         </div>
-                        <div class="query-col-input">
+                        <div class="query-col-input" >
                             <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-ddT00:00:00" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart"></el-date-picker>
                             <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-ddT23:59:59" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59"></el-date-picker>
                         </div>
@@ -239,9 +239,13 @@
                 <div class="query-cont-row mt20">
                     <div class="query-cont-col">
                         <div class="query-col-title">时间：</div>
-                        <div class="query-col-input">
-                            <el-date-picker v-model="repayQueryParams.startTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :picker-options="pickerStart"></el-date-picker>
-                            <el-date-picker v-model="repayQueryParams.endTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
+                        <div class="query-col-input" v-if="recordTabName == 'isOnline'||recordTabName == 'isOffline' || recordTabName=='isOffbank'">
+                            <el-date-picker v-model="repayQueryParams.submitTimeFrom" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :picker-options="pickerStart"></el-date-picker>
+                            <el-date-picker v-model="repayQueryParams.submitTimeTo" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
+                        </div>
+                          <div class="query-col-input" v-if="recordTabName == 'isAdvance'||recordTabName == 'isOnbank'">
+                            <el-date-picker v-model="repayQueryParams.prepayConfirmTimeFrom" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :picker-options="pickerBankStart"></el-date-picker>
+                            <el-date-picker v-model="repayQueryParams.prepayConfirmTimeTo" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :picker-options="pickerBankEnd" default-time="23:59:59"></el-date-picker>
                         </div>
                     </div>
                     <template v-if="recordTabName == 'isOnline'">
@@ -358,6 +362,10 @@ export default {
                 status: '',
                 startTime: '',
                 endTime: '',
+                submitTimeFrom: '',
+                submitTimeTo: '',
+                prepayConfirmTimeTo: '',
+                prepayConfirmTimeFrom: '',
                 childOrderNo: '',
                 agentOrderNo: '',
                 username: '',
@@ -399,7 +407,7 @@ export default {
         pickerStart () {
             return {
                 disabledDate: (time) => {
-                    const beginDateVal = this.repayQueryParams.endTime
+                    const beginDateVal = this.repayQueryParams.submitTimeFrom
                     if (beginDateVal) {
                         return time.getTime() >= new Date(beginDateVal).getTime()
                     }
@@ -409,7 +417,27 @@ export default {
         pickerEnd () {
             return {
                 disabledDate: (time) => {
-                    const beginDateVal = this.repayQueryParams.startTime
+                    const beginDateVal = this.repayQueryParams.submitTimeTo
+                    if (beginDateVal) {
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                    }
+                }
+            }
+        },
+        pickerBankStart () {
+            return {
+                disabledDate: (time) => {
+                    const beginDateVal = this.queryParams.prepayConfirmTimeTo
+                    if (beginDateVal) {
+                        return time.getTime() >= new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerBankEnd () {
+            return {
+                disabledDate: (time) => {
+                    const beginDateVal = this.queryParams.prepayConfirmTimeFrom
                     if (beginDateVal) {
                         return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
@@ -783,7 +811,7 @@ export default {
         async getPrepayRepay () {
             this.repayQueryParams.payWay = 10
             this.tableLabel = [
-                { label: '时间', prop: 'prepayTime', formatters: 'dateTime' },
+                { label: '时间', prop: 'prepayConfirmTime', formatters: 'dateTime' },
                 { label: '金额', prop: 'prepayAmount', formatters: 'moneyShow' },
                 { label: '打款账户名称', prop: 'prepayAccountName' },
                 { label: '打款银行账号', prop: 'prepayBankCardNo' },
@@ -804,7 +832,7 @@ export default {
         async getOnbankRepay () {
             this.repayQueryParams.payWay = 20
             this.tableLabel = [
-                { label: '时间', prop: 'prepayTime', formatters: 'dateTime' },
+                { label: '时间', prop: 'prepayConfirmTime', formatters: 'dateTime' },
                 { label: '预付款支付金额', prop: 'prepayAmount', formatters: 'moneyShow' },
                 { label: '代采订单号', prop: 'agentOrderNo' },
                 { label: '企业名称', prop: 'companyName' },
