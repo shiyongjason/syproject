@@ -5,13 +5,13 @@
             <div class="query-cont-col">
                 <div class="query-col__label">供应商名称：</div>
                 <div class="query-col__input">
-                    <el-input v-model="queryParams.paymentOrderNo" placeholder="请输入" maxlength="50"></el-input>
+                    <el-input v-model="queryParams.supplierName" placeholder="请输入" maxlength="50"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col__label">创建人：</div>
                 <div class="query-col__input">
-                    <el-input v-model="queryParams.paymentOrderNo" placeholder="请输入" maxlength="50"></el-input>
+                    <el-input v-model="queryParams.createBy" placeholder="请输入" maxlength="50"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <h-button type="primary" @click="findFundsList({...queryParamsTemp, pageNumber: 1})">
+                <h-button type="primary" @click="findPurchaseList({ ...queryParams, pageNumber: 1 })">
                     查询
                 </h-button>
                 <h-button @click="onReset">
@@ -49,7 +49,11 @@ export default {
         return {
             queryParams: {
                 pageNumber: 1,
-                pageSize: 10
+                pageSize: 10,
+                startDate: '',
+                endDate: '',
+                supplierName: '',
+                createBy: ''
             },
             tableLabel: [
                 { label: '供应商编码', prop: 'supplierCode', width: '150' },
@@ -63,12 +67,19 @@ export default {
     },
     computed: {
         options () {
+            console.log('🚀', {
+                type: 'datetime',
+                valueFormat: 'yyyy-MM-dd',
+                format: 'yyyy-MM-dd',
+                startDate: this.queryParams.startDate,
+                endDate: this.queryParams.endDate
+            })
             return {
                 type: 'datetime',
-                valueFormat: 'yyyy-MM-ddTHH:mm:ss',
-                format: 'yyyy-MM-dd HH:mm:ss',
-                startTime: this.queryParams.scheduleStartTime,
-                endTime: this.queryParams.scheduleEndTime
+                valueFormat: 'yyyy-MM-dd',
+                format: 'yyyy-MM-dd',
+                startDate: this.queryParams.startDate,
+                endDate: this.queryParams.endDate
             }
         },
         ...mapGetters({
@@ -78,33 +89,30 @@ export default {
     },
     methods: {
         onStartChange (val) {
-            this.queryParams.scheduleStartTime = val
+            this.queryParams.startDate = val
         },
         onEndChange (val) {
-            this.queryParams.scheduleEndTime = val
+            this.queryParams.endDate = val
         },
         onReset () {
-            const repaymentTypeArrays = this.queryParams.repaymentTypeArrays
-            this.queryParams = { ...this.queryParamsTemp, repaymentTypeArrays }
-            this.findFundsList(this.queryParamsUseQuery)
-        },
-        findFundsList () {
-
+            this.queryParams = { ...this.queryParamsTemp }
+            this.findPurchaseList(this.queryParams)
         },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
-            this.findFundsList(this.queryParamsUseQuery)
+            this.findPurchaseList(this.queryParams)
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            this.findFundsList(this.queryParamsUseQuery)
+            this.findPurchaseList(this.queryParams)
         },
         ...mapActions({
-            findFundsList: 'crmFunds/findPurchaseList'
+            findPurchaseList: 'supplierSearchStore/findPurchaseList'
         })
     },
     mounted () {
         this.queryParamsTemp = { ...this.queryParams }
+        this.findPurchaseList(this.queryParams)
     }
 }
 </script>
