@@ -10,13 +10,7 @@
         "dev": "vue-cli-service build --mode dev",
         "build": "vue-cli-service build",
         "lint": "vue-cli-service lint",
-        "count": "cloc src/views/serviceManagement",
-        "xxxx": "echo \"fooo\" && exit 0"
-    },
-    "husky":{
-        "hooks":{
-          "pre-commit":"npm run xxxx"
-        }
+        "count": "cloc src/views/serviceManagement"
     },
     "dependencies": {
         "@sentry/browser": "^5.21.1",
@@ -65,7 +59,6 @@
         "element-ui": "^2.15.1",
         "eslint": "^5.16.0",
         "eslint-plugin-vue": "^5.2.2",
-        "husky": "^7.0.1",
         "node-sass": "^4.14.1",
         "sass-loader": "^7.1.0",
         "ts-loader": "^8.0.18",
