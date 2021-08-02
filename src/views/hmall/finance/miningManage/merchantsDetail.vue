@@ -305,7 +305,7 @@
                     <div class="query-cont-col" v-if="recordTabName == 'isOnbank' || recordTabName == 'isOffbank'">
                         <div class="query-col-title">企业名称：</div>
                         <div class="query-col-input">
-                            <el-input v-model="repayQueryParams.companyName" maxlength="50" placeholder="请输入企业名称"></el-input>
+                            <el-input v-model="repayQueryParams.username" maxlength="50" placeholder="请输入企业名称"></el-input>
                         </div>
                     </div>
                     <div class="query-cont-col">
