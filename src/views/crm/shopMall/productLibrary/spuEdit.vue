@@ -159,6 +159,7 @@ export default class SpuEdit extends Vue {
     @Ref('selectCityTree') $refSelectCityTree: ElTree<any, any>;
     @State('userInfo') userInfo: any
     @Action('setNewTags') setNewTags: Function
+    xxx = ''
     authOn = CRM_SHOPP_SPUEDIT_ONTHESHELVES
     authOff = CRM_SHOPP_SPUEDIT_RACK
     authAdd = CRM_SHOPP_SPUEDIT_ADD

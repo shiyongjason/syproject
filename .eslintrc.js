@@ -36,6 +36,7 @@ module.exports = {
             'ignoreComments': false
         }],
         'eol-last': 'off',
-        'eqeqeq': 0
+        'eqeqeq': 0,
+        "no-unused-vars": 'off'
     }
 }
