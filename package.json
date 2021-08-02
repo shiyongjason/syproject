@@ -2,11 +2,6 @@
     "name": "boss",
     "version": "3.0.0",
     "private": true,
-    "husky":{
-        "hooks":{
-          "pre-commit":"npm run esLint"
-        }
-    },
     "scripts": {
         "serve": "vue-cli-service serve",
         "test": "vue-cli-service build --mode test",
@@ -16,7 +11,12 @@
         "build": "vue-cli-service build",
         "lint": "vue-cli-service lint",
         "count": "cloc src/views/serviceManagement",
-        "esLint": "echo \"fooo\" && exit 0"
+        "xxxx": "echo \"fooo\" && exit 0"
+    },
+    "husky":{
+        "hooks":{
+          "pre-commit":"npm run xxxx"
+        }
     },
     "dependencies": {
         "@sentry/browser": "^5.21.1",
