@@ -234,7 +234,7 @@ export default class SpuEdit extends Vue {
         ],
         showName: [
             { required: true, message: '必填项不能为空', trigger: 'blur' },
-            { message: '限中西文字、数字以及空格', trigger: 'blur', pattern: /^[\u4e00-\u9fa50-9a-zA-Z ]+$/ },
+            { message: '限中西文字、数字以及空格', trigger: 'blur', pattern: /^[\u4e00-\u9fa50-9.a-zA-Z ]+$/ },
             { whitespace: true, message: '必填项不能为空', trigger: 'blur' }
         ],
         priceVisible: [
