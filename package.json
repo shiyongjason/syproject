@@ -10,12 +10,12 @@
         "dev": "vue-cli-service build --mode dev",
         "build": "vue-cli-service build",
         "lint": "vue-cli-service lint",
-        "count": "cloc src/views/serviceManagement",
-        "eslint": "eslint --cache --ext .js,.jsx,.ts,.tsx,.vue"
+        "count": "cloc src/views/serviceManagement"
     },
     "husky":{
         "hooks":{
-          "pre-commit":"npm run eslint"
+          "pre-commit":"npm run eslint",
+          "eslint": "eslint --cache --ext .js,.jsx,.ts,.tsx,.vue"
         }
     },
     "dependencies": {
