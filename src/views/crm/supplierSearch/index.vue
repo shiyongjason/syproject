@@ -67,19 +67,12 @@ export default {
     },
     computed: {
         options () {
-            console.log('🚀', {
-                type: 'datetime',
-                valueFormat: 'yyyy-MM-dd',
-                format: 'yyyy-MM-dd',
-                startDate: this.queryParams.startDate,
-                endDate: this.queryParams.endDate
-            })
             return {
                 type: 'datetime',
                 valueFormat: 'yyyy-MM-dd',
                 format: 'yyyy-MM-dd',
-                startDate: this.queryParams.startDate,
-                endDate: this.queryParams.endDate
+                startTime: this.queryParams.startDate,
+                endTime: this.queryParams.endDate
             }
         },
         ...mapGetters({
