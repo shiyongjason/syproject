@@ -252,7 +252,7 @@
                         <div class="query-cont-col">
                             <div class="query-col-title">状态：</div>
                             <div class="query-col-input">
-                                <el-select v-model="repayQueryParams.status">
+                                <el-select v-model="repayQueryParams.repayStatus">
                                     <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </div>
@@ -314,8 +314,8 @@
                     </div>
                 </div>
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="pagination" @onCurrentChange="onCurrentChange" @onSizeChange="handleSizeChange" :isShowSum="true" :getSum="getSum">
-                    <template slot="status" slot-scope="scope">
-                        <span>{{statusMap.get(scope.data.row.status) || '-'}}</span>
+                    <template slot="repayStatus" slot-scope="scope">
+                        <span>{{statusMap.get(scope.data.row.repayStatus) || '-'}}</span>
                     </template>
                     <template slot="repayWay" slot-scope="scope">
                         <span>{{deaTypeMap.get(scope.data.row.repayWay) || '-'}}</span>
@@ -360,6 +360,7 @@ export default {
             recordTabName: 'isOnline',
             repayQueryParams: {
                 status: '',
+
                 startTime: '',
                 endTime: '',
                 submitTimeFrom: '',
@@ -527,6 +528,7 @@ export default {
             }
         },
         onRecordTab () {
+            this.repayQueryParams = { ...this.repayResetParams }
             if (this.recordTabName == 'isOnline') {
                 this.repayQueryParams.pageNumber = 1
                 this.getOnlineRepay()
@@ -543,7 +545,6 @@ export default {
                 this.repayQueryParams.pageNumber = 1
                 this.getOffbankRepay()
             }
-            this.onReset()
         },
         onCurrentChange (val) {
             if (this.tabName == 'detail') {
@@ -772,7 +773,7 @@ export default {
             this.tableLabel = [
                 { label: '时间', prop: 'submitTime', formatters: 'dateTime' },
                 { label: '金额', prop: 'repayAmount', formatters: 'moneyShow' },
-                { label: '状态', prop: 'status' },
+                { label: '状态', prop: 'repayStatus' },
                 { label: '回款订单号', prop: 'childOrderNo' },
                 { label: '回款代采订单号', prop: 'agentOrderNo' },
                 { label: 'MIS订单号', prop: 'misOrderNo' }
