@@ -36,6 +36,7 @@ import contractTemp from '@/views/crm/contractTemp/store/index'
 import projectStore from '@/views/crm/projectList2_0/store/index'
 import threadStore from '@/views/crm/thread/store/index'
 import supplierSearchStore from '@/views/crm/supplierSearch/store/index'
+import apiCompensationSchemeStore from '@/views/crm/apiCompensationScheme/store/index'
 Vue.use(Vuex)
 
 const token = localStorage.getItem('token')
@@ -98,7 +99,8 @@ const store = new Vuex.Store({
         contractTemp,
         projectStore,
         threadStore,
-        supplierSearchStore
+        supplierSearchStore,
+        apiCompensationSchemeStore
     }
 })
 export default store

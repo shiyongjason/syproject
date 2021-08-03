@@ -564,6 +564,18 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/crm/supplierSearch/index.vue')
+            },
+            {
+                path: 'apiCompensationScheme',
+                name: 'apiCompensationScheme',
+                meta: {
+                    title: '接口调用补偿机制',
+                    tagName: '接口调用补偿机制',
+                    parentName: '好橙工',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/apiCompensationScheme/index.vue')
             }
         ]
     }
