@@ -131,6 +131,7 @@
                                   scope.data.row.goodsConfirmFlag === 1
                               )">确认收货</h-button>
                     <h-button table @click="openDrawer(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_DETAIL)">查看详情</h-button>
+                    <h-button table @click="openDrawer(scope.data.row)">审批记录</h-button>
                     <!-- dealerCooperationMethod 1 垫资代采 2 代收代付 -->
                     <h-button table @click="onUploadPay(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_UPLOADPAY)&&(((scope.data.row.status==9||(scope.data.row.status==1&&scope.data.row.sign)) && scope.data.row.dealerCooperationMethod == 1) || (scope.data.row.dealerCooperationMethod == 2 && scope.data.row.status == 1))">上传支付凭证</h-button>
                 </template>
