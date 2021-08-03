@@ -528,6 +528,7 @@ export default {
             }
         },
         onRecordTab () {
+            this.repayQueryParams = { ...this.repayResetParams }
             if (this.recordTabName == 'isOnline') {
                 this.repayQueryParams.pageNumber = 1
                 this.getOnlineRepay()
@@ -544,7 +545,6 @@ export default {
                 this.repayQueryParams.pageNumber = 1
                 this.getOffbankRepay()
             }
-            this.onReset()
         },
         onCurrentChange (val) {
             if (this.tabName == 'detail') {
