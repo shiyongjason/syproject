@@ -576,6 +576,18 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/crm/apiCompensationScheme/index.vue')
+            },
+            {
+                path: 'advancelist',
+                name: 'advancelist',
+                meta: {
+                    title: '货款支付',
+                    tagName: '货款支付',
+                    parentName: '货款支付',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/advancePayment/index.vue')
             }
         ]
     }
