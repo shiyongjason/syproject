@@ -437,6 +437,7 @@ export default class ProductLibrary extends Vue {
     }
     // 批量下架
     async onBatch () {
+        this.itemSKU = ''
         this.dialogSKU = []
         if (this.Selection.length == 0) {
             this.$message.error('请先选择需要下架的SKU~')
@@ -455,7 +456,6 @@ export default class ProductLibrary extends Vue {
             this.$message.error('仅可对上架SKU进行此操作~')
             return
         }
-
         this.rackDialogTitle = '批量下架确认'
         this.rackDialog = true
     }
