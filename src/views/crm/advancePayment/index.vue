@@ -172,7 +172,9 @@
                 </div>
 
             </div>
+              <p>审核通过后，将会发送钉钉预付款支付审批流程</p>
             <span slot="footer" class="dialog-footer">
+
                 <el-button type="primary" @click="dialogVisible = false">确认审核</el-button>
             </span>
         </el-dialog>
