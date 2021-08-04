@@ -38,7 +38,7 @@
                     </h-button>
                 </div>
             </div>
-            <basicTable :tableData="apiCompensationSchemeList" :tableLabel="tableLabel" :pagination="apiCompensationSchemePagination" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isShowIndex='true'>
+            <basicTable is-action :tableData="apiCompensationSchemeList" :tableLabel="tableLabel" :pagination="apiCompensationSchemePagination" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isShowIndex='true'>
                 <template slot="systemType" slot-scope="scope">
                     <span class="colblue">{{SYSTEM_TYPE.get(scope.data.row.systemType)}}</span>
                 </template>
@@ -132,7 +132,8 @@ export default {
             findApiCompensationSchemeList: 'apiCompensationSchemeStore/apiCompensationSchemeList'
         }),
         reCall (row) {
-            updateApiCompensationScheme({ id: row.id })
+            updateApiCompensationScheme({ id: row.id }) // todo 后台接口没通 暂时没办法调
+            this.$message.success('重新调用')
         }
     },
     mounted () {
