@@ -18,7 +18,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>当前额度<span>（元）</span></p>
-                            <p>{{fundDetil.creditLimit|| 0 | moneyShow}}</p>
+                            <p>{{merchantStatistInfo.creditLimit|| 0 | moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -27,7 +27,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总代采<span>（元）</span></p>
-                            <p>{{fundDetil.totalAmount || 0 | moneyShow}}</p>
+                            <p>{{merchantStatistInfo.totalAmount || 0 | moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -36,7 +36,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总预付<span>（元）</span></p>
-                            <p>{{fundDetil.totalPrepayAmount|| 0 | moneyShow}}</p>
+                            <p>{{merchantStatistInfo.totalPrepayAmount|| 0 | moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -45,7 +45,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总代付<span>（元）</span></p>
-                            <p>{{fundDetil.totalRetainageAmount || 0 | moneyShow}}</p>
+                            <p>{{merchantStatistInfo.totalRetainageAmount || 0 | moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -54,7 +54,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总回款<span>（元）</span></p>
-                            <p>{{fundDetil.totalRepayAmount|| 0| moneyShow}}</p>
+                            <p>{{merchantStatistInfo.totalRepayAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -63,7 +63,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>当前占用<span>（元）</span></p>
-                            <p>{{fundDetil.occupationAmount|| 0| moneyShow}}</p>
+                            <p>{{merchantStatistInfo.occupationAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -72,7 +72,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>当前逾期未还<span>（元）</span></p>
-                            <p>{{fundDetil.overdueAmount || 0| moneyShow}}</p>
+                            <p>{{merchantStatistInfo.overdueAmount || 0| moneyShow}}</p>
                         </div>
                     </div>
                 </div>
@@ -92,7 +92,7 @@
                                 <el-option v-for="item in deadlineOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                             </el-select>
                         </div>
-                        <div class="query-col-input">
+                        <div class="query-col-input" >
                             <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-ddT00:00:00" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart"></el-date-picker>
                             <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-ddT23:59:59" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59"></el-date-picker>
                         </div>
@@ -160,7 +160,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总回款<span>（元）</span></p>
-                            <p>{{detail.totalRepayAmount|| 0| moneyShow}}</p>
+                            <p>{{repayStatistInfo.totalRepayAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -168,8 +168,8 @@
                             <i class="iconfont hosjoy_order"></i>
                         </div>
                         <div class="balance-col-money">
-                            <p>线下回款<span>（元）</span></p>
-                            <p>{{detail.offlineRepayAmount|| 0| moneyShow}}</p>
+                            <p>线下提前还款<span>（元）</span></p>
+                            <p>{{repayStatistInfo.offlineAdvanceRepayAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -177,8 +177,8 @@
                             <i class="iconfont hosjoy_operation"></i>
                         </div>
                         <div class="balance-col-money">
-                            <p>线上回款<span>（元）</span></p>
-                            <p>{{detail.onlineRepayAmount|| 0| moneyShow}}</p>
+                            <p>单分享订单回款<span>（元）</span></p>
+                            <p>{{repayStatistInfo.saleRepayAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -187,7 +187,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>已提现<span>（元）</span></p>
-                            <p>{{detail.withdrawAmount|| 0| moneyShow}}</p>
+                            <p>{{repayStatistInfo.withdrawAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -196,7 +196,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>可提现<span>（元）</span></p>
-                            <p>{{detail.availableWithdrawAmount|| 0| moneyShow}}</p>
+                            <p>{{repayStatistInfo.availableWithdrawAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -204,31 +204,55 @@
                             <i class="iconfont hosjoy_jgzx"></i>
                         </div>
                         <div class="balance-col-money">
-                            <p>预付款<span>（元）</span></p>
-                            <p>{{detail.prepayAmount|| 0| moneyShow}}</p>
+                            <p>线下转账预付款<span>（元）</span></p>
+                            <p>{{repayStatistInfo.offlinePrepayAmount|| 0| moneyShow}}</p>
+                        </div>
+                    </div>
+                    <div class="balance-cont-col">
+                        <div class="balance-col-icon">
+                            <i class="iconfont hosjoy_jgzx"></i>
+                        </div>
+                        <div class="balance-col-money">
+                            <p>网银支付预付款<span>（元）</span></p>
+                            <p>{{repayStatistInfo.onlineBankingPrepayAmount|| 0| moneyShow}}</p>
+                        </div>
+                    </div>
+                    <div class="balance-cont-col">
+                        <div class="balance-col-icon">
+                            <i class="iconfont hosjoy_order"></i>
+                        </div>
+                        <div class="balance-col-money">
+                            <p>网银支付提前还款<span>（元）</span></p>
+                            <p>{{repayStatistInfo.onlineBankingAdvanceRepayAmount|| 0| moneyShow}}</p>
                         </div>
                     </div>
                 </div>
                 <div>
                     <el-tabs type="card" v-model="recordTabName" @tab-click="onRecordTab">
-                        <el-tab-pane label="线上回款" name="isOnline"></el-tab-pane>
-                        <el-tab-pane label="线下回款" name="isOffline"></el-tab-pane>
-                        <el-tab-pane label="预付款" name="isAdvance"></el-tab-pane>
+                        <el-tab-pane label="单分享订单回款" name="isOnline"></el-tab-pane>
+                        <el-tab-pane label="线下提前还款" name="isOffline"></el-tab-pane>
+                        <el-tab-pane label="线下转账预付款" name="isAdvance"></el-tab-pane>
+                        <el-tab-pane label="网银支付预付款" name="isOnbank"></el-tab-pane>
+                        <el-tab-pane label="网银支付提前还款" name="isOffbank"></el-tab-pane>
                     </el-tabs>
                 </div>
                 <div class="query-cont-row mt20">
                     <div class="query-cont-col">
                         <div class="query-col-title">时间：</div>
-                        <div class="query-col-input">
-                            <el-date-picker v-model="repayQueryParams.startTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :picker-options="pickerStart"></el-date-picker>
-                            <el-date-picker v-model="repayQueryParams.endTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
+                        <div class="query-col-input" v-if="recordTabName == 'isOnline'||recordTabName == 'isOffline' || recordTabName=='isOffbank'">
+                            <el-date-picker v-model="repayQueryParams.submitTimeFrom" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :picker-options="pickerStart"></el-date-picker>
+                            <el-date-picker v-model="repayQueryParams.submitTimeTo" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :picker-options="pickerEnd" default-time="23:59:59"></el-date-picker>
+                        </div>
+                          <div class="query-col-input" v-if="recordTabName == 'isAdvance'||recordTabName == 'isOnbank'">
+                            <el-date-picker v-model="repayQueryParams.prepayConfirmTimeFrom" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :picker-options="pickerBankStart"></el-date-picker>
+                            <el-date-picker v-model="repayQueryParams.prepayConfirmTimeTo" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :picker-options="pickerBankEnd" default-time="23:59:59"></el-date-picker>
                         </div>
                     </div>
                     <template v-if="recordTabName == 'isOnline'">
                         <div class="query-cont-col">
                             <div class="query-col-title">状态：</div>
                             <div class="query-col-input">
-                                <el-select v-model="repayQueryParams.status">
+                                <el-select v-model="repayQueryParams.repayStatus">
                                     <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </div>
@@ -240,13 +264,13 @@
                             </div>
                         </div>
                     </template>
-                    <div class="query-cont-col" v-if="recordTabName != 'isAdvance'">
+                    <div class="query-cont-col" v-if="recordTabName != 'isAdvance' && recordTabName != 'isOnbank'&& recordTabName != 'isOffbank'">
                         <div class="query-col-title">回款代采订单号：</div>
                         <div class="query-col-input">
                             <el-input v-model="repayQueryParams.agentOrderNo" maxlength="50" placeholder="请输入回款代采订单号"></el-input>
                         </div>
                     </div>
-                    <div class="query-cont-col" v-if="recordTabName == 'isAdvance'">
+                    <div class="query-cont-col" v-if="recordTabName == 'isAdvance'|| recordTabName == 'isOnbank'|| recordTabName == 'isOffbank'">
                         <div class="query-col-title">代采订单号：</div>
                         <div class="query-col-input">
                             <el-input v-model="repayQueryParams.agentOrderNo" maxlength="50" placeholder="请输入代采订单号"></el-input>
@@ -272,10 +296,16 @@
                             </div>
                         </div>
                     </template>
-                    <div class="query-cont-col">
+                    <div class="query-cont-col" v-if="recordTabName != 'isOnbank' && recordTabName != 'isOffbank'">
                         <div class="query-col-title">MIS订单号：</div>
                         <div class="query-col-input">
                             <el-input v-model="repayQueryParams.misOrderNo" maxlength="50" placeholder="请输入MIS订单号"></el-input>
+                        </div>
+                    </div>
+                    <div class="query-cont-col" v-if="recordTabName == 'isOnbank' || recordTabName == 'isOffbank'">
+                        <div class="query-col-title">企业名称：</div>
+                        <div class="query-col-input">
+                            <el-input v-model="repayQueryParams.username" maxlength="50" placeholder="请输入企业名称"></el-input>
                         </div>
                     </div>
                     <div class="query-cont-col">
@@ -284,11 +314,11 @@
                     </div>
                 </div>
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="pagination" @onCurrentChange="onCurrentChange" @onSizeChange="handleSizeChange" :isShowSum="true" :getSum="getSum">
-                    <template slot="status" slot-scope="scope">
-                        <span>{{statusMap.get(scope.data.row.status)}}</span>
+                    <template slot="repayStatus" slot-scope="scope">
+                        <span>{{statusMap.get(scope.data.row.repayStatus) || '-'}}</span>
                     </template>
-                    <template slot="type" slot-scope="scope">
-                        <span>{{deaTypeMap.get(scope.data.row.type)}}</span>
+                    <template slot="repayWay" slot-scope="scope">
+                        <span>{{deaTypeMap.get(scope.data.row.repayWay) || '-'}}</span>
                     </template>
                 </basicTable>
             </div>
@@ -296,14 +326,14 @@
     </div>
 </template>
 <script>
-import { BUSINESS_DETAIL_OPTIONS, BUSINESS_DETAIL_MAP, STAUTS_OPTIONS, STAUTS_MAP, OVERDUE_OPTIONS, OVERDUE_MAP, CAPITAL_STATUS_OPTIONS, CAPITAL_STATUS_MAP, DEADLINE_OPTIONS, DEA_TYPE_MAP } from '../const.js'
+import { BUSINESS_DETAIL_OPTIONS, BUSINESS_DETAIL_MAP, STAUTS_OPTIONS, STAUTS_MAP, OVERDUE_OPTIONS, OVERDUE_MAP, CAPITAL_STATUS_OPTIONS, CAPITAL_STATUS_MAP, DEADLINE_OPTIONS, DEA_TYPE_MAP, PAY_METHOD } from '../const.js'
 import { clearCache, newCache } from '@/utils/index'
 import { mapState, mapActions } from 'vuex'
 export default {
     name: 'merchantsDetail',
     data () {
         return {
-            tabName: 'detail',
+            tabName: 'record',
             businessDetaulOptions: BUSINESS_DETAIL_OPTIONS,
             businessDetaulMap: BUSINESS_DETAIL_MAP,
             statusOptions: STAUTS_OPTIONS,
@@ -314,16 +344,8 @@ export default {
             capitalStatusMap: CAPITAL_STATUS_MAP,
             deadlineOptions: DEADLINE_OPTIONS,
             deaTypeMap: DEA_TYPE_MAP,
-            fundDetil: {
-                creditLimit: '',
-                totalAmount: '',
-                totalPrepayAmount: '',
-                totalRetainageAmount: '',
-                totalRepayAmount: '',
-                occupationAmount: '',
-                overdueAmoun: ''
-            },
-            resetParams: {},
+            payWay: PAY_METHOD,
+            advanceRepayWay: PAY_METHOD,
             queryParams: {
                 username: '',
                 timeQueryType: '1',
@@ -334,54 +356,32 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
+            resetParams: {},
             recordTabName: 'isOnline',
-            tableDetailLabel: [
-                { label: '管理员账号', prop: 'username' },
-                { label: '企业名称', prop: 'companyName' },
-                { label: '当前额度', prop: 'creditLimit', formatters: 'moneyShow' },
-                { label: '总代采', prop: 'totalAmount' },
-                { label: '总预付', prop: 'totalPrepayAmount' },
-                { label: '总代付', prop: 'totalRetaingeAmount' },
-                { label: '总回款', prop: 'totalRepayedAmount' },
-                { label: '当前占用', prop: 'occupationAmount' },
-                { label: '当前逾期未还', prop: 'overdueAmount' },
-                { label: '最终回款期限', prop: 'finalRepayTime', formatters: 'date' },
-                { label: '最近还款日期', prop: 'lastRepayTime', formatters: 'date' },
-                { label: '逾期否', prop: 'overdue' },
-                { label: '资金状态', prop: 'fundStatus' }
-            ],
             repayQueryParams: {
-                type: '1',
                 status: '',
+
                 startTime: '',
                 endTime: '',
+                submitTimeFrom: '',
+                submitTimeTo: '',
+                prepayConfirmTimeTo: '',
+                prepayConfirmTimeFrom: '',
                 childOrderNo: '',
                 agentOrderNo: '',
                 username: '',
                 accountName: '',
                 bankCardNo: '',
+                payWay: '',
+                advanceRepayWay: '',
                 misOrderNo: '',
                 pageNumber: 1,
                 pageSize: 10
             },
             repayResetParams: {},
+            tableLabel: [],
             tableData: [],
-            tableLabel: [
-                { label: '时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '金额', prop: 'amount', formatters: 'moneyShow' },
-                { label: '状态', prop: 'status' },
-                { label: '回款订单号', prop: 'childOrderNo' },
-                { label: '回款代采订单号', prop: 'agentOrderNo' },
-                { label: 'MIS订单号', prop: 'misOrderNo' }
-            ],
-            detail: {
-                totalRepayAmount: '',
-                offlineRepayAmount: '',
-                onlineRepayAmount: '',
-                withdrawAmount: '',
-                availableWithdrawAmount: '',
-                prepayAmount: ''
-            }
+            pagination: {}
         }
     },
     computed: {
@@ -408,7 +408,7 @@ export default {
         pickerStart () {
             return {
                 disabledDate: (time) => {
-                    const beginDateVal = this.repayQueryParams.endTime
+                    const beginDateVal = this.repayQueryParams.submitTimeFrom
                     if (beginDateVal) {
                         return time.getTime() >= new Date(beginDateVal).getTime()
                     }
@@ -418,7 +418,27 @@ export default {
         pickerEnd () {
             return {
                 disabledDate: (time) => {
-                    const beginDateVal = this.repayQueryParams.startTime
+                    const beginDateVal = this.repayQueryParams.submitTimeTo
+                    if (beginDateVal) {
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                    }
+                }
+            }
+        },
+        pickerBankStart () {
+            return {
+                disabledDate: (time) => {
+                    const beginDateVal = this.queryParams.prepayConfirmTimeTo
+                    if (beginDateVal) {
+                        return time.getTime() >= new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerBankEnd () {
+            return {
+                disabledDate: (time) => {
+                    const beginDateVal = this.queryParams.prepayConfirmTimeFrom
                     if (beginDateVal) {
                         return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
@@ -434,8 +454,27 @@ export default {
             offlineRepayList: state => state.hmall.finance.offlineRepayList,
             prepayRepayList: state => state.hmall.finance.prepayRepayList,
             repayStatistInfo: state => state.hmall.finance.repayStatistInfo,
-            repayAll: state => state.hmall.finance.repayAll
+            onlineRepayAll: state => state.hmall.finance.onlineRepayAll,
+            offlineRepayAll: state => state.hmall.finance.offlineRepayAll,
+            advanceRepayAll: state => state.hmall.finance.advanceRepayAll
         }),
+        tableDetailLabel () {
+            return [
+                { label: '管理员账号', prop: 'username' },
+                { label: '企业名称', prop: 'companyName' },
+                { label: '当前额度', prop: 'creditLimit', formatters: 'moneyShow' },
+                { label: '总代采', prop: 'totalAmount' },
+                { label: '总预付', prop: 'totalPrepayAmount' },
+                { label: '总代付', prop: 'totalRetaingeAmount' },
+                { label: '总回款', prop: 'totalRepayedAmount' },
+                { label: '当前占用', prop: 'occupationAmount' },
+                { label: '当前逾期未还', prop: 'overdueAmount' },
+                { label: '最终回款期限', prop: 'finalRepayTime', formatters: 'date' },
+                { label: '最近还款日期', prop: 'lastRepayTime', formatters: 'date' },
+                { label: '逾期否', prop: 'overdue' },
+                { label: '资金状态', prop: 'fundStatus' }
+            ]
+        },
         paginationDetail () {
             return {
                 total: this.merchantList.total,
@@ -449,48 +488,15 @@ export default {
     },
     methods: {
         init () {
-            this.getMerchant()
-            this.getRepayStatist()
-            this.getOnlineRepay()
-            // this.getOfflineRepay()
-            // this.getPrepayRepay()
-            this.getMerchantStatistInfo()
-            this.getMerchantAllInfo()
-            this.getRepayAll()
-        },
-        onTab () {
-            this.queryParams = { ...this.resetParams }
-            if (this.tabName == 'detail') {
-                this.getMerchant()
-                this.getMerchantStatistInfo()
-                this.getMerchantAllInfo()
-            } else {
-                this.recordTabName = 'isOnline'
-                this.getOnlineRepay()
-                this.getRepayStatist()
-            }
-        },
-        onRecordTab (value) {
-            if (this.recordTabName == 'isOnline') {
-                this.repayQueryParams.pageNumber = 1
-                this.getOnlineRepay()
-                this.getRepayAll()
-            } else if (this.recordTabName == 'isOffline') {
-                this.repayQueryParams.pageNumber = 1
-                this.getOfflineRepay()
-                this.getRepayAll()
-            } else if (this.recordTabName == 'isAdvance') {
-                this.repayQueryParams.pageNumber = 1
-                this.getPrepayRepay()
-                this.getRepayAll()
-            }
-            this.onReset()
+            this.resetParams = { ...this.queryParams }
+            this.repayResetParams = { ...this.repayQueryParams }
+            this.onTab()
+            this.onQuery()
         },
         onQuery () {
             if (this.tabName == 'detail') {
                 this.queryParams.pageNumber = 1
                 this.getMerchant()
-                this.getMerchantAllInfo()
             } else if (this.tabName == 'record') {
                 if (this.recordTabName == 'isOnline') {
                     this.repayQueryParams.pageNumber = 1
@@ -501,7 +507,43 @@ export default {
                 } else if (this.recordTabName == 'isAdvance') {
                     this.repayQueryParams.pageNumber = 1
                     this.getPrepayRepay()
+                } else if (this.recordTabName == 'isOnbank') {
+                    this.repayQueryParams.pageNumber = 1
+                    this.getOnbankRepay()
+                } else if (this.recordTabName == 'isOffbank') {
+                    this.repayQueryParams.pageNumber = 1
+                    this.getOffbankRepay()
                 }
+            }
+        },
+        onTab () {
+            if (this.tabName == 'detail') {
+                this.queryParams.pageNumber = 1
+                this.getMerchantStatistInfo()
+                this.getMerchant()
+            } else {
+                this.recordTabName = 'isOnline'
+                this.getRepayStatist()
+                this.getOnlineRepay()
+            }
+        },
+        onRecordTab () {
+            this.repayQueryParams = { ...this.repayResetParams }
+            if (this.recordTabName == 'isOnline') {
+                this.repayQueryParams.pageNumber = 1
+                this.getOnlineRepay()
+            } else if (this.recordTabName == 'isOffline') {
+                this.repayQueryParams.pageNumber = 1
+                this.getOfflineRepay()
+            } else if (this.recordTabName == 'isAdvance') {
+                this.repayQueryParams.pageNumber = 1
+                this.getPrepayRepay()
+            } else if (this.recordTabName == 'isOnbank') {
+                this.repayQueryParams.pageNumber = 1
+                this.getOnbankRepay()
+            } else if (this.recordTabName == 'isOffbank') {
+                this.repayQueryParams.pageNumber = 1
+                this.getOffbankRepay()
             }
         },
         onCurrentChange (val) {
@@ -518,6 +560,12 @@ export default {
                 } else if (this.recordTabName == 'isAdvance') {
                     this.repayQueryParams.pageNumber = val.pageNumber
                     this.getPrepayRepay()
+                } else if (this.recordTabName == 'isOnbank') {
+                    this.repayQueryParams.pageNumber = val.pageNumber
+                    this.getOnbankRepay()
+                } else if (this.recordTabName == 'isOffbank') {
+                    this.repayQueryParams.pageNumber = val.pageNumber
+                    this.getOffbankRepay()
                 }
             }
         },
@@ -535,6 +583,12 @@ export default {
                 } else if (this.recordTabName == 'isAdvance') {
                     this.repayQueryParams.pageSize = val
                     this.getPrepayRepay()
+                } else if (this.recordTabName == 'isOnbank') {
+                    this.repayQueryParams.pageSize = val
+                    this.getOnbankRepay()
+                } else if (this.recordTabName == 'isOffbank') {
+                    this.repayQueryParams.pageSize = val
+                    this.getOffbankRepay()
                 }
             }
         },
@@ -542,10 +596,21 @@ export default {
         onReset () {
             if (this.tabName == 'detail') {
                 this.queryParams = { ...this.resetParams }
+                this.getMerchant()
             } else if (this.tabName == 'record') {
                 this.repayQueryParams = { ...this.repayResetParams }
+                if (this.recordTabName == 'isOnline') {
+                    this.getOnlineRepay()
+                } else if (this.recordTabName == 'isOffline') {
+                    this.getOfflineRepay()
+                } else if (this.recordTabName == 'isAdvance') {
+                    this.getPrepayRepay()
+                } else if (this.recordTabName == 'isOnbank') {
+                    this.getOnbankRepay()
+                } else if (this.recordTabName == 'isOffbank') {
+                    this.getOffbankRepay()
+                }
             }
-            this.onQuery()
         },
         // 提现
         onWithdrawal () {
@@ -627,12 +692,54 @@ export default {
                     if (index == 0) {
                         sums[index] = '合计'
                     }
-                    if (column.property == 'amount') {
-                        sums[index] = this.repayAll
-                        if (sums[index] && sums[index] != '-') {
-                            sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                        } else {
-                            sums[index] = '-'
+                    if (this.recordTabName == 'isOnline') {
+                        if (column.property == 'repayAmount') {
+                            sums[index] = this.onlineRepayAll
+                            if (sums[index] && sums[index] != '-') {
+                                sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                            } else {
+                                sums[index] = '-'
+                            }
+                        }
+                    }
+                    if (this.recordTabName == 'isOffline') {
+                        if (column.property == 'repayAmount') {
+                            sums[index] = this.offlineRepayAll
+                            if (sums[index] && sums[index] != '-') {
+                                sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                            } else {
+                                sums[index] = '-'
+                            }
+                        }
+                    }
+                    if (this.recordTabName == 'isOffbank') {
+                        if (column.property == 'repayAmount') {
+                            sums[index] = this.offlineRepayAll
+                            if (sums[index] && sums[index] != '-') {
+                                sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                            } else {
+                                sums[index] = '-'
+                            }
+                        }
+                    }
+                    if (this.recordTabName == 'isAdvance') {
+                        if (column.property == 'prepayAmount') {
+                            sums[index] = this.advanceRepayAll
+                            if (sums[index] && sums[index] != '-') {
+                                sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                            } else {
+                                sums[index] = '-'
+                            }
+                        }
+                    }
+                    if (this.recordTabName == 'isOnbank') {
+                        if (column.property == 'prepayAmount') {
+                            sums[index] = this.advanceRepayAll
+                            if (sums[index] && sums[index] != '-') {
+                                sums[index] = Number(sums[index]).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                            } else {
+                                sums[index] = '-'
+                            }
                         }
                     }
                 })
@@ -640,40 +747,37 @@ export default {
             }
         },
         ...mapActions({
-            findMerchant: 'finance/findMerchant',
             findMerchantStatist: 'finance/findMerchantStatist',
+            findMerchant: 'finance/findMerchant',
             findMerchantAll: 'finance/findMerchantAll',
+            findRepayStatist: 'finance/findRepayStatist',
             findOnlineRepay: 'finance/findOnlineRepay',
             findOfflineRepay: 'finance/findOfflineRepay',
             findPrepayRepay: 'finance/findPrepayRepay',
-            findRepayStatist: 'finance/findRepayStatist',
-            findRepayAll: 'finance/findRepayAll'
+            findOnlineRepayAll: 'finance/findOnlineRepayAll',
+            findOfflineRepayAll: 'finance/findOfflineRepayAll',
+            findAdvanceRepayAll: 'finance/findAdvanceRepayAll'
         }),
-        async getMerchant () {
-            await this.findMerchant(this.queryParams)
-            this.getMerchantAllInfo()
-        },
         async getMerchantStatistInfo () {
             await this.findMerchantStatist()
-            this.fundDetil = this.merchantStatistInfo
         },
-        async getMerchantAllInfo () {
+        async getMerchant () {
+            await this.findMerchant(this.queryParams)
             await this.findMerchantAll(this.queryParams)
         },
         async getRepayStatist () {
             await this.findRepayStatist()
-            this.detail = this.repayStatistInfo
         },
         async getOnlineRepay () {
+            this.repayQueryParams.type = 1
             this.tableLabel = [
-                { label: '时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '金额', prop: 'amount', formatters: 'moneyShow' },
-                { label: '状态', prop: 'status' },
+                { label: '时间', prop: 'submitTime', formatters: 'dateTime' },
+                { label: '金额', prop: 'repayAmount', formatters: 'moneyShow' },
+                { label: '状态', prop: 'repayStatus' },
                 { label: '回款订单号', prop: 'childOrderNo' },
                 { label: '回款代采订单号', prop: 'agentOrderNo' },
                 { label: 'MIS订单号', prop: 'misOrderNo' }
             ]
-            this.repayQueryParams.type = 1
             await this.findOnlineRepay(this.repayQueryParams)
             this.tableData = this.onlineRepayList.records
             this.pagination = {
@@ -681,14 +785,14 @@ export default {
                 pageNumber: this.onlineRepayList.current,
                 pageSize: this.onlineRepayList.size
             }
-            this.repayQueryParams.type = 1
-            this.getRepayAll()
+            await this.findOnlineRepayAll(this.repayQueryParams)
         },
         async getOfflineRepay () {
+            this.repayQueryParams.advanceRepayWay = 10
             this.tableLabel = [
-                { label: '时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '金额', prop: 'amount', formatters: 'moneyShow' },
-                { label: '类型', prop: 'type' },
+                { label: '时间', prop: 'submitTime', formatters: 'dateTime' },
+                { label: '金额', prop: 'repayAmount', formatters: 'moneyShow' },
+                { label: '类型', prop: 'repayWay' },
                 { label: '打款账户名称', prop: 'accountName' },
                 { label: '打款银行账号', prop: 'bankCardNo' },
                 { label: '企业名称', prop: 'companyName' },
@@ -696,7 +800,6 @@ export default {
                 { label: '回款代采订单号', prop: 'agentOrderNo' },
                 { label: 'MIS订单号', prop: 'misOrderNo' }
             ]
-            this.repayQueryParams.type = 2
             await this.findOfflineRepay(this.repayQueryParams)
             this.tableData = this.offlineRepayList.records
             this.pagination = {
@@ -704,22 +807,20 @@ export default {
                 pageNumber: this.offlineRepayList.current,
                 pageSize: this.offlineRepayList.size
             }
-            this.repayQueryParams.type = 2
-            this.getRepayAll()
+            await this.findOfflineRepayAll(this.repayQueryParams)
         },
         async getPrepayRepay () {
+            this.repayQueryParams.payWay = 10
             this.tableLabel = [
-                { label: '时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '金额', prop: 'amount', formatters: 'moneyShow' },
-                { label: '类型', prop: 'type' },
-                { label: '打款账户名称', prop: 'accountName' },
-                { label: '打款银行账号', prop: 'bankCardNo' },
+                { label: '时间', prop: 'prepayConfirmTime', formatters: 'dateTime' },
+                { label: '金额', prop: 'prepayAmount', formatters: 'moneyShow' },
+                { label: '打款账户名称', prop: 'prepayAccountName' },
+                { label: '打款银行账号', prop: 'prepayBankCardNo' },
                 { label: '企业名称', prop: 'companyName' },
                 { label: '管理员账号', prop: 'username' },
                 { label: '代采订单号', prop: 'agentOrderNo' },
                 { label: 'MIS订单号', prop: 'misOrderNo' }
             ]
-            this.repayQueryParams.type = 3
             await this.findPrepayRepay(this.repayQueryParams)
             this.tableData = this.prepayRepayList.records
             this.pagination = {
@@ -727,23 +828,48 @@ export default {
                 pageNumber: this.prepayRepayList.current,
                 pageSize: this.prepayRepayList.size
             }
-            this.repayQueryParams.type = 3
-            this.getRepayAll()
+            await this.findAdvanceRepayAll(this.repayQueryParams)
         },
-        async getRepayAll () {
-            if (this.recordTabName == 'isOnline') {
-                this.repayQueryParams.type = 1
-            } else if (this.recordTabName == 'isOffline') {
-                this.repayQueryParams.type = 2
-            } else if (this.recordTabName == 'isAdvance') {
-                this.repayQueryParams.type = 3
+        async getOnbankRepay () {
+            this.repayQueryParams.payWay = 20
+            this.tableLabel = [
+                { label: '时间', prop: 'prepayConfirmTime', formatters: 'dateTime' },
+                { label: '预付款支付金额', prop: 'prepayAmount', formatters: 'moneyShow' },
+                { label: '代采订单号', prop: 'agentOrderNo' },
+                { label: '企业名称', prop: 'companyName' },
+                { label: '管理员账号', prop: 'username' },
+                { label: 'MIS订单号', prop: 'misOrderNo' }
+            ]
+            await this.findPrepayRepay(this.repayQueryParams)
+            this.tableData = this.prepayRepayList.records
+            this.pagination = {
+                total: this.prepayRepayList.total,
+                pageNumber: this.prepayRepayList.current,
+                pageSize: this.prepayRepayList.size
             }
-            await this.findRepayAll(this.repayQueryParams)
+            await this.findAdvanceRepayAll(this.repayQueryParams)
+        },
+        async getOffbankRepay () {
+            this.repayQueryParams.advanceRepayWay = 20
+            this.tableLabel = [
+                { label: '时间', prop: 'submitTime', formatters: 'dateTime' },
+                { label: '预付款支付金额', prop: 'repayAmount', formatters: 'moneyShow' },
+                { label: '代采订单号', prop: 'agentOrderNo' },
+                { label: '企业名称', prop: 'companyName' },
+                { label: '管理员账号', prop: 'username' },
+                { label: 'MIS订单号', prop: 'misOrderNo' }
+            ]
+            await this.findOfflineRepay(this.repayQueryParams)
+            this.tableData = this.offlineRepayList.records
+            this.pagination = {
+                total: this.offlineRepayList.total,
+                pageNumber: this.offlineRepayList.current,
+                pageSize: this.offlineRepayList.size
+            }
+            await this.findOfflineRepayAll(this.repayQueryParams)
         }
     },
     mounted () {
-        this.repayResetParams = { ...this.repayQueryParams }
-        this.resetParams = { ...this.queryParams }
         this.init()
     },
     beforeRouteEnter (to, from, next) {
