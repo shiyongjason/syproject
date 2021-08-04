@@ -586,7 +586,7 @@ export default {
                     { label: '商品ID', prop: 'productId' },
                     { label: '商品名称', prop: 'productName' },
                     { label: '商品规格', prop: 'productSpecification' },
-                    { label: '商品价格（元）', prop: 'productPrice' },
+                    { label: '商品价格（元）', prop: 'productAmount' },
                     { label: '商品数量（件）', prop: 'productCount' }
                 ]
             } else if (this.focusDetailOrder.source === this.ORDER_SOURCE_B2B) {
