@@ -115,7 +115,8 @@
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>上游支付凭证：
                         <div class="advance_wrap-pic">
-                            <img src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" alt="">
+                            <!-- <img src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" alt=""> -->
+                             <ImageAddToken fileUrl="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" alt="" />
                         </div>
                     </el-col>
                     <el-col :span="7" :offset='1'>支付凭证上传时间：2102-8-9</el-col>
@@ -222,6 +223,7 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { CreateElement } from 'vue'
 import { Action, Getter, State } from 'vuex-class'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
+import ImageAddToken from '@/components/elImageAddToken/index.vue'
 import { deepCopy } from '@/utils/utils'
 import './css/css.scss'
 interface Query{
@@ -231,7 +233,8 @@ interface Query{
     name: 'Advancelist',
     components: {
         hosJoyTable,
-        OssFileHosjoyUpload
+        OssFileHosjoyUpload,
+        ImageAddToken
     }
 })
 export default class Advancelist extends Vue {
