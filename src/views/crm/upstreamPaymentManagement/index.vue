@@ -265,7 +265,7 @@ export default class UpstreamPaymentManagement extends Vue {
     }
     paymentType = PAYMENTTYPE
     supplierPaymentMethod = SUPPLIERPAYMENTMETHOD
-    tableData:RespUpStreamPayment[] | [] = []
+    tableData:RespUpStreamPayment[] = []
     editorDrawer:boolean = false
     isOpen:boolean = false
     isOpenChangeStatus: boolean = false

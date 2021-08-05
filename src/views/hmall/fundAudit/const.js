@@ -166,7 +166,8 @@ export const AUDIT_MAP = new Map([
 ])
 // 预付款付款方式
 export const PAY_OPTIONS = [
-    { label: '线下转账', value: 10 }
+    { label: '线下转账', value: 10 },
+    { label: '企业网银支付', value: 20 }
 ]
 // 单位
 export const UNIT_MAP = new Map([

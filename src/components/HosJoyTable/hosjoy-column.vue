@@ -41,8 +41,9 @@
         </template>
 
         <template slot-scope="scope">
-            <hosjoy-render :scope="scope" :render="column.render">
-            </hosjoy-render>
+            <div class="hosjoyRender">
+                <hosjoy-render :scope="scope" :render="column.render"></hosjoy-render>
+            </div>
         </template>
 
         <template v-if="column.children">
@@ -139,7 +140,7 @@ export default {
         setColumn () {
             if (this.column && this.column.formatter) {
                 this.column.render = (h, scope) => {
-                    return <span>{scope.column.formatter(scope.row, scope.column, scope.row, scope.$index)}</span>
+                    return <div>{scope.column.formatter(scope.row, scope.column, scope.row, scope.$index)}</div>
                 }
             }
             if (this.column && !this.column.render) {
@@ -148,20 +149,20 @@ export default {
                     // 添加字典
                     if (this.column.dicData) {
                         return (
-                            <span>
+                            <div>
                                 {this.getLabelFromDicData(scope.row[this.column.prop], this.column.dicData) ? this.getLabelFromDicData(scope.row[this.column.prop], this.column.dicData).label : '-'}
-                            </span>
+                            </div>
                         )
                     }
                     if (this.column.displayAs) {
                         return (
-                            <span>
+                            <div>
                                 {this.filterMethods(this.column.displayAs, scope.row[scope.column.property]) + unit}
-                            </span>
+                            </div>
                         )
                     }
                     return (
-                        <span>{scope.row[scope.column.property] || scope.row[scope.column.property] === 0 ? `${scope.row[scope.column.property]}${unit}` : '-'}</span>
+                        <div>{scope.row[scope.column.property] || scope.row[scope.column.property] === 0 ? `${scope.row[scope.column.property]}${unit}` : '-'}</div>
                     )
                 }
             }

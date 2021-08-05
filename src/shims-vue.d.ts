@@ -18,6 +18,8 @@ declare module 'vue/types/vue' {
         /** 精确乘法 */
         $multipliedBy: Function,
         $router: VueRouter,
-        $route: Route
+        $route: Route,
+        /** 鉴权 */
+        hosAuthCheck: Function
     }
 }

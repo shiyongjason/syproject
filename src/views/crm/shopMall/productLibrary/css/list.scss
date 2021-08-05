@@ -1,0 +1,125 @@
+.ProductLibrary{
+    .bulkPull{
+        margin: 15px 0;
+    }
+    .flexlayout{
+        display: flex;
+        align-items: center;
+    }
+    .search-btn{
+        margin-left: 25px;
+    }
+    
+}
+.crmshopMallSpuEdit{
+    /deep/.elupload{
+        margin-top: 0px;
+    }
+    /deep/.default-pre-view{
+        margin-top: 0px;
+        // margin-right: 0px;
+    }
+}
+/deep/.vicepics{
+    .default-pre-view{
+        margin-top: 0px;
+        margin-right: 8px;
+    }
+}
+/deep/.productPicture{
+    display: flex;
+}
+/deep/.priceflex{
+    display: flex;
+    justify-content: center;
+}
+.SpuEdit{
+    .el-form .el-input{
+        width: 340px;
+    }
+}
+.areaTree{
+    max-height: 300px;
+    overflow-y: scroll;
+    border: 1px solid #ebeef5;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding:10px 0;
+    /deep/.el-tree-node__label{
+        margin-left: 4px;
+    }
+}
+/deep/::-webkit-scrollbar-thumb {
+    background-color: #d6d1d1 !important;
+}
+.SpuEdit{
+    .hosjoy-table {
+        /deep/.el-table .pricecell{
+            .cell:before {
+                content: '*';
+                color: #F56C6C;
+                margin-right: 4px;
+            }
+        }
+        
+    }
+    .addNew{
+        color: #2f71e8;
+        cursor: pointer;
+        display: inline;
+    }
+}
+.skutableForm{
+    display: flex;
+    // align-items: center;
+    /deep/.el-form-item__content{
+        margin-left: 0px !important;
+        line-height:unset !important;
+    }
+    /deep/.el-form-item{
+        margin-bottom: 0px !important;
+    }
+    /deep/.el-form-item__error{
+        position: unset;
+        text-align: left;
+    }
+}
+.submit-btns{
+    margin:50px 0 30px;
+    text-align: center;
+}
+.tipsDialog{
+    /deep/.el-dialog__body{
+        min-height:120px;
+        box-sizing: border-box;
+    }
+}
+.chooseSKUDialog{
+    /deep/.el-dialog .el-input{
+        width: 50px;
+    }
+    /deep/.el-dialog .el-select{
+        width: unset;
+    }
+    
+}
+
+.productPicture{
+    /deep/.preViewExtends{
+        cursor: pointer;
+        user-select: none;
+        color: #ffffff;
+        font-size: 12px;
+        flex: 0 0 48px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    /deep/.mainpic{
+        margin-left:36px;
+    }
+    /deep/.sidepic{
+        margin-left: 95px;
+    }
+}
