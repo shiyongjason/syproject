@@ -1,0 +1,67 @@
+.query_tag {
+    display: flex;
+    flex-direction: column;
+    max-height: 300px;
+    overflow-y: scroll;
+    width: 500px;
+    /deep/.el-tag {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+}
+.query-col__label{
+    i{
+        font-style: normal;
+        color: red;
+    }
+}
+.block {
+    max-height: 450px;
+    overflow-y: scroll;
+}
+.custom-tree-node {
+    display: flex;
+    width: 80%;
+    span {
+        &:first-child {
+            width: 300px;
+            display: block;
+        }
+        display: flex;
+        flex: 1;
+        justify-content: right;
+    }
+}
+/deep/.el-tree-node__content {
+    ~ .custom-tree-node {
+        span {
+            padding-left: 36px;
+        }
+    }
+}
+.floor-tit {
+    background: #e5e5e5;
+    opacity: 0.8;
+    font-size: 18px;
+    padding: 5px 10px;
+    margin-bottom: 20px;
+    position: relative;
+    &::before {
+        content: '';
+        width: 5px;
+        height: 100%;
+        background: tomato;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
+.category_bot {
+    margin-top: 20px;
+    text-align: center;
+}
+.B2b .query-col__input .el-input {
+    width: 100%;
+}

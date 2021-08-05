@@ -77,7 +77,7 @@
                                 {{ paymentOrderDetail.payOrderDetail.applyAmount | fundMoneyHasTail }}元
                             </p>
                             <p class="col-filed col-50">
-                                <span class="label">最迟发货日期：</span> {{ paymentOrderDetail.payOrderDetail.lastGoodsDate }}
+                                <span class="label">最迟发货日期：</span> {{ paymentOrderDetail.payOrderDetail.lastGoodsDate||'-' }}
                             </p>
                         </div>
                         <div class="row-filed">

@@ -294,7 +294,7 @@ export default {
             }
         },
         formChange (val) {
-            // this.createChange = val
+            this.createChange = val
         },
         closeDialog () {
             this.form.repayStatus = ''

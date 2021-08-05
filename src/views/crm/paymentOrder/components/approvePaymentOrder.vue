@@ -44,7 +44,7 @@
                             {{ paymentOrderConst.APPLY_TYPE.get(paymentDetail.payOrderPoDetail.poNumber) }}
                         </el-form-item>
                         <el-form-item label="最迟发货日期：">
-                            {{ paymentDetail.payOrderPoDetail.lastGoodsDate }}
+                            {{ paymentDetail.payOrderPoDetail.lastGoodsDate||'-' }}
                         </el-form-item>
                         <el-form-item label="收货地址：">
                             {{ paymentDetail.payOrderPoDetail.goodsAddress }}
