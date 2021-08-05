@@ -247,7 +247,7 @@ export default class LoanHandoverInformation extends Vue {
     infoDialog:boolean = false
     isMoreBill:boolean = false
     title:string = ''
-    billData:BillAmountResponse[] | [] = []
+    billData:BillAmountResponse[] = []
     supplierPaymentMethodArr = new Map([[1, '先款后货'], [2, '先货后款']])
     dealerCooperationMethodArr = new Map([[1, '垫资代采'], [2, '代收代付']])
 
