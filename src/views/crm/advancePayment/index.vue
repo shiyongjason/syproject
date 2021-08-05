@@ -62,17 +62,16 @@
                 </div>
             </div>
             <div class="query-cont__row">
-                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span>累计金额：{{totalAmount|fundMoneyHasTail}}</span></el-tag>
+                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span>累计金额：{{'10000'|fundMoneyHasTail}}</span></el-tag>
             </div>
             <!-- end search bar -->
-            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction
-                :isActionFixed='tableData&&tableData.length>0'>
+            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
                     <h-button table>查看详情</h-button>
                 </template>
             </hosJoyTable>
         </div>
-        <el-dialog title="预付款支付单详情" :visible.sync="dialogVisible" width="40%" :before-close="handleClose">
+        <el-dialog title="预付款支付单详情" :visible.sync="dialogVisible" width="40%" :before-close="()=>{dialogVisible = false}">
             <div class="advance_wrap">
                 <h3>项目信息</h3>
                 <el-row type="flex" class="row-bg">
@@ -123,7 +122,7 @@
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="24" :offset='20'>
-                        <el-button type="primary" @click="dialogVisible = false">确认上游支付</el-button>
+                        <el-button type="primary" @click="onConfirmUpper">确认上游支付</el-button>
                     </el-col>
                 </el-row>
             </div>
@@ -132,7 +131,7 @@
             </span>
         </el-dialog>
         <!-- 审核 -->
-        <el-dialog title="预付款支付单审核" :visible.sync="examineVisble" width="40%" :before-close="handleClose">
+        <el-dialog title="预付款支付单审核" :visible.sync="examineVisble" width="40%" :before-close="()=>{examineVisble = false}">
             <div class="advance_examine">
                 <div class="advance_examine-left">
                     <h3>项目信息</h3>
@@ -158,30 +157,29 @@
                 </div>
                 <div class="advance_examine-right">
                     <h3>审核信息</h3>
-                    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm">
-                        <el-form-item label="审核结果">
-                            <el-radio-group v-model="ruleForm.resource">
-                                <el-radio label="线上品牌商赞助"></el-radio>
-                                <el-radio label="线下场地免费"></el-radio>
+                    <el-form :model="auditForm" :rules="auditRules" ref="auditForm" label-width="100px" class="demo-ruleForm">
+                        <el-form-item label="审核结果：" prop="desc">
+                            <el-radio-group v-model="auditForm.resource">
+                                <el-radio label="通过"></el-radio>
+                                <el-radio label="不通过"></el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <el-form-item label="活动形式">
-                            <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+                        <el-form-item label="审核备注：" prop="desc">
+                            <el-input type="textarea" v-model="auditForm.desc" maxlength="200"></el-input>
                         </el-form-item>
                     </el-form>
                 </div>
-
             </div>
-              <p>审核通过后，将会发送钉钉预付款支付审批流程</p>
+            <p style="color: #999;">审核通过后，将会发送钉钉预付款支付审批流程</p>
             <span slot="footer" class="dialog-footer">
-
+                <el-button  @click="examineVisble = false">取 消</el-button>
                 <el-button type="primary" @click="dialogVisible = false">确认审核</el-button>
             </span>
         </el-dialog>
 
         <!-- 确认上游支付 -->
-        <el-dialog title="预付款支付单详情" :visible.sync="comfireVisble" width="40%" :before-close="handleClose">
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="140px" class="demo-ruleForm">
+        <el-dialog title="预付款上游支付" :visible.sync="comfirmVisble" width="40%" :before-close="()=>{comfirmVisble = false}">
+            <el-form :model="detailForm" :rules="detailRules" ref="detailForm" label-width="150px" class="demo-ruleForm">
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>经销商：</el-col>
                     <el-col :span="10" :offset='1'>项目：</el-col>
@@ -194,15 +192,15 @@
                     <el-col :span="10" :offset='1'>上游支付方式：</el-col>
                     <el-col :span="10" :offset='1'>剩余应上游支付(元)：</el-col>
                 </el-row>
-                <el-form-item label="本次支付金额" prop="name">
-                    <el-input v-model="ruleForm.name"></el-input>
+                <el-form-item style="margin-top:20px" label="本次支付金额" prop="name">
+                    <el-input v-model.trim="detailForm.goodsAmount" maxlength="50" v-isNegative:2="detailForm.goodsAmount"></el-input>
                 </el-form-item>
                 <el-form-item label="支付日期：" prop="name">
-                    <el-date-picker v-model="ruleForm.name" type="date" placeholder="选择日期">
+                    <el-date-picker v-model="detailForm.name" type="date" placeholder="选择日期">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="上传上游支付凭证：" prop="payVouchers" style="margin-bottom:20px">
-                    <OssFileHosjoyUpload v-model="ruleForm.payVouchers" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.form.clearValidate()" accept=".jpg,.png,.pdf">
+                <el-form-item label="上传上游支付凭证：" prop="payVouchers" style="margin:20px 0">
+                    <OssFileHosjoyUpload v-model="detailForm.payVouchers" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.detailForm.clearValidate()" accept=".jpg,.png,.pdf">
                         <div class="a-line">
                             <h-button>上传文件</h-button>
                         </div>
@@ -211,8 +209,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="dialogVisible = false">确认上游支付</el-button>
-                <el-button @click="dialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="comfirmVisble = false">取 消</el-button>
+                <el-button @click="dialogVisible = false">确认支付</el-button>
             </span>
         </el-dialog>
     </div>
@@ -224,6 +222,7 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { CreateElement } from 'vue'
 import { Action, Getter, State } from 'vuex-class'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
+import { deepCopy } from '@/utils/utils'
 import './css/css.scss'
 interface Query{
     [key:string]:any
@@ -243,19 +242,23 @@ export default class Advancelist extends Vue {
         updateUid: '',
         reservedName: false
     }
-    private dialogVisible:boolean = false
-    private comfireVisble:boolean = false
-    private examineVisble:boolean = true
+    private dialogVisible:boolean = true
+    private comfirmVisble:boolean = false
+    private examineVisble:boolean = false
     queryParams:Query = {
 
     }
-    ruleForm:object = {
+    detailForm:object = {
         payVouchers: []
     }
+    auditForm:object = {
+
+    }
+
     page = {
         total: 0
     }
-    tableLabel:tableLabelProps = [
+    private tableLabel:tableLabelProps = [
         { label: '支付单编号', prop: 'paymentOrderNo', width: '100' },
         { label: '所属分部', prop: 'deptName', width: '130' },
         { label: '经销商', prop: 'companyName', width: '150', resizable: true },
@@ -263,7 +266,7 @@ export default class Advancelist extends Vue {
         { label: '项目名称', prop: 'projectName', minWidth: '300' },
         { label: '采购单金额', prop: 'poAmount', width: '160', displayAs: 'money' }
     ]
-    tableData = []
+    private tableData = []
     @State('userInfo') userInfo: any
     @Getter('crmmanage/crmdepList') crmdepList!: Array<HCGCommonInterface.Branch>
     @Action('crmmanage/findCrmdeplist') findCrmdeplist!: Function
@@ -277,11 +280,37 @@ export default class Advancelist extends Vue {
         }
     }
 
+    auditRules = {
+        desc: [
+            { required: true, message: '必填项不能为空', trigger: 'blur' }
+        ]
+    }
+    detailRules = {
+        payVouchers: [
+            { required: true, message: '必填项不能为空', trigger: 'blur' }
+        ],
+        name: [
+            { required: true, message: '必填项不能为空', trigger: 'blur' }
+        ]
+    }
+    public onStartChange (val): void {
+        this.queryParams.startExpectSupplierPaymentDate = val
+    }
+    public onEndChange (val): void {
+        this.queryParams.endExpectSupplierPaymentDate = val
+    }
+
     public getList (): void {
 
     }
-    public created (): void {
-        console.log('created')
+
+    public onReset (): void {
+        console.log('onReset')
+    }
+
+    public onConfirmUpper (): void {
+        // 上游支付
+        this.comfirmVisble = true
     }
 
     public async mounted () {
@@ -297,6 +326,3 @@ export default class Advancelist extends Vue {
     }
 }
 </script>
-
-<style lang="scss" scoped>
-</style>>
