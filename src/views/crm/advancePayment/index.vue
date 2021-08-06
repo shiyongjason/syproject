@@ -226,9 +226,15 @@ import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyU
 import ImageAddToken from '@/components/elImageAddToken/index.vue'
 import { deepCopy } from '@/utils/utils'
 import './css/css.scss'
+import { getPrePayList } from './api/index'
+import { IPagePrepaymentResponse } from '@/interface/hbp-project'
+// 定义类型
 interface Query{
     [key:string]:any
 }
+
+const preStatus = [{ value: 1, label: '待项目运营审核' }, { value: 2, label: '流程审批中' }, { value: 3, label: '预付款待支付' }, { value: 4, label: '预付款支付单完成' }, { value: 5, label: '预付款待核销' }, { value: 6, label: '预付款已核销' }, { value: 7, label: '预付款支付单关闭' }]
+
 @Component({
     name: 'Advancelist',
     components: {
@@ -249,7 +255,8 @@ export default class Advancelist extends Vue {
     private comfirmVisble:boolean = false
     private examineVisble:boolean = false
     queryParams:Query = {
-
+        pageSize: 10,
+        pageNumber: 1
     }
     detailForm:object = {
         payVouchers: []
@@ -262,12 +269,17 @@ export default class Advancelist extends Vue {
         total: 0
     }
     private tableLabel:tableLabelProps = [
-        { label: '支付单编号', prop: 'paymentOrderNo', width: '100' },
-        { label: '所属分部', prop: 'deptName', width: '130' },
-        { label: '经销商', prop: 'companyName', width: '150', resizable: true },
-        { label: '上游供应商', prop: 'supplierCompanyName', width: '180' },
-        { label: '项目名称', prop: 'projectName', minWidth: '300' },
-        { label: '采购单金额', prop: 'poAmount', width: '160', displayAs: 'money' }
+        { label: '预付款支付单编号', prop: 'prepaymentNo' },
+        { label: '所属分部', prop: 'subsectionName' },
+        { label: '经销商', prop: 'distributor' },
+        { label: '项目名称', prop: 'projectName', width: '120' },
+        { label: '金额', prop: 'applyAmount', displayAs: 'money' },
+        { label: '状态', prop: 'status', dicData: preStatus },
+        { label: '核销采购单编号', prop: 'purchaseOrderId' },
+        { label: '申请人', prop: 'applyUser' },
+        { label: '申请时间', prop: 'applyTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+        { label: '更新时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss' }
+
     ]
     private tableData = []
     @State('userInfo') userInfo: any
@@ -303,8 +315,10 @@ export default class Advancelist extends Vue {
         this.queryParams.endExpectSupplierPaymentDate = val
     }
 
-    public getList (): void {
-
+    public async getList () {
+        const { data } = await getPrePayList(this.queryParams)
+        this.tableData = data.records
+        this.page.total = data.total as number
     }
 
     public onReset (): void {
@@ -317,7 +331,7 @@ export default class Advancelist extends Vue {
     }
 
     public async mounted () {
-        console.log('mounted')
+        this.getList()
         await this.findCrmdeplist({
             deptType: 'F',
             pkDeptDoc: this.userInfo.pkDeptDoc,

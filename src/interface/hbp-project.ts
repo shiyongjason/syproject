@@ -414,6 +414,13 @@ export interface ReqContract {
     createBy?: string
 
     /**
+     * 创建人手机号
+     * @type {string}
+     * @memberof ReqContract
+     */
+    createPhone?: string
+
+    /**
      * 更新人
      * @type {string}
      * @memberof ReqContract
@@ -1269,6 +1276,13 @@ export interface PayVoucher {
      */
     fileName?: string
 
+    /**
+     * 带token的上游支付凭证文件路径
+     * @type {string}
+     * @memberof PayVoucher
+     */
+    tokenUrl?: string
+
 }
 
 
@@ -1688,6 +1702,222 @@ export interface ReqDingCallbackTask {
 
 
 /**
+* 
+* @export
+* @interface ResolutionDingInitRequest
+*/
+export interface ResolutionDingInitRequest {
+    
+    /**
+     * 所属大区/分部
+     * @type {string}
+     * @memberof ResolutionDingInitRequest
+     */
+    deptName: string
+
+    /**
+     * 合作次数
+     * @type {number | string}
+     * @memberof ResolutionDingInitRequest
+     */
+    cooperationNumber: number | string
+
+    /**
+     * 经销商
+     * @type {string}
+     * @memberof ResolutionDingInitRequest
+     */
+    companyName: string
+
+    /**
+     * 客户经理
+     * @type {string}
+     * @memberof ResolutionDingInitRequest
+     */
+    userManager: string
+
+    /**
+     * 客户经理手机号
+     * @type {string}
+     * @memberof ResolutionDingInitRequest
+     */
+    userManagerPhone: string
+
+    /**
+     * 可代采购额度(元)
+     * @type {number | string}
+     * @memberof ResolutionDingInitRequest
+     */
+    purchaseQuota: number | string
+
+    /**
+     * 剩余代采购额度(元)
+     * @type {number | string}
+     * @memberof ResolutionDingInitRequest
+     */
+    purchaseBalance: number | string
+
+    /**
+     * 经销商评级
+     * @type {string}
+     * @memberof ResolutionDingInitRequest
+     */
+    companyLevel: string
+
+    /**
+     * 项目id
+     * @type {number | string}
+     * @memberof ResolutionDingInitRequest
+     */
+    projectId: number | string
+
+    /**
+     * 项目名称
+     * @type {string}
+     * @memberof ResolutionDingInitRequest
+     */
+    projectName: string
+
+    /**
+     * 项目评级
+     * @type {string}
+     * @memberof ResolutionDingInitRequest
+     */
+    levels: string
+
+    /**
+     * 项目合同总额
+     * @type {number | string}
+     * @memberof ResolutionDingInitRequest
+     */
+    contractAmount: number | string
+
+    /**
+     * 申请代付金额(元)
+     * @type {number | string}
+     * @memberof ResolutionDingInitRequest
+     */
+    predictLoanAmount: number | string
+
+    /**
+     * 首付款比例%
+     * @type {number | string}
+     * @memberof ResolutionDingInitRequest
+     */
+    advancePaymentRate: number | string
+
+    /**
+     * 设备款总额
+     * @type {number | string}
+     * @memberof ResolutionDingInitRequest
+     */
+    deviceAmount: number | string
+
+    /**
+     * 剩余货款支付周期（月）
+     * @type {number | string}
+     * @memberof ResolutionDingInitRequest
+     */
+    remainPaymentCycle: number | string
+
+    /**
+     * 执行费率(银行转账)
+     * @type {number | string}
+     * @memberof ResolutionDingInitRequest
+     */
+    transferBankRate: number | string
+
+    /**
+     * 执行费率(银行承兑)
+     * @type {number | string}
+     * @memberof ResolutionDingInitRequest
+     */
+    acceptBankRate: number | string
+
+    /**
+     * 项目采购信息
+     * @type {Array<ResolutionPurchaseRequest>}
+     * @memberof ResolutionDingInitRequest
+     */
+    resolutionPurchaseList: Array<ResolutionPurchaseRequest>
+
+    /**
+     * 备注信息
+     * @type {string}
+     * @memberof ResolutionDingInitRequest
+     */
+    remark: string
+
+    /**
+     * 发起人手机号
+     * @type {string}
+     * @memberof ResolutionDingInitRequest
+     */
+    applierMobile: string
+
+}
+
+
+/**
+* 项目采购信息
+* @export
+* @interface ResolutionPurchaseRequest
+*/
+export interface ResolutionPurchaseRequest {
+    
+    /**
+     * 项目采购信息id
+     * @type {number | string}
+     * @memberof ResolutionPurchaseRequest
+     */
+    id?: number | string
+
+    /**
+     * 所属项目id/发起决议变更快照id
+     * @type {number | string}
+     * @memberof ResolutionPurchaseRequest
+     */
+    ascriptionId?: number | string
+
+    /**
+     * 设备品类
+     * @type {string}
+     * @memberof ResolutionPurchaseRequest
+     */
+    deviceCategory?: string
+
+    /**
+     * 设备品牌
+     * @type {string}
+     * @memberof ResolutionPurchaseRequest
+     */
+    deviceBrand?: string
+
+    /**
+     * 上游供应商类型 1：厂商 2：代理商 3：经销商
+     * @type {number | string}
+     * @memberof ResolutionPurchaseRequest
+     */
+    upstreamSupplierType?: number | string
+
+    /**
+     * 上游供应商
+     * @type {string}
+     * @memberof ResolutionPurchaseRequest
+     */
+    upstreamSupplierName?: string
+
+    /**
+     * 上游接受的付款方式 1：现金 2：承兑
+     * @type {number | string}
+     * @memberof ResolutionPurchaseRequest
+     */
+    upstreamPayType?: number | string
+
+}
+
+
+/**
 * 变更字段对比 注：发起类型是采购单变更提交才会传
 * @export
 * @interface PoChangeFields
@@ -1794,6 +2024,13 @@ export interface PoInfo {
      * @memberof PoInfo
      */
     poAmount?: number | string
+
+    /**
+     * 
+     * @type {JsonNode}
+     * @memberof PoInfo
+     */
+    poDetail?: JsonNode
 
     /**
      * 采购批次
@@ -1960,11 +2197,52 @@ export interface ReqPurchaseOrderDingInitApproval {
     initiateType: number | string
 
     /**
+     * 
+     * @type {PoInfo}
+     * @memberof ReqPurchaseOrderDingInitApproval
+     */
+    poInfo?: PoInfo
+
+    /**
      * 变更字段对比 注：发起类型是采购单变更提交才会传
      * @type {Array<PoChangeFields>}
      * @memberof ReqPurchaseOrderDingInitApproval
      */
     poChangeFieldsList?: Array<PoChangeFields>
+
+}
+
+
+/**
+* 
+* @export
+* @interface PrepaymentsDingInitRequest
+*/
+export interface PrepaymentsDingInitRequest {
+    
+    /**
+     * 支付单id
+     * @type {number | string}
+     * @memberof PrepaymentsDingInitRequest
+     */
+    paymentOrderId: number | string
+
+}
+
+
+/**
+* 
+* @export
+* @interface PaymentOrderDingInitRequest
+*/
+export interface PaymentOrderDingInitRequest {
+    
+    /**
+     * 支付单id
+     * @type {number | string}
+     * @memberof PaymentOrderDingInitRequest
+     */
+    paymentOrderId: number | string
 
 }
 
@@ -2049,13 +2327,6 @@ export interface ReqDingInitApproval {
 */
 export interface RespPurchaseOrderPrompt {
     
-    /**
-     * 采购单id
-     * @type {number | string}
-     * @memberof RespPurchaseOrderPrompt
-     */
-    purchaseOrderId: number | string
-
     /**
      * 状态提示 1：该项目合作已关闭，不可添加采购单 2：该项目终审未通过，不可添加采购单 注：针对于采购单对应项目状态判断提示
      * @type {number | string}
@@ -2150,13 +2421,6 @@ export interface ReqPurchaseOrderChange {
 export interface ReqAttachDoc {
     
     /**
-     * id
-     * @type {number | string}
-     * @memberof ReqAttachDoc
-     */
-    id?: number | string
-
-    /**
      * 附件地址
      * @type {string}
      * @memberof ReqAttachDoc
@@ -2200,6 +2464,23 @@ export interface ReqContractCoManager {
      * @memberof ReqContractCoManager
      */
     screenshots?: Array<ReqAttachDoc>
+
+}
+
+
+/**
+* 
+* @export
+* @interface ProjectPurchaseOrderRequest
+*/
+export interface ProjectPurchaseOrderRequest {
+    
+    /**
+     * 项目Id
+     * @type {number | string}
+     * @memberof ProjectPurchaseOrderRequest
+     */
+    projectId: number | string
 
 }
 
@@ -2252,6 +2533,121 @@ export interface ReqPurchaseOrderContractSave {
 /**
 * 
 * @export
+* @interface PrepaymentOrderRequest
+*/
+export interface PrepaymentOrderRequest {
+    
+    /**
+     * 项目id
+     * @type {number | string}
+     * @memberof PrepaymentOrderRequest
+     */
+    projectId: number | string
+
+    /**
+     * 项目名称
+     * @type {string}
+     * @memberof PrepaymentOrderRequest
+     */
+    projectName: string
+
+    /**
+     * 经销商
+     * @type {string}
+     * @memberof PrepaymentOrderRequest
+     */
+    distributor: string
+
+    /**
+     * 分部编码
+     * @type {string}
+     * @memberof PrepaymentOrderRequest
+     */
+    subsectionCode: string
+
+    /**
+     * 分部名称
+     * @type {string}
+     * @memberof PrepaymentOrderRequest
+     */
+    subsectionName: string
+
+    /**
+     * 申请金额
+     * @type {number | string}
+     * @memberof PrepaymentOrderRequest
+     */
+    applyAmount: number | string
+
+    /**
+     * 请备注
+     * @type {string}
+     * @memberof PrepaymentOrderRequest
+     */
+    applyRemark?: string
+
+    /**
+     * 申请人
+     * @type {string}
+     * @memberof PrepaymentOrderRequest
+     */
+    applyUser: string
+
+    /**
+     * 上游供应商公司Id
+     * @type {number | string}
+     * @memberof PrepaymentOrderRequest
+     */
+    supplierCompanyId: number | string
+
+    /**
+     * 上游供应商名称
+     * @type {string}
+     * @memberof PrepaymentOrderRequest
+     */
+    supplierCompanyName: string
+
+    /**
+     * 银行联行号
+     * @type {string}
+     * @memberof PrepaymentOrderRequest
+     */
+    supplierBankNo: string
+
+    /**
+     * 供应商开户行名称
+     * @type {string}
+     * @memberof PrepaymentOrderRequest
+     */
+    supplierAccountName: string
+
+    /**
+     * 供应商银行账号
+     * @type {string}
+     * @memberof PrepaymentOrderRequest
+     */
+    supplierAccountNo: string
+
+    /**
+     * 期望上游支付日期
+     * @type {string}
+     * @memberof PrepaymentOrderRequest
+     */
+    expectSupplierPaymentDate: string
+
+    /**
+     * 上游支付方式:1-银行转帐;2-银行承兑
+     * @type {number | string}
+     * @memberof PrepaymentOrderRequest
+     */
+    supplierPaymentType: number | string
+
+}
+
+
+/**
+* 
+* @export
 * @interface ReqServiceFeePayment
 */
 export interface ReqServiceFeePayment {
@@ -2290,6 +2686,44 @@ export interface ReqServiceFeePayment {
      * @memberof ReqServiceFeePayment
      */
     paidAmount?: number | string
+
+}
+
+
+/**
+* 
+* @export
+* @interface PaymentOrderSegmentFinanceApprovalRequest
+*/
+export interface PaymentOrderSegmentFinanceApprovalRequest {
+    
+    /**
+     * 支付单id
+     * @type {number | string}
+     * @memberof PaymentOrderSegmentFinanceApprovalRequest
+     */
+    paymentOrderId: number | string
+
+    /**
+     * 账户信息是否已确认
+     * @type {boolean}
+     * @memberof PaymentOrderSegmentFinanceApprovalRequest
+     */
+    supplierAccountConfirm: boolean
+
+    /**
+     * 共管户是否已监管
+     * @type {boolean}
+     * @memberof PaymentOrderSegmentFinanceApprovalRequest
+     */
+    coManagerSupervision: boolean
+
+    /**
+     * 分财审核备注
+     * @type {string}
+     * @memberof PaymentOrderSegmentFinanceApprovalRequest
+     */
+    approvalRemark?: string
 
 }
 
@@ -2519,6 +2953,13 @@ export interface ReqPaymentOrderApply {
     supplierCompanyName?: string
 
     /**
+     * 
+     * @type {JsonNode}
+     * @memberof ReqPaymentOrderApply
+     */
+    paymentDetail?: JsonNode
+
+    /**
      * 最迟发货日期
      * @type {string}
      * @memberof ReqPaymentOrderApply
@@ -2614,7 +3055,7 @@ export interface ReqPaymentOrderApply {
      * @type {number | string}
      * @memberof ReqPaymentOrderApply
      */
-    billClaim: number | string
+    billClaim?: number | string
 
     /**
      * 票面金额
@@ -2655,13 +3096,6 @@ export interface LoanTransferRequest {
     pledgeNo: string
 
     /**
-     * 评审决议流程状态 1已完结
-     * @type {number | string}
-     * @memberof LoanTransferRequest
-     */
-    reviewResolutionStatus: number | string
-
-    /**
      * OA货款支付流程
      * @type {string}
      * @memberof LoanTransferRequest
@@ -2674,6 +3108,37 @@ export interface LoanTransferRequest {
      * @memberof LoanTransferRequest
      */
     oaStatus: number | string
+
+}
+
+
+/**
+* 单次采购明细文件（采购合同归档合同文件）22
+* @export
+* @interface AttachDocRequest
+*/
+export interface AttachDocRequest {
+    
+    /**
+     * id
+     * @type {number | string}
+     * @memberof AttachDocRequest
+     */
+    id?: number | string
+
+    /**
+     * 附件地址
+     * @type {string}
+     * @memberof AttachDocRequest
+     */
+    fileUrl?: string
+
+    /**
+     * 附件名称
+     * @type {string}
+     * @memberof AttachDocRequest
+     */
+    fileName?: string
 
 }
 
@@ -2694,24 +3159,24 @@ export interface LoanTransferDocRequest {
 
     /**
      * 采购合同（合同归档合同文件）20
-     * @type {Array<ReqAttachDoc>}
+     * @type {Array<AttachDocRequest>}
      * @memberof LoanTransferDocRequest
      */
-    contractArchiveDocs?: Array<ReqAttachDoc>
+    contractArchiveDocs?: Array<AttachDocRequest>
 
     /**
      * 采购合同（放款交接文件）21
-     * @type {Array<ReqAttachDoc>}
+     * @type {Array<AttachDocRequest>}
      * @memberof LoanTransferDocRequest
      */
-    loanTransferArchiveDocs?: Array<ReqAttachDoc>
+    loanTransferArchiveDocs?: Array<AttachDocRequest>
 
     /**
      * 单次采购明细文件（采购合同归档合同文件）22
-     * @type {Array<ReqAttachDoc>}
+     * @type {Array<AttachDocRequest>}
      * @memberof LoanTransferDocRequest
      */
-    purchaseDetailsDocs?: Array<ReqAttachDoc>
+    purchaseDetailsDocs?: Array<AttachDocRequest>
 
 }
 
@@ -3170,6 +3635,13 @@ export interface ReqOfflineContract {
      * @memberof ReqOfflineContract
      */
     createBy?: string
+
+    /**
+     * 创建人手机号
+     * @type {string}
+     * @memberof ReqOfflineContract
+     */
+    createPhone?: string
 
     /**
      * 更新人
@@ -3735,6 +4207,20 @@ export interface RespConfirmation {
 
     /**
      * 
+     * @type {Contract}
+     * @memberof RespConfirmation
+     */
+    contract: Contract
+
+    /**
+     * 
+     * @type {ContractTemplateVersion}
+     * @memberof RespConfirmation
+     */
+    contractTemplateVersion: ContractTemplateVersion
+
+    /**
+     * 
      * @type {boolean}
      * @memberof RespConfirmation
      */
@@ -4059,6 +4545,106 @@ export interface SaveBillAmountRequest {
      */
     billAmount?: Array<BillAmountRequest>
 
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SaveBillAmountRequest
+     */
+    sendMessage?: boolean
+
+}
+
+
+/**
+* 
+* @export
+* @interface PaymentOrderVoucherRequest
+*/
+export interface PaymentOrderVoucherRequest {
+    
+    /**
+     * 支付单id
+     * @type {number | string}
+     * @memberof PaymentOrderVoucherRequest
+     */
+    paymentOrderId: number | string
+
+    /**
+     * 文件（上传凭证返回的文件名和文件url）
+     * @type {Array<ReqAttachDoc>}
+     * @memberof PaymentOrderVoucherRequest
+     */
+    attachDocs: Array<ReqAttachDoc>
+
+    /**
+     * 经销商id
+     * @type {number | string}
+     * @memberof PaymentOrderVoucherRequest
+     */
+    companyId?: number | string
+
+}
+
+
+/**
+* 
+* @export
+* @interface FundPayVoucherRequest
+*/
+export interface FundPayVoucherRequest {
+    
+    /**
+     * 账单id
+     * @type {number | string}
+     * @memberof FundPayVoucherRequest
+     */
+    fundId: number | string
+
+    /**
+     * 文件（上传凭证返回的文件名和文件url）
+     * @type {Array<ReqAttachDoc>}
+     * @memberof FundPayVoucherRequest
+     */
+    attachDocs: Array<ReqAttachDoc>
+
+    /**
+     * 经销商id
+     * @type {number | string}
+     * @memberof FundPayVoucherRequest
+     */
+    companyId?: number | string
+
+}
+
+
+/**
+* 
+* @export
+* @interface FundPayVoucherBatchRequest
+*/
+export interface FundPayVoucherBatchRequest {
+    
+    /**
+     * 账单id
+     * @type {Array<number | string>}
+     * @memberof FundPayVoucherBatchRequest
+     */
+    fundId: Array<number | string>
+
+    /**
+     * 文件（上传凭证返回的文件名和文件url）
+     * @type {Array<ReqAttachDoc>}
+     * @memberof FundPayVoucherBatchRequest
+     */
+    attachDocs: Array<ReqAttachDoc>
+
+    /**
+     * 经销商id
+     * @type {number | string}
+     * @memberof FundPayVoucherBatchRequest
+     */
+    companyId: number | string
+
 }
 
 
@@ -4075,13 +4661,6 @@ export interface ReqExaminePass {
      * @memberof ReqExaminePass
      */
     approvalRemark?: string
-
-    /**
-     * 应收账款质押:1-已质押; (06期优化删除  2-放款前质押;3-其他
-     * @type {number | string}
-     * @memberof ReqExaminePass
-     */
-    accountReceivablePledgeType: number | string
 
     /**
      * 上游货款方式 1.先款后货 2.先货后款
@@ -4158,6 +4737,23 @@ export interface ReqPaymentOrderFundConfirm {
      * @memberof ReqPaymentOrderFundConfirm
      */
     fundId: number | string
+
+}
+
+
+/**
+* 
+* @export
+* @interface FundPayReceiveRequest
+*/
+export interface FundPayReceiveRequest {
+    
+    /**
+     * 账单id
+     * @type {Array<number | string>}
+     * @memberof FundPayReceiveRequest
+     */
+    fundId: Array<number | string>
 
 }
 
@@ -4411,6 +5007,20 @@ export interface RespSupplierInfo {
      * @memberof RespSupplierInfo
      */
     goodsProgress: number | string
+
+    /**
+     * 
+     * @type {JsonNode}
+     * @memberof RespSupplierInfo
+     */
+    poDetail: JsonNode
+
+    /**
+     * 
+     * @type {JsonNode}
+     * @memberof RespSupplierInfo
+     */
+    paymentDetail: JsonNode
 
     /**
      * 采购单id
@@ -4712,6 +5322,13 @@ export interface ReqUpStreamPaymentQuery {
     pageSize?: number | string
 
     /**
+     * 
+     * @type {Sort}
+     * @memberof ReqUpStreamPaymentQuery
+     */
+    sort?: Sort
+
+    /**
      * 支付单编号
      * @type {string}
      * @memberof ReqUpStreamPaymentQuery
@@ -4829,6 +5446,20 @@ export interface ReqUpStreamPaymentQuery {
      * @memberof ReqUpStreamPaymentQuery
      */
     subsectionCode?: string
+
+    /**
+     * 运营确认时间起始时间
+     * @type {string}
+     * @memberof ReqUpStreamPaymentQuery
+     */
+    startInitiateTime?: string
+
+    /**
+     * 运营确认时间结束时间
+     * @type {string}
+     * @memberof ReqUpStreamPaymentQuery
+     */
+    endInitiateTime?: string
 
 }
 
@@ -5015,6 +5646,13 @@ export interface RespUpStreamPayment {
     downPaymentConfirmTime?: string
 
     /**
+     * 运营确认时间
+     * @type {string}
+     * @memberof RespUpStreamPayment
+     */
+    initiateTime?: string
+
+    /**
      * 期望上游支付日期
      * @type {string}
      * @memberof RespUpStreamPayment
@@ -5048,6 +5686,190 @@ export interface RespUpStreamPayment {
      * @memberof RespUpStreamPayment
      */
     loanTransferId?: number | string
+
+}
+
+
+/**
+* 
+* @export
+* @interface SupplierAccountPageRequest
+*/
+export interface SupplierAccountPageRequest {
+    
+    /**
+     * 页码
+     * @type {number | string}
+     * @memberof SupplierAccountPageRequest
+     */
+    pageNumber?: number | string
+
+    /**
+     * 每页大小
+     * @type {number | string}
+     * @memberof SupplierAccountPageRequest
+     */
+    pageSize?: number | string
+
+    /**
+     * 
+     * @type {Sort}
+     * @memberof SupplierAccountPageRequest
+     */
+    sort?: Sort
+
+    /**
+     * 供应商名称
+     * @type {string}
+     * @memberof SupplierAccountPageRequest
+     */
+    supplierName?: string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof SupplierAccountPageRequest
+     */
+    createBy?: string
+
+    /**
+     * 查询开始日期
+     * @type {string}
+     * @memberof SupplierAccountPageRequest
+     */
+    startDate?: string
+
+    /**
+     * 查询结束日期
+     * @type {string}
+     * @memberof SupplierAccountPageRequest
+     */
+    endDate?: string
+
+}
+
+
+/**
+* 
+* @export
+* @interface IPageSupplierAccountResponse
+*/
+export interface IPageSupplierAccountResponse {
+    
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IPageSupplierAccountResponse
+     */
+    searchCount: boolean
+
+    /**
+     * 
+     * @type {Array<SupplierAccountResponse>}
+     * @memberof IPageSupplierAccountResponse
+     */
+    records: Array<SupplierAccountResponse>
+
+    /**
+     * 
+     * @type {number | string}
+     * @memberof IPageSupplierAccountResponse
+     */
+    total: number | string
+
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IPageSupplierAccountResponse
+     */
+    hitCount: boolean
+
+    /**
+     * 
+     * @type {number | string}
+     * @memberof IPageSupplierAccountResponse
+     */
+    pages: number | string
+
+    /**
+     * 
+     * @type {number | string}
+     * @memberof IPageSupplierAccountResponse
+     */
+    current: number | string
+
+    /**
+     * 
+     * @type {number | string}
+     * @memberof IPageSupplierAccountResponse
+     */
+    size: number | string
+
+}
+
+
+/**
+* 
+* @export
+* @interface SupplierAccountResponse
+*/
+export interface SupplierAccountResponse {
+    
+    /**
+     * id
+     * @type {number | string}
+     * @memberof SupplierAccountResponse
+     */
+    id?: number | string
+
+    /**
+     * 供应商编号【MIS返回的编号】
+     * @type {string}
+     * @memberof SupplierAccountResponse
+     */
+    supplierCode?: string
+
+    /**
+     * 供应商名称
+     * @type {string}
+     * @memberof SupplierAccountResponse
+     */
+    supplierName?: string
+
+    /**
+     * 供应商开户行名称
+     * @type {string}
+     * @memberof SupplierAccountResponse
+     */
+    supplierAccountName?: string
+
+    /**
+     * 供应商银行账号
+     * @type {string}
+     * @memberof SupplierAccountResponse
+     */
+    supplierAccountNo?: string
+
+    /**
+     * 银行联行行号
+     * @type {string}
+     * @memberof SupplierAccountResponse
+     */
+    supplierBankNo?: string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof SupplierAccountResponse
+     */
+    createBy?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof SupplierAccountResponse
+     */
+    createTime?: string
 
 }
 
@@ -5124,6 +5946,20 @@ export interface RespPurchaseDetailDing {
      * @memberof RespPurchaseDetailDing
      */
     purchaseOrderDingType: number | string
+
+    /**
+     * 
+     * @type {RespPurchaseDetailDingSubmit}
+     * @memberof RespPurchaseDetailDing
+     */
+    respPurchaseDetailDingSubmit: RespPurchaseDetailDingSubmit
+
+    /**
+     * 
+     * @type {RespPurchaseDetailDingChange}
+     * @memberof RespPurchaseDetailDing
+     */
+    respPurchaseDetailDingChange: RespPurchaseDetailDingChange
 
 }
 
@@ -5264,6 +6100,13 @@ export interface RespPurchaseDetailDingChange {
 */
 export interface RespPurchaseDetailDingSubmit {
     
+    /**
+     * 
+     * @type {JsonNode}
+     * @memberof RespPurchaseDetailDingSubmit
+     */
+    poDetail?: JsonNode
+
     /**
      * 销售合同信息
      * @type {Array<RespPurchaseOrderContractDingSubmit>}
@@ -5620,6 +6463,20 @@ export interface RespCrmPurchaseOrderDetail$Contract {
     id?: number | string
 
     /**
+     * 
+     * @type {RespCrmPurchaseOrderDetail$Contract}
+     * @memberof RespCrmPurchaseOrderDetail$Contract
+     */
+    originalContract?: RespCrmPurchaseOrderDetail$Contract
+
+    /**
+     * 
+     * @type {RespCrmPurchaseOrderDetail$Contract}
+     * @memberof RespCrmPurchaseOrderDetail$Contract
+     */
+    changeContract?: RespCrmPurchaseOrderDetail$Contract
+
+    /**
      * 合同名称
      * @type {string}
      * @memberof RespCrmPurchaseOrderDetail$Contract
@@ -5684,6 +6541,13 @@ export interface RespPoInfo {
      * @memberof RespPoInfo
      */
     poAmount: number | string
+
+    /**
+     * 
+     * @type {JsonNode}
+     * @memberof RespPoInfo
+     */
+    poDetail: JsonNode
 
     /**
      * 采购批次
@@ -5983,6 +6847,20 @@ export interface RespContractChangeRelationship {
      * @memberof RespContractChangeRelationship
      */
     status?: number | string
+
+    /**
+     * 
+     * @type {RespPurchaseOrderSubmit$Contract}
+     * @memberof RespContractChangeRelationship
+     */
+    originalContractInfo?: RespPurchaseOrderSubmit$Contract
+
+    /**
+     * 
+     * @type {RespPurchaseOrderSubmit$Contract}
+     * @memberof RespContractChangeRelationship
+     */
+    changedContractInfo?: RespPurchaseOrderSubmit$Contract
 
 }
 
@@ -6309,6 +7187,13 @@ export interface RespPurchaseOrderContract {
     projectName?: string
 
     /**
+     * 公司id
+     * @type {number | string}
+     * @memberof RespPurchaseOrderContract
+     */
+    companyId?: number | string
+
+    /**
      * 合同名称
      * @type {string}
      * @memberof RespPurchaseOrderContract
@@ -6431,11 +7316,32 @@ export interface RespPurchaseOrderContract {
 export interface RespPurchaseOrderCrm {
     
     /**
+     * 
+     * @type {PurchaseOrder}
+     * @memberof RespPurchaseOrderCrm
+     */
+    purchaseOrder: PurchaseOrder
+
+    /**
+     * 
+     * @type {PoInfo}
+     * @memberof RespPurchaseOrderCrm
+     */
+    poInfo: PoInfo
+
+    /**
      * 合同信息
      * @type {Array<RespPurchaseOrderContract>}
      * @memberof RespPurchaseOrderCrm
      */
     contractList: Array<RespPurchaseOrderContract>
+
+    /**
+     * 
+     * @type {JsonNode}
+     * @memberof RespPurchaseOrderCrm
+     */
+    salePoDetailUrl: JsonNode
 
     /**
      * 预估借款时间
@@ -6472,6 +7378,86 @@ export interface RespPurchaseOrderCrm {
      */
     supplierCompanyName: string
 
+    /**
+     * 上游支付方式1：转账 2：承兑
+     * @type {number | string}
+     * @memberof RespPurchaseOrderCrm
+     */
+    supplierPaymentType: number | string
+
+    /**
+     * 供应商是否跳转 true 跳转天眼查  false 跳转选择供应商
+     * @type {boolean}
+     * @memberof RespPurchaseOrderCrm
+     */
+    suppliers: boolean
+
+}
+
+
+/**
+* 
+* @export
+* @interface RespProjectPurchase
+*/
+export interface RespProjectPurchase {
+    
+    /**
+     * 项目采购信息id
+     * @type {number | string}
+     * @memberof RespProjectPurchase
+     */
+    id?: number | string
+
+    /**
+     * 所属项目id/发起决议变更快照id
+     * @type {number | string}
+     * @memberof RespProjectPurchase
+     */
+    ascriptionId?: number | string
+
+    /**
+     * 设备品类 1：空调 2：采暖 3：新风 4：净水 5：智能化 6：辅材 7：电梯 8：其他 9:电器 10:热水器
+     * @type {number | string}
+     * @memberof RespProjectPurchase
+     */
+    deviceCategoryType?: number | string
+
+    /**
+     * 设备品类
+     * @type {string}
+     * @memberof RespProjectPurchase
+     */
+    deviceCategory?: string
+
+    /**
+     * 设备品牌
+     * @type {string}
+     * @memberof RespProjectPurchase
+     */
+    deviceBrand?: string
+
+    /**
+     * 上游供应商类型 1：厂商 2：代理商 3：经销商
+     * @type {number | string}
+     * @memberof RespProjectPurchase
+     */
+    upstreamSupplierType?: number | string
+
+    /**
+     * 上游供应商
+     * @type {string}
+     * @memberof RespProjectPurchase
+     */
+    upstreamSupplierName?: string
+
+    /**
+     * 上游接受的付款方式 1：现金 2：承兑
+     * @type {number | string}
+     * @memberof RespProjectPurchase
+     */
+    upstreamPayType?: number | string
+
 }
 
 
@@ -6495,6 +7481,13 @@ export interface ReqPurchaseOrderCrmSearch {
      * @memberof ReqPurchaseOrderCrmSearch
      */
     pageSize?: number | string
+
+    /**
+     * 
+     * @type {Sort}
+     * @memberof ReqPurchaseOrderCrmSearch
+     */
+    sort?: Sort
 
     /**
      * 项目Id
@@ -6988,6 +7981,13 @@ export interface RespPayOrderDetail {
     supplierCompanyName?: string
 
     /**
+     * 
+     * @type {JsonNode}
+     * @memberof RespPayOrderDetail
+     */
+    paymentDetail?: JsonNode
+
+    /**
      * 最迟发货日期
      * @type {string}
      * @memberof RespPayOrderDetail
@@ -7065,7 +8065,7 @@ export interface RespPayOrderDetail {
     interestType?: number | string
 
     /**
-     * 状态：0-支付单待审核;
+     * 状态：0-待项目运营审核;
 	1-首付款待支付;
 	2-首付款待确认;
 	3-上游支付确认中;
@@ -7078,6 +8078,9 @@ export interface RespPayOrderDetail {
 	10-剩余货款待确认;
 	11-支付单完成;
 	12-支付单关闭;
+	13-支付单取消;
+	14-待分财审核;
+	15-支付单审核中;
 
      * @type {number | string}
      * @memberof RespPayOrderDetail
@@ -7325,6 +8328,20 @@ export interface RespPayOrderDetail {
 export interface RespPurchaseOrderInfo {
     
     /**
+     * 
+     * @type {PurchaseOrder}
+     * @memberof RespPurchaseOrderInfo
+     */
+    purchaseOrder: PurchaseOrder
+
+    /**
+     * 
+     * @type {PoInfo}
+     * @memberof RespPurchaseOrderInfo
+     */
+    poInfo: PoInfo
+
+    /**
      * 采购单合同信息
      * @type {Array<RespPurchaseOrderContract>}
      * @memberof RespPurchaseOrderInfo
@@ -7369,6 +8386,20 @@ export interface RespPurchaseOrderInfo {
 */
 export interface RespPurchaseOrderConfirm {
     
+    /**
+     * 
+     * @type {PurchaseOrder}
+     * @memberof RespPurchaseOrderConfirm
+     */
+    purchaseOrder: PurchaseOrder
+
+    /**
+     * 
+     * @type {PoInfo}
+     * @memberof RespPurchaseOrderConfirm
+     */
+    poInfo: PoInfo
+
     /**
      * 采购单合同信息
      * @type {Array<RespPurchaseOrderContract>}
@@ -7495,6 +8526,20 @@ export interface RespPoChangeContract {
 export interface RespPurchaseOrderChangeConfirm {
     
     /**
+     * 
+     * @type {PurchaseOrder}
+     * @memberof RespPurchaseOrderChangeConfirm
+     */
+    purchaseOrder: PurchaseOrder
+
+    /**
+     * 
+     * @type {PoChange}
+     * @memberof RespPurchaseOrderChangeConfirm
+     */
+    poChange: PoChange
+
+    /**
      * 采购单变更字段内容信息
      * @type {Array<RespPurchaseOrderChangeFields>}
      * @memberof RespPurchaseOrderChangeConfirm
@@ -7531,6 +8576,13 @@ export interface ReqPurchaseOrderSearch {
      * @memberof ReqPurchaseOrderSearch
      */
     pageSize?: number | string
+
+    /**
+     * 
+     * @type {Sort}
+     * @memberof ReqPurchaseOrderSearch
+     */
+    sort?: Sort
 
     /**
      * 采购单编号
@@ -7643,6 +8695,13 @@ export interface ReqPurchaseOrderSearch {
      * @memberof ReqPurchaseOrderSearch
      */
     coManager?: boolean
+
+    /**
+     * 提交人
+     * @type {string}
+     * @memberof ReqPurchaseOrderSearch
+     */
+    submitBy?: string
 
 }
 
@@ -7948,6 +9007,13 @@ export interface ReqPurchaseOrderAppletsSearch {
     pageSize?: number | string
 
     /**
+     * 
+     * @type {Sort}
+     * @memberof ReqPurchaseOrderAppletsSearch
+     */
+    sort?: Sort
+
+    /**
      * 用户id
      * @type {number | string}
      * @memberof ReqPurchaseOrderAppletsSearch
@@ -8040,6 +9106,791 @@ export interface ReqPurchaseOrderContractQuery {
 /**
 * 
 * @export
+* @interface IPagePrepaymentResponse
+*/
+export interface IPagePrepaymentResponse {
+    
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IPagePrepaymentResponse
+     */
+    searchCount: boolean
+
+    /**
+     * 
+     * @type {Array<PrepaymentResponse>}
+     * @memberof IPagePrepaymentResponse
+     */
+    records: Array<PrepaymentResponse>
+
+    /**
+     * 
+     * @type {number | string}
+     * @memberof IPagePrepaymentResponse
+     */
+    total: number | string
+
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IPagePrepaymentResponse
+     */
+    hitCount: boolean
+
+    /**
+     * 
+     * @type {number | string}
+     * @memberof IPagePrepaymentResponse
+     */
+    pages: number | string
+
+    /**
+     * 
+     * @type {number | string}
+     * @memberof IPagePrepaymentResponse
+     */
+    current: number | string
+
+    /**
+     * 
+     * @type {number | string}
+     * @memberof IPagePrepaymentResponse
+     */
+    size: number | string
+
+}
+
+
+/**
+* 
+* @export
+* @interface PrepaymentResponse
+*/
+export interface PrepaymentResponse {
+    
+    /**
+     * 预付款id
+     * @type {number | string}
+     * @memberof PrepaymentResponse
+     */
+    id?: number | string
+
+    /**
+     * 预付款编号
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    prepaymentNo?: string
+
+    /**
+     * 项目id
+     * @type {number | string}
+     * @memberof PrepaymentResponse
+     */
+    projectId?: number | string
+
+    /**
+     * 项目名称
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    projectName?: string
+
+    /**
+     * 经销商
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    distributor?: string
+
+    /**
+     * 分部编码
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    subsectionCode?: string
+
+    /**
+     * 分部名称
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    subsectionName?: string
+
+    /**
+     * 1.待项目运营审核、2流程审批中 3预付款待支付 4 预付款支付单完成 5预付款待核销 6 预付款已核销 7预付款支付单关闭
+     * @type {number | string}
+     * @memberof PrepaymentResponse
+     */
+    status?: number | string
+
+    /**
+     * 核销采购单id
+     * @type {number | string}
+     * @memberof PrepaymentResponse
+     */
+    purchaseOrderId?: number | string
+
+    /**
+     * 申请金额
+     * @type {number | string}
+     * @memberof PrepaymentResponse
+     */
+    applyAmount?: number | string
+
+    /**
+     * 申请备注
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    applyRemark?: string
+
+    /**
+     * 申请人
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    applyUser?: string
+
+    /**
+     * 申请时间
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    applyTime?: string
+
+    /**
+     * 核销状态 1.未核销，2.部分核销，3.已核销
+     * @type {number | string}
+     * @memberof PrepaymentResponse
+     */
+    writeOffStatus?: number | string
+
+    /**
+     * 核销时间
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    writeOffTime?: string
+
+    /**
+     * 上游供应商公司Id
+     * @type {number | string}
+     * @memberof PrepaymentResponse
+     */
+    supplierCompanyId?: number | string
+
+    /**
+     * 上游供应商名称
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    supplierCompanyName?: string
+
+    /**
+     * 银行联行号
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    supplierBankNo?: string
+
+    /**
+     * 供应商开户行名称
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    supplierAccountName?: string
+
+    /**
+     * 供应商银行账号
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    supplierAccountNo?: string
+
+    /**
+     * 期望上游支付日期
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    expectSupplierPaymentDate?: string
+
+    /**
+     * 上游支付方式:1-银行转帐;2-银行承兑
+     * @type {number | string}
+     * @memberof PrepaymentResponse
+     */
+    supplierPaymentType?: number | string
+
+    /**
+     * 审核结果:1-通过;2-不通过
+     * @type {number | string}
+     * @memberof PrepaymentResponse
+     */
+    approvalStatus?: number | string
+
+    /**
+     * 审核人
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    approvalUser?: string
+
+    /**
+     * 审核人手机号
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    approvalPhone?: string
+
+    /**
+     * 审核时间
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    approvalTime?: string
+
+    /**
+     * 审核备注
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    approvalRemark?: string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    createBy?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    createTime?: string
+
+    /**
+     * 更新人
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    updateBy?: string
+
+    /**
+     * 更新时间
+     * @type {string}
+     * @memberof PrepaymentResponse
+     */
+    updateTime?: string
+
+}
+
+
+/**
+* 
+* @export
+* @interface ProjectInfoResponse
+*/
+export interface ProjectInfoResponse {
+    
+    /**
+     * 
+     * @type {number | string}
+     * @memberof ProjectInfoResponse
+     */
+    projectId: number | string
+
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectInfoResponse
+     */
+    projectName: string
+
+    /**
+     * 
+     * @type {number | string}
+     * @memberof ProjectInfoResponse
+     */
+    companyId: number | string
+
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectInfoResponse
+     */
+    companyName: string
+
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ProjectInfoResponse
+     */
+    upstreamSupplierName: Array<string>
+
+}
+
+
+/**
+* 
+* @export
+* @interface PrepaymentDetailResponse
+*/
+export interface PrepaymentDetailResponse {
+    
+    /**
+     * 预付款id
+     * @type {number | string}
+     * @memberof PrepaymentDetailResponse
+     */
+    id: number | string
+
+    /**
+     * 预付款编号
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    prepaymentNo: string
+
+    /**
+     * 项目id
+     * @type {number | string}
+     * @memberof PrepaymentDetailResponse
+     */
+    projectId: number | string
+
+    /**
+     * 项目名称
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    projectName: string
+
+    /**
+     * 经销商
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    distributor: string
+
+    /**
+     * 分部编码
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    subsectionCode: string
+
+    /**
+     * 分部名称
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    subsectionName: string
+
+    /**
+     * 1.待项目运营审核、2流程审批中 3预付款待支付 4 预付款支付单完成 5预付款待核销 6 预付款已核销 7预付款支付单关闭
+     * @type {number | string}
+     * @memberof PrepaymentDetailResponse
+     */
+    status: number | string
+
+    /**
+     * 核销采购单id
+     * @type {number | string}
+     * @memberof PrepaymentDetailResponse
+     */
+    purchaseOrderId: number | string
+
+    /**
+     * 申请金额
+     * @type {number | string}
+     * @memberof PrepaymentDetailResponse
+     */
+    applyAmount: number | string
+
+    /**
+     * 申请备注
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    applyRemark: string
+
+    /**
+     * 申请人
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    applyUser: string
+
+    /**
+     * 申请时间
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    applyTime: string
+
+    /**
+     * 核销状态 1.未核销，2.部分核销，3.已核销
+     * @type {number | string}
+     * @memberof PrepaymentDetailResponse
+     */
+    writeOffStatus: number | string
+
+    /**
+     * 核销时间
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    writeOffTime: string
+
+    /**
+     * 上游供应商公司Id
+     * @type {number | string}
+     * @memberof PrepaymentDetailResponse
+     */
+    supplierCompanyId: number | string
+
+    /**
+     * 上游供应商名称
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    supplierCompanyName: string
+
+    /**
+     * 银行联行号
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    supplierBankNo: string
+
+    /**
+     * 供应商开户行名称
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    supplierAccountName: string
+
+    /**
+     * 供应商银行账号
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    supplierAccountNo: string
+
+    /**
+     * 期望上游支付日期
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    expectSupplierPaymentDate: string
+
+    /**
+     * 上游支付方式:1-银行转帐;2-银行承兑
+     * @type {number | string}
+     * @memberof PrepaymentDetailResponse
+     */
+    supplierPaymentType: number | string
+
+    /**
+     * 审核结果:1-通过;2-不通过
+     * @type {number | string}
+     * @memberof PrepaymentDetailResponse
+     */
+    approvalStatus: number | string
+
+    /**
+     * 审核人
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    approvalUser: string
+
+    /**
+     * 审核人手机号
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    approvalPhone: string
+
+    /**
+     * 审核时间
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    approvalTime: string
+
+    /**
+     * 审核备注
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    approvalRemark: string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    createBy: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    createTime: string
+
+    /**
+     * 更新人
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    updateBy: string
+
+    /**
+     * 更新时间
+     * @type {string}
+     * @memberof PrepaymentDetailResponse
+     */
+    updateTime: string
+
+}
+
+
+/**
+* 
+* @export
+* @interface PrepaymentWriteOffResponse
+*/
+export interface PrepaymentWriteOffResponse {
+    
+    /**
+     * 预付款id
+     * @type {number | string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    id?: number | string
+
+    /**
+     * 预付款编号
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    prepaymentNo?: string
+
+    /**
+     * 项目id
+     * @type {number | string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    projectId?: number | string
+
+    /**
+     * 项目名称
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    projectName?: string
+
+    /**
+     * 经销商
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    distributor?: string
+
+    /**
+     * 分部编码
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    subsectionCode?: string
+
+    /**
+     * 分部名称
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    subsectionName?: string
+
+    /**
+     * 1.待项目运营审核、2流程审批中 3预付款待支付 4 预付款支付单完成 5预付款待核销 6 预付款已核销 7预付款支付单关闭
+     * @type {number | string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    status?: number | string
+
+    /**
+     * 核销采购单id
+     * @type {number | string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    purchaseOrderId?: number | string
+
+    /**
+     * 申请金额
+     * @type {number | string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    applyAmount?: number | string
+
+    /**
+     * 申请备注
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    applyRemark?: string
+
+    /**
+     * 申请人
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    applyUser?: string
+
+    /**
+     * 申请时间
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    applyTime?: string
+
+    /**
+     * 核销状态 1.未核销，2.部分核销，3.已核销
+     * @type {number | string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    writeOffStatus?: number | string
+
+    /**
+     * 核销时间
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    writeOffTime?: string
+
+    /**
+     * 上游供应商公司Id
+     * @type {number | string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    supplierCompanyId?: number | string
+
+    /**
+     * 上游供应商名称
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    supplierCompanyName?: string
+
+    /**
+     * 银行联行号
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    supplierBankNo?: string
+
+    /**
+     * 供应商开户行名称
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    supplierAccountName?: string
+
+    /**
+     * 供应商银行账号
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    supplierAccountNo?: string
+
+    /**
+     * 期望上游支付日期
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    expectSupplierPaymentDate?: string
+
+    /**
+     * 上游支付方式:1-银行转帐;2-银行承兑
+     * @type {number | string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    supplierPaymentType?: number | string
+
+    /**
+     * 审核结果:1-通过;2-不通过
+     * @type {number | string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    approvalStatus?: number | string
+
+    /**
+     * 审核人
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    approvalUser?: string
+
+    /**
+     * 审核人手机号
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    approvalPhone?: string
+
+    /**
+     * 审核时间
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    approvalTime?: string
+
+    /**
+     * 审核备注
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    approvalRemark?: string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    createBy?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    createTime?: string
+
+    /**
+     * 更新人
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    updateBy?: string
+
+    /**
+     * 更新时间
+     * @type {string}
+     * @memberof PrepaymentWriteOffResponse
+     */
+    updateTime?: string
+
+}
+
+
+/**
+* 
+* @export
 * @interface ReqBasePage
 */
 export interface ReqBasePage {
@@ -8057,6 +9908,13 @@ export interface ReqBasePage {
      * @memberof ReqBasePage
      */
     pageSize?: number | string
+
+    /**
+     * 
+     * @type {Sort}
+     * @memberof ReqBasePage
+     */
+    sort?: Sort
 
 }
 
@@ -8193,6 +10051,13 @@ export interface ReqPaymentOrderQuery {
      * @memberof ReqPaymentOrderQuery
      */
     sign?: boolean
+
+    /**
+     * 申请人
+     * @type {string}
+     * @memberof ReqPaymentOrderQuery
+     */
+    applyName?: string
 
 }
 
@@ -8349,7 +10214,7 @@ export interface RespPaymentOrders {
 
     /**
      * 状态：
-	 * 状态：0-支付单待审核;
+	 * 状态：0-待项目运营审核;
 	 * 1-首付款待支付;
 	 * 2-首付款待确认;
 	 * 3-上游支付确认中;
@@ -8363,6 +10228,8 @@ export interface RespPaymentOrders {
 	 * 11-支付单完成;
 	 * 12-支付单关闭;
 	 * 13-支付单取消;
+	 * 14-待分财审核;
+	 * 15-支付单审核中;
 	
      * @type {number | string}
      * @memberof RespPaymentOrders
@@ -8403,6 +10270,27 @@ export interface RespPaymentOrders {
      * @memberof RespPaymentOrders
      */
     operateStatus?: number | string
+
+    /**
+     * 申请人
+     * @type {string}
+     * @memberof RespPaymentOrders
+     */
+    applyName?: string
+
+    /**
+     * 申请人手机号
+     * @type {string}
+     * @memberof RespPaymentOrders
+     */
+    applyPhone?: string
+
+    /**
+     * 公司id
+     * @type {number | string}
+     * @memberof RespPaymentOrders
+     */
+    companyId?: number | string
 
 }
 
@@ -8630,6 +10518,130 @@ export interface Fund {
      */
     currDayEmailStatus?: number | string
 
+    /**
+     * 是否批量支付 0否1是
+     * @type {boolean}
+     * @memberof Fund
+     */
+    payBatch?: boolean
+
+}
+
+
+/**
+* 
+* @export
+* @interface PaymentOrderInfo
+*/
+export interface PaymentOrderInfo {
+    
+    /**
+     * 状态：0-支付单待审核;
+	1-首付款待支付;
+	2-首付款待确认;
+	3-上游支付确认中;
+	4-上游支付中;
+	5--待出票;
+	6-正在出票;
+	7-待发货;
+	8-待收货;
+	9-剩余货款待支付;
+	10-剩余货款待确认;
+	11-支付单完成;
+	12-支付单关闭;
+
+     * @type {number | string}
+     * @memberof PaymentOrderInfo
+     */
+    status?: number | string
+
+    /**
+     * 申请金额
+     * @type {number | string}
+     * @memberof PaymentOrderInfo
+     */
+    applyAmount?: number | string
+
+    /**
+     * 支付单编号
+     * @type {string}
+     * @memberof PaymentOrderInfo
+     */
+    paymentOrderNo?: string
+
+}
+
+
+/**
+* 分财审核信息
+* @export
+* @interface PaymentOrderSegmentFinanceApprovalResponse
+*/
+export interface PaymentOrderSegmentFinanceApprovalResponse {
+    
+    /**
+     * id
+     * @type {number | string}
+     * @memberof PaymentOrderSegmentFinanceApprovalResponse
+     */
+    id?: number | string
+
+    /**
+     * 支付单id
+     * @type {number | string}
+     * @memberof PaymentOrderSegmentFinanceApprovalResponse
+     */
+    paymentOrderId?: number | string
+
+    /**
+     * 账户信息是否已确认
+     * @type {boolean}
+     * @memberof PaymentOrderSegmentFinanceApprovalResponse
+     */
+    supplierAccountConfirm?: boolean
+
+    /**
+     * 共管户是否已监管
+     * @type {boolean}
+     * @memberof PaymentOrderSegmentFinanceApprovalResponse
+     */
+    coManagerSupervision?: boolean
+
+    /**
+     * 分财审核结果:1-通过;2-不通过
+     * @type {number | string}
+     * @memberof PaymentOrderSegmentFinanceApprovalResponse
+     */
+    approvalStatus?: number | string
+
+    /**
+     * 分财审核人
+     * @type {string}
+     * @memberof PaymentOrderSegmentFinanceApprovalResponse
+     */
+    approvalUser?: string
+
+    /**
+     * 分财审核人手机号
+     * @type {string}
+     * @memberof PaymentOrderSegmentFinanceApprovalResponse
+     */
+    approvalPhone?: string
+
+    /**
+     * 分财审核时间
+     * @type {string}
+     * @memberof PaymentOrderSegmentFinanceApprovalResponse
+     */
+    approvalTime?: string
+
+    /**
+     * 分财审核备注
+     * @type {string}
+     * @memberof PaymentOrderSegmentFinanceApprovalResponse
+     */
+    approvalRemark?: string
+
 }
 
 
@@ -8640,6 +10652,13 @@ export interface Fund {
 */
 export interface RespFundDetailPage {
     
+    /**
+     * 
+     * @type {Fund}
+     * @memberof RespFundDetailPage
+     */
+    downpaymentFund: Fund
+
     /**
      * 服务费账单列表
      * @type {Array<Fund>}
@@ -8660,6 +10679,13 @@ export interface RespFundDetailPage {
      * @memberof RespFundDetailPage
      */
     totalPaidAmount: number | string
+
+    /**
+     * 
+     * @type {Fund}
+     * @memberof RespFundDetailPage
+     */
+    arrearFund: Fund
 
 }
 
@@ -8710,6 +10736,13 @@ export interface RespPayOrderPoDetail {
     poAmount?: number | string
 
     /**
+     * 
+     * @type {JsonNode}
+     * @memberof RespPayOrderPoDetail
+     */
+    poDetail?: JsonNode
+
+    /**
      * 采购批次
      * @type {number | string}
      * @memberof RespPayOrderPoDetail
@@ -8758,6 +10791,13 @@ export interface RespPayOrderPoDetail {
      */
     updateTime?: string
 
+    /**
+     * 
+     * @type {Array<PaymentOrderInfo>}
+     * @memberof RespPayOrderPoDetail
+     */
+    paymentOrderInfos?: Array<PaymentOrderInfo>
+
 }
 
 
@@ -8768,6 +10808,48 @@ export interface RespPayOrderPoDetail {
 */
 export interface RespPaymentOrderDetail {
     
+    /**
+     * 
+     * @type {RespProjectInfo}
+     * @memberof RespPaymentOrderDetail
+     */
+    projectInfo: RespProjectInfo
+
+    /**
+     * 
+     * @type {RespPayOrderDetail}
+     * @memberof RespPaymentOrderDetail
+     */
+    payOrderDetail: RespPayOrderDetail
+
+    /**
+     * 
+     * @type {RespPayOrderPoDetail}
+     * @memberof RespPaymentOrderDetail
+     */
+    payOrderPoDetail: RespPayOrderPoDetail
+
+    /**
+     * 
+     * @type {RespFundDetailPage}
+     * @memberof RespPaymentOrderDetail
+     */
+    respFundResults: RespFundDetailPage
+
+    /**
+     * 
+     * @type {RespGoodsAmount}
+     * @memberof RespPaymentOrderDetail
+     */
+    respGoodsAmount: RespGoodsAmount
+
+    /**
+     * 
+     * @type {RespSupplierAmount}
+     * @memberof RespPaymentOrderDetail
+     */
+    respSupplierAmount: RespSupplierAmount
+
     /**
      * 上游可支付标识：0-不可支付，1-可支付
      * @type {number | string}
@@ -8781,6 +10863,20 @@ export interface RespPaymentOrderDetail {
      * @memberof RespPaymentOrderDetail
      */
     goodsConfirmFlag: number | string
+
+    /**
+     * 
+     * @type {BillAmountResponse}
+     * @memberof RespPaymentOrderDetail
+     */
+    billAmountResponse: BillAmountResponse
+
+    /**
+     * 
+     * @type {PaymentOrderSegmentFinanceApprovalResponse}
+     * @memberof RespPaymentOrderDetail
+     */
+    paymentOrderSegmentFinanceApprovalResponse: PaymentOrderSegmentFinanceApprovalResponse
 
 }
 
@@ -9160,6 +11256,13 @@ export interface RespAppPaymentOrder {
     paymentOrderNo: string
 
     /**
+     * 
+     * @type {JsonNode}
+     * @memberof RespAppPaymentOrder
+     */
+    paymentDetail: JsonNode
+
+    /**
      * 采购单编号
      * @type {string}
      * @memberof RespAppPaymentOrder
@@ -9228,6 +11331,13 @@ export interface RespAppPaymentOrder {
      * @memberof RespAppPaymentOrder
      */
     restPaymentPeriod: number | string
+
+    /**
+     * 
+     * @type {JsonNode}
+     * @memberof RespAppPaymentOrder
+     */
+    poDetail: JsonNode
 
     /**
      * 经销商名称（企业名称）
@@ -9342,11 +11452,39 @@ export interface RespAppPaymentOrder {
     arrearAttachDocs: Array<AttachDoc>
 
     /**
+     * 
+     * @type {RespGoodsAmount}
+     * @memberof RespAppPaymentOrder
+     */
+    respGoodsAmount: RespGoodsAmount
+
+    /**
+     * 
+     * @type {RespSupplierAmount}
+     * @memberof RespAppPaymentOrder
+     */
+    respSupplierAmount: RespSupplierAmount
+
+    /**
      * 票面金额有无要求 0：无要求 1：有要求
      * @type {number | string}
      * @memberof RespAppPaymentOrder
      */
     billClaim: number | string
+
+    /**
+     * 
+     * @type {BillAmountResponse}
+     * @memberof RespAppPaymentOrder
+     */
+    billAmountResponse: BillAmountResponse
+
+    /**
+     * 审批实例业务编号
+     * @type {string}
+     * @memberof RespAppPaymentOrder
+     */
+    businessId: string
 
     /**
      * 银行联行号
@@ -9703,6 +11841,13 @@ export interface ReqFundQuery {
     pageSize?: number | string
 
     /**
+     * 
+     * @type {Sort}
+     * @memberof ReqFundQuery
+     */
+    sort?: Sort
+
+    /**
      * 账单Id
      * @type {number | string}
      * @memberof ReqFundQuery
@@ -9947,7 +12092,7 @@ export interface RespFundResult {
     orderId: number | string
 
     /**
-     * 支付单状态：0-支付单待审核;1-首付款待支付;2-首付款待确认;8-待收货;9-尾款待支付;10-尾款待确认;12-支付单完成;13-支付单关闭;
+     * 支付单状态：0-待项目运营审核;1-首付款待支付;2-首付款待确认;8-待收货;9-尾款待支付;10-尾款待确认;11-支付单完成;12-支付单关闭;13-支付单取消;14-待分财审核;15-支付单审核中;
      * @type {number | string}
      * @memberof RespFundResult
      */
@@ -10045,6 +12190,13 @@ export interface RespFundResult {
     projectName: string
 
     /**
+     * 经销商id
+     * @type {string}
+     * @memberof RespFundResult
+     */
+    companyId: string
+
+    /**
      * 经销商名称
      * @type {string}
      * @memberof RespFundResult
@@ -10135,6 +12287,13 @@ export interface RespFundResult {
      */
     currDayEmailStatus: number | string
 
+    /**
+     * 是否批量支付 0否1是
+     * @type {boolean}
+     * @memberof RespFundResult
+     */
+    payBatch: boolean
+
 }
 
 
@@ -10158,6 +12317,13 @@ export interface LoanTransferRecordResponse {
      * @memberof LoanTransferRecordResponse
      */
     operationContent?: string
+
+    /**
+     * 操作类型 1：正常流转 2：驳回 3：变更
+     * @type {number | string}
+     * @memberof LoanTransferRecordResponse
+     */
+    type?: number | string
 
     /**
      * 备注
@@ -10214,6 +12380,13 @@ export interface AttachDocResponse {
 */
 export interface LoanTransferInfoResponse {
     
+    /**
+     * 支付单id
+     * @type {number | string}
+     * @memberof LoanTransferInfoResponse
+     */
+    paymentOrderId: number | string
+
     /**
      * 项目id
      * @type {number | string}
@@ -10481,6 +12654,13 @@ export interface LoanTransferInfoResponse {
     purchaseDetailFiles: Array<AttachDoc>
 
     /**
+     * 
+     * @type {BillAmountResponse}
+     * @memberof LoanTransferInfoResponse
+     */
+    billAmountResponse: BillAmountResponse
+
+    /**
      * 放款交接备注
      * @type {string}
      * @memberof LoanTransferInfoResponse
@@ -10538,20 +12718,6 @@ export interface ReviewResolutionResponse {
      * @memberof ReviewResolutionResponse
      */
     pledgeNo: string
-
-    /**
-     * 评审决议流程
-     * @type {string}
-     * @memberof ReviewResolutionResponse
-     */
-    reviewResolutionNo: string
-
-    /**
-     * 评审决议流程状态
-     * @type {number | string}
-     * @memberof ReviewResolutionResponse
-     */
-    reviewResolutionStatus: number | string
 
     /**
      * OA货款支付流程
@@ -10623,6 +12789,13 @@ export interface LoanTransferDocResponse {
 export interface LoanTransferResponse {
     
     /**
+     * 
+     * @type {ReviewResolutionResponse}
+     * @memberof LoanTransferResponse
+     */
+    reviewResolutionResponse: ReviewResolutionResponse
+
+    /**
      * 采购合同（合同归档合同文件）20 & 21
      * @type {Array<AttachDocResponse>}
      * @memberof LoanTransferResponse
@@ -10637,11 +12810,223 @@ export interface LoanTransferResponse {
     purchaseDetailsDocs: Array<AttachDocResponse>
 
     /**
+     * 
+     * @type {BillAmountResponse}
+     * @memberof LoanTransferResponse
+     */
+    billAmountResponse: BillAmountResponse
+
+    /**
      * 更多票面金额（总数）
      * @type {number | string}
      * @memberof LoanTransferResponse
      */
     billAmountNumber: number | string
+
+    /**
+     * 支付单申请金额
+     * @type {number | string}
+     * @memberof LoanTransferResponse
+     */
+    applyAmount: number | string
+
+    /**
+     * 上游支付方式:1-银行转帐;2-银行承兑
+     * @type {number | string}
+     * @memberof LoanTransferResponse
+     */
+    supplierPaymentType: number | string
+
+}
+
+
+/**
+* 
+* @export
+* @interface InterfaceCompensationMechanismResponse
+*/
+export interface InterfaceCompensationMechanismResponse {
+    
+    /**
+     * id
+     * @type {number | string}
+     * @memberof InterfaceCompensationMechanismResponse
+     */
+    id: number | string
+
+    /**
+     * 支付单编号
+     * @type {string}
+     * @memberof InterfaceCompensationMechanismResponse
+     */
+    paymentOrderNo: string
+
+    /**
+     * 对接系统 1：司库 2：MIS 3：OA
+     * @type {number | string}
+     * @memberof InterfaceCompensationMechanismResponse
+     */
+    systemType: number | string
+
+    /**
+     * 业务id
+     * @type {number | string}
+     * @memberof InterfaceCompensationMechanismResponse
+     */
+    bizId: number | string
+
+    /**
+     * 接口 1：供应商创建接口 2：上游支付同步司库 3：上游支付同步OA
+     * @type {number | string}
+     * @memberof InterfaceCompensationMechanismResponse
+     */
+    interfaceType: number | string
+
+    /**
+     * 报错原因
+     * @type {string}
+     * @memberof InterfaceCompensationMechanismResponse
+     */
+    remark: string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof InterfaceCompensationMechanismResponse
+     */
+    createBy: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof InterfaceCompensationMechanismResponse
+     */
+    createTime: string
+
+    /**
+     * 删除标识
+     * @type {boolean}
+     * @memberof InterfaceCompensationMechanismResponse
+     */
+    deleted: boolean
+
+}
+
+
+/**
+* 
+* @export
+* @interface InterfaceCompensationMechanismPageRequest
+*/
+export interface InterfaceCompensationMechanismPageRequest {
+    
+    /**
+     * 页码
+     * @type {number | string}
+     * @memberof InterfaceCompensationMechanismPageRequest
+     */
+    pageNumber?: number | string
+
+    /**
+     * 每页大小
+     * @type {number | string}
+     * @memberof InterfaceCompensationMechanismPageRequest
+     */
+    pageSize?: number | string
+
+    /**
+     * 
+     * @type {Sort}
+     * @memberof InterfaceCompensationMechanismPageRequest
+     */
+    sort?: Sort
+
+    /**
+     * 对接系统 1：司库 2：MIS 3：OA
+     * @type {number | string}
+     * @memberof InterfaceCompensationMechanismPageRequest
+     */
+    systemType?: number | string
+
+    /**
+     * 接口 1：供应商创建接口 2：上游支付同步司库 3：上游支付同步OA
+     * @type {number | string}
+     * @memberof InterfaceCompensationMechanismPageRequest
+     */
+    interfaceType?: number | string
+
+    /**
+     * 调用开始日期
+     * @type {string}
+     * @memberof InterfaceCompensationMechanismPageRequest
+     */
+    startDate?: string
+
+    /**
+     * 调用结束日期
+     * @type {string}
+     * @memberof InterfaceCompensationMechanismPageRequest
+     */
+    endDate?: string
+
+}
+
+
+/**
+* 
+* @export
+* @interface IPageInterfaceCompensationMechanismResponse
+*/
+export interface IPageInterfaceCompensationMechanismResponse {
+    
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IPageInterfaceCompensationMechanismResponse
+     */
+    searchCount: boolean
+
+    /**
+     * 
+     * @type {Array<InterfaceCompensationMechanismResponse>}
+     * @memberof IPageInterfaceCompensationMechanismResponse
+     */
+    records: Array<InterfaceCompensationMechanismResponse>
+
+    /**
+     * 
+     * @type {number | string}
+     * @memberof IPageInterfaceCompensationMechanismResponse
+     */
+    total: number | string
+
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IPageInterfaceCompensationMechanismResponse
+     */
+    hitCount: boolean
+
+    /**
+     * 
+     * @type {number | string}
+     * @memberof IPageInterfaceCompensationMechanismResponse
+     */
+    pages: number | string
+
+    /**
+     * 
+     * @type {number | string}
+     * @memberof IPageInterfaceCompensationMechanismResponse
+     */
+    current: number | string
+
+    /**
+     * 
+     * @type {number | string}
+     * @memberof IPageInterfaceCompensationMechanismResponse
+     */
+    size: number | string
 
 }
 
@@ -10964,6 +13349,13 @@ export interface ReqFundListQuery {
     pageSize?: number | string
 
     /**
+     * 
+     * @type {Sort}
+     * @memberof ReqFundListQuery
+     */
+    sort?: Sort
+
+    /**
      * 账单Id
      * @type {number | string}
      * @memberof ReqFundListQuery
@@ -11210,7 +13602,7 @@ export interface RespMonthStaticFundDetail {
     orderId?: number | string
 
     /**
-     * 支付单状态：0-支付单待审核;1-首付款待支付;2-首付款待确认;8-待收货;9-尾款待支付;10-尾款待确认;12-支付单完成;12-支付单关闭;
+     * 支付单状态：0-待项目运营审核;1-首付款待支付;2-首付款待确认;8-待收货;9-尾款待支付;10-尾款待确认;11-支付单完成;12-支付单关闭;13-支付单取消;14-待分财审核;15-支付单审核中;
      * @type {number | string}
      * @memberof RespMonthStaticFundDetail
      */
@@ -11425,6 +13817,13 @@ export interface ReqContractPageQuery {
     pageSize?: number | string
 
     /**
+     * 
+     * @type {Sort}
+     * @memberof ReqContractPageQuery
+     */
+    sort?: Sort
+
+    /**
      * 合同名称/编号
      * @type {string}
      * @memberof ReqContractPageQuery
@@ -11479,6 +13878,13 @@ export interface ReqContractPageQuery {
      * @memberof ReqContractPageQuery
      */
     createBy?: string
+
+    /**
+     * 发起人手机号
+     * @type {string}
+     * @memberof ReqContractPageQuery
+     */
+    createPhone?: string
 
     /**
      * 发起开始时间
@@ -11684,6 +14090,86 @@ export interface RespContractEditNumber {
      * @memberof RespContractEditNumber
      */
     legalAffairsEditNumber: number | string
+
+}
+
+
+/**
+* 
+* @export
+* @interface ReqCrmContractPageQuery
+*/
+export interface ReqCrmContractPageQuery {
+    
+    /**
+     * 页码
+     * @type {number | string}
+     * @memberof ReqCrmContractPageQuery
+     */
+    pageNumber?: number | string
+
+    /**
+     * 每页大小
+     * @type {number | string}
+     * @memberof ReqCrmContractPageQuery
+     */
+    pageSize?: number | string
+
+    /**
+     * 
+     * @type {Sort}
+     * @memberof ReqCrmContractPageQuery
+     */
+    sort?: Sort
+
+    /**
+     * 合同类型列表，逗号分隔
+     * @type {string}
+     * @memberof ReqCrmContractPageQuery
+     */
+    contractTypeIdArrays?: string
+
+    /**
+     * 合同状态列表，逗号分隔：1：草稿 2：待分财审核 3：分财审核未通过 4：待风控审核 5：风控审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
+     * @type {string}
+     * @memberof ReqCrmContractPageQuery
+     */
+    contractStatusArrays?: string
+
+    /**
+     * 更新开始时间
+     * @type {string}
+     * @memberof ReqCrmContractPageQuery
+     */
+    updateStartTime?: string
+
+    /**
+     * 更新结束时间
+     * @type {string}
+     * @memberof ReqCrmContractPageQuery
+     */
+    updateEndTime?: string
+
+    /**
+     * 创建时间排序方式asc/desc
+     * @type {string}
+     * @memberof ReqCrmContractPageQuery
+     */
+    createTimeOrder?: string
+
+    /**
+     * 更新时间排序方式asc/desc
+     * @type {string}
+     * @memberof ReqCrmContractPageQuery
+     */
+    updateTimeOrder?: string
+
+    /**
+     * crm企业微信id
+     * @type {string}
+     * @memberof ReqCrmContractPageQuery
+     */
+    corpUserId?: string
 
 }
 
@@ -13047,6 +15533,20 @@ export interface RespContractCrmSignHistory {
      */
     attachDocs?: Array<AttachDoc>
 
+    /**
+     * 钉钉流程id
+     * @type {string}
+     * @memberof RespContractCrmSignHistory
+     */
+    processInstanceId?: string
+
+    /**
+     * 钉钉流程编号
+     * @type {string}
+     * @memberof RespContractCrmSignHistory
+     */
+    dingCode?: string
+
 }
 
 
@@ -13154,6 +15654,20 @@ export interface RespContractSignHistory {
      * @memberof RespContractSignHistory
      */
     attachDocs?: Array<AttachDoc>
+
+    /**
+     * 钉钉审批id
+     * @type {string}
+     * @memberof RespContractSignHistory
+     */
+    processInstanceId?: string
+
+    /**
+     * 钉钉流程编号
+     * @type {string}
+     * @memberof RespContractSignHistory
+     */
+    dingCode?: string
 
 }
 
@@ -13416,6 +15930,13 @@ export interface ReqCaQuery {
      * @memberof ReqCaQuery
      */
     pageSize?: number | string
+
+    /**
+     * 
+     * @type {Sort}
+     * @memberof ReqCaQuery
+     */
+    sort?: Sort
 
     /**
      * 个人姓名/企业名称
@@ -13883,5 +16404,123 @@ export interface RespCAAccount {
      * @memberof RespCAAccount
      */
     deleted?: boolean
+
+}
+
+
+/**
+* 账单批量操作列表
+* @export
+* @interface BatchFundResponse
+*/
+export interface BatchFundResponse {
+    
+    /**
+     * 账单Id
+     * @type {number | string}
+     * @memberof BatchFundResponse
+     */
+    id?: number | string
+
+    /**
+     * 支付单Id
+     * @type {number | string}
+     * @memberof BatchFundResponse
+     */
+    orderId?: number | string
+
+    /**
+     * 支付状态：0-待支付；1-支付待确认；2-已支付；3-支付失败；4-已取消
+     * @type {number | string}
+     * @memberof BatchFundResponse
+     */
+    paymentFlag?: number | string
+
+    /**
+     * 还款类型：1-首付款；2-剩余货款；3-服务费；
+     * @type {number | string}
+     * @memberof BatchFundResponse
+     */
+    repaymentType?: number | string
+
+    /**
+     * 应支付金额
+     * @type {number | string}
+     * @memberof BatchFundResponse
+     */
+    paymentAmount?: number | string
+
+    /**
+     * 应支付日期
+     * @type {string}
+     * @memberof BatchFundResponse
+     */
+    schedulePaymentDate?: string
+
+    /**
+     * 项目id
+     * @type {string}
+     * @memberof BatchFundResponse
+     */
+    projectId?: string
+
+    /**
+     * 项目名称
+     * @type {string}
+     * @memberof BatchFundResponse
+     */
+    projectName?: string
+
+    /**
+     * 经销商名称
+     * @type {string}
+     * @memberof BatchFundResponse
+     */
+    companyName?: string
+
+    /**
+     * 支付时间
+     * @type {string}
+     * @memberof BatchFundResponse
+     */
+    paidTime?: string
+
+}
+
+
+/**
+* 
+* @export
+* @interface FundPayBatchResponse
+*/
+export interface FundPayBatchResponse {
+    
+    /**
+     * 账单批量操作列表
+     * @type {Array<BatchFundResponse>}
+     * @memberof FundPayBatchResponse
+     */
+    batchFunds: Array<BatchFundResponse>
+
+    /**
+     * 进销商企业名称
+     * @type {string}
+     * @memberof FundPayBatchResponse
+     */
+    companyName: string
+
+    /**
+     * 总金额
+     * @type {number | string}
+     * @memberof FundPayBatchResponse
+     */
+    totalAmount: number | string
+
+    /**
+     * 支付凭证文件
+     * @type {Array<AttachDocResponse>}
+     * @memberof FundPayBatchResponse
+     */
+    attachDocs: Array<AttachDocResponse>
 
 }
