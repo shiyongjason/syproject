@@ -68,6 +68,9 @@
                             <el-form-item label="资金业务：" prop="resource" :label-width="formLabelWidth">
                                 <el-switch v-model="bossDetail.fundAuthorization" :active-value=true :inactive-value=false :disabled='switchD'></el-switch>
                             </el-form-item>
+                            <el-form-item label="品牌自动审核：" prop="resource" :label-width="formLabelWidth">
+                                <el-switch v-model="bossDetail.fundAuthorization" :active-value=true :inactive-value=false></el-switch>
+                            </el-form-item>
                         </div>
                     </template>
                     <el-form-item label="认证状态：" :label-width="formLabelWidth">

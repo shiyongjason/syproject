@@ -91,6 +91,14 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
+                    <div class="query-col__lable">品牌自动审核：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.fundAuthorization">
+                            <el-option v-for="item in autoInductionOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont__col">
                     <h-button type="primary" @click="onFindMlist(1)">
                         查询
                     </h-button>
@@ -128,6 +136,9 @@
                 <template slot="fundAuthorization" slot-scope="scope">
                     {{openingStatusMap.get(scope.data.row.fundAuthorization)}}
                 </template>
+                <template slot="fundAuthorization" slot-scope="scope">
+                    {{autoInductionMap.get(scope.data.row.fundAuthorization)}}
+                </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</h-button>
                     <h-button table @click="onFindInfo(scope.data.row.companyCode,'merchant')">查看详情</h-button>
@@ -142,7 +153,7 @@ import drawerCom from './drawerComs'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import { changeState } from './api/index'
-import { BUSINESS_ROLE_OPTIONS, BUSINESS_ROLE_MAP, OPENING_STATUS_OPTIONS, OPENING_STATUS_MAP } from './const'
+import { BUSINESS_ROLE_OPTIONS, BUSINESS_ROLE_MAP, OPENING_STATUS_OPTIONS, OPENING_STATUS_MAP, AUTO_INDUCTION_OPTIONS, AUTO_INDUCTION_MAP } from './const'
 export default {
     name: 'membershipBussinessmanage',
     data () {
@@ -151,6 +162,8 @@ export default {
             openingStatusMap: OPENING_STATUS_MAP,
             businessRoleOptions: BUSINESS_ROLE_OPTIONS,
             businessRoleMAP: BUSINESS_ROLE_MAP,
+            autoInductionOptions: AUTO_INDUCTION_OPTIONS,
+            autoInductionMap: AUTO_INDUCTION_MAP,
             queryParams: {
                 authenticationEndTime: '',
                 authenticationStartTime: '',
@@ -198,6 +211,7 @@ export default {
                 { label: '商家角色权限', prop: 'merchantRolePermission', width: '120px' },
                 { label: '自动推送至店铺', prop: 'isAutoDispatch', width: '120px' },
                 { label: '资金业务', prop: 'fundAuthorization' },
+                { label: '品牌自动审核', prop: 'fundAuthorization' },
                 { label: '状态', prop: 'isEnabled' }
             ],
             tableData: [],

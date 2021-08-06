@@ -22,3 +22,13 @@ export const OPENING_STATUS_MAP = new Map([
     [true, '开启'],
     [false, '关闭']
 ])
+// 品牌自动审核
+export const AUTO_INDUCTION_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '开通', value: true },
+    { label: '未开通', value: false }
+]
+export const AUTO_INDUCTION_MAP = new Map([
+    [true, '开通'],
+    [false, '未开通']
+])

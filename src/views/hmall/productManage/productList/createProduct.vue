@@ -184,18 +184,18 @@ export default {
                 showName: [
                     { required: true, message: '请输入商品销售名称', trigger: 'blur' }
                 ],
-                imageUrls: [
-                    {
-                        required: true,
-                        validator: (rule, value, callback) => {
-                            if (this.imageUrls.length == 0) {
-                                return callback(new Error('请上传商品图片'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'change'
-                    }
-                ],
+                // imageUrls: [
+                //     {
+                //         required: true,
+                //         validator: (rule, value, callback) => {
+                //             if (this.imageUrls.length == 0) {
+                //                 return callback(new Error('请上传商品图片'))
+                //             }
+                //             return callback()
+                //         },
+                //         trigger: 'change'
+                //     }
+                // ],
                 option: [
                     { required: true, message: '请输入规格名', trigger: 'blur' }
                 ],
