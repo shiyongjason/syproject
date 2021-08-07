@@ -2,11 +2,15 @@ const SentryPlugin = require('@sentry/webpack-plugin')
 // const SentryPlugin = require('webpack-sentry-plugin')
 module.exports = {
     devServer: {
-        // host: '192.168.27.33'
+        port: 8082,
+        open: false,
+        sockHost: 'http://localhost:8081/',
+        disableHostCheck: true
     },
+    productionSourceMap: false,
     configureWebpack: config => {
         // 是否生产和预发布
-        if (process.env.NODE_ENV === 'production' || process.env.VUE_APP_TITLE === 'preview') {
+        if (process.env.NODE_ENV === 'production') {
             config.plugins.push(
                 new SentryPlugin({
                     include: './dist',
@@ -18,6 +22,12 @@ module.exports = {
             )
         }
     },
+    /* // "webpack-bundle-analyzer": "^4.4.2" 添加到package.json,npm run build
+    chainWebpack: config => {
+        config
+            .plugin('webpack-bundle-analyzer')
+            .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
+    }, */
     css: {
         loaderOptions: {
             sass: {

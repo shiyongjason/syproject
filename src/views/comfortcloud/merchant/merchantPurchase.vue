@@ -212,9 +212,7 @@ export default {
                 disabledDate: time => {
                     let beginDateVal = this.queryParams.startCreateTime
                     if (beginDateVal) {
-                        return (
-                            time.getTime() < new Date(beginDateVal).getTime() - 24 * 60 * 60 * 1000 + 1000
-                        )
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
@@ -227,6 +225,8 @@ export default {
                         return (
                             time.getTime() > new Date(beginDateVal).getTime()
                         )
+                    } else {
+                        return time.getTime() <= Date.now() - 8.64e7
                     }
                 }
             }
@@ -236,9 +236,7 @@ export default {
                 disabledDate: time => {
                     let beginDateVal = this.form.startTime
                     if (beginDateVal) {
-                        return (
-                            time.getTime() < new Date(beginDateVal).getTime() - 24 * 60 * 60 * 1000 + 1000
-                        )
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }

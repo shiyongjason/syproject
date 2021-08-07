@@ -1,0 +1,257 @@
+// tab 共用css
+::-webkit-scrollbar-thumb {
+    background-color: #d6d1d1 !important;
+}
+.tab-layout {
+    
+    overflow-y: scroll;
+    height: calc(100vh - 180px);
+    padding-bottom: 20px;
+    box-sizing: border-box;
+    .tab-layout-title {
+        background: #6e95bd1a;
+        padding: 8px 7px;
+        box-sizing: border-box;
+        width: 98%;
+        font-weight: bold;
+        color: #000;
+        // flex: 0 0 100px;
+        font-size: 16px;
+        margin-top: 30px;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        span {
+            display: inline-block;
+            width: 5px;
+            height: 10px;
+            background: #ff7a45;
+            margin-right: 8px;
+            flex: 0 0 5px;
+        }
+        font {
+            font-size: 15px;
+            margin-left: 15px;
+        }
+        &-box{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex: 1;
+        }
+    }
+    .info-layout {
+        display: flex;
+        flex-wrap: wrap;
+        &-item {
+            margin: 10px 10px 0 0;
+            flex: 1;
+            display: flex;
+            font {
+                // flex: 0 0 100px;
+            }
+        }
+        &-span {
+            flex: 1;
+            margin-top: 15px;
+        }
+        &-item {
+            span:nth-child(2) {
+                word-break: break-all;
+            }
+            &-link{
+                text-decoration: underline;
+                cursor: pointer;
+                color: #FF7A45;
+            }
+        }
+    }
+    .bill-table {
+        margin: 20px 0 0;
+        width: 580px;
+        &_flex {
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid #dbddde;
+            height: 40px;
+            line-height: 40px;
+            border-bottom: none;
+            &:last-child {
+                border-bottom: 1px solid #dbddde;
+            }
+            &--left {
+                flex:0 0 200px;
+                border-right: 1px solid #dbddde;
+                justify-content: center;
+                padding: 0 10px;
+                display: flex;
+            }
+            &--right {
+                padding: 0 10px;
+                display: flex;
+                flex:0 0 300px;
+                justify-content: center;
+            }
+        }
+    }
+    .historyRecords{
+        width: 580px;
+        margin-top: 10px;
+    }
+   .tab-textarea{
+       width: 98%;
+       margin-top: 20px;
+   }
+   .remark-infos{
+       margin-top: 2px;
+       color: #FF0000;
+       word-break: break-all;
+   }
+   .showCollapse{
+       /deep/.el-collapse-item__header{
+           display: none;
+       }
+   }
+   .noShow{
+       /deep/.el-collapse-item__content{
+           display: none;
+       }
+   }
+   /deep/.download-btn{
+        background:none !important;
+        color: #FF7A45;
+        padding: 0;
+        margin-left: 0;
+    }
+   
+}
+.sure-sub-btn{
+    padding: 5px;
+    background: #fff !important;
+    text-align: right;
+}
+.LoanTransferContent{
+    .upload{ 
+        max-height: 500px;
+        overflow-y: scroll;
+    }
+    .dialog-ctx{
+        .file-icon {
+            font-size: 18px;
+            margin: 0 !important;
+            line-height: 24px !important;
+            color: #fff;
+        }
+        .file_box {
+            margin: 10px 0 0 0;
+            display: flex;
+            i {
+                font-size: 18px;
+                margin: 0 !important;
+                color: #ff6600;
+                padding-right: 5px;
+            }
+            span {
+                width: 350px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                color: #ff6600;
+
+            }
+            em {
+                display: block;
+                font-style: normal;
+                margin-left: 10px;
+                color: #169bd5;
+                cursor: pointer;
+
+            }
+        }
+        .upload-title{
+            margin-top: 10px;
+            em{
+                font-style: normal;
+                color: #F56C6C;
+            }
+        }
+        .upload-link{
+            text-decoration: underline;
+            cursor: pointer;
+            color: #FF7A45;
+            margin-top: 5px;
+        }
+        /deep/.download-btn{
+            background:none !important;
+            color: #FF7A45;
+            padding: 0;
+            margin-left: 0;
+        }
+        /deep/.abs{
+            display: block;
+        }
+        .del-item{
+            margin-left: 30px;
+            color: #167cd5;
+            cursor: pointer;
+
+        }
+        .add-item{
+            margin-left: 120px;
+            cursor: pointer;
+            color: #FF7A45;
+            margin-top: 5px;
+            display: inline-block;
+        }
+        .total-error{
+            margin:0px 0 0 98px;
+            color: #F56C6C;
+            font-size: 12px;
+        }
+        /deep/.flexlayout{
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+    }
+    .reviewResolution{
+        /deep/.el-form-item{
+            margin-bottom: 0;
+        }
+    }
+    .dynamicFormVoterbox{
+        max-height: 400px;
+        overflow-y: scroll;
+    }
+    
+    .default-upload-warp{
+        display: block !important;
+    }
+    /deep/.el-collapse-item__header{
+        color: #FF7A45;
+        border:none;
+        justify-content: flex-end;
+    }
+    /deep/.el-collapse{
+        border: none;
+    }
+    /deep/.el-collapse-item__wrap{
+        border: none;
+    }
+    /deep/.el-collapse-item__arrow{
+        margin:0 0 0 10px
+    }
+    
+}
+.reviewResolutionForm-title{
+    font-weight: bold;
+    margin-top: 12px;
+    margin-bottom: 5px;
+    color: #333;
+    em{
+        color:#F56C6C;font-style: normal;margin-right: 3px;
+    }
+}
+.reviewResolutionForm-reviewResolutionNo{
+    margin: 10px 0;
+}

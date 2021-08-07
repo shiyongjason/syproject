@@ -1,0 +1,208 @@
+::-webkit-scrollbar-thumb {
+    background-color: #d6d1d1 !important;
+}
+.finalApproval {
+    margin-top: 50px;
+    padding: 0 10px 100px 0px;
+    box-sizing: border-box;
+    margin-left: 10px;
+    .reviewResolution {
+        max-height: 550px;
+        overflow-y: scroll;
+    }
+
+    /deep/.el-radio-button__inner {
+        margin-top: 10px;
+        width: 310px;
+    }
+    /deep/.el-radio-button__orig-radio:checked + .el-radio-button__inner {
+        background-color: #716a6a;
+        border-color: #716a6a;
+        box-shadow: none;
+        transition: none;
+    }
+    // /deep/.is-active:hover {
+    //     color: #606266;
+    // }
+    .tab-layout {
+        // overflow-y: scroll;
+        // height: calc(100vh - 100px);
+        box-sizing: border-box;
+        .tab-layout-title {
+            background: #6e95bd1a;
+            padding: 8px 7px;
+            box-sizing: border-box;
+            width: 98%;
+            font-weight: bold;
+            color: #000;
+            font-size: 16px;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            span {
+                display: inline-block;
+                width: 5px;
+                height: 10px;
+                background: #ff7a45;
+                margin-right: 8px;
+                flex: 0 0 5px;
+            }
+            font {
+                font-size: 15px;
+                margin-left: 15px;
+            }
+            &-box {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex: 1;
+            }
+        }
+        .status-title {
+            padding: 8px 7px;
+            font-size: 16px;
+            margin-top: 20px;
+            color: #000;
+            font-weight: bold;
+        }
+        &-flex {
+            margin: 10px;
+        }
+        .flex-top {
+            display: flex;
+            justify-content: space-between;
+            span {
+                i {
+                    font-style: normal;
+                    padding-right: 10px;
+                    color: skyblue;
+                }
+            }
+        }
+    }
+    .item {
+        .item-title {
+            margin-top: 15px;
+        }
+        .info-layout {
+            display: flex;
+            flex-wrap: wrap;
+            box-sizing: border-box;
+            padding-left: 20px;
+            &-item {
+                margin: 8px 10px 0 0;
+                flex: 1;
+                display: flex;
+            }
+            &-span {
+                flex: 1;
+                margin-top: 15px;
+            }
+            &-item {
+                span:nth-child(2) {
+                    word-break: break-all;
+                }
+                &-link {
+                    text-decoration: underline;
+                    cursor: pointer;
+                    color: #ff7a45;
+                }
+            }
+        }
+    }
+    .table {
+        margin-top: 10px;
+    }
+    .dialogbaseinfo {
+        margin-left: 35px;
+        display: flex;
+        &-item {
+            margin: 15px 30px 0 0;
+        }
+    }
+    .purchaseConclusion {
+        .form-item {
+            display: flex;
+            .el-form-item {
+                flex: 1;
+            }
+        }
+        .form-table {
+            margin-top: 20px;
+        }
+        /deep/.hosjoy-table {
+            th.form-table-header .cell span:before {
+                content: '*';
+                color: #f56c6c;
+                margin-right: 4px;
+            }
+            .required-txt {
+                color: #f56c6c;
+                text-align: left;
+                margin-top: 5px;
+                margin-left: 10px;
+            }
+            .mini {
+                width: 180px;
+            }
+            .miniSelectSupplier {
+                .el-input {
+                    width: 180px;
+                }
+            }
+            .miniSelectCompany {
+                .el-input {
+                    width: 210px;
+                }
+            }
+            .miniSelect {
+                width: 110px;
+                .el-input {
+                    width: 110px;
+                }
+            }
+            .categorymini {
+                width: 120px;
+                .el-input {
+                    width: 120px;
+                }
+            }
+        }
+    }
+}
+.info-finallNo {
+    h3 {
+        padding: 10px;
+    }
+    p {
+        padding: 10px;
+    }
+}
+.flex-operate {
+    p {
+        padding: 10px 0 0 10px;
+        text-indent: 2em;
+    }
+    i {
+        font-style: normal;
+        color: #ff7a45;
+    }
+    span{
+        color: red;
+    }
+}
+.dingBg{
+    background: #e5e5e5;
+    color: red;
+    padding:8px;
+}
+// /deep/.el-select-dropdown{
+//     color: #f00;
+//     .el-input--mini .el-input__inner{
+//         width: 120px;
+//     }
+// }
+// .el-select-dropdown__item.is-disabled{
+//     cursor: pointer;
+// }

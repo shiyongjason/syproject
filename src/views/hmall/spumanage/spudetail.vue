@@ -28,15 +28,11 @@
                 <!-- 新增 start -->
                 <div v-if="operate=='add'" style="margin:10px 0 20px 0">
                     <el-form-item label="商品类目：" prop="categoryId" style="width: 460px;" v-if="operate=='add'">
-                        <el-cascader :options="categoryOptions" v-model="categoryIdArr" @change="productCategoryChange" ></el-cascader>
+                        <el-cascader :options="categoryOptions" v-model="categoryIdArr" @change="productCategoryChange"></el-cascader>
                     </el-form-item>
                     <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;" v-if="operate=='add'" ref="brandId">
                         <el-select v-model="form.brandId" filterable placeholder="请选择">
-                            <el-option
-                            v-for="item in brandOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+                            <el-option v-for="item in brandOptions" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -78,10 +74,7 @@
                 </div>
                 <div :key="index" v-for="(item,index) in form.specifications" class="el-form-item" style="width: 460px;">
                     <!--  -->
-                    <el-form-item
-                        :label="item.k"
-                        :prop="'specifications.'+ index + '.v'"
-                        :rules="{
+                    <el-form-item :label="item.k" :prop="'specifications.'+ index + '.v'" :rules="{
                             required: item.isRequired === 1 ? true : false ,
                             whitespace: true,
                             message: '请输入'+ item.k,
@@ -402,7 +395,7 @@ export default {
                             type: 'success',
                             message: '商品新建成功！'
                         })
-                        this.$router.push({ path: '/b2b/commodity/spumange' })
+                        this.$router.push({ path: '/b2b/product/spumange' })
                     } else if (this.operate == 'modify') {
                         await putSpuTemplate(this.spuTemplateBo)
                         this.resetForm()
@@ -410,7 +403,7 @@ export default {
                             type: 'success',
                             message: '商品更新成功！'
                         })
-                        this.$router.push({ path: '/b2b/commodity/spumange' })
+                        this.$router.push({ path: '/b2b/product/spumange' })
                     } else {
                         if (this.auditForm.auditStatus == 1) {
                             this.auditForm.auditOpinion = ''

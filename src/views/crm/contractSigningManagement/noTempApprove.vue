@@ -5,7 +5,10 @@
                 <div>
                     <h-button type="primary" @click="onDownZip">下载原始合同</h-button>
                 </div>
-                <p v-for="(item,index) in contractArr" :key="index">合同：{{item.picName}}</p>
+                <div v-for="(item,index) in contractArr" :key="index" class="contract-flex_down">
+                    合同：{{item.picName}}
+                    <downloadFileAddToken :file-name="item.fileName" :file-url="item.picUrl" :a-link-words="'下载'" is-type="btn" />
+                </div>
                 <div class="contract-flex_bot">
                     <h-button type="primary" @click="onResive">驳回合同</h-button>
                 </div>
@@ -57,9 +60,11 @@ import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { ccpBaseUrl } from '@/api/config'
 import { mapState } from 'vuex'
 import { submitApprove, rejectContracts, getNoTempContracts, downNoTempContracts } from './api/index'
+import downloadFileAddToken from '@/components/downloadFileAddToken'
+
 export default {
     name: 'noTemp',
-    components: { hosjoyUpload },
+    components: { hosjoyUpload, downloadFileAddToken },
     data () {
         return {
             action: ccpBaseUrl + 'common/files/upload-old',
@@ -213,6 +218,12 @@ export default {
     box-sizing: 10px 10px 5px #efefee;
     &_tips {
         color: #f00;
+    }
+    &_down{
+        display: flex;
+        height: 40px;
+        align-items: center;
+        // justify-content:;
     }
     p {
         margin-top: 5px;

@@ -183,6 +183,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantOutOrderList.vue')
+                    },
+                    {
+                        path: 'merchantDispatchManager',
+                        name: 'merchantDispatchManager',
+                        meta: {
+                            title: '营销物料',
+                            tagName: '营销物料',
+                            parentName: '订单管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantDispatchManager.vue')
                     }
                 ]
             },
@@ -313,6 +325,87 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantPurchase.vue')
+                    }
+                ]
+            },
+            {
+                path: 'merchantEngine',
+                meta: {
+                    title: '工程方案',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'merchantEnginePlan',
+                        name: 'merchantEnginePlan',
+                        meta: {
+                            title: '工程方案',
+                            tagName: '工程方案',
+                            parentName: '工程方案',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantEnginePlan.vue')
+                    },
+                    {
+                        path: 'merchantEnginePlanEdit',
+                        name: 'merchantEnginePlanEdit',
+                        meta: {
+                            title: '工程方案编辑',
+                            tagName: '工程方案编辑',
+                            parentName: '工程方案',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantEnginePlanEdit.vue')
+                    }
+                ]
+            },
+            {
+                path: 'merchantCase',
+                meta: {
+                    title: '用户方案',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'merchantMemberCase',
+                        name: 'merchantMemberCase',
+                        meta: {
+                            title: '方案列表',
+                            tagName: '方案列表',
+                            parentName: '用户方案',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantMemberCase.vue')
+                    }
+                ]
+            },
+            {
+                path: 'merchantMemange',
+                meta: {
+                    title: '服务管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'serviceOpportunity',
+                        name: 'serviceOpportunity',
+                        meta: {
+                            title: '服务机会',
+                            tagName: '服务机会',
+                            parentName: '舒适云概览',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/serviceManage/serviceOpportunity.vue')
                     }
                 ]
             }

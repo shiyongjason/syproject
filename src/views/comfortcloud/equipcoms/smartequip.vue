@@ -116,9 +116,8 @@ export default {
                 disabledDate: time => {
                     let endDateVal = this.smartparams.endDate
                     if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
+                        return time.getTime() > new Date(endDateVal).getTime()
                     }
-                    // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         },
@@ -127,9 +126,8 @@ export default {
                 disabledDate: time => {
                     let beginDateVal = this.smartparams.startDate
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
-                    // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         },
@@ -138,7 +136,7 @@ export default {
                 disabledDate: time => {
                     let endDateVal = this.deviceDetailParams.endDate
                     if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
+                        return time.getTime() > new Date(endDateVal).getTime()
                     }
                 }
             }
@@ -148,7 +146,7 @@ export default {
                 disabledDate: time => {
                     let beginDateVal = this.deviceDetailParams.startDate
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
@@ -190,12 +188,14 @@ export default {
             this.drawLine(this.smartData)
         },
         onDetail (val) {
+            let date = new Date(val.createTime) // 传入一个时间格式，如果不传入就是获取现在的时间了，这样做不兼容火狐。
             this.$router.push({
                 path: '/comfortcloud/equipmentOverview/deviceDetail',
                 query: {
                     iotId: val.iotId,
                     subIotId: val.subIotId,
-                    deviceClass: val.deviceClass
+                    deviceClass: val.deviceClass,
+                    createTime: Date.parse(date)
                 }
             })
         },

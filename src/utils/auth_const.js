@@ -166,8 +166,11 @@ export const WISDOM_POINTSCREDIT_SHOW_LINE = 10860
 
 // 舒适云-智能玩法编辑 todo 舒适云目前没有添加权限按钮 编辑页面全部预留 key
 export const AUTH_CLOUD_SMART_PLAY_EDIT = 10680
-
 export const AUTH_CLOUD_SEND_MESSAGE_EDIT = 10681
+// 舒适云-订单管理-订单列表-发货
+export const AUTH_CLOUD_DELIVER_OPERATE = 10682
+// 舒适云-订单管理-营销物料-发货
+export const AUTH_CLOUD_DISPATCH_DELIVER_OPERATE = 10683
 
 // 好程工 权限功能  109000
 export const CRM_GOODWORK_DETAIL = 109111
@@ -189,6 +192,7 @@ export const CRM_WHITE_OPERATE = 109212
 export const CRM_WHITE_BAOCUN = 109213
 // 好橙工
 export const CRM_GOODWORK_CLOSE = 109214 // 合作关闭
+export const CRM_TRANSFER_ADMIN = 109216 // 转让管理员 109215有个天眼查
 
 // 好橙工 申请列表
 export const CRM_APPLY_ASSIGN = 109301 // 分配
@@ -222,6 +226,8 @@ export const CRM_SERVICE_FUND_CONFIRM = 109511 // 服务费账单-支付确认
 export const CRM_PREV_PAYMENT_DETAIL = 109512 // 查看上游支付明细
 export const CRM_ARREAR_FUND_CONFIRM = 109513 // 尾款账单-支付确认
 export const CRM_REVIEW_RECEIPT_DETAIL = 109514 // 查看收货明细
+export const CRM_PAYMENT_REVIEW_DOWN = 109524
+export const CRM_PAYMENT_UPLOADPAY = 1097001 // 上传凭证
 
 // 好程工 资金
 export const CRM_FUNDS_DOWN_PAYMENT_FUND_CONFIRM = 109515 // 首付款账单-支付确认
@@ -230,10 +236,18 @@ export const CRM_FUNDS_SERVICE_FUND_CONFIRM = 109517 // 服务费账单-支付�
 export const CRM_FUNDS_SERVICE_FUND_SEE = 109518 // 服务费账单-查看凭证
 export const CRM_FUNDS_ARREAR_FUND_CONFIRM = 109519 // 尾款账单-支付确认
 export const CRM_FUNDS_ARREAR_FUND_SEE = 109520 // 尾款账单-查看凭证
+export const CRM_FUNDS_DOWN_UPLOAD = 1096001 // 首付款上传
+export const CRM_FUNDS_SERVICE_UPLOAD = 1096002 // 服务费上传
+export const CRM_FUNDS_ARREAR_UPLOAD = 1096003 // 尾款上传
+
 // 好程工 后添加
 export const CRM_PURCHASE_ORDER_CONTRACT_SEE = 109521 // 采购单-查看合同
 export const CRM_PAYMENT_REVIEW_DETAIL = 109522 // 支付单-支付单审核
 export const CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT = 109523 // 支付单- [日期修改,服务费修改]
+// 好橙工 采购单上传共管户信息 2021-05-19
+export const CRM_PURCHASE_CO_MANAGER = 109525
+// 采购单详情去归档按钮权限
+export const CRM_PURCHASE_DETAIL_FILE = 109526
 
 // 资金逾期
 export const BRANCH_OVERDUE_SUM_EXPORT = 110003
@@ -277,3 +291,114 @@ export const CONTRACTLIST_TYPE_AUTH = 5111115
 // 节假日管理
 export const HOLIDAY_ADD = 800081
 export const HOLIDAY_EDIT = 800082
+
+// 上游支付
+export const UPSTREAM_PAY_DETAIL = 500001// 详情
+// 确认信息 资金部审核
+export const UPSTREAM_PAY_CONFIRM_EX = 500002
+// 确认信息 资金部放款
+export const UPSTREAM_PAY_CONFIRM_LOAN = 500003
+// 下载放款单
+export const UPSTREAM_PAY_DOWN = 500004
+// 支付
+export const UPSTREAM_PAY_MENT = 500005
+// 变更交接状态
+export const CHANGE_LOAN_TRANSFER_STATUS = 500006
+// 合同签署的归档
+export const CONTRACT_PLACE = 800201
+// 合同签署的更新归档
+export const CONTRACT_UPDATEPLACE = 800202
+// 上游支付下载采购合同
+export const UPSTREAM_DOWN_PURCHASE = 800203
+// 上游支付下载票面明细
+export const UPSTREAM_DOWN_BILLS = 800204
+// 上游支付驳回交接
+export const UPSTREAM_REJECT = 800205
+// 上游支付确认交接
+export const UPSTREAM_CONFIRM = 800206
+// 列表导出数据
+export const UPSTREAM_PAY_EXPORT = 800207
+// 支付单管理放款交接
+export const LENDER_HANDOVER = 800208
+
+// 删除该企业
+export const CRM_AUTHEN_DELETE = 109601
+// 修改客户经理
+export const CRM_AUTHEN_EDITNAME = 109602
+
+// 好橙工项目 编辑客户
+export const CRM_WORK_FINAL_EDITCUS = 100701
+// 好橙工项目 编辑采购单
+export const CRM_WORK_FINAL_EDITPUR = 100702
+// 好橙工项目 终审不通过
+export const CRM_WORK_FINAL_NOPASS = 100703
+// 好橙工项目 发起决议
+export const CRM_WORK_FINAL_PASS = 100704
+// 好橙工项目 新增采购单
+export const CRM_WORK_FINAL_ADDPUR = 100705
+// 好橙工项目 删除采购单
+export const CRM_WORK_FINAL_DELETEPUR = 100706
+
+// 好橙工项目 导出客户列表
+export const CRM_WORK_CUSTOMER_EXPORT = 100707
+
+// 舒适云项目  设备解绑
+export const MERCHANT_DEVICE_UNBIND = 100709
+
+// 直播视频 按钮权限
+export const CRM_LIVE_ADD = 108701
+export const CRM_LIVE_EDIT = 108702
+export const CRM_LIVE_ONTOP = 108703
+export const CRM_LIVE_NOTOP = 108704
+export const CRM_LIVE_DELETE = 108705
+
+// 商品管理-新增商品
+export const CRM_SHOPP_ADDPRODUCT_PULL = 108801 // 拉取
+export const CRM_SHOPP_ADDPRODUCT_BATCH_PULL = 108802 // 批量拉取
+export const CRM_SHOPP_ADDPRODUCT_EDITOR = 108803 // 编辑商品
+
+// 商品管理-好橙工商品库
+export const CRM_SHOPP_PRODUCTLIBRARY_EDITOR = 108804 // spu tab编辑商品
+export const CRM_SHOPP_PRODUCTLIBRARY_ADD = 108805 // spu tab新增商品
+
+export const CRM_SHOPP_SPUEDIT_ONTHESHELVES = 108806 // 编辑页面上架
+export const CRM_SHOPP_SPUEDIT_RACK = 108807 // 编辑页面下架
+export const CRM_SHOPP_SPUEDIT_ADD = 108808 // 编辑页面新增SKU
+export const CRM_SHOPP_SPUEDIT_DEL = 108809 // 编辑页面删除SKU
+
+export const CRM_SHOPP_PRODUCTLIBRARY_SKU_ONTHESHELVES = 108810 // sku tab上架
+export const CRM_SHOPP_PRODUCTLIBRARY_SKU_RACK = 108811 // sku tab下架
+export const CRM_SHOPP_PRODUCTLIBRARY_SKU_DEL = 108812 // sku tab删除
+
+// 商品管理-商品标签
+export const CRM_SHOPP_PRODUCTLABEL_RECOMMEND = 108813 // 推荐
+export const CRM_SHOPP_PRODUCTLABEL_CANCELRECOMMEND = 108814 // 取消推荐
+export const CRM_SHOPP_PRODUCTLABEL_BATCH_RECOMMEND = 108815 // 批量推荐
+export const CRM_SHOPP_PRODUCTLABEL_BATCH_CANCEL = 108816 // 批量取消
+// 商品管理-品牌管理
+export const CRM_SHOPP_PRODUCTLABEL_VIEW = 108817 // 查看
+export const CRM_SHOPP_PRODUCTLABEL_EDIT = 108818 // 修改
+// 品类管理
+export const CRM_CATEGORY_ADD = 117601
+export const CRM_CATEGORY_EDIT = 117602
+export const CRM_CATEGORY_DETELE = 117603
+export const CRM_CATEGORY_LOOK = 117604
+export const CRM_CATEGORY_MOVE = 117605
+
+// 广告位管理
+export const CRM_ADV_BANNER_ADD = 117611
+export const CRM_ADV_BANNER_EDIT = 117612
+export const CRM_ADV_BANNER_DELETE = 117613
+export const CRM_ADV_BANNER_OPERATE = 117614
+export const CRM_ADV_BANNER_MOVE = 117615
+
+export const CRM_ADV_CATEGORY_ADD = 117621
+export const CRM_ADV_CATEGORY_CANCEL = 117622
+export const CRM_ADV_CATEGORY_MOVE = 117623
+
+export const CRM_ADV_FLOOR_ADD = 117631
+export const CRM_ADV_FLOOR_LOOK = 117632
+export const CRM_ADV_FLOOR_OPERATE = 117633
+export const CRM_ADV_FLOOR_EDIT = 117634
+export const CRM_ADV_FLOOR_DELETE = 117635
+export const CRM_ADV_FLOOR_MOVE = 117636

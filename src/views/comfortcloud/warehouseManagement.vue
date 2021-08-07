@@ -126,15 +126,7 @@
                 <el-form-item label-width="0">
                     <el-col :span="8">
                         <el-form-item label="经销商名称：" prop="dealer">
-                            <el-autocomplete
-                                class="inline-input"
-                                v-model="addRecord.dealer"
-                                :fetch-suggestions="dealerRequest"
-                                placeholder="请输入经销商名称"
-                                :trigger-on-focus="false"
-                                @select="dealerChanged"
-                                :disabled="isEditRecord"
-                            ></el-autocomplete>
+                            <el-autocomplete class="inline-input" v-model="addRecord.dealer" :fetch-suggestions="dealerRequest" placeholder="请输入经销商名称" :trigger-on-focus="false" @select="dealerChanged" :disabled="isEditRecord"></el-autocomplete>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8" :offset="2">
@@ -167,8 +159,8 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 outboundType: '',
-                dealer: '',
-                dealerPhone: ''
+                dealer: this.$route.query.dealer ? this.$route.query.dealer : '',
+                dealerPhone: this.$route.query.phone ? this.$route.query.phone : ''
             },
             searchParams: {},
             tableData: [],
@@ -320,9 +312,12 @@ export default {
         })
     },
     mounted () {
-        if (this.$route.params.dealer && this.$route.params.dealer !== undefined) {
-            this.queryParams.dealer = decodeURIComponent(this.$route.params.dealer)
-        }
+        // if (this.$route.params.dealer && this.$route.params.dealer !== undefined) {
+        //     this.queryParams.dealer = decodeURIComponent(this.$route.params.dealer)
+        // }
+        // if (this.$route.params.phone && this.$route.params.phone !== undefined) {
+        //     this.queryParams.phone = decodeURIComponent(this.$route.params.phone)
+        // }
         this.onSearch()
         this.findCloudOutboundCategoryList()
     },

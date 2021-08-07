@@ -194,11 +194,11 @@ export default {
             this.searchList()
         },
         gotoProductAdd () {
-            this.$router.push({ path: '/b2b/commodity/spudetail', query: { type: 'add' } })
+            this.$router.push({ path: '/b2b/product/spudetail', query: { type: 'add' } })
         },
         onEditSpu (val) {
             clearCache('spudetail')
-            this.$router.push({ path: '/b2b/commodity/spudetail', query: { type: 'modify', spuTemplateId: val.id } })
+            this.$router.push({ path: '/b2b/product/spudetail', query: { type: 'modify', spuTemplateId: val.id } })
         }
     }
     /* beforeRouteEnter (to, from, next) {

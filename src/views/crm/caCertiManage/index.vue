@@ -29,21 +29,25 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">创建时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.createStartTime" default-time="00:00:00" type="datetime" value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsMax">
+                        <!-- <el-date-picker v-model="queryParams.createStartTime" default-time="00:00:00" type="datetime" value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsMax">
                         </el-date-picker>
                         <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.createEndTime" default-time="23:59:59" type="datetime" value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsMin">
-                        </el-date-picker>
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStartCreate" :end-change="onEndCreate" :options="createOptions">
+                        </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">实名时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.realStartTime" default-time="00:00:00" type="datetime" value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsMax">
+                        <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
+                        </HDatePicker>
+                        <!-- <el-date-picker v-model="queryParams.realStartTime" default-time="00:00:00" type="datetime" value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsMax">
                         </el-date-picker>
                         <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.realEndTime" default-time="23:59:59" type="datetime" value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsMin">
-                        </el-date-picker>
+                        </el-date-picker> -->
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -109,10 +113,6 @@ export default {
     name: 'caCertiManage',
     data () {
         return {
-            options: {
-                direction: 'rtl',
-                size: '400px'
-            },
             activeName: 'personage',
             copyParms: {},
             queryParams: {
@@ -137,25 +137,22 @@ export default {
             tableData: state => state.caCertiManage.tableData,
             paginationInfo: state => state.caCertiManage.paginationInfo
         }),
-        pickerOptionsMax () {
+        options () {
             return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.createEndTime
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(new Date(beginDateVal).toLocaleDateString()).getTime()
-                    }
-                }
+                type: 'datetime',
+                valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+                format: 'yyyy-MM-dd HH:mm:ss',
+                startTime: this.queryParams.realStartTime,
+                endTime: this.queryParams.realEndTime
             }
         },
-        pickerOptionsMin () {
+        createOptions () {
             return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.createStartTime
-                    if (beginDateVal) {
-                        //  - 8.64e7
-                        return time.getTime() < new Date(new Date(beginDateVal).toLocaleDateString()).getTime()
-                    }
-                }
+                type: 'datetime',
+                valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+                format: 'yyyy-MM-dd HH:mm:ss',
+                startTime: this.queryParams.createStartTime,
+                endTime: this.queryParams.createEndTime
             }
         }
     },
@@ -168,6 +165,18 @@ export default {
             getPersonalCAList: 'caCertiManage/getPersonalCAList',
             getCompanyCAList: 'caCertiManage/getCompanyCAList'
         }),
+        onStartChange (val) {
+            this.queryParams.realStartTime = val
+        },
+        onEndChange (val) {
+            this.queryParams.realEndTime = val
+        },
+        onStartCreate (val) {
+            this.queryParams.createStartTime = val
+        },
+        onEndCreate (val) {
+            this.queryParams.createEndTime = val
+        },
         compare (startTime, endTime) {
             const start = new Date(startTime).getTime()
             const end = new Date(endTime).getTime()

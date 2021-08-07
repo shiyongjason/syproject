@@ -20,6 +20,12 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col-title">企业名称：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
                     <div class="query-col-title">经营区域：</div>
                     <div class="query-cont-col-area">
                         <el-select v-model="queryParams.provinceId" @change="onProvince" placeholder="省" :clearable=true>
@@ -54,12 +60,7 @@
                     <div class="query-col-title">自动标签：</div>
                     <div class="flex-wrap-cont">
                         <el-select v-model="queryParams.autoTags" multiple collapse-tags>
-                            <el-option label="买过采暖产品" value="1"></el-option>
-                            <el-option label="买过新风产品" value="2"></el-option>
-                            <el-option label="买过空调主材" value="3"></el-option>
-                            <el-option label="买过空调辅材" value="4"></el-option>
-                            <el-option label="买过智能产品" value="5"></el-option>
-                            <el-option label="买过舒适云产品" value="6"></el-option>
+                            <el-option v-for="item in this.allAutoTags" :key="item.tagId" :label="item.tagName" :value="item.tagId"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -106,9 +107,9 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <div v-if="scope.data.row.autoTag && scope.data.row.autoTag.length > 0">
-                        <el-button class="orangeBtn" @click="onOrderList(scope.data.row)">查看订单</el-button>
-                        <el-button class="orangeBtn" @click="onDetail(scope.data.row,0)">会员详情</el-button>
-                        <el-button class="orangeBtn" @click="onDetail(scope.data.row,2)">沟通记录</el-button>
+                        <el-button v-if="scope.data.row.source!=='hcg'" class="orangeBtn" @click="onOrderList(scope.data.row)">查看订单</el-button>
+                        <el-button v-if="scope.data.row.autoTag" class="orangeBtn" @click="onDetail(scope.data.row,'enterpriseInfo')">会员详情</el-button>
+                        <el-button class="orangeBtn" @click="onDetail(scope.data.row,'contact')">沟通记录</el-button>
                     </div>
                     <div v-else>-</div>
                     <el-button v-if="scope.data.row.source==='third'" class="orangeBtn" @click="deleteData(scope.data.row)">删除</el-button>
@@ -169,7 +170,7 @@
 <script>
 import { getChiness } from '../../hmall/membership/api/index'
 import { clearCache, newCache } from '../../../utils'
-import { addMemberTag, editMemberTag, deleteThirdExernalMembersituation } from '../api'
+import { addMemberTag, editMemberTag, deleteThirdExernalMembersituation, getDictionary } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { iotUrl } from '@/api/config'
 
@@ -181,6 +182,7 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 phone: '',
+                companyName: '',
                 source: '',
                 provinceId: '',
                 cityId: '',
@@ -217,30 +219,31 @@ export default {
             tagStringList: [],
             provinceList: [],
             cityList: [],
+            allAutoTags: [],
             pagination: {
                 pageNumber: 1,
                 pageSize: 10,
                 total: 0
             },
             tableLabel: [
-                { label: '会员来源', prop: 'source', width: '100px' },
-                { label: '企业名称', prop: 'companyName', width: '100px' },
+                { label: '会员来源', prop: 'source' },
+                { label: '企业名称', prop: 'companyName', width: '200' },
                 { label: '认证状态', prop: 'authenticationStatus' },
                 { label: '会员角色', prop: 'role' },
-                { label: '会员账号', prop: 'phone', width: '100px' },
+                { label: '会员账号', prop: 'phone' },
                 { label: '会员昵称', prop: 'nickName' },
-                { label: '经营区域', prop: 'provinceName', width: '100px' },
+                { label: '经营区域', prop: 'provinceName' },
                 { label: '门店地址', prop: 'storeAddress' },
                 { label: '所属分部', prop: 'department' },
                 { label: '主营品牌', prop: 'mainBrand' },
                 { label: '主营品类', prop: 'mainCategory' },
-                { label: '注册时间', prop: 'createTime', formatters: 'dateTime', width: '150px' },
+                { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '销售顾问姓名', prop: 'saleName' },
-                { label: '销售顾问手机号', prop: 'salePhone', width: '100px' },
+                { label: '销售顾问手机号', prop: 'salePhone' },
                 { label: '是否注册享钱', prop: 'isAppletUser' },
-                { label: '首次沟通日期', prop: 'firstCommunicationDate', formatters: 'date', width: '100px' },
-                { label: '手动标签', prop: 'manualTags', width: '200px' },
-                { label: '自动标签', prop: 'autoTag', width: '150px' }
+                { label: '首次沟通日期', prop: 'firstCommunicationDate', formatters: 'date' },
+                { label: '手动标签', prop: 'manualTags', width: '200' },
+                { label: '自动标签', prop: 'autoTag', width: '150' }
             ],
             errTableLabel: [
                 { label: '企业名称', prop: 'companyName' },
@@ -271,23 +274,13 @@ export default {
         autoTag () {
             return function (tags) {
                 if (tags && tags.length > 0) {
-                    let auto = tags.split(',')
+                    let auto = this.allAutoTags
+                    let val = tags.split(',')
                     let newAuto = []
                     for (let i = 0; i < auto.length; i++) {
-                        const element = auto[i]
-                        if (element.length > 0) {
-                            if (element === '1') {
-                                newAuto.push('买过采暖产品')
-                            } else if (element === '2') {
-                                newAuto.push('买过新风产品')
-                            } else if (element === '3') {
-                                newAuto.push('买过空调主材')
-                            } else if (element === '4') {
-                                newAuto.push('买过空调辅材')
-                            } else if (element === '5') {
-                                newAuto.push('买过智能产品')
-                            } else if (element === '6') {
-                                newAuto.push('买过舒适云产品')
+                        for (let j = 0; j < val.length; j++) {
+                            if (auto[i].tagId == val[j]) {
+                                newAuto.push(auto[i].tagName)
                             }
                         }
                     }
@@ -328,7 +321,7 @@ export default {
                 disabledDate: time => {
                     let endDateVal = this.queryParams.endTime
                     if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
+                        return time.getTime() > new Date(endDateVal).getTime()
                     }
                 }
             }
@@ -338,7 +331,7 @@ export default {
                 disabledDate: time => {
                     let beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
@@ -366,10 +359,20 @@ export default {
             }
         }
     },
-    mounted () {
+    async mounted () {
         this.onSearch()
         this.getAreacode()
         this.queryTags()
+        const { data } = await getDictionary({
+            item: 'out_store_water_member_auto_tag'
+        })
+        this.allAutoTags = data.data.map((v) => {
+            return {
+                tagType: 1,
+                tagId: parseInt(v.dataKey),
+                tagName: v.dataValue
+            }
+        })
     },
     activated () {
         this.onQuery()
@@ -447,7 +450,7 @@ export default {
             this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberManage', query: { 'phone': val.phone } })
         },
         onDetail (val, index) {
-            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantExternalInvitation', query: { 'phone': val.phone, 'index': index } })
+            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantExternalInvitation', query: { 'phone': val.phone, 'name': index, 'companyId': val.companyId } })
         },
         async deleteData (val) {
             console.log(val)

@@ -29,8 +29,11 @@ const state = {
     cloudAlarmList: [],
     cloudAlarmPagination: {},
     cloudEquipmentErrorList: [],
+    cloudDeviceIDImportData: {},
     cloudEquipmentErrorPagination: {},
+    deviceIDImportPagination: {},
     cloudDict: [],
+    cloudImportDict: [],
     cloudSmartPlayList: [],
     cloudSmartPlayPagination: {},
     cloudSendMessageList: [],
@@ -74,8 +77,13 @@ const state = {
     cloudHomeModeTypeList: [],
     serviceManageHistoryList: [],
     cloudMerchantList: [],
-    cloudMerchantFromPhone: [],
     cloudMerchantListPagination: {},
+    cloudMerchantDetailList: [],
+    cloudMerchantDetailListPagination: {},
+    cloudMerchantDetailStats: {},
+    cloudMerchantCaseList: [],
+    cloudMerchantCaseDetailList: [],
+    cloudMerchantFromPhone: [],
     cloudMerchantAgentDetail: {},
     cloudMerchantAdList: [],
     cloudMerchantAdListPagination: {},
@@ -104,9 +112,23 @@ const state = {
     cloudMerchantProductOrderTotal: {},
     cloudMerchantActivityPurchaseData: {},
     cloudMerchantmemberInvitationOutOrderData: {},
+    cloudMerchantmemberInvitationProjectData: {},
     cloudMerchantTaglist: [],
     cloudMerchantMemberCommunicationList: [],
-    cloudMerchantMemberCommunicationListPagination: {}
+    cloudMerchantMemberCommunicationListPagination: {},
+    cloudMerchantMemberDepartmentList: [],
+    cloudMerchantMaterialList: [],
+    cloudMerchantProjectSchemeList: [],
+    cloudMerchantProjectSchemeListPagination: {},
+    cloudMerchantProjectSchemeDetail: {},
+    canUnbindDeivceList: [],
+    bossBindRecords: [],
+    complaintOrderList: [],
+    complaintOrderDetail: {},
+    complaintProcessOrderList: [],
+    complaintProcessOrderDetail: {},
+    cloudServiceMindList: [],
+    cloudServiceMindListPagination: {}
 }
 
 const getters = {
@@ -131,8 +153,11 @@ const getters = {
     cloudAlarmList: state => state.cloudAlarmList,
     cloudAlarmPagination: state => state.cloudAlarmPagination,
     cloudEquipmentErrorList: state => state.cloudEquipmentErrorList,
+    cloudDeviceIDImportData: state => state.cloudDeviceIDImportData,
     cloudEquipmentErrorPagination: state => state.cloudEquipmentErrorPagination,
+    deviceIDImportPagination: state => state.deviceIDImportPagination,
     cloudDict: state => state.cloudDict,
+    cloudImportDict: state => state.cloudImportDict,
     cloudSmartPlayList: state => state.cloudSmartPlayList,
     cloudSmartPlayPagination: state => state.cloudSmartPlayPagination,
     cloudSmartPlayPostDetail: state => state.cloudSmartPlayPostDetail,
@@ -186,8 +211,13 @@ const getters = {
     cloudHomeModeTypeList: state => state.cloudHomeModeTypeList,
     serviceManageHistoryList: state => state.serviceManageHistoryList,
     cloudMerchantList: state => state.cloudMerchantList,
-    cloudMerchantFromPhone: state => state.cloudMerchantFromPhone,
     cloudMerchantListPagination: state => state.cloudMerchantListPagination,
+    cloudMerchantDetailList: state => state.cloudMerchantDetailList,
+    cloudMerchantDetailListPagination: state => state.cloudMerchantDetailListPagination,
+    cloudMerchantDetailStats: state => state.cloudMerchantDetailStats,
+    cloudMerchantCaseList: state => state.cloudMerchantCaseList,
+    cloudMerchantCaseDetailList: state => state.cloudMerchantCaseDetailList,
+    cloudMerchantFromPhone: state => state.cloudMerchantFromPhone,
     cloudMerchantAgentDetail: state => state.cloudMerchantAgentDetail,
     cloudMerchantAdList: state => state.cloudMerchantAdList,
     cloudMerchantAdListPagination: state => state.cloudMerchantAdListPagination,
@@ -220,9 +250,23 @@ const getters = {
     cloudMerchantProductOrderTotal: state => state.cloudMerchantProductOrderTotal,
     cloudMerchantActivityPurchaseData: state => state.cloudMerchantActivityPurchaseData,
     cloudMerchantmemberInvitationOutOrderData: state => state.cloudMerchantmemberInvitationOutOrderData,
+    cloudMerchantmemberInvitationProjectData: state => state.cloudMerchantmemberInvitationProjectData,
     cloudMerchantTaglist: state => state.cloudMerchantTaglist,
     cloudMerchantMemberCommunicationList: state => state.cloudMerchantMemberCommunicationList,
-    cloudMerchantMemberCommunicationListPagination: state => state.cloudMerchantMemberCommunicationListPagination
+    cloudMerchantMemberCommunicationListPagination: state => state.cloudMerchantMemberCommunicationListPagination,
+    cloudMerchantMemberDepartmentList: state => state.cloudMerchantMemberDepartmentList,
+    cloudMerchantMaterialList: state => state.cloudMerchantMaterialList,
+    cloudMerchantProjectSchemeList: state => state.cloudMerchantProjectSchemeList,
+    cloudMerchantProjectSchemeListPagination: state => state.cloudMerchantProjectSchemeListPagination,
+    cloudMerchantProjectSchemeDetail: state => state.cloudMerchantProjectSchemeDetail,
+    canUnbindDeivceList: state => state.canUnbindDeivceList,
+    bossBindRecords: state => state.bossBindRecords,
+    complaintOrderList: state => state.complaintOrderList,
+    complaintOrderDetail: state => state.complaintOrderDetail,
+    complaintProcessOrderList: state => state.complaintProcessOrderList,
+    complaintProcessOrderDetail: state => state.complaintProcessOrderDetail,
+    cloudServiceMindList: state => state.cloudServiceMindList,
+    cloudServiceMindListPagination: state => state.cloudServiceMindListPagination
 }
 
 const mutations = {
@@ -292,11 +336,20 @@ const mutations = {
     [cloud.CLOUD_EQUIPMENT_ERROR_LIST] (state, payload) {
         state.cloudEquipmentErrorList = payload
     },
+    [cloud.CLOUD_DEVICE_ID_IMPORT] (state, payload) {
+        state.cloudDeviceIDImportData = payload
+    },
     [cloud.CLOUD_EQUIPMENT_ERROR_PAGINATION] (state, payload) {
         state.cloudEquipmentErrorPagination = payload
     },
+    [cloud.CLOUD_DEVICE_ID_IMPORT_PAGINATION] (state, payload) {
+        state.deviceIDImportPagination = payload
+    },
     [cloud.CLOUD_DICT] (state, payload) {
         state.cloudDict = payload
+    },
+    [cloud.CLOUD_DEVICE_BRAND_NO] (state, payload) {
+        state.cloudImportDict = payload
     },
     [cloud.CLOUD_SMART_PLAY_LIST] (state, payload) {
         state.cloudSmartPlayList = payload
@@ -428,6 +481,21 @@ const mutations = {
     [cloud.GET_CLOUD_MERCHANT_LIST] (state, payload) {
         state.cloudMerchantList = payload
     },
+    [cloud.GET_CLOUD_MERCHANT_DETAIL_LIST] (state, payload) {
+        state.cloudMerchantDetailList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_DETAIL_LIST_PAGINATION] (state, payload) {
+        state.cloudMerchantDetailListPagination = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_DETAIL_STATS] (state, payload) {
+        state.cloudMerchantDetailStats = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_CASE_LIST] (state, payload) {
+        state.cloudMerchantCaseList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_CASE_DETAIL_LIST] (state, payload) {
+        state.cloudMerchantCaseDetailList = payload
+    },
     [cloud.GET_CLOUD_MERCHANT_FROM_PHONE] (state, payload) {
         state.cloudMerchantFromPhone = payload
         console.log(payload)
@@ -519,6 +587,9 @@ const mutations = {
     [cloud.MERCHANT_MEMBERS_INVITATION_OUT_ORDER_DATA] (state, payload) {
         state.cloudMerchantmemberInvitationOutOrderData = payload
     },
+    [cloud.MERCHANT_MEMBERS_INVITATION_PROJECT_DATA] (state, payload) {
+        state.cloudMerchantmemberInvitationProjectData = payload
+    },
     [cloud.GET_CLOUD_MERCHANT_TAG_LIST] (state, payload) {
         state.cloudMerchantTaglist = payload
     },
@@ -527,6 +598,45 @@ const mutations = {
     },
     [cloud.GET_CLOUD_MERCHANT_MEMBER_COMMUNICATION_LIST_PAGINATION] (state, payload) {
         state.cloudMerchantMemberCommunicationListPagination = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_MEMBER_DEPARTMENT_LIST] (state, payload) {
+        state.cloudMerchantMemberDepartmentList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_MATERIAL_LIST] (state, payload) {
+        state.cloudMerchantMaterialList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_PROJECT_SCHEME_LIST] (state, payload) {
+        state.cloudMerchantProjectSchemeList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_PROJECT_SCHEME_LIST_PAGINATION] (state, payload) {
+        state.cloudMerchantProjectSchemeListPagination = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_PROJECT_SCHEME_DETAIL] (state, payload) {
+        state.cloudMerchantProjectSchemeDetail = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_CANUNBIND_DEVICE_LIST] (state, payload) {
+        state.canUnbindDeivceList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_BIND_RECORDS] (state, payload) {
+        state.bossBindRecords = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_COMPLAINT_ORDER_RECORDS] (state, payload) {
+        state.complaintOrderList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_COMPLAINT_ORDER_DETAIL] (state, payload) {
+        state.complaintOrderDetail = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_COMPLAINT_PROCESS_ORDER_LIST] (state, payload) {
+        state.complaintProcessOrderList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_COMPLAINT_PROCESS_ORDER_DETAIL] (state, payload) {
+        state.complaintProcessOrderDetail = payload
+    },
+    [cloud.GET_CLOUD_SERVICE_REMIND_LIST] (state, payload) {
+        state.cloudServiceMindList = payload
+    },
+    [cloud.GET_CLOUD_SERVICE_REMIND_LIST_PAGINATION] (state, payload) {
+        state.cloudServiceMindListPagination = payload
     }
 }
 
@@ -640,6 +750,19 @@ const actions = {
             pageSize: data.data.size,
             total: data.data.total
         })
+    },
+    async findCloudDeviceIDImportData ({ commit }, params) {
+        const { data } = await Api.getCloudDeviceIDImportData(params)
+        commit(cloud.CLOUD_DEVICE_ID_IMPORT, data.data)
+        commit(cloud.CLOUD_DEVICE_ID_IMPORT_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async findCloudBrandNo ({ commit }, params) {
+        const { data } = await Api.getCloudDeviceBrandNo(params)
+        commit(cloud.CLOUD_DEVICE_BRAND_NO, data.data)
     },
     async findCloudDict ({ commit }, params) {
         const { data } = await Api.getCloudDict(params)
@@ -835,6 +958,27 @@ const actions = {
             total: data.total
         })
     },
+    async findCloudMerchantDetailList ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantDetailList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_DETAIL_LIST, data.records)
+        commit(cloud.GET_CLOUD_MERCHANT_DETAIL_LIST_PAGINATION, {
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
+        })
+    },
+    async findCloudMerchantDetailStats ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantDetailStats(params)
+        commit(cloud.GET_CLOUD_MERCHANT_DETAIL_STATS, data)
+    },
+    async findCloudMerchantCaseList ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantCaseList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_CASE_LIST, data)
+    },
+    async findCloudMerchantCaseDetailList ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantCaseDetailList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_CASE_DETAIL_LIST, data)
+    },
     async findCloudMerchantFromPhone ({ commit }, params) {
         const { data } = await Api.getCloudMerchantFromPhone(params)
         commit(cloud.GET_CLOUD_MERCHANT_FROM_PHONE, data)
@@ -959,6 +1103,11 @@ const actions = {
         const { data } = await Api.getMerchantMemberInvitationOutOrdersituation(params)
         commit(cloud.MERCHANT_MEMBERS_INVITATION_OUT_ORDER_DATA, data)
     },
+    async findMerchantMemberInvitationProject ({ commit }, params) {
+        console.log(params)
+        const { data } = await Api.getMerchantMemberInvitationProject(params)
+        commit(cloud.MERCHANT_MEMBERS_INVITATION_PROJECT_DATA, data)
+    },
     async findCloudMerchantTaglist ({ commit }, params) {
         const { data } = await Api.getCloudMerchantTaglist(params)
         for (let i = 0; i < data.length; i++) {
@@ -977,6 +1126,60 @@ const actions = {
             pageNumber: data.current,
             pageSize: data.size,
             total: data.total
+        })
+    },
+    async findCloudMerchantMemberDepartmentList ({ commit }, params) {
+        const { data } = await Api.findMerchantDep(params)
+        commit(cloud.GET_CLOUD_MERCHANT_MEMBER_DEPARTMENT_LIST, data)
+    },
+    async findCloudMerchantMaterialList ({ commit }, params) {
+        const { data } = await Api.getMarktingMaterial(params)
+        commit(cloud.GET_CLOUD_MERCHANT_MATERIAL_LIST, data)
+    },
+    async findCloudMerchanProjectSchemeList ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantProjectSchemeList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_PROJECT_SCHEME_LIST, data.records)
+        commit(cloud.GET_CLOUD_MERCHANT_PROJECT_SCHEME_LIST_PAGINATION, {
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
+        })
+    },
+    async findCloudMerchanProjectSchemeDetail ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantProjectSchemeDetail(params)
+        commit(cloud.GET_CLOUD_MERCHANT_PROJECT_SCHEME_DETAIL, data)
+    },
+    async getBossCanUnbindDeviceList ({ commit }, params) {
+        const { data } = await Api.getBossCanUnbindDeviceList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_CANUNBIND_DEVICE_LIST, data.data)
+    },
+    async getBossBindRecords ({ commit }, params) {
+        const { data } = await Api.getBossBindRecords(params)
+        commit(cloud.GET_CLOUD_MERCHANT_BIND_RECORDS, data.data)
+    },
+    async getComplaintOrderList ({ commit }, params) {
+        const { data } = await Api.getComplaintOrderList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_COMPLAINT_ORDER_RECORDS, data)
+    },
+    async getComplaintOrderDetail ({ commit }, params) {
+        const { data } = await Api.getComplaintOrderDetail(params)
+        commit(cloud.GET_CLOUD_MERCHANT_COMPLAINT_ORDER_DETAIL, data)
+    },
+    async getComplaintProcessOrderList ({ commit }, params) {
+        const { data } = await Api.getComplaintProcessOrderList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_COMPLAINT_PROCESS_ORDER_LIST, data)
+    },
+    async getComplaintProcessOrderDetail ({ commit }, params) {
+        const { data } = await Api.getComplaintProcessOrderDetail(params)
+        commit(cloud.GET_CLOUD_MERCHANT_COMPLAINT_PROCESS_ORDER_DETAIL, data)
+    },
+    async findCloudServiceMindList ({ commit }, params) {
+        const { data } = await Api.getServiceRemindList(params)
+        commit(cloud.GET_CLOUD_SERVICE_REMIND_LIST, data.data.records)
+        commit(cloud.GET_CLOUD_SERVICE_REMIND_LIST_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
         })
     }
 }

@@ -6,24 +6,24 @@
                     <div class="default-pre-view-warp">
                         <div class="default-pre-view-mask">
                             <i class="el-icon-zoom-in" style="color:#fff" @click="open(index,item)"></i>
-                            <i class="el-icon-delete-solid" style="color:#fff" @click="remove(index)"></i>
+                            <i v-if="showUpload" class="el-icon-delete-solid" style="color:#fff" @click="remove(index)"></i>
                         </div>
                     </div>
                     <!-- TODO: 这块功能还未涉及到，已经更新了对应代码 没有场景用到，可能会有bug-->
-                    <div class="pdfimg" v-if="(item.fileUrl).indexOf('.pdf') != -1">
+                    <div class="pdfimg" v-if="_checkPicType(item,['.pdf'])">
                         <img :src="pdfbase">
                     </div>
-                    <div class="pdfimg" v-else-if="(item.fileUrl).indexOf('.xls') != -1||(item.fileUrl).indexOf('.xlxs') != -1">
+                    <div class="pdfimg" v-else-if="_checkPicType(item,['.xls','.xlsx'])">
                         <img :src="xlsbase">
                     </div>
-                    <div class="pdfimg" v-else-if="(item.fileUrl).indexOf('.zip') != -1||(item.fileUrl).indexOf('.rar') != -1">
+                    <div class="pdfimg" v-else-if="_checkPicType(item,['.zip','.rar'])">
                         <img :src="zipbase">
                     </div>
-                    <div class="pdfimg" v-else-if="(item.fileUrl).indexOf('.doc') != -1||(item.fileUrl).indexOf('.docx') != -1||(item.fileUrl).indexOf('.word') != -1">
+                    <div class="pdfimg" v-else-if="_checkPicType(item,['.doc','.docx','.word'])">
                         <img :src="worldbase">
                     </div>
-<!--                    <el-image fit="contain" :src="item.fileUrl" :preview-src-list="[item.fileUrl]"></el-image>-->
-                    <elImageAddToken  v-else :ref="`preview_${index}`" :fileUrl="item.fileUrl" :fit="'contain'"></elImageAddToken>
+                    <elImageAddToken v-else-if="item.fileUrl" :ref="`preview_${index}`" :fileUrl="item.fileUrl" fit="contain" :preview-src-list="previewSrcList"></elImageAddToken>
+                    <!-- <el-image v-else-if="item.tokenUrl||item.fileUrl" :ref="`preview_${index}`" class="default-pre-view-image" fit="contain" :src="item.tokenUrl||item.fileUrl" :preview-src-list="previewSrcList"></el-image> -->
                 </div>
             </template>
         </template>
@@ -31,19 +31,19 @@
             <span v-for="(item,index) in fileList" :key="index" class="posrtv">
                 <template v-if="item&&item.fileUrl">
                     <i class="el-icon-document"></i>
-<!--                    <a src="item.fileUrl" target="_blank">-->
-<!--                        <font>{{item.fileName}}</font>-->
-<!--                    </a>-->
-                    <downloadFileAddToken :file-name="item.fileName" :file-url="item.fileUrl" :a-link-words="item.fileName"></downloadFileAddToken>
+                    <!--                    <a src="item.fileUrl" target="_blank">-->
+                    <!--                        <font>{{item.fileName}}</font>-->
+                    <!--                    </a>-->
+                    <downloadFileAddToken isType='default' :file-name="item.fileName" :file-url="item.fileUrl" :a-link-words="item.fileName"></downloadFileAddToken>
                     <div class="abs">
                         <i class="el-icon-circle-close" @click="remove(index)"></i>
                     </div>
                 </template>
             </span>
         </template>
-        <div class="elupload" v-loading='loading' :class="haveslot?'haveslot':''">
+        <div v-if="showUpload" class="elupload" v-loading='loading' :class="haveslot?'haveslot':''">
             <el-upload v-if="fileList.length<fileNum" v-bind="$attrs" v-on="$listeners" drag ref="elUpload" :multiple='multiple' name='multiFile' :data='uploadParameters' :showFileList='showFileList' :disabled='disabled' action='action' :limit='limit' :on-exceed="onExceed" :on-remove="handleRemove"
-                       :on-success="handleSuccess" :on-change="handleCheckedSize" :before-upload="beforeAvatarUpload" :on-progress="uploadProcess" :accept='accept' :on-error='handleError' :http-request="uploadFile">
+                :on-success="handleSuccess" :on-change="handleCheckedSize" :before-upload="beforeAvatarUpload" :on-progress="uploadProcess" :accept='accept' :on-error='handleError' :http-request="uploadFile">
                 <!-- 默认插槽 -->
                 <slot>
                     <div class="default-upload">
@@ -59,8 +59,8 @@
             </el-upload>
 
         </div>
-        <el-dialog title="提示" :visible.sync="deleteVisible" width="500px" class="deldialog" :modal=false>
-            <span>您确定删除这一条数据吗？</span>
+        <el-dialog title="删除确认" :visible.sync="deleteVisible" width="500px" class="deldialog" :modal=false>
+            <span>{{delTips}}</span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="deleteVisible = false">取 消</el-button>
                 <el-button type="primary" @click="doRemove">确 定</el-button>
@@ -71,8 +71,8 @@
 
 <script>
 import OssFileUtils from '@/utils/OssFileUtils'
-import elImageAddToken from '@/components/elImageAddToken'
 import downloadFileAddToken from '@/components/downloadFileAddToken'
+import elImageAddToken from '@/components/elImageAddToken'
 export default {
     name: 'OssFileHosjoyUpload',
     props: {
@@ -88,9 +88,12 @@ export default {
         showAsFileName: { type: Boolean, default: false }, // 文件名形式显示
         showProgress: { type: Boolean, default: false },
         fileNum: { type: Number, default: 100 }, // 限制文件总数
-        accept: { type: String, default: '.jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.zip,.rar' } // 上传的类型
+        accept: { type: String, default: '.jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.zip,.rar' }, // 上传的类型
+        showUpload: { type: Boolean, default: true }, // 是否显示上传按钮
+        delTips: { type: String, default: '您确定删除这一条数据吗？' }
+
     },
-    components: { elImageAddToken, downloadFileAddToken },
+    components: { downloadFileAddToken, elImageAddToken },
     data () {
         return {
             successFileTemp: {},
@@ -120,9 +123,14 @@ export default {
         }
     },
     methods: {
+        async getOssUrl (fileUrl) {
+            const res = await OssFileUtils.getUrl(fileUrl)
+            console.log('🚀 --- getOssUrl --- res', res)
+            return res
+        },
         handleError (err) {
-            let errMessage = (JSON.parse(err.message)).message || ''
-            this.$message.error(`上传失败：` + errMessage)
+            const errMessage = (JSON.parse(err.message)).message || ''
+            this.$message.error('上传失败：' + errMessage)
             this.progressFlag = false
             this.loading = false
         },
@@ -132,7 +140,7 @@ export default {
             this.uploadPercent = Math.floor(event.percent)
         },
         async handleSuccess (response, file, fileList) {
-            let obj = {
+            const obj = {
                 fileName: this.successFileTemp.name,
                 fileUrl: this.successFileTemp.url
             }
@@ -142,12 +150,25 @@ export default {
                 } else {
                     this.$message.error(`上传数量超出限制！最大个数：${this.fileNum}`)
                 }
+                //
+                // this.fileList.map(async (tempArrElement, index) => {
+                //     const tempUrl = await OssFileUtils.getUrl(tempArrElement.fileUrl)
+                //     this.$set(this.fileList, index, Object.assign(tempArrElement, { tokenUrl: tempUrl }))
+                // })
                 this.uploadPercent = 100
                 this.progressFlag = false
                 this.loading = false
                 this.$emit('successCb')
                 this.$emit('successArg', obj)
+                // this.$forceUpdate()
             }, 500)
+        },
+        // 校验大小
+        _checkPicType (item, typePic) {
+            if (item && item.fileUrl && typePic.indexOf(item.fileUrl.slice(item.fileUrl.lastIndexOf('.')).toLowerCase()) > -1) {
+                return true
+            }
+            return false
         },
         doRemove () {
             this.fileList.splice(this.index, 1)
@@ -160,7 +181,7 @@ export default {
         },
         handleRemove (file, fileList) {
             if (file.response && file.response.data) {
-                let index = this.fileList.indexOf(file.response.data.accessUrl)
+                const index = this.fileList.indexOf(file.response.data.accessUrl)
                 this.doRemove(index)
             }
         },
@@ -172,20 +193,20 @@ export default {
             this.isBeyond = files.size / (1024 * 1024) >= this.fileSize
         },
         getFileType (file) {
-            let startIndex = file.lastIndexOf('.')
+            const startIndex = file.lastIndexOf('.')
             if (startIndex !== -1) {
                 return file.substring(startIndex + 1, file.length).toLowerCase()
             }
             return ''
         },
         beforeAvatarUpload (file) {
-            let arr = this.accept.split(',')
+            const arr = this.accept.split(',')
             let flag = false
             arr.map(item => {
                 if (item === `.${this.getFileType(file.name)}`) flag = true
             })
             if (!flag) {
-                this.$message.error(`上传错误，暂不支持该文件格式上传`)
+                this.$message.error('上传错误，暂不支持该文件格式上传')
                 return false
             }
             if (this.isBeyond) {
@@ -193,26 +214,43 @@ export default {
                 return false
             }
         },
+        async tofileUrl () {
+            this.tokenUrl = await OssFileUtils.getUrl(this.fileUrl)
+            return this.tokenUrl
+        },
         async open (index, item = null) {
-            if ((item.fileName).indexOf('.png') > -1 || (item.fileName).indexOf('.jpg') > -1 || (item.fileName).indexOf('.jpeg') > -1) {
-                let temp = this.fileList[index]
+            this.previewSrcList = []
+            if ((item.fileName).toLowerCase().indexOf('.png') > -1 || (item.fileName).toLowerCase().indexOf('.jpg') > -1 || (item.fileName).toLowerCase().indexOf('.jpeg') > -1) {
+                const temp = this.fileList[index]
                 let tempArr = JSON.parse(JSON.stringify(this.fileList))
                 tempArr.splice(index, 1)
                 tempArr.unshift(temp)
-                for (let tempArrElement of tempArr) {
-                    tempArrElement = await OssFileUtils.getUrl(tempArrElement.fileUrl)
-                }
-                this.previewSrcList = tempArr
-                const pre = this.$refs[`preview_${index}`]
-                if (pre && pre[0]) {
-                    pre[0].clickHandler()
-                }
+                tempArr = tempArr.filter(item => {
+                    if ((item.fileName).toLowerCase().indexOf('.png') > -1 || (item.fileName).toLowerCase().indexOf('.jpg') > -1 || (item.fileName).toLowerCase().indexOf('.jpeg') > -1) {
+                        return item
+                    }
+                })
+
+                tempArr.map(async item => {
+                    const tokenUrl = await OssFileUtils.getUrl(item.fileUrl)
+                    this.previewSrcList.push(tokenUrl)
+                })
+                setTimeout(() => {
+                    const pre = this.$refs[`preview_${index}`]
+                    if (pre && pre[0]) {
+                        console.log(pre[0])
+                        console.log(' 🚗 🚕 🚙 🚌 🚎 this.previewSrcList', this.previewSrcList)
+                        pre[0].clickHandler()
+                        this.$forceUpdate()
+                    }
+                }, 0)
             } else {
-                let url = await OssFileUtils.getUrl(item.fileUrl)
+                const url = await OssFileUtils.getUrl(item.fileUrl)
                 window.open(url)
             }
         },
         async uploadFile (params) {
+            console.log('params: ', params)
             this.successFileTemp = await OssFileUtils.uploadFile(params.file)
         }
     },
@@ -220,6 +258,7 @@ export default {
         if (this.$slots.default) {
             this.haveslot = true// 此块为了去掉自定义的默认全局样式
         }
+        console.log(' 🚗 🚕 🚙 🚌 🚎 ')
     }
 }
 </script>

@@ -50,7 +50,7 @@
                 </template>
             </hosJoyTable>
         </div>
-        <h-drawer title="合同版本记录" :visible.sync="ver_drawer" size='50%' :beforeClose="handleClose">
+        <h-drawer title="合同版本记录" :visible.sync="ver_drawer" v-if="ver_drawer" size='50%' :beforeClose="handleClose">
             <template #connect>
                 <hosJoyTable isShowIndex ref="hosjoyTable" align="center" showPagination border stripe :column="verLabel" :data="ver_Data" @pagination="versionList" :pageNumber.sync="drawerParams.pageNumber" :pageSize.sync="drawerParams.pageSize" :total="verpaginationInfo.total" isAction>
                     <template slot="action" slot-scope="scope">
@@ -88,7 +88,7 @@ export default {
             copy_queryParams: {},
             tableLabel: [
                 { label: '合同模板编号', prop: 'templateNo', width: '100' },
-                { label: '合同模版名称', prop: 'templateName', width: '200' },
+                { label: '合同模板名称', prop: 'templateName', width: '200' },
                 { label: '合同类型', prop: 'typeName', width: '100' },
                 { label: '状态', prop: 'status', dicData: [{ value: 0, label: '已禁用' }, { value: 1, label: '已启用' }], width: '80' },
                 { label: '启用/禁用时间', prop: 'enableTime', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', width: '200' },
@@ -202,7 +202,7 @@ export default {
                     })
                 } catch (error) {
                     this.$message.closeAll()
-                    this.$confirm('不符合启用条件，请先编辑合同模版', '提示', {
+                    this.$confirm('不符合启用条件，请先编辑合同模板', '提示', {
                         confirmButtonText: '去编辑',
                         cancelButtonText: '暂不启用',
                         type: 'warning'
@@ -231,7 +231,7 @@ export default {
         },
         onEdit (val) {
             if (val.status == 1) {
-                this.$confirm('启用状态的模版不可编辑，如您需要编辑此模版，请先禁用此模版', '提示', {
+                this.$confirm('启用状态的模板不可编辑，如您需要编辑此模板，请先禁用此模板', '提示', {
                     confirmButtonText: '禁用并编辑',
                     cancelButtonText: '暂不编辑',
                     type: 'warning'

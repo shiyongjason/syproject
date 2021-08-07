@@ -279,11 +279,11 @@ export default {
         },
         onAuditSpu (val) {
             clearCache('spudetail')
-            this.$router.push({ path: '/b2b/commodity/spudetail', query: { type: 'audit', spuId: val.spuId } })
+            this.$router.push({ path: '/b2b/product/spudetail', query: { type: 'audit', spuId: val.spuId } })
         },
         onShowSpu (val) {
             clearCache('spudetail')
-            this.$router.push({ path: '/b2b/commodity/spudetail', query: { type: 'show', spuId: val.spuId } })
+            this.$router.push({ path: '/b2b/product/spudetail', query: { type: 'show', spuId: val.spuId } })
         },
         async onSetSpuTemplate (val) {
             await this.setSpuTemplate(val.spuId)

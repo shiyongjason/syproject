@@ -249,7 +249,8 @@ export default {
                 pageSize: 10,
                 uuid: this.$route.query.uuid
             },
-            tagStringList: [],
+            tagStringList: [], // 用于编辑的tags列表
+            showTagStringList: [], // 用于展示的tags列表
             updateMonthShow: false,
             updateIndexData: {},
             searchParams: {},
@@ -400,8 +401,8 @@ export default {
             }
         },
         showTag () {
-            if (this.tagStringList.length > 0) {
-                return this.tagStringList.join(',')
+            if (this.showTagStringList.length > 0) {
+                return this.showTagStringList.join(',')
             } else {
                 return '--'
             }
@@ -411,17 +412,7 @@ export default {
                 disabledDate: time => {
                     let endDateVal = this.queryParams.endTime
                     if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.startTime
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
+                        return time.getTime() > new Date(endDateVal).getTime()
                     }
                 }
             }
@@ -480,13 +471,12 @@ export default {
                 pageSize: this.merchantmemberInvitationChangeData.size,
                 total: this.merchantmemberInvitationChangeData.total
             }
+            this.memberInfo()
         },
         async memberInfo () {
             await this.findMerchantMembersituation({ 'phone': this.$route.query.phone })
-            if (this.merchantmemberData.records.length > 0) {
-                this.enterpriseInfoData = this.merchantmemberData.records[0]
-            }
             this.tagStringList = this.enterpriseInfoData.userTags ? this.enterpriseInfoData.userTags.split(',') : []
+            this.showTagStringList = [...this.tagStringList]
         },
         async employeeData () {
             await this.findMerchantCompanyEmployee(this.$route.query.companyCode)
@@ -504,7 +494,7 @@ export default {
                     const element = this.tagStringList[i]
                     tagMapList.push({ 'tagId': '', 'tagName': element })
                 }
-                if (this.$route.query.userTags) {
+                if (this.showTagStringList && this.showTagStringList.length > 0) {
                     await editMemberTag({ 'phone': this.$route.query.phone, 'tagNames': tagMapList })
                 } else {
                     await addMemberTag({ 'phone': this.$route.query.phone, 'tagNames': tagMapList })

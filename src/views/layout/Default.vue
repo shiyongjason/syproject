@@ -221,7 +221,7 @@ export default {
 
 <style lang="scss" scoped>
 .tabs-container {
-    z-index: 1000;
+    z-index: 100;
     &__height {
         height: 50px;
     }
@@ -284,7 +284,7 @@ export default {
 
 /deep/ .el-loading-mask {
     position: fixed;
-    z-index: 2000;
+    z-index: 200000;
     background-color: rgba(255, 255, 255, 0.9);
     top: 0;
     left: 0;

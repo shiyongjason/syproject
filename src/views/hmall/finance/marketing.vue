@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <div class="query-cont__row">
                 <div class="query-cont__col">
-                    <div class="query-col__lable">子订单号：</div>
+                    <div class="query-col__lable">订单编号：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.childOrderNo" maxlength="50"></el-input>
                     </div>
@@ -112,8 +112,7 @@
                     <h-button class="ml20" @click="onExport">导出</h-button>
                 </div>
             </div>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange"
-                :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isShowIndex='true'>
                 <template slot="payWay" slot-scope="scope">
                     {{ paymethodMap.get(scope.data.row.payWay) || '-' }}
                 </template>
@@ -127,7 +126,7 @@
                     {{ activityTypeMap.get(scope.data.row.activityType) || '-' }}
                 </template>
                 <template slot="couponType" slot-scope="scope">
-                    <p class="couponP" v-for="(item, index) in getCouponArr(scope.data.row.couponType)" :key="index" >{{ couponsTypeMap.get(parseInt(item)) }}</p>
+                    <p class="couponP" v-for="(item, index) in getCouponArr(scope.data.row.couponType)" :key="index">{{ couponsTypeMap.get(parseInt(item)) }}</p>
                 </template>
                 <template slot="couponCode" slot-scope="scope">
                     <p class="couponP" v-for="(item, index) in getCouponArr(scope.data.row.couponCode)" :key="index">{{ item }}</p>
@@ -146,7 +145,8 @@
 <script>
 import {
     ORDER_STATUS_OPTIONS, ORDER_CHANNERL_OPTIONS, SELF_SUPPORT_OPTIONS, COUPONS_TYPE_OPTIONS, ACTIVITY_TYPE_OPTIONS,
-    ORDER_STATUS_MAP, ORDER_CHANNERL_MAP, COUPONS_TYPE_MAP, ACTIVITY_TYPE_MAP } from './const'
+    ORDER_STATUS_MAP, ORDER_CHANNERL_MAP, COUPONS_TYPE_MAP, ACTIVITY_TYPE_MAP
+} from './const'
 import { PAY_METHOD_OPTIONS, PAY_METHOD_MAP } from '@/utils/const'
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
@@ -188,7 +188,7 @@ export default {
                 pageSize: 10
             },
             tableLabel: [
-                { label: '子订单号', prop: 'childOrderNo' },
+                { label: '订单编号', prop: 'childOrderNo' },
                 { label: '支付时间', prop: 'payTime', formatters: 'dateTime' },
                 { label: '完成时间', prop: 'completeTime', formatters: 'dateTime' },
                 { label: '订单总金额（元）', prop: 'totalAmount', formatters: 'moneyShow' },
@@ -284,7 +284,7 @@ export default {
                 for (let key in this.queryParams) {
                     url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
                 }
-                location.href = B2bUrl + 'order/api/boss/orders/finance-market/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
+                location.href = B2bUrl + 'order/boss/child-orders/market/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
             }
         },
         getCouponArr (val) {

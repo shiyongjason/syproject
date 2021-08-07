@@ -17,3 +17,5 @@ export const updatePurchaseOrderChangeConfirmStatus = (params) => axios.put(`/pr
 export const updatePurchaseOrderConfirmStatus = (params) => axios.put(`/project/api/purchase-orders/boss/confirm`, params)
 // 采购单确认
 export const getSeals = (params) => axios.get(`/project/api/contract-approval/${params}/seal-approval-history`, params)
+// BOSS-上传共管户
+export const uploadCoManagerPhotos = (params) => axios.post(`/project/api/purchase-orders/co-manager`, params)

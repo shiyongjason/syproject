@@ -107,7 +107,7 @@
                     <span v-if="scope.data.row.auditStatus === 2">审核不通过</span>
                 </template>
                 <template slot="targetRange" slot-scope="scope">
-                    {{scope.data.row.targetRange === 1 ? '全部会员店' : '部分会员店'}}
+                    {{scope.data.row.targetRange === 1 ? '全部归属会员店' : scope.data.row.targetRange === 2 ? '指定会员店' : '全部平台会员店'}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table v-if="scope.data.row.status == 3" @click="onCheck(scope.data.row.id,'review')">审核</h-button>
@@ -130,9 +130,10 @@
                         {{couponInfo.couponCode}}
                     </el-form-item>
                     <el-form-item label="活动范围：">
-                        <!--目标范围(1,全部会员店 2,部分会员店)-->
-                        <span v-if="couponInfo.targetRange === 1">全部会员店</span>
-                        <span v-if="couponInfo.targetRange === 2">部分会员店</span>
+                        <!--目标范围(1,全部会员店 2,部分会员店 3,全部平台会员店)-->
+                        <span v-if="couponInfo.targetRange === 1">全部归属会员店</span>
+                        <span v-if="couponInfo.targetRange === 2">指定会员店</span>
+                        <span v-if="couponInfo.targetRange === 3">全部平台会员店</span>
                     </el-form-item>
                     <el-form-item label="优惠券名称：">
                         {{couponInfo.couponName}}

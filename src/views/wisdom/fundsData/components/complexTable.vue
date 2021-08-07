@@ -69,7 +69,6 @@ import { getAccountBasic, getLoan, getRespAccountRepaymentPlan, transformPlanTyp
 import moment from 'moment'
 import { mapState } from 'vuex'
 import filters from '@/utils/filters.js'
-import { MathJS } from '@/utils/MathUtils'
 import {
     WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA,
     WISDOM_EXPOSURE_FUNDSDATA_UPDATA,
@@ -676,12 +675,12 @@ export default {
                                     render: (h, scope) => {
                                         return <span>
                                             {filters.fundMoneyHaveSpot(
-                                                MathJS.evaluate(`${scope.row.paymentStatic_interestAmount} + ${scope.row.paymentStatic_graceInterestAmount}`).toNumber()
+                                                this.$plus(scope.row.paymentStatic_interestAmount, scope.row.paymentStatic_graceInterestAmount)
                                             )}
                                             {scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal
                                                 ? `(${(scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) > 0
-                                                    ? '+' + (MathJS.evaluate(`${scope.row.paymentStatic_normalInterestPranayamaTotal} + ${scope.row.paymentStatic_graceInterestPranayamaTotal}`).toNumber())
-                                                    : (MathJS.evaluate(`${scope.row.paymentStatic_normalInterestPranayamaTotal} + ${scope.row.paymentStatic_graceInterestPranayamaTotal}`).toNumber())})`
+                                                    ? '+' + (this.$plus(scope.row.paymentStatic_normalInterestPranayamaTotal, scope.row.paymentStatic_graceInterestPranayamaTotal))
+                                                    : (this.$plus(scope.row.paymentStatic_normalInterestPranayamaTotal, scope.row.paymentStatic_graceInterestPranayamaTotal))})`
                                                 : ''
                                             }
                                         </span>
@@ -1410,12 +1409,12 @@ export default {
                                         return <span>
                                             {
                                                 filters.fundMoneyHaveSpot(
-                                                    MathJS.evaluate(`${scope.row.paymentStatic_interestTotalAmount} + ${scope.row.paymentStatic_graceInterestAmount}`).toNumber()
+                                                    this.$plus(scope.row.paymentStatic_interestTotalAmount, scope.row.paymentStatic_graceInterestAmount)
                                                 )}
                                             {scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal
                                                 ? `(${(scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) > 0
-                                                    ? '+' + (MathJS.evaluate(`${scope.row.paymentStatic_normalInterestPranayamaTotal} + ${scope.row.paymentStatic_graceInterestPranayamaTotal}`).toNumber())
-                                                    : (MathJS.evaluate(`${scope.row.paymentStatic_normalInterestPranayamaTotal} + ${scope.row.paymentStatic_graceInterestPranayamaTotal}`).toNumber())})`
+                                                    ? '+' + (this.$plus(scope.row.paymentStatic_normalInterestPranayamaTotal, scope.row.paymentStatic_graceInterestPranayamaTotal))
+                                                    : (this.$plus(scope.row.paymentStatic_normalInterestPranayamaTotal, scope.row.paymentStatic_graceInterestPranayamaTotal))})`
                                                 : ''
                                             }
                                         </span>

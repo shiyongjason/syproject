@@ -45,6 +45,14 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
+                    <div class="query-col__label">是否已归档：</div>
+                    <div class="query-col__input">
+                        <el-select placeholder="请选择" v-model="queryParams.archive" :clearable=true>
+                            <el-option :label="item.label" :value="item.value" v-for="item in fileStatus" :key="item.label"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont__col">
                     <div class="query-col__label">发起人：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.createBy" placeholder="请输入" maxlength="50"></el-input>
@@ -53,11 +61,6 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">发起时间：</div>
                     <div class="query-col-input">
-                        <!-- <el-date-picker type="datetime" :editable="false" v-model="queryParams.createStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('createEndTime')">
-                        </el-date-picker>
-                        <span class="ml10 mr10">-</span>
-                        <el-date-picker type="datetime" :editable="false" v-model="queryParams.createEndTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd('createStartTime')">
-                        </el-date-picker> -->
                         <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
                         </HDatePicker>
                     </div>
@@ -66,11 +69,6 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">更新时间：</div>
                     <div class="query-col-input">
-                        <!-- <el-date-picker type="datetime" :editable="false" v-model="queryParams.updateStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('updateEndTime')">
-                        </el-date-picker>
-                        <span class="ml10 mr10">-</span>
-                        <el-date-picker type="datetime" :editable="false" v-model="queryParams.updateEndTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd('updateStartTime')">
-                        </el-date-picker> -->
                         <HDatePicker :start-change="onStartUpdate" :end-change="onEndUpdate" :options="updateOptions">
                         </HDatePicker>
                     </div>
@@ -99,7 +97,7 @@
                 <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项</el-tag>
             </div>
             <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="searchList"
-                actionWidth='375' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+                actionWidth='420' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template slot="action" slot-scope="scope">
                     <h-button v-if="scope.data.row.contractStatus===2&&hosAuthCheck(Auths.CRM_CONTRACT_FIN)" table @click="approveContract(scope.data.row,1)">分财审核</h-button>
                     <h-button v-if="scope.data.row.contractStatus===4&&hosAuthCheck(Auths.CRM_CONTRACT_RISK)" table @click="approveContract(scope.data.row,2)">风控审核</h-button>
@@ -107,11 +105,13 @@
                     <h-button table @click="openDetail(scope.data.row)">查看合同</h-button>
                     <h-button table @click="getHistory(scope.data.row)">审核记录</h-button>
                     <h-button table @click="onAbolished(scope.data.row)" v-if="scope.data.row.contractStatus!=17 && hosAuthCheck(Auths.CRM_CONTRACT_ABOLISH)">废止</h-button>
+                    <h-button table @click="onGetfile(scope.data.row)" v-if="hosAuthCheck(Auths.CONTRACT_PLACE)&&scope.data.row.contractSignType==2&&scope.data.row.contractStatus==12&&!scope.data.row.archive">归档</h-button>
+                    <!-- <h-button table @click="onGetfile(scope.data.row)">归档</h-button> -->
                 </template>
             </hosJoyTable>
         </div>
 
-        <el-drawer title="查看信息" :visible.sync="drawerVisible" :wrapperClosable="false" size='580px' :beforeClose="() => drawerVisible=false" class="contentdrawerbox">
+        <el-drawer title="查看信息" v-if="drawerVisible" :visible.sync="drawerVisible" :wrapperClosable="false" size='580px' :beforeClose="() => drawerVisible=false" class="contentdrawerbox">
             <div slot="title">审核记录</div>
             <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
             <!-- {{detailRes.contractStatus == 2?'合同待分财审核':detailRes.contractStatus == 4?'合同待风控审核':detailRes.contractStatus == 6?'合同待法务审核':''}} -->
@@ -183,11 +183,13 @@
             </div>
         </el-drawer>
         <diffDialog ref="diffDialog" v-if="currentContent&&lastContent" :currentContent=currentContent :lastContent=lastContent></diffDialog>
+        <fileDialog ref='fileDialog' @callBackFun=getList></fileDialog>
     </div>
 </template>
 <script>
 import diffDialog from './diffDialog'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
+import fileDialog from './fileDialog'
 import {
     contractSigningList,
     contractStatic,
@@ -215,13 +217,16 @@ const _queryParams = {
     authCode: '',
     jobNumber: '',
     companyName: '',
+    archive: '',
     createTimeOrder: null, // asc 或 desc
     updateTimeOrder: null// asc 或 desc
 }
 const _dicData = [{ value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待风控审核' }, { value: 5, label: '风控审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }, { value: 15, label: '用印发起失败' }, { value: 16, label: '发起线上待客户签署' }, { value: 17, label: '合同废止' }]
+
+const _fileData = [{ value: true, label: '是' }, { value: false, label: '否' }]
 export default {
     name: 'contractSigningManagement',
-    components: { hosJoyTable, diffDialog },
+    components: { hosJoyTable, diffDialog, fileDialog },
     data () {
         return {
             Auths,
@@ -248,23 +253,34 @@ export default {
                 { label: '所属分部', prop: 'subsectionName', width: '120' },
                 { label: '项目', prop: 'projectName', width: '120' },
                 {
-                    label: '合同模版编号',
+                    label: '合同模板编号',
                     prop: 'templateId',
                     width: '180',
                     render: (h, scope) => {
                         return <span>{!scope.row.templateId ? '-' : scope.row.templateId}</span>
                     }
                 },
-                { label: '合同模版版本', prop: 'versionNo', width: '120' },
+                { label: '合同模板版本', prop: 'versionNo', width: '120' },
                 { label: '合同类型', prop: 'contractTemplateTypeName', width: '150' },
                 { label: '状态', prop: 'contractStatus', width: '120', dicData: _dicData },
+                {
+                    label: '是否已归档',
+                    prop: 'archive',
+                    width: '120',
+                    render: (h, scope) => {
+                        return <span>{scope.row.archive ? '是' : '否'}</span>
+                    }
+                },
                 { label: '发起人', prop: 'createBy', width: '120' },
                 { label: '发起时间', prop: 'createTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
                 { label: '更新时间', prop: 'updateTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' }
             ],
             tableData: [],
             currentContent: '',
-            lastContent: ''
+            lastContent: '',
+            fileDialog: false,
+            archive: '',
+            fileStatus: [{ value: '', label: '全部' }, { value: true, label: '是' }, { value: false, label: '否' }]
         }
     },
     computed: {
@@ -332,8 +348,17 @@ export default {
                 currentId: currentContentId,
                 lastId: lastContentId
             })
-            this.currentContent = data.contractContent
-            this.lastContent = data.lastContractContent
+            let reg = /\sdata-mce-style=".*?"/g
+            this.currentContent = data.contractContent.replace(reg, '')
+            this.lastContent = data.lastContractContent.replace(reg, '')
+            this.currentContent = this.currentContent.replace(/\sdata-mce-src=".*?"/g, '')
+            this.lastContent = this.lastContent.replace(/\sdata-mce-src=".*?"/g, '')
+            this.currentContent = this.currentContent.replace(/<table(.*?)style="[\s\S]*?"/gi, '<table$1style="border-collapse: collapse"')
+            this.lastContent = this.lastContent.replace(/<table(.*?)style="[\s\S]*?"/gi, '<table$1style="border-collapse: collapse"')
+            this.currentContent = this.currentContent.replace(/<tr(.*?)style=".*?"/g, '<tr$1style="border: 1px solid #666"')
+            this.lastContent = this.lastContent.replace(/<tr(.*?)style=".*?"/g, '<tr$1style="border: 1px solid #666"')
+            this.currentContent = this.currentContent.replace(/<td(.*?)style=".*?"/g, '<td$1style="border: 1px solid #666"')
+            this.lastContent = this.lastContent.replace(/<td(.*?)style=".*?"/g, '<td$1style="border: 1px solid #666"')
             if (this.currentContent === null) {
                 this.$message({
                     message: `获取新版合同失败`,
@@ -387,6 +412,7 @@ export default {
         },
         reset () {
             this.queryParams = JSON.parse(JSON.stringify(_queryParams))
+            this.archive = ''
             this.getList()
         },
         openDetail (item) {
@@ -444,6 +470,7 @@ export default {
             this.searchList()
         },
         async getList (val = '') {
+            // this.queryParams.archive = this.archive
             this.queryParams.jobNumber = this.userInfo.jobNumber
             this.queryParams.authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
             if (val) {
@@ -459,7 +486,7 @@ export default {
         approveContract (item, val) {
             // 这里根据 是否为 模板合同 来进入上传页面
             // 1：有模板 2：无模板
-            if (item.contractSignType == 2) {
+            if (!item.contractTemplateVersionId) {
                 this.$router.push({ path: '/goodwork/noTempApprove', query: { id: item.id, role: val } })
             } else {
                 this.$router.push({ path: '/goodwork/approveContract', query: { id: item.id, contractTypeId: item.contractTypeId } })
@@ -479,9 +506,13 @@ export default {
             this.financeManagerWaitingNum = data.financeManagerWaitingNum
             this.lawManagerWaitingNum = data.lawManagerWaitingNum
             this.riskManagerWaitingNum = data.riskManagerWaitingNum
+        },
+        onGetfile (val) {
+            this.$nextTick(() => {
+                this.$refs.fileDialog.onGetfile(val.id, 1)
+            })
         }
     },
-
     async mounted () {
         // tableData
         this.getList()

@@ -17,3 +17,21 @@ export const updateServiceUnPay = (params) => axios.patch('/project/api/payment-
 export const updateFinalPay = (params) => axios.patch('/project/api/payment-orders/balance-received', params)
 // boss 资金列表 剩余货款支付确认收到
 export const updateFinalUnPay = (params) => axios.patch('/project/api/payment-orders/balance-not-received', params)
+
+// 支付凭证保存
+export const payVoucher = (params) => axios.post('/project/api/batch-funds/boss/pay-voucher', params)
+// 支付单保存
+export const payOrderVoucher = (params) => axios.post('/project/api/batch-funds/boss/payment-order-voucher', params)
+
+// 失败 待支付的 数量
+export const getBnumber = (params) => axios.get('/project/api/batch-funds/boss/pay-batch-number', { params })
+// 查询未支付的账单列表
+export const getFundsPayBatch = (params) => axios.get('/project/api/batch-funds/boss/pay-batch', { params })
+// 批量保存支付
+export const payVoucherBatch = (params) => axios.post('/project/api/batch-funds/boss/pay-voucher-batch', params)
+// 批量收到
+export const payReceived = (params) => axios.patch('/project/api/batch-funds/boss/pay-receive-batch', params)
+// 批量未收到
+export const payNoReceived = (params) => axios.patch('/project/api/batch-funds/boss/pay-not-receive-batch', params)
+// 批量待确认
+export const confirmPay = (params) => axios.get('/project/api/batch-funds/boss/to-be-confirmed', { params })

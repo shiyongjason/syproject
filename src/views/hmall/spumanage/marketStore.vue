@@ -178,7 +178,7 @@ export default {
                 this.$message.warning('请先选择商品！')
                 return
             }
-            await offShlef({ spuIdList: spuId ? [spuId] : this.multiSelection.map(v => v.spuId) })
+            await offShlef(spuId ? [spuId] : this.multiSelection.map(v => v.spuId))
             this.$message.success('操作成功')
             this.search()
         },

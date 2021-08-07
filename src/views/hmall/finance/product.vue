@@ -15,7 +15,7 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col__lable">子订单编号：</div>
+                    <div class="query-col__lable">订单编号：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.childOrderNo" maxlength="50"></el-input>
                     </div>
@@ -94,8 +94,7 @@
                     <h-button class="ml20" @click="onExport">导出</h-button>
                 </div>
             </div>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false"  @onSortChange="onSortChange"
-                :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" @onSortChange="onSortChange" :isShowIndex='true'>
                 <template slot="source" slot-scope="scope">
                     {{ orderChannelMap.get(scope.data.row.source) }}
                 </template>
@@ -186,7 +185,7 @@ export default {
             return [
                 { label: 'SPU编码', prop: 'spuCode' },
                 { label: 'SKU编码', prop: 'skuCode' },
-                { label: '子订单编号', prop: 'childOrderNo' },
+                { label: '订单编号', prop: 'childOrderNo' },
                 { label: '订单来源', prop: 'sourceMerchantName' },
                 { label: '商品所属', prop: 'merchantName' },
                 { label: '商品单价（元）', prop: 'price', sortable: true, formatters: 'moneyShow' },
@@ -226,7 +225,7 @@ export default {
                 url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
             }
             url += 'access_token=' + localStorage.getItem('token')
-            location.href = B2bUrl + 'order/api/boss/orders/finance-products/export?' + url
+            location.href = B2bUrl + 'order/boss/child-orders/finance-product/export?' + url
         },
         async findProductCategoryAsync () {
             const { data } = await findAllCategory()
