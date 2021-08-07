@@ -61,6 +61,34 @@
                     </div>
                 </div>
             </template>
+            <!-- 收款人信息 -->
+            <div class="tab-layout-title">
+                <span></span>
+                <div class="tab-layout-title-box">
+                    收款人信息
+                    <h-button table @click="handleOpenDialog" v-if="operateStatus==1">编辑</h-button>
+                </div>
+            </div>
+            <div class="info-layout">
+                <div class="info-layout-item">
+                    <font style="flex:0 0 110px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>供应商名称：</font><span>{{LoanTransferContent.reviewResolutionResponse.pledgeNo||'-'}}</span>
+                </div>
+            </div>
+            <div class="info-layout">
+                <div class="info-layout-item">
+                    <font style="flex:0 0 130px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>供应商开户行名称：</font><span>{{LoanTransferContent.reviewResolutionResponse.pledgeNo||'-'}}</span>
+                </div>
+            </div>
+            <div class="info-layout">
+                <div class="info-layout-item">
+                    <font style="flex:0 0 130px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>供应商银行账号：</font><span>{{LoanTransferContent.reviewResolutionResponse.pledgeNo||'-'}}</span>
+                </div>
+            </div>
+            <div class="info-layout">
+                <div class="info-layout-item">
+                    <font style="flex:0 0 110px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>银行联行号：</font><span>{{LoanTransferContent.reviewResolutionResponse.pledgeNo||'-'}}</span>
+                </div>
+            </div>
             <!-- 当上游支付方式为银行转账时，不展示下方框选区域 supplierPaymentType 上游支付方式:1-银行转帐;2-银行承兑-->
             <div class="tab-layout-title" v-if="LoanTransferContent.supplierPaymentType!=upstreamPaymentMethod.bankTransfer">
                 <span></span>
