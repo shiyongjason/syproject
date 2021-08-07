@@ -155,29 +155,7 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo
         }),
-        ...mapGetters(['cloudActicitylist', 'klCatalogueList', 'klQuestionList']),
-        pickerOptionsStart () {
-            return {
-                disabledDate: time => {
-                    let endDateVal = this.queryParams.endTime
-                    if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
-                    }
-                    // return time.getTime() <= Date.now() - 8.64e7
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.startTime
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                    // return time.getTime() <= Date.now() - 8.64e7
-                }
-            }
-        }
+        ...mapGetters(['cloudActicitylist', 'klCatalogueList', 'klQuestionList'])
     },
     mounted () {
         // this.tableData = [{ productN: '123' }]

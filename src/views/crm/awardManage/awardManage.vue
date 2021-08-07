@@ -27,21 +27,25 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">信用评审通过时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.creditApprovedTimeStart" type="datetime" value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart('creditApprovedTimeEnd')">
+                        <!-- <el-date-picker v-model="queryParams.creditApprovedTimeStart" type="datetime" value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart('creditApprovedTimeEnd')">
                         </el-date-picker>
                         <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.creditApprovedTimeEnd" type="datetime" value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd('creditApprovedTimeStart')">
-                        </el-date-picker>
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
+                        </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">认证时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.authenticationTimeStart" type="datetime" value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart('authenticationTimeEnd')">
+                        <!-- <el-date-picker v-model="queryParams.authenticationTimeStart" type="datetime" value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart('authenticationTimeEnd')">
                         </el-date-picker>
                         <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.authenticationTimeEnd" type="datetime" value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd('authenticationTimeStart')">
-                        </el-date-picker>
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStartAuth" :end-change="onEndAuth" :options="authOptions">
+                        </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -65,7 +69,7 @@
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="doPlay(scope.data.row)" v-if="scope.data.row.sendStatus === 1 && hosAuthCheck(CRM_AWARD_SEND)">发放</h-button>
                     <h-button table @click="doPlay(scope.data.row)" disabled v-else-if="scope.data.row.sendStatus === 2 && hosAuthCheck(CRM_AWARD_SEND)">已发放</h-button>
-<!--                    <span v-else-if="scope.data.row.sendStatus === 2" class="disabled">已发放</span>-->
+                    <!--                    <span v-else-if="scope.data.row.sendStatus === 2" class="disabled">已发放</span>-->
                     <span v-else>-</span>
                 </template>
             </basicTable>
@@ -112,32 +116,42 @@ export default {
         ...mapState({
             rcommenderRewardList: state => state.crmAwardManage.rcommenderRewardList,
             rcommenderRewardTotal: state => state.crmAwardManage.rcommenderRewardTotal
-        })
+        }),
+        options () {
+            return {
+                type: 'datetime',
+                valueFormat: 'yyyy-MM-ddTHH:mm',
+                format: 'yyyy-MM-dd HH:mm',
+                startTime: this.queryParams.creditApprovedTimeStart,
+                endTime: this.queryParams.creditApprovedTimeEnd
+            }
+        },
+        authOptions () {
+            return {
+                type: 'datetime',
+                valueFormat: 'yyyy-MM-ddTHH:mm',
+                format: 'yyyy-MM-dd HH:mm',
+                startTime: this.queryParams.authenticationTimeStart,
+                endTime: this.queryParams.authenticationTimeEnd
+            }
+        }
     },
     methods: {
         ...mapActions({
             getRecommenderRewardList: 'crmAwardManage/getRecommenderRewardList',
             getRecommenderRewardTotal: 'crmAwardManage/getRecommenderRewardTotal'
         }),
-        pickerOptionsStart (date) {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams[date]
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
-                    }
-                }
-            }
+        onStartChange (val) {
+            this.queryParams.creditApprovedTimeStart = val
         },
-        pickerOptionsEnd (date) {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams[date]
-                    if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                }
-            }
+        onEndChange (val) {
+            this.queryParams.creditApprovedTimeEnd = val
+        },
+        onStartAuth (val) {
+            this.queryParams.authenticationTimeStart = val
+        },
+        onEndAuth (val) {
+            this.queryParams.authenticationTimeEnd = val
         },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
@@ -201,10 +215,10 @@ export default {
 </script>
 
 <style scoped>
-    .eltagtop {
-        margin-bottom: 10px;
-    }
-    .sub-eltag {
-        margin-right: 30px;
-    }
+.eltagtop {
+    margin-bottom: 10px;
+}
+.sub-eltag {
+    margin-right: 30px;
+}
 </style>

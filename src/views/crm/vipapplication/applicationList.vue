@@ -64,20 +64,22 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">申请时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.minApplyTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsMax">
+                        <!-- <el-date-picker v-model="queryParams.minApplyTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsMax">
                         </el-date-picker>
                         <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.maxApplyTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsMin">
-                        </el-date-picker>
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStartApply" :end-change="onEndApply" :options="applyOptions">
+                        </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont__col">
-                        <h-button type="primary" @click="searchList()">
-                            查询
-                        </h-button>
-                        <h-button @click="onRest">
-                            重置
-                        </h-button>
+                    <h-button type="primary" @click="searchList()">
+                        查询
+                    </h-button>
+                    <h-button @click="onRest">
+                        重置
+                    </h-button>
                 </div>
             </div>
             <el-tag size="medium" class="eltagtop">已筛选 {{vipApply.total||0}} 项</el-tag>
@@ -232,24 +234,13 @@ export default {
             contracts: 'vipApply/contracts',
             nestDdata: 'nestDdata'
         }),
-        pickerOptionsMax () {
+        applyOptions () {
             return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.maxApplyTime
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsMin () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.minApplyTime
-                    if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                }
+                valueFormat: 'yyyy-MM-dd HH:mm',
+                format: 'yyyy-MM-dd HH:mm',
+                type: 'datetime',
+                startTime: this.queryParams.minApplyTime,
+                endTime: this.queryParams.maxApplyTime
             }
         }
     },
@@ -267,6 +258,12 @@ export default {
             findApplyvip: 'vipApply/findApplyvip',
             findContract: 'vipApply/findContract'
         }),
+        onStartApply (val) {
+            this.queryParams.minApplyTime = val
+        },
+        onEndApply (val) {
+            this.queryParams.maxApplyTime = val
+        },
         onRest () {
             this.queryParams = { ...this.copyParams }
             this.stateUser = ''

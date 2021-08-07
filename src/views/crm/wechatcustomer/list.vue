@@ -47,17 +47,18 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">添加时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.minCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <!-- <el-date-picker v-model="queryParams.minCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.maxCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options"></HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont__col">
-                        <h-button type='primary' @click="searchList(1)">查询</h-button>
-                        <h-button @click="onRest">重置</h-button>
-                        <h-button type='assist' @click="onLookDetail(2)">数据分析</h-button>
+                    <h-button type='primary' @click="searchList(1)">查询</h-button>
+                    <h-button @click="onRest">重置</h-button>
+                    <h-button type='assist' @click="onLookDetail(2)">数据分析</h-button>
                 </div>
             </div>
             <el-tag size="medium" class="eltagtop">已筛选 {{tableLoan.totalNum||0}},已注册：{{tableLoan.registerUserNum||0}},未注册:{{tableLoan.waitRegisterUserNum||0}}</el-tag>
@@ -126,24 +127,34 @@ export default {
         hosJoyTable, detailDrawer
     },
     computed: {
-        pickerOptionsStart () {
+        // pickerOptionsStart () {
+        //     return {
+        //         disabledDate: (time) => {
+        //             let beginDateVal = this.queryParams.maxCreateTime
+        //             if (beginDateVal) {
+        //                 return time.getTime() > new Date(beginDateVal).getTime()
+        //             }
+        //         }
+        //     }
+        // },
+        // pickerOptionsEnd () {
+        //     return {
+        //         disabledDate: (time) => {
+        //             let beginDateVal = this.queryParams.minCreateTime
+        //             if (beginDateVal) {
+        //                 return time.getTime() < new Date(beginDateVal).getTime()
+        //             }
+        //         }
+        //     }
+        // },
+        options () {
             return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.maxCreateTime
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.minCreateTime
-                    if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                }
+                type: 'datetime',
+                placeholder: '选择日期',
+                valueFormat: 'yyyy-MM-dd HH:mm',
+                format: 'yyyy-MM-dd HH:mm',
+                startTime: this.queryParams.minCreateTime,
+                endTime: this.queryParams.maxCreateTime
             }
         },
         ...mapState({
@@ -166,6 +177,12 @@ export default {
             findCrmdeplist: 'crmmanage/findCrmdeplist',
             findCustomerstatic: 'wxMember/findCustomerstatic'
         }),
+        onStartChange (val) {
+            this.queryParams.minCreateTime = val
+        },
+        onEndChange (val) {
+            this.queryParams.maxCreateTime = val
+        },
         async onGetbranch () {
             await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
             this.branchArr = this.crmdepList
@@ -175,7 +192,6 @@ export default {
             this.searchList(1)
         },
         async searchList (val) {
-            console.log(val)
             if (val == 1) { this.queryParams.pageNumber = val }
             await this.findwxMemberpage(this.queryParams)
             this.tableData = this.wxMemberpage.records

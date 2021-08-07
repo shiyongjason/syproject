@@ -21,7 +21,7 @@
                 </div>
             </el-form-item>
             <el-form-item label="本次到货金额：" prop="goodsAmount">
-                <el-input type="text" placeholder="请输入" v-model="formData.goodsAmount" maxlength="50" v-isNegative:2="formData.goodsAmount"></el-input>
+                <el-input type="text" placeholder="请输入" v-model.trim="formData.goodsAmount" maxlength="50" v-isNegative:2="formData.goodsAmount"></el-input>
             </el-form-item>
             <el-form-item label="到货验收单：" prop="reqAttachDocs">
                 <OssFileHosjoyUpload v-model="formData.reqAttachDocs" :showPreView=true :fileSize=20 :fileNum=9 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()" accept=".jpg,.jpeg,.png,.pdf">
@@ -78,6 +78,14 @@ export default {
             rules: {
                 goodsAmount: [
                     { required: true, message: '请填写本次到货金额', trigger: 'blur' }
+                    // {
+                    //     validator: (r, v, callback) => {
+                    //         if (+this.formData.goodsAmount == 0) {
+                    //             return callback(new Error('本次到货金额不能等于0'))
+                    //         }
+                    //         return callback()
+                    //     }
+                    // }
                 ],
                 reqAttachDocs: [
                     { required: true, message: '请上传到货验收单', trigger: 'blur' }

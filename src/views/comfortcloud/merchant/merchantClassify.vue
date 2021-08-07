@@ -4,17 +4,14 @@
             <span>一键匹配智能辅材</span>
         </div>
 
-        <div class="page-body-cont query-cont" >
-            <el-popover
-                placement="right"
-                width="200"
-                trigger="hover">
+        <div class="page-body-cont query-cont">
+            <el-popover placement="right" width="200" trigger="hover">
                 <div class="popover-btn" @click="addClassifyByProduct">按主营产品</div>
                 <div class="popover-btn" @click="addClassifyByMember">按会员标签</div>
 
                 <div class="query-cont-col" slot="reference">
                     <div class="query-col-title">
-                        <el-button type="primary" class="ml20" >新增智能辅材匹配关系</el-button>
+                        <el-button type="primary" class="ml20">新增智能辅材匹配关系</el-button>
                     </div>
                 </div>
             </el-popover>
@@ -26,8 +23,11 @@
                 <template slot="type" slot-scope="scope">
                     <span>{{scope.data.row.type === 1 ? '按主营产品' : '按会员标签'}}</span>
                 </template>
+                <template slot="products" slot-scope="scope">
+                    <div v-html="productDes(scope.data.row.products)">{{}}</div>
+                </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="checkClassify(scope.data.row)">查看匹配商品</el-button>
+                    <el-button class="orangeBtn" @click="checkClassify(scope.data.row)">编辑</el-button>
                     <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
                 </template>
             </basicTable>
@@ -60,13 +60,13 @@
                 </el-form-item>
 
                 <el-form-item label="手动标签：">
-                    <el-select v-model="addByTagForm.manualTags" multiple >
+                    <el-select v-model="addByTagForm.manualTags" multiple>
                         <el-option-group v-for="group in cloudMerchantTaglist" :key="group.tagCategory" :label="group.tagCategory">
                             <el-option v-for="item in group.tagDetailBos" :key="item" :label="item" :value="item"></el-option>
                         </el-option-group>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="自动标签：" >
+                <el-form-item label="自动标签：">
                     <el-select v-model="addByTagForm.autoTags" value-key="tagId" multiple>
                         <el-option v-for="item in allAutoTags" :key="item.tagId" :label="item.tagName" :value="item"></el-option>
                     </el-select>
@@ -121,7 +121,8 @@ export default {
             isEdith: false, // 是否是新增
             tableLabel: [
                 { label: '匹配类型', prop: 'type' },
-                { label: '匹配内容', prop: 'mainCategoryName' }
+                { label: '匹配内容', prop: 'mainCategoryName' },
+                { label: '匹配商品', prop: 'products' }
             ],
             dialogAddVisible: false,
             isAdding: false,
@@ -276,6 +277,13 @@ export default {
             }).finally(null)
         },
 
+        productDes (data) {
+            let des = ''
+            data.map((item) => {
+                des += item.productName + '<br>'
+            })
+            return des
+        },
         clearAddFormData () {
             if (this.$refs['addForm']) {
                 this.$refs['addForm'].clearValidate()
@@ -378,12 +386,14 @@ export default {
             }
         },
         async sendAddByTagClassify () {
-            let params = { operator: this.userInfo.employeeName,
+            let params = {
+                operator: this.userInfo.employeeName,
                 mainProductList: this.addByTagForm.mainProductList
             }
 
             let manualTags = this.addByTagForm.manualTags.map((v) => {
-                return { tagType: 2,
+                return {
+                    tagType: 2,
                     tagName: v,
                     tagId: 0
                 }
@@ -416,7 +426,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 .spanflex {
     font-size: 16px;
     padding-bottom: 10px;
@@ -437,5 +446,4 @@ export default {
 /deep/.el-form .el-input:not(:first-child) {
     margin-left: 0px;
 }
-
 </style>

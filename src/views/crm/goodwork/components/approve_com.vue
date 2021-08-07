@@ -2,9 +2,7 @@
     <div class="collect-wrap">1
         <div class="fullbg" v-if="showPacking">
             <div class="fullbg-img">
-                <img
-                    src="https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20201027/01791ef9-5a1f-4e26-8b52-d6ab69548e3b.png"
-                    width="100px">
+                <img src="https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20201027/01791ef9-5a1f-4e26-8b52-d6ab69548e3b.png" width="100px">
                 <p>
                     <i class="el-icon-loading" style="font-size:23px;margin-right:3px"></i>
                     <font>文件打包中，请耐心等待，请勿关闭页面...</font>
@@ -33,11 +31,18 @@
                 </div>
                 <p>说明： {{ approveForm.remark ? approveForm.remark : '-' }}</p>
                 <template v-if="activeName=='4' && approveForm.approveResult == true">
-                    <p><span class="star">*</span>执行费率（银行承兑）： {{approveForm.acceptBankRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
-                    <p><span class="star">*</span>执行费率（银行转账）：{{approveForm.transferBankRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
-                    <p><span class="star">*</span>最大采购总额：{{approveForm.maxPurchaseAmount | fundMoneyHasTail}}元 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
-                    <p><span class="star">*</span>经销商首付款比例：{{approveForm.advancePaymentRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
-                    <p><span class="star">*</span>剩余货款支付周期：{{approveForm.remainPaymentCycle || '-'}}个月 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                    <div class="approve_flex">
+                        <p><span class="star">*</span>执行费率（银行承兑）： {{approveForm.acceptBankRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                        <p><span class="star">*</span>执行费率（银行转账）：{{approveForm.transferBankRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                    </div>
+                    <div class="approve_flex">
+                        <p><span class="star">*</span>最大采购总额：{{approveForm.maxPurchaseAmount | fundMoneyHasTail}}元 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                        <p><span class="star">*</span>经销商首付款比例：{{approveForm.advancePaymentRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                    </div>
+                    <div class="approve_flex">
+                        <p><span class="star">*</span>剩余货款支付周期：{{approveForm.remainPaymentCycle || '-'}}个月 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                        <p><span class="star">*</span>评审决议编号：<span style="width:150px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{{approveForm.reviewResolutionNo || '-'}}</span> <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                    </div>
                 </template>
             </div>
             <div class="collect-wrapbox" v-for="item in approveForm.projectDocList" :key="item.firstCatagoryId">
@@ -56,23 +61,19 @@
                                 <span class="posrtv">
                                     <template v-if="jtem&&jtem.fileUrl">
                                         <i class="el-icon-document"></i>
-                                        <downloadFileAddToken isPreview :file-name="jtem.fileName" :file-url="jtem.fileUrl" :a-link-words="jtem.fileName" is-type="main"/>
+                                        <downloadFileAddToken isPreview :file-name="jtem.fileName" :file-url="jtem.fileUrl" :a-link-words="jtem.fileName" is-type="main" />
                                     </template>
                                 </span>
                             </div>
-                            <div>{{ moment(jtem.createTime).format('YYYY-MM-DD HH:mm:ss') }}</div>
+                            <div style="flex:3">{{ moment(jtem.createTime).format('YYYY-MM-DD HH:mm:ss') }}</div>
                             <div>
-                                <font class="fileItemDownLoad" @click="()=>{onDelete(obj,index)}"
-                                      v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)">删除</font>
-                                <downloadFileAddToken :file-name="jtem.fileName" :file-url="jtem.fileUrl" :a-link-words="'下载'" is-type="btn"/>
+                                <font class="fileItemDownLoad" @click="()=>{onDelete(obj,index)}" v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)">删除</font>
+                                <downloadFileAddToken :file-name="jtem.fileName" :file-url="jtem.fileUrl" :a-link-words="'下载'" is-type="btn" />
                             </div>
                         </div>
-                        <OssFileHosjoyUpload v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)"
-                                      v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100
-                                      :limit=100 :action='action' :uploadParameters='uploadParameters'
-                                      @successCb="()=>{handleSuccessCb(obj)}"
-                                      style="margin:10px 0 0 5px">
-                          <el-button type="primary">上 传</el-button>
+                        <OssFileHosjoyUpload v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)" v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=100 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}"
+                            style="margin:10px 0 0 5px">
+                            <el-button type="primary">上 传</el-button>
                         </OssFileHosjoyUpload>
                     </el-form-item>
                 </template>
@@ -95,10 +96,9 @@
                 <h-button type="primary" @click="onSaveapproveOrfinal(2)">确定</h-button>
             </span>
         </el-dialog>
-        <el-dialog title="终审" :visible.sync="projectFinaleVisible" width="50%" :before-close="onCloseProjectFinale"
-                   :modal=false :close-on-click-modal=false>
+        <el-dialog title="终审" :visible.sync="projectFinaleVisible" width="50%" :before-close="onCloseProjectFinale" :modal=false :close-on-click-modal=false>
             <el-form ref="projectFinaleDialog" :model="projectFinaleForm" :rules="projectFinaleRules" label-width="180px">
-                <el-form-item :label="approveTitle+'结果：'" prop="submitStatus">
+                <el-form-item :label="approveTitle+'结果：'" prop="result">
                     <el-radio-group v-model="projectFinaleForm.result">
                         <el-radio :label=1>通过</el-radio>
                         <el-radio :label=0>不通过</el-radio>
@@ -106,26 +106,22 @@
                 </el-form-item>
                 <template v-if="projectFinaleForm.result == 1">
                     <el-form-item label="执行费率（银行承兑）：" prop="acceptBankRate">
-                        <el-input v-model="projectFinaleForm.acceptBankRate" maxlength="10"
-                                  v-isNegative:2="projectFinaleForm.acceptBankRate">
+                        <el-input v-model="projectFinaleForm.acceptBankRate" maxlength="10" v-isNegative:2="projectFinaleForm.acceptBankRate">
                             <template slot="suffix">%</template>
                         </el-input>
                     </el-form-item>
                     <el-form-item label="执行费率（银行转账）：" prop="transferBankRate">
-                        <el-input v-model="projectFinaleForm.transferBankRate" maxlength="10"
-                                  v-isNegative:2="projectFinaleForm.transferBankRate">
+                        <el-input v-model="projectFinaleForm.transferBankRate" maxlength="10" v-isNegative:2="projectFinaleForm.transferBankRate">
                             <template slot="suffix">%</template>
                         </el-input>
                     </el-form-item>
                     <el-form-item label="最大采购总额：" prop="maxPurchaseAmount">
-                        <el-input v-model="projectFinaleForm.maxPurchaseAmount" maxlength="18"
-                                  v-isNegative:2="projectFinaleForm.maxPurchaseAmount">
+                        <el-input v-model="projectFinaleForm.maxPurchaseAmount" maxlength="18" v-isNegative:2="projectFinaleForm.maxPurchaseAmount">
                             <template slot="suffix">元</template>
                         </el-input>
                     </el-form-item>
                     <el-form-item label="经销商首付款比例：" prop="advancePaymentRate" maxlength="10">
-                        <el-input v-model="projectFinaleForm.advancePaymentRate"
-                                  v-isNegative:2="projectFinaleForm.advancePaymentRate">
+                        <el-input v-model="projectFinaleForm.advancePaymentRate" v-isNegative:2="projectFinaleForm.advancePaymentRate">
                             <template slot="suffix">%</template>
                         </el-input>
                     </el-form-item>
@@ -140,10 +136,13 @@
                         </el-select>
                         个月
                     </el-form-item>
+                    <el-form-item label="评审决议编号：" prop="reviewResolutionNo">
+                        <el-input v-model="projectFinaleForm.reviewResolutionNo"  maxlength="50">
+                        </el-input>
+                    </el-form-item>
                 </template>
                 <el-form-item label="说明：" prop="remark">
-                    <el-input type="textarea" placeholder="请输入说明" v-model.trim="projectFinaleForm.remark" maxlength="500"
-                              :rows="8" show-word-limit></el-input>
+                    <el-input type="textarea" placeholder="请输入说明" v-model.trim="projectFinaleForm.remark" maxlength="500" :rows="8" show-word-limit></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -151,7 +150,7 @@
                 <h-button type="primary" @click="updateFinalStatus">确定</h-button>
             </span>
         </el-dialog>
-        <el-dialog title="终审字段修改" :visible.sync="finalConfirmVisible"  :modal=false  width="50%" :close-on-click-modal=false :before-close="finalConfirmDialogClose">
+        <el-dialog title="终审字段修改" :visible.sync="finalConfirmVisible" :modal=false width="50%" :close-on-click-modal=false :before-close="finalConfirmDialogClose">
             <el-form :model="formData" :rules="rules" ref="finalConfirmForm" label-width="180px">
                 <el-form-item label="执行费率（银行承兑）：" prop="acceptBankRate">
                     <el-input type="text" maxlength="10" v-isNegative:2="formData.acceptBankRate" v-model="formData.acceptBankRate">
@@ -184,6 +183,10 @@
                     </el-select>
                     个月
                 </el-form-item>
+                <el-form-item label="评审决议编号：" prop="reviewResolutionNo">
+                    <el-input type="text" maxlength="50" v-model="formData.reviewResolutionNo">
+                    </el-input>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <h-button @click="finalConfirmDialogClose">取消</h-button>
@@ -199,7 +202,7 @@ import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyU
 import { ccpBaseUrl } from '@/api/config'
 import { submitProjectdoc, saveProjectdoc, updateFinalStatus, putProjectDetail } from '../api/index'
 import downloadFileAddToken from '@/components/downloadFileAddToken'
-
+import { checkNumandEng } from '@/utils/rules'
 export default {
     name: 'approvecom',
     props: {
@@ -272,7 +275,8 @@ export default {
                 maxPurchaseAmount: '',
                 advancePaymentRate: '',
                 remainPaymentCycle: '',
-                remark: ''
+                remark: '',
+                reviewResolutionNo: ''
             },
             projectFinaleRules: {
                 result: [
@@ -286,7 +290,8 @@ export default {
                     {
                         trigger: 'blur',
                         message: '执行费率（银行承兑）0-100',
-                        validator: validateNumber }
+                        validator: validateNumber
+                    }
                 ],
                 transferBankRate: [
                     { required: true, message: '请输入执行费率（银行转账）', trigger: 'blur' },
@@ -302,6 +307,10 @@ export default {
                 ],
                 remainPaymentCycle: [
                     { required: true, message: '请选择剩余货款支付周期', trigger: 'change' }
+                ],
+                reviewResolutionNo: [
+                    { required: true, message: '请输入评审决议编号', trigger: 'blur' },
+                    { message: '格式为50位以内数字或字母', validator: checkNumandEng, trigger: 'blur' }
                 ]
             },
             isDownLoad: false,
@@ -312,7 +321,8 @@ export default {
                 transferBankRate: '',
                 maxPurchaseAmount: '',
                 advancePaymentRate: '',
-                remainPaymentCycle: ''
+                remainPaymentCycle: '',
+                reviewResolutionNo: ''
             },
             rules: {
                 acceptBankRate: [
@@ -333,6 +343,10 @@ export default {
                 ],
                 remainPaymentCycle: [
                     { required: true, message: '请选择剩余货款支付周期', trigger: 'change' }
+                ],
+                reviewResolutionNo: [
+                    { required: true, message: '请输入评审决议编号', trigger: 'blur' },
+                    { message: '格式为50位以内数字或字母', validator: checkNumandEng, trigger: 'blur' }
                 ]
             }
         }
@@ -378,6 +392,7 @@ export default {
             this.formData.maxPurchaseAmount = this.approveForm.maxPurchaseAmount
             this.formData.advancePaymentRate = this.approveForm.advancePaymentRate
             this.formData.remainPaymentCycle = this.approveForm.remainPaymentCycle
+            this.formData.reviewResolutionNo = this.approveForm.reviewResolutionNo
             this.$nextTick(() => {
                 this.$refs.finalConfirmForm.clearValidate()
             })
@@ -388,7 +403,8 @@ export default {
                 transferBankRate: '',
                 maxPurchaseAmount: '',
                 advancePaymentRate: '',
-                remainPaymentCycle: ''
+                remainPaymentCycle: '',
+                reviewResolutionNo: ''
             }
         },
         finalConfirmDialogClose () {
@@ -407,6 +423,10 @@ export default {
                 } else {
                     this.$message.error(`${this.canIOpenTheWindow.name}不能为空`)
                 }
+            } else {
+                this.$nextTick(() => {
+                    this.$refs.approveDailg.clearValidate()
+                })
             }
             this.approveTitle = this.status == 4 ? '立项' : '终审'
         },
@@ -515,7 +535,8 @@ export default {
                 maxPurchaseAmount: '',
                 advancePaymentRate: '',
                 remainPaymentCycle: '',
-                remark: ''
+                remark: '',
+                reviewResolutionNo: ''
             }
             this.projectFinaleVisible = false
         },
@@ -536,6 +557,7 @@ export default {
                             value.projectId = this.approveForm.projectId
                         })
                         this.projectFinaleForm.riskCheckProjectDocPoList = riskCheckProjectDocPoList
+                        console.log(this.projectFinaleForm)
                         await updateFinalStatus(this.projectFinaleForm)
                         this.$message.success(`项目终审提交成功`)
                         this.$emit('onCompsback')
@@ -617,7 +639,7 @@ export default {
 }
 
 .demo-ruleForm {
-    margin-top: 80px;
+    margin-top: 20px;
 }
 
 .collect-title {
@@ -770,6 +792,7 @@ export default {
         color: #666666;
         padding-top: 16px;
         align-items: center;
+        margin-right: 30px;
     }
 }
 .crm-edit {
@@ -778,10 +801,14 @@ export default {
     height: 20px;
     margin-left: 10px;
 }
-.star {
-    color: red;
-    font-size: 14px;
+.approve_flex {
+    display: flex;
+    .star {
+        color: red;
+        font-size: 14px;
+    }
 }
+
 .download {
     cursor: pointer;
 }

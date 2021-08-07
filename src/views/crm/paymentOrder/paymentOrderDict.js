@@ -121,15 +121,15 @@ const PaymentOrderDict = Object.freeze({
             {
                 key: 1,
                 value: '已质押'
-            },
-            {
-                key: 2,
-                value: '放款前质押'
-            },
-            {
-                key: 3,
-                value: '其他'
             }
+            // {
+            //     key: 2,
+            //     value: '放款前质押'
+            // },
+            // {
+            //     key: 3,
+            //     value: '其他'
+            // }
         ]
     },
     orderLetterStatus: {

@@ -54,18 +54,13 @@
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">
                 已筛选 {{this.cloudMerchantListPagination.total}} 项；
-                累计代理商总数: {{this.statistics.totalCount}} 个；
-                累计品类一级代理总数: {{this.statistics.oneLevelCount}} 个；
-                累计品类二级代理总数:{{this.statistics.twoLevelCount}} 个；
+                累计一级（独家）代理商总数: {{this.statistics.totalCount}} 个；
+                商品型号一级代理总数: {{this.statistics.oneLevelCount}} 个；
+                商品型号二级代理总数:{{this.statistics.twoLevelCount}} 个；
             </el-tag>
-            <!-- 表格使用老毕的组件 -->
             <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantList" :pagination="cloudMerchantListPagination" @onCurrentChange='onCurrentChange' isShowIndex @onSizeChange='onSizeChange' :isAction="true">
-                <template slot="level" slot-scope="scope">
-                    {{scope.data.row.level === 1 ? '一级': (scope.data.row.level === 2 ? '二级' : '一级(独家)')}}
-                </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn clipBtn" @click="onShowRights(scope.data.row)">查看权益</el-button>
-                    <el-button class="orangeBtn clipBtn" @click="onShowProgress(scope.data.row)" style="margin:10px 10px 0 10px">提货进度</el-button>
+                    <el-button class="orangeBtn clipBtn" @click="onShowDetail(scope.data.row)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
@@ -84,11 +79,59 @@
             <div class="right-items" v-html="cloudMerchantAgentDetail.agentContent"></div>
         </el-dialog>
 
-        <el-dialog title="提货进度" :modal-append-to-body=false :append-to-body=false :visible.sync="progressDialogVisible" width="50%">
+        <!-- <el-dialog title="提货进度" :modal-append-to-body=false :append-to-body=false :visible.sync="progressDialogVisible" width="50%">
             <basicTable :tableLabel="progressTableLabel" :tableData="progressTable">
 
             </basicTable>
             <el-button class="orangeBtn chckBtn" @click="checkShopManager(progressCompany)">查询提货明细</el-button>
+        </el-dialog> -->
+        <el-dialog title="代理商代理详情" :modal-append-to-body=false :append-to-body=false :visible.sync="detailDialogVisible" width="1200px">
+            <el-tag size="medium" class="eltagtop">
+                代理产品型号共计{{cloudMerchantDetailStats.agentSpecificationCount}}个,
+                其中履约中的共{{cloudMerchantDetailStats.effectiveCount}}个,
+                已过期的{{cloudMerchantDetailStats.expiredCount}}个,
+                支付押金共计{{cloudMerchantDetailStats.totalAgentAmount}}元,
+                支付提货预付款{{cloudMerchantDetailStats.totalPrepayAmount}}元,
+                已提货金额{{cloudMerchantDetailStats.alreadyPickAmount}}元,
+                剩余提货金额{{(cloudMerchantDetailStats.totalPrepayAmount - cloudMerchantDetailStats.alreadyPickAmount) > 0 ? cloudMerchantDetailStats.totalPrepayAmount - cloudMerchantDetailStats.alreadyPickAmount :0}}元。
+            </el-tag>
+            <div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">代理品类：</div>
+                    <div class="query-cont-col-area">
+                        <el-select v-model="detailTableQueryParams.categoryId" placeholder="品类" :clearable=true>
+                            <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in cloudMerchantShopCategoryList" :key="item.categoryId"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">代理合同状态：</div>
+                    <div class="query-cont-col-area">
+                        <el-select v-model="detailTableQueryParams.status" placeholder="合同状态" :clearable=true>
+                            <el-option label="选择" value=""></el-option>
+                            <el-option label="履约中" value="10"></el-option>
+                            <el-option label="已过期" value="40"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">
+                        <el-button type="primary" class="ml20" @click="onDetailSearch">查询</el-button>
+                    </div>
+                </div>
+            </div>
+            <basicTable :maxHeight="400" :tableLabel="detailTableLabel" :tableData="cloudMerchantDetailList" :pagination="cloudMerchantDetailListPagination" @onCurrentChange='onDetailTableCurrentChange' isShowIndex @onSizeChange='onDetailTableSizeChange' :isAction="true">
+                <template slot="level" slot-scope="scope">
+                    {{scope.data.row.level === 1 ? '一级': (scope.data.row.level === 2 ? '二级' : '一级(独家)')}}
+                </template>
+                <template slot="status" slot-scope="scope">
+                    {{scope.data.row.status === 10 ? '履约中' : '已过期'}}
+                </template>
+                <template slot="action" slot-scope="scope">
+                    <el-button class="orangeBtn clipBtn" @click="onShowRights(scope.data.row)">查看权益</el-button>
+                    <el-button class="orangeBtn clipBtn" @click="onShowProgress(scope.data.row)" style="margin:10px 0 0 0">提货明细</el-button>
+                </template>
+            </basicTable>
         </el-dialog>
     </div>
 </template>
@@ -121,15 +164,34 @@ export default {
             provinceList: [],
             formLabelWidth: '140px',
             tableLabel: [
-                { label: '代理时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '代理商公司名称', prop: 'companyName' },
                 { label: '省', prop: 'provinceName' },
                 { label: '市', prop: 'cityName' },
-                { label: '代理商公司名称', prop: 'companyName' },
-                { label: '代理商等级', prop: 'level' },
                 { label: '代理商联系人', prop: 'contactUser' },
                 { label: '代理商联系电话', prop: 'contactNumber' },
+                { label: '代理商联系地址', prop: 'contactAddress' }
+            ],
+            detailTableLabel: [
+                { label: '签约人会员昵称', prop: 'nickName' },
+                { label: '签约人会员账号', prop: 'phone' },
+                { label: '签约时间', prop: 'signDate', formatters: 'dateTime' },
+                { label: '代理订单号', prop: 'agentCode' },
+                { label: '代理商等级', prop: 'level' },
                 { label: '代理品类', prop: 'categoryName' },
-                { label: '代理型号', prop: 'specificationName' }],
+                { label: '代理型号', prop: 'specificationName' },
+                { label: '年度提货额度', prop: 'agentCount' },
+                { label: '已提货数量', prop: 'alreadyPickCount' },
+                { label: '已提货金额', prop: 'alreadyPickAmount' },
+                { label: '待提货数量', prop: 'noPickCount' },
+                { label: '代理合同状态', prop: 'status' }],
+            detailTableQueryParams: {
+                unionId: '',
+                categoryId: '',
+                status: '',
+                pageNumber: 1,
+                pageSize: 10
+            },
+            focusDetailAgent: null,
             progressTableLabel: [
                 { label: '年度提货额度', prop: 'totalPickGoodsCount' },
                 { label: '已提货', prop: 'alreadyPickGoodsCount' },
@@ -138,7 +200,8 @@ export default {
             progressTable: [],
             progressCompany: null,
             rightsDialogVisible: false,
-            progressDialogVisible: false
+            progressDialogVisible: false,
+            detailDialogVisible: false
         }
     },
     mounted () {
@@ -152,7 +215,10 @@ export default {
             cloudMerchantList: 'cloudMerchantList',
             cloudMerchantListPagination: 'cloudMerchantListPagination',
             cloudMerchantShopCategoryList: 'cloudMerchantShopCategoryList',
-            cloudMerchantAgentDetail: 'cloudMerchantAgentDetail'
+            cloudMerchantAgentDetail: 'cloudMerchantAgentDetail',
+            cloudMerchantDetailList: 'cloudMerchantDetailList',
+            cloudMerchantDetailListPagination: 'cloudMerchantDetailListPagination',
+            cloudMerchantDetailStats: 'cloudMerchantDetailStats'
         }),
         getCity () {
             const province = this.provinceList.filter(item => item.provinceId == this.queryParams.provinceId)
@@ -190,7 +256,9 @@ export default {
         ...mapActions({
             findCloudMerchantList: 'findCloudMerchantList',
             findCloudMerchantShopCategoryList: 'findCloudMerchantShopCategoryList',
-            getCloudMerchantAgentDetail: 'getCloudMerchantAgentDetail'
+            getCloudMerchantAgentDetail: 'getCloudMerchantAgentDetail',
+            findCloudMerchantDetailList: 'findCloudMerchantDetailList',
+            findCloudMerchantDetailStats: 'findCloudMerchantDetailStats'
         }),
 
         onSearch: function () {
@@ -226,17 +294,34 @@ export default {
             this.queryParams.cityId = key
             console.log(key)
         },
+        onShowDetail (val) {
+            this.focusDetailAgent = val
+            this.detailTableQueryParams = {
+                unionId: val.unionId,
+                categoryId: '',
+                status: '',
+                pageNumber: 1,
+                pageSize: 10
+            }
+            this.queryDetailList(this.detailTableQueryParams)
+            this.findCloudMerchantDetailStats({ unionId: val.unionId })
+            this.detailDialogVisible = true
+        },
         async onShowRights (val) {
             await this.getCloudMerchantAgentDetail({ id: val.id })
             this.rightsDialogVisible = true
         },
         async onShowProgress (val) {
-            this.progressCompany = val
-            const data = await getCloudMerchantAgentProgress({ id: val.id })
-            if (data) {
-                this.progressTable = [data.data]
-                this.progressDialogVisible = true
-            }
+            // this.progressCompany = val
+            // const data = await getCloudMerchantAgentProgress({ id: val.id })
+            // if (data) {
+            //     this.progressTable = [data.data]
+            //     this.progressDialogVisible = true
+            // }
+            // console.log(val)
+            this.$router.push({
+                path: `/comfortCloud/equipmentOverview/warehouseManagement`, query: { phone: val.phone }
+            })
         },
         async queryStatistics (parms) {
             const data = await getCloudMerchantStatistics(parms)
@@ -252,10 +337,25 @@ export default {
             return year + '年' + month + '月' + day + '日'
         },
 
-        checkShopManager (val) {
-            this.$router.push({
-                name: `warehouseManagement`, params: { dealer: val.companyName }
-            })
+        // checkShopManager (val) {
+        //     console.log(val)
+        //     this.$router.push({
+        //         name: `warehouseManagement`, params: { dealer: this.focusDetailAgent.companyName }
+        //     })
+        // },
+        queryDetailList (detailTableQueryParams) {
+            this.findCloudMerchantDetailList(detailTableQueryParams)
+        },
+        onDetailTableCurrentChange: function (val) {
+            this.detailTableQueryParams.pageNumber = val.pageNumber
+            this.queryDetailList(this.detailTableQueryParams)
+        },
+        onDetailTableSizeChange: function (val) {
+            this.detailTableQueryParams.pageSize = val
+            this.queryDetailList(this.detailTableQueryParams)
+        },
+        onDetailSearch () {
+            this.queryDetailList(this.detailTableQueryParams)
         }
 
     }

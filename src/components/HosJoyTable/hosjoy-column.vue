@@ -18,7 +18,7 @@
         :sort-orders="column.sortOrders"
         :resizable="column.resizable || true"
         :formatter="column.formatter"
-        :show-overflow-tooltip="column.showOverflowTooltip || true"
+        :show-overflow-tooltip="column.showOverflowTooltip === false ? false: true"
         :align="column.align || align || 'center'"
         :header-align="column.headerAlign || headerAlign || column.align || align || 'center'"
         :class-name="column.className"
@@ -35,13 +35,15 @@
         <template slot="header" slot-scope="scope">
             <hosjoy-render v-if="column.renderHeader" :scope="scope" :render="column.renderHeader">
             </hosjoy-render>
-            <span v-if='(column.displayAs || column.unit) && !column.isTHNoTranslate'>{{ dealHeader(scope.column.label, column) }}</span>
+            <span v-else-if='column.headerUnit!=null && !column.isTHNoTranslate'>{{ dealHeaderUnit(scope.column.label, column) }}</span>
+            <span v-else-if='(column.displayAs || column.unit) && !column.isTHNoTranslate'>{{ dealHeader(scope.column.label, column) }}</span>
             <span v-else>{{ scope.column.label }}</span>
         </template>
 
         <template slot-scope="scope">
-            <hosjoy-render :scope="scope" :render="column.render">
-            </hosjoy-render>
+            <div class="hosjoyRender">
+                <hosjoy-render :scope="scope" :render="column.render"></hosjoy-render>
+            </div>
         </template>
 
         <template v-if="column.children">
@@ -138,7 +140,7 @@ export default {
         setColumn () {
             if (this.column && this.column.formatter) {
                 this.column.render = (h, scope) => {
-                    return <span>{scope.column.formatter(scope.row, scope.column, scope.row, scope.$index)}</span>
+                    return <div>{scope.column.formatter(scope.row, scope.column, scope.row, scope.$index)}</div>
                 }
             }
             if (this.column && !this.column.render) {
@@ -147,20 +149,20 @@ export default {
                     // 添加字典
                     if (this.column.dicData) {
                         return (
-                            <span>
+                            <div>
                                 {this.getLabelFromDicData(scope.row[this.column.prop], this.column.dicData) ? this.getLabelFromDicData(scope.row[this.column.prop], this.column.dicData).label : '-'}
-                            </span>
+                            </div>
                         )
                     }
                     if (this.column.displayAs) {
                         return (
-                            <span>
-                                {this.filterMethods(this.column.displayAs, scope.row[scope.column.property])}
-                            </span>
+                            <div>
+                                {this.filterMethods(this.column.displayAs, scope.row[scope.column.property]) + unit}
+                            </div>
                         )
                     }
                     return (
-                        <span>{scope.row[scope.column.property] || scope.row[scope.column.property] === 0 ? `${scope.row[scope.column.property]}${unit}` : '-'}</span>
+                        <div>{scope.row[scope.column.property] || scope.row[scope.column.property] === 0 ? `${scope.row[scope.column.property]}${unit}` : '-'}</div>
                     )
                 }
             }
@@ -204,6 +206,19 @@ export default {
             }
             let unit = childItem.unit ? childItem.unit : '' // 添加单位unit
             return res === '-' ? res : res + unit
+        },
+        dealHeaderUnit (label, column) {
+            if (!column.displayAs && !column.headerUnit) return label
+            let res = '-'
+            if (column.displayAs && (column.displayAs in this.functions)) {
+                if (label || label == 0) {
+                    res = this.filterMethods(column.displayAs, label)
+                }
+            } else {
+                res = label
+            }
+            let headerUnit = column.headerUnit ? column.headerUnit : '' // 头部单位headerUnit区别列表单元格单位展示
+            return res === '-' ? res : res + headerUnit
         }
     },
     watch: {

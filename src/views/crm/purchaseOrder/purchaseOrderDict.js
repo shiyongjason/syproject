@@ -28,6 +28,19 @@ const PurchaseOrderDict = Object.freeze({
             }
         ]
     },
+    coManager: {
+        title: '共管户信息',
+        list: [
+            {
+                key: false,
+                value: '未确认'
+            },
+            {
+                key: true,
+                value: '已确认'
+            }
+        ]
+    },
     freeInterestType: {
         title: '免息方式',
         list: [

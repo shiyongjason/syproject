@@ -144,6 +144,14 @@ const percentageShow = function (value) {
     }
     return '--'
 }
+const percenShow = function (value) {
+    let str = Number(value)
+    if (value) {
+        str += '%'
+        return str
+    }
+    return '-'
+}
 const attributeComputed = function (key, list) {
     if (key === null) return '-'
     let value = ''
@@ -168,5 +176,6 @@ export default {
     fundMoneyHaveSpot,
     momentFormat,
     percentageShow,
+    percenShow,
     attributeComputed
 }

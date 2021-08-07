@@ -1,63 +1,68 @@
 <template>
-    <div class="page-table clearfix">
-        <div class="collapse">
-            <img src="../../../src/assets/images/typeIcon.png" alt="" class="collapse" @click="collapse = !collapse">
-        </div>
-        <el-collapse-transition>
-            <div class="collapse-content" v-if="collapse">
-                <el-checkbox v-if="showCheckAll" :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-                <div style="margin: 15px 0;"></div>
-                <el-checkbox-group v-model="selectTh" @change="handleCheckedCitiesChange">
-                    <el-checkbox v-for="(item) in defaultTh" :label="item" :key="item">{{item}}</el-checkbox>
-                </el-checkbox-group>
+    <div class="page-table">
+        <div class="collapse-wrap">
+            <div class="collapse" v-if="isShowCollapse">
+                <img src="../../../src/assets/images/typeIcon.png" alt="" @click="collapse = !collapse">
             </div>
-        </el-collapse-transition>
-        <!-- 列表 -->
-        <el-table v-bind="tableAttr" :data="tableData" :stripe='stripe' border :lazy="true" :max-height="maxHeight" @sort-change="handleSortChange" @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="rowKey" :load="load" :indent="4"
-            :row-class-name="rowClassName">
-            <el-table-column v-if="isMultiple" type="selection" align="center" :selectable="selectable"></el-table-column>
-            <el-table-column v-if="isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
-            <template v-for="item in tableLabel">
-                <el-table-column v-if="selectTh.indexOf(item.label)>-1 && !item.isHidden" :key="columnKey(item)" :label="item.label" :prop="item.prop" :sortable="item.sortable" :align="item.align?item.align:'center'" :min-width="item.width?item.width:''" :show-overflow-tooltip="true" v-bind="item">
+            <el-collapse-transition>
+                <div class="collapse-content" v-if="collapse">
+                    <el-checkbox v-if="showCheckAll" :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+                    <div style="margin: 15px 0;"></div>
+                    <el-checkbox-group v-model="selectTh" @change="handleCheckedCitiesChange">
+                        <el-checkbox v-for="(item) in defaultTh" :label="item" :key="item">{{item}}</el-checkbox>
+                    </el-checkbox-group>
+                </div>
+            </el-collapse-transition>
+        </div>
+        <div class="clearfix">
+            <!-- 列表 -->
+            <el-table v-bind="tableAttr" :data="tableData" :stripe='stripe' border :lazy="true" :max-height="maxHeight" @sort-change="handleSortChange" @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="rowKey" :show-summary="isShowSum" :summary-method="getSum" :load="load" :indent="4"
+                :row-class-name="rowClassName">
+                <el-table-column v-if="isMultiple" type="selection" align="center" :selectable="selectable"></el-table-column>
+                <el-table-column v-if="isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
+                <template v-for="item in tableLabel">
+                    <el-table-column v-if="selectTh.indexOf(item.label)>-1 && !item.isHidden" :key="columnKey(item)" :label="item.label" :prop="item.prop" :sortable="item.sortable" :align="item.align?item.align:'center'" :min-width="item.width?item.width:'160'" :show-overflow-tooltip="true"
+                        v-bind="item">
+                        <template slot-scope="scope">
+                            <slot v-if="item.formatters === 'money'" :name="item.prop" :data="scope">{{scope.row[item.prop] | money}}</slot>
+                            <slot v-else-if="item.formatters === 'moneyShow'" :name="item.prop" :data="scope">{{scope.row[item.prop] | moneyShow}}</slot>
+                            <slot v-else-if="item.formatters === 'fundMoney'" :name="item.prop" :data="scope">{{scope.row[item.prop] | fundMoney}}</slot>
+                            <slot v-else-if="item.formatters === 'fundMoneyHaveSpot'" :name="item.prop" :data="scope">{{scope.row[item.prop] | fundMoneyHaveSpot}}</slot>
+                            <slot v-else-if="item.formatters === 'dateTime'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTime}}</slot>
+                            <slot v-else-if="item.formatters === 'dateTimes'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTimes}}</slot>
+                            <slot v-else-if="item.formatters === 'date'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterDate}}</slot>
+                            <slot v-else-if="item.colorLeave" :name="item.prop" :data="scope">
+                                <span v-if="scope.row[item.prop] <= item.colorLeave.bound" :class="item.colorLeave.notReach">{{scope.row[item.prop]}}</span>
+                                <span v-else :class="item.colorLeave.reach">{{scope.row[item.prop]}}</span>
+                            </slot>
+                            <slot v-else :name="item.prop" :data="scope">{{formatter(scope.row[item.prop])}}</slot>
+                        </template>
+                        <template v-if="selectTh.indexOf(item.label)>-1">
+                            <el-table-column v-for="obj in item.tableLabel" :key="obj.label" :label="obj.label" :prop="obj.prop" :sortable="obj.sortable" :align="obj.align?obj.align:'center'" :min-width="obj.width?obj.width:''" :show-overflow-tooltip="true" v-bind="obj">
+                                <template slot-scope="scope">
+                                    <slot v-if="obj.formatters === 'money'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | money}}</slot>
+                                    <slot v-else-if="obj.formatters === 'moneyShow'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | moneyShow}}</slot>
+                                    <slot v-else-if="obj.formatters === 'fundMoney'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | fundMoney}}</slot>
+                                    <slot v-else-if="obj.formatters === 'dateTime'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterTime}}</slot>
+                                    <slot v-else-if="obj.formatters === 'dateTimes'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterTimes}}</slot>
+                                    <slot v-else-if="obj.formatters === 'date'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterDate}}</slot>
+                                    <slot v-else :name="obj.prop" :data="scope">{{formatter(scope.row[obj.prop])}}</slot>
+                                </template>
+                            </el-table-column>
+                        </template>
+                    </el-table-column>
+                </template>
+                <el-table-column label="操作" v-if="isAction" align="center" :fixed="actionFixed" :min-width="minWidth">
                     <template slot-scope="scope">
-                        <slot v-if="item.formatters === 'money'" :name="item.prop" :data="scope">{{scope.row[item.prop] | money}}</slot>
-                        <slot v-else-if="item.formatters === 'moneyShow'" :name="item.prop" :data="scope">{{scope.row[item.prop] | moneyShow}}</slot>
-                        <slot v-else-if="item.formatters === 'fundMoney'" :name="item.prop" :data="scope">{{scope.row[item.prop] | fundMoney}}</slot>
-                        <slot v-else-if="item.formatters === 'fundMoneyHaveSpot'" :name="item.prop" :data="scope">{{scope.row[item.prop] | fundMoneyHaveSpot}}</slot>
-                        <slot v-else-if="item.formatters === 'dateTime'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTime}}</slot>
-                        <slot v-else-if="item.formatters === 'dateTimes'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTimes}}</slot>
-                        <slot v-else-if="item.formatters === 'date'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterDate}}</slot>
-                        <slot v-else-if="item.colorLeave" :name="item.prop" :data="scope">
-                            <span v-if="scope.row[item.prop] <= item.colorLeave.bound" :class="item.colorLeave.notReach">{{scope.row[item.prop]}}</span>
-                            <span v-else :class="item.colorLeave.reach">{{scope.row[item.prop]}}</span>
-                        </slot>
-                        <slot v-else :name="item.prop" :data="scope">{{formatter(scope.row[item.prop])}}</slot>
-                    </template>
-                    <template v-if="selectTh.indexOf(item.label)>-1">
-                        <el-table-column v-for="obj in item.tableLabel" :key="obj.label" :label="obj.label" :prop="obj.prop" :sortable="obj.sortable" :align="obj.align?obj.align:'center'" :min-width="obj.width?obj.width:''" :show-overflow-tooltip="true" v-bind="obj">
-                            <template slot-scope="scope">
-                                <slot v-if="obj.formatters === 'money'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | money}}</slot>
-                                <slot v-else-if="obj.formatters === 'moneyShow'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | moneyShow}}</slot>
-                                <slot v-else-if="obj.formatters === 'fundMoney'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | fundMoney}}</slot>
-                                <slot v-else-if="obj.formatters === 'dateTime'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterTime}}</slot>
-                                <slot v-else-if="obj.formatters === 'dateTimes'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterTimes}}</slot>
-                                <slot v-else-if="obj.formatters === 'date'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterDate}}</slot>
-                                <slot v-else :name="obj.prop" :data="scope">{{formatter(scope.row[obj.prop])}}</slot>
-                            </template>
-                        </el-table-column>
+                        <slot class="action" name="action" :data="scope"></slot>
                     </template>
                 </el-table-column>
-            </template>
-            <el-table-column label="操作" v-if="isAction" align="center" :fixed="isfiexd" :min-width="minWidth">
-                <template slot-scope="scope">
-                    <slot class="action" name="action" :data="scope"></slot>
-                </template>
-            </el-table-column>
-        </el-table>
-        <!-- 分页 -->
-        <el-pagination v-if="isPagination && paginationInfo.total" :total="paginationInfo.total" :layout="paginationStyle.pageLayout" :current-page="paginationInfo.pageNumber" :page-size.sync="paginationInfo.pageSize" :page-sizes="paginationStyle.pageSizes" @current-change="handleCurrentChange"
-            @size-change="handleSizeChange">
-        </el-pagination>
+            </el-table>
+            <!-- 分页 -->
+            <el-pagination v-if="isPagination && paginationInfo.total" :total="paginationInfo.total" :layout="paginationStyle.pageLayout" :current-page="paginationInfo.pageNumber" :page-size.sync="paginationInfo.pageSize" :page-sizes="paginationStyle.pageSizes" @current-change="handleCurrentChange"
+                @size-change="handleSizeChange">
+            </el-pagination>
+        </div>
     </div>
 </template>
 <script>
@@ -75,6 +80,10 @@ export default {
         }
     },
     props: {
+        isShowCollapse: {
+            type: Boolean,
+            default: true
+        },
         isMultiple: {
             type: Boolean,
             default: false
@@ -94,6 +103,10 @@ export default {
         stripe: {
             type: Boolean,
             default: true
+        },
+        isShowSum: {
+            type: Boolean,
+            default: false
         },
         isBlank: {
             type: Boolean,
@@ -134,6 +147,10 @@ export default {
             type: Object,
             default: () => ({})
         },
+        spanMethod: {
+            type: Function,
+            defalut: () => { }
+        },
         rowKey: {
             type: String,
             default: ''
@@ -141,6 +158,10 @@ export default {
         treeProps: {
             type: Object,
             default: () => ({ children: 'children', hasChildren: 'hasChildren' })
+        },
+        getSum: {
+            type: Function,
+            default: () => true
         },
         load: {
             type: Function,
@@ -154,7 +175,7 @@ export default {
             type: Function,
             default: () => ''
         },
-        isfiexd: {
+        actionFixed: {
             type: String,
             default: 'right'
         },
@@ -207,11 +228,6 @@ export default {
             deep: true,
             immediate: true
         },
-        actionMinWidth: {
-            handler (val) {
-                this.minWidth = val
-            }
-        },
         selectTh () {
             this.changeThNum = this.changeThNum + 1
         }
@@ -228,6 +244,10 @@ export default {
         handleCurrentChange (val) {
             this.paginationInfo.pageNumber = val
             this.$emit('onCurrentChange', this.paginationInfo)
+        },
+        doLayout () {
+            console.log('重新布局', this.$refs.basicTable)
+            this.$refs.basicTable && this.$refs.basicTable.doLayout()
         },
         handleSizeChange (val) {
             this.$emit('onSizeChange', val)
@@ -281,7 +301,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.page-table {
+.collapse-wrap {
     position: relative;
 }
 .el-pagination {
@@ -298,7 +318,7 @@ export default {
     font-weight: 400;
     background: rgba(242, 242, 244, 1);
 }
-/deep/ .el-table .cell.el-tooltip .couponP{
+/deep/ .el-table .cell.el-tooltip .couponP {
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -323,12 +343,17 @@ export default {
 }
 .collapse {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    right: 10px;
-    top: 2px;
+    width: 16px;
+    height: 16px;
+    right: 14px;
+    top: 14px;
     z-index: 999;
     cursor: pointer;
+
+    img {
+        max-width: 100%;
+        max-height: 100%;
+    }
 }
 .collapse-content {
     position: absolute;

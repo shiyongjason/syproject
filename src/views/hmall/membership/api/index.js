@@ -6,11 +6,11 @@ export const getChiness = (params) => {
 }
 // 获取商家列表
 export const getBossMerchant = (params) => {
-    return axios.get(B2bUrl + 'merchant/api/company/boss/merchant', { params })
+    return axios.get(B2bUrl + 'merchant/boss/merchant', { params })
 }
 // 获取商家详情
 export const getBossMerchantDetail = (params) => {
-    return axios.get(B2bUrl + 'merchant/api/company/boss/merchant/detail', { params })
+    return axios.get(B2bUrl + `merchant/boss/merchant/${params.merchantCode}`, { params })
 }
 // 获取商家详情统计
 export const getBossMerchantStatic = (params) => {
@@ -18,11 +18,13 @@ export const getBossMerchantStatic = (params) => {
 }
 // 更新商家详情
 export const putMerchantDetail = (params) => {
-    return axios.put(B2bUrl + 'merchant/api/company/boss/merchant/detail', params)
+    return axios.put(B2bUrl + 'merchant/boss/merchant', params)
 }
 // 分部列表
 export const findBrandsList = (params) => {
-    return axios.get(B2bUrl + 'common/api/organizations/branches', { params })
+    // return axios.get(B2bUrl + 'common/api/organizations/branches', { params })
+    return axios.get('https://b2b-gateway.hosjoy.com/common/api/organizations/branches', { params })
+    // return axios.get('https://b2b-gateway-test.hosjoy.com/common/api/organizations/branches', { params })// 临时解决环境245环境无法获取分部，上线打包前需要切回原来代码
 }
 
 // 启用禁用商家

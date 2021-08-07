@@ -84,17 +84,6 @@ export default {
         ...mapGetters({
             cloudActicitylist: 'cloudActicitylist'
         }),
-        pickerOptionsStart () {
-            return {
-                disabledDate: time => {
-                    let endDateVal = this.queryParams.endTime
-                    if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
-                    }
-                    // return time.getTime() <= Date.now() - 8.64e7
-                }
-            }
-        },
         pickerOptionsEnd () {
             return {
                 disabledDate: time => {

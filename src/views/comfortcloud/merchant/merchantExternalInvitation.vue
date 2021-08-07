@@ -18,26 +18,7 @@
         </div>
         <div class="page-body-cont query-cont">
             <el-tabs v-model="tabIndex" type="card" @tab-click="handleClick">
-                <el-tab-pane label="购买记录" name="0">
-                    <el-tag size="medium" class="eltagtop">
-                        合计 共购买 {{tableBuyData.length}}种商品；
-                        累计购买订单数：{{tableBuyTotalData.totalOrderCount ? tableBuyTotalData.totalOrderCount : '0'}}笔；
-                        累计购买件数：{{tableBuyTotalData.totalProductCount ? tableBuyTotalData.totalProductCount : '0'}}件；
-                        累计购买金额：{{tableBuyTotalData.totalOrderAmount ? tableBuyTotalData.totalOrderAmount : '0'}}元；
-                    </el-tag>
-                    <div class="page-body-cont">
-                        <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
-                            <template slot="replenishmentTime" slot-scope="scope">
-                                <div v-if="scope.data.row.brandName === '舒适云'">{{scope.data.row.replenishmentTime | formatterTime}}</div>
-                                <div v-else>--</div>
-                            </template>
-                            <template slot="action" slot-scope="scope">
-                                <el-button class="orangeBtn" @click="goToDetail(scope.data.row)">查看明细</el-button>
-                            </template>
-                        </basicTable>
-                    </div>
-                </el-tab-pane>
-                <el-tab-pane class="page-body-cont-enterprise" label="企业信息" name="1">
+                <el-tab-pane class="page-body-cont-enterprise" label="企业信息" name="enterpriseInfo">
                     <div class="page-body-cont-enterprise-info">
                         <span style="margin-bottom: 20px">公司名称： {{enterpriseInfoData.companyName}} </span>
                         <span style="margin-bottom: 20px">联系地址： {{constructAddress}}</span>
@@ -49,22 +30,63 @@
                         <span style="margin-bottom: 20px">主营品牌：{{enterpriseInfoData.mainBrand}}</span>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="沟通记录" name="2">
+                <el-tab-pane label="沟通记录" name="contact">
                     <div class="query-cont-col ml20">
                         <el-button type="primary" @click="communicate">+新增记录</el-button>
                     </div>
                     <div class="page-body-cont">
-                        <basicTable :tableLabel="communicationTableLabel" :tableData="cloudMerchantMemberCommunicationList" :pagination="cloudMerchantMemberCommunicationListPagination" :isShowIndex='false' :isAction="true" @onCurrentChange='onCommunicationCurrentChange' @onSizeChange='onCommunicationSizeChange'>
+                        <basicTable :tableLabel="communicationTableLabel"
+                                    :tableData="cloudMerchantMemberCommunicationList"
+                                    :pagination="cloudMerchantMemberCommunicationListPagination" :isShowIndex='false'
+                                    :isAction="true" @onCurrentChange='onCommunicationCurrentChange'
+                                    @onSizeChange='onCommunicationSizeChange'>
                             <template slot="action" slot-scope="scope">
-                                <el-button class="orangeBtn" @click="onCommunicationRecordEdit(scope.data.row)">编辑</el-button>
-                                <el-button class="orangeBtn" @click="onCommunicationRecordDelete(scope.data.row)">删除</el-button>
+                                <el-button class="orangeBtn" @click="onCommunicationRecordEdit(scope.data.row)">编辑
+                                </el-button>
+                                <el-button class="orangeBtn" @click="onCommunicationRecordDelete(scope.data.row)">删除
+                                </el-button>
                             </template>
                         </basicTable>
                     </div>
 
                 </el-tab-pane>
+                <el-tab-pane v-if="enterpriseInfoData.source!='hcg'" label="购买记录" name="shop">
+                    <el-tag size="medium" class="eltagtop">
+                        合计 共购买 {{tableBuyData.length}}种商品；
+                        累计购买订单数：{{tableBuyTotalData.totalOrderCount ? tableBuyTotalData.totalOrderCount : '0'}}笔；
+                        累计购买件数：{{tableBuyTotalData.totalProductCount ? tableBuyTotalData.totalProductCount : '0'}}件；
+                        累计购买金额：{{tableBuyTotalData.totalOrderAmount ? tableBuyTotalData.totalOrderAmount : '0'}}元；
+                    </el-tag>
+                    <div class="page-body-cont">
+                        <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true'
+                                    :pagination="pagination" @onCurrentChange='onCurrentChange'
+                                    @onSizeChange='onSizeChange' :isAction="true">
+                            <template slot="action" slot-scope="scope">
+                                <el-button class="orangeBtn" @click="goToDetail(scope.data.row)">查看明细</el-button>
+                            </template>
+                        </basicTable>
+                    </div>
+                </el-tab-pane>
+                <el-tab-pane v-if="enterpriseInfoData.source==='hcg'" label="工程项目" name="project">
+                    <div class="page-body-cont">
+                        <basicTable :tableLabel="tableProjectLabel" :tableData="tableProjectData" :isShowIndex='true'
+                                    :pagination="projectPagination" @onCurrentChange='onCurrentChange'
+                                    @onSizeChange='onSizeChange' :isAction="false">
+                            <template slot="status" slot-scope="scope">
+                                <div>{{statusMap[scope.data.row.status]}}</div>
+                            </template>
+                            <template slot="deviceCategory" slot-scope="scope">
+                                <div>{{categoryMap[scope.data.row.deviceCategory]}}</div>
+                            </template>
+                            <template slot="type" slot-scope="scope">
+                                <div>{{typeMap[scope.data.row.type]}}</div>
+                            </template>
+                        </basicTable>
+                    </div>
+                </el-tab-pane>
             </el-tabs>
-            <el-dialog title="选择标签" :modal-append-to-body=false :append-to-body=false :visible.sync="dialogVisible" width="50%">
+            <el-dialog title="选择标签" :modal-append-to-body=false :append-to-body=false :visible.sync="dialogVisible"
+                       width="50%">
                 <div v-for="item in cloudMerchantTaglist" :key="item.id">
                     <h1>{{item.tagCategory}}</h1>
                     <div class="tag-cont">
@@ -77,14 +99,19 @@
                     <el-button type="primary" @click="editConform()">确认</el-button>
                 </span>
             </el-dialog>
-            <el-dialog title="沟通内容编辑" :modal-append-to-body=false :append-to-body=false :visible.sync="communicationRecordDialogVisible" width="50%" :close-on-click-modal="false">
-                <el-form ref="communicationRecordForm" :model="communicationRecordForm" :rules="communicationRecordFormRules" label-width="110px">
+            <el-dialog title="沟通内容编辑" :modal-append-to-body=false :append-to-body=false
+                       :visible.sync="communicationRecordDialogVisible" width="50%" :close-on-click-modal="false">
+                <el-form ref="communicationRecordForm" :model="communicationRecordForm"
+                         :rules="communicationRecordFormRules" label-width="110px">
                     <el-form-item label="沟通日期：" prop="communicationDate">
-                        <el-date-picker type="date" v-model="communicationRecordForm.communicationDate" :clearable=false placeholder="沟通日期" value-format='yyyy-MM-dd'>
+                        <el-date-picker type="date" v-model="communicationRecordForm.communicationDate" :clearable=false
+                                        placeholder="沟通日期" value-format='yyyy-MM-dd'>
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="沟通结果：" prop="communicationResult">
-                        <el-input v-model="communicationRecordForm.communicationResult" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入沟通结果" style="width:80%" show-word-limit maxlength="250"></el-input>
+                        <el-input v-model="communicationRecordForm.communicationResult" type="textarea"
+                                  :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入沟通结果" style="width:80%"
+                                  show-word-limit maxlength="250"></el-input>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -115,16 +142,55 @@ export default {
                 pageSize: 10,
                 phone: this.$route.query.phone
             },
+            statusMap: {
+                1: '待提交',
+                2: '初审中',
+                3: '资料收集中',
+                4: '待立项',
+                5: '合作关闭',
+                6: '待签约',
+                7: '待放款',
+                8: '贷中',
+                9: '项目完成',
+                10: '信息待完善',
+                11: '待终审',
+                12: '资料待审核'
+            },
+            categoryMap: {
+                1: '空调',
+                2: '采暖',
+                3: '新风',
+                4: '净水',
+                5: '智能化',
+                6: '辅材',
+                7: '电梯',
+                8: '其他',
+                9: '电器',
+                10: '热水器'
+            },
+            typeMap: { 1: '地产项目', 2: '政府共建项目', 3: '市政项目', 4: '办公楼', 5: '厂房', 6: '其他' },
+            projectQueryParams: {
+                pageNumber: 1,
+                pageSize: 10,
+                companyId: this.$route.query.companyId
+            },
             pagination: {
                 pageNumber: 1,
                 pageSize: 10,
                 total: 0
             },
-            tabIndex: this.$route.query.index,
+            projectPagination: {
+                pageNumber: 1,
+                pageSize: 10,
+                total: 0
+            },
+            tabIndex: this.$route.query.name,
             tableBuyTotalData: {},
             enterpriseInfoData: {},
-            tagStringList: [],
+            tagStringList: [], // 用于编辑的tags列表
+            showTagStringList: [], // 用于展示的tags列表
             tableBuyData: [],
+            tableProjectData: [],
             dialogVisible: false,
             tableBuyLabel: [
                 { label: '品类', prop: 'categoryName' },
@@ -135,6 +201,22 @@ export default {
                 { label: '累计购买件数', prop: 'productCount' },
                 { label: '累计购买金额', prop: 'orderAmount' },
                 { label: '预计补货时间', prop: 'replenishmentTime', formatters: 'dateTime' }
+            ],
+            tableProjectLabel: [
+                { label: '项目名称', prop: 'projectName' },
+                { label: '项目地址', prop: 'address', width: '220px' },
+                { label: '项目编号', prop: 'projectNo' },
+                { label: '所属分部', prop: 'deptName' },
+                { label: '经销商', prop: 'companyName' },
+                { label: '甲方名称', prop: 'firstPartName' },
+                { label: '预计签约时间', prop: 'estimateSignTime', formatters: 'dateTime' },
+                { label: '项目类别', prop: 'type' },
+                { label: '工程项目进度', prop: 'status' },
+                { label: '项目合同总额', prop: 'contractAmount' },
+                { label: '设备总额', prop: 'deviceAmount' },
+                { label: '设备品类', prop: 'deviceCategory' },
+                { label: '设备品牌', prop: 'deviceBrand' },
+                { label: '合作进度', prop: 'status' }
             ],
             communicationTableLabel: [
                 { label: '沟通日期', prop: 'communicationDate', formatters: 'date' },
@@ -161,6 +243,7 @@ export default {
         }),
         ...mapGetters({
             merchantmemberInvitationOutOrderData: 'cloudMerchantmemberInvitationOutOrderData',
+            merchantmemberInvitationProjectData: 'cloudMerchantmemberInvitationProjectData',
             merchantExernalMemberData: 'iotmerchantExternalMemberData',
             cloudMerchantTaglist: 'cloudMerchantTaglist',
             cloudMerchantMemberCommunicationList: 'cloudMerchantMemberCommunicationList',
@@ -189,8 +272,8 @@ export default {
             }
         },
         showTag () {
-            if (this.tagStringList.length > 0) {
-                return this.tagStringList.join(',')
+            if (this.showTagStringList.length > 0) {
+                return this.showTagStringList.join(',')
             } else {
                 return '--'
             }
@@ -198,27 +281,38 @@ export default {
     },
     mounted () {
         this.onSearch()
-        // this.tagStringList = ['空调地暖面板YG-3329', '水地暖智控面板YH-3305']
     },
     methods: {
         ...mapActions({
             findMerchantMemberInvitationOutOrdersituation: 'findMerchantMemberInvitationOutOrdersituation',
+            findMerchantMemberInvitationProject: 'findMerchantMemberInvitationProject',
             findMerchantExternalMembersituation: 'findMerchantExternalMembersituation',
             findCloudMerchantTaglist: 'findCloudMerchantTaglist',
             findCloudMerchantMemberCommunicationList: 'findCloudMerchantMemberCommunicationList'
         }),
         async onQuery () {
             await this.findMerchantMemberInvitationOutOrdersituation(this.searchParams)
+            await this.findMerchantMemberInvitationProject(this.projectQueryParams)
             await this.requestMemberCommunicationList()
             this.tableBuyData = this.merchantmemberInvitationOutOrderData.records
+            this.tableProjectData = this.merchantmemberInvitationProjectData.records
             this.pagination = {
                 pageNumber: this.merchantmemberInvitationOutOrderData.current,
                 pageSize: this.merchantmemberInvitationOutOrderData.size,
                 total: this.merchantmemberInvitationOutOrderData.total
             }
+            this.projectPagination = {
+                pageNumber: this.merchantmemberInvitationProjectData.current,
+                pageSize: this.merchantmemberInvitationProjectData.size,
+                total: this.merchantmemberInvitationProjectData.total
+            }
+            this.memberInfo()
         },
         async requestMemberCommunicationList () {
-            await this.findCloudMerchantMemberCommunicationList({ ...this.searchParams, phone: this.$route.query.phone })
+            await this.findCloudMerchantMemberCommunicationList({
+                ...this.searchParams,
+                phone: this.$route.query.phone
+            })
         },
         async onTotal () {
             const { data } = await getMerchantMemberInvitationOutOrdersTotal({ 'phone': this.$route.query.phone })
@@ -229,7 +323,10 @@ export default {
             if (this.merchantExernalMemberData.records.length > 0) {
                 this.enterpriseInfoData = this.merchantExernalMemberData.records[0]
             }
+
             this.tagStringList = this.enterpriseInfoData.manualTags ? this.enterpriseInfoData.manualTags : []
+            this.showTagStringList = [...this.tagStringList]
+            console.log(this.showTagStringList)
         },
         async showDliag (val) {
             await this.findCloudMerchantTaglist()
@@ -244,7 +341,7 @@ export default {
                     tagMapList.push({ 'tagId': '', 'tagName': element })
                 }
 
-                if (this.$route.query.manualTags) {
+                if (this.showTagStringList && this.showTagStringList.length > 0) {
                     await editMemberTag({ 'phone': this.$route.query.phone, 'tagNames': tagMapList })
                 } else {
                     await addMemberTag({ 'phone': this.$route.query.phone, 'tagNames': tagMapList })
@@ -275,7 +372,7 @@ export default {
             this.requestMemberCommunicationList()
         },
         onCommunicationRecordEdit (data) {
-            this.communicationRecordForm = data
+            this.communicationRecordForm = Object.assign({}, data)
             this.communicationRecordDialogVisible = true
         },
         onCommunicationRecordDelete (data) {
@@ -292,7 +389,8 @@ export default {
                     type: 'success',
                     message: '删除成功!'
                 })
-            }).catch(() => { })
+            }).catch(() => {
+            })
         },
         onCommunicationRecordCancel () {
             this.clearCommunicationRecordForm()
@@ -319,7 +417,10 @@ export default {
         },
 
         goToDetail (val) {
-            this.$router.push({ path: '/comfortCloudMerchant/merchantOrderManage/merchantOutOrderList', query: { 'phone': this.queryParams.phone } })
+            this.$router.push({
+                path: '/comfortCloudMerchant/merchantOrderManage/merchantOutOrderList',
+                query: { 'phone': this.queryParams.phone }
+            })
         },
         tagCancel () {
             this.clearData()
@@ -346,7 +447,7 @@ export default {
             this.onQuery()
         },
         handleClick (tab, event) {
-            this.tabIndex = tab.index
+            this.tabIndex = tab.name
         },
         addTag (tag) {
             let selectTag = false
@@ -373,106 +474,109 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-/deep/ .el-dialog__body {
-    padding-top: 10px;
-}
+    /deep/ .el-dialog__body {
+        padding-top: 10px;
+    }
 
-.top-box {
-    width: auto;
-    margin-left: 1rem;
-    display: flex;
-    flex-direction: column;
-    height: 4rem;
-    justify-content: space-between;
-    background: #ffffff;
-}
+    .top-box {
+        width: auto;
+        margin-left: 1rem;
+        display: flex;
+        flex-direction: column;
+        height: 4rem;
+        justify-content: space-between;
+        background: #ffffff;
+    }
 
-.top-box-right {
-    width: auto;
-    margin-left: 3rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    background: #ffffff;
-}
+    .top-box-right {
+        width: auto;
+        margin-left: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        background: #ffffff;
+    }
 
-.choice-tag {
-    color: #ff7a45;
-    cursor: pointer;
-}
-.unselect {
-    display: inline-block;
-    padding: 5px 10px;
-    margin: 10px;
-    border: 1px solid #606266;
-    border-radius: 5px;
-}
-.select {
-    display: inline-block;
-    padding: 5px 10px;
-    margin: 10px;
-    background-color: #ff7a45;
-    border: 1px solid #ff7a45;
-    color: white;
-    border-radius: 5px;
-}
-.hand {
-    cursor: pointer !important;
-}
+    .choice-tag {
+        color: #ff7a45;
+        cursor: pointer;
+    }
 
-.page-body-cont-top {
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: row;
-    align-content: flex-start;
-    padding: 20px 24px;
-    background: $whiteColor;
-}
+    .unselect {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 10px;
+        border: 1px solid #606266;
+        border-radius: 5px;
+    }
 
-.page-body-cont-top-no-left {
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: row;
-    align-content: flex-start;
-    padding-top: 20px;
-    background: $whiteColor;
-    align-items: center;
-}
+    .select {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 10px;
+        background-color: #ff7a45;
+        border: 1px solid #ff7a45;
+        color: white;
+        border-radius: 5px;
+    }
 
-.page-body-cont-top-no-align-items {
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: row;
-    align-content: flex-start;
-    padding-top: 20px;
-    background: $whiteColor;
-}
+    .hand {
+        cursor: pointer !important;
+    }
 
-.page-body-cont-enterprise-info {
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-    align-content: flex-start;
-    padding: 20px 24px;
-    background: $whiteColor;
-}
+    .page-body-cont-top {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: row;
+        align-content: flex-start;
+        padding: 20px 24px;
+        background: $whiteColor;
+    }
 
-.page-body-cont-enterprise {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    background: $whiteColor;
-}
+    .page-body-cont-top-no-left {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: row;
+        align-content: flex-start;
+        padding-top: 20px;
+        background: $whiteColor;
+        align-items: center;
+    }
 
-.page-body-cont-enterprise-info-empty {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    text-align: center;
-    color: #888888;
-    flex-direction: column;
-    align-content: center;
-    padding: 40px 200px 40px 200px;
-    background: $whiteColor;
-}
+    .page-body-cont-top-no-align-items {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: row;
+        align-content: flex-start;
+        padding-top: 20px;
+        background: $whiteColor;
+    }
+
+    .page-body-cont-enterprise-info {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: column;
+        align-content: flex-start;
+        padding: 20px 24px;
+        background: $whiteColor;
+    }
+
+    .page-body-cont-enterprise {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        background: $whiteColor;
+    }
+
+    .page-body-cont-enterprise-info-empty {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        text-align: center;
+        color: #888888;
+        flex-direction: column;
+        align-content: center;
+        padding: 40px 200px 40px 200px;
+        background: $whiteColor;
+    }
 </style>

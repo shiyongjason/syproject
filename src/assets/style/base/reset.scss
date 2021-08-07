@@ -198,7 +198,8 @@ li {
 }
 
 .el-message-box__content {
-    min-height: 0px;
+    max-height: 400px;
+    overflow-y: overlay;
 }
 
 .el-message-box__wrapper {

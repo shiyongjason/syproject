@@ -19,6 +19,12 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col-title">企业名称：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
                     <div class="query-col-title">注册时间：</div>
                     <div class="query-col-input">
                         <el-date-picker v-model="queryParams.startRegisterTime" type="datetime"
@@ -69,6 +75,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onSearch">查 询</el-button>
+                        <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
                     </div>
                 </div>
             </div>
@@ -144,11 +151,12 @@
     </div>
 </template>
 <script>
-// import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
+import axios from 'axios'
 import { clearCache, newCache } from '../../../utils'
 import { addMemberTag, editMemberTag, recommendChange } from '../api'
 import { getChiness } from '../../hmall/membership/api'
+import { iotUrl } from '../../../api/config'
 
 export default {
     name: 'comfortcloudMembermanage',
@@ -157,7 +165,8 @@ export default {
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                phone: this.$route.query.phone,
+                phone: this.$route.query.phone ? this.$route.query.phone : '',
+                companyName: '',
                 endRegisterTime: '',
                 provinceId: '',
                 cityId: '',
@@ -246,9 +255,8 @@ export default {
                 disabledDate: time => {
                     let endDateVal = this.queryParams.endRegisterTime
                     if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
+                        return time.getTime() > new Date(endDateVal).getTime()
                     }
-                    // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         },
@@ -257,9 +265,8 @@ export default {
                 disabledDate: time => {
                     let beginDateVal = this.queryParams.startRegisterTime
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
-                    // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         }
@@ -316,6 +323,39 @@ export default {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
+        onExport () {
+            if (this.tableData.length <= 0) {
+                this.$message.warning('无数据可导出！')
+            } else {
+                let url = ''
+                for (const key in this.queryParams) {
+                    if (this.queryParams[key] !== '') {
+                        url += (`${key}=${this.queryParams[key]}&`)
+                    }
+                }
+
+                axios.defaults.responseType = 'blob'
+                axios.post(iotUrl + '/mall/boss/user/export', this.queryParams).then(function (response) {
+                    try {
+                        const reader = new FileReader()
+                        reader.readAsDataURL(response.data)
+                        reader.onload = function (e) {
+                            const a = document.createElement('a')
+                            a.download = '会员列表.xlsx'
+                            a.href = e.target.result
+                            document.querySelector('body').appendChild(a)
+                            a.click()
+                            document.querySelector('body').removeChild(a)
+                        }
+                        axios.defaults.responseType = 'json'
+                    } catch (e) {
+                        axios.defaults.responseType = 'json'
+                    }
+                }).catch(function () {
+                    axios.defaults.responseType = 'json'
+                })
+            }
+        },
         async showDliag (val) {
             if (val !== undefined) {
                 this.setTagUser = val
@@ -342,7 +382,7 @@ export default {
         },
         async editConform () {
             if (this.tagStringList) {
-                // 这里因为后台需要传递tagid 所以要加上再传递
+                // 这里因为后台需要传递tagid  所以要加上再传递
                 let tagMapList = []
                 for (let i = 0; i < this.tagStringList.length; i++) {
                     const element = this.tagStringList[i]

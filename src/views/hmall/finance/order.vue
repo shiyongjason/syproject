@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <div class="query-cont__row">
                 <div class="query-cont__col">
-                    <div class="query-col__lable">子订单号：</div>
+                    <div class="query-col__lable">订单编号：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.childOrderNo" maxlength="50"></el-input>
                     </div>
@@ -74,8 +74,7 @@
                     <h-button class="ml20" @click="onExport">导出</h-button>
                 </div>
             </div>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo"
-                @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isShowIndex='true'>
                 <template slot="payWay" slot-scope="scope">
                     {{ paymethodMap.get(scope.data.row.payWay) || '-' }}
                 </template>
@@ -126,7 +125,7 @@ export default {
                 pageSize: 10
             },
             tableLabel: [
-                { label: '子订单号', prop: 'childOrderNo' },
+                { label: '订单编号', prop: 'childOrderNo' },
                 { label: '支付时间', prop: 'payTime', formatters: 'dateTime' },
                 { label: '客户名称', prop: 'customerName' },
                 { label: '支付方式', prop: 'payWay' },
@@ -192,7 +191,7 @@ export default {
                 for (let key in this.queryParams) {
                     url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
                 }
-                location.href = B2bUrl + 'order/api/boss/orders/finance-orders/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
+                location.href = B2bUrl + 'order/boss/child-orders/finance/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
             }
         },
         onSizeChange (val) {

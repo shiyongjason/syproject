@@ -2,14 +2,14 @@
     <div class="page-body B2b">
         <div class="contract-temp  page-component__scroll">
             <div class="page-body-cont">
-                <div class="contract-temp_title" v-if="!$route.query.id&&!$route.query.type">新增合同模版</div>
-                <div class="contract-temp_title" v-if="$route.query.id&&!$route.query.type">编辑合同模版</div>
-                <div class="contract-temp_title" v-if="$route.query.type&&$route.query.id">复制合同模版</div>
+                <div class="contract-temp_title" v-if="!$route.query.id&&!$route.query.type">新增合同模板</div>
+                <div class="contract-temp_title" v-if="$route.query.id&&!$route.query.type">编辑合同模板</div>
+                <div class="contract-temp_title" v-if="$route.query.type&&$route.query.id">复制合同模板</div>
             </div>
             <div class="page-body-cont ">
-                <div class="contract-temp_name">合同模版设置</div>
+                <div class="contract-temp_name">合同模板设置</div>
                 <el-form ref="contractForm" :model="contractForm" label-width="">
-                    <el-form-item label="模版名称：" class="contract-temp_set">
+                    <el-form-item label="模板名称：" class="contract-temp_set">
                         <el-input v-model="contractForm.templateName" placeholder="请输入" maxlength="50"></el-input>
                     </el-form-item>
                     <el-form-item label="合同类型：">
@@ -18,13 +18,17 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
+                    <!-- V.07 新增 -->
+                    <el-form-item label="适用情景：" class="contract-temp_scenario" style="width:500px;display: flex;">
+                        <el-input type="textarea" :autosize='{ minRows: 5, maxRows: 10 }' v-model.trim="contractForm.describe" placeholder="请输入" maxlength="150" show-word-limit></el-input>
+                    </el-form-item>
                 </el-form>
             </div>
             <div class="page-body-cont">
-                <div class="contract-temp_name">合同模版内容</div>
+                <div class="contract-temp_name">合同模板内容</div>
                 <div class="contract-temp_flex">
                     <div class="contract-temp_rich">
-                        <RichEditor ref="RichEditor" v-model="contractForm.content"  :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%" @change="onchange" @blur="onBlur">
+                        <RichEditor ref="RichEditor" v-model="contractForm.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%" @change="onchange" @blur="onBlur">
                         </RichEditor>
                     </div>
                     <div class="contract-temp_txt">
@@ -54,9 +58,9 @@
                                 </HAutocomplete>
 
                             </el-form-item>
-                            <el-form-item label="">
+                            <!-- <el-form-item label="">
                                 <el-button type="primary" @click="onInsertInfo">插入当前位置</el-button>
-                            </el-form-item>
+                            </el-form-item> -->
                             <el-form-item label="自定义合同条款：">
                                 <el-button type="primary" @click="onShowCustomTermsDefine">插入当前位置</el-button>
                             </el-form-item>
@@ -121,7 +125,7 @@
             <div class="page-body-cont">
                 <el-button type="default" @click="onCancelTemp">取消修改</el-button>
                 <el-button type="primary" @click="onSaveTemp(0)">保存模板</el-button>
-                <el-button type="primary" @click="onSaveTemp(1)">保存并启用模版</el-button>
+                <el-button type="primary" @click="onSaveTemp(1)">保存并启用模板</el-button>
             </div>
         </div>
         <el-drawer title="我是标题" :visible.sync="drawer" :with-header="false">
@@ -216,7 +220,8 @@ export default {
                 signerSetting: [], // 签署方设置
                 operatorBy: '',
                 operatorAccount: '',
-                recommendSigner: 1
+                recommendSigner: 1,
+                describe: '' // 适用情景
             },
             valid_form: {},
             rules: {},
@@ -439,8 +444,13 @@ export default {
         //     console.log('val', val)
         //     this.keyValue = this.insertVal
         // },
+
+        // 选中下拉回调
         backFindparam (val) {
             this.keyValue = val.value
+            if (this.keyValue) {
+                this.onInsertInfo()
+            }
         },
         backFindparams (val) {
             this.keyValue = val.value
@@ -496,6 +506,9 @@ export default {
                 } else if (val.className.indexOf('contract_sign_') != -1) {
                     // 自定义合同条款绑定点击事件
                     val.onclick = (event) => {
+                        this.$nextTick(() => {
+                            this.$refs.customTermsForm.clearValidate()
+                        })
                         this.customTermsForm = {
                             parameterName: event.target.value,
                             parameterValue: event.target.dataset.content || '',
@@ -508,6 +521,7 @@ export default {
             })
         },
         onInsertInfo () {
+            console.log('🚀 --- onInsertInfo --- this.keyValue', this.keyValue)
             ++this.num
             if (!this.keyValue || !this.keyValue.paramKey) {
                 this.$message({
@@ -541,6 +555,8 @@ export default {
             // document.getElementsByClassName(`${this._keyValue.paramKey}`)[0].outerHTML = ''
             // document.getElementById(this._keyValue).outerHTML = ''
             this.$nextTick(() => {
+                let curObj = this.tempParams.find(item => item.paramKey === this.targetObjs.selectCode)
+                this.keyValue = curObj
                 let inputWidth = this.keyValue.paramName.length * 14
                 let domObj = document.getElementById(this._keyValue)
                 domObj.setAttribute('class', `${this.keyValue.paramKey}`)
@@ -778,7 +794,7 @@ export default {
             // 必填项校验
             if (!this.contractForm.templateName) {
                 this.$message({
-                    message: '请填写模版名称',
+                    message: '请填写模板名称',
                     type: 'warning'
                 })
                 return
@@ -786,6 +802,13 @@ export default {
             if (!this.contractForm.typeId) {
                 this.$message({
                     message: '请选择合同类型',
+                    type: 'warning'
+                })
+                return
+            }
+            if (!this.contractForm.describe) {
+                this.$message({
+                    message: '合同模板适用情景不得为空',
                     type: 'warning'
                 })
                 return
@@ -916,10 +939,14 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-/deep/ .el-form .el-input{
+/deep/ .el-form .el-input {
     width: 270px;
 }
-
+.contract-temp_scenario{
+    /deep/.el-textarea{
+        width: 400px;
+    }
+}
 .contract-temp {
     &_flex {
         display: flex;
@@ -975,9 +1002,8 @@ export default {
 /deep/.el-select-dropdown {
     z-index: 20000 !important;
 }
-/deep/.w-e-toolbar{
+/deep/.w-e-toolbar {
     z-index: 500 !important;
-
 }
 /deep/.w-e-menu {
     z-index: 500 !important;

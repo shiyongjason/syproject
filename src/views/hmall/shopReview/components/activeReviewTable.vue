@@ -44,9 +44,9 @@
             <el-table-column
                 align="center"
                 label="活动范围">
-                <!--(1,全部会员店 2,部分会员店)-->
+                <!--(1,全部会员店 2,部分会员店 3,全部平台会员)-->
                 <template slot-scope="scope">
-                    {{scope.row.targetRange === 1 ? '全部会员店' : '部分会员店'}}
+                    {{scope.row.targetRange === 1 ? '全部归属会员店' : scope.row.targetRange === 2 ? '指定会员店' : '全部平台会员店'}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -96,9 +96,10 @@
                         {{activeDetails.activityCode}}
                     </el-form-item>
                     <el-form-item label="活动范围：">
-                        <!--目标范围(1,全部会员店 2,部分会员店)-->
-                        <span v-if="activeDetails.targetRange === 1">全部会员店</span>
-                        <span v-if="activeDetails.targetRange === 2">部分会员店</span>
+                        <!--目标范围(1,全部会员店 2,部分会员店 3,全部平台会员店)-->
+                        <span v-if="activeDetails.targetRange === 1">全部归属会员店</span>
+                        <span v-if="activeDetails.targetRange === 2">指定会员店</span>
+                        <span v-if="activeDetails.targetRange === 3">全部平台会员店</span>
                     </el-form-item>
                     <el-form-item label="活动名称：">
                         {{activeDetails.activityName}}

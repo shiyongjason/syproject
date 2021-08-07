@@ -6,6 +6,7 @@ export const PROCESS_LIST =
         { key: 4, value: '项目已开工' }
     ]
 
+// 删除待签约、待放款、贷中、合作完成 增加终审通过和终审为通过状态
 export const STATUS_LIST =
     [
         { key: 10, value: '信息待完善' },
@@ -14,10 +15,8 @@ export const STATUS_LIST =
         { key: 12, value: '资料待审核' },
         { key: 4, value: '待立项' },
         { key: 11, value: '待终审' },
-        { key: 6, value: '待签约' },
-        { key: 7, value: '待放款' },
-        { key: 8, value: '贷中' },
-        { key: 9, value: '合作完成' },
+        { key: 13, value: '终审通过' },
+        { key: 14, value: '终审未通过' },
         { key: 5, value: '审核未通过' }
     ]
 
@@ -39,6 +38,8 @@ export const DEVICE_LIST = [
     { key: 5, value: '智能化' },
     { key: 6, value: '辅材' },
     { key: 7, value: '电梯' },
+    { key: 9, value: '电器' },
+    { key: 10, value: '热水器' },
     { key: 8, value: '其他' }
 
 ]

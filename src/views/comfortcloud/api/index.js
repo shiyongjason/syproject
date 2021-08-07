@@ -43,7 +43,7 @@ export function getMembersituation (params) {
 
 // 经销商会员列表分页查询
 export function getMerchantMembersituation (params) {
-    return axios.post(iotUrl + `/mall/wx/user/boss/manage`, params)
+    return axios.post(iotUrl + `/mall/boss/user/manage`, params)
 }
 
 // 销售线索管理会员列表分页查询
@@ -73,7 +73,7 @@ export function getMerchantMembersDistributor (params) {
 
 // 经销商会员邀请注册列表分页查询
 export function getMerchantMemberInvitationRegistersituation (params) {
-    return axios.get(iotUrl + `/mall/wx/user/boss/registered/` + params.uuid, { params })
+    return axios.get(iotUrl + `/mall/boss/user/registered/` + params.uuid, { params })
 }
 
 // 经销商会员企业信息
@@ -102,12 +102,12 @@ export function getMerchantMemberInvitationBuyTotal (params) {
 
 // 经销商会员邀请成交列表分页查询
 export function getMerchantMemberInvitationOrdersituation (params) {
-    return axios.get(iotUrl + `/mall/wx/user/boss/order/` + params.uuid, { params })
+    return axios.get(iotUrl + `/mall/boss/user/order/` + params.uuid, { params })
 }
 
 // 经销商会员总数查询
 export function getMerchantMemberTotalsituation (params) {
-    return axios.post(iotUrl + `/mall/wx/user/boss/count`, params)
+    return axios.post(iotUrl + `/mall/boss/user/count`, params)
 }
 
 // 邀请详情订单修改
@@ -241,6 +241,12 @@ export function downloadQuestionTemp () {
 // 设备故障列表
 export function getCloudEquipmentErrorList (params) {
     return axios.get(iotUrl + `/api/device/breakdown`, { params })
+}// 设备故障列表
+export function getCloudDeviceIDImportData (params) {
+    return axios.get(iotUrl + `/api/user/device/page`, { params })
+}
+export function getCloudDeviceBrandNo (params) {
+    return axios.get(iotUrl + `/api//user/device/batch-nos`)
 }
 
 // 下载故障模板
@@ -253,6 +259,52 @@ export function downloadEquipmentErrorList () {
             reader.onload = function (e) {
                 const a = document.createElement('a')
                 a.download = '故障模板.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
+// 下载
+export function downloadEquipmentIDImportList () {
+    axios.defaults.responseType = 'blob'
+    axios.get(iotUrl + `/api/user/device/download-template`).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '设备入库模板.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
+// 下载导入数据失败列表
+export function downloadImportDeviceErrorList (params) {
+    axios.defaults.responseType = 'blob'
+    axios.post(iotUrl + `/api/user/device/download-failed-devices`, params).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '设备入库模板.xlsx'
                 a.href = e.target.result
                 document.querySelector('body').appendChild(a)
                 a.click()
@@ -600,7 +652,26 @@ export function getHomeUser (params) {
 
 // 获取招商代理商列表
 export function getCloudMerchantList (params) {
-    return axios.get(iotUrl + '/mall/boss/agent-sign/page', { params })
+    return axios.get(iotUrl + '/mall/boss/agent-sign', { params })
+}
+
+// 代理商代理详情
+export function getCloudMerchantDetailList (params) {
+    return axios.get(iotUrl + '/mall/boss/agent-sign/sign-detail', { params })
+}
+
+// 获取代理商详情统计
+export function getCloudMerchantDetailStats (params) {
+    return axios.get(iotUrl + '/mall/boss/agent-sign/sign-detail/statistics', { params })
+}
+
+// 获取用户方案
+export function getCloudMerchantCaseList (params) {
+    return axios.get(iotUrl + '/mall/boss/customer-project', { params })
+}
+// 获取用户方案详情
+export function getCloudMerchantCaseDetailList (params) {
+    return axios.get(iotUrl + '/mall/boss/customer-project/' + params.id)
 }
 // 获取招商代理商
 export function getCloudMerchantFromPhone (params) {
@@ -797,6 +868,11 @@ export function getCloudMerchantProductOrderList (params) {
     return axios.get(iotUrl + '/mall/boss/order', { params })
 }
 
+// 添加订单
+export function addCloudMerchantProductOrder (params) {
+    return axios.post(iotUrl + '/mall/boss/order/add', params)
+}
+
 // 获取微信订单列表
 export function getCloudMerchantProductOutOrderList (params) {
     return axios.get(iotUrl + '/mall/boss/out-order/page', { params })
@@ -809,7 +885,7 @@ export function getCloudMerchantProductOutOrderDetail (params) {
 
 // 获取外部订单详情
 export function getCloudMerchantProductOrderDetail (params) {
-    return axios.get(iotUrl + '/mall/boss/order/detail', { params })
+    return axios.get(iotUrl + '/mall/boss/order/detail/' + params.orderId, { params: { source: params.source } })
 }
 
 // 获取抢购活动信息
@@ -865,6 +941,9 @@ export function editMemberTag (params) {
 // 获取销售线索管理购买记录
 export function getMerchantMemberInvitationOutOrdersituation (params) {
     return axios.get(iotUrl + '/mall/boss/user/out/order', { params })
+}// 获取销售线索管理购买记录
+export function getMerchantMemberInvitationProject (params) {
+    return axios.get(iotUrl + '/mall/boss/hbp/projects', { params })
 }
 
 // 获取销售线索管理购买记录统计
@@ -920,3 +999,68 @@ export const changeQuotationPermission = (params) => axios.put(iotUrl + '/mall/b
 
 // 删除外部订单
 export const deleteThirdOrder = params => axios.delete(iotUrl + '/mall/boss/order/third/' + params.orderId)
+
+// 获取营销物料列表
+export const getMarktingMaterial = params => axios.get(iotUrl + '/mall/boss/marketing-material', { params })
+
+// 获取营销物料详情
+export const getMarktingMaterialDetail = params => axios.get(iotUrl + '/mall/boss/marketing-material/' + params.materialId)
+
+// 获取待发货的营销物料列表
+export const getToDispatchList = params => axios.get(iotUrl + '/mall/boss/delivery-order/product-options', { params })
+
+// 新增修改营销物料
+export const addMarktingMaterial = params => axios.post(iotUrl + '/mall/boss/marketing-material', params)
+
+// 删除营销物料
+export const deleteMarktingMaterial = params => axios.delete(iotUrl + '/mall/boss/marketing-material/' + params.materialId)
+
+// 营销物料发货单
+export const addDispatchOrder = params => axios.post(iotUrl + '/mall/boss/delivery-order', params)
+
+// 物料回收
+export const recycleMaterial = params => axios.put(iotUrl + '/mall/boss/marketing-material/recycle', params)
+
+// 获取分部列表
+export const findMerchantDep = (params) => axios.get(`/uaa/department/general/${params.pkDeptDoc}/${params.deptType}/${params.jobNumber}/${params.authCode}`)
+
+// 获取工程方案列表
+export const getCloudMerchantProjectSchemeList = params => axios.get(iotUrl + '/mall/boss/project-scheme', { params })
+
+// 获取工程方案详情
+export const getCloudMerchantProjectSchemeDetail = params => axios.get(iotUrl + '/mall/boss/project-scheme/' + params.id)
+
+// 新增修改工程方案
+export const addCloudMerchantProjectScheme = params => axios.post(iotUrl + '/mall/boss/project-scheme', params)
+
+// 删除工程方案
+export const deleteProjectScheme = params => axios.delete(iotUrl + '/mall/boss/project-scheme/' + params.id)
+
+// 获取boss端可解绑设备列表
+export const getBossCanUnbindDeviceList = params => axios.get(iotUrl + '/api/boss/device-unbind', { params })
+// 获取boss端解绑设备记录
+export const getBossBindRecords = params => axios.get(iotUrl + '/api/boss/device-unbind/record', { params })
+// boss端设备解绑
+export const bossDeviceUnbind = params => axios.post(iotUrl + '/api/boss/device-unbind', params)
+
+// 获取投诉工单列表
+export const getComplaintOrderList = params => axios.get(iotUrl + '/mall/boss/complaint', { params })
+// 获取投诉工单详情
+export const getComplaintOrderDetail = params => axios.get(iotUrl + '/mall/boss/complaint/detail', { params })
+// 创建投诉工单
+export const createComplaintOrder = params => axios.post(iotUrl + '/mall/boss/complaint', params)
+// 修改投诉工单
+export const editComplaintOrder = params => axios.put(iotUrl + '/mall/boss/complaint', params)
+
+// 获取投诉工单解决记录列表
+export const getComplaintProcessOrderList = params => axios.get(iotUrl + '/mall/boss/complaint/process', { params })
+// 编辑工单解决记录
+export const editComplaintProcessOrder = params => axios.put(iotUrl + '/mall/boss/complaint/process', params)
+// 创建工单解决记录
+export const createComplaintProcessOrder = params => axios.post(iotUrl + '/mall/boss/complaint/process', params)
+// 删除工单解决记录
+export const deleteComplaintProcessOrder = params => axios.delete(iotUrl + '/mall/boss/complaint/process', { data: params })
+// 获取工单解决记录详情
+export const getComplaintProcessOrderDetail = params => axios.get(iotUrl + '/mall/boss/complaint/process/detail', { params })
+// 获取服务机会列表
+export const getServiceRemindList = params => axios.get(iotUrl + '/api/service-reminds/boss', { params })
