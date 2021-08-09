@@ -577,7 +577,7 @@ export default {
                             mainSkus: deepCopy(this.form.mainSkus).map(item => {
                                 item.id = item.mainSkuId ? item.mainSkuId : ''
                                 item.name = this.form.name + item.optionValues.map(sItem => sItem.name).join('')
-                                item.imageUrls = item.imageUrls ? item.imageUrls.split(',') : ''
+                                item.imageUrls = item.imageUrls ? item.imageUrls.split(',') : []
                                 item.optionValueIds = item.optionValues.map(sItem => sItem.id).filter(sItem => sItem)
                                 return item
                             }),
@@ -590,7 +590,7 @@ export default {
                             mainSkus: deepCopy(this.form.mainSkus).map(item => {
                                 item.id = item.mainSkuId ? item.mainSkuId : ''
                                 item.name = this.form.name
-                                item.imageUrls = item.imageUrls ? item.imageUrls.split(',') : ''
+                                item.imageUrls = item.imageUrls ? item.imageUrls.split(',') : []
                                 return item
                             }),
                             specifications: this.form.specifications.filter(item => item.v),

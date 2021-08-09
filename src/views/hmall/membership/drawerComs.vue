@@ -69,7 +69,7 @@
                                 <el-switch v-model="bossDetail.fundAuthorization" :active-value=true :inactive-value=false :disabled='switchD'></el-switch>
                             </el-form-item>
                             <el-form-item label="品牌自动审核：" prop="resource" :label-width="formLabelWidth">
-                                <el-switch v-model="bossDetail.autoInductionOptions" :active-value=true :inactive-value=false></el-switch>
+                                <el-switch v-model="bossDetail.isAutoBrandAudit" :active-value=true :inactive-value=false></el-switch>
                             </el-form-item>
                         </div>
                     </template>
