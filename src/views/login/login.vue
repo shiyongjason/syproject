@@ -11,8 +11,8 @@
                         </div>
                         <div class="login-form">
                             <el-form ref="loginForm" :model="loginForm" :rules="loginRules">
-                                <el-form-item prop="username">
-                                    <el-input v-model.trim="loginForm.username" placeholder="11位手机号" maxlength="11" ref="mobileInput">
+                                <el-form-item prop="phone">
+                                    <el-input v-model.trim="loginForm.phone" placeholder="11位手机号" maxlength="11" ref="mobileInput">
                                         <template slot="prepend">
                                             +86
                                         </template>
@@ -21,8 +21,8 @@
                                         </template>
                                     </el-input>
                                 </el-form-item>
-                                <el-form-item prop="verificationCode">
-                                    <el-input v-model.trim="loginForm.verificationCode" placeholder="输入验证码" maxlength="6"></el-input>
+                                <el-form-item prop="smsCode">
+                                    <el-input v-model.trim="loginForm.smsCode" placeholder="输入验证码" maxlength="6"></el-input>
                                     <h-button @click="onMobileVerifica" :disabled="after?false:true">{{content}}</h-button>
                                 </el-form-item>
 
@@ -40,7 +40,7 @@
     </div>
 </template>
 <script>
-import { login, getUserdata, findMenuList } from './api/index'
+import { login, getUserdata, findMenuList, sendMobileVerifica, phoneLogin } from './api/index'
 import jwtDecode from 'jwt-decode'
 import { Phone, VerificationCode } from '@/utils/rules'
 import { mapMutations, mapActions } from 'vuex'
@@ -54,15 +54,15 @@ export default {
             checked: true,
             passwordType: true,
             loginForm: {
-                username: '',
-                verificationCode: ''
+                phone: '',
+                smsCode: ''
             },
             loginRules: {
-                username: [
+                phone: [
                     { required: true, message: '请输入正确手机号码', trigger: 'blur' },
                     { validator: Phone, trigger: 'blur' }
                 ],
-                verificationCode: [
+                smsCode: [
                     { required: true, message: '请输入短信验证码', trigger: 'blur' },
                     { validator: VerificationCode, trigger: 'blur' }
                 ]
@@ -77,7 +77,7 @@ export default {
     },
     methods: {
         onMobileVerifica () {
-            this.$refs.loginForm.validateField('username', async (valid) => {
+            this.$refs.loginForm.validateField('phone', async (valid) => {
                 if (!valid) {
                     this.after = false
                     this.content = '重新发送 ' + this.time
@@ -97,7 +97,7 @@ export default {
         },
         async sendMobileVerifica () {
             try {
-                // await sendMobileVerifica({ mobile: this.registForm.mobile })
+                await sendMobileVerifica({ phone: this.loginForm.phone })
                 this.$message.success('验证码已发送，请查收短信')
             } catch (error) {
                 clearInterval(this.clock)
@@ -110,7 +110,11 @@ export default {
         async onLogin () {
             this.$refs['loginForm'].validate(async (valid) => {
                 if (valid) {
-                    const { data } = await login(this.loginForm)
+                    // const { data } = await login({
+                    //     username: this.registForm.mobile,
+                    //     password: '123456'
+                    // })
+                    const { data } = await phoneLogin(this.loginForm)
                     const userInfo = jwtDecode(data.access_token)
                     this.userInfo = jwtDecode(data.access_token)
                     localStorage.setItem('token', data.access_token)
@@ -124,7 +128,7 @@ export default {
                         job_number: userInfo.jobNumber,
                         user_agent: navigator.userAgent
                     })
-                    const { data: userData } = await getUserdata({ loginName: this.loginForm.username })
+                    const { data: userData } = await getUserdata({ loginName: this.loginForm.phone })
                     if (userData.code != 400) {
                         sessionStorage.setItem('user_Data', JSON.stringify(userData.data))
                         this.sendMessage(userData.data)
@@ -300,5 +304,8 @@ export default {
     .el-icon-success {
         display: inline;
     }
+}
+/deep/ .el-input__suffix-inner {
+    line-height: 40px;
 }
 </style>
