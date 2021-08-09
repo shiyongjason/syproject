@@ -93,7 +93,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">品牌自动审核：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.fundAuthorization">
+                        <el-select v-model="queryParams.autoInductionOptions">
                             <el-option v-for="item in autoInductionOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
@@ -136,8 +136,8 @@
                 <template slot="fundAuthorization" slot-scope="scope">
                     {{openingStatusMap.get(scope.data.row.fundAuthorization)}}
                 </template>
-                <template slot="fundAuthorization" slot-scope="scope">
-                    {{autoInductionMap.get(scope.data.row.fundAuthorization)}}
+                <template slot="autoInductionOptions" slot-scope="scope">
+                    {{autoInductionMap.get(scope.data.row.autoInductionOptions)}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</h-button>
@@ -179,6 +179,7 @@ export default {
                 subsectionCode: '',
                 authenticationTime: '',
                 fundAuthorization: '',
+                autoInductionOptions: '',
                 createTime: 'desc',
                 shopName: ''
             },
@@ -211,7 +212,7 @@ export default {
                 { label: '商家角色权限', prop: 'merchantRolePermission', width: '120px' },
                 { label: '自动推送至店铺', prop: 'isAutoDispatch', width: '120px' },
                 { label: '资金业务', prop: 'fundAuthorization' },
-                { label: '品牌自动审核', prop: 'fundAuthorization' },
+                { label: '品牌自动审核', prop: 'autoInductionOptions' },
                 { label: '状态', prop: 'isEnabled' }
             ],
             tableData: [],
