@@ -5,7 +5,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">预付款支付单编号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.paymentOrderNo" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.prepaymentNo" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -19,13 +19,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">经销商：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.paymentOrderNo" placeholder="请输入" maxlength="50"></el-input>
-                    </div>
-                </div>
-                <div class="query-cont__col">
-                    <div class="query-col__label">预付款支付单编号：</div>
-                    <div class="query-col__input">
-                        <el-input v-model="queryParams.paymentOrderNo" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.distributorName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -37,13 +31,13 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">项目名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.paymentOrderNo" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.projectName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.paymentStatus" placeholder="请选择">
+                        <el-select v-model="queryParams.status" placeholder="请选择">
                             <el-option label="全部" value=""></el-option>
                             <el-option label="待支付" :value="1"></el-option>
                             <el-option label="部分支付" :value="2"></el-option>
@@ -53,7 +47,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">申请人：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.paymentOrderNo" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.applyUser" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -67,7 +61,7 @@
             <!-- end search bar -->
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <h-button table>查看详情</h-button>
+                    <h-button table @click="onLook(slotProps.data.row)">查看详情</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -75,42 +69,42 @@
             <div class="advance_wrap">
                 <h3>项目信息</h3>
                 <el-row type="flex" class="row-bg">
-                    <el-col :span="7" :offset='1'>项目：222222222222</el-col>
-                    <el-col :span="7" :offset='1'>经销商：2233333333333333</el-col>
-                    <el-col :span="7" :offset='1'>所属分部：333333333333333</el-col>
+                    <el-col :span="7" :offset='1'>项目：{{detailForm.projectName}}</el-col>
+                    <el-col :span="7" :offset='1'>经销商：{{detailForm.distributor}}</el-col>
+                    <el-col :span="7" :offset='1'>所属分部：{{detailForm.subsectionName}}</el-col>
                 </el-row>
                 <h3>上游支付信息</h3>
                 <el-row type="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>申请金额(元)：</el-col>
-                    <el-col :span="10" :offset='1'>上游支付方式：</el-col>
+                    <el-col :span="10" :offset='1'>申请金额(元)：{{detailForm.applyAmount | fundMoneyHasTail}}</el-col>
+                    <el-col :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
                 </el-row>
                 <el-row type="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>上游供应商：</el-col>
-                    <el-col :span="10" :offset='1'>供应商开户行名称：</el-col>
+                    <el-col :span="10" :offset='1'>上游供应商：{{detailForm.supplierCompanyName}}</el-col>
+                    <el-col :span="10" :offset='1'>供应商开户行名称：{{detailForm.supplierAccountName}}</el-col>
                 </el-row>
                 <el-row type="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>供应商开户行名称：</el-col>
-                    <el-col :span="10" :offset='1'>供应商银行账号：</el-col>
+                    <el-col :span="10" :offset='1'>银行联行号：{{detailForm.supplierBankNo}}</el-col>
+                    <el-col :span="10" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo}}</el-col>
                 </el-row>
                 <el-row type="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>期望上游支付日期：</el-col>
-                    <el-col :span="10" :offset='1'>备注：</el-col>
+                    <el-col :span="10" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate}}</el-col>
+                    <el-col :span="10" :offset='1'>备注：{{detailForm.approvalRemark}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>申请时间：</el-col>
-                    <el-col :span="10" :offset='1'>申请时间：</el-col>
+                    <el-col :span="10" :offset='1'>申请时间：{{detailForm.applyTime}}</el-col>
+                    <el-col :span="10" :offset='1'>申请人：{{detailForm.applyTime}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>审核人：</el-col>
-                    <el-col :span="10" :offset='1'>申请时间：</el-col>
+                    <el-col :span="10" :offset='1'>审核人：{{detailForm.approvalUser}}</el-col>
+                    <el-col :span="10" :offset='1'>申请时间：{{detailForm.approvalTime}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>申核结果：</el-col>
-                    <el-col :span="10" :offset='1'>申核备注：</el-col>
+                    <el-col :span="10" :offset='1'>申核结果：{{detailForm.approvalStatus==1?'通过':detailForm.approvalStatus==2?'不通过':'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>申核备注：{{detailForm.approvalRemark}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>已向上游支付(元)：</el-col>
-                    <el-col :span="10" :offset='1'>支付日期：</el-col>
+                    <el-col :span="10" :offset='1'>已向上游支付(元)：{{detailForm.subsectionName}}</el-col>
+                    <el-col :span="10" :offset='1'>支付日期：{{detailForm.subsectionName}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>上游支付凭证：
@@ -137,36 +131,36 @@
                 <div class="advance_examine-left">
                     <h3>项目信息</h3>
                     <el-row type="flex" class="row-bg">
-                        <el-col :span="23" :offset='1'>项目：222222222222</el-col>
+                        <el-col :span="23" :offset='1'>项目：{{detailForm.projectName}}</el-col>
                     </el-row>
                     <el-row type="flex" class="row-bg">
-                        <el-col :span="23" :offset='1'>经销商：222222222222</el-col>
+                        <el-col :span="23" :offset='1'>经销商：{{detailForm.distributor}}</el-col>
                     </el-row>
                     <el-row type="flex" class="row-bg">
-                        <el-col :span="23" :offset='1'>所属分部：222222222222</el-col>
+                        <el-col :span="23" :offset='1'>所属分部：{{detailForm.subsectionName}}</el-col>
                     </el-row>
                     <h3>上游支付信息</h3>
                     <el-row>
-                        <el-col class="col-padding" :span="23" :offset='1'>申请金额(元)：</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>上游支付方式：</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>上游供应商：</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>供应商开户行名称：</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>供应商银行账号：</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>期望上游支付日期：</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>备注信息：</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>申请金额(元)：{{detailForm.subsectionName}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>上游支付方式：{{detailForm.subsectionName}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>上游供应商：{{detailForm.subsectionName}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>供应商开户行名称：{{detailForm.subsectionName}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>供应商银行账号：{{detailForm.subsectionName}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>期望上游支付日期：{{detailForm.subsectionName}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>备注信息：{{detailForm.subsectionName}}</el-col>
                     </el-row>
                 </div>
                 <div class="advance_examine-right">
                     <h3>审核信息</h3>
                     <el-form :model="auditForm" :rules="auditRules" ref="auditForm" label-width="100px" class="demo-ruleForm">
-                        <el-form-item label="审核结果：" prop="desc">
+                        <el-form-item label="审核结果：" prop="resource">
                             <el-radio-group v-model="auditForm.resource">
                                 <el-radio label="通过"></el-radio>
                                 <el-radio label="不通过"></el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <el-form-item label="审核备注：" prop="desc">
-                            <el-input type="textarea" v-model="auditForm.desc" maxlength="200"></el-input>
+                        <el-form-item label="审核备注：" prop="remark">
+                            <el-input type="textarea" v-model="auditForm.remark" maxlength="200"></el-input>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -226,7 +220,7 @@ import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyU
 import ImageAddToken from '@/components/elImageAddToken/index.vue'
 import { deepCopy } from '@/utils/utils'
 import './css/css.scss'
-import { getPrePayList } from './api/index'
+import { getPrePayList, getPrePayDetail } from './api/index'
 import { IPagePrepaymentResponse } from '@/interface/hbp-project'
 // 定义类型
 interface Query{
@@ -251,12 +245,26 @@ export default class Advancelist extends Vue {
         updateUid: '',
         reservedName: false
     }
+     supplierPaymentType : Map<number | null, string> = new Map([
+         [null, '-'],
+         [1, '先款后货'],
+         [2, '先货后款']
+     ])
     private dialogVisible:boolean = true
     private comfirmVisble:boolean = false
     private examineVisble:boolean = false
+    private _queryParams:Query = {}
     queryParams:Query = {
         pageSize: 10,
-        pageNumber: 1
+        pageNumber: 1,
+        prepaymentNo: '',
+        projectName: '',
+        distributorName: '',
+        subsectionCode: '',
+        status: '',
+        applyUser: '',
+        applyTimeStart: '',
+        applyTimeEnd: ''
     }
     detailForm:object = {
         payVouchers: []
@@ -290,8 +298,8 @@ export default class Advancelist extends Vue {
             type: 'date',
             valueFormat: 'yyyy-MM-dd',
             format: 'yyyy-MM-dd',
-            startTime: this.queryParams.startExpectSupplierPaymentDate,
-            endTime: this.queryParams.endExpectSupplierPaymentDate
+            startTime: this.queryParams.applyTimeEnd,
+            endTime: this.queryParams.applyTimeEnd
         }
     }
 
@@ -309,16 +317,20 @@ export default class Advancelist extends Vue {
         ]
     }
     public onStartChange (val): void {
-        this.queryParams.startExpectSupplierPaymentDate = val
+        this.queryParams.applyTimeStart = val
     }
     public onEndChange (val): void {
-        this.queryParams.endExpectSupplierPaymentDate = val
+        this.queryParams.applyTimeEnd = val
     }
 
     public async getList () {
         const { data } = await getPrePayList(this.queryParams)
         this.tableData = data.records
         this.page.total = data.total as number
+    }
+    public async onLook (v) {
+        const { data } = await getPrePayDetail(v.id)
+        this.detailForm = { ...this.detailForm, ...data }
     }
 
     public onReset (): void {
@@ -331,6 +343,7 @@ export default class Advancelist extends Vue {
     }
 
     public async mounted () {
+        this._queryParams = deepCopy(this.queryParams)
         this.getList()
         await this.findCrmdeplist({
             deptType: 'F',
