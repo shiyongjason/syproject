@@ -8,17 +8,23 @@
     height: 500px;
     overflow: hidden;
     overflow-y: scroll;
+    &-msg{
+        font-size: 16px;
+        padding-top: 10px;
+        color: sandybrown;
+    }
     h3{
         color: red;
         padding: 10px 0;
     }
     &-pic {
         width: 50px;
-        height: 50px;
+        height: auto;
         margin: 6px;
+        border:1px solid #e4eee4;
         img {
             width: 50px;
-            height: 50px;
+            height: auto;
         }
     }
 }

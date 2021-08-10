@@ -4,6 +4,10 @@
 * @export
 * @interface ReqPurchaseOrder
 */
+
+export interface JsonNode {
+
+}
 export interface ReqPurchaseOrder {
 
     /**

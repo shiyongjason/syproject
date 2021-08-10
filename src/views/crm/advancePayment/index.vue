@@ -39,8 +39,8 @@
                     <div class="query-col__input">
                         <el-select v-model="queryParams.status" placeholder="请选择">
                             <el-option label="全部" value=""></el-option>
-                            <el-option label="待支付" :value="1"></el-option>
-                            <el-option label="部分支付" :value="2"></el-option>
+                            <el-option :label=item.label :value=item.value v-for="(item) in preStatus" :key=item.label></el-option>
+                            <!-- <el-option label="部分支付" :value="2"></el-option> -->
                         </el-select>
                     </div>
                 </div>
@@ -56,24 +56,25 @@
                 </div>
             </div>
             <div class="query-cont__row">
-                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span>累计金额：{{'10000'|fundMoneyHasTail}}</span></el-tag>
+                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span>累计金额：{{totalMoney|fundMoneyHasTail}}</span></el-tag>
             </div>
             <!-- end search bar -->
-            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
+            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction
+                :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <h-button table @click="onApproval(slotProps.data.row)">审核</h-button>
+                    <h-button table @click="onApproval(slotProps.data.row)" v-if="slotProps.data.row.status==1">审核</h-button>
                     <h-button table @click="onLook(slotProps.data.row)">查看详情</h-button>
                     <h-button table @click="onApprovalRecord(slotProps.data.row)">审批记录</h-button>
                 </template>
             </hosJoyTable>
         </div>
-        <el-dialog title="预付款支付单详情" :visible.sync="dialogVisible" width="40%" :before-close="()=>{dialogVisible = false}">
+        <el-dialog title="预付款支付单详情" :visible.sync="dialogVisible" width="40%" :close-on-click-modal=false :before-close="()=>{dialogVisible = false}">
             <div class="advance_wrap">
                 <h3>项目信息</h3>
                 <el-row type="flex" class="row-bg">
-                    <el-col :span="7" :offset='1'>项目：{{detailForm.projectName}}</el-col>
-                    <el-col :span="7" :offset='1'>经销商：{{detailForm.distributor}}</el-col>
-                    <el-col :span="7" :offset='1'>所属分部：{{detailForm.subsectionName}}</el-col>
+                    <el-col :span="7" :offset='1'>项目：{{detailForm.projectName||'-'}}</el-col>
+                    <el-col :span="7" :offset='1'>经销商：{{detailForm.distributor||'-'}}</el-col>
+                    <el-col :span="7" :offset='1'>所属分部：{{detailForm.subsectionName||'-'}}</el-col>
                 </el-row>
                 <h3>上游支付信息</h3>
                 <el-row type="flex" class="row-bg">
@@ -81,46 +82,48 @@
                     <el-col :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
                 </el-row>
                 <el-row type="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>上游供应商：{{detailForm.supplierCompanyName}}</el-col>
-                    <el-col :span="10" :offset='1'>供应商开户行名称：{{detailForm.supplierAccountName}}</el-col>
+                    <el-col :span="10" :offset='1'>上游供应商：{{detailForm.supplierCompanyName||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>供应商开户行名称：{{detailForm.supplierAccountName||'-'}}</el-col>
                 </el-row>
                 <el-row type="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>银行联行号：{{detailForm.supplierBankNo}}</el-col>
-                    <el-col :span="10" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo}}</el-col>
+                    <el-col :span="10" :offset='1'>银行联行号：{{detailForm.supplierBankNo||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo||'-'}}</el-col>
                 </el-row>
                 <el-row type="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate}}</el-col>
-                    <el-col :span="10" :offset='1'>备注：{{detailForm.approvalRemark}}</el-col>
+                    <el-col :span="10" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>备注：{{detailForm.approvalRemark||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>申请时间：{{detailForm.applyTime}}</el-col>
-                    <el-col :span="10" :offset='1'>申请人：{{detailForm.applyTime}}</el-col>
+                    <el-col :span="10" :offset='1'>申请时间：{{detailForm.applyTime||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>申请人：{{detailForm.applyTime||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>审核人：{{detailForm.approvalUser}}</el-col>
-                    <el-col :span="10" :offset='1'>申请时间：{{detailForm.approvalTime}}</el-col>
+                    <el-col :span="10" :offset='1'>审核人：{{detailForm.approvalUser||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>申请时间：{{detailForm.approvalTime||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>申核结果：{{detailForm.approvalStatus==1?'通过':detailForm.approvalStatus==2?'不通过':'-'}}</el-col>
-                    <el-col :span="10" :offset='1'>申核备注：{{detailForm.approvalRemark}}</el-col>
+                    <el-col :span="10" :offset='1'>申核备注：{{detailForm.approvalRemark||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>应向上游支付(元)：{{detailForm.totalAmount|fundMoneyHasTail}}</el-col>
                     <el-col :span="10" :offset='1'>已向上游支付(员)：{{detailForm.paidAmount|fundMoneyHasTail}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg" v-for="(item,index) in detailForm.supplierDetails" :key="index">
-                    <el-col :span="10" :offset='1'>本次上游支付(元){{item.payAmount|fundMoneyHasTail}}</el-col>
+                    <el-col :span="10" :offset='1'>本次上游支付(元)：{{item.payAmount|fundMoneyHasTail}}</el-col>
                     <el-col :span="10" :offset='1'>支付日期：{{item.payDate}}</el-col>
                     <el-col :span="10" :offset='1'>操作人：{{item.createBy}}</el-col>
-                    <el-col :span="10" :offset='1'>操作时间：{{item.createTime}}</el-col>
-                    <el-col :span="10" :offset='1'>上游支付凭证：
-                        <div class="advance_wrap-pic" v-for="(v,index) in item.payVouchers" :key="index">
-                             <ImageAddToken :fileUrl="v.fileUrl" alt="" />
+                    <el-col :span="10" :offset='1'>操作时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</el-col>
+                    <el-col :span="20" :offset='1' type='flex'>上游支付凭证：
+                        <div style="display:flex;">
+                            <div class="advance_wrap-pic" v-for="(v,index) in item.payVouchers" :key="index">
+                                <ImageAddToken :fileUrl="v.fileUrl" alt="" />
+                            </div>
                         </div>
                     </el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
-                    <el-col :span="24" :offset='20'>
+                    <el-col :span="24" :offset='18'>
                         <el-button type="primary" @click="onConfirmUpper">确认上游支付</el-button>
                     </el-col>
                 </el-row>
@@ -130,28 +133,28 @@
             </span>
         </el-dialog>
         <!-- 审核 -->
-        <el-dialog title="预付款支付单审核" :visible.sync="examineVisble" width="40%" :before-close="()=>{examineVisble = false}">
+        <el-dialog title="预付款支付单审核" :visible.sync="examineVisble" width="40%" :close-on-click-modal=false :before-close="()=>{examineVisble = false}">
             <div class="advance_examine">
                 <div class="advance_examine-left">
                     <h3>项目信息</h3>
                     <el-row type="flex" class="row-bg">
-                        <el-col :span="23" :offset='1'>项目：{{detailForm.projectName}}</el-col>
+                        <el-col :span="23" :offset='1'>项目：{{detailForm.projectName||'-'}}</el-col>
                     </el-row>
                     <el-row type="flex" class="row-bg">
-                        <el-col :span="23" :offset='1'>经销商：{{detailForm.distributor}}</el-col>
+                        <el-col :span="23" :offset='1'>经销商：{{detailForm.distributor||'-'}}</el-col>
                     </el-row>
                     <el-row type="flex" class="row-bg">
-                        <el-col :span="23" :offset='1'>所属分部：{{detailForm.subsectionName}}</el-col>
+                        <el-col :span="23" :offset='1'>所属分部：{{detailForm.subsectionName||'-'}}</el-col>
                     </el-row>
                     <h3>上游支付信息</h3>
                     <el-row>
                         <el-col class="col-padding" :span="23" :offset='1'>申请金额(元)：{{detailForm.applyAmount|fundMoneyHasTail}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>上游供应商：{{detailForm.supplierCompanyName}}</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>供应商开户行名称：{{detailForm.supplierAccountName}}</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo}}</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate}}</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>备注信息：{{detailForm.applyRemark}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>上游供应商：{{detailForm.supplierCompanyName||'-'}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>供应商开户行名称：{{detailForm.supplierAccountName||'-'}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo||'-'}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate||'-'}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>备注信息：{{detailForm.applyRemark||'-'}}</el-col>
                     </el-row>
                 </div>
                 <div class="advance_examine-right">
@@ -163,7 +166,7 @@
                                 <el-radio label="不通过"></el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <el-form-item label="审核备注：" prop="remark">
+                        <el-form-item label="审核备注：" prop="remark" v-if="auditForm.resource=='不通过'">
                             <el-input type="textarea" v-model="auditForm.remark" maxlength="200"></el-input>
                         </el-form-item>
                     </el-form>
@@ -171,21 +174,21 @@
             </div>
             <p style="color: #999;">审核通过后，将会发送钉钉预付款支付审批流程</p>
             <span slot="footer" class="dialog-footer">
-                <el-button  @click="examineVisble = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确认审核</el-button>
+                <el-button @click="examineVisble = false">取 消</el-button>
+                <el-button type="primary" @click="onSubmitAudit">确认审核</el-button>
             </span>
         </el-dialog>
 
         <!-- 确认上游支付 -->
-        <el-dialog title="预付款上游支付" :visible.sync="comfirmVisble" width="40%" :before-close="()=>{comfirmVisble = false}">
+        <el-dialog title="预付款上游支付" :visible.sync="comfirmVisble" width="40%" :close-on-click-modal=false :before-close="()=>{comfirmVisble = false}">
             <el-form :model="payForm" :rules="detailRules" ref="payForm" label-width="150px" class="demo-ruleForm">
                 <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>经销商：{{detailForm.distributor}}</el-col>
-                    <el-col :span="10" :offset='1'>项目：{{detailForm.projectName}}</el-col>
+                    <el-col :span="10" :offset='1'>经销商：{{detailForm.distributor||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>项目：{{detailForm.projectName||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>分部：{{detailForm.subsectionName}}</el-col>
-                    <el-col :span="10" :offset='1'>上游：{{detailForm.supplierCompanyName}}</el-col>
+                    <el-col :span="10" :offset='1'>分部：{{detailForm.subsectionName||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>上游：{{detailForm.supplierCompanyName||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
@@ -213,10 +216,18 @@
             </span>
         </el-dialog>
         <!-- 记录 -->
-         <el-dialog title="审批记录" :visible.sync="recordVisible" width="40%" :before-close="()=>{recordVisible = false}">
+        <el-dialog title="审批记录" :visible.sync="recordVisible" width="30%"  :before-close="()=>{recordVisible = false}">
             <div class="advance_wrap">
+                <p>预付款支付钉钉审批流程</p>
+                <p class="advance_wrap-msg">{{recordInfo.distributor}}申请预付款支付{{recordInfo.applyAmount|fundMoneyHasTail}}元</p>
+                <el-timeline :reverse="reverse">
+                    <el-timeline-item v-for="(item, index) in records" :key="index" :timestamp="item.operationTime">
+                    <p>李四/同意</p>
+                    <p>备注：{{item.content}}</p>
+                    </el-timeline-item>
+                </el-timeline>
             </div>
-         </el-dialog>
+        </el-dialog>
     </div>
 </template>
 
@@ -229,8 +240,9 @@ import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyU
 import ImageAddToken from '@/components/imageAddToken/index.vue'
 import { deepCopy } from '@/utils/utils'
 import './css/css.scss'
-import { getPrePayList, getPrePayDetail, submitPrePay, getPreTotal } from './api/index'
-import { IPagePrepaymentResponse, PrepaymentDetailResponse, PrepaymentSupplierSubmitResponse } from '@/interface/hbp-project'
+import { getPrePayList, getPrePayDetail, submitPrePay, getPreTotal, passPre, passFailPre, getApprovalHistory } from './api/index'
+import { PrepaymentDetailResponse, PrepaymentSupplierSubmitResponse, RespContractSignHistory } from '@/interface/hbp-project'
+import moment from 'moment'
 // 定义类型
 interface Query{
     [key:string]:any
@@ -250,6 +262,8 @@ export default class Advancelist extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
+    preStatus = preStatus
+    moment = moment
     uploadParameters = {
         updateUid: '',
         reservedName: false
@@ -264,6 +278,13 @@ export default class Advancelist extends Vue {
     private examineVisble:boolean = false
     private recordVisible:boolean = false
     private _queryParams:Query = {}
+    private totalMoney:number = 0
+    private id:number|string = null
+    private records:Array<RespContractSignHistory> = null
+    private recordInfo = {
+        distributor: '',
+        applyAmount: ''
+    }
     queryParams:Query = {
         pageSize: 10,
         pageNumber: 1,
@@ -277,7 +298,9 @@ export default class Advancelist extends Vue {
         applyTimeEnd: ''
     }
     detailForm:PrepaymentDetailResponse = {} as PrepaymentDetailResponse
-    auditForm:object = {
+    auditForm = {
+        resource: '',
+        remark: ''
     }
     payForm:PrepaymentSupplierSubmitResponse={
         payVouchers: [],
@@ -296,7 +319,7 @@ export default class Advancelist extends Vue {
         { label: '项目名称', prop: 'projectName', width: '120' },
         { label: '金额', prop: 'applyAmount', displayAs: 'money' },
         { label: '状态', prop: 'status', dicData: preStatus },
-        { label: '核销采购单编号', prop: 'purchaseOrderId' },
+        { label: '核销采购单编号', prop: 'purchaseOrderNo' },
         { label: '申请人', prop: 'applyUser' },
         { label: '申请时间', prop: 'applyTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '更新时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss' }
@@ -317,8 +340,11 @@ export default class Advancelist extends Vue {
     }
     // validator: (rule, value, callback) => {
     auditRules = {
-        desc: [
-            { required: true, message: '上传上游支付凭证', trigger: 'blur' }
+        resource: [
+            { required: true, message: '请选择审核结果', trigger: 'blur' }
+        ],
+        remark: [
+            { required: true, message: '请填写审核备注', trigger: 'blur' }
         ]
     }
     detailRules = {
@@ -353,15 +379,37 @@ export default class Advancelist extends Vue {
     }
 
     public async getList () {
-        const res = Promise.all([getPreTotal(this.queryParams), getPrePayList(this.queryParams)])
-        console.log(res)
-        // this.tableData = data.records
-        // this.page.total = data.total as number
+        const res:any = await Promise.all([getPreTotal(this.queryParams), getPrePayList(this.queryParams)])
+        this.tableData = res[1].data.records
+        this.page.total = res[1].data.total as number
+        this.totalMoney = res[0].data
     }
 
     // 审核
-    public onApproval () {
+    public async onApproval (v) {
+        this.id = v.id
+        const { data } = await getPrePayDetail(v.id)
+        this.detailForm = { ...this.detailForm, ...data }
         this.examineVisble = true
+        this.auditForm = {
+            resource: '',
+            remark: ''
+        }
+    }
+
+    public onSubmitAudit ():void {
+        this.$refs['auditForm'].validate(async value => {
+            if (value) {
+                if (this.auditForm.resource == '通过') {
+                    await passPre(this.id)
+                } else {
+                    await passFailPre(this.id, { remark: this.auditForm.remark })
+                }
+                this.$message.success('提交成功')
+                this.getList()
+                this.examineVisble = false
+            }
+        })
     }
 
     //
@@ -373,6 +421,7 @@ export default class Advancelist extends Vue {
                 this.$message.success('提交成功')
                 this.getList()
                 this.dialogVisible = false
+                this.comfirmVisble = false
             }
         })
     }
@@ -384,7 +433,13 @@ export default class Advancelist extends Vue {
     }
 
     public async onApprovalRecord (v) {
-        const { data } = await xxxx()
+        this.recordVisible = true
+        const { data } = await getApprovalHistory(v.id)
+        this.recordInfo = {
+            distributor: v.distributor,
+            applyAmount: v.applyAmount
+        }
+        this.records = data
     }
 
     public onReset (): void {

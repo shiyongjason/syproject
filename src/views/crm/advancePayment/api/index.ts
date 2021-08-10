@@ -1,5 +1,5 @@
 
-import { IPagePrepaymentResponse, PrepaymentDetailResponse, PrepaymentSupplierSubmitResponse } from '@/interface/hbp-project'
+import { IPagePrepaymentResponse, PrepaymentDetailResponse, PrepaymentSupplierSubmitResponse, RespContractSignHistory } from '@/interface/hbp-project'
 import axios, { AxiosPromise } from 'axios'
 
 export const getPrePayList: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
@@ -16,4 +16,16 @@ export const submitPrePay: (params) => AxiosPromise<void> = (params:PrepaymentSu
 
 export const getPreTotal: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
     return axios.get(`/project/api/prepayments/boss/total-amount`, params)
+}
+
+export const passPre: (params) => AxiosPromise<void> = (id) => {
+    return axios.patch(`/project/api/prepayments/boss/${id}/examine-pass`)
+}
+
+export const passFailPre: (id, params) => AxiosPromise<void> = (id, params) => {
+    return axios.patch(`/project/api/prepayments/boss/${id}/examine-fail`, params)
+}
+
+export const getApprovalHistory: (params) => AxiosPromise<RespContractSignHistory[]> = (params) => {
+    return axios.get(`/project/api/contract-approval/${params}/prepayment-order/approval-history`)
 }
