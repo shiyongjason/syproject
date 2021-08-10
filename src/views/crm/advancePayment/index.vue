@@ -61,7 +61,9 @@
             <!-- end search bar -->
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
+                    <h-button table @click="onApproval(slotProps.data.row)">审核</h-button>
                     <h-button table @click="onLook(slotProps.data.row)">查看详情</h-button>
+                    <h-button table @click="onApprovalRecord(slotProps.data.row)">审批记录</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -103,17 +105,19 @@
                     <el-col :span="10" :offset='1'>申核备注：{{detailForm.approvalRemark}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>已向上游支付(元)：{{detailForm.subsectionName}}</el-col>
-                    <el-col :span="10" :offset='1'>支付日期：{{detailForm.subsectionName}}</el-col>
+                    <el-col :span="10" :offset='1'>应向上游支付(元)：{{detailForm.totalAmount|fundMoneyHasTail}}</el-col>
+                    <el-col :span="10" :offset='1'>已向上游支付(员)：{{detailForm.paidAmount|fundMoneyHasTail}}</el-col>
                 </el-row>
-                <el-row ype="flex" class="row-bg">
+                <el-row ype="flex" class="row-bg" v-for="(item,index) in detailForm.supplierDetails" :key="index">
+                    <el-col :span="10" :offset='1'>本次上游支付(元){{item.payAmount|fundMoneyHasTail}}</el-col>
+                    <el-col :span="10" :offset='1'>支付日期：{{item.payDate}}</el-col>
+                    <el-col :span="10" :offset='1'>操作人：{{item.createBy}}</el-col>
+                    <el-col :span="10" :offset='1'>操作时间：{{item.createTime}}</el-col>
                     <el-col :span="10" :offset='1'>上游支付凭证：
-                        <div class="advance_wrap-pic">
-                            <!-- <img src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" alt=""> -->
-                             <ImageAddToken fileUrl="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" alt="" />
+                        <div class="advance_wrap-pic" v-for="(v,index) in item.payVouchers" :key="index">
+                             <ImageAddToken :fileUrl="v.fileUrl" alt="" />
                         </div>
                     </el-col>
-                    <el-col :span="7" :offset='1'>支付凭证上传时间：2102-8-9</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="24" :offset='20'>
@@ -141,13 +145,13 @@
                     </el-row>
                     <h3>上游支付信息</h3>
                     <el-row>
-                        <el-col class="col-padding" :span="23" :offset='1'>申请金额(元)：{{detailForm.subsectionName}}</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>上游支付方式：{{detailForm.subsectionName}}</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>上游供应商：{{detailForm.subsectionName}}</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>供应商开户行名称：{{detailForm.subsectionName}}</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>供应商银行账号：{{detailForm.subsectionName}}</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>期望上游支付日期：{{detailForm.subsectionName}}</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>备注信息：{{detailForm.subsectionName}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>申请金额(元)：{{detailForm.applyAmount|fundMoneyHasTail}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>上游供应商：{{detailForm.supplierCompanyName}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>供应商开户行名称：{{detailForm.supplierAccountName}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>备注信息：{{detailForm.applyRemark}}</el-col>
                     </el-row>
                 </div>
                 <div class="advance_examine-right">
@@ -174,28 +178,28 @@
 
         <!-- 确认上游支付 -->
         <el-dialog title="预付款上游支付" :visible.sync="comfirmVisble" width="40%" :before-close="()=>{comfirmVisble = false}">
-            <el-form :model="detailForm" :rules="detailRules" ref="detailForm" label-width="150px" class="demo-ruleForm">
+            <el-form :model="payForm" :rules="detailRules" ref="payForm" label-width="150px" class="demo-ruleForm">
                 <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>经销商：</el-col>
-                    <el-col :span="10" :offset='1'>项目：</el-col>
+                    <el-col :span="10" :offset='1'>经销商：{{detailForm.distributor}}</el-col>
+                    <el-col :span="10" :offset='1'>项目：{{detailForm.projectName}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>分部：</el-col>
-                    <el-col :span="10" :offset='1'>上游：</el-col>
+                    <el-col :span="10" :offset='1'>分部：{{detailForm.subsectionName}}</el-col>
+                    <el-col :span="10" :offset='1'>上游：{{detailForm.supplierCompanyName}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>上游支付方式：</el-col>
-                    <el-col :span="10" :offset='1'>剩余应上游支付(元)：</el-col>
+                    <el-col :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
+                    <el-col :span="10" :offset='1'>剩余应上游支付(元)：{{detailForm.surplusAmount|fundMoneyHasTail}}</el-col>
                 </el-row>
-                <el-form-item style="margin-top:20px" label="本次支付金额" prop="name">
-                    <el-input v-model.trim="detailForm.goodsAmount" maxlength="50" v-isNegative:2="detailForm.goodsAmount"></el-input>
+                <el-form-item style="margin-top:20px" label="本次支付金额" prop="payAmount">
+                    <el-input v-model.trim="payForm.payAmount" maxlength="50" v-isNegative:2="payForm.payAmount"></el-input>
                 </el-form-item>
-                <el-form-item label="支付日期：" prop="name">
-                    <el-date-picker v-model="detailForm.name" type="date" placeholder="选择日期">
+                <el-form-item label="支付日期：" prop="payDate">
+                    <el-date-picker v-model="payForm.payDate" type="date" placeholder="选择日期">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="上传上游支付凭证：" prop="payVouchers" style="margin:20px 0">
-                    <OssFileHosjoyUpload v-model="detailForm.payVouchers" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.detailForm.clearValidate()" accept=".jpg,.png,.pdf">
+                    <OssFileHosjoyUpload v-model="payForm.payVouchers" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.payForm.clearValidate('payVouchers')" accept=".jpg,.png,.pdf">
                         <div class="a-line">
                             <h-button>上传文件</h-button>
                         </div>
@@ -205,9 +209,14 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="comfirmVisble = false">取 消</el-button>
-                <el-button @click="dialogVisible = false">确认支付</el-button>
+                <el-button @click="onSubmitPay">确认支付</el-button>
             </span>
         </el-dialog>
+        <!-- 记录 -->
+         <el-dialog title="审批记录" :visible.sync="recordVisible" width="40%" :before-close="()=>{recordVisible = false}">
+            <div class="advance_wrap">
+            </div>
+         </el-dialog>
     </div>
 </template>
 
@@ -217,11 +226,11 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { CreateElement } from 'vue'
 import { Action, Getter, State } from 'vuex-class'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
-import ImageAddToken from '@/components/elImageAddToken/index.vue'
+import ImageAddToken from '@/components/imageAddToken/index.vue'
 import { deepCopy } from '@/utils/utils'
 import './css/css.scss'
-import { getPrePayList, getPrePayDetail } from './api/index'
-import { IPagePrepaymentResponse } from '@/interface/hbp-project'
+import { getPrePayList, getPrePayDetail, submitPrePay, getPreTotal } from './api/index'
+import { IPagePrepaymentResponse, PrepaymentDetailResponse, PrepaymentSupplierSubmitResponse } from '@/interface/hbp-project'
 // 定义类型
 interface Query{
     [key:string]:any
@@ -250,9 +259,10 @@ export default class Advancelist extends Vue {
          [1, '先款后货'],
          [2, '先货后款']
      ])
-    private dialogVisible:boolean = true
+    private dialogVisible:boolean = false
     private comfirmVisble:boolean = false
     private examineVisble:boolean = false
+    private recordVisible:boolean = false
     private _queryParams:Query = {}
     queryParams:Query = {
         pageSize: 10,
@@ -266,11 +276,14 @@ export default class Advancelist extends Vue {
         applyTimeStart: '',
         applyTimeEnd: ''
     }
-    detailForm:object = {
-        payVouchers: []
-    }
+    detailForm:PrepaymentDetailResponse = {} as PrepaymentDetailResponse
     auditForm:object = {
-
+    }
+    payForm:PrepaymentSupplierSubmitResponse={
+        payVouchers: [],
+        prepaymentOrderId: '',
+        payAmount: '',
+        payDate: ''
     }
 
     page = {
@@ -298,22 +311,38 @@ export default class Advancelist extends Vue {
             type: 'date',
             valueFormat: 'yyyy-MM-dd',
             format: 'yyyy-MM-dd',
-            startTime: this.queryParams.applyTimeEnd,
+            startTime: this.queryParams.applyTimeStart,
             endTime: this.queryParams.applyTimeEnd
         }
     }
-
+    // validator: (rule, value, callback) => {
     auditRules = {
         desc: [
-            { required: true, message: '必填项不能为空', trigger: 'blur' }
+            { required: true, message: '上传上游支付凭证', trigger: 'blur' }
         ]
     }
     detailRules = {
         payVouchers: [
-            { required: true, message: '必填项不能为空', trigger: 'blur' }
+            { required: true, message: '上传上游支付凭证不能为空', trigger: 'blur' }
         ],
-        name: [
-            { required: true, message: '必填项不能为空', trigger: 'blur' }
+        payDate: [
+            { required: true, message: '上游支付日期不能为空', trigger: 'blur' }
+        ],
+        payAmount: [
+            {
+                required: true,
+                validator: (rule, value, callback) => {
+                    if (!value.length) {
+                        return callback(new Error('上游支付金额不能为空'))
+                    } else if (value.length && value == 0) {
+                        return callback(new Error('上游支付金额必须大于0'))
+                    } else if (value > this.detailForm.surplusAmount) {
+                        return callback(new Error('上游支付金额必须小于等于剩余应上游支付'))
+                    }
+                    return callback()
+                },
+                trigger: 'blur'
+            }
         ]
     }
     public onStartChange (val): void {
@@ -324,22 +353,51 @@ export default class Advancelist extends Vue {
     }
 
     public async getList () {
-        const { data } = await getPrePayList(this.queryParams)
-        this.tableData = data.records
-        this.page.total = data.total as number
+        const res = Promise.all([getPreTotal(this.queryParams), getPrePayList(this.queryParams)])
+        console.log(res)
+        // this.tableData = data.records
+        // this.page.total = data.total as number
     }
+
+    // 审核
+    public onApproval () {
+        this.examineVisble = true
+    }
+
+    //
+    public onSubmitPay () {
+        this.payForm.prepaymentOrderId = this.detailForm.id
+        this.$refs['payForm'].validate(async value => {
+            if (value) {
+                await submitPrePay(this.payForm)
+                this.$message.success('提交成功')
+                this.getList()
+                this.dialogVisible = false
+            }
+        })
+    }
+
     public async onLook (v) {
+        this.dialogVisible = true
         const { data } = await getPrePayDetail(v.id)
         this.detailForm = { ...this.detailForm, ...data }
     }
 
+    public async onApprovalRecord (v) {
+        const { data } = await xxxx()
+    }
+
     public onReset (): void {
-        console.log('onReset')
+        this.queryParams = deepCopy(this._queryParams)
+        this.getList()
     }
 
     public onConfirmUpper (): void {
         // 上游支付
         this.comfirmVisble = true
+        this.$nextTick(() => {
+            this.$refs['payForm'].clearValidate()
+        })
     }
 
     public async mounted () {

@@ -5,6 +5,9 @@
     margin-bottom: 10px;
 }
 .advance_wrap {
+    height: 500px;
+    overflow: hidden;
+    overflow-y: scroll;
     h3{
         color: red;
         padding: 10px 0;
