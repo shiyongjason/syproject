@@ -27,7 +27,7 @@
                 <!-- <el-input v-model="form.deptName" disabled></el-input> -->
             </el-form-item>
             <el-form-item label="工程项目名称：" prop="projectName">
-                <el-input v-model="projectForm.projectName" maxlength="100" placeholder="请输入工程项目名称"></el-input>
+                <el-input v-model="projectForm.projectName" maxlength="70" placeholder="请输入工程项目名称"></el-input>
             </el-form-item>
             <el-form-item label="项目地址：" prop="address">
                 <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入项目地址" v-model="projectForm.address" maxlength="200" show-word-limit>
