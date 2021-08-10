@@ -10,6 +10,7 @@
                             好享家运营后台
                         </div>
                         <div class="login-form">
+                            <iframe :src="src" ref="iframe" style="display:none"></iframe>
                             <el-form ref="loginForm" :model="loginForm" :rules="loginRules">
                                 <el-form-item prop="phone">
                                     <el-input v-model.trim="loginForm.phone" placeholder="11位手机号" maxlength="11" ref="mobileInput">
@@ -70,18 +71,26 @@ export default {
             isLogin: true,
             userInfo: '',
             src: iframeUrl,
+            iframeWin: {},
             after: true,
             content: '获取验证码',
             time: 60
         }
     },
     methods: {
+        sendMessage (userData) {
+            // 外部vue向iframe内部传数据
+            this.iframeWin.postMessage({
+                cmd: 'getFormJson',
+                params: userData
+            }, '*')
+        },
         onMobileVerifica () {
             this.$refs.loginForm.validateField('phone', async (valid) => {
                 if (!valid) {
                     this.after = false
                     this.content = '重新发送 ' + this.time
-                    this.sendMobileVerifica()
+                    this.sendMobileVerifica(this.loginForm.phone)
                     this.clock = setInterval(() => {
                         this.time--
                         this.content = '重新发送' + this.time
@@ -110,10 +119,6 @@ export default {
         async onLogin () {
             this.$refs['loginForm'].validate(async (valid) => {
                 if (valid) {
-                    // const { data } = await login({
-                    //     username: this.registForm.mobile,
-                    //     password: '123456'
-                    // })
                     const { data } = await phoneLogin(this.loginForm)
                     const userInfo = jwtDecode(data.access_token)
                     this.userInfo = jwtDecode(data.access_token)
@@ -186,6 +191,8 @@ export default {
     mounted () {
         localStorage.removeItem('token')
         this.tagUpdate([])
+        // 获取iframe 对象
+        this.iframeWin = this.$refs.iframe.contentWindow
         document.onkeypress = (e) => {
             const keyCode = document.all ? event.keyCode : e.which
             if (keyCode === 13) {
