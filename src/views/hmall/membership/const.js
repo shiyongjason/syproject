@@ -29,6 +29,6 @@ export const AUTO_INDUCTION_OPTIONS = [
     { label: '未开通', value: false }
 ]
 export const AUTO_INDUCTION_MAP = new Map([
-    [true, '开通'],
-    [false, '未开通']
+    [true, '开启'],
+    [false, '关闭']
 ])
