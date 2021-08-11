@@ -161,18 +161,18 @@ export default {
                         trigger: 'change'
                     }
                 ],
-                imageUrls: [
-                    {
-                        required: true,
-                        validator: (rule, value, callback) => {
-                            if (!value || value == '') {
-                                return callback(new Error('请上传图片'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'change'
-                    }
-                ],
+                // imageUrls: [
+                //     {
+                //         required: true,
+                //         validator: (rule, value, callback) => {
+                //             if (!value || value == '') {
+                //                 return callback(new Error('请上传图片'))
+                //             }
+                //             return callback()
+                //         },
+                //         trigger: 'change'
+                //     }
+                // ],
                 serialNumber: [
                     {
                         validator: (rule, value, callback) => {
