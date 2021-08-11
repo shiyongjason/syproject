@@ -393,11 +393,10 @@ export default {
                     {
                         required: true,
                         validator: (rule, value, callback) => {
-                            if (value.length && value.length < 12) {
-                                return callback(new Error('请输入正确的12位联行号数字！'))
-                            }
                             if (!value) {
                                 return callback(new Error('银行联行号不能为空'))
+                            } else if (value.length && value.length < 12) {
+                                return callback(new Error('请输入正确的12位联行号数字！'))
                             }
                             return callback()
                         },
