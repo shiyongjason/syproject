@@ -387,7 +387,7 @@ export default {
             deep: true
         },
         '$route' (to, from) {
-            if (!to.query.id) {
+            if (to.query.id) {
                 this.reload('createProduct')
             }
         }
