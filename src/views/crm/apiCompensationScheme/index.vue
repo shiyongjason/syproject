@@ -49,7 +49,7 @@
                     <span class="colblue">{{ scope.data.row.createTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="reCall(scope.data.row)">重新调用</h-button>
+                    <h-button table @click="reCall(scope.data.row)">问题处理</h-button>
                 </template>
             </basicTable>
         </div>
@@ -132,8 +132,9 @@ export default {
             findApiCompensationSchemeList: 'apiCompensationSchemeStore/apiCompensationSchemeList'
         }),
         reCall (row) {
-            updateApiCompensationScheme({ id: row.id }) // todo 后台接口没通 暂时没办法调
-            this.$message.success('重新调用')
+            updateApiCompensationScheme(row.id)
+            this.$message.success('问题已处理')
+            this.findApiCompensationSchemeList(this.queryParams)
         }
     },
     mounted () {
