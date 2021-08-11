@@ -7,11 +7,11 @@
                     <span class="title-cont__label">商品基本信息</span>
                 </div>
                 <el-form-item label="商品品牌：" prop="brandName">
-                    <el-autocomplete class="form-input_big" v-model="form.brandName" :fetch-suggestions="querySearchAsyncBrand" @select="handleSelectBrand" @blur="handleBlurBrand" :debounce="500" :maxlength="30" placeholder="请输入商品品牌" :disabled="showMore"></el-autocomplete>
+                    <el-autocomplete class="form-input_big" v-model="form.brandName" :fetch-suggestions="querySearchAsyncBrand" @select="handleSelectBrand" @blur="handleBlurBrand" :debounce="500" :maxlength="30" placeholder="请输入商品品牌" :disabled="showMore&&nowShow"></el-autocomplete>
                     <span class="ml10 isGrayColor">如果没有对应的品牌，请联系运营人员添加!</span>
                 </el-form-item>
                 <el-form-item label="商品型号：" prop="model">
-                    <el-autocomplete class="form-input_big autocomplete" v-model="form.model" :fetch-suggestions="querySearchAsyncModel" @select="handleSelectModel" :debounce="500" :maxlength="50" placeholder="请输入商品型号" :disabled="showMore">
+                    <el-autocomplete class="form-input_big autocomplete" v-model="form.model" :fetch-suggestions="querySearchAsyncModel" @select="handleSelectModel" :debounce="500" :maxlength="50" placeholder="请输入商品型号" :disabled="showMore&&nowShow">
                         <template slot-scope="{item}">
                             <el-tooltip effect="dark" :content="item.value" placement="top">
                                 <span class="autocomplete-select_item">{{item.value}}</span>
@@ -29,12 +29,12 @@
                     </el-autocomplete>
                 </el-form-item>
                 <el-form-item label="商品类目：" prop="categoryId">
-                    <el-cascader class="form-input_medium" v-model="form.categoryId" :options="categoryOption" :props="props" clearable @expand-change="onExpandChangeCategory" placeholder="请选择商品类目" :disabled="showMore"></el-cascader>
-                    <h-button type='primary' class="ml10" @click="onFindProduct" :disabled="showMore">确定</h-button>
+                    <el-cascader class="form-input_medium" v-model="form.categoryId" :options="categoryOption" :props="props" clearable @expand-change="onExpandChangeCategory" placeholder="请选择商品类目" :disabled="showMore&&nowShow"></el-cascader>
+                    <h-button type='primary' class="ml10" @click="onFindProduct" :disabled="showMore&&nowShow">确定</h-button>
                 </el-form-item>
                 <div v-if="showMore">
                     <el-form-item label="商品名称：" prop="name">
-                        <el-input class="form-input_big" v-model="form.name" maxlength="100" placeholder="请输入商品名称" :disabled="$route.query.id&&form.auditStatus == 1"></el-input>
+                        <el-input class="form-input_big" v-model="form.name" maxlength="100" placeholder="请输入商品名称" :disabled="$route.query.id&&form.auditStatus == 1&&nowShow"></el-input>
                     </el-form-item>
                     <el-form-item label="">
                         <span class="isGrayColor">商品名称用于识别操作上下架编辑，字数最多100字</span>
@@ -71,12 +71,12 @@
                         <div class="sku-cont_group mb20" v-for="(item,index) in form.optionTypeList" :key="index">
                             <div class="group-spec_label">
                                 <el-form-item label="规格名：" :prop="`optionTypeList[${index}].name`" :rules="rules.option">
-                                    <el-input v-model="item.name" @change="onAddOption(item.id,item.name,index)" maxlength="10" placeholder="请输入规格名" :disabled="item.disabled"></el-input>
+                                    <el-input v-model="item.name" @change="onAddOption(item.id,item.name,index)" maxlength="10" placeholder="请输入规格名" :disabled="item.disabled&&nowShow"></el-input>
                                 </el-form-item>
                             </div>
                             <div class="group-spec_tags mt20">
                                 <el-form-item label="规格值：" :prop="`optionTypeList[${index}].optionValues`" :rules="rules.optionValues">
-                                    <el-tag class="mr10" v-for="(sItem,sIndex) in item.optionValues" :key="sIndex" @close="onDelOptionValue(index,sIndex)" :closable="!sItem.disabled">{{sItem.name}}</el-tag>
+                                    <el-tag class="mr10" v-for="(sItem,sIndex) in item.optionValues" :key="sIndex" @close="onDelOptionValue(index,sIndex)" :closable="!sItem.disabled&&!nowShow">{{sItem.name}}</el-tag>
                                     <el-input v-model="addValues[index]" @change="onAddOptionVlaue(index)" suffix-icon="el-icon-plus" maxlength="50" placeholder="多个属性值以空格隔开"></el-input>
                                 </el-form-item>
                             </div>
@@ -266,6 +266,9 @@ export default {
         },
         mainSkus () {
             return deepCopy(this.form.mainSkus)
+        },
+        nowShow () {
+            return !this.$route.query.show
         }
     },
     watch: {
