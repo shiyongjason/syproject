@@ -54,7 +54,7 @@
                         </td>
                     </template>
                     <td class="fixed-width">
-                        <el-form-item label-width='0' :prop="`mainSkus[${index}].imageUrls`" :rules="rules.imageUrls">
+                        <el-form-item label-width='0'>
                             <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" v-if="seeTask==false" />
                             <img :src="item.imageUrls" style="width:44px;height:44px" v-if="seeTask==true" />
                         </el-form-item>
