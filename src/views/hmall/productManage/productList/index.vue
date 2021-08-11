@@ -233,11 +233,7 @@ export default {
                     this.$router.push({ path: '/b2b/product/createProduct', query: { id: row.id } })
                 }
             } else if (this.productType == 'SKU') {
-                if (this.tabName == 'AUDIT' || this.tabName == 'REJECT') {
-                    this.$router.push({ path: '/b2b/product/createProduct', query: { id: row.mainSpuId, show: 'show' } })
-                } else {
-                    this.$router.push({ path: '/b2b/product/createProduct', query: { id: row.mainSpuId } })
-                }
+                this.$router.push({ path: '/b2b/product/createProduct', query: { id: row.mainSpuId } })
             }
         },
         // 批量生效
