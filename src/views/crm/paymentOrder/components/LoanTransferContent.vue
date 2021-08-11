@@ -384,10 +384,10 @@ export default {
         supplierRules () {
             return {
                 supplierAccountName: [
-                    { required: true, message: '供应商开户行名称不能为空' }
+                    { required: true, message: '供应商开户行名称不能为空', trigger: 'blur' }
                 ],
                 supplierAccountNo: [
-                    { required: true, message: '供应商银行账号不能为空' }
+                    { required: true, message: '供应商银行账号不能为空', trigger: 'blur' }
                 ],
                 supplierBankNo: [
                     {
