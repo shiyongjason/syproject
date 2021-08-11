@@ -227,9 +227,17 @@ export default {
         // 跳转到修改商品页面
         onEditProduct (row) {
             if (this.productType == 'SPU') {
-                this.$router.push({ path: '/b2b/product/createProduct', query: { id: row.id } })
+                if (this.tabName == 'AUDIT' || this.tabName == 'REJECT') {
+                    this.$router.push({ path: '/b2b/product/createProduct', query: { id: row.id, show: 'show' } })
+                } else {
+                    this.$router.push({ path: '/b2b/product/createProduct', query: { id: row.id } })
+                }
             } else if (this.productType == 'SKU') {
-                this.$router.push({ path: '/b2b/product/createProduct', query: { id: row.mainSpuId } })
+                if (this.tabName == 'AUDIT' || this.tabName == 'REJECT') {
+                    this.$router.push({ path: '/b2b/product/createProduct', query: { id: row.mainSpuId, show: 'show' } })
+                } else {
+                    this.$router.push({ path: '/b2b/product/createProduct', query: { id: row.mainSpuId } })
+                }
             }
         },
         // 批量生效
