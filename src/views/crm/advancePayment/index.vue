@@ -220,7 +220,7 @@
             <div class="advance_wrap">
                 <p>预付款支付钉钉审批流程</p>
                 <p class="advance_wrap-msg">{{recordInfo.distributor}}申请预付款支付{{recordInfo.applyAmount|fundMoneyHasTail}}元</p>
-                <el-timeline :reverse="reverse">
+                <el-timeline >
                     <el-timeline-item v-for="(item, index) in records" :key="index" :timestamp="item.operationTime">
                     <p>李四/同意</p>
                     <p>备注：{{item.content}}</p>
