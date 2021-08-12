@@ -249,7 +249,7 @@ interface Query{
     [key:string]:any
 }
 
-const preStatus = [{ value: 1, label: '待项目运营审核' }, { value: 2, label: '流程审批中' }, { value: 3, label: '预付款待支付' }, { value: 4, label: '预付款支付单完成' }, { value: 5, label: '预付款待核销' }, { value: 6, label: '预付款已核销' }, { value: 7, label: '预付款支付单关闭' }]
+const preStatus = [{ value: 1, label: '待项目运营审核' }, { value: 2, label: '流程审批中' }, { value: 3, label: '待支付' }, { value: 4, label: '支付单完成' }, { value: 5, label: '待核销' }, { value: 6, label: '已核销' }, { value: 7, label: '支付单关闭' }]
 
 @Component({
     name: 'Advancelist',
@@ -271,8 +271,8 @@ export default class Advancelist extends Vue {
     }
      supplierPaymentType : Map<number | null, string> = new Map([
          [null, '-'],
-         [1, '先款后货'],
-         [2, '先货后款']
+         [1, '银行转帐'],
+         [2, '银行承兑']
      ])
     private dialogVisible:boolean = false
     private comfirmVisble:boolean = false
@@ -333,8 +333,8 @@ export default class Advancelist extends Vue {
     get options () {
         return {
             type: 'date',
-            valueFormat: 'yyyy-MM-dd',
-            format: 'yyyy-MM-dd',
+            valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+            format: 'yyyy-MM-ddTHH:mm:ss',
             startTime: this.queryParams.applyTimeStart,
             endTime: this.queryParams.applyTimeEnd
         }
