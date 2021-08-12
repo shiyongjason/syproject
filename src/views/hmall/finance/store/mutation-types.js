@@ -26,6 +26,10 @@ export const OFFLINE_REPAY_LIST = 'OFFLINE_REPAY_LIST'
 export const PREPAY_REPAY_LIST = 'PREPAY_REPAY_LIST'
 // 资金代采 交易记录 线上回款 线下回款 预付款 合计
 export const REPAY_ALL = 'REPAY_ALL'
+export const ONLINEREPAY_ALL = 'ONLINEREPAY_ALL'
+export const OFFLINEREPAY_ALL = 'OFFLINEREPAY_ALL'
+export const ADVANCEREPAY_ALL = 'ADVANCEREPAY_ALL'
+
 // 资金代采 交易记录统计
 export const REPAY_STATIST_INFO = 'REPAY_STATIST_INFO'
 // 资金申请详情

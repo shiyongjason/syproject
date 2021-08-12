@@ -5,6 +5,8 @@ export const getPaymentOrderList = (params) => axios.get('/project/api/payment-o
 export const getPaymentOrderTotal = (params) => axios.get('/project/api/payment-orders/total-amount', { params })
 // 支付单详情
 export const getPaymentOrderDetail = (paymentOrderId) => axios.get(`/project/api/payment-orders/${paymentOrderId}`)
+// 支付单财务审核
+export const updatePaymentOrderStatusFinance = (params) => axios.post('/project/api/payment-orders/segment-finance/audit', params)
 // 支付单审核通过
 export const updatePaymentOrderStatusPass = (paymentOrderId, params) => axios.patch(`/project/api/payment-orders/${paymentOrderId}/examine-pass`, params)
 // 支付单审核不通过
@@ -54,3 +56,8 @@ export const getLoanTransferRecord = (paymentOrderId) => axios.get(`/project/api
 export const getLoanTransferCheck = (paymentOrderId) => axios.get(`/project/api/loan-transfers/boss/check/${paymentOrderId}`)
 // 放款交接-终审决议信息 - 查询
 export const getReviewResolution = (paymentOrderId) => axios.get(`/project/api/loan-transfers/boss/review-resolution/${paymentOrderId}`)
+
+// 支付单审核记录
+export const approvalHistory = (paymentOrderId) => axios.get(`/project/api/contract-approval/${paymentOrderId}/payment-order/approval-history`)
+// 收款人保存
+export const postSupplierLoan = (params) => axios.post(`/project/api/loan-transfers/boss/supplier`, params)

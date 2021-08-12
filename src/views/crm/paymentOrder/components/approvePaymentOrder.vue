@@ -27,7 +27,7 @@
                         <div class="mb20"  style="max-height:250px; overflow-y: scroll;">
                             <basicTable :tableData="paymentDetail.payOrderPoDetail.paymentOrderInfos" :tableLabel="orderLabel" :isPagination='false'>
                                 <template slot="status" slot-scope="scope">
-                                    {{orderStatus[scope.data.row.status] }}
+                                    {{paymentOrderConst.PAYMENT_ORDER_STATUS_ALL.get(scope.data.row.status) }}
                                 </template>
                             </basicTable>
                         </div>
@@ -41,10 +41,10 @@
                             </div>
                         </el-form-item>
                         <el-form-item label="采购批次：">
-                            {{ paymentDetail.payOrderPoDetail.poNumber | attributeComputed(PaymentOrderDict.applyType.list) }}
+                            {{ paymentOrderConst.APPLY_TYPE.get(paymentDetail.payOrderPoDetail.poNumber) }}
                         </el-form-item>
                         <el-form-item label="最迟发货日期：">
-                            {{ paymentDetail.payOrderPoDetail.lastGoodsDate }}
+                            {{ paymentDetail.payOrderPoDetail.lastGoodsDate||'-' }}
                         </el-form-item>
                         <el-form-item label="收货地址：">
                             {{ paymentDetail.payOrderPoDetail.goodsAddress }}
@@ -80,7 +80,7 @@
                             {{paymentDetail.payOrderDetail.supplierBankNo}}
                         </el-form-item>
                         <el-form-item label="期望上游支付日期：">
-                            {{paymentDetail.payOrderDetail.expectSupplierPaymentDate?moment(paymentDetail.payOrderDetail.expectSupplierPaymentDate).format('YYYY-MM-DD'):''}}
+                            {{paymentDetail.payOrderDetail.expectSupplierPaymentDate | momentFormat('YYYY-MM-DD')}}
                         </el-form-item>
                         <el-form-item label="上游支付方式：">
                             {{paymentDetail.payOrderDetail.supplierPaymentType==1?'银行转账':'银行承兑'}}
@@ -114,8 +114,36 @@
                             {{paymentDetail.payOrderDetail.specialRemark}}
                         </el-form-item>
                     </div>
-                    <div class="col-filed">
-                        <div class="info-title">审核信息</div>
+                    <div class="col-filed" v-if="paymentDetail.payOrderDetail.status === paymentOrderStatusKey.FINANCE_AUDIT">
+                        <div class="info-title">分财审核信息</div>
+                        <el-form-item prop="supplierAccountConfirm" label="账户信息是否已确认：" label-width="165px">
+                            <el-radio-group v-model="formData.supplierAccountConfirm" @change="onRdioChange">
+                                <el-radio :label="true">是</el-radio>
+                                <el-radio :label="false">否</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item prop="coManagerSupervision" label="共管户是否已监管：" label-width="165px">
+                            <el-radio-group v-model="formData.coManagerSupervision" @change="onRdioChange">
+                                <el-radio :label="true">是</el-radio>
+                                <el-radio :label="false">否</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="审核备注：" prop="approvalRemark" label-width="165px">
+                            <el-input type="textarea" v-model="formData.approvalRemark" maxlength="200"></el-input>
+                        </el-form-item>
+                    </div>
+                    <div class="col-filed" v-else>
+                        <div class="info-title">分财审核信息</div>
+                        <el-form-item label="账户信息是否已确认：" label-width="165px">
+                            {{paymentDetail.paymentOrderSegmentFinanceApprovalResponse.supplierAccountConfirm ? '是' : '否'}}
+                        </el-form-item>
+                        <el-form-item label="共管户是否已监管：" label-width="165px">
+                            {{paymentDetail.paymentOrderSegmentFinanceApprovalResponse.coManagerSupervision ? '是' : '否'}}
+                        </el-form-item>
+                        <el-form-item label="审核备注：" label-width="165px">
+                            {{paymentDetail.approvalRemark || '-'}}
+                        </el-form-item>
+                        <div class="info-title">项目运营审核信息</div>
                         <el-form-item prop="checkPass" label="审核结果：">
                             <el-radio-group v-model="formData.checkPass" @change="onRdioChange">
                                 <el-radio label="pass">通过</el-radio>
@@ -126,8 +154,8 @@
                         <template v-if="formData.checkPass === 'pass'">
                             <el-form-item label="上游货款方式：" prop="supplierPaymentMethod">
                                 <el-radio-group v-model="formData.supplierPaymentMethod">
-                                    <el-radio :key="item.key" :label="item.key" v-for="item in PaymentOrderDict.supplierPaymentMethod.list">
-                                        {{item.value}}
+                                    <el-radio :key="key" :label="key" v-for="[key, value] of paymentOrderConst.SUPPLIER_PAYMENT_METHOD">
+                                        {{value}}
                                     </el-radio>
                                 </el-radio-group>
                             </el-form-item>
@@ -165,7 +193,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <p class="tips">
-                    审核通过后，将会给经销商发送《订单及服务费确认函》
+                    <span v-if="paymentDetail.payOrderDetail.status === paymentOrderStatusKey.OPERATE_AUDIT">审核通过后，将会给经销商发送《订单及服务费确认函》</span>
                 </p>
                 <div class="btn-group">
                     <h-button type="cancel" @click="onCancel">取消</h-button>
@@ -185,11 +213,10 @@
     </div>
 </template>
 <script>
-import { updatePaymentOrderStatusNoPass, updatePaymentOrderStatusPass, getComputedValue } from '@/views/crm/paymentOrder/api'
-import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
+import { updatePaymentOrderStatusNoPass, updatePaymentOrderStatusPass, getComputedValue, updatePaymentOrderStatusFinance } from '@/views/crm/paymentOrder/api'
 import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import imageAddToken from '@/components/imageAddToken'
-import moment from 'moment'
+import paymentOrderConst from '@/views/crm/paymentOrder/const'
 export default {
     name: 'approvePaymentOrder',
     components: {
@@ -211,16 +238,16 @@ export default {
     },
     data () {
         return {
-            moment,
             PurchaseOrderDict,
             formData: {
                 checkPass: '',
                 approvalRemark: '',
                 downPaymentAmount: '',
-                supplierPaymentMethod: ''
+                supplierPaymentMethod: '',
+                supplierAccountConfirm: '',
+                coManagerSupervision: ''
             },
             editAmountVisible: false,
-            PaymentOrderDict,
             serviceFee: {},
             serviceParams: {
                 totalAmount: '',
@@ -235,13 +262,31 @@ export default {
                     { required: true, message: '请选择审核结果' }
                 ],
                 approvalRemark: [
-                    { required: true, message: '请填写审核备注' }
+                    {
+                        validator: (rule, value, callback) => {
+                            // 分财审核且审核结果中有否的时候必填
+                            const isFinanceRequired = this.paymentDetail.payOrderDetail.status === this.paymentOrderStatusKey.FINANCE_AUDIT && !(this.formData.supplierAccountConfirm && this.formData.coManagerSupervision)
+                            // 项目运营审核结果为不通过的时候必填
+                            const isOperateRequired = this.formData.checkPass === 'noPass'
+                            if ((isFinanceRequired || isOperateRequired) && (!value || value.trim() == '')) {
+                                return callback(new Error('请填写审核备注'))
+                            }
+                            callback()
+                        },
+                        trigger: 'blur'
+                    }
                 ],
                 supplierPaymentMethod: [
                     { required: true, message: '请选择上游货款方式' }
                 ],
                 dealerCooperationMethod: [
                     { required: true, message: '请选择下游合作方式' }
+                ],
+                supplierAccountConfirm: [
+                    { required: true, message: '请选择账户信息是否已确认' }
+                ],
+                coManagerSupervision: [
+                    { required: true, message: '请选择共管户是否已监管' }
                 ]
             },
             downPaymentAmount: '-',
@@ -254,7 +299,8 @@ export default {
                 { label: '支付单金额(元)', prop: 'applyAmount', formatters: 'moneyShow' },
                 { label: '支付单状态', prop: 'status' }
             ],
-            orderStatus: { 0: '支付单待审核', 1: '首付款待支付', 2: '首付款待确认', 3: '上游支付确认中', 4: '上游支付中', 5: '待出票', 6: '正在出票', 7: '待发货', 8: '待收货', 9: '剩余货款待支付', 10: '剩余货款待确认', 11: '支付单完成', 12: '支付单关闭' }
+            paymentOrderStatusKey: paymentOrderConst.PAYMENT_ORDER_STATUS_KEY,
+            paymentOrderConst
         }
     },
     watch: {
@@ -303,9 +349,6 @@ export default {
             }
         },
         async onCancelAmount () {
-            // this.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
-            // this.serviceParams.downpaymentAmount = this.downPaymentAmount
-            // await this.getComputedValue()
             this.editAmountVisible = false
         },
         async onSaveAmount () {
@@ -313,10 +356,6 @@ export default {
                 this.$message.error('经销商预付款不能为空')
                 return
             }
-            // if (this.formData.downPaymentAmount == 0) {
-            //     this.$message.error('经销商预付款不能为0')
-            //     return
-            // }
             if (this.formData.downPaymentAmount == this.paymentDetail.payOrderDetail.applyAmount) {
                 this.$message.error('首付款金额最大不可超过申请支付金额')
                 return
@@ -349,7 +388,22 @@ export default {
                 if (value) {
                     this.formData.downPaymentAmount = this.downPaymentAmount
                     this.formData.updateTime = this.paymentDetail.payOrderPoDetail.updateTime
-                    if (this.formData.checkPass === 'pass') {
+                    // 分财审核逻辑
+                    if (this.paymentDetail.payOrderDetail.status === this.paymentOrderStatusKey.FINANCE_AUDIT) {
+                        // 二次确认 通过
+                        const message = this.formData.supplierAccountConfirm && this.formData.coManagerSupervision ? '确定对当前支付单给予审核通过吗？' : '确定对当前支付单给予审核不通过吗？'
+                        this.$confirm(message, '再次确认', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'warning'
+                        }).then(async () => {
+                            this.formData.paymentOrderId = this.paymentDetail.payOrderDetail.id
+                            await updatePaymentOrderStatusFinance(this.formData)
+                            this.clearForm()
+                            this.$emit('onCloseDialogAndQuery', 'approvePaymentVisible')
+                        }).catch(() => {
+                        })
+                    } else if (this.formData.checkPass === 'pass') {
                         // 二次确认 通过
                         this.$confirm('确定对当前支付单给予审核通过吗？', '再次确认', {
                             confirmButtonText: '确定',
@@ -375,9 +429,6 @@ export default {
                         })
                     }
                 } else {
-                    // console.log(object)
-                    // const needTip = Object.keys(rules)
-                    // this.$message.error(`${rules[needTip[0]][0].message}`)
                     this.$nextTick(() => {
                         const dom = document.querySelector('.is-error')
                         const _dom = dom.querySelector('input') || dom.querySelector('textarea')

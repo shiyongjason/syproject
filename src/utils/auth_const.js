@@ -242,12 +242,14 @@ export const CRM_FUNDS_ARREAR_UPLOAD = 1096003 // 尾款上传
 
 // 好程工 后添加
 export const CRM_PURCHASE_ORDER_CONTRACT_SEE = 109521 // 采购单-查看合同
-export const CRM_PAYMENT_REVIEW_DETAIL = 109522 // 支付单-支付单审核
+export const CRM_PAYMENT_REVIEW_DETAIL = 109522 // 支付单-项目运营审核
 export const CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT = 109523 // 支付单- [日期修改,服务费修改]
 // 好橙工 采购单上传共管户信息 2021-05-19
 export const CRM_PURCHASE_CO_MANAGER = 109525
 // 采购单详情去归档按钮权限
 export const CRM_PURCHASE_DETAIL_FILE = 109526
+// 分财审核
+export const CRM_PAYMENT_FINANCE_AUDIT = 109527
 
 // 资金逾期
 export const BRANCH_OVERDUE_SUM_EXPORT = 110003
@@ -351,3 +353,57 @@ export const CRM_LIVE_EDIT = 108702
 export const CRM_LIVE_ONTOP = 108703
 export const CRM_LIVE_NOTOP = 108704
 export const CRM_LIVE_DELETE = 108705
+
+// 商品管理-新增商品
+export const CRM_SHOPP_ADDPRODUCT_PULL = 108801 // 拉取
+export const CRM_SHOPP_ADDPRODUCT_BATCH_PULL = 108802 // 批量拉取
+export const CRM_SHOPP_ADDPRODUCT_EDITOR = 108803 // 编辑商品
+
+// 商品管理-好橙工商品库
+export const CRM_SHOPP_PRODUCTLIBRARY_EDITOR = 108804 // spu tab编辑商品
+export const CRM_SHOPP_PRODUCTLIBRARY_ADD = 108805 // spu tab新增商品
+
+export const CRM_SHOPP_SPUEDIT_ONTHESHELVES = 108806 // 编辑页面上架
+export const CRM_SHOPP_SPUEDIT_RACK = 108807 // 编辑页面下架
+export const CRM_SHOPP_SPUEDIT_ADD = 108808 // 编辑页面新增SKU
+export const CRM_SHOPP_SPUEDIT_DEL = 108809 // 编辑页面删除SKU
+
+export const CRM_SHOPP_PRODUCTLIBRARY_SKU_ONTHESHELVES = 108810 // sku tab上架
+export const CRM_SHOPP_PRODUCTLIBRARY_SKU_RACK = 108811 // sku tab下架
+export const CRM_SHOPP_PRODUCTLIBRARY_SKU_DEL = 108812 // sku tab删除
+
+// 商品管理-商品标签
+export const CRM_SHOPP_PRODUCTLABEL_RECOMMEND = 108813 // 推荐
+export const CRM_SHOPP_PRODUCTLABEL_CANCELRECOMMEND = 108814 // 取消推荐
+export const CRM_SHOPP_PRODUCTLABEL_BATCH_RECOMMEND = 108815 // 批量推荐
+export const CRM_SHOPP_PRODUCTLABEL_BATCH_CANCEL = 108816 // 批量取消
+// 商品管理-品牌管理
+export const CRM_SHOPP_PRODUCTLABEL_VIEW = 108817 // 查看
+export const CRM_SHOPP_PRODUCTLABEL_EDIT = 108818 // 修改
+// 品类管理
+export const CRM_CATEGORY_ADD = 117601
+export const CRM_CATEGORY_EDIT = 117602
+export const CRM_CATEGORY_DETELE = 117603
+export const CRM_CATEGORY_LOOK = 117604
+export const CRM_CATEGORY_MOVE = 117605
+
+// 广告位管理
+export const CRM_ADV_BANNER_ADD = 117611
+export const CRM_ADV_BANNER_EDIT = 117612
+export const CRM_ADV_BANNER_DELETE = 117613
+export const CRM_ADV_BANNER_OPERATE = 117614
+export const CRM_ADV_BANNER_MOVE = 117615
+
+export const CRM_ADV_CATEGORY_ADD = 117621
+export const CRM_ADV_CATEGORY_CANCEL = 117622
+export const CRM_ADV_CATEGORY_MOVE = 117623
+
+export const CRM_ADV_FLOOR_ADD = 117631
+export const CRM_ADV_FLOOR_LOOK = 117632
+export const CRM_ADV_FLOOR_OPERATE = 117633
+export const CRM_ADV_FLOOR_EDIT = 117634
+export const CRM_ADV_FLOOR_DELETE = 117635
+export const CRM_ADV_FLOOR_MOVE = 117636
+
+// 货款 支付
+export const CRM_ADVACE_UPSTREAMPAY = 118501

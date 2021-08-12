@@ -1,16 +1,12 @@
 <template>
     <div class="drawer-wrap">
-        <!-- <el-drawer title="支付单详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='65%'
-                   :before-close="handleClose" :wrapperClosable=false> -->
         <h-drawer v-if="drawer" title="支付单详情" :visible.sync="drawer" direction='rtl' size='60%' :wrapperClosable="false" :modal="false" :beforeClose="handleClose">
             <template #connect>
-                <h-button type="primary" v-if="paymentOrderDetail.payOrderDetail.isShowDownloadLoan&&hosAuthCheck(Auths.CRM_PAYMENT_REVIEW_DOWN)" @click="onDownFile">下载放款交接单</h-button>
+                <h-button type="primary" v-if="paymentOrderDetail.payOrderDetail.isShowDownloadLoan && hosAuthCheck(Auths.CRM_PAYMENT_REVIEW_DOWN)" @click="onDownFile">下载放款交接单</h-button>
                 <div class="drawer-content">
                     <div class="info-content">
                         <div class="row-filed">
-                            <p class="col-filed">
-                                <span class="info-title">项目信息</span>
-                            </p>
+                            <p class="col-filed"><span class="info-title">项目信息</span></p>
                         </div>
                         <div class="row-filed project">
                             <p class="col-filed">
@@ -24,9 +20,7 @@
                             </p>
                         </div>
                         <div class="row-filed">
-                            <p class="col-filed">
-                                <span class="info-title">采购单信息</span>
-                            </p>
+                            <p class="col-filed"><span class="info-title">采购单信息</span></p>
                         </div>
                         <div class="row-filed">
                             <p class="col-filed col-50">
@@ -57,31 +51,23 @@
                         <div class="row-filed">
                             <p class="col-filed col-25">
                                 <span class="label">采购批次：</span>
-                                {{
-                                paymentOrderDetail.payOrderPoDetail.poNumber  | attributeComputed(PaymentOrderDict.applyType.list)
-                            }}
+                                {{ paymentOrderConst.APPLY_TYPE.get(paymentOrderDetail.payOrderPoDetail.poNumber) }}
                             </p>
                             <p class="col-filed col-25">
                                 <span class="label">经销商预付款比例：</span> {{ paymentOrderDetail.payOrderPoDetail.prePercent }}%
                             </p>
                             <p class="col-filed col-25">
-                                <span class="label">剩余货款支付周期：</span>{{
-                                paymentOrderDetail.payOrderPoDetail.restPaymentPeriod
-                            }}个月
+                                <span class="label">剩余货款支付周期：</span>{{ paymentOrderDetail.payOrderPoDetail.restPaymentPeriod }}个月
                             </p>
                             <p class="col-filed col-25">
-                                <span class="label">免息方式：</span>{{
-                                paymentOrderDetail.payOrderPoDetail.freeInterestType | attributeComputed(PurchaseOrderDict.freeInterestType.list)
-                            }}
+                                <span class="label">免息方式：</span>{{ paymentOrderDetail.payOrderPoDetail.freeInterestType | attributeComputed(PurchaseOrderDict.freeInterestType.list) }}
                             </p>
                         </div>
                         <div class="row-filed">
                             <p class="col-filed">
                                 <span class="info-title">支付单信息</span>
                                 <span class="info-status">
-                                    {{
-                                    paymentOrderDetail.payOrderDetail.status | attributeComputed(PaymentOrderDict.status.list)
-                                }}
+                                    {{ paymentOrderConst.PAYMENT_ORDER_STATUS_ALL.get(paymentOrderDetail.payOrderDetail.status) }}
                                 </span>
                             </p>
                         </div>
@@ -91,7 +77,7 @@
                                 {{ paymentOrderDetail.payOrderDetail.applyAmount | fundMoneyHasTail }}元
                             </p>
                             <p class="col-filed col-50">
-                                <span class="label">最迟发货日期：</span> {{ paymentOrderDetail.payOrderDetail.lastGoodsDate }}
+                                <span class="label">最迟发货日期：</span> {{ paymentOrderDetail.payOrderDetail.lastGoodsDate||'-' }}
                             </p>
                         </div>
                         <div class="row-filed">
@@ -134,26 +120,23 @@
                         <div class="row-filed">
                             <p class="col-filed col-33">
                                 <span class="label">上游支付方式：</span>
-                                {{paymentOrderDetail.payOrderDetail.supplierPaymentType | attributeComputed(PaymentOrderDict.supplierPaymentType.list)}}
+                                {{ paymentOrderConst.SUPPLIER_PAYMENT_TYPE.get(paymentOrderDetail.payOrderDetail.supplierPaymentType) }}
                             </p>
                             <p class="col-filed col-33">
                                 <span class="label">期望上游支付日期：</span>
-                                {{paymentOrderDetail.payOrderDetail.expectSupplierPaymentDate?moment(paymentOrderDetail.payOrderDetail.expectSupplierPaymentDate).format('YYYY-MM-DD'):''}}
+                                {{ paymentOrderDetail.payOrderDetail.expectSupplierPaymentDate | momentFormat('YYYY-MM-DD') }}
                             </p>
                             <p class="col-filed  col-33">
                                 <span class="label">备注信息：</span>
-                                {{paymentOrderDetail.payOrderDetail.specialRemark}}
+                                {{ paymentOrderDetail.payOrderDetail.specialRemark }}
                             </p>
                         </div>
-                        <div class="row-filed" v-if="paymentOrderDetail.payOrderDetail.supplierPaymentType==2">
+                        <!-- 银行承兑才有票面信息 -->
+                        <div class="row-filed" v-if="paymentOrderDetail.payOrderDetail.supplierPaymentType == 2">
                             <div class="ticket-table">
                                 <div class="tr">
-                                    <div class="th">
-                                        出票张数
-                                    </div>
-                                    <div class="th">
-                                        票面金额（元）
-                                    </div>
+                                    <div class="th">出票张数</div>
+                                    <div class="th">票面金额（元）</div>
                                 </div>
                                 <div class="tr" v-for="(item,index) in paymentOrderDetail.billAmountResponse.billAmountDetail" :key="index">
                                     <div class="td">第 {{item.number}} 张票</div>
@@ -168,477 +151,335 @@
                         <div class="row-filed">
                             <p class="col-filed col-33">
                                 <span class="label">申请时间：</span>
-                                {{ paymentOrderDetail.payOrderDetail.applyDate | formatDate('YYYY-MM-DD HH:mm:ss') }}
+                                {{ paymentOrderDetail.payOrderDetail.applyDate | momentFormat('YYYY-MM-DD HH:mm:ss') }}
                             </p>
                             <p class="col-filed col-33">
                                 <span class="label">申请人：</span>
                                 {{paymentOrderDetail.payOrderDetail.createBy}}（{{ paymentOrderDetail.payOrderDetail.createPhone }}）
                             </p>
                         </div>
-                        <div class="row-filed" v-if="PaymentOrderDict.status.list[7].key === paymentOrderDetail.payOrderDetail.status">
-                            <p class="col-filed">
-                                <span class="label">关闭时间：</span>
-                                {{ paymentOrderDetail.payOrderDetail.closeTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
-                            </p>
-                            <p class="col-filed">
-                                <span class="label">关闭人：</span>
-                                {{
-                                paymentOrderDetail.payOrderDetail.closeBy
-                            }}（{{ paymentOrderDetail.payOrderDetail.closePhone }}）
-                            </p>
+                        <!-- 待分财审核 -->
+                        <div class="row-filed" v-if="statusKey.FINANCE_AUDIT === paymentOrderDetail.payOrderDetail.status">
+                            <h-button type="assist" @click="openApproveDialog" v-if="hosAuthCheck(Auths.CRM_PAYMENT_FINANCE_AUDIT)">
+                                支付单审核
+                            </h-button>
                         </div>
-                        <div class="row-filed" v-if="PaymentOrderDict.status.list[0].key === paymentOrderDetail.payOrderDetail.status">
+                        <!-- 分财审核之后，paymentOrderSegmentFinanceApprovalResponse中如果有信息，那么就展示分财审核信息 -->
+                        <template v-if="paymentOrderDetail.paymentOrderSegmentFinanceApprovalResponse && checkPaymentStatus(statusKey.OPERATE_AUDIT)">
+                            <div class="row-filed">
+                                <p class="col-filed col-33">
+                                    <span class="label">审核人：</span>
+                                    {{ paymentOrderDetail.paymentOrderSegmentFinanceApprovalResponse.approvalUser }}（{{ paymentOrderDetail.paymentOrderSegmentFinanceApprovalResponse.approvalPhone }}）
+                                </p>
+                                <p class="col-filed col-33">
+                                    <span class="label">审核时间：</span>
+                                    {{ paymentOrderDetail.paymentOrderSegmentFinanceApprovalResponse.approvalTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}
+                                </p>
+                                <p class="col-filed col-33">
+                                    <span class="label">账户信息是否已确认： </span>
+                                    {{ paymentOrderDetail.paymentOrderSegmentFinanceApprovalResponse.supplierAccountConfirm ? '是' : '否' }}
+                                </p>
+                            </div>
+                            <div class="row-filed">
+                                <p class="col-filed col-33">
+                                    <span class="label">共管户是否已监管：</span>
+                                    {{ paymentOrderDetail.paymentOrderSegmentFinanceApprovalResponse.coManagerSupervision ? '是' : '否' }}
+                                </p>
+                                <p class="col-filed col-66">
+                                    <span class="label">审核备注：</span>
+                                    {{ paymentOrderDetail.paymentOrderSegmentFinanceApprovalResponse.approvalRemark }}
+                                </p>
+                            </div>
+                        </template>
+                        <!-- 项目运营审核 -->
+                        <div class="row-filed" v-if="statusKey.OPERATE_AUDIT === paymentOrderDetail.payOrderDetail.status">
                             <h-button type="assist" @click="openApproveDialog" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW_DETAIL)">
                                 支付单审核
                             </h-button>
                         </div>
-                        <template v-if="paymentOrderDetail.payOrderDetail.status !== PaymentOrderDict.status.list[0].key">
-                            <template v-if="PaymentOrderDict.status.list[1].key <= paymentOrderDetail.payOrderDetail.status && (paymentOrderDetail.payOrderDetail.approvalStatus >= PaymentOrderDict.approvalStatus.list[0].key)">
-                                <!--                    首付款待支付start-->
+                        <!-- 根据审核状态是否存在判定是否经过项目运营审核环节了 -->
+                        <template v-if="paymentOrderDetail.payOrderDetail.approvalStatus && checkPaymentStatus(statusKey.DING_AUDIT)">
+                            <!-- 首付款待支付之后的状态显示下面内容，这里的判断是非分财审核，非项目运营审核，非流程审核中的 -->
+                            <div class="row-filed">
+                                <p class="col-filed col-33">
+                                    <span class="label">审核人：</span>
+                                    {{ paymentOrderDetail.payOrderDetail.approvalUser }}（{{ paymentOrderDetail.payOrderDetail.approvalPhone }}）
+                                </p>
+                                <p class="col-filed col-33">
+                                    <span class="label">审核时间：</span>
+                                    {{ paymentOrderDetail.payOrderDetail.approvalTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}
+                                </p>
+                                <p class="col-filed col-33">
+                                    <span class="label">审核结果：</span>
+                                    {{ paymentOrderConst.APPROVAL_STATUS.get(paymentOrderDetail.payOrderDetail.approvalStatus) }}
+                                </p>
+                            </div>
+                            <!-- 审核不通过只展示审核备注，这个时候支付单应该是关闭状态 -->
+                            <template v-if="paymentOrderDetail.payOrderDetail.approvalStatus === paymentOrderConst.APPROVAL_STATUS_KEY_NO_PASS">
                                 <div class="row-filed">
-                                    <p class="col-filed col-33">
-                                        <span class="label">审核人：</span>{{
-                                        paymentOrderDetail.payOrderDetail.approvalUser
-                                    }}（{{ paymentOrderDetail.payOrderDetail.approvalPhone }}）
-                                    </p>
-                                    <p class="col-filed col-33">
-                                        <span class="label">审核时间：</span>
-                                        {{ paymentOrderDetail.payOrderDetail.approvalTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
-                                    </p>
-                                    <p class="col-filed col-33">
-                                        <span class="label">审核结果：</span>{{
-                                        paymentOrderDetail.payOrderDetail.approvalStatus | attributeComputed(PaymentOrderDict.approvalStatus.list)
-                                    }}
+                                    <p class="col-filed approval-remark">
+                                        <span class="label">审核备注：</span>{{paymentOrderDetail.payOrderDetail.approvalRemark || '-'}}
                                     </p>
                                 </div>
-                                <template v-if="paymentOrderDetail.payOrderDetail.approvalStatus === PaymentOrderDict.approvalStatus.list[1].key">
-                                    <div class="row-filed">
-                                        <p class="col-filed approval-remark">
-                                            <span class="label">审核备注：</span>{{paymentOrderDetail.payOrderDetail.approvalRemark || '-'}}
-                                        </p>
-                                    </div>
-                                </template>
-                                <!--                            && paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[2].key-->
-                                <template v-if="(!paymentOrderDetail.payOrderDetail.closeReasonCode || paymentOrderDetail.payOrderDetail.closeReasonCode >= PaymentOrderDict.closeReasonCode.list[1].key)">
-                                    <div class="row-filed">
-                                        <p class="col-filed col-33">
-                                            <span class="label">应收账款质押：</span>{{
-                                            paymentOrderDetail.payOrderDetail.accountReceivablePledgeType | attributeComputed(PaymentOrderDict.accountReceivablePledgeType.list)
-                                        }}
-                                        </p>
+                            </template>
+                            <!-- 审核通过展示审核通过时填写的信息 -->
+                            <template v-else>
+                                <div class="row-filed">
+                                    <p class="col-filed col-33">
+                                        <span class="label">应收账款质押：</span>
+                                        {{ paymentOrderConst.ACCOUNT_RECEIVABLE_PLEDGE_TYPE.get(paymentOrderDetail.payOrderDetail.accountReceivablePledgeType) || '-' }}
+                                    </p>
 
-                                        <p class="col-filed col-33">
-                                            <span class="label">上游货款方式：</span>{{
-                                            paymentOrderDetail.payOrderDetail.supplierPaymentMethod  | attributeComputed(PaymentOrderDict.supplierPaymentMethod.list)
-                                        }}
-                                        </p>
-                                        <p class="col-filed col-33">
-                                            <span class="label">下游合作方式：</span>{{
-                                            paymentOrderDetail.payOrderDetail.dealerCooperationMethod==2?'代收代付': paymentOrderDetail.payOrderDetail.dealerCooperationMethod==1?'垫资代采':'-'
-                                        }}
-                                        </p>
-                                    </div>
-                                    <!--                                    <div class="row-filed">-->
-                                    <!--                                        &lt;!&ndash; 新增 &ndash;&gt;-->
-                                    <!--                                        <div class="col-filed info-img-group">-->
-                                    <!--                                            <span class="label">网银盾照片：</span>-->
-                                    <!--                                            <p class="content">-->
-                                    <!--                                                <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.shieldFiles">-->
-                                    <!--                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.shieldFiles" @click="handle(item.fileUrl)">-->
-                                    <!--                                                        <img :src=item.fileUrl />-->
-                                    <!--                                                    </span>-->
-                                    <!--                                                </template>-->
-                                    <!--                                            </p>-->
-                                    <!--                                        </div>-->
-                                    <!--                                    </div>-->
-                                    <!--                                    <div class="row-filed">-->
-                                    <!--                                        &lt;!&ndash; 新增 &ndash;&gt;-->
-                                    <!--                                        <div class="col-filed info-img-group">-->
-                                    <!--                                            <span class="label">共管户截图：</span>-->
-                                    <!--                                            <p class="content">-->
-                                    <!--                                                <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.managedFiles">-->
-                                    <!--                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.managedFiles" @click="handle(item.fileUrl)">-->
-                                    <!--                                                        <img :src=item.fileUrl />-->
-                                    <!--                                                    </span>-->
-                                    <!--                                                </template>-->
-                                    <!--                                            </p>-->
-                                    <!--                                        </div>-->
-                                    <!--                                    </div>-->
-                                    <div class="row-filed">
-                                        <p class="col-filed col-33">
-                                            <span class="label">质押信息：</span>{{
-                                            paymentOrderDetail.payOrderDetail.pledgeNo||'-'
-                                        }}
-                                        </p>
-                                        <p class="col-filed col-33">
-                                            <span class="label" style="min-width:100px">OA货款支付编号：</span>{{paymentOrderDetail.payOrderDetail.oaNo||'-'  }}
-                                        </p>
-                                        <p class="col-filed">
-                                            <span class="label">审核备注：</span>{{
-                                            paymentOrderDetail.payOrderDetail.approvalRemark||'-'
-                                        }}
-                                        </p>
-                                    </div>
+                                    <p class="col-filed col-33">
+                                        <span class="label">上游货款方式：</span>
+                                        {{ paymentOrderConst.SUPPLIER_PAYMENT_METHOD.get(paymentOrderDetail.payOrderDetail.supplierPaymentMethod) || '-'}}
+                                    </p>
+                                    <p class="col-filed col-33">
+                                        <span class="label">下游合作方式：</span>
+                                        {{ paymentOrderConst.DEALER_COOPERATION_METHOD.get(paymentOrderDetail.payOrderDetail.dealerCooperationMethod) || '-' }}
+                                    </p>
+                                </div>
+                                <div class="row-filed">
+                                    <p class="col-filed col-33">
+                                        <span class="label">质押信息：</span>
+                                        {{ paymentOrderDetail.payOrderDetail.pledgeNo || '-' }}
+                                    </p>
+                                    <p class="col-filed col-66">
+                                        <span class="label" style="min-width:100px">OA货款支付编号：</span>{{ paymentOrderDetail.payOrderDetail.oaNo || '-' }}
+                                    </p>
+                                </div>
+                                <div class="row-filed">
+                                    <p class="col-filed col-50">
+                                        <span class="label">经销商预付款：</span>
+                                        {{ paymentOrderDetail.payOrderDetail.downPaymentAmount | fundMoneyHasTail }}元
+                                    </p>
+                                    <p class="col-filed col-50" v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod == 1">
+                                        <span class="label">剩余货款：</span> {{ paymentOrderDetail.payOrderDetail.arrearAmount | fundMoneyHasTail }}元
+                                    </p>
+                                </div>
+                                <!-- 剩余支付方式 -->
+                                <template v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod == 1">
                                     <div class="row-filed">
                                         <p class="col-filed col-50">
-                                            <span class="label">经销商预付款：</span>{{
-                                            paymentOrderDetail.payOrderDetail.downPaymentAmount | fundMoneyHasTail
-                                        }}元
-                                        </p>
-                                        <p class="col-filed col-50" v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod==1">
-                                            <span class="label">剩余货款：</span> {{ paymentOrderDetail.payOrderDetail.arrearAmount  | fundMoneyHasTail }}元
-                                        </p>
-                                    </div>
-                                    <div class="row-filed" v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod==1">
-                                        <p class="col-filed col-50">
-                                            <span class="label">预计服务费总额：</span> {{ paymentOrderDetail.payOrderDetail.feeAmount  | fundMoneyHasTail }}元
+                                            <span class="label">预计服务费总额：</span> {{ paymentOrderDetail.payOrderDetail.feeAmount | fundMoneyHasTail }}元
                                         </p>
                                         <p class="col-filed col-50">
-                                            <span class="label">预计每期服务费：</span> {{
-                                            paymentOrderDetail.payOrderDetail.feeAmountPer  | fundMoneyHasTail
-                                        }}元
+                                            <span class="label">预计每期服务费：</span> {{ paymentOrderDetail.payOrderDetail.feeAmountPer | fundMoneyHasTail }}元
                                         </p>
                                     </div>
-                                    <div class="row-filed confirm-server" v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod==1">
-                                        《订单及服务费确认函》： <span class="info-status-words">{{
-                                        paymentOrderDetail.payOrderDetail.orderLetterStatus | attributeComputed(PaymentOrderDict.orderLetterStatus.list)
-                                    }}</span>
-                                        <!--                        首付款待签约以后-->
-                                        <h-button table class="go-contract-detail" @click="goContractDetail" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONTRACT_SEE) && paymentOrderDetail.payOrderDetail.orderLetterStatus === PaymentOrderDict.orderLetterStatus.list[1].key">
+                                    <!-- 垫资代采才需要签署确认函 -->
+                                    <div class="row-filed confirm-server">
+                                        《订单及服务费确认函》： <span class="info-status-words">{{ paymentOrderConst.ORDER_LETTER_STATUS.get(paymentOrderDetail.payOrderDetail.orderLetterStatus) ||  '-' }}</span>
+                                        <!-- 首付款签约以后-->
+                                        <h-button table class="go-contract-detail" @click="goContractDetail" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONTRACT_SEE) && paymentOrderDetail.payOrderDetail.orderLetterStatus === 1">
                                             查看合同
                                         </h-button>
-                                        <!--                        首付款待签约以后-->
+                                        <!-- 首付款签约以后-->
                                     </div>
                                 </template>
                             </template>
-                            <!-- 如果是代收代付就走这里面 -->
-                            <template v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod==2">
-
-                                <template>
-                                    <template v-if="PaymentOrderDict.status.list[1].key  <= paymentOrderDetail.payOrderDetail.status">
-                                        <div class="row-filed">
-                                            <p class="col-filed">
-                                                <span class="info-title">首付款支付计划：</span>
-                                            </p>
-                                        </div>
-                                        <div class="row-filed need-center" v-if="paymentOrderDetail.respFundResults.downpaymentFund">
-                                            <p class="col-filed col-30">
-                                                <span class="label">首付款：</span>
-                                                {{
-                                            paymentOrderDetail.respFundResults.downpaymentFund.paymentAmount | fundMoneyHasTail
-                                        }}元
-                                            </p>
-                                            <p class="col-filed col-30">
-                                                <span class="label">应支付时间：</span>
-                                                {{
-                                            paymentOrderDetail.respFundResults.downpaymentFund.schedulePaymentDate | formatDate('YYYY-MM-DD')
-                                        }}
-                                                <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
-                                                    <img src="../../../../assets/images/crm-edit.png" alt="" v-if="PaymentOrderDict.paymentFlag.list[0].key === paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag ||
-                                            PaymentOrderDict.paymentFlag.list[1].key === paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag||
-                                            PaymentOrderDict.paymentFlag.list[3].key === paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag" @click="updateRow('首付款', paymentOrderDetail.respFundResults.downpaymentFund, false)" class="info-img-edit">
-                                                </template>
-                                            </p>
-                                            <p class="col-filed col-40 need-center">
-                                                <span class="label">
-                                                    支付<template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key">失败</template><template
-                                                        v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">成功</template><template
-                                                        v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[4].key">取消</template>时间：</span>
-                                                <template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[4].key">
-                                                    {{ paymentOrderDetail.respFundResults.downpaymentFund.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
+                            <!-- 首付款计划 -->
+                            <template v-if="paymentOrderDetail.respFundResults.downpaymentFund && checkPaymentStatus(statusKey.DOWN_PAYMENT_WAITING_PAY)">
+                                <div class="row-filed">
+                                    <p class="col-filed">
+                                        <span class="info-title">首付款支付计划：</span>
+                                    </p>
+                                </div>
+                                <div class="row-filed need-center">
+                                    <p class="col-filed col-30">
+                                        <span class="label">首付款：</span>
+                                        {{ paymentOrderDetail.respFundResults.downpaymentFund.paymentAmount | fundMoneyHasTail }}元
+                                    </p>
+                                    <p class="col-filed col-30">
+                                        <span class="label">应支付时间：</span>
+                                        {{ paymentOrderDetail.respFundResults.downpaymentFund.schedulePaymentDate | momentFormat('YYYY-MM-DD') }}
+                                        <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
+                                            <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow('首付款', paymentOrderDetail.respFundResults.downpaymentFund, false)"
+                                                v-if="canUpdatePaymentInfo(paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag)" class="info-img-edit">
+                                        </template>
+                                    </p>
+                                    <p class="col-filed col-40 need-center">
+                                        <span class="label">{{ paymentLabel(paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag) }}</span>
+                                        <template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === paymentFlagKey.CANCEL">
+                                            {{ paymentOrderDetail.respFundResults.downpaymentFund.updateTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}
+                                        </template>
+                                        <template v-else>
+                                            {{ paymentOrderDetail.respFundResults.downpaymentFund.paidTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}
+                                        </template>
+                                        <template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === paymentFlagKey.CONFIRM">
+                                            <h-button table class="ml-20" v-if="hosAuthCheck(Auths.CRM_DOWN_PAYMENT_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.downpaymentFund.id,FundsDict.repaymentTypeArrays.list[0].key)">
+                                                {{ paymentOrderConst.PAYMENT_FLAG.get(paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag) }}
+                                            </h-button>
+                                        </template>
+                                        <template v-else>
+                                            <span class="info-status ml-20">
+                                                {{ paymentOrderConst.PAYMENT_FLAG.get(paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag) }}
+                                            </span>
+                                        </template>
+                                    </p>
+                                </div>
+                            </template>
+                            <!-- 如果是垫资代采是有服务费,服务费是在签署之后形成的，我这里不做状态判断，直接判断数据是否存在 -->
+                            <template v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod == 1">
+                                <template v-if="paymentOrderDetail.respFundResults.serviceFund && paymentOrderDetail.respFundResults.serviceFund.length > 0">
+                                    <div class="row-filed">
+                                        <p class="col-filed">
+                                            <span class="info-title">服务费支付计划：</span>
+                                        </p>
+                                    </div>
+                                    <div class="row-filed need-center" :key="item.id" v-for="(item,index) in paymentOrderDetail.respFundResults.serviceFund">
+                                        <p class="col-filed col-30">
+                                            <span class="label">第{{ index + 1 }}期服务费：</span>
+                                            {{ item.paymentAmount  | fundMoneyHasTail }} 元
+                                            <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
+                                                <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow(`第${index + 1}期服务费`, item)"
+                                                    v-if="canUpdatePaymentInfo(item.paymentFlag)" class="info-img-edit">
+                                            </template>
+                                        </p>
+                                        <p class="col-filed col-30">
+                                            <span class="label">应支付时间：</span>{{ item.schedulePaymentDate }}
+                                            <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
+                                                <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow(`第${index + 1}期服务费`, item)"
+                                                    v-if="canUpdatePaymentInfo(item.paymentFlag)" class="info-img-edit">
+                                            </template>
+                                        </p>
+                                        <div class="col-filed col-40 service-pay-time need-center">
+                                            <p class="mr-50">
+                                                <span class="label">{{ paymentLabel(item.paymentFlag) }}</span>
+                                                <template v-if="item.paymentFlag === paymentFlagKey.CANCEL">
+                                                    {{ item.updateTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}
                                                 </template>
                                                 <template v-else>
-                                                    {{ paymentOrderDetail.respFundResults.downpaymentFund.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
-                                                </template>
-                                                <template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key">
-                                                    <h-button table class="ml-20" v-if="hosAuthCheck(Auths.CRM_DOWN_PAYMENT_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.downpaymentFund.id,FundsDict.repaymentTypeArrays.list[0].key)">
-                                                        {{
-                                                    paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
-                                                }}
-                                                    </h-button>
-                                                </template>
-                                                <template v-else>
-                                                    <span class="info-status ml-20">
-                                                        {{
-                                                paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
-                                            }}
-                                                    </span>
+                                                    {{ item.paidTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}
                                                 </template>
                                             </p>
+                                            <template v-if="item.paymentFlag === paymentFlagKey.CONFIRM">
+                                                <h-button table v-if="hosAuthCheck(Auths.CRM_SERVICE_FUND_CONFIRM)" @click="openFundsDialog(item.id, FundsDict.repaymentTypeArrays.list[1].key)">
+                                                    {{ paymentOrderConst.PAYMENT_FLAG.get(item.paymentFlag) }}
+                                                </h-button>
+                                            </template>
+                                            <template v-else>
+                                                <span class="info-status">
+                                                    {{ paymentOrderConst.PAYMENT_FLAG.get(item.paymentFlag) }}
+                                                </span>
+                                            </template>
                                         </div>
-                                    </template>
-                                    <template v-if="(PaymentOrderDict.status.list[3].key  === paymentOrderDetail.payOrderDetail.status ||
-                                        PaymentOrderDict.status.list[4].key  === paymentOrderDetail.payOrderDetail.status ||
-PaymentOrderDict.status.list[5].key  === paymentOrderDetail.payOrderDetail.status||
-PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.status ) && true">
-                                        <div class="row-filed">
-                                            <p class="col-filed">
-                                                <span class="info-title">上游支付：</span>
-                                            </p>
-                                        </div>
-                                        <div class="row-filed" v-if="paymentOrderDetail.respSupplierAmount">
-                                            <p class="col-filed col-33">
-                                                <span class="label">应向上游支付：</span> {{ paymentOrderDetail.respSupplierAmount.totalAmount | fundMoneyHasTail}}元
-                                            </p>
-                                            <p class="col-filed col-33">
-                                                <span class="label">已向上游支付：</span> {{ paymentOrderDetail.respSupplierAmount.paidAmount | fundMoneyHasTail}}元
-                                            </p>
-                                            <p class="col-filed col-33">
-                                                <span class="info-status-words" @click="openLookPrevPaymentDialog" v-if="hosAuthCheck(Auths.CRM_PREV_PAYMENT_DETAIL)">查看上游支付明细</span>
-                                            </p>
-                                        </div>
-                                        <!-- <div class="row-filed" v-if="paymentOrderDetail.respGoodsAmount">
-                                            <h-button type="assist" @click="openPrevPay" v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV)&& (paymentOrderDetail.supplierPayFlag === 1)">
-                                                上游支付
-                                            </h-button>
-                                        </div> -->
-
-                                        <div class="row-filed">
-                                            <p class="col-filed">
-                                                <span class="info-title">到货信息：</span>
-                                            </p>
-                                        </div>
-                                        <div class="row-filed">
-                                            <p class="col-filed col-33">
-                                                <span class="label">应到货金额总计：</span> {{ paymentOrderDetail.respGoodsAmount.totalAmount | fundMoneyHasTail }}元
-                                            </p>
-                                            <p class="col-filed col-33">
-                                                <span class="label">已到货金额总计：</span> {{ paymentOrderDetail.respGoodsAmount.goodsAmount | fundMoneyHasTail }}元
-                                            </p>
-                                            <p class="col-filed col-33">
-                                                <span class="info-status-words" @click="openLookReceiptDetail" v-if="hosAuthCheck(Auths.CRM_REVIEW_RECEIPT_DETAIL)">查看收货明细</span>
-                                            </p>
-                                        </div>
-                                        <div class="row-filed">
-                                            <h-button type="assist" @click="openConfirmReceipt" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && (paymentOrderDetail.respGoodsAmount.goodsAmount !== paymentOrderDetail.respGoodsAmount.totalAmount)">确认收货
-                                            </h-button>
-                                        </div>
-                                    </template>
+                                    </div>
+                                    <div class="row-filed">
+                                        <p class="col-filed col-50">
+                                            <span class="label">当前服务费合计：</span>
+                                            {{ paymentOrderDetail.respFundResults.totalServiceAmount  | fundMoneyHasTail }}元
+                                        </p>
+                                        <p class="col-filed col-50">
+                                            <span class="label">已成功支付：</span>
+                                            {{ paymentOrderDetail.respFundResults.totalPaidAmount  | fundMoneyHasTail }}元
+                                        </p>
+                                    </div>
                                 </template>
                             </template>
-                            <!-- 支付单待审核 -->
-                            <!--                            订单及服务费确认函状态：orderLetterStatus 0： 未签约 1： 未签约 2： 客户已拒签-->
-                            <!--                           downpaymentFund：  首付款支付-->
-                            <!--                           closeReasonCode 支付单关闭原因： 1： 支付单审核不通过 2： 用户拒签订单及服务费确认函 3： 用户主动取消-->
-                            <!--                            1）支付订单及服务费确认函状态不是未签约 2）首付款信息存在   3)支付单未关闭-->
-                            <template v-else>
-                                <template
-                                    v-if="paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[0].key && paymentOrderDetail.respFundResults.downpaymentFund && (!paymentOrderDetail.payOrderDetail.closeReasonCode || paymentOrderDetail.payOrderDetail.closeReasonCode  >=PaymentOrderDict.closeReasonCode.list[2].key)">
-                                    <template v-if="PaymentOrderDict.status.list[1].key  <= paymentOrderDetail.payOrderDetail.status">
-                                        <div class="row-filed">
-                                            <p class="col-filed">
-                                                <span class="info-title">首付款支付计划：</span>
-                                            </p>
-                                        </div>
-                                        <div class="row-filed need-center" v-if="paymentOrderDetail.respFundResults.downpaymentFund">
-                                            <p class="col-filed col-30">
-                                                <span class="label">首付款：</span>
-                                                {{
-                                                    paymentOrderDetail.respFundResults.downpaymentFund.paymentAmount | fundMoneyHasTail
-                                                }}元
-                                            </p>
-                                            <p class="col-filed col-30">
-                                                <span class="label">应支付时间：</span>
-                                                {{
-                                                    paymentOrderDetail.respFundResults.downpaymentFund.schedulePaymentDate | formatDate('YYYY-MM-DD')
-                                                }}
-                                                <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
-                                                    <img src="../../../../assets/images/crm-edit.png" alt="" v-if="PaymentOrderDict.paymentFlag.list[0].key === paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag ||
-                                            PaymentOrderDict.paymentFlag.list[1].key === paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag||
-                                            PaymentOrderDict.paymentFlag.list[3].key === paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag" @click="updateRow('首付款', paymentOrderDetail.respFundResults.downpaymentFund, false)" class="info-img-edit">
-                                                </template>
-                                            </p>
-                                            <p class="col-filed col-40 need-center">
-                                                <span class="label">
-                                                    支付<template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key">失败</template><template
-                                                        v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">成功</template><template
-                                                        v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[4].key">取消</template>时间：</span>
-                                                <template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[4].key">
-                                                    {{ paymentOrderDetail.respFundResults.downpaymentFund.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
-                                                </template>
-                                                <template v-else>
-                                                    {{ paymentOrderDetail.respFundResults.downpaymentFund.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
-                                                </template>
-                                                <template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key">
-                                                    <h-button table class="ml-20" v-if="hosAuthCheck(Auths.CRM_DOWN_PAYMENT_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.downpaymentFund.id,FundsDict.repaymentTypeArrays.list[0].key)">
-                                                        {{
-                                                            paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
-                                                        }}
-                                                    </h-button>
-                                                </template>
-                                                <template v-else>
-                                                    <span class="info-status ml-20">
-                                                        {{
-                                                        paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
-                                                    }}
-                                                    </span>
-                                                </template>
-                                            </p>
-                                        </div>
-                                        <div class="row-filed">
-                                            <p class="col-filed">
-                                                <span class="info-title">服务费支付计划：</span>
-                                            </p>
-                                        </div>
-                                        <template v-if="paymentOrderDetail.respFundResults.serviceFund">
-                                            <div class="row-filed need-center" :key="item.id" v-for="(item,index) in paymentOrderDetail.respFundResults.serviceFund">
-                                                <p class="col-filed col-30">
-                                                    <span class="label">第{{ index + 1 }}期服务费：</span>
-                                                    {{ item.paymentAmount  | fundMoneyHasTail }} 元
-                                                    <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
-                                                        <img src="../../../../assets/images/crm-edit.png" alt="" v-if="PaymentOrderDict.paymentFlag.list[0].key === item.paymentFlag ||
-                                            PaymentOrderDict.paymentFlag.list[1].key === item.paymentFlag||
-                                            PaymentOrderDict.paymentFlag.list[3].key === item.paymentFlag" @click="updateRow(`第${index + 1}期服务费`, item)" class="info-img-edit">
-                                                    </template>
-                                                </p>
-                                                <p class="col-filed col-30">
-                                                    <span class="label">应支付时间：</span>{{ item.schedulePaymentDate }}
-                                                    <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
-                                                        <img src="../../../../assets/images/crm-edit.png" alt="" v-if="PaymentOrderDict.paymentFlag.list[0].key === item.paymentFlag ||
-                                            PaymentOrderDict.paymentFlag.list[1].key === item.paymentFlag||
-                                            PaymentOrderDict.paymentFlag.list[3].key === item.paymentFlag" @click="updateRow(`第${index + 1}期服务费`, item)" class="info-img-edit">
-                                                    </template>
-                                                </p>
-                                                <div class="col-filed col-40 service-pay-time need-center">
-                                                    <p class="mr-50">
-                                                        <span class="label">
-                                                            <!--                                                换行有空格-->
-                                                            支付<template v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key">失败</template><template v-else-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">成功</template><template
-                                                                v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[4].key">取消</template>时间：
-                                                        </span><template v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[4].key">{{ item.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</template>
-                                                        <template v-else>
-                                                            {{ item.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
-                                                        </template>
-                                                    </p>
-                                                    <template v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key">
-                                                        <h-button table v-if="hosAuthCheck(Auths.CRM_SERVICE_FUND_CONFIRM)" @click="openFundsDialog(item.id, FundsDict.repaymentTypeArrays.list[1].key)">
-                                                            {{
-                                                                item.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
-                                                            }}
-                                                        </h-button>
-                                                    </template>
-                                                    <template v-else>
-                                                        <span class="info-status">
-                                                            {{
-                                                            item.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
-                                                        }}
-                                                        </span>
-                                                    </template>
-                                                </div>
-                                            </div>
-                                        </template>
-                                        <div class="row-filed">
-                                            <p class="col-filed col-50">
-                                                <span class="label">当前服务费合计：</span>
-                                                {{ paymentOrderDetail.respFundResults.totalServiceAmount  | fundMoneyHasTail }}元
-                                            </p>
-                                            <p class="col-filed col-50">
-                                                <span class="label">已成功支付：</span>
-                                                {{ paymentOrderDetail.respFundResults.totalPaidAmount  | fundMoneyHasTail }}元
-                                            </p>
-                                        </div>
-                                    </template>
-                                    <template v-if="(PaymentOrderDict.status.list[3].key  === paymentOrderDetail.payOrderDetail.status ||
-                                        PaymentOrderDict.status.list[4].key  === paymentOrderDetail.payOrderDetail.status ||
-PaymentOrderDict.status.list[5].key  === paymentOrderDetail.payOrderDetail.status||
-PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.status ) && true">
-                                        <div class="row-filed">
-                                            <p class="col-filed">
-                                                <span class="info-title">上游支付：</span>
-                                            </p>
-                                        </div>
-                                        <div class="row-filed" v-if="paymentOrderDetail.respSupplierAmount">
-                                            <p class="col-filed col-33">
-                                                <span class="label">应向上游支付：</span> {{ paymentOrderDetail.respSupplierAmount.totalAmount | fundMoneyHasTail}}元
-                                            </p>
-                                            <p class="col-filed col-33">
-                                                <span class="label">已向上游支付：</span> {{ paymentOrderDetail.respSupplierAmount.paidAmount | fundMoneyHasTail}}元
-                                            </p>
-                                            <p class="col-filed col-33">
-                                                <span class="info-status-words" @click="openLookPrevPaymentDialog" v-if="hosAuthCheck(Auths.CRM_PREV_PAYMENT_DETAIL)">查看上游支付明细</span>
-                                            </p>
-                                        </div>
-                                        <!-- <div class="row-filed" v-if="paymentOrderDetail.respGoodsAmount">
-                                            <h-button type="assist" @click="openPrevPay" v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV)&& (paymentOrderDetail.supplierPayFlag === 1)">
-                                                上游支付
-                                            </h-button>
-                                        </div> -->
-                                        <template>
-                                            <div class="row-filed">
-                                                <p class="col-filed">
-                                                    <span class="info-title">到货信息：</span>
-                                                </p>
-                                            </div>
-                                            <div class="row-filed">
-                                                <p class="col-filed col-33">
-                                                    <span class="label">应到货金额总计：</span> {{ paymentOrderDetail.respGoodsAmount.totalAmount | fundMoneyHasTail }}元
-                                                </p>
-                                                <p class="col-filed col-33">
-                                                    <span class="label">已到货金额总计：</span> {{ paymentOrderDetail.respGoodsAmount.goodsAmount | fundMoneyHasTail }}元
-                                                </p>
-                                                <p class="col-filed col-33">
-                                                    <span class="info-status-words" @click="openLookReceiptDetail" v-if="hosAuthCheck(Auths.CRM_REVIEW_RECEIPT_DETAIL)">查看收货明细</span>
-                                                </p>
-                                            </div>
-                                            <div class="row-filed">
-                                                <h-button type="assist" @click="openConfirmReceipt" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && (paymentOrderDetail.respGoodsAmount.goodsAmount !== paymentOrderDetail.respGoodsAmount.totalAmount)">确认收货
+                            <template v-if="checkPaymentStatus(statusKey.WAITING_RECEIVED)">
+                                <template v-if="paymentOrderDetail.respSupplierAmount">
+                                    <div class="row-filed">
+                                        <p class="col-filed">
+                                            <span class="info-title">上游支付：</span>
+                                        </p>
+                                    </div>
+                                    <div class="row-filed">
+                                        <p class="col-filed col-33">
+                                            <span class="label">应向上游支付：</span> {{ paymentOrderDetail.respSupplierAmount.totalAmount | fundMoneyHasTail}}元
+                                        </p>
+                                        <p class="col-filed col-33">
+                                            <span class="label">已向上游支付：</span> {{ paymentOrderDetail.respSupplierAmount.paidAmount | fundMoneyHasTail}}元
+                                        </p>
+                                        <p class="col-filed col-33">
+                                            <span class="info-status-words" @click="openLookPrevPaymentDialog" v-if="hosAuthCheck(Auths.CRM_PREV_PAYMENT_DETAIL)">查看上游支付明细</span>
+                                        </p>
+                                    </div>
+                                </template>
+                                <template v-if="paymentOrderDetail.respGoodsAmount">
+                                    <div class="row-filed">
+                                        <p class="col-filed">
+                                            <span class="info-title">到货信息：</span>
+                                        </p>
+                                    </div>
+                                    <div class="row-filed">
+                                        <p class="col-filed col-33">
+                                            <span class="label">应到货金额总计：</span> {{ paymentOrderDetail.respGoodsAmount.totalAmount | fundMoneyHasTail }}元
+                                        </p>
+                                        <p class="col-filed col-33">
+                                            <span class="label">已到货金额总计：</span> {{ paymentOrderDetail.respGoodsAmount.goodsAmount | fundMoneyHasTail }}元
+                                        </p>
+                                        <p class="col-filed col-33">
+                                            <span class="info-status-words" @click="openLookReceiptDetail" v-if="hosAuthCheck(Auths.CRM_REVIEW_RECEIPT_DETAIL)">查看收货明细</span>
+                                        </p>
+                                    </div>
+                                    <div class="row-filed">
+                                        <h-button type="assist" @click="openConfirmReceipt" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && (paymentOrderDetail.respGoodsAmount.goodsAmount !== paymentOrderDetail.respGoodsAmount.totalAmount)">确认收货
+                                        </h-button>
+                                    </div>
+                                </template>
+                            </template>
+                            <template v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod == 1">
+                                <template v-if="paymentOrderDetail.respFundResults.arrearFund">
+                                    <div class="row-filed">
+                                        <p class="col-filed">
+                                            <span class="info-title">剩余货款支付计划：</span>
+                                        </p>
+                                    </div>
+                                    <div class="row-filed arrear-fund">
+                                        <p class="col-filed col-25">
+                                            <span class="label">剩余货款：</span>
+                                            {{ paymentOrderDetail.respFundResults.arrearFund.paymentAmount | fundMoneyHasTail }}元
+                                        </p>
+                                        <p class="col-filed col-25">
+                                            <span class="label">应支付时间：</span>
+                                            {{ paymentOrderDetail.respFundResults.arrearFund.schedulePaymentDate }}
+                                            <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
+                                                <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow(`尾款`, paymentOrderDetail.respFundResults.arrearFund, false)" class="info-img-edit"
+                                                    v-if="canUpdatePaymentInfo(paymentOrderDetail.respFundResults.arrearFund.paymentFlag)">
+                                            </template>
+                                        </p>
+                                        <p class="col-filed col-50 resp-fund-results">
+                                            <span class="label">{{ paymentLabel(paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }}</span>
+                                            {{ paymentOrderDetail.respFundResults.arrearFund.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
+                                            <template v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === paymentFlagKey.CONFIRM">
+                                                <h-button table v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.arrearFund.id,FundsDict.repaymentTypeArrays.list[2].key)">
+                                                    {{ paymentOrderConst.PAYMENT_FLAG.get(paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }}
                                                 </h-button>
-                                            </div>
-                                        </template>
-                                        <template v-if="!paymentOrderDetail.payOrderDetail.closeReasonCode">
-                                            <div class="row-filed">
-                                                <p class="col-filed">
-                                                    <span class="info-title">剩余货款支付计划：</span>
-                                                </p>
-                                            </div>
-                                            <div class="row-filed arrear-fund" v-if="paymentOrderDetail.respFundResults.arrearFund">
-                                                <p class="col-filed col-25">
-                                                    <span class="label">剩余货款：</span>
-                                                    {{ paymentOrderDetail.respFundResults.arrearFund.paymentAmount | fundMoneyHasTail }}元
-                                                </p>
-                                                <p class="col-filed col-25">
-                                                    <span class="label">应支付时间：</span>
-                                                    {{ paymentOrderDetail.respFundResults.arrearFund.schedulePaymentDate }}
-                                                    <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
-                                                        <img src="../../../../assets/images/crm-edit.png" alt="" v-if="PaymentOrderDict.paymentFlag.list[0].key === paymentOrderDetail.respFundResults.arrearFund.paymentFlag ||
-                                            PaymentOrderDict.paymentFlag.list[1].key === paymentOrderDetail.respFundResults.arrearFund.paymentFlag||
-                                            PaymentOrderDict.paymentFlag.list[3].key === paymentOrderDetail.respFundResults.arrearFund.paymentFlag" @click="updateRow(`尾款`, paymentOrderDetail.respFundResults.arrearFund, false)" class="info-img-edit">
-                                                    </template>
-                                                </p>
-                                                <p class="col-filed col-50 resp-fund-results">
-                                                    <span class="label">支付<template v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">成功</template><template
-                                                            v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key">失败</template>时间：</span>
-                                                    {{ paymentOrderDetail.respFundResults.arrearFund.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
-                                                    <template v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key">
-                                                        <h-button table v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.arrearFund.id,FundsDict.repaymentTypeArrays.list[2].key)">
-                                                            {{
-                                                                paymentOrderDetail.respFundResults.arrearFund.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
-                                                            }}
-                                                        </h-button>
-                                                    </template>
-                                                    <template v-else>
-                                                        <span class="info-status">
-                                                            {{
-                                                            paymentOrderDetail.respFundResults.arrearFund.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
-                                                        }}
-                                                        </span>
-                                                    </template>
-                                                </p>
-                                            </div>
-                                        </template>
-                                    </template>
+                                            </template>
+                                            <template v-else>
+                                                <span class="info-status">
+                                                    {{ paymentOrderConst.PAYMENT_FLAG.get(paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }}
+                                                </span>
+                                            </template>
+                                        </p>
+                                    </div>
                                 </template>
                             </template>
                         </template>
+                        <!-- 异常流：支付单关闭 -->
+                        <template v-if="statusKey.CLOSED === paymentOrderDetail.payOrderDetail.status">
+                            <div class="row-filed">
+                                <p class="col-filed col-33">
+                                    <span class="label">关闭时间：</span>
+                                    {{ paymentOrderDetail.payOrderDetail.closeTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}
+                                </p>
+                                <p class="col-filed col-66">
+                                    <span class="label">关闭人：</span>
+                                    {{ paymentOrderDetail.payOrderDetail.closeBy }}（{{ paymentOrderDetail.payOrderDetail.closePhone }}）
+                                </p>
+                            </div>
+                            <p class="tips">
+                                支付单关闭原因：{{ paymentOrderDetail.payOrderDetail.closeReason }}
+                            </p>
+                        </template>
                     </div>
-                    <p v-if="PaymentOrderDict.status.list[7].key === paymentOrderDetail.payOrderDetail.status" class="tips">
+                    <!-- 支付单关闭展示关闭原因
+                    <p v-if="statusKey.CLOSED === paymentOrderDetail.payOrderDetail.status" class="tips">
                         支付单关闭原因：{{ paymentOrderDetail.payOrderDetail.closeReason }}
-                    </p>
+                    </p> -->
                     <div class="drawer-footer">
                         <div class="drawer-button">
-                            <!--                        <h-button type="assist">支付单审核</h-button>-->
-
-                            <!--                        <h-button type="primary">审核通过</h-button>-->
                             <h-button type="default" @click="handleClose">取消</h-button>
                         </div>
                     </div>
@@ -666,7 +507,7 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
 <script>
 import { mapGetters, mapState } from 'vuex'
 import { getPaymentOrderDetail, updateServiceAmountAndTime, downFile } from '@/views/crm/paymentOrder/api'
-import PaymentOrderDict from '../paymentOrderDict'
+import paymentOrderConst from '../const'
 import FundsDict from '@/views/crm/funds/fundsDict'
 import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import * as Auths from '@/utils/auth_const'
@@ -711,7 +552,6 @@ export default {
                 respGoodsAmount: {},
                 respSupplierAmount: {}
             },
-            PaymentOrderDict,
             PurchaseOrderDict,
             FundsDict,
             updateRowVisible: false,
@@ -728,8 +568,10 @@ export default {
                 time: [
                     { required: true, message: '请选择时间' }
                 ]
-            }
-
+            },
+            paymentOrderConst,
+            statusKey: paymentOrderConst.PAYMENT_ORDER_STATUS_KEY,
+            paymentFlagKey: paymentOrderConst.PAYMENT_FLAG_KEY
         }
     },
     components: { imageAddToken },
@@ -856,10 +698,10 @@ export default {
             const { data } = await getPaymentOrderDetail(id)
             let _id = ''
             let type = ''
-            if (status === PaymentOrderDict.status.list[2].key) {
+            if (status === this.statusKey.DOWN_PAYMENT_CONFIRM) {
                 _id = data.respFundResults.downpaymentFund.id
                 type = FundsDict.repaymentTypeArrays.list[0].key
-            } else if (status === PaymentOrderDict.status.list[5].key) {
+            } else if (status === this.statusKey.REMAINING_PAYMENT_CONFIRM) {
                 _id = data.respFundResults.arrearFund.id
                 type = FundsDict.repaymentTypeArrays.list[2].key
             }
@@ -895,6 +737,32 @@ export default {
             window.open(data) */
             let apiUrl = `project/api/loan-transfers/boss/${this.paymentOrderDetail.payOrderDetail.id}/download`
             downloadFile(apiUrl)
+        },
+        // 是否可以更新支付信息
+        canUpdatePaymentInfo (paymentFlag) {
+            return this.paymentFlagKey.WAITING === paymentFlag || this.paymentFlagKey.CONFIRM === paymentFlag || this.paymentFlagKey.FAIL === paymentFlag
+        },
+        // 支付文案处理
+        paymentLabel (paymentFlag) {
+            let paymentLabel = '支付'
+            if (paymentFlag === this.paymentFlagKey.FAIL) {
+                paymentLabel = '支付失败'
+            } else if (paymentFlag === this.paymentFlagKey.PAID) {
+                paymentLabel = '支付成功'
+            } else if (paymentFlag === this.paymentFlagKey.CANCEL) {
+                paymentLabel = '支付取消'
+            }
+            return paymentLabel + '时间：'
+        },
+        // 支付单状态判断
+        checkPaymentStatus (displayStatus) {
+            // 这个是有状态顺序的，按照这个顺序来判定阶段，displayStatus的是指在什么阶段显示数据，那么displayStatus之后的状态都显示
+            const statusOrderList = [this.statusKey.FINANCE_AUDIT, this.statusKey.OPERATE_AUDIT, this.statusKey.DING_AUDIT,
+                this.statusKey.DOWN_PAYMENT_WAITING_PAY, this.statusKey.DOWN_PAYMENT_CONFIRM, this.statusKey.CLOSED, this.statusKey.WAITING_RECEIVED,
+                this.statusKey.REMAINING_PAYMENT_WAITING_PAY, this.statusKey.REMAINING_PAYMENT_CONFIRM, this.statusKey.FINISH]
+            const sIndex = statusOrderList.indexOf(displayStatus)
+            const statusList = statusOrderList.filter((item, index) => index >= sIndex)
+            return statusList.includes(this.paymentOrderDetail.payOrderDetail.status)
         }
     },
     watch: {
