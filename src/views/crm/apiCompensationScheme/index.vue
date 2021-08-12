@@ -49,7 +49,7 @@
                     <span class="colblue">{{ scope.data.row.createTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="reCall(scope.data.row)">问题处理</h-button>
+                    <h-button v-if="!scope.data.row.resolved" table @click="reCall(scope.data.row)">问题处理</h-button>
                 </template>
             </basicTable>
         </div>
@@ -60,15 +60,16 @@
 import { updateApiCompensationScheme } from './api/index'
 import { mapActions, mapGetters } from 'vuex'
 
-const SYSTEM_TYPE = new Map([
+const SYSTEM_TYPE = new Map([ // 1：司库 2：MIS 3：OA
     [ 1, '司库' ],
     [ 2, 'MIS' ],
     [ 3, 'OA' ]
 ])
-const INTERFACE_TYPE = new Map([
+const INTERFACE_TYPE = new Map([ // 1：供应商创建接口 2：上游支付同步司库 3：上游支付同步O
     [ 1, '供应商创建接口' ],
     [ 2, '上游支付同步司库' ],
-    [ 3, '上游支付同步OA' ]
+    [ 3, '上游支付同步OA' ],
+    [ 4, '查询上游支付同步司库结果' ]
 ])
 
 export default {
