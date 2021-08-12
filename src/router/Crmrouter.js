@@ -711,7 +711,7 @@ export default [
                     title: '供应商查询',
                     tagName: '供应商查询',
                     parentName: '好橙工',
-                    isMenu: false,
+                    isMenu: true,
                     icon: ''
                 },
                 component: () => import('@/views/crm/supplierSearch/index.vue')
@@ -723,7 +723,7 @@ export default [
                     title: '接口调用补偿机制',
                     tagName: '接口调用补偿机制',
                     parentName: '好橙工',
-                    isMenu: false,
+                    isMenu: true,
                     icon: ''
                 },
                 component: () => import('@/views/crm/apiCompensationScheme/index.vue')
