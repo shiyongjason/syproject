@@ -404,3 +404,6 @@ export const CRM_ADV_FLOOR_OPERATE = 117633
 export const CRM_ADV_FLOOR_EDIT = 117634
 export const CRM_ADV_FLOOR_DELETE = 117635
 export const CRM_ADV_FLOOR_MOVE = 117636
+
+// 货款 支付
+export const CRM_ADVACE_UPSTREAMPAY = 118501

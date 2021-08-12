@@ -124,7 +124,7 @@
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="24" :offset='18'>
-                        <el-button type="primary" @click="onConfirmUpper">确认上游支付</el-button>
+                        <el-button type="primary" v-if="hosAuthCheck(advancepay)" @click="onConfirmUpper">确认上游支付</el-button>
                     </el-col>
                 </el-row>
             </div>
@@ -244,6 +244,7 @@ import './css/css.scss'
 import { getPrePayList, getPrePayDetail, submitPrePay, getPreTotal, passPre, passFailPre, getApprovalHistory } from './api/index'
 import { PrepaymentDetailResponse, PrepaymentSupplierSubmitResponse, RespContractSignHistory } from '@/interface/hbp-project'
 import moment from 'moment'
+import { CRM_ADVACE_UPSTREAMPAY } from '@/utils/auth_const'
 // 定义类型
 interface Query{
     [key:string]:any
@@ -274,6 +275,7 @@ export default class Advancelist extends Vue {
          [1, '银行转帐'],
          [2, '银行承兑']
      ])
+    advancepay = CRM_ADVACE_UPSTREAMPAY
     private dialogVisible:boolean = false
     private comfirmVisble:boolean = false
     private examineVisble:boolean = false
