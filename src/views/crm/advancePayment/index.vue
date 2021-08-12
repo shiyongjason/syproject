@@ -216,17 +216,20 @@
             </span>
         </el-dialog>
         <!-- 记录 -->
-        <el-dialog title="审批记录" :visible.sync="recordVisible" width="30%"  :before-close="()=>{recordVisible = false}">
+        <el-dialog title="审批记录" :visible.sync="recordVisible" width="30%" :before-close="()=>{recordVisible = false}">
             <div class="advance_wrap">
                 <p>预付款支付钉钉审批流程</p>
                 <p class="advance_wrap-msg">{{recordInfo.distributor}}申请预付款支付{{recordInfo.applyAmount|money}}元</p>
-                <el-timeline >
-                    <el-timeline-item v-for="(item, index) in records" :key="index" hide-timestamp="true">
-                    <p>{{item.operator}}/{{item.operationName}}</p>
-                    <p>{{moment(item.operationTime).format("YYYY-MM-DD HH:mm:ss")}}</p>
-                    <p>备注：{{item.approvalRemark||'-'}}</p>
+                <el-timeline>
+                    <el-timeline-item v-for="(item, index) in records" :key="index" :hide-timestamp="true">
+                        <p>{{item.operator}}/{{item.operationName}}</p>
+                        <p>{{moment(item.operationTime).format("YYYY-MM-DD HH:mm:ss")}}</p>
+                        <p>备注：{{item.approvalRemark||'-'}}</p>
                     </el-timeline-item>
                 </el-timeline>
+                <p v-if="records&&records.length==0" style="text-align:center">
+                    暂无审批记录
+                </p>
             </div>
         </el-dialog>
     </div>
