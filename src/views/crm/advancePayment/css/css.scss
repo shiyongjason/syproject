@@ -1,0 +1,47 @@
+.row-bg {
+    padding: 5px 0;
+}
+.tag_top{
+    margin-bottom: 10px;
+}
+.advance_wrap {
+    height: 500px;
+    overflow: hidden;
+    overflow-y: scroll;
+    &-msg{
+        font-size: 16px;
+        padding-top: 10px;
+        color: sandybrown;
+        padding-bottom: 20px;
+    }
+    h3{
+        color: red;
+        padding: 10px 0;
+    }
+    &-pic {
+        width: 50px;
+        height: auto;
+        margin: 6px;
+        border:1px solid #e4eee4;
+        img {
+            width: 50px;
+            height: auto;
+        }
+    }
+}
+.advance_examine {
+    h3{
+        color: red;
+        padding: 10px 0;
+    }
+    display: flex;
+    &-left {
+        flex: 1;
+    }
+    &-right {
+        flex: 1;
+    }
+    .col-padding {
+        padding: 5px 0;
+    }
+}
