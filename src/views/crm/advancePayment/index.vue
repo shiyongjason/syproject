@@ -56,7 +56,7 @@
                 </div>
             </div>
             <div class="query-cont__row">
-                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span>累计金额：{{totalMoney|fundMoneyHasTail}}</span></el-tag>
+                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span>累计金额：{{totalMoney|money}}</span></el-tag>
             </div>
             <!-- end search bar -->
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction
@@ -78,7 +78,7 @@
                 </el-row>
                 <h3>上游支付信息</h3>
                 <el-row type="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>申请金额(元)：{{detailForm.applyAmount | fundMoneyHasTail}}</el-col>
+                    <el-col :span="10" :offset='1'>申请金额(元)：{{detailForm.applyAmount | money}}</el-col>
                     <el-col :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
                 </el-row>
                 <el-row type="flex" class="row-bg">
@@ -91,7 +91,7 @@
                 </el-row>
                 <el-row type="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate||'-'}}</el-col>
-                    <el-col :span="10" :offset='1'>备注：{{detailForm.approvalRemark||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>备注：{{detailForm.applyRemark||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>申请时间：{{detailForm.applyTime||'-'}}</el-col>
@@ -106,11 +106,11 @@
                     <el-col :span="10" :offset='1'>申核备注：{{detailForm.approvalRemark||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>应向上游支付(元)：{{detailForm.totalAmount|fundMoneyHasTail}}</el-col>
-                    <el-col :span="10" :offset='1'>已向上游支付(员)：{{detailForm.paidAmount|fundMoneyHasTail}}</el-col>
+                    <el-col :span="10" :offset='1'>应向上游支付(元)：{{detailForm.totalAmount|money}}</el-col>
+                    <el-col :span="10" :offset='1'>已向上游支付(员)：{{detailForm.paidAmount|money}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg" v-for="(item,index) in detailForm.supplierDetails" :key="index">
-                    <el-col :span="10" :offset='1'>本次上游支付(元)：{{item.payAmount|fundMoneyHasTail}}</el-col>
+                    <el-col :span="10" :offset='1'>本次上游支付(元)：{{item.payAmount|money}}</el-col>
                     <el-col :span="10" :offset='1'>支付日期：{{item.payDate}}</el-col>
                     <el-col :span="10" :offset='1'>操作人：{{item.createBy}}</el-col>
                     <el-col :span="10" :offset='1'>操作时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</el-col>
@@ -148,7 +148,7 @@
                     </el-row>
                     <h3>上游支付信息</h3>
                     <el-row>
-                        <el-col class="col-padding" :span="23" :offset='1'>申请金额(元)：{{detailForm.applyAmount|fundMoneyHasTail}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>申请金额(元)：{{detailForm.applyAmount|money}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>上游供应商：{{detailForm.supplierCompanyName||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>供应商开户行名称：{{detailForm.supplierAccountName||'-'}}</el-col>
@@ -192,7 +192,7 @@
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
-                    <el-col :span="10" :offset='1'>剩余应上游支付(元)：{{detailForm.surplusAmount|fundMoneyHasTail}}</el-col>
+                    <el-col :span="10" :offset='1'>剩余应上游支付(元)：{{detailForm.surplusAmount|money}}</el-col>
                 </el-row>
                 <el-form-item style="margin-top:20px" label="本次支付金额" prop="payAmount">
                     <el-input v-model.trim="payForm.payAmount" maxlength="50" v-isNegative:2="payForm.payAmount"></el-input>
@@ -219,11 +219,12 @@
         <el-dialog title="审批记录" :visible.sync="recordVisible" width="30%"  :before-close="()=>{recordVisible = false}">
             <div class="advance_wrap">
                 <p>预付款支付钉钉审批流程</p>
-                <p class="advance_wrap-msg">{{recordInfo.distributor}}申请预付款支付{{recordInfo.applyAmount|fundMoneyHasTail}}元</p>
+                <p class="advance_wrap-msg">{{recordInfo.distributor}}申请预付款支付{{recordInfo.applyAmount|money}}元</p>
                 <el-timeline >
-                    <el-timeline-item v-for="(item, index) in records" :key="index" :timestamp="item.operationTime">
-                    <p>李四/同意</p>
-                    <p>备注：{{item.content}}</p>
+                    <el-timeline-item v-for="(item, index) in records" :key="index" hide-timestamp="true">
+                    <p>{{item.operator}}/{{item.operationName}}</p>
+                    <p>{{moment(item.operationTime).format("YYYY-MM-DD HH:mm:ss")}}</p>
+                    <p>备注：{{item.approvalRemark||'-'}}</p>
                     </el-timeline-item>
                 </el-timeline>
             </div>
@@ -248,7 +249,7 @@ interface Query{
     [key:string]:any
 }
 
-const preStatus = [{ value: 1, label: '待项目运营审核' }, { value: 2, label: '流程审批中' }, { value: 3, label: '预付款待支付' }, { value: 4, label: '预付款支付单完成' }, { value: 5, label: '预付款待核销' }, { value: 6, label: '预付款已核销' }, { value: 7, label: '预付款支付单关闭' }]
+const preStatus = [{ value: 1, label: '待项目运营审核' }, { value: 2, label: '流程审批中' }, { value: 3, label: '待支付' }, { value: 4, label: '支付单完成' }, { value: 5, label: '待核销' }, { value: 6, label: '已核销' }, { value: 7, label: '支付单关闭' }]
 
 @Component({
     name: 'Advancelist',
@@ -270,8 +271,8 @@ export default class Advancelist extends Vue {
     }
      supplierPaymentType : Map<number | null, string> = new Map([
          [null, '-'],
-         [1, '先款后货'],
-         [2, '先货后款']
+         [1, '银行转帐'],
+         [2, '银行承兑']
      ])
     private dialogVisible:boolean = false
     private comfirmVisble:boolean = false
@@ -332,8 +333,8 @@ export default class Advancelist extends Vue {
     get options () {
         return {
             type: 'date',
-            valueFormat: 'yyyy-MM-dd',
-            format: 'yyyy-MM-dd',
+            valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+            format: 'yyyy-MM-ddTHH:mm:ss',
             startTime: this.queryParams.applyTimeStart,
             endTime: this.queryParams.applyTimeEnd
         }
