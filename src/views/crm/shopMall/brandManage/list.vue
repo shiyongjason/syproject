@@ -219,7 +219,7 @@ export default class brandManage extends Vue {
     ];
 
     onCopyLink (val) {
-        let text = `/mall/pages/brandSquare/index?brandId=${val.id}`
+        let text = `/mall/pages/brandSquare/index?brandId=${val.brandId}`
         let clipboard = new Clipboard('.clipBtn', {
             text: function () {
                 return text
