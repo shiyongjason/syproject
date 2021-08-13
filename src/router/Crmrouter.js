@@ -732,9 +732,9 @@ export default [
                 path: 'advancelist',
                 name: 'advancelist',
                 meta: {
-                    title: '货款支付',
-                    tagName: '货款支付',
-                    parentName: '货款支付',
+                    title: '预付款支付单',
+                    tagName: '预付款支付单',
+                    parentName: '预付款支付单',
                     isMenu: true,
                     icon: ''
                 },

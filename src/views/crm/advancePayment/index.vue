@@ -337,9 +337,9 @@ export default class Advancelist extends Vue {
     @Action('crmmanage/findCrmdeplist') findCrmdeplist!: Function
     get options () {
         return {
-            type: 'date',
+            type: 'datetime',
             valueFormat: 'yyyy-MM-ddTHH:mm:ss',
-            format: 'yyyy-MM-ddTHH:mm:ss',
+            format: 'yyyy-MM-dd HH:mm:ss',
             startTime: this.queryParams.applyTimeStart,
             endTime: this.queryParams.applyTimeEnd
         }
