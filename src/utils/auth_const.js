@@ -215,7 +215,8 @@ export const CRM_PURCHASE_ORDER_CONFIRM = 109501 // 确认采购单
 export const CRM_PURCHASE_ORDER_CONFIRM_CHANGE = 109502 // 确认变更
 export const CRM_PURCHASE_ORDER_SEE_DETAIL = 109503 // 查看详情
 // 好程工 支付单管理
-export const CRM_PAYMENT_REVIEW = 109504 // 审核
+export const CRM_PAYMENT_REVIEW = 109504 // 审核 -> 待分财审核
+export const CRM_PAYMENT_REVIEW_PROJECT = 109528 // 审核 -> 待项目运营审核
 export const CRM_PAYMENT_CONFIRM = 109505 // 支付确认
 export const CRM_PAYMENT_PREV = 109506 // 上游支付 支付单-列表 支付单-drawer
 export const CRM_PAYMENT_CONFIRM_RECEIPT = 109507 // 确认收货 支付单-列表 支付单-drawer
