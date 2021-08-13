@@ -61,6 +61,34 @@
                     </div>
                 </div>
             </template>
+            <!-- 收款人信息 -->
+            <div class="tab-layout-title">
+                <span></span>
+                <div class="tab-layout-title-box">
+                    收款人信息
+                    <h-button table @click="handleSuppDialog" v-if="operateStatus==1">编辑</h-button>
+                </div>
+            </div>
+            <div class="info-layout">
+                <div class="info-layout-item">
+                    <font style="flex:0 0 110px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>供应商名称：</font><span>{{LoanTransferContent.supplierCompanyName||'-'}}</span>
+                </div>
+            </div>
+            <div class="info-layout">
+                <div class="info-layout-item">
+                    <font style="flex:0 0 140px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>供应商开户行名称：</font><span>{{LoanTransferContent.supplierAccountName||'-'}}</span>
+                </div>
+            </div>
+            <div class="info-layout">
+                <div class="info-layout-item">
+                    <font style="flex:0 0 130px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>供应商银行账号：</font><span>{{LoanTransferContent.supplierAccountNo||'-'}}</span>
+                </div>
+            </div>
+            <div class="info-layout">
+                <div class="info-layout-item">
+                    <font style="flex:0 0 110px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>银行联行号：</font><span>{{LoanTransferContent.supplierBankNo||'-'}}</span>
+                </div>
+            </div>
             <!-- 当上游支付方式为银行转账时，不展示下方框选区域 supplierPaymentType 上游支付方式:1-银行转帐;2-银行承兑-->
             <div class="tab-layout-title" v-if="LoanTransferContent.supplierPaymentType!=upstreamPaymentMethod.bankTransfer">
                 <span></span>
@@ -149,7 +177,27 @@
             <!-- 需要校验页面必填项不得为空。若为空给予页面提示：“必填项不得为空哦~” -->
             <h-button type='primary' @click="confirmLoanTransfers">确认并发起流程</h-button>
         </div>
-
+        <!-- 收款人信息 -->
+        <el-dialog title="收款人信息" :close-on-click-modal='false' :visible.sync="suppDialog" width="750px" :before-close="()=>onCancel('supplierForm')" :modal='false'>
+            <el-form id='elform' :model="supplierForm" :rules="supplierRules" label-width="180px" label-position='right' ref="supplierForm">
+                <el-form-item label="供应商名称：" style="marginLeft:-8px">
+                    <el-input placeholder="供应商名称" v-model="supplierForm.supplierCompanyName"  disabled></el-input>
+                </el-form-item>
+                <el-form-item label="供应商开户行名称：" prop='supplierAccountName' style="marginLeft:-8px">
+                    <el-input placeholder="供应商开户行名称" v-model="supplierForm.supplierAccountName" maxlength="50" ></el-input>
+                </el-form-item>
+                <el-form-item label="供应商银行账号：" prop='supplierAccountNo' style="marginLeft:-8px">
+                    <el-input placeholder="供应商银行账号" v-model="supplierForm.supplierAccountNo" maxlength="25" ></el-input>
+                </el-form-item>
+                <el-form-item label="银行联行号：" prop='supplierBankNo' style="marginLeft:-8px">
+                <el-input placeholder="银行联行号" v-model="supplierForm.supplierBankNo" maxlength="12" ></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <h-button @click="()=>onCancel('supplierForm')">取消</h-button>
+                <h-button type="primary" @click="submitSupp">确定</h-button>
+            </div>
+        </el-dialog>
         <!-- 质押与终审决议信息 dialog -->
         <el-dialog title="质押与终审决议信息" :close-on-click-modal='false' :visible.sync="openDialog" width="750px" :before-close="()=>onCancel('reviewResolutionForm')" :modal='false'>
             <div class="dialog-ctx reviewResolution">
@@ -161,17 +209,6 @@
                         <!-- 长度为50位以内字母或数字。 -->
                         <el-input placeholder="请输入中登网质押编号" v-model="reviewResolutionForm.pledgeNo" maxlength="50"></el-input>
                     </el-form-item>
-                        <!-- <div class="reviewResolutionForm-title">
-                            评审决议流程：
-                        </div>
-                        <div class="reviewResolutionForm-reviewResolutionNo" style="margin-left: 32px;">
-                            评审决议编号：{{reviewResolutionForm.reviewResolutionNo||'-'}}
-                        </div>
-                        <el-form-item label="评审决议流程状态：" prop='reviewResolutionStatus' style="marginLeft:-9px;marginTop:10px">
-                            <el-select v-model="reviewResolutionForm.reviewResolutionStatus" placeholder="请选择">
-                                <el-option label="已完结" :value="1"></el-option>
-                            </el-select>
-                        </el-form-item> -->
                         <div class="reviewResolutionForm-title">
                             货款支付流程：
                         </div>
@@ -275,13 +312,14 @@ import downloadFileAddToken from '@/components/downloadFileAddToken'
 import utils from '@/utils/filters'
 import { isNum } from '@/utils/validate/format'
 // api
-import { postPledgeResolution, getMoreBillAmount, getLoanTransferDoc, postLoanTransferDoc, postBillAmount, postLoanTransfersConfirm, getReviewResolution } from '../api/index'
+import { postPledgeResolution, getMoreBillAmount, getLoanTransferDoc, postLoanTransferDoc, postBillAmount, postLoanTransfersConfirm, getReviewResolution, postSupplierLoan } from '../api/index'
 export default {
     name: 'LoanTransferContent',
     components: { OssFileHosjoyUpload, downloadFileAddToken },
     props: ['LoanTransferContent', 'paymentOrderId', 'operateStatus'],
     data () {
         return {
+            suppDialog: false,
             // 上游支付方式:1-银行转帐;2-银行承兑
             upstreamPaymentMethod: {
                 bankTransfer: 1,
@@ -292,6 +330,9 @@ export default {
             openDialog: false,
             openDialogUpload: false,
             openDialogVoter: false,
+            supplierForm: {
+
+            },
             reviewResolutionForm: {
                 id: '',
                 pledgeNo: '', // 质押信息
@@ -339,6 +380,30 @@ export default {
                 return t
             }, 0)
             return total
+        },
+        supplierRules () {
+            return {
+                supplierAccountName: [
+                    { required: true, message: '供应商开户行名称不能为空', trigger: 'blur' }
+                ],
+                supplierAccountNo: [
+                    { required: true, message: '供应商银行账号不能为空', trigger: 'blur' }
+                ],
+                supplierBankNo: [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            if (!value) {
+                                return callback(new Error('银行联行号不能为空'))
+                            } else if (value.length && value.length < 12) {
+                                return callback(new Error('请输入正确的12位联行号数字！'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
+                ]
+            }
         },
         rules () {
             return {
@@ -441,6 +506,15 @@ export default {
         getDetailAgain () {
             this.$emit('getDetailAgain')
         },
+        handleSuppDialog (val) {
+            this.suppDialog = true
+            this.supplierForm = {
+                supplierCompanyName: this.LoanTransferContent.supplierCompanyName,
+                supplierAccountName: this.LoanTransferContent.supplierAccountName,
+                supplierAccountNo: this.LoanTransferContent.supplierAccountNo,
+                supplierBankNo: this.LoanTransferContent.supplierBankNo
+            }
+        },
         // 打开编辑质押与终审决议信息弹窗
         async handleOpenDialog () {
             const { data: reviewResolutionResponse } = await getReviewResolution(this.paymentOrderId)
@@ -457,6 +531,11 @@ export default {
         },
         // 取消弹窗
         onCancel (refForm) {
+            if (refForm === 'supplierForm') {
+                this.suppDialog = false
+                this.$refs[refForm].resetFields()
+                return
+            }
             if (refForm === 'DialogUpload') {
                 this.openDialogUpload = false
                 return
@@ -508,13 +587,21 @@ export default {
                 this.billAmountForm.billAmount.splice(index, 1)
             }
         },
+        submitSupp () {
+            this.supplierForm.id = this.paymentOrderId
+            this.$refs['supplierForm'].validate(async (valid) => {
+                if (valid) {
+                    await postSupplierLoan(this.supplierForm)
+                    this.getDetailAgain()
+                    this.onCancel('supplierForm')
+                }
+            })
+        },
         // 提交票面
         submitForm () {
             this.$refs['formVoter'].validate(async (valid) => {
                 if (valid) {
                     if (this.totalAmount != this.LoanTransferContent.applyAmount) {
-                        console.log('🚀 --- totalAmount', this.totalAmount)
-                        console.log('🚀 --- this.LoanTransferContent.applyAmount', this.LoanTransferContent.applyAmount)
                         this.$message.error(`提示：合计票面金额应等于货款申请金额`)
                         return
                     }

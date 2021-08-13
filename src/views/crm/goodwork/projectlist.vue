@@ -5,7 +5,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">项目名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.projectName" placeholder="请输入项目名称" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.projectName" placeholder="请输入项目名称" maxlength="70"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">

@@ -59,3 +59,5 @@ export const getReviewResolution = (paymentOrderId) => axios.get(`/project/api/l
 
 // 支付单审核记录
 export const approvalHistory = (paymentOrderId) => axios.get(`/project/api/contract-approval/${paymentOrderId}/payment-order/approval-history`)
+// 收款人保存
+export const postSupplierLoan = (params) => axios.post(`/project/api/loan-transfers/boss/supplier`, params)

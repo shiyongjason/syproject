@@ -124,7 +124,7 @@
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="24" :offset='18'>
-                        <el-button type="primary" @click="onConfirmUpper">确认上游支付</el-button>
+                        <el-button type="primary" v-if="hosAuthCheck(advancepay)" @click="onConfirmUpper">确认上游支付</el-button>
                     </el-col>
                 </el-row>
             </div>
@@ -216,17 +216,20 @@
             </span>
         </el-dialog>
         <!-- 记录 -->
-        <el-dialog title="审批记录" :visible.sync="recordVisible" width="30%"  :before-close="()=>{recordVisible = false}">
+        <el-dialog title="审批记录" :visible.sync="recordVisible" width="30%" :before-close="()=>{recordVisible = false}">
             <div class="advance_wrap">
                 <p>预付款支付钉钉审批流程</p>
                 <p class="advance_wrap-msg">{{recordInfo.distributor}}申请预付款支付{{recordInfo.applyAmount|money}}元</p>
-                <el-timeline >
-                    <el-timeline-item v-for="(item, index) in records" :key="index" hide-timestamp="true">
-                    <p>{{item.operator}}/{{item.operationName}}</p>
-                    <p>{{moment(item.operationTime).format("YYYY-MM-DD HH:mm:ss")}}</p>
-                    <p>备注：{{item.approvalRemark||'-'}}</p>
+                <el-timeline>
+                    <el-timeline-item v-for="(item, index) in records" :key="index" :hide-timestamp="true">
+                        <p>{{item.operator}}/{{item.operationName}}</p>
+                        <p>{{moment(item.operationTime).format("YYYY-MM-DD HH:mm:ss")}}</p>
+                        <p>备注：{{item.approvalRemark||'-'}}</p>
                     </el-timeline-item>
                 </el-timeline>
+                <p v-if="records&&records.length==0" style="text-align:center">
+                    暂无审批记录
+                </p>
             </div>
         </el-dialog>
     </div>
@@ -244,6 +247,7 @@ import './css/css.scss'
 import { getPrePayList, getPrePayDetail, submitPrePay, getPreTotal, passPre, passFailPre, getApprovalHistory } from './api/index'
 import { PrepaymentDetailResponse, PrepaymentSupplierSubmitResponse, RespContractSignHistory } from '@/interface/hbp-project'
 import moment from 'moment'
+import { CRM_ADVACE_UPSTREAMPAY } from '@/utils/auth_const'
 // 定义类型
 interface Query{
     [key:string]:any
@@ -274,6 +278,7 @@ export default class Advancelist extends Vue {
          [1, '银行转帐'],
          [2, '银行承兑']
      ])
+    advancepay = CRM_ADVACE_UPSTREAMPAY
     private dialogVisible:boolean = false
     private comfirmVisble:boolean = false
     private examineVisble:boolean = false
