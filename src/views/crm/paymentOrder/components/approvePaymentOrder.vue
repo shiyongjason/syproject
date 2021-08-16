@@ -141,7 +141,7 @@
                             {{paymentDetail.paymentOrderSegmentFinanceApprovalResponse.coManagerSupervision ? '是' : '否'}}
                         </el-form-item>
                         <el-form-item label="审核备注：" label-width="165px">
-                            {{paymentDetail.approvalRemark || '-'}}
+                            {{paymentDetail.paymentOrderSegmentFinanceApprovalResponse.approvalRemark || '-'}}
                         </el-form-item>
                         <div class="info-title">项目运营审核信息</div>
                         <el-form-item prop="checkPass" label="审核结果：">
