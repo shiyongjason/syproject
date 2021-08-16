@@ -99,11 +99,11 @@
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>审核人：{{detailForm.approvalUser||'-'}}</el-col>
-                    <el-col :span="10" :offset='1'>申请时间：{{detailForm.approvalTime||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>审核时间：{{detailForm.approvalTime||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>申核结果：{{detailForm.approvalStatus==1?'通过':detailForm.approvalStatus==2?'不通过':'-'}}</el-col>
-                    <el-col :span="10" :offset='1'>申核备注：{{detailForm.approvalRemark||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>审核结果：{{detailForm.approvalStatus==1?'通过':detailForm.approvalStatus==2?'不通过':'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>审核备注：{{detailForm.approvalRemark||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>应向上游支付(元)：{{detailForm.totalAmount|money}}</el-col>
@@ -199,7 +199,7 @@
                     <el-input v-model.trim="payForm.payAmount" maxlength="50" v-isNegative:2="payForm.payAmount"></el-input>
                 </el-form-item>
                 <el-form-item label="支付日期：" prop="payDate">
-                    <el-date-picker v-model="payForm.payDate" type="date" placeholder="选择日期">
+                    <el-date-picker v-model="payForm.payDate" type="date" placeholder="选择日期" :picker-options="pickerOptions">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="上传上游支付凭证：" prop="payVouchers" style="margin:20px 0">
@@ -306,6 +306,11 @@ export default class Advancelist extends Vue {
         applyTimeStart: '',
         applyTimeEnd: ''
     }
+    pickerOptions={
+        disabledDate (time) {
+            return time.getTime() > Date.now() // 如果当天可选，就不用减8.64e7
+        }
+    }
     detailForm:PrepaymentDetailResponse = {} as PrepaymentDetailResponse
     auditForm = {
         resource: '',
@@ -347,6 +352,13 @@ export default class Advancelist extends Vue {
             endTime: this.queryParams.applyTimeEnd
         }
     }
+
+    // pickerBeginDateBefore：{
+    //         disabledDate(time){
+    //             return time.getTime() < Date.now()-8.64e7   //如果当天可选，就不用减8.64e7
+    //         }
+    //     }
+
     // validator: (rule, value, callback) => {
     auditRules = {
         resource: [
