@@ -110,14 +110,19 @@
                     <el-col :span="10" :offset='1'>已向上游支付(元)：{{detailForm.paidAmount|money}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg" v-for="(item,index) in detailForm.supplierDetails" :key="index">
-                    <el-col :span="10" :offset='1'>本次上游支付(元)：{{item.payAmount|money}}</el-col>
+                    <el-col :span="10" :offset='1'>{{index+1}}、本次上游支付(元)：{{item.payAmount|money}}</el-col>
                     <el-col :span="10" :offset='1'>支付日期：{{item.payDate}}</el-col>
                     <el-col :span="10" :offset='1'>操作人：{{item.createBy}}</el-col>
                     <el-col :span="10" :offset='1'>操作时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</el-col>
                     <el-col :span="20" :offset='1' type='flex'>上游支付凭证：
                         <div style="display:flex;">
-                            <div class="advance_wrap-pic" v-for="(v,index) in item.payVouchers" :key="index">
-                                <ImageAddToken :fileUrl="v.fileUrl" alt="" />
+                            <div class="advance_wrap-pic1" v-for="(v,index) in item.payVouchers" :key="index">
+                                <!-- <ImageAddToken :fileUrl="v.fileUrl" alt="" /> -->
+                                <downloadFileAddToken isPreview
+                                                              :file-name="v.fileName"
+                                                              :file-url="v.fileUrl"
+                                                              :a-link-words="v.fileName"
+                                                              is-type="main" />
                             </div>
                         </div>
                     </el-col>
@@ -245,6 +250,8 @@ import { CreateElement } from 'vue'
 import { Action, Getter, State } from 'vuex-class'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
 import ImageAddToken from '@/components/imageAddToken/index.vue'
+import downloadFileAddToken from '@/components/downloadFileAddToken/index.vue'
+
 import { deepCopy } from '@/utils/utils'
 import './css/css.scss'
 import { getPrePayList, getPrePayDetail, submitPrePay, getPreTotal, passPre, passFailPre, getApprovalHistory } from './api/index'
@@ -263,7 +270,8 @@ const preStatus = [{ value: 1, label: '待项目运营审核' }, { value: 2, lab
     components: {
         hosJoyTable,
         OssFileHosjoyUpload,
-        ImageAddToken
+        ImageAddToken,
+        downloadFileAddToken
     }
 })
 export default class Advancelist extends Vue {
