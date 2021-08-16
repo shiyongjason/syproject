@@ -466,7 +466,7 @@
                                 </p>
                                 <p class="col-filed col-66">
                                     <span class="label">关闭人：</span>
-                                    {{ paymentOrderDetail.payOrderDetail.closeBy }}（{{ paymentOrderDetail.payOrderDetail.closePhone }}）
+                                    {{ paymentOrderDetail.payOrderDetail.closeBy }}（{{ paymentOrderDetail.payOrderDetail.closePhone ||'-'}}）
                                 </p>
                             </div>
                             <p class="tips">
