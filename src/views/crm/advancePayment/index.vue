@@ -107,7 +107,7 @@
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>应向上游支付(元)：{{detailForm.totalAmount|money}}</el-col>
-                    <el-col :span="10" :offset='1'>已向上游支付(员)：{{detailForm.paidAmount|money}}</el-col>
+                    <el-col :span="10" :offset='1'>已向上游支付(元)：{{detailForm.paidAmount|money}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg" v-for="(item,index) in detailForm.supplierDetails" :key="index">
                     <el-col :span="10" :offset='1'>本次上游支付(元)：{{item.payAmount|money}}</el-col>
