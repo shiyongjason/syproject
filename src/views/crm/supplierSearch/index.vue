@@ -44,8 +44,8 @@ export default {
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                startDate: '',
-                endDate: '',
+                startTime: '',
+                endTime: '',
                 supplierName: '',
                 createBy: ''
             },
@@ -65,8 +65,8 @@ export default {
                 type: 'datetime',
                 valueFormat: 'yyyy-MM-ddTHH:mm:ss',
                 format: 'yyyy-MM-dd HH:mm:ss',
-                startTime: this.queryParams.startDate,
-                endTime: this.queryParams.endDate
+                startTime: this.queryParams.startTime,
+                endTime: this.queryParams.endTime
             }
         },
         ...mapGetters({
