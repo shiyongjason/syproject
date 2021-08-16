@@ -95,7 +95,7 @@
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>申请时间：{{detailForm.applyTime||'-'}}</el-col>
-                    <el-col :span="10" :offset='1'>申请人：{{detailForm.applyTime||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>申请人：{{detailForm.applyUser||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>审核人：{{detailForm.approvalUser||'-'}}</el-col>
@@ -124,7 +124,7 @@
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="24" :offset='18'>
-                        <el-button type="primary" v-if="hosAuthCheck(advancepay)" @click="onConfirmUpper">确认上游支付</el-button>
+                        <el-button type="primary" v-if="hosAuthCheck(advancepay)&&detailForm.supplierPaymentType==2" @click="onConfirmUpper">确认上游支付</el-button>
                     </el-col>
                 </el-row>
             </div>
@@ -222,10 +222,12 @@
                 <p>预付款支付钉钉审批流程</p>
                 <p class="advance_wrap-msg">{{recordInfo.distributor}}申请预付款支付{{recordInfo.applyAmount|money}}元</p>
                 <el-timeline>
-                    <el-timeline-item v-for="(item, index) in records" :key="index" :hide-timestamp="true">
+                    <el-timeline-item v-for="(item, index) in records" :key="index"
+                    color='#ff7a45'
+                    :hide-timestamp="true">
                         <p>{{item.operator}}/{{item.operationName}}</p>
                         <p>{{moment(item.operationTime).format("YYYY-MM-DD HH:mm:ss")}}</p>
-                        <p>备注：{{item.approvalRemark||'-'}}</p>
+                        <p style="color:#ff7a45">备注：{{item.approvalRemark||'-'}}</p>
                     </el-timeline-item>
                 </el-timeline>
                 <p v-if="records&&records.length==0" style="text-align:center">

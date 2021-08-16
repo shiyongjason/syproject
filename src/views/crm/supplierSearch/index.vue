@@ -9,13 +9,7 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col__label">创建人：</div>
-                <div class="query-col__input">
-                    <el-input v-model="queryParams.createBy" placeholder="请输入" maxlength="50"></el-input>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col__label">应支付日期：</div>
+                <div class="query-col__label">创建时间：</div>
                 <div class="query-col__input">
                     <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
                     </HDatePicker>
@@ -69,8 +63,8 @@ export default {
         options () {
             return {
                 type: 'datetime',
-                valueFormat: 'yyyy-MM-dd',
-                format: 'yyyy-MM-dd',
+                valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+                format: 'yyyy-MM-dd HH:mm:ss',
                 startTime: this.queryParams.startDate,
                 endTime: this.queryParams.endDate
             }
