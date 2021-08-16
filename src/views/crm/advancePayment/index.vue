@@ -152,6 +152,7 @@
                         <el-col class="col-padding" :span="23" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>上游供应商：{{detailForm.supplierCompanyName||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>供应商开户行名称：{{detailForm.supplierAccountName||'-'}}</el-col>
+                         <el-col class="col-padding" :span="23" :offset='1'>银行联行号：{{detailForm.supplierBankNo||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>备注信息：{{detailForm.applyRemark||'-'}}</el-col>
@@ -337,9 +338,9 @@ export default class Advancelist extends Vue {
     @Action('crmmanage/findCrmdeplist') findCrmdeplist!: Function
     get options () {
         return {
-            type: 'date',
+            type: 'datetime',
             valueFormat: 'yyyy-MM-ddTHH:mm:ss',
-            format: 'yyyy-MM-ddTHH:mm:ss',
+            format: 'yyyy-MM-dd HH:mm:ss',
             startTime: this.queryParams.applyTimeStart,
             endTime: this.queryParams.applyTimeEnd
         }
