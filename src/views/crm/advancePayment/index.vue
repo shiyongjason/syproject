@@ -129,7 +129,7 @@
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="24" :offset='18'>
-                        <el-button type="primary" v-if="hosAuthCheck(advancepay)&&detailForm.supplierPaymentType==2" @click="onConfirmUpper">确认上游支付</el-button>
+                        <el-button type="primary" v-if="hosAuthCheck(advancepay)&&detailForm.supplierPaymentType==2&&detailForm.status==3" @click="onConfirmUpper">确认上游支付</el-button>
                     </el-col>
                 </el-row>
             </div>
