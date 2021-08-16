@@ -95,7 +95,7 @@
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>申请时间：{{detailForm.applyTime||'-'}}</el-col>
-                    <el-col :span="10" :offset='1'>申请人：{{detailForm.applyTime||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>申请人：{{detailForm.applyUser||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>审核人：{{detailForm.approvalUser||'-'}}</el-col>
@@ -124,7 +124,7 @@
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="24" :offset='18'>
-                        <el-button type="primary" v-if="hosAuthCheck(advancepay)" @click="onConfirmUpper">确认上游支付</el-button>
+                        <el-button type="primary" v-if="hosAuthCheck(advancepay)&&detailForm.supplierPaymentType==2" @click="onConfirmUpper">确认上游支付</el-button>
                     </el-col>
                 </el-row>
             </div>
