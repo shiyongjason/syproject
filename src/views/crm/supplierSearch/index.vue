@@ -9,12 +9,6 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col__label">创建人：</div>
-                <div class="query-col__input">
-                    <el-input v-model="queryParams.createBy" placeholder="请输入" maxlength="50"></el-input>
-                </div>
-            </div>
-            <div class="query-cont-col">
                 <div class="query-col__label">应支付日期：</div>
                 <div class="query-col__input">
                     <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
