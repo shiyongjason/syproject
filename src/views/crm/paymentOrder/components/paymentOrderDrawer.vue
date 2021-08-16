@@ -187,7 +187,7 @@
                                 </p>
                                 <p class="col-filed col-66">
                                     <span class="label">审核备注：</span>
-                                    {{ paymentOrderDetail.paymentOrderSegmentFinanceApprovalResponse.approvalRemark }}
+                                    {{ paymentOrderDetail.paymentOrderSegmentFinanceApprovalResponse.approvalRemark||'-' }}
                                 </p>
                             </div>
                         </template>
