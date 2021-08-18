@@ -37,7 +37,7 @@
                         </span>
                         {{ item.paymentBank||'-' }}
                     </p> -->
-                    <div class="body info-img-group">
+                    <div class="body info-img-group" v-if="prevPaymentDetail.supplierPaymentType==1">
                         <span class="label">
                             支付凭证：
                         </span>
