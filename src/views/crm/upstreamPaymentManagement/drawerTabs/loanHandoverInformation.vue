@@ -71,7 +71,7 @@
              <div class="info-layout-item"><font style="flex: 0 0 130px">期望上游支付日期：</font><span>{{data.expectSupplierPaymentDate||'-'}}</span></div>
          </div>
          <div  class="info-layout">
-            <div class="info-layout-item"><font style="flex: 0 0 100px">上游支付形式：</font><span>
+            <div class="info-layout-item"><font style="flex: 0 0 100px">上游支付方式：</font><span>
                 {{paymentType.get(data.supplierPaymentType)}}
             </span></div>
          </div>
