@@ -432,7 +432,7 @@ export default class Advancelist extends Vue {
                 if (this.auditForm.resource == '通过') {
                     await passPre(this.id)
                 } else {
-                    await passFailPre(this.id, { remark: this.auditForm.remark })
+                    await passFailPre(this.id, { remark: this.auditForm.remark.trim() })
                 }
                 this.$message.success('提交成功')
                 this.getList()
