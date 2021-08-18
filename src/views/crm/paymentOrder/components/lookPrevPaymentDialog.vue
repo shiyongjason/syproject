@@ -8,7 +8,7 @@
                         <span class="orange-main">{{ prevPaymentDetail.totalAmount | fundMoneyHasTail }}元</span>
                     </p>
                     <p>
-                        <span>上游支付形式：</span>
+                        <span>上游支付方式：</span>
                         <span class="orange-main">{{ prevPaymentDetail.supplierPaymentType | attributeComputed(PaymentOrderDict.supplierPaymentType.list) }}</span>
                     </p>
                 </div>
@@ -37,7 +37,7 @@
                         </span>
                         {{ item.paymentBank||'-' }}
                     </p> -->
-                    <div class="body info-img-group">
+                    <div class="body info-img-group" v-if="prevPaymentDetail.supplierPaymentType==1">
                         <span class="label">
                             支付凭证：
                         </span>
