@@ -115,17 +115,16 @@
                     <el-col :span="10" :offset='1'>支付日期：{{item.payDate}}</el-col>
                     <el-col :span="10" :offset='1'>操作人：{{item.createBy}}</el-col>
                     <el-col :span="10" :offset='1'>操作时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</el-col>
-                    <el-col :span="20" :offset='1' type='flex'>上游支付凭证：
-                        <div style="display:flex;">
+                    <el-col :span="20" :offset='1' >上游支付凭证：
+                        <div>
                             <div class="advance_wrap-pic1" v-for="(v,index) in item.payVouchers" :key="index">
                                 <!-- <ImageAddToken :fileUrl="v.fileUrl" alt="" /> -->
-                                <downloadFileAddToken isPreview
-                                                              :file-name="v.fileName"
-                                                              :file-url="v.fileUrl"
-                                                              :a-link-words="v.fileName"
-                                                              is-type="main" />
+                                <downloadFileAddToken isPreview :file-name="v.fileName" :file-url="v.fileUrl" :a-link-words="v.fileName" is-type="main" />
                             </div>
                         </div>
+                        <span v-if="item.payVouchers&&item.payVouchers.length==0">
+                            -
+                        </span>
                     </el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
@@ -158,7 +157,7 @@
                         <el-col class="col-padding" :span="23" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>上游供应商：{{detailForm.supplierCompanyName||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>供应商开户行名称：{{detailForm.supplierAccountName||'-'}}</el-col>
-                         <el-col class="col-padding" :span="23" :offset='1'>银行联行号：{{detailForm.supplierBankNo||'-'}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>银行联行号：{{detailForm.supplierBankNo||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>备注信息：{{detailForm.applyRemark||'-'}}</el-col>
@@ -189,35 +188,35 @@
         <!-- 确认上游支付 -->
         <el-dialog title="预付款上游支付" :visible.sync="comfirmVisble" width="600px" :close-on-click-modal=false :before-close="()=>{comfirmVisble = false}">
             <div class="advance_wrap">
-            <el-form :model="payForm" :rules="detailRules" ref="payForm" label-width="150px" class="demo-ruleForm">
-                <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>经销商：{{detailForm.distributor||'-'}}</el-col>
-                    <el-col :span="10" :offset='1'>项目：{{detailForm.projectName||'-'}}</el-col>
-                </el-row>
-                <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>分部：{{detailForm.subsectionName||'-'}}</el-col>
-                    <el-col :span="10" :offset='1'>上游：{{detailForm.supplierCompanyName||'-'}}</el-col>
-                </el-row>
-                <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
-                    <el-col :span="10" :offset='1'>剩余应上游支付(元)：{{detailForm.surplusAmount|fundMoneyHasTail}}</el-col>
-                </el-row>
-                <el-form-item style="margin-top:20px" label="本次支付金额：" prop="payAmount">
-                    <el-input v-model.trim="payForm.payAmount" maxlength="50" v-isNegative:2="payForm.payAmount"></el-input>
-                </el-form-item>
-                <el-form-item label="支付日期：" prop="payDate">
-                    <el-date-picker v-model="payForm.payDate" type="date" placeholder="选择日期" :picker-options="pickerOptions">
-                    </el-date-picker>
-                </el-form-item>
-                <el-form-item label="上传上游支付凭证：" prop="payVouchers" style="margin:20px 0">
-                    <OssFileHosjoyUpload v-model="payForm.payVouchers" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.payForm.clearValidate('payVouchers')" accept=".jpg,.png,.pdf">
-                        <div class="a-line">
-                            <h-button>上传文件</h-button>
-                        </div>
-                    </OssFileHosjoyUpload>
-                    <p class="tips">支持扩展名：jpg.png.pdf...</p>
-                </el-form-item>
-            </el-form>
+                <el-form :model="payForm" :rules="detailRules" ref="payForm" label-width="150px" class="demo-ruleForm">
+                    <el-row ype="flex" class="row-bg">
+                        <el-col :span="10" :offset='1'>经销商：{{detailForm.distributor||'-'}}</el-col>
+                        <el-col :span="10" :offset='1'>项目：{{detailForm.projectName||'-'}}</el-col>
+                    </el-row>
+                    <el-row ype="flex" class="row-bg">
+                        <el-col :span="10" :offset='1'>分部：{{detailForm.subsectionName||'-'}}</el-col>
+                        <el-col :span="10" :offset='1'>上游：{{detailForm.supplierCompanyName||'-'}}</el-col>
+                    </el-row>
+                    <el-row ype="flex" class="row-bg">
+                        <el-col :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
+                        <el-col :span="10" :offset='1'>剩余应上游支付(元)：{{detailForm.surplusAmount|fundMoneyHasTail}}</el-col>
+                    </el-row>
+                    <el-form-item style="margin-top:20px" label="本次支付金额：" prop="payAmount">
+                        <el-input v-model.trim="payForm.payAmount" maxlength="50" v-isNegative:2="payForm.payAmount"></el-input>
+                    </el-form-item>
+                    <el-form-item label="支付日期：" prop="payDate">
+                        <el-date-picker v-model="payForm.payDate" type="date" placeholder="选择日期" :picker-options="pickerOptions">
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="上传上游支付凭证：" prop="payVouchers" style="margin:20px 0">
+                        <OssFileHosjoyUpload v-model="payForm.payVouchers" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.payForm.clearValidate('payVouchers')" accept=".jpg,.png,.pdf">
+                            <div class="a-line">
+                                <h-button>上传文件</h-button>
+                            </div>
+                        </OssFileHosjoyUpload>
+                        <p class="tips">支持扩展名：jpg.png.pdf...</p>
+                    </el-form-item>
+                </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="comfirmVisble = false">取 消</el-button>
@@ -230,9 +229,7 @@
                 <p>预付款支付钉钉审批流程</p>
                 <p class="advance_wrap-msg">{{recordInfo.distributor}}申请预付款支付{{recordInfo.applyAmount|fundMoneyHasTail}}元</p>
                 <el-timeline>
-                    <el-timeline-item v-for="(item, index) in records" :key="index"
-                    color='#ff7a45'
-                    :hide-timestamp="true">
+                    <el-timeline-item v-for="(item, index) in records" :key="index" color='#ff7a45' :hide-timestamp="true">
                         <p>{{item.operator}}/{{item.operationName}}</p>
                         <p>{{moment(item.operationTime).format("YYYY-MM-DD HH:mm:ss")}}</p>
                         <p style="color:#ff7a45">备注：{{item.approvalRemark||'-'}}</p>
