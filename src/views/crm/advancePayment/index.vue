@@ -97,11 +97,12 @@
                     <el-col :span="10" :offset='1'>申请时间：{{moment(detailForm.applyTime).format('yyyy-MM-DD HH:mm:ss')||'-'}}</el-col>
                     <el-col :span="10" :offset='1'>申请人：{{detailForm.applyUser||'-'}}</el-col>
                 </el-row>
-                <el-row ype="flex" class="row-bg">
+
+                <el-row ype="flex" class="row-bg" v-if="detailForm.status!=1">
                     <el-col :span="10" :offset='1'>审核人：{{detailForm.approvalUser||'-'}}</el-col>
                     <el-col :span="10" :offset='1'>审核时间：{{detailForm.approvalTime||'-'}}</el-col>
                 </el-row>
-                <el-row ype="flex" class="row-bg">
+                <el-row ype="flex" class="row-bg" v-if="detailForm.status!=1">
                     <el-col :span="10" :offset='1'>审核结果：{{detailForm.approvalStatus==1?'通过':detailForm.approvalStatus==2?'不通过':'-'}}</el-col>
                     <el-col :span="10" :offset='1'>审核备注：{{detailForm.approvalRemark||'-'}}</el-col>
                 </el-row>
