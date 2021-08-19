@@ -187,7 +187,8 @@
         </el-dialog>
 
         <!-- 确认上游支付 -->
-        <el-dialog title="预付款上游支付" :visible.sync="comfirmVisble" width="40%" :close-on-click-modal=false :before-close="()=>{comfirmVisble = false}">
+        <el-dialog title="预付款上游支付" :visible.sync="comfirmVisble" width="600px" :close-on-click-modal=false :before-close="()=>{comfirmVisble = false}">
+            <div class="advance_wrap">
             <el-form :model="payForm" :rules="detailRules" ref="payForm" label-width="150px" class="demo-ruleForm">
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>经销商：{{detailForm.distributor||'-'}}</el-col>
@@ -217,6 +218,7 @@
                     <p class="tips">支持扩展名：jpg.png.pdf...</p>
                 </el-form-item>
             </el-form>
+            </div>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="comfirmVisble = false">取 消</el-button>
                 <el-button @click="onSubmitPay">确认支付</el-button>
