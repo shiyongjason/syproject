@@ -122,6 +122,13 @@
                 <el-date-picker v-model="projectForm.estimateSignTime" value-format="yyyy-MM-dd" type="date" placeholder="请选择预计可签约的时间">
                 </el-date-picker>
             </el-form-item>
+            <el-form-item label="客户角色：">
+                <el-input v-model="projectForm.customerRole" placeholder="请输入客户角色" maxlength="18"></el-input>
+            </el-form-item>
+            <el-form-item label="合作机会分析：">
+                <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入合作机会分析" v-model="projectForm.cooperationAnalyse" maxlength="200" show-word-limit>
+                </el-input>
+            </el-form-item>
             <el-form-item label="附件：" prop="projectUpload" ref="projectUpload">
                 <OssFileHosJoyUpload v-model="projectForm.projectUpload" accept='.jpeg,.jpg,.png,.BMP,.pdf,.xls,.xlsx,.zip,.rar' :fileSize='20' :fileNum='20' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
                 </OssFileHosJoyUpload>
