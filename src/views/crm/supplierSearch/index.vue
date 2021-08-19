@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { deepCopy } from '@/utils/utils'
 
 import { mapActions, mapGetters } from 'vuex'
 
@@ -76,13 +77,13 @@ export default {
     },
     methods: {
         onStartChange (val) {
-            this.queryParams.startDate = val
+            this.queryParams.startTime = val
         },
         onEndChange (val) {
-            this.queryParams.endDate = val
+            this.queryParams.endTime = val
         },
         onReset () {
-            this.queryParams = { ...this.queryParamsTemp }
+            this.queryParams = deepCopy(this.queryParamsTemp)
             this.findPurchaseList(this.queryParams)
         },
         handleSizeChange (val) {
@@ -98,7 +99,7 @@ export default {
         })
     },
     mounted () {
-        this.queryParamsTemp = { ...this.queryParams }
+        this.queryParamsTemp = deepCopy(this.queryParams)
         this.findPurchaseList(this.queryParams)
     }
 }
