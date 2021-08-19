@@ -202,7 +202,7 @@
                     <el-col :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
                     <el-col :span="10" :offset='1'>剩余应上游支付(元)：{{detailForm.surplusAmount|fundMoneyHasTail}}</el-col>
                 </el-row>
-                <el-form-item style="margin-top:20px" label="本次支付金额" prop="payAmount">
+                <el-form-item style="margin-top:20px" label="本次支付金额：" prop="payAmount">
                     <el-input v-model.trim="payForm.payAmount" maxlength="50" v-isNegative:2="payForm.payAmount"></el-input>
                 </el-form-item>
                 <el-form-item label="支付日期：" prop="payDate">
@@ -485,6 +485,7 @@ export default class Advancelist extends Vue {
         this.$nextTick(() => {
             this.$refs['payForm'].clearValidate()
         })
+        this.payForm.payAmount = this.detailForm.surplusAmount
     }
 
     public async mounted () {
