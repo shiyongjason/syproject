@@ -68,7 +68,7 @@
                 </template>
             </hosJoyTable>
         </div>
-        <el-dialog title="预付款支付单详情" :visible.sync="dialogVisible" width="40%" :close-on-click-modal=false :before-close="()=>{dialogVisible = false}">
+        <el-dialog title="预付款支付单详情" :visible.sync="dialogVisible" width="600px" :close-on-click-modal=false :before-close="()=>{dialogVisible = false}">
             <div class="advance_wrap">
                 <h3>项目信息</h3>
                 <el-row type="flex" class="row-bg">
@@ -138,7 +138,7 @@
             </span>
         </el-dialog>
         <!-- 审核 -->
-        <el-dialog title="预付款支付单审核" :visible.sync="examineVisble" width="40%" :close-on-click-modal=false :before-close="()=>{examineVisble = false}">
+        <el-dialog title="预付款支付单审核" :visible.sync="examineVisble" width="600px" :close-on-click-modal=false :before-close="()=>{examineVisble = false}">
             <div class="advance_examine">
                 <div class="advance_examine-left">
                     <h3>项目信息</h3>
