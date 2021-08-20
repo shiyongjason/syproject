@@ -484,6 +484,7 @@ export default class Advancelist extends Vue {
         })
         this.payForm.payAmount = this.detailForm.surplusAmount
         this.payForm.payDate = moment(new Date()).format('YYYY-MM-DD')
+        this.payForm.payVouchers = []
         console.log(this.payForm.payDate)
     }
 
