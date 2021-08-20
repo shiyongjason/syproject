@@ -1074,4 +1074,4 @@ export const getControlProjectList = params => axios.get(iotUrl + '/ccs/boss/pro
 // 查看集控项目详情
 export const getControlProjectDetail = params => axios.get(iotUrl + '/ccs/boss/project/' + params.id)
 // 获取工程端一级设备类型
-export const getControlProjectDevicesTypes = params => axios.get(iotUrl + '/ccs/project-device/types', params)
+export const getControlProjectDevicesTypes = params => axios.get(iotUrl + '/ccs/project-device/all-types', params)
