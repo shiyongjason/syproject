@@ -387,11 +387,12 @@ export default class Advancelist extends Vue {
             {
                 required: true,
                 validator: (rule, value, callback) => {
-                    if (!value.length) {
+                    console.log('value.length', value.length, this.payForm.payAmount)
+                    if (!this.payForm.payAmount) {
                         return callback(new Error('上游支付金额不能为空'))
-                    } else if (value.length && value == 0) {
+                    } else if (this.payForm.payAmount == 0) {
                         return callback(new Error('上游支付金额必须大于0'))
-                    } else if (value > this.detailForm.surplusAmount) {
+                    } else if (this.payForm.payAmount > this.detailForm.surplusAmount) {
                         return callback(new Error('上游支付金额必须小于等于剩余应上游支付'))
                     }
                     return callback()
