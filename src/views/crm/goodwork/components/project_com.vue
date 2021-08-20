@@ -123,7 +123,15 @@
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="客户角色：">
-                <el-input v-model="projectForm.customerRole" placeholder="请输入客户角色" maxlength="18"></el-input>
+                <el-cascader placeholder="请选择客户角色" :show-all-levels="false" :options="customRoleOption" :props="{ multiple: true, label: 'value' }" filterable>
+                    <template slot-scope="{ node, data }">
+                        <span v-if="node.isLeaf && data.key == 41">
+                            <span>{{ data.label }}</span>
+                            <el-input name="value" type="text" size="mini" style="width:120px;margin-left:10px;" v-model.trim="data.value" maxlength="20" clearable></el-input>
+                        </span>
+                        <span v-else>{{ data.value }}</span>
+                    </template>
+                </el-cascader>
             </el-form-item>
             <el-form-item label="合作机会分析：">
                 <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入合作机会分析" v-model="projectForm.cooperationAnalyse" maxlength="200" show-word-limit>
@@ -158,7 +166,7 @@ import { mapGetters, mapState } from 'vuex'
 import * as newAuth from '@/utils/auth_const'
 import OssFileHosJoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
 import { ccpBaseUrl } from '@/api/config'
-import { putProjectDetail, saveCreditLevel } from './../api/index'
+import { putProjectDetail, saveCreditLevel, getDictionary } from './../api/index'
 import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, NEW_STATUS_TYPE, CREDITLEVEL } from '../../const'
 export default {
     name: 'projectcom',
@@ -287,7 +295,38 @@ export default {
                         }
                     }
                 ]
-            }
+            },
+            customRoleOption: [{
+                value: 'zhinan',
+                label: '指南',
+                children: [{
+                    value: 'shejiyuanze',
+                    label: '设计原则',
+                    children: [{
+                        value: 'yizhi',
+                        label: '一致'
+                    }, {
+                        value: 'fankui',
+                        label: '反馈'
+                    }, {
+                        value: 'xiaolv',
+                        label: '效率'
+                    }, {
+                        value: 'kekong',
+                        label: '可控'
+                    }]
+                }, {
+                    value: 'daohang',
+                    label: '导航',
+                    children: [{
+                        value: 'cexiangdaohang',
+                        label: '侧向导航'
+                    }, {
+                        value: 'dingbudaohang',
+                        label: '顶部导航'
+                    }]
+                }]
+            }]
         }
     },
     computed: {
@@ -308,8 +347,21 @@ export default {
     },
     mounted () {
         this.copyStatusForm = { ...this.statusForm }
+        this.getCustomRole()
     },
     methods: {
+        async getCustomRole () {
+            const result = await Promise.all([getDictionary({ item: 'customer_role' }), getDictionary({ item: 'general_contractor' }), getDictionary({ item: 'sub_contractor' }), getDictionary({ item: 'engineering_construction' }), getDictionary({ item: 'other_customer_role' })])
+            result[4].data.forEach(item => {
+                item.label = item.value
+                item.value = ''
+            })
+            result[0].data[0].children = result[1].data
+            result[0].data[1].children = result[2].data
+            result[0].data[2].children = result[3].data
+            result[0].data[3].children = result[4].data
+            this.customRoleOption = result[0].data
+        },
         onLinkBus (val) {
             this.$router.push({ name: 'authenlist', query: { name: val.companyName, code: val.companyCode } })
         },
@@ -476,5 +528,8 @@ export default {
     line-height: 40px;
     top: 0;
     right: 15%;
+}
+.flex {
+    display: flex;
 }
 </style>
