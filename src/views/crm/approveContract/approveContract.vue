@@ -885,7 +885,7 @@ export default {
                     contractId: this.$route.query.id,
                     approver: this.userInfo.employeeName,
                     // 合同审批角色 1：分财 2：风控 3：法务
-                    approverRole: this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
+                    approverRole: this.$route.query.role,
                     approvalStatus: this.dialog.status,
                     approvalRemark: this.dialog.remark,
                     contractContent: this.detailRes.contractStatus == 6 ? this.contractDocument.innerHTML : '',
