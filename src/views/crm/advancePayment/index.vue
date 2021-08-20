@@ -100,7 +100,7 @@
 
                 <el-row ype="flex" class="row-bg" v-if="detailForm.status!=1">
                     <el-col :span="10" :offset='1'>审核人：{{detailForm.approvalUser||'-'}}</el-col>
-                    <el-col :span="10" :offset='1'>审核时间：{{detailForm.approvalTime||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>审核时间：{{moment(detailForm.approvalTime).format('yyyy-MM-DD HH:mm:ss')||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg" v-if="detailForm.status!=1">
                     <el-col :span="10" :offset='1'>审核结果：{{detailForm.approvalStatus==1?'通过':detailForm.approvalStatus==2?'不通过':'-'}}</el-col>
@@ -483,6 +483,8 @@ export default class Advancelist extends Vue {
             this.$refs['payForm'].clearValidate()
         })
         this.payForm.payAmount = this.detailForm.surplusAmount
+        this.payForm.payDate = moment(new Date()).format('YYYY-MM-DD')
+        console.log(this.payForm.payDate)
     }
 
     public async mounted () {
