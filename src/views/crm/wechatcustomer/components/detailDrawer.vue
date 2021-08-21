@@ -81,6 +81,7 @@
 import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
+
 export default {
     name: 'userOrdepart',
     data () {
@@ -272,7 +273,6 @@ export default {
         }
     },
     mounted () {
-
     }
 }
 </script>
