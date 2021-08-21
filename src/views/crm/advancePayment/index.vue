@@ -219,8 +219,8 @@
                 </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="comfirmVisble = false">取 消</el-button>
-                <el-button @click="onSubmitPay">确认支付</el-button>
+                <el-button @click="comfirmVisble = false">取 消</el-button>
+                <el-button type="primary"  @click="onSubmitPay">确认支付</el-button>
             </span>
         </el-dialog>
         <!-- 记录 -->
