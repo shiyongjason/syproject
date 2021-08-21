@@ -12,33 +12,25 @@
                         <div class="login-form">
                             <iframe :src="src" ref="iframe" style="display:none"></iframe>
                             <el-form ref="loginForm" :model="loginForm" :rules="loginRules">
-                                <el-form-item prop="username">
-                                    <span class="form-icon">
-                                        <i class="iconfont hosjoy_account"></i>
-                                    </span>
-                                    <el-input v-model="loginForm.username" placeholder="请输入您的手机号码" maxlength="11"></el-input>
+                                <el-form-item prop="phone">
+                                    <el-input v-model.trim="loginForm.phone" placeholder="11位手机号" maxlength="11" ref="mobileInput">
+                                        <template slot="prepend">
+                                            +86
+                                        </template>
+                                        <template slot="suffix">
+                                            <i class="el-icon-success mr5"></i>
+                                        </template>
+                                    </el-input>
                                 </el-form-item>
-                                <el-form-item prop="password">
-                                    <span class="form-icon">
-                                        <i class="iconfont hosjoy_password"></i>
-                                    </span>
-                                    <el-input v-model.trim="loginForm.password" :type="passwordType? 'password' : 'text'" placeholder="请输入您的密码"></el-input>
-                                    <span class="form-icon-end" @click="passwordType = !passwordType">
-                                        <i class="iconfont" :class="passwordType? 'hosjoy_eye_close' : 'hosjoy_eye'"></i>
-                                    </span>
+                                <el-form-item prop="smsCode">
+                                    <el-input v-model.trim="loginForm.smsCode" placeholder="输入验证码" maxlength="6"></el-input>
+                                    <h-button @click="onMobileVerifica" :disabled="after?false:true">{{content}}</h-button>
                                 </el-form-item>
-                                <el-form-item>
-                                    <el-button
-                                        name="hosjoy-color"
-                                        @click="onLogin"
-                                        :disabled="!checked"
-                                        v-loading.fullscreen.lock="$store.state.loading"
-                                        element-loading-text="处理中" element-loading-spinner="el-icon-loading"
-                                        element-loading-background="rgba(0, 0, 0, 0.5)"
-                                    >登录</el-button>
+
+                                <el-form-item class="mt20">
+                                    <h-button type='primary' :disabled="!checked" v-loading.fullscreen.lock="$store.state.loading" element-loading-text="处理中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.5)" @click="onLogin">登录</h-button>
                                 </el-form-item>
                             </el-form>
-
                         </div>
                     </div>
                 </el-col>
@@ -49,9 +41,9 @@
     </div>
 </template>
 <script>
-import { login, getUserdata, findMenuList } from './api/index'
+import { login, getUserdata, findMenuList, sendMobileVerifica, phoneLogin } from './api/index'
 import jwtDecode from 'jwt-decode'
-import { Phone } from '@/utils/rules'
+import { Phone, VerificationCode } from '@/utils/rules'
 import { mapMutations, mapActions } from 'vuex'
 import { iframeUrl } from '@/api/config'
 import { tracking } from '@/api/index'
@@ -61,26 +53,28 @@ export default {
     data () {
         return {
             checked: true,
-            passwordType: true, // true password false text
+            passwordType: true,
             loginForm: {
-                username: '',
-                password: ''
+                phone: '',
+                smsCode: ''
             },
             loginRules: {
-                username: [
-                    { required: true, message: '请输入登录帐号', trigger: 'blur' },
+                phone: [
+                    { required: true, message: '请输入正确手机号码', trigger: 'blur' },
                     { validator: Phone, trigger: 'blur' }
                 ],
-                password: [
-                    { required: true, message: '请输入密码', trigger: 'blur' }
-                    // { validator: Password, trigger: 'blur' },
-                    // { min: 8, max: 16, message: '长度为8-16位数字或字母', trigger: 'blur' }
+                smsCode: [
+                    { required: true, message: '请输入短信验证码', trigger: 'blur' },
+                    { validator: VerificationCode, trigger: 'blur' }
                 ]
             },
             isLogin: true,
             userInfo: '',
             src: iframeUrl,
-            iframeWin: {}
+            iframeWin: {},
+            after: true,
+            content: '获取验证码',
+            time: 60
         }
     },
     methods: {
@@ -91,10 +85,41 @@ export default {
                 params: userData
             }, '*')
         },
+        onMobileVerifica () {
+            this.$refs.loginForm.validateField('phone', async (valid) => {
+                if (!valid) {
+                    this.after = false
+                    this.content = '重新发送 ' + this.time
+                    this.sendMobileVerifica(this.loginForm.phone)
+                    this.clock = setInterval(() => {
+                        this.time--
+                        this.content = '重新发送' + this.time
+                        if (this.time <= 0) {
+                            clearInterval(this.clock)
+                            this.content = '获取验证码'
+                            this.time = 60
+                            this.after = true
+                        }
+                    }, 1000)
+                }
+            })
+        },
+        async sendMobileVerifica () {
+            try {
+                await sendMobileVerifica({ phone: this.loginForm.phone })
+                this.$message.success('验证码已发送，请查收短信')
+            } catch (error) {
+                clearInterval(this.clock)
+                this.content = '获取验证码'
+                this.time = 60
+                this.after = true
+                this.$refs.mobileInput.focus()
+            }
+        },
         async onLogin () {
             this.$refs['loginForm'].validate(async (valid) => {
                 if (valid) {
-                    const { data } = await login(this.loginForm)
+                    const { data } = await phoneLogin(this.loginForm)
                     const userInfo = jwtDecode(data.access_token)
                     this.userInfo = jwtDecode(data.access_token)
                     localStorage.setItem('token', data.access_token)
@@ -108,7 +133,7 @@ export default {
                         job_number: userInfo.jobNumber,
                         user_agent: navigator.userAgent
                     })
-                    const { data: userData } = await getUserdata({ loginName: this.loginForm.username })
+                    const { data: userData } = await getUserdata({ loginName: this.loginForm.phone })
                     if (userData.code != 400) {
                         sessionStorage.setItem('user_Data', JSON.stringify(userData.data))
                         this.sendMessage(userData.data)
@@ -200,7 +225,7 @@ export default {
     position: absolute;
     top: 50vh;
     left: 50%;
-    width: px2rem(350);
+    width: px2rem(370);
     background: $whiteColor;
     z-index: 1;
     padding: px2rem(42);
@@ -222,72 +247,19 @@ export default {
 .login-form {
     margin-top: 70px;
     .el-form-item {
-        margin-bottom: 36px;
-
-        .form-icon {
-            position: absolute;
-            top: 1px;
-            left: 1px;
-            z-index: 99;
-            width: 42px;
-            height: 42px;
-            color: $blackLight;
-            text-align: center;
-            background: linear-gradient(
-                180deg,
-                rgba(255, 255, 255, 1) 0%,
-                rgba(245, 245, 245, 1) 100%
-            );
-            border-radius: 4px 0px 0px 4px;
-            border-right: 1px solid rgba(229, 229, 234, 1);
-        }
-        .form-icon-end {
-            position: absolute;
-            top: 1px;
-            right: 1px;
-            z-index: 99;
-            width: 42px;
-            height: 42px;
-            color: $blackLight;
-            text-align: center;
-            cursor: pointer;
-        }
-        .el-input {
-            width: 100%;
-            float: left;
-
-            &:not(:first-child) {
-                margin-left: 0;
-            }
-
-            /deep/ .el-input__inner {
-                padding-left: 57px;
-                height: 44px;
+        &:nth-child(1) {
+            .el-input {
+                width: 100%;
             }
         }
-
-        &:nth-child(3) {
+        &:nth-child(2) {
             .el-input {
                 width: 196px;
-
-                /deep/ .el-input__inner {
-                    padding-left: 15px;
-                    height: 44px;
-                    border-radius: 4px;
-                }
             }
-
-            span {
-                margin-left: 16px;
-                float: left;
-                width: 128px;
-                height: 44px;
-                cursor: pointer;
-
-                img {
-                    width: 100%;
-                    height: 100%;
-                }
+            .el-button {
+                float: right;
+                width: 120px;
+                padding: 0;
             }
         }
 
@@ -296,8 +268,28 @@ export default {
             height: 44px;
         }
     }
-    .el-form-item:last-child {
-        margin-bottom: 0;
+}
+/deep/ .el-input-group__prepend {
+    padding: 0;
+    width: 44px;
+    text-align: center;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #333;
+}
+.el-form-item {
+    margin-bottom: 16px;
+    .el-input {
+        float: left;
+        width: 100%;
+
+        &:not(:first-child) {
+            margin-left: 0;
+        }
+
+        .el-input__inner {
+            height: 44px;
+        }
     }
 }
 
@@ -319,5 +311,8 @@ export default {
     .el-icon-success {
         display: inline;
     }
+}
+/deep/ .el-input__suffix-inner {
+    line-height: 40px;
 }
 </style>

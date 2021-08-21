@@ -713,6 +713,9 @@ export default {
             }
             return comObj[this.currentKey.inputStyle]
         },
+        getTableHtml (array = []) {
+
+        },
         /**
          * 生成表格html
          */
@@ -732,17 +735,33 @@ export default {
                 let tableItem = this.$dividedBy(serviceFeeEstimate.paramValue, loanMonth.paramValue).toFixed(2)
                 const dayObj = { 0: '第一期', 1: '第二期', 2: '第三期', 3: '第四期', 4: '第五期', 5: '第六期', 6: '第七期', 7: '第八期', 8: '第九期', 9: '第十期', 10: '第十一期', 11: '第十二期' }
                 // 表格数据渲染成服务费表格div
-                let tableHead = `<span style="border-top: 1px solid #3a3a3a; float: left; height: 80px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; width: 110px; word-break: break-all; padding: 0 3px; font-size: 13px; line-height: 80px; text-align: center;">支付日期</span>`
-                let tableBody = `<span style="float: left; height: 80px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; width: 110px; word-break: break-all; padding: 0 3px; font-size: 13px; line-height: 80px; text-align: center;">支付金额</span>`
+                let tableHead = [`<span style="background: #f7f7f7; border-top: 1px solid #3a3a3a; float: left; height: 80px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; width: 110px; word-break: break-all; padding: 0 3px; font-size: 13px; line-height: 80px; text-align: center;">支付日期</span>`]
+                let tableBody = [`<span style="float: left; height: 80px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; width: 110px; word-break: break-all; padding: 0 3px; font-size: 13px; line-height: 80px; text-align: center;">支付金额</span>`]
                 let preTotal = this.$multipliedBy(loanMonth.paramValue - 1, tableItem) // 精确乘法
                 let rest = this.$minus(serviceFeeEstimate.paramValue, preTotal) // 精确减法
                 for (let i = 0; i < loanMonth.paramValue * 1; i++) {
-                    let head = `<span style="border-top: 1px solid #3a3a3a; float: left; height: 80px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; width: 110px; word-break: break-all; padding: 0 3px; font-size: 13px; line-height: 80px; text-align: center;">${dayObj[i]}</span>`
+                    let head = `<span style="background: #f7f7f7; border-top: 1px solid #3a3a3a; float: left; height: 80px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; width: 110px; word-break: break-all; padding: 0 3px; font-size: 13px; line-height: 80px; text-align: center;">${dayObj[i]}</span>`
                     let body = `<span style="float: left; height: 80px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; width: 110px; word-break: break-all; padding: 0 3px; font-size: 13px; line-height: 80px; text-align: center;">${i == loanMonth.paramValue - 1 ? rest.toFixed(2) : tableItem}元</span>`
-                    tableHead += head
-                    tableBody += body
+                    tableHead.push(head)
+                    tableBody.push(body)
                 }
-                let str = `<div contenteditable="false" class="purch_service_fee_form" style='border-left: 1px solid #3a3a3a; width: ${(Number(loanMonth.paramValue) + 1) * 120}px;'><div style='display: flex; margin-top: 10px; overflow: hidden;'>${tableHead}</div><div style='overflow: hidden; display: flex;'>${tableBody}</div></div>`
+                let tableHead2 = []
+                let tableBody2 = []
+                if (loanMonth.paramValue * 1 > 6) {
+                    tableHead2 = tableHead.splice(7)
+                    tableBody2 = tableBody.splice(7)
+                    tableHead2.unshift(tableHead[0])
+                    tableBody2.unshift(tableBody[0])
+                }
+                let width = Number(loanMonth.paramValue) > 6 ? 7 * 120 : (Number(loanMonth.paramValue) + 1) * 120
+                let str = `
+                            <div contenteditable="false" class="purch_service_fee_form" style='border-left: 1px solid #3a3a3a; width: ${width}px;'>
+                                <div style='display: flex; margin-top: 10px; overflow: hidden;'>${tableHead.join('')}</div>
+                                <div style='overflow: hidden; display: flex;'>${tableBody.join('')}</div>
+                                ${tableHead2.length > 0 ? `<div style='display: flex; margin-top: -1px; overflow: hidden;'>${tableHead2.join('')}</div>` : ''}
+                                ${tableBody2.length > 0 ? `<div style='overflow: hidden; display: flex;'>${tableBody2.join('')}</div>` : ''}
+                            </div>
+                        `
                 this.serviceFee = str
                 // 是否生成的表格修改到合同上
                 if (flage) {
@@ -814,20 +833,6 @@ export default {
             this.historyList = data.signHistory
         },
         openDialog (title, status) {
-            // let flagFeeForm = this.contractFieldsList.filter(ktem => ktem.paramKey === 'purch_service_fee_form')[0]
-            // let flagBatch = this.contractFieldsList.filter(ktem => ktem.paramKey === 'purch_order_purch_batch')[0]
-            // if (title !== '驳回' && flagFeeForm && flagBatch && flagBatch.paramValue == '分批采购') {
-            //     if ((Object.prototype.toString.call(flagFeeForm.paramValue) === '[object Array]' && flagFeeForm.paramValue.length == 0) || !flagFeeForm.paramValue) {
-            //         this.$message({
-            //             message: `服务费分期表格(采购单)不能为空`,
-            //             type: 'error'
-            //         })
-            //         const dom = document.querySelector('.purch_service_fee_form')
-            //         if (!dom) { console.error('dom不存在') }
-            //         dom && dom.scrollIntoView()
-            //         return
-            //     }
-            // }
             this.dialog.dialogVisible = true
             this.dialog.title = title
             this.dialog.status = status
@@ -880,7 +885,7 @@ export default {
                     contractId: this.$route.query.id,
                     approver: this.userInfo.employeeName,
                     // 合同审批角色 1：分财 2：风控 3：法务
-                    approverRole: this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
+                    approverRole: this.$route.query.role,
                     approvalStatus: this.dialog.status,
                     approvalRemark: this.dialog.remark,
                     contractContent: this.detailRes.contractStatus == 6 ? this.contractDocument.innerHTML : '',
@@ -1392,10 +1397,7 @@ export default {
                 // 分批
                 console.log('分批: ', this.currentKey.paramValue)
                 if (this.currentKey.paramValue === '分批采购' || this.currentKey.paramValue == 2) {
-                    // console.log('我走了xxxx', this.contractDocument.getElementsByClassName('purch_service_fee_form')[0].getElementsByTagName('img')[0].src)
                     let firstChild = this.contractDocument.getElementsByClassName('purch_service_fee_form')[0]
-                    console.log('🚀 --- dealSaveContent --- firstChild', firstChild)
-                    // console.log('firstChild.tagName: ', firstChild.tagName)
                     if (firstChild && firstChild.tagName === 'DIV') {
                         // 把表格修改成上传图片(图片是用div生成，图片是span包的img)
                         let feeTableDom = this.contractDocument.getElementsByClassName('purch_service_fee_form')

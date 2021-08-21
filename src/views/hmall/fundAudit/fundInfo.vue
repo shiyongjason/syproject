@@ -51,7 +51,7 @@
                 </el-form-item>
                 <el-form-item label="付款方式：" prop="payWay">
                     <el-select v-model="form.payWay" disabled>
-                        <el-option :label="payOptions[0].label" :value="payOptions[0].value"></el-option>
+                        <el-option v-for="item in payOptions " :key="item.value"  :label="item.label" :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="备注信息：" prop="note">

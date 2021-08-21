@@ -1,6 +1,6 @@
 
 import * as types from './mutation-types'
-import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo, findFreightOrders, findFreightInfo, findFreightList, findFreightBankAccountInfo, findFreightWithdrawal, findFreightBankCardInfo, findOnlinefreightList, findBankInfo, findMerchant, findMerchantStatist, findMerchantAll, findOnlineRepay, findOfflineRepay, findPrepayRepay, findRepayStatist, findApplyList, findPrepayList, findOccupationList, findApplyAll, findPrepayAll, findOccupationAll, findAgentCharge, findAgentCashWithdrawal, findAgentBankAccountInfo, findAgentBankCardInfo, findRepayAll } from '../api'
+import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo, findFreightOrders, findFreightInfo, findFreightList, findFreightBankAccountInfo, findFreightWithdrawal, findFreightBankCardInfo, findOnlinefreightList, findBankInfo, findMerchant, findMerchantStatist, findMerchantAll, findOnlineRepay, findOfflineRepay, findPrepayRepay, findRepayStatist, findApplyList, findPrepayList, findOccupationList, findApplyAll, findPrepayAll, findOccupationAll, findAgentCharge, findAgentCashWithdrawal, findAgentBankAccountInfo, findAgentBankCardInfo, findRepayAll, findAdvanceRepayAll, findOfflineRepayAll, findOnlineRepayAll } from '../api'
 
 const state = {
     // 服务费收取明细
@@ -32,7 +32,10 @@ const state = {
     // 交易记录预付款
     prepayRepayList: [],
     // 交易记录线上回款 线下回款 预付款 合计
-    repayAll: {},
+    // repayAll: {},
+    onlineRepayAll: {},
+    offlineRepayAll: {},
+    advanceRepayAll: {},
     // 交易记录统计
     repayStatistInfo: {},
     // 资金申请详情
@@ -108,7 +111,10 @@ const getters = {
     freightBankCardInfo: state => state.freightBankCardInfo,
     onlinefreightList: state => state.onlinefreightList,
     bankInfo: state => state.bankInfo,
-    repayAll: state => state.repayAll
+    // repayAll: state => state.repayAll,
+    onlineRepayAll: state => state.onlineRepayAll,
+    offlineRepayAll: state => state.offlineRepayAll,
+    advanceRepayAll: state => state.advanceRepayAll
 }
 
 const mutations = {
@@ -208,8 +214,17 @@ const mutations = {
     [types.BANK_INFO] (state, payload) {
         state.bankInfo = payload
     },
-    [types.REPAY_ALL] (state, payload) {
-        state.repayAll = payload
+    // [types.REPAY_ALL] (state, payload) {
+    //     state.repayAll = payload
+    // },
+    [types.ONLINEREPAY_ALL] (state, payload) {
+        state.onlineRepayAll = payload
+    },
+    [types.OFFLINEREPAY_ALL] (state, payload) {
+        state.offlineRepayAll = payload
+    },
+    [types.ADVANCEREPAY_ALL] (state, payload) {
+        state.advanceRepayAll = payload
     }
 }
 
@@ -342,9 +357,21 @@ const actions = {
         const { data } = await findBankInfo(params)
         commit(types.BANK_INFO, data)
     },
-    async findRepayAll ({ commit }, params) {
-        const { data } = await findRepayAll(params)
-        commit(types.REPAY_ALL, data)
+    // async findRepayAll ({ commit }, params) {
+    //     const { data } = await findRepayAll(params)
+    //     commit(types.REPAY_ALL, data)
+    // },
+    async findOnlineRepayAll ({ commit }, params) {
+        const { data } = await findOnlineRepayAll(params)
+        commit(types.ONLINEREPAY_ALL, data)
+    },
+    async findOfflineRepayAll ({ commit }, params) {
+        const { data } = await findOfflineRepayAll(params)
+        commit(types.OFFLINEREPAY_ALL, data)
+    },
+    async findAdvanceRepayAll ({ commit }, params) {
+        const { data } = await findAdvanceRepayAll(params)
+        commit(types.ADVANCEREPAY_ALL, data)
     }
 }
 
