@@ -100,7 +100,7 @@
 
                 <el-row ype="flex" class="row-bg" v-if="detailForm.status!=1">
                     <el-col :span="10" :offset='1'>审核人：{{detailForm.approvalUser||'-'}}</el-col>
-                    <el-col :span="10" :offset='1'>审核时间：{{moment(detailForm.approvalTime).format('yyyy-MM-DD HH:mm:ss')||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>审核时间：{{detailForm.approvalTime?moment(detailForm.approvalTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg" v-if="detailForm.status!=1">
                     <el-col :span="10" :offset='1'>审核结果：{{detailForm.approvalStatus==1?'通过':detailForm.approvalStatus==2?'不通过':'-'}}</el-col>
@@ -219,8 +219,8 @@
                 </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="comfirmVisble = false">取 消</el-button>
-                <el-button @click="onSubmitPay">确认支付</el-button>
+                <el-button @click="comfirmVisble = false">取 消</el-button>
+                <el-button type="primary"  @click="onSubmitPay">确认支付</el-button>
             </span>
         </el-dialog>
         <!-- 记录 -->
