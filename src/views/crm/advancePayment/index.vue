@@ -63,7 +63,7 @@
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
                     <h-button table @click="onApproval(slotProps.data.row)" v-if="hosAuthCheck(advanceapprove)&&slotProps.data.row.status==1">审核</h-button>
-                    <h-button table @click="onLook(slotProps.data.row)" v-if="hosAuthCheck(advanceapprove)"> 查看详情</h-button>
+                    <h-button table @click="onLook(slotProps.data.row)" v-if="hosAuthCheck(advancelook)"> 查看详情</h-button>
                     <h-button table @click="onApprovalRecord(slotProps.data.row)" v-if="hosAuthCheck(advancerecords)">审批记录</h-button>
                 </template>
             </hosJoyTable>
