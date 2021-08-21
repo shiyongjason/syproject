@@ -55,3 +55,8 @@ export const updateThreadDetail: (params: any) => AxiosPromise<any> = (params) =
 export const assignmentCustomer: (params: any) => AxiosPromise<any> = (params) => {
     return axios.post('memeber/api/clue/boss/assignment-customer', params)
 }
+
+// 公司列表
+export const companyList: (params: any) => AxiosPromise<any> = (params) => {
+    return axios.get('memeber/api/crm/company/list', params)
+}

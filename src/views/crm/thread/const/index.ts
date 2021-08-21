@@ -21,4 +21,32 @@ export const DEVICE_CATEGORY: { label: string; value: string; }[] = [
     { label: '其他', value: '8' }
 ]
 
+/** 婚姻状况 */
+export const MARITAL_STATUS: { label: string; value: string; }[] = [
+    { label: '未婚', value: '1' },
+    { label: '已婚', value: '2' },
+    { label: '离异', value: '3' }
+]
+
+/** 从业年限 */
+export const EMPLOYED_AGE: { label: string; value: string; }[] = [
+    { label: '3年以下', value: '1' },
+    { label: '3-5年', value: '2' },
+    { label: '5-8年', value: '3' },
+    { label: '8-10年', value: '4' },
+    { label: '10-15年', value: '5' },
+    { label: '15-20年', value: '6' },
+    { label: '20年以上', value: '7' }
+]
+
+/** 客户来源 */
+export const CUSTOM_SOURCE: { label: string; value: string; }[] = [
+    { label: '销售自拓', value: '1' },
+    { label: '会销活动', value: '2' },
+    { label: '厂商介绍', value: '3' },
+    { label: '老客户转介绍', value: '4' },
+    { label: '总部分配', value: '5' },
+    { label: '客户继承', value: '6' },
+    { label: '其他', value: '7' }
+]
 export const USER_DEFAULT = 'https://hosjoy-hbp.oss-cn-hangzhou.aliyuncs.com/application/crm_wxapp/user-default.png'
