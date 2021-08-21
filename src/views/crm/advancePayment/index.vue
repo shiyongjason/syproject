@@ -205,7 +205,7 @@
                         <el-input v-model.trim="payForm.payAmount" maxlength="50" v-isNegative:2="payForm.payAmount"></el-input>
                     </el-form-item>
                     <el-form-item label="支付日期：" prop="payDate">
-                        <el-date-picker v-model="payForm.payDate" type="date" placeholder="选择日期" :picker-options="pickerOptions">
+                        <el-date-picker v-model="payForm.payDate" value-format='yyyy-MM-dd' type="date" placeholder="选择日期" :picker-options="pickerOptions">
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="上传上游支付凭证：" prop="payVouchers" style="margin:20px 0">
