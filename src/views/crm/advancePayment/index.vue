@@ -62,9 +62,9 @@
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <h-button table @click="onApproval(slotProps.data.row)" v-if="slotProps.data.row.status==1">审核</h-button>
-                    <h-button table @click="onLook(slotProps.data.row)">查看详情</h-button>
-                    <h-button table @click="onApprovalRecord(slotProps.data.row)">审批记录</h-button>
+                    <h-button table @click="onApproval(slotProps.data.row)" v-if="hosAuthCheck(advanceapprove)&&slotProps.data.row.status==1">审核</h-button>
+                    <h-button table @click="onLook(slotProps.data.row)" v-if="hosAuthCheck(advanceapprove)"> 查看详情</h-button>
+                    <h-button table @click="onApprovalRecord(slotProps.data.row)" v-if="hosAuthCheck(advancerecords)">审批记录</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -257,7 +257,7 @@ import './css/css.scss'
 import { getPrePayList, getPrePayDetail, submitPrePay, getPreTotal, passPre, passFailPre, getApprovalHistory } from './api/index'
 import { PrepaymentDetailResponse, PrepaymentSupplierSubmitResponse, RespContractSignHistory } from '@/interface/hbp-project'
 import moment from 'moment'
-import { CRM_ADVACE_UPSTREAMPAY } from '@/utils/auth_const'
+import { CRM_ADVACE_UPSTREAMPAY, CRM_ADVACE_APPROVE, CRM_ADVACE_LOOK, CRM_ADVACE_RECORDS } from '@/utils/auth_const'
 // 定义类型
 interface Query{
     [key:string]:any
@@ -290,6 +290,10 @@ export default class Advancelist extends Vue {
          [2, '银行承兑']
      ])
     advancepay = CRM_ADVACE_UPSTREAMPAY
+    advanceapprove = CRM_ADVACE_APPROVE
+    advancelook = CRM_ADVACE_LOOK
+    advancerecords = CRM_ADVACE_RECORDS
+
     private dialogVisible:boolean = false
     private comfirmVisble:boolean = false
     private examineVisble:boolean = false
