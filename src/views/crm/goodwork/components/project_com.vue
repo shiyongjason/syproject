@@ -123,15 +123,8 @@
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="客户角色：">
-                <el-cascader placeholder="请选择客户角色" :show-all-levels="false" :options="customRoleOption" :props="{ multiple: true, label: 'value' }" filterable>
-                    <template slot-scope="{ node, data }">
-                        <span v-if="node.isLeaf && data.key == 41">
-                            <span>{{ data.label }}</span>
-                            <el-input name="value" type="text" size="mini" style="width:120px;margin-left:10px;" v-model.trim="data.value" maxlength="20" clearable></el-input>
-                        </span>
-                        <span v-else>{{ data.value }}</span>
-                    </template>
-                </el-cascader>
+                <el-cascader placeholder="请选择客户角色" v-model="customerRoleArr" :show-all-levels="false" :options="customRoleOption" :props="{ multiple: true, label: 'value', value: 'key' }" filterable clearable></el-cascader>
+                <el-input type="text" v-if="isCheckOtherRole" placeholder="请输入其他客户角色" style="width: 200px !important;margin-left: 10px;" v-model.trim="projectForm.otherCustomerRole" maxlength="20" clearable></el-input>
             </el-form-item>
             <el-form-item label="合作机会分析：">
                 <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入合作机会分析" v-model="projectForm.cooperationAnalyse" maxlength="200" show-word-limit>
@@ -296,37 +289,8 @@ export default {
                     }
                 ]
             },
-            customRoleOption: [{
-                value: 'zhinan',
-                label: '指南',
-                children: [{
-                    value: 'shejiyuanze',
-                    label: '设计原则',
-                    children: [{
-                        value: 'yizhi',
-                        label: '一致'
-                    }, {
-                        value: 'fankui',
-                        label: '反馈'
-                    }, {
-                        value: 'xiaolv',
-                        label: '效率'
-                    }, {
-                        value: 'kekong',
-                        label: '可控'
-                    }]
-                }, {
-                    value: 'daohang',
-                    label: '导航',
-                    children: [{
-                        value: 'cexiangdaohang',
-                        label: '侧向导航'
-                    }, {
-                        value: 'dingbudaohang',
-                        label: '顶部导航'
-                    }]
-                }]
-            }]
+            customRoleOption: [],
+            customerRoleArr: []
         }
     },
     computed: {
@@ -336,13 +300,34 @@ export default {
         ...mapGetters({
             // projectDetail: 'crmmanage/projectDetail',
             crmdepList: 'crmmanage/crmdepList'
-        })
+        }),
+        isCheckOtherRole () {
+            return this.customerRoleArr.length && this.customerRoleArr.map(item => item.includes('41')).filter(val => val).length
+        }
     },
     watch: {
         'projectForm.projectUpload' (val) {
             this.$nextTick(() => {
                 if (val) this.$refs['projectUpload'].clearValidate()
             })
+        },
+        'projectForm.customerRole': {
+            handler (val) {
+                console.log(val)
+                if (val) {
+                    let valSplit = val.split(',')
+                    let result = []
+                    for (let i = 0; i < valSplit.length; i += 2) {
+                        result.push(valSplit.slice(i, i + 2))
+                    }
+                    this.customerRoleArr = result
+                }
+            },
+            immediate: true
+        },
+        // 监听清空其他客户角色
+        isCheckOtherRole () {
+            this.projectForm.otherCustomerRole = ''
         }
     },
     mounted () {
@@ -352,10 +337,6 @@ export default {
     methods: {
         async getCustomRole () {
             const result = await Promise.all([getDictionary({ item: 'customer_role' }), getDictionary({ item: 'general_contractor' }), getDictionary({ item: 'sub_contractor' }), getDictionary({ item: 'engineering_construction' }), getDictionary({ item: 'other_customer_role' })])
-            result[4].data.forEach(item => {
-                item.label = item.value
-                item.value = ''
-            })
             result[0].data[0].children = result[1].data
             result[0].data[1].children = result[2].data
             result[0].data[2].children = result[3].data
@@ -437,6 +418,7 @@ export default {
         //     }
         // },
         onSaveproject () {
+            this.projectForm.customerRole = this.customerRoleArr.join(',')
             this.projectForm.projectUpload.map(value => {
                 if (!value.url) {
                     value.url = value.fileUrl
@@ -528,8 +510,5 @@ export default {
     line-height: 40px;
     top: 0;
     right: 15%;
-}
-.flex {
-    display: flex;
 }
 </style>

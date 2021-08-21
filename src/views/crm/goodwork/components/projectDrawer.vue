@@ -128,6 +128,7 @@ export default {
             form: {
                 customerRole: '',
                 cooperationAnalyse: '',
+                otherCustomerRole: '',
                 projectUpload: [],
                 loanPayTypeRate: '方法定义必填',
                 payAcceptanceRemarkTxt: '承兑方法必填',
