@@ -15,7 +15,7 @@ export const submitPrePay: (params) => AxiosPromise<void> = (params:PrepaymentSu
 }
 
 export const getPreTotal: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
-    return axios.get(`/project/api/prepayments/boss/total-amount`, params)
+    return axios.get(`/project/api/prepayments/boss/total-amount`, { params })
 }
 
 export const passPre: (params) => AxiosPromise<void> = (id) => {
