@@ -47,7 +47,7 @@
                 </div>
             </div>
         </div>
-        <el-dialog title="新建项目" :visible.sync="addProject" width="750px" :close-on-click-modal="false">
+        <el-dialog :title="form.id?'项目编辑':'新建项目'" :visible.sync="addProject" width="750px" :close-on-click-modal="false">
             <el-form ref="form" :model="form" :rules="rules" label-width="130px" label-position="left">
                 <el-form-item label="项目名称：" prop="projectName">
                     <el-input v-model.trim="form.projectName" show-word-limit placeholder="请输入项目全称" maxlength='50' style="width:356px" clearable></el-input>
@@ -89,7 +89,7 @@
                     <el-input v-model.trim="form.adminName" show-word-limit placeholder="请输入管理员姓名" maxlength='20' clearable></el-input>
                 </el-form-item>
                 <el-form-item label="管理员手机号：" prop="username">
-                    <el-input v-model.trim="form.username" show-word-limit placeholder="请输入管理员手机号" maxlength='11' clearable></el-input>
+                    <el-input v-model.trim="form.username" show-word-limit placeholder="请输入管理员手机号" :disabled="form.id" maxlength='11' clearable></el-input>
                 </el-form-item>
                 <el-form-item label="项目类型：" prop="projectType">
                     <el-checkbox-group v-model="form.projectType">
@@ -124,9 +124,6 @@
         </el-dialog>
         <div class="page-body-cont">
             <basicTable :isShowIndex="true" :tableLabel="tableLabel" :tableData="tableData" :pagination="recordPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='90'>
-                <!-- <template slot="code" slot-scope="scope">
-                    <p class="colred" @click="openFaultEdit(scope.data.row, 'code')">{{scope.data.row.code}}</p>
-                </template> -->
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="editProject(scope.data.row.id)">编辑</el-button>
                 </template>
@@ -370,22 +367,19 @@ export default {
             await this.getClouldControlProjectDetail({ id: id })
             this.form = this.clouldControlProjectDetail
             this.addProject = true
-            // this.$confirm('确认要删除该条故障码', '删除提示').then(() => {
-            //     deleteCloudEquipment({ id: id, operateUserName: this.userInfo.employeeName })
-            //     this.onQuery(this.queryParams)
-            // })
         },
         async saveProject () {
             console.log(this.form)
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     if (this.form.id) {
-                        console.log(JSON.stringify({ ...this.form, updateBy: this.userInfo.employeeName }), '参数')
+                        console.log('编辑', this.form.id)
                         await editControlProject({ ...this.form, updateBy: this.userInfo.employeeName })
                     } else {
                         await createControlProject({ ...this.form, createBy: this.userInfo.employeeName })
                     }
                     if (this.$refs.form) {
+                        console.log('新增', this.form.id)
                         this.$refs.form.clearValidate()
                     }
                     this.cancelDialog()
