@@ -24,12 +24,12 @@ export const createThread: (params: any) => AxiosPromise<any> = (params) => {
 
 // 新增跟进记录
 export const addFlowUp: (params: any) => AxiosPromise<any> = (params) => {
-    return axios.post('memeber/api/flow-up/boss', params)
+    return axios.post('memeber/api/flow-up/boss/clue', params)
 }
 
 // 获取线索跟进记录
 export const getFlowUp: (params: any) => AxiosPromise<any> = (params) => {
-    return axios.get('memeber/api/flow-up/boss', { params })
+    return axios.get('memeber/api/flow-up/boss/clue', { params })
 }
 
 // 获取线索列表统计
