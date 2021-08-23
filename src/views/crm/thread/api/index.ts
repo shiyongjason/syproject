@@ -60,3 +60,8 @@ export const assignmentCustomer: (params: any) => AxiosPromise<any> = (params) =
 export const companyList: (params: any) => AxiosPromise<any> = (params) => {
     return axios.get('memeber/api/crm/company/list', params)
 }
+
+// 天眼查
+export const tianyanchaSearches: (params: any) => AxiosPromise<any> = (params) => {
+    return axios.get('memeber/api/tianyancha/searches', { params })
+}

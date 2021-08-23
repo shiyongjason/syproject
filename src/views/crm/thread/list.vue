@@ -162,18 +162,20 @@
                     </div>
                     <div class="add-cont__row flex">
                         <el-form-item label="客户来源：" prop="userSource">
-                            <el-select v-model="threadForm.userSource" placeholder="请选择">
+                            <el-select v-model="threadForm.userSource" placeholder="请选择" @change="userSourceChange">
                                 <el-option v-for="item in userSourceOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item v-if="threadForm.userSource == 3" class="flex_item" prop="manufacturer">
-                            <el-select v-model="threadForm.manufacturer" style="margin-left:20px" placeholder="请添加厂商信息">
+                            <span class="ml10 mr10">-</span>
+                            <el-select v-model="threadForm.manufacturer" placeholder="请添加厂商信息" filterable clearable>
                                 <el-option v-for="item in manufacturerOption" :key="item.companyCode" :label="item.companyName" :value="item.companyCode"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item v-if="threadForm.userSource == 4" class="flex_item" prop="oldCompanyName">
-                            <el-select v-model="threadForm.oldCompanyName" style="margin-left:20px" placeholder="请添加老客户信息">
-                                <el-option v-for="item in oldCompanyNameOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            <span class="ml10 mr10">-</span>
+                            <el-select v-model="threadForm.oldCompanyName" placeholder="请添加老客户信息" :remote-method="tianyanchaSearchesList" filterable clearable remote reserve-keyword>
+                                <el-option v-for="item in oldCompanyNameOption" :key="item.id" :label="item.name" :value="item.name"></el-option>
                             </el-select>
                         </el-form-item>
                     </div>
@@ -258,7 +260,7 @@
 <script lang='tsx'>
 import { Vue, Component, Prop, Watch, Ref } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
-import { getChiness, getThreadList, assignmentCustomer, getThreadDetail, createThread, getThreadListCount, checkThreadIsRight, companyList } from './api/index'
+import { getChiness, getThreadList, assignmentCustomer, getThreadDetail, createThread, getThreadListCount, checkThreadIsRight, companyList, tianyanchaSearches } from './api/index'
 import detail from './detail.vue'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { ThreadQeuryModel } from './const/model'
@@ -379,7 +381,7 @@ export default class Thread extends Vue {
     maritalStatusOption = MARITAL_STATUS
     workingYearsOption = EMPLOYED_AGE
     userSourceOption = CUSTOM_SOURCE
-    oldCompanyName:any[] = []
+    oldCompanyNameOption:any[] = []
     manufacturerOption: any = []
     provinceList: any[] = []
     cityList: any[] = []
@@ -408,7 +410,6 @@ export default class Thread extends Vue {
     numberSelectThread: { [name: number]: Clue[] } = {}
     timeout = null
     stateN: string = ''
-
     get authOptions () {
         return {
             valueFormat: 'yyyy-MM-ddTHH:mm',
@@ -606,7 +607,6 @@ export default class Thread extends Vue {
 
     addThread () {
         this.threadVisible = true
-        this.getCompanyList()
     }
 
     distributor (val: RespBossCluePage) {
@@ -715,9 +715,24 @@ export default class Thread extends Vue {
         this.findThreadList()
     }
 
+    // 客户来源选择
+    userSourceChange (value) {
+        value == 3 && this.getCompanyList()
+    }
+
     // 获取公司列表
     async getCompanyList () {
-        this.manufacturerOption = await companyList({})
+        const res = await companyList({})
+        this.manufacturerOption = res.data
+    }
+    // 天眼查
+    async tianyanchaSearchesList (query) {
+        if (query !== '') {
+            const res = await tianyanchaSearches({ word: query })
+            this.oldCompanyNameOption = res.data.items
+        } else {
+            this.oldCompanyNameOption = []
+        }
     }
 
     async viewDetail (val: RespBossCluePage) {

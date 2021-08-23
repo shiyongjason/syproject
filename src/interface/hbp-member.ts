@@ -511,6 +511,41 @@ export interface Clue {
      */
     userName?: string
 
+    /**
+     * 老客户信息
+     * @type {string}
+     * @memberof Clue
+     */
+    oldCompanyName?: string
+
+    /**
+     * 厂商信息
+     * @type {string}
+     * @memberof Clue
+     */
+    manufacturer?: string
+
+    /**
+     * 婚姻状况
+     * @type {string}
+     * @memberof Clue
+     */
+    maritalStatus?: string
+
+    /**
+     * 从业年限
+     * @type {string}
+     * @memberof Clue
+     */
+    workingYears?: string
+
+    /**
+     * 客户来源
+     * @type {string}
+     * @memberof Clue
+     */
+    userSource?: string
+
 }
 
 /**

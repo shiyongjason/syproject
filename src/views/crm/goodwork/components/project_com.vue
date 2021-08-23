@@ -124,7 +124,9 @@
             </el-form-item>
             <el-form-item label="客户角色：">
                 <el-cascader placeholder="请选择客户角色" v-model="customerRoleArr" :show-all-levels="false" :options="customRoleOption" :props="{ multiple: true, label: 'value', value: 'key' }" filterable clearable></el-cascader>
-                <el-input type="text" v-if="isCheckOtherRole" placeholder="请输入其他客户角色" style="width: 200px !important;margin-left: 10px;" v-model.trim="projectForm.otherCustomerRole" maxlength="20" clearable></el-input>
+            </el-form-item>
+            <el-form-item v-if="isCheckOtherRole" prop="otherCustomerRole">
+                <el-input type="text" placeholder="请输入其他客户角色" v-model.trim="projectForm.otherCustomerRole" maxlength="20" clearable></el-input>
             </el-form-item>
             <el-form-item label="合作机会分析：">
                 <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入合作机会分析" v-model="projectForm.cooperationAnalyse" maxlength="200" show-word-limit>
@@ -257,8 +259,10 @@ export default {
                             return callback()
                         }
                     }
+                ],
+                otherCustomerRole: [
+                    { required: true, message: '请输入其他客户角色', trigger: 'blur' }
                 ]
-
             },
             levelsForm: {
                 id: '',
