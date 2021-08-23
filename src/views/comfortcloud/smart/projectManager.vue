@@ -31,10 +31,10 @@
             <div class="query-cont-col">
                 <div class="query-col-title">创建时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.createStartTime" type="date" format="yyyy-MM-dd" value-format='yyyy-MM-dd' placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.createTimeStart" type="date" format="yyyy-MM-dd" value-format='yyyy-MM-dd' placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                     <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.createEndTime" type="date" format="yyyy-MM-dd" value-format='yyyy-MM-dd' placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                    <el-date-picker v-model="queryParams.createTimeEnd" type="date" format="yyyy-MM-dd" value-format='yyyy-MM-dd' placeholder="结束日期" :picker-options="pickerOptionsEnd">
                     </el-date-picker>
                 </div>
             </div>
@@ -47,7 +47,7 @@
                 </div>
             </div>
         </div>
-        <el-dialog :title="form.id?'项目编辑':'新建项目'" :visible.sync="addProject" :before-close="cancelDialog" width="750px" :close-on-click-modal="false">
+        <el-dialog :title="form.id?'项目编辑':'新建项目'" :visible.sync="addProject" :before-close="cancelDialog" width="900px" :close-on-click-modal="false">
             <el-form ref="form" :model="form" :rules="rules" label-width="130px" label-position="left">
                 <el-form-item label="项目名称：" prop="projectName">
                     <el-input v-model.trim="form.projectName" show-word-limit placeholder="请输入项目全称" maxlength='50' style="width:356px"></el-input>
@@ -104,12 +104,12 @@
                 <el-form-item label-width="0px" v-for="(item,index) in form.deviceTypes" :key="index">
                     <el-col :span="10">
                         <el-form-item label="设备TYPE号：" :prop="'deviceTypes.'+index+'.deviceTypeCode'" :rules="rules.deviceTypeCode">
-                            <el-input style="width:150px" v-model="item.deviceTypeCode" placeholder="请输入设备TYPE号" @change="deviceTypeChange" @focus="deviceTypeFocus(index)" maxlength='10'></el-input>
+                            <el-input v-model="item.deviceTypeCode" placeholder="请输入设备TYPE号" @change="deviceTypeChange" @focus="deviceTypeFocus(index)" maxlength='10'></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="10">
-                        <el-form-item label="设备名称：" :prop="'deviceTypes.'+index+'.deviceTypeName'" :rules="rules.deviceTypeName">
-                            <el-input style="width:150px" v-model="item.deviceTypeName" placeholder="--" disabled></el-input>
+                        <el-form-item label="设备名称：" label-width="95px" :prop="'deviceTypes.'+index+'.deviceTypeName'" :rules="rules.deviceTypeName">
+                            <el-input v-model="item.deviceTypeName" placeholder="--" disabled></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="4">
@@ -124,6 +124,9 @@
         </el-dialog>
         <div class="page-body-cont">
             <basicTable :isShowIndex="true" :tableLabel="tableLabel" :tableData="tableData" :pagination="recordPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='90'>
+                <template slot="address" slot-scope="scope">
+                    {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName+scope.data.row.address}}
+                </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="editProject(scope.data.row.id)">编辑</el-button>
                 </template>
@@ -156,8 +159,8 @@ const _form = {
 }
 
 const _queryParams = {
-    createStartTime: null,
-    createEndTime: null,
+    createTimeStart: null,
+    createTimeEnd: null,
     companyName: null,
     projectName: null,
     adminName: null,
@@ -258,7 +261,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.queryParams.createEndTime
+                    let beginDateVal = this.queryParams.createTimeEnd
                     if (beginDateVal) {
                         return (
                             time.getTime() > new Date(beginDateVal).getTime()
@@ -272,7 +275,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.queryParams.createStartTime
+                    let beginDateVal = this.queryParams.createTimeStart
                     if (beginDateVal) {
                         return (
                             time.getTime() < new Date(beginDateVal).getTime()
