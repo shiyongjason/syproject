@@ -47,17 +47,17 @@
                 </div>
             </div>
         </div>
-        <el-dialog :title="form.id?'项目编辑':'新建项目'" :visible.sync="addProject" width="750px" :close-on-click-modal="false">
+        <el-dialog :title="form.id?'项目编辑':'新建项目'" :visible.sync="addProject" :before-close="cancelDialog" width="750px" :close-on-click-modal="false">
             <el-form ref="form" :model="form" :rules="rules" label-width="130px" label-position="left">
                 <el-form-item label="项目名称：" prop="projectName">
-                    <el-input v-model.trim="form.projectName" show-word-limit placeholder="请输入项目全称" maxlength='50' style="width:356px" clearable></el-input>
+                    <el-input v-model.trim="form.projectName" show-word-limit placeholder="请输入项目全称" maxlength='50' style="width:356px"></el-input>
                 </el-form-item>
                 <el-form-item label="项目简称：" prop="projectSimpleName">
-                    <el-input v-model.trim="form.projectSimpleName" show-word-limit placeholder="请输入项目简称" maxlength='50' style="width:356px" clearable></el-input>
+                    <el-input v-model.trim="form.projectSimpleName" show-word-limit placeholder="请输入项目简称" maxlength='6' style="width:356px"></el-input>
                 </el-form-item>
                 <el-form-item label-width="0px">
                     <div class="city-select">
-                        <el-form-item label="收货人地址：" prop="provinceId">
+                        <el-form-item label="项目地址：" prop="provinceId">
                             <el-select v-model="form.provinceId" @change="onProvince" placeholder="省" clearable>
                                 <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
                                 </el-option>
@@ -83,13 +83,13 @@
                     <el-input v-model.trim="form.address" show-word-limit type="textarea" :rows="2" placeholder="请输入详细地址" maxlength='200' style="width:356px"></el-input>
                 </el-form-item>
                 <el-form-item label="公司名称：" prop="companyName">
-                    <el-input v-model.trim="form.companyName" show-word-limit placeholder="请输入公司名称" maxlength='50' style="width:356px" clearable></el-input>
+                    <el-input v-model.trim="form.companyName" show-word-limit placeholder="请输入公司名称" maxlength='50' style="width:356px"></el-input>
                 </el-form-item>
                 <el-form-item label="管理员姓名：" prop="adminName">
-                    <el-input v-model.trim="form.adminName" show-word-limit placeholder="请输入管理员姓名" maxlength='20' clearable></el-input>
+                    <el-input v-model.trim="form.adminName" show-word-limit placeholder="请输入管理员姓名" maxlength='20'></el-input>
                 </el-form-item>
                 <el-form-item label="管理员手机号：" prop="username">
-                    <el-input v-model.trim="form.username" show-word-limit placeholder="请输入管理员手机号" :disabled="form.id" maxlength='11' clearable></el-input>
+                    <el-input v-model.trim="form.username" show-word-limit placeholder="请输入管理员手机号" :disabled="form.id" maxlength='11'></el-input>
                 </el-form-item>
                 <el-form-item label="项目类型：" prop="projectType">
                     <el-checkbox-group v-model="form.projectType">
@@ -192,7 +192,7 @@ export default {
                 pageSize: 10
             },
             tableLabel: [
-                { label: '项目全称', prop: 'projectName' },
+                { label: '项目名称', prop: 'projectName' },
                 { label: '项目简称', prop: 'projectSimpleName' },
                 { label: '企业名称', prop: 'companyName' },
                 { label: '项目地址', prop: 'address' },
@@ -234,7 +234,8 @@ export default {
                     { required: true, message: '请输入管理员姓名', trigger: 'blur' }
                 ],
                 username: [
-                    { required: true, message: '请输入管理员手机号', trigger: 'blur' }
+                    { required: true, message: '请输入管理员手机号', trigger: 'blur' },
+                    { message: '请输入正确手机号码', trigger: 'blur', pattern: /^[1][0-9]{10}$/ }
                 ],
                 deviceTypes: [
                     { required: true, message: '请添加项目包含的设备', trigger: 'blur' }
@@ -244,7 +245,7 @@ export default {
                     { validator: checkDeviceTypeRule, trigger: 'blur' }
                 ],
                 deviceTypeName: [
-                    { required: true, message: '设备TYPE号无法匹配到数据', trigger: 'blur' }
+                    { required: true, message: '设备TYPE号无法匹配到数据', trigger: 'change' }
                 ],
                 projectType: [
                     { required: true, message: '请选择项目类型', trigger: 'blur' }
