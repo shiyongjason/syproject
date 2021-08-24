@@ -85,6 +85,7 @@ import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import { getListApi, postBrands, getBrands } from './api'
 import { BrandDetailResponse, BrandShopExtendResponse } from '@/interface/hbp-shop'
 import { CRM_SHOPP_PRODUCTLABEL_VIEW, CRM_SHOPP_PRODUCTLABEL_EDIT } from '@/utils/auth_const'
+import Clipboard from 'clipboard'
 
 const _queryParams = {
     brandCode: '',
@@ -210,12 +211,30 @@ export default class brandManage extends Vue {
                     <div>
                         {this.hosAuthCheck(this.authEdit) && <h-button table onClick={() => this.onEdit(scope.row)}>修改品牌信息</h-button>}
                         {this.hosAuthCheck(this.authView) && <h-button table onClick={() => this.onGetDetail(scope.row)}>查看</h-button>}
+                        <h-button table class="clipBtn" onClick={() => this.onCopyLink(scope.row)}>复制</h-button>
                     </div>
                 )
             }
         }
     ];
 
+    onCopyLink (val) {
+        let text = `/mall/pages/brandSquare/index?brandId=${val.brandId}`
+        let clipboard = new Clipboard('.clipBtn', {
+            text: function () {
+                return text
+            }
+        })
+        clipboard.on('success', e => {
+            this.$message({ message: '复制成功', showClose: true, type: 'success' })
+            // 释放内存
+            clipboard.destroy()
+        })
+        clipboard.on('error', e => {
+            this.$message({ message: '复制失败,', showClose: true, type: 'error' })
+            clipboard.destroy()
+        })
+    }
     // methods:::
     // 查看详情
     async onGetDetail (d) {
