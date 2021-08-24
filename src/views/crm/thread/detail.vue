@@ -77,10 +77,12 @@
                                     </template>
                                     <div class="title-tag" v-if="item.content">跟进内容</div>
                                     <div class="desc" v-if="item.content">{{item.content}}</div>
-                                    <div class="title-tag" v-if="item.content">跟进阶段</div>
-                                    <div class="desc" v-if="item.content">{{item.flowUpProcess}}</div>
-                                    <div class="title-tag" v-if="item.content">客户标签</div>
-                                    <div class="desc" v-if="item.content">{{item.userTag}}</div>
+                                    <div class="title-tag" v-if="item.flowUpProcess">跟进阶段</div>
+                                    <div class="desc" v-if="item.flowUpProcess">{{ followUpPhaseOption[item.flowUpProcess] && followUpPhaseOption[item.flowUpProcess].label }}</div>
+                                    <div class="title-tag" v-if="item.userTag">客户标签</div>
+                                    <div class="desc" v-if="item.userTag">
+                                        <span class="desc-title" v-for="value in item.userTag.split(',')" :key="value">{{ customerTagOption[value] && customerTagOption[value].label}}</span>
+                                    </div>
                                     <div class="title-tag" v-if="item.remark">其他备注</div>
                                     <div class="desc" v-if="item.remark">{{item.remark}}</div>
                                 </div>
