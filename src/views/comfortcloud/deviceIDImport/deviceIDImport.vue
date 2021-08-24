@@ -20,6 +20,15 @@
                 </div>
             </div>
             <div class="query-cont-col">
+                <div class="query-col-title">产品渠道：</div>
+                <div class="query-col-input">
+                    <el-select v-model="queryParams.deviceChannel" clearable>
+                        <el-option label="工程端" value="1"></el-option>
+                        <el-option label="零售端" value="0"></el-option>
+                    </el-select>
+                </div>
+            </div>
+            <div class="query-cont-col">
                 <el-checkbox :checked="false" :true-label="1" :false-label="2" v-model="queryParams.noVersion">无版本号
                 </el-checkbox>
             </div>
@@ -93,6 +102,7 @@ export default {
             queryParams: {
                 batchNo: '',
                 iotId: '',
+                deviceChannel: '',
                 pageNumber: 1,
                 noVersion: 2,
                 pageSize: 10

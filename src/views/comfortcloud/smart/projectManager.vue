@@ -31,10 +31,10 @@
             <div class="query-cont-col">
                 <div class="query-col-title">创建时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.createStartTime" type="date" format="yyyy-MM-dd" value-format='yyyy-MM-dd' placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.createTimeStart" type="date" format="yyyy-MM-dd" value-format='yyyy-MM-dd' placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                     <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.createEndTime" type="date" format="yyyy-MM-dd" value-format='yyyy-MM-dd' placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                    <el-date-picker v-model="queryParams.createTimeEnd" type="date" format="yyyy-MM-dd" value-format='yyyy-MM-dd' placeholder="结束日期" :picker-options="pickerOptionsEnd">
                     </el-date-picker>
                 </div>
             </div>
@@ -47,17 +47,17 @@
                 </div>
             </div>
         </div>
-        <el-dialog :title="form.id?'项目编辑':'新建项目'" :visible.sync="addProject" width="750px" :close-on-click-modal="false">
+        <el-dialog :title="form.id?'项目编辑':'新建项目'" :visible.sync="addProject" :before-close="cancelDialog" width="900px" :close-on-click-modal="false">
             <el-form ref="form" :model="form" :rules="rules" label-width="130px" label-position="left">
                 <el-form-item label="项目名称：" prop="projectName">
-                    <el-input v-model.trim="form.projectName" show-word-limit placeholder="请输入项目全称" maxlength='50' style="width:356px" clearable></el-input>
+                    <el-input v-model.trim="form.projectName" show-word-limit placeholder="请输入项目全称" maxlength='50' style="width:356px"></el-input>
                 </el-form-item>
                 <el-form-item label="项目简称：" prop="projectSimpleName">
-                    <el-input v-model.trim="form.projectSimpleName" show-word-limit placeholder="请输入项目简称" maxlength='50' style="width:356px" clearable></el-input>
+                    <el-input v-model.trim="form.projectSimpleName" show-word-limit placeholder="请输入项目简称" maxlength='6' style="width:356px"></el-input>
                 </el-form-item>
                 <el-form-item label-width="0px">
                     <div class="city-select">
-                        <el-form-item label="收货人地址：" prop="provinceId">
+                        <el-form-item label="项目地址：" prop="provinceId">
                             <el-select v-model="form.provinceId" @change="onProvince" placeholder="省" clearable>
                                 <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
                                 </el-option>
@@ -83,13 +83,13 @@
                     <el-input v-model.trim="form.address" show-word-limit type="textarea" :rows="2" placeholder="请输入详细地址" maxlength='200' style="width:356px"></el-input>
                 </el-form-item>
                 <el-form-item label="公司名称：" prop="companyName">
-                    <el-input v-model.trim="form.companyName" show-word-limit placeholder="请输入公司名称" maxlength='50' style="width:356px" clearable></el-input>
+                    <el-input v-model.trim="form.companyName" show-word-limit placeholder="请输入公司名称" maxlength='50' style="width:356px"></el-input>
                 </el-form-item>
                 <el-form-item label="管理员姓名：" prop="adminName">
-                    <el-input v-model.trim="form.adminName" show-word-limit placeholder="请输入管理员姓名" maxlength='20' clearable></el-input>
+                    <el-input v-model.trim="form.adminName" show-word-limit placeholder="请输入管理员姓名" maxlength='20'></el-input>
                 </el-form-item>
                 <el-form-item label="管理员手机号：" prop="username">
-                    <el-input v-model.trim="form.username" show-word-limit placeholder="请输入管理员手机号" :disabled="form.id" maxlength='11' clearable></el-input>
+                    <el-input v-model.trim="form.username" show-word-limit placeholder="请输入管理员手机号" :disabled="form.id" maxlength='11'></el-input>
                 </el-form-item>
                 <el-form-item label="项目类型：" prop="projectType">
                     <el-checkbox-group v-model="form.projectType">
@@ -104,12 +104,12 @@
                 <el-form-item label-width="0px" v-for="(item,index) in form.deviceTypes" :key="index">
                     <el-col :span="10">
                         <el-form-item label="设备TYPE号：" :prop="'deviceTypes.'+index+'.deviceTypeCode'" :rules="rules.deviceTypeCode">
-                            <el-input style="width:150px" v-model="item.deviceTypeCode" placeholder="请输入设备TYPE号" @change="deviceTypeChange" @focus="deviceTypeFocus(index)" maxlength='10'></el-input>
+                            <el-input v-model="item.deviceTypeCode" placeholder="请输入设备TYPE号" @change="deviceTypeChange" @focus="deviceTypeFocus(index)" maxlength='10'></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="10">
-                        <el-form-item label="设备名称：" :prop="'deviceTypes.'+index+'.deviceTypeName'" :rules="rules.deviceTypeName">
-                            <el-input style="width:150px" v-model="item.deviceTypeName" placeholder="--" disabled></el-input>
+                        <el-form-item label="设备名称：" label-width="95px" :prop="'deviceTypes.'+index+'.deviceTypeName'" :rules="rules.deviceTypeName">
+                            <el-input v-model="item.deviceTypeName" placeholder="--" disabled></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="4">
@@ -124,6 +124,9 @@
         </el-dialog>
         <div class="page-body-cont">
             <basicTable :isShowIndex="true" :tableLabel="tableLabel" :tableData="tableData" :pagination="recordPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='90'>
+                <template slot="address" slot-scope="scope">
+                    {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName+scope.data.row.address}}
+                </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="editProject(scope.data.row.id)">编辑</el-button>
                 </template>
@@ -156,8 +159,8 @@ const _form = {
 }
 
 const _queryParams = {
-    createStartTime: null,
-    createEndTime: null,
+    createTimeStart: null,
+    createTimeEnd: null,
     companyName: null,
     projectName: null,
     adminName: null,
@@ -192,7 +195,7 @@ export default {
                 pageSize: 10
             },
             tableLabel: [
-                { label: '项目全称', prop: 'projectName' },
+                { label: '项目名称', prop: 'projectName' },
                 { label: '项目简称', prop: 'projectSimpleName' },
                 { label: '企业名称', prop: 'companyName' },
                 { label: '项目地址', prop: 'address' },
@@ -234,7 +237,8 @@ export default {
                     { required: true, message: '请输入管理员姓名', trigger: 'blur' }
                 ],
                 username: [
-                    { required: true, message: '请输入管理员手机号', trigger: 'blur' }
+                    { required: true, message: '请输入管理员手机号', trigger: 'blur' },
+                    { message: '请输入正确手机号码', trigger: 'blur', pattern: /^[1][0-9]{10}$/ }
                 ],
                 deviceTypes: [
                     { required: true, message: '请添加项目包含的设备', trigger: 'blur' }
@@ -244,7 +248,7 @@ export default {
                     { validator: checkDeviceTypeRule, trigger: 'blur' }
                 ],
                 deviceTypeName: [
-                    { required: true, message: '设备TYPE号无法匹配到数据', trigger: 'blur' }
+                    { required: true, message: '设备TYPE号无法匹配到数据', trigger: 'change' }
                 ],
                 projectType: [
                     { required: true, message: '请选择项目类型', trigger: 'blur' }
@@ -257,7 +261,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.queryParams.createEndTime
+                    let beginDateVal = this.queryParams.createTimeEnd
                     if (beginDateVal) {
                         return (
                             time.getTime() > new Date(beginDateVal).getTime()
@@ -271,7 +275,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.queryParams.createStartTime
+                    let beginDateVal = this.queryParams.createTimeStart
                     if (beginDateVal) {
                         return (
                             time.getTime() < new Date(beginDateVal).getTime()
