@@ -66,6 +66,13 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
+                    <div class="query-col__label">更新时间：</div>
+                    <div class="query-col__input">
+                        <HDatePicker :start-change="onUpdateStartChange" :end-change="onUpdateEndChange" :options="updateAuthOptions">
+                        </HDatePicker>
+                    </div>
+                </div>
+                <div class="query-cont__col">
                     <div class="query-col__label">是否有客户经理：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.customer" placeholder="请选择" clearable>
@@ -319,6 +326,8 @@ export default class Thread extends Vue {
         deviceCategory: null,
         startTime: '',
         endTime: '',
+        maxUpdateTime: '',
+        minUpdateTime: '',
         origin: null,
         pageNumber: 1,
         pageSize: 10,
@@ -420,6 +429,16 @@ export default class Thread extends Vue {
         }
     }
 
+    get updateAuthOptions () {
+        return {
+            valueFormat: 'yyyy-MM-ddTHH:mm',
+            format: 'yyyy-MM-dd HH:mm',
+            type: 'datetime',
+            startTime: this.queryParams.minUpdateTime,
+            endTime: this.queryParams.maxUpdateTime
+        }
+    }
+
     get deviceCategoryString () {
         return deviceCategory => {
             const filters = this.devieCategorys.filter((item: { value: string, label: string }) => {
@@ -463,6 +482,12 @@ export default class Thread extends Vue {
     }
     onEndChange (val) {
         this.queryParams.endTime = val
+    }
+    onUpdateStartChange (val) {
+        this.queryParams.minUpdateTime = val
+    }
+    onUpdateEndChange (val) {
+        this.queryParams.maxUpdateTime = val
     }
     onProvince (key) {
         this.queryParams.provinceId = key || ''
