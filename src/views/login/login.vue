@@ -212,7 +212,7 @@ export default {
     width: 100%;
     height: 100%;
     z-index: -10;
-    background-image: url("../../assets/images/login_bg@2x.png");
+    background-image: url("https://hosjoy-hbp.oss-cn-hangzhou.aliyuncs.com/application/crm_wxapp/login_bg@2x.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center 0;
