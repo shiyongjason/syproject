@@ -703,6 +703,42 @@ export default [
                     showMenuAs: '/goodwork/category'
                 },
                 component: () => import('@/views/crm/shopMall/category/detail.vue')
+            },
+            {
+                path: 'supplierSearch',
+                name: 'supplierSearch',
+                meta: {
+                    title: '供应商查询',
+                    tagName: '供应商查询',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/supplierSearch/index.vue')
+            },
+            {
+                path: 'apiCompensationScheme',
+                name: 'apiCompensationScheme',
+                meta: {
+                    title: '接口调用补偿机制',
+                    tagName: '接口调用补偿机制',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/apiCompensationScheme/index.vue')
+            },
+            {
+                path: 'advancelist',
+                name: 'advancelist',
+                meta: {
+                    title: '货款支付',
+                    tagName: '货款支付',
+                    parentName: '货款支付',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/advancePayment/index.vue')
             }
         ]
     }

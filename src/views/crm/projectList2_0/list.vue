@@ -295,7 +295,7 @@
                         <div class="form-item">
                             <el-form-item prop='projectRoleList' label="">
                                 <div slot="label" style="line-height: 20px;">
-                                    <font style="padding-right:10px">项目角色</font><br />（可多选）：
+                                    <font style="padding-right:10px">客户角色</font><br />（可多选）：
                                 </div>
                                 <el-select v-model="reqProjectSupply.projectRoleList" multiple placeholder="请选择">
                                     <el-option v-for="item in projectRole" :key="item.value" :label="item.value" :value="Number(item.key)"></el-option>
@@ -344,7 +344,7 @@
                     </div>
                     <div class="flex-item" style="margin-top:15px">
                         <div class="form-item">
-                            <el-form-item label="项目预计交付时间：">
+                            <el-form-item label="项目预计交付时间：" prop="estimatedDeliverTime">
                                 <el-date-picker v-model="reqProjectSupply.estimatedDeliverTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd"></el-date-picker>
                             </el-form-item>
                         </div>
@@ -543,6 +543,9 @@ export default class ProjectList2 extends Vue {
                         return callback()
                     }
                 }
+            ],
+            estimatedDeliverTime: [
+                { required: true, message: '必填项不能为空', trigger: 'change' }
             ]
         }
         return rules

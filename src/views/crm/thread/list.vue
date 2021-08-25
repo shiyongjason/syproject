@@ -35,7 +35,6 @@
                             <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
                             </el-option>
                         </el-select>
-
                     </div>
                     <span class="ml10 mr10">-</span>
                     <div class="query-col__input">
@@ -63,6 +62,13 @@
                     <div class="query-col__label">创建时间：</div>
                     <div class="query-col__input">
                         <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="authOptions">
+                        </HDatePicker>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__label">更新时间：</div>
+                    <div class="query-col__input">
+                        <HDatePicker :start-change="onUpdateStartChange" :end-change="onUpdateEndChange" :options="updateAuthOptions">
                         </HDatePicker>
                     </div>
                 </div>
@@ -95,8 +101,7 @@
                 已经选中{{selectThread.length}}个，可进行批量操作
                 <h-button table :disabled='selectThread.length === 0' style="margin-left:10px" @click="distributor()">批量分配销售</h-button>
             </el-tag>
-            <hosJoyTable localName="V3.*" ref="hosjoyTable" collapseShow align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="pagination"
-                @selection-change="dialogCheckChange" actionWidth='220' isShowselection isAction :isActionFixed='tableData&&tableData.length>0'>
+            <hosJoyTable localName="V3.*" ref="hosjoyTable" collapseShow align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="pagination" @selection-change="dialogCheckChange" actionWidth='220' isShowselection isAction :isActionFixed='tableData&&tableData.length>0'>
                 <template #deviceCategory="slotProps">
                     {{deviceCategoryString(slotProps.data.row.deviceCategory)}}
                 </template>
@@ -149,7 +154,40 @@
                         </el-form-item>
                     </div>
                     <div class="add-cont__row">
-                        <el-form-item label="企业名称：">
+                        <el-form-item label="婚姻状况：" prop="maritalStatus">
+                            <el-select v-model="threadForm.maritalStatus" placeholder="请选择">
+                                <el-option v-for="item in maritalStatusOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                    <div class="add-cont__row">
+                        <el-form-item label="从业年限：" prop="workingYears">
+                            <el-select v-model="threadForm.workingYears" placeholder="请选择">
+                                <el-option v-for="item in workingYearsOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                    <div class="add-cont__row flex">
+                        <el-form-item label="客户来源：" prop="userSource">
+                            <el-select v-model="threadForm.userSource" placeholder="请选择" @change="userSourceChange">
+                                <el-option v-for="item in userSourceOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item v-if="threadForm.userSource == 3" class="flex_item" prop="manufacturer">
+                            <span class="ml10 mr10">-</span>
+                            <el-select v-model="threadForm.manufacturer" placeholder="请添加厂商信息" filterable clearable>
+                                <el-option v-for="item in manufacturerOption" :key="item.companyCode" :label="item.companyName" :value="item.companyCode"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item v-if="threadForm.userSource == 4" class="flex_item" prop="oldCompanyName">
+                            <span class="ml10 mr10">-</span>
+                            <el-select v-model="threadForm.oldCompanyName" placeholder="请添加老客户信息" :remote-method="tianyanchaSearchesList" filterable clearable remote reserve-keyword>
+                                <el-option v-for="item in oldCompanyNameOption" :key="item.id" :label="item.name" :value="item.name"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                    <div class="add-cont__row">
+                        <el-form-item label="企业名称：" prop="companyName">
                             <el-input placeholder="请输入企业名称" maxlength="50" v-model='threadForm.companyName'></el-input>
                         </el-form-item>
                     </div>
@@ -171,7 +209,6 @@
                                 </el-option>
                             </el-select>
                         </el-form-item>
-
                     </div>
                     <div class="add-cont__row">
                         <el-form-item label="">
@@ -230,11 +267,11 @@
 <script lang='tsx'>
 import { Vue, Component, Prop, Watch, Ref } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
-import { getChiness, getThreadList, assignmentCustomer, getThreadDetail, createThread, getThreadListCount, checkThreadIsRight } from './api/index'
+import { getChiness, getThreadList, assignmentCustomer, getThreadDetail, createThread, getThreadListCount, checkThreadIsRight, companyList, tianyanchaSearches } from './api/index'
 import detail from './detail.vue'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { ThreadQeuryModel } from './const/model'
-import { THREAD_ORIGIN, DEVICE_CATEGORY } from './const/index'
+import { THREAD_ORIGIN, DEVICE_CATEGORY, MARITAL_STATUS, EMPLOYED_AGE, CUSTOM_SOURCE } from './const/index'
 import { Clue, RespBossCluePage } from '@/interface/hbp-member'
 import { Phone } from '@/utils/rules'
 
@@ -289,6 +326,8 @@ export default class Thread extends Vue {
         deviceCategory: null,
         startTime: '',
         endTime: '',
+        maxUpdateTime: '',
+        minUpdateTime: '',
         origin: null,
         pageNumber: 1,
         pageSize: 10,
@@ -321,6 +360,24 @@ export default class Thread extends Vue {
         ],
         userName: [
             { required: true, message: '请输入客户姓名', trigger: 'blur' }
+        ],
+        companyName: [
+            { required: true, message: '请输入企业名称', trigger: 'blur' }
+        ],
+        maritalStatus: [
+            { required: true, message: '请选择婚姻状况', trigger: 'change' }
+        ],
+        workingYears: [
+            { required: true, message: '请选择从业年限', trigger: 'change' }
+        ],
+        userSource: [
+            { required: true, message: '请选择客户来源', trigger: 'change' }
+        ],
+        manufacturer: [
+            { required: true, message: '请添加厂商信息', trigger: 'change' }
+        ],
+        oldCompanyName: [
+            { required: true, message: '请添加老客户信息', trigger: 'change' }
         ]
     }
     page = {
@@ -330,6 +387,11 @@ export default class Thread extends Vue {
     }
     origins = THREAD_ORIGIN
     devieCategorys = DEVICE_CATEGORY
+    maritalStatusOption = MARITAL_STATUS
+    workingYearsOption = EMPLOYED_AGE
+    userSourceOption = CUSTOM_SOURCE
+    oldCompanyNameOption:any[] = []
+    manufacturerOption: any = []
     provinceList: any[] = []
     cityList: any[] = []
     countryList: any[] = []
@@ -357,7 +419,6 @@ export default class Thread extends Vue {
     numberSelectThread: { [name: number]: Clue[] } = {}
     timeout = null
     stateN: string = ''
-
     get authOptions () {
         return {
             valueFormat: 'yyyy-MM-ddTHH:mm',
@@ -365,6 +426,16 @@ export default class Thread extends Vue {
             type: 'datetime',
             startTime: this.queryParams.startTime,
             endTime: this.queryParams.endTime
+        }
+    }
+
+    get updateAuthOptions () {
+        return {
+            valueFormat: 'yyyy-MM-ddTHH:mm',
+            format: 'yyyy-MM-dd HH:mm',
+            type: 'datetime',
+            startTime: this.queryParams.minUpdateTime,
+            endTime: this.queryParams.maxUpdateTime
         }
     }
 
@@ -411,6 +482,12 @@ export default class Thread extends Vue {
     }
     onEndChange (val) {
         this.queryParams.endTime = val
+    }
+    onUpdateStartChange (val) {
+        this.queryParams.minUpdateTime = val
+    }
+    onUpdateEndChange (val) {
+        this.queryParams.maxUpdateTime = val
     }
     onProvince (key) {
         this.queryParams.provinceId = key || ''
@@ -663,6 +740,26 @@ export default class Thread extends Vue {
         this.findThreadList()
     }
 
+    // 客户来源选择
+    userSourceChange (value) {
+        value == 3 && this.getCompanyList()
+    }
+
+    // 获取公司列表
+    async getCompanyList () {
+        const res = await companyList({})
+        this.manufacturerOption = res.data
+    }
+    // 天眼查
+    async tianyanchaSearchesList (query) {
+        if (query !== '') {
+            const res = await tianyanchaSearches({ word: query })
+            this.oldCompanyNameOption = res.data.items
+        } else {
+            this.oldCompanyNameOption = []
+        }
+    }
+
     async viewDetail (val: RespBossCluePage) {
         this.currentThread = val
         const { data } = await getThreadDetail(val.id)
@@ -679,5 +776,5 @@ export default class Thread extends Vue {
 }
 </script>
 <style lang='scss' scoped>
-@import "./css/list.scss";
+@import './css/list.scss';
 </style>

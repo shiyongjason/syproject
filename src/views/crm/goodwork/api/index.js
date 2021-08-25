@@ -67,3 +67,15 @@ export const finalApproveNo = (params) => axios.put(`/memeber/api/resolutions/bo
 export const addEmptyPurchase = (params) => axios.post(`/project/api/purchase-orders/boss-save`, params)
 // 删除采购单
 export const deletePurchase = (params) => axios.delete(`/project/api/purchase-orders/boss/${params}`)
+
+/** 根据item查找字典列表
+ * @对应的 item:
+ * @客户角色 : customer_role
+ * @总包方 : general_contractor
+ * @分包方 : sub_contractor
+ * @工程施工方 :engineering_construction
+ * @其他客户角色 : other_customer_role
+ */
+export const getDictionary = (params) => {
+    return axios.get('memeber/api/dictionary/search-by-item', { params })
+}
