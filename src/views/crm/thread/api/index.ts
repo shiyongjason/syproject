@@ -24,12 +24,12 @@ export const createThread: (params: any) => AxiosPromise<any> = (params) => {
 
 // 新增跟进记录
 export const addFlowUp: (params: any) => AxiosPromise<any> = (params) => {
-    return axios.post('memeber/api/flow-up/boss', params)
+    return axios.post('memeber/api/flow-up/boss/clue', params)
 }
 
 // 获取线索跟进记录
 export const getFlowUp: (params: any) => AxiosPromise<any> = (params) => {
-    return axios.get('memeber/api/flow-up/boss', { params })
+    return axios.get('memeber/api/flow-up/boss/clue', { params })
 }
 
 // 获取线索列表统计
@@ -54,4 +54,14 @@ export const updateThreadDetail: (params: any) => AxiosPromise<any> = (params) =
 // 分配线索给客户经理
 export const assignmentCustomer: (params: any) => AxiosPromise<any> = (params) => {
     return axios.post('memeber/api/clue/boss/assignment-customer', params)
+}
+
+// 公司列表
+export const companyList: (params: any) => AxiosPromise<any> = (params) => {
+    return axios.get('memeber/api/crm/company/list', params)
+}
+
+// 天眼查
+export const tianyanchaSearches: (params: any) => AxiosPromise<any> = (params) => {
+    return axios.get('memeber/api/tianyancha/searches', { params })
 }
