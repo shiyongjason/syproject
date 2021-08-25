@@ -176,7 +176,7 @@
                         <el-form-item v-if="threadForm.userSource == 3" class="flex_item" prop="manufacturer">
                             <span class="ml10 mr10">-</span>
                             <el-select v-model="threadForm.manufacturer" placeholder="请添加厂商信息" filterable clearable>
-                                <el-option v-for="item in manufacturerOption" :key="item.companyCode" :label="item.companyName" :value="item.companyCode"></el-option>
+                                <el-option v-for="item in manufacturerOption" :key="item.companyCode" :label="item.companyName" :value="item.companyName"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item v-if="threadForm.userSource == 4" class="flex_item" prop="oldCompanyName">
