@@ -341,6 +341,7 @@ export default class Thread extends Vue {
         { label: '企业名称', prop: 'companyName', width: '200' },
         { label: '创建人', prop: 'createBy', width: '120' },
         { label: '创建时间', prop: 'createTime', width: '130', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+        { label: '更新时间', prop: 'updateTime', width: '130', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '所在城市', prop: 'cityName', slot: 'cityName', width: '120' },
         { label: '所属分部', prop: 'customerDeptName', width: '120' },
         { label: '主营品牌', prop: 'deviceBrand', width: '120' },
