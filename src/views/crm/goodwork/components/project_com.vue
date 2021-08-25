@@ -122,13 +122,13 @@
                 <el-date-picker v-model="projectForm.estimateSignTime" value-format="yyyy-MM-dd" type="date" placeholder="请选择预计可签约的时间">
                 </el-date-picker>
             </el-form-item>
-            <el-form-item label="客户角色：">
-                <el-cascader placeholder="请选择客户角色" v-model="customerRoleArr" :show-all-levels="false" :options="customRoleOption" :props="{ multiple: true, label: 'value', value: 'key' }" filterable clearable></el-cascader>
+            <el-form-item label="客户角色：" prop="customerRoleArr">
+                <el-cascader placeholder="请选择客户角色" v-model="projectForm.customerRoleArr" :show-all-levels="false" :options="customRoleOption" :props="{ multiple: true, label: 'value', value: 'key' }" filterable clearable></el-cascader>
             </el-form-item>
             <el-form-item v-if="isCheckOtherRole" prop="otherCustomerRole">
                 <el-input type="text" placeholder="请输入其他客户角色" v-model.trim="projectForm.otherCustomerRole" maxlength="20" clearable></el-input>
             </el-form-item>
-            <el-form-item label="合作机会分析：">
+            <el-form-item label="合作机会分析：" prop="cooperationAnalyse">
                 <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入合作机会分析" v-model="projectForm.cooperationAnalyse" maxlength="200" show-word-limit>
                 </el-input>
             </el-form-item>
@@ -260,8 +260,14 @@ export default {
                         }
                     }
                 ],
+                customerRoleArr: [
+                    { type: 'array', required: true, message: '请选择客户角色', trigger: 'change' }
+                ],
                 otherCustomerRole: [
                     { required: true, message: '请输入其他客户角色', trigger: 'blur' }
+                ],
+                cooperationAnalyse: [
+                    { required: true, message: '请输入合作机会分析', trigger: 'blur' }
                 ]
             },
             levelsForm: {
@@ -293,8 +299,7 @@ export default {
                     }
                 ]
             },
-            customRoleOption: [],
-            customerRoleArr: []
+            customRoleOption: []
         }
     },
     computed: {
@@ -306,7 +311,7 @@ export default {
             crmdepList: 'crmmanage/crmdepList'
         }),
         isCheckOtherRole () {
-            return this.customerRoleArr.length && this.customerRoleArr.map(item => item.includes('41')).filter(val => val).length
+            return this.projectForm.customerRoleArr && this.projectForm.customerRoleArr.length > 0 && this.projectForm.customerRoleArr.map(item => item.includes('41')).filter(val => val).length
         }
     },
     watch: {
@@ -317,14 +322,13 @@ export default {
         },
         'projectForm.customerRole': {
             handler (val) {
-                console.log(val)
                 if (val) {
                     let valSplit = val.split(',')
                     let result = []
                     for (let i = 0; i < valSplit.length; i += 2) {
                         result.push(valSplit.slice(i, i + 2))
                     }
-                    this.customerRoleArr = result
+                    this.projectForm.customerRoleArr = result
                 }
             },
             immediate: true
@@ -422,7 +426,7 @@ export default {
         //     }
         // },
         onSaveproject () {
-            this.projectForm.customerRole = this.customerRoleArr.join(',')
+            this.projectForm.customerRole = this.projectForm.customerRoleArr.join(',')
             this.projectForm.projectUpload.map(value => {
                 if (!value.url) {
                     value.url = value.fileUrl
