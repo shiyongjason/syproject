@@ -126,10 +126,10 @@
                 <el-cascader placeholder="请选择客户角色" v-model="projectForm.customerRoleArr" :show-all-levels="false" :options="customRoleOption" :props="{ multiple: true, label: 'value', value: 'key' }" filterable clearable></el-cascader>
             </el-form-item>
             <el-form-item v-if="isCheckOtherRole" prop="otherCustomerRole">
-                <el-input type="text" placeholder="请输入其他客户角色" v-model.trim="projectForm.otherCustomerRole" maxlength="20" clearable></el-input>
+                <el-input type="text" placeholder="请输入其他客户角色" v-model.trim="projectForm.otherCustomerRole" maxlength="50" clearable></el-input>
             </el-form-item>
             <el-form-item label="合作机会分析：" prop="cooperationAnalyse">
-                <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入合作机会分析" v-model="projectForm.cooperationAnalyse" maxlength="200" show-word-limit>
+                <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入合作机会分析" v-model="projectForm.cooperationAnalyse" maxlength="500" show-word-limit>
                 </el-input>
             </el-form-item>
             <el-form-item label="附件：" prop="projectUpload" ref="projectUpload">
@@ -329,6 +329,8 @@ export default {
                         result.push(valSplit.slice(i, i + 2))
                     }
                     this.projectForm.customerRoleArr = result
+                } else {
+                    this.projectForm.customerRoleArr = []
                 }
             },
             immediate: true

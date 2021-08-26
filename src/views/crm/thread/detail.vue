@@ -656,7 +656,6 @@ export default class ThreadDetail extends Vue {
         this.flowUpRequest.createBy = this.userInfo.employeeName
         this.flowUpRequest.createPhone = this.userInfo.phoneNumber
         this.flowUpRequest.userTag = this.flowUpRequest.userTag.toString()
-        this.flowUpRequest.id = this.threadDetail.id
         let query = JSON.parse(JSON.stringify(this.flowUpRequest))
         if (this.flowUpRequest.picUrls) {
             let picUrls = []
