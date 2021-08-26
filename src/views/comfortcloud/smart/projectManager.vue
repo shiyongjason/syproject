@@ -71,7 +71,7 @@
                             </el-select>
                         </el-form-item>
                         <span class="ml10 mr10">-</span>
-                        <el-form-item label-width="0px" prop="countryId">
+                        <el-form-item label-width="0px">
                             <el-select v-model="form.countryId" @change="onArea" placeholder="区" clearable>
                                 <el-option v-for="item in getCountry" :key="item.countryId" :label="item.name" :value="item.countryId">
                                 </el-option>
