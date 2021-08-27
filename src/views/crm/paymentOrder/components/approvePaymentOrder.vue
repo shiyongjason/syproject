@@ -191,10 +191,7 @@
                     </div>
                 </div>
             </el-form>
-            <div slot="footer" class="dialog-footer">
-                <p class="tips">
-                    <span v-if="paymentDetail.payOrderDetail.status === paymentOrderStatusKey.OPERATE_AUDIT">审核通过后，将会给经销商发送《订单及服务费确认函》</span>
-                </p>
+            <div slot="footer">
                 <div class="btn-group">
                     <h-button type="cancel" @click="onCancel">取消</h-button>
                     <h-button type="primary" @click="onReceived">确认审核</h-button>
@@ -499,11 +496,6 @@ export default {
 }
 .tips {
     line-height: 20px;
-}
-.dialog-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 .rate-row {
     display: flex;
