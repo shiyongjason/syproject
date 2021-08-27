@@ -335,7 +335,6 @@ export default {
             }
         },
         onCity (key) {
-            console.log('没走吗')
             this.form.cityId = key || ''
             this.form.countryId = ''
             this.form.countryName = ''
@@ -348,6 +347,7 @@ export default {
         },
         onArea (key) {
             this.form.countryId = key
+            this.form.countryName = ''
             if (key.length > 0) {
                 const country = this.getCountry.filter(item => {
                     return item.countryId === this.form.countryId
