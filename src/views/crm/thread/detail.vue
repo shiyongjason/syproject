@@ -145,9 +145,20 @@
                                 <el-input placeholder="请输入企业名称" maxlength="50" v-model='threadDetail.companyName'></el-input>
                             </el-form-item>
                         </div>
+                        <div class="project-detail-item">
+                            <el-form-item label="主营品类：" prop="deviceCategory">
+                                <el-select v-model="threadDetail.deviceCategory" placeholder="请选择">
+                                    <el-option v-for="item in categorys" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </div>
+                        <div class="project-detail-item">
+                            <el-form-item label="主营品牌：" prop="deviceBrand">
+                                <el-input placeholder="请输入主营品牌" v-model='threadDetail.deviceBrand'></el-input>
+                            </el-form-item>
+                        </div>
                         <div class="project-detail-item area-select">
-                            <el-form-item label="">
-                                <div slot="label" style="line-height: 20px;"> 客户地址：</div>
+                            <el-form-item label="客户地址：" prop="provinceId">
                                 <el-select v-model="threadDetail.provinceId" @change="onProvince" placeholder="省" clearable>
                                     <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
                                     </el-option>
@@ -163,24 +174,32 @@
                                     </el-option>
                                 </el-select>
                             </el-form-item>
-
                         </div>
                         <div class="project-detail-item">
                             <el-form-item label="">
                                 <el-input v-model="threadDetail.address" maxlength="100" placeholder="请输入详细地址"></el-input>
                             </el-form-item>
                         </div>
-                        <div class="project-detail-item">
-                            <el-form-item label="">
-                                <div slot="label">主营品类：</div>
-                                <el-select v-model="threadDetail.deviceCategory" placeholder="请选择">
-                                    <el-option v-for="item in categorys" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        <div class="add-cont__row">
+                        <el-form-item label="已合作甲方" prop="cooperatedFirstParty">
+                            <el-input type="textarea" :rows="2" v-model="threadDetail.cooperatedFirstParty" maxlength="200" placeholder="请输入甲方名称，多个用逗号隔开"></el-input>
+                        </el-form-item>
+                        </div>
+                        <div class="add-cont__row">
+                            <el-form-item label="常做项目类型" prop="usualProjectType">
+                                <el-select v-model="threadDetail.usualProjectType" placeholder="请选择" clearable>
+                                    <el-option v-for="item in projectTypeOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
-                        <div class="project-detail-item">
-                            <el-form-item label="主营品牌：">
-                                <el-input placeholder="请输入主营品牌" v-model='threadDetail.deviceBrand'></el-input>
+                        <div class="add-cont__row">
+                            <el-form-item label="合作伙伴" prop="partner">
+                                <el-input type="textarea" :rows="2" v-model="threadDetail.partner" maxlength="200" placeholder="请输入合作伙伴"></el-input>
+                            </el-form-item>
+                        </div>
+                        <div class="add-cont__row">
+                            <el-form-item label="常用区域品牌名称">
+                                <el-input type="textarea" :rows="2" v-model="threadDetail.usualRegionBrand" maxlength="200" placeholder="请输入区域品牌名称，多个用逗号隔开"></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
@@ -304,7 +323,7 @@ import OssFileUtils from '@/utils/OssFileUtils'
 import { State, namespace, Action, Getter } from 'vuex-class'
 import { Clue, FlowUpRequest } from '@/interface/hbp-member'
 import { validateForm, handleSubmit } from '@/decorator'
-import { THREAD_ORIGIN, DEVICE_CATEGORY, USER_DEFAULT, EMPLOYED_AGE, CUSTOM_SOURCE, MARITAL_STATUS, FOLLOW_UP_PHASE, CUSTOMER_TAG } from './const/index'
+import { THREAD_ORIGIN, DEVICE_CATEGORY, USER_DEFAULT, EMPLOYED_AGE, CUSTOM_SOURCE, MARITAL_STATUS, FOLLOW_UP_PHASE, CUSTOMER_TAG, PROJECT_TYPE } from './const/index'
 import { Phone } from '@/utils/rules'
 const _flowUpRequest = {
     assistantRemark: '', // 协助内容
@@ -380,6 +399,32 @@ export default class ThreadDetail extends Vue {
         ],
         oldCompanyName: [
             { required: true, message: '请添加老客户信息', trigger: 'change' }
+        ],
+        deviceCategory: [
+            { required: true, message: '请选择主营品类', trigger: 'change' }
+        ],
+        deviceBrand: [
+            { required: true, message: '请输入主营品牌', trigger: 'blur' }
+        ],
+        provinceId: [
+            { required: true, message: '请选择省、市、区', trigger: 'change' },
+            { validator: (rule, value, callback) => {
+                if (this.threadDetail.provinceId == '' || this.threadDetail.cityId == '' || this.threadDetail.countryId == '') {
+                    return callback(new Error('请选择省、市、区'))
+                }
+                return callback()
+            },
+            trigger: 'change'
+            }
+        ],
+        address: [
+            { required: true, message: '请输入详细地址', trigger: 'blur' }
+        ],
+        cooperatedFirstParty: [
+            { required: true, message: '请输入已合作甲方', trigger: 'blur' }
+        ],
+        usualProjectType: [
+            { required: true, message: '请选择常做项目类型', trigger: 'change' }
         ]
     }
 
@@ -401,6 +446,7 @@ export default class ThreadDetail extends Vue {
     userDefault = USER_DEFAULT
     followUpPhaseOption:any[] = FOLLOW_UP_PHASE
     customerTagOption: any[] = CUSTOMER_TAG
+    projectTypeOption = PROJECT_TYPE
     stateN = ''
 
     queryParams = {
