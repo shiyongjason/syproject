@@ -69,4 +69,14 @@ export const CUSTOMER_TAG: { label: string; value: number; }[] = [
     { label: '可助力品牌合作', value: 4 },
     { label: '可发展为区域KOL', value: 5 }
 ]
+
+/** 常做项目类型 */
+export const PROJECT_TYPE: { label: string; value: number; }[] = [
+    { label: '居住建筑', value: 1 },
+    { label: '市政建筑', value: 2 },
+    { label: '企事业建筑', value: 3 },
+    { label: '商业娱乐建筑', value: 4 },
+    { label: '生产性建筑', value: 5 },
+    { label: '其他', value: 6 }
+]
 export const USER_DEFAULT = 'https://hosjoy-hbp.oss-cn-hangzhou.aliyuncs.com/application/crm_wxapp/user-default.png'
