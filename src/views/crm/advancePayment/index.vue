@@ -316,7 +316,10 @@ export default class Advancelist extends Vue {
         status: '',
         applyUser: '',
         applyTimeStart: '',
-        applyTimeEnd: ''
+        applyTimeEnd: '',
+        authCode: sessionStorage.getItem('authCode')
+            ? JSON.parse(sessionStorage.getItem('authCode') || '')
+            : ''
     }
     pickerOptions={
         disabledDate (time) {
