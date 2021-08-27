@@ -13,7 +13,7 @@
         <div class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 85px">采购单金额：</font><span>
                 {{ data.poAmount|fundMoneyHasTail}} 元</span></div>
-            <div class="info-layout-item"><font style="flex: 0 0 120px">预付款核销金额：</font><span>
+            <div class="info-layout-item"><font style="flex: 0 0 120px">上游预付款核销金额：</font><span>
                 {{ data.prepaymentWriteOffAmount|fundMoneyHasTail}} 元</span></div>
         </div>
         <div class="info-layout">
@@ -88,8 +88,8 @@
         <div class="tab-layout-title"><span></span>放款交接内容：<font>申请人：{{data.initiateBy||'-'}}</font><font>申请时间：{{data.initiateTime|formatterTime}}</font></div>
         <div style="margin-left:10px">
         <div class="info_box">
-             <div class="info_box-icon"><i class="el-icon-s-claim"></i>首付款到好享家账户</div>
-             <div class="info_box-txt"><font>首付款金额：{{data.advancePaymentAmount|fundMoneyHasTail}}元</font><font> 确认到账时间：{{data.confirmArrivalTime|formatterTime}}</font><font>确认人：{{data.confirmArrivalBy}}</font></div>
+             <div class="info_box-icon"><i class="el-icon-s-claim"></i>预付款到好享家账户</div>
+             <div class="info_box-txt"><font>预付款金额：{{data.advancePaymentAmount|fundMoneyHasTail}}元</font><font> 确认到账时间：{{data.confirmArrivalTime|formatterTime}}</font><font>确认人：{{data.confirmArrivalBy}}</font></div>
             <div  class="info-layout">
             <div class="info-layout-item">
                 <div class="info-layout-img" v-for="(item,index) in data.advancePaymentVouchers" :key="index">

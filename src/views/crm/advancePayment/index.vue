@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <div class="query-cont-row">
                 <div class="query-cont__col">
-                    <div class="query-col__label">预付款支付单编号：</div>
+                    <div class="query-col__label">上游预付款支付单编号：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.prepaymentNo" placeholder="请输入" maxlength="50"></el-input>
                     </div>
@@ -56,7 +56,7 @@
                 </div>
             </div>
             <div class="query-cont__row">
-                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span>累计金额：{{totalMoney|fundMoneyHasTail}}</span></el-tag>
+                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span>上游预付款支付单总金额：{{totalMoney|fundMoneyHasTail}}</span></el-tag>
             </div>
             <!-- end search bar -->
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction
@@ -138,7 +138,7 @@
             </span>
         </el-dialog>
         <!-- 审核 -->
-        <el-dialog title="预付款支付单审核" :visible.sync="examineVisble" width="600px" :close-on-click-modal=false :before-close="()=>{examineVisble = false}">
+        <el-dialog title="上游预付款支付单审核" :visible.sync="examineVisble" width="600px" :close-on-click-modal=false :before-close="()=>{examineVisble = false}">
             <div class="advance_examine">
                 <div class="advance_examine-left">
                     <h3>项目信息</h3>
@@ -178,7 +178,7 @@
                     </el-form>
                 </div>
             </div>
-            <p style="color: #999;">审核通过后，将会发送钉钉预付款支付审批流程</p>
+            <p style="color: #999;">审核通过后，将会发送钉钉上游预付款支付审批流程</p>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="examineVisble = false">取 消</el-button>
                 <el-button type="primary" @click="onSubmitAudit">确认审核</el-button>
@@ -186,7 +186,7 @@
         </el-dialog>
 
         <!-- 确认上游支付 -->
-        <el-dialog title="预付款上游支付" :visible.sync="comfirmVisble" width="600px" :close-on-click-modal=false :before-close="()=>{comfirmVisble = false}">
+        <el-dialog title="上游预付款的上游支付" :visible.sync="comfirmVisble" width="600px" :close-on-click-modal=false :before-close="()=>{comfirmVisble = false}">
             <div class="advance_wrap">
                 <el-form :model="payForm" :rules="detailRules" ref="payForm" label-width="150px" class="demo-ruleForm">
                     <el-row ype="flex" class="row-bg">
@@ -339,7 +339,7 @@ export default class Advancelist extends Vue {
         total: 0
     }
     private tableLabel:tableLabelProps = [
-        { label: '预付款支付单编号', prop: 'prepaymentNo' },
+        { label: '上游预付款支付单编号', prop: 'prepaymentNo', width: '160px' },
         { label: '所属分部', prop: 'subsectionName' },
         { label: '经销商', prop: 'distributor' },
         { label: '项目名称', prop: 'projectName', width: '120' },
