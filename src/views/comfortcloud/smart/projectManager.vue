@@ -89,7 +89,7 @@
                     <el-input v-model.trim="form.adminName" show-word-limit placeholder="请输入管理员姓名" maxlength='20'></el-input>
                 </el-form-item>
                 <el-form-item label="管理员手机号：" prop="username">
-                    <el-input v-model.trim="form.username" show-word-limit placeholder="请输入管理员手机号" :disabled="form.id" maxlength='11'></el-input>
+                    <el-input v-model.trim="form.username" show-word-limit placeholder="请输入管理员手机号" :disabled="form.id&&form.id.length>0" maxlength='11'></el-input>
                 </el-form-item>
                 <el-form-item label="项目类型：" prop="projectType">
                     <el-checkbox-group v-model="form.projectType">
@@ -219,7 +219,7 @@ export default {
                     { required: true, message: '请输入项目简称', trigger: 'blur' }
                 ],
                 companyName: [
-                    { required: true, message: '请输入企业名称', trigger: 'blur' }
+                    { required: true, message: '请输入公司名称', trigger: 'blur' }
                 ],
                 provinceId: [
                     { required: true, message: '选择省份', trigger: 'change' }
@@ -278,7 +278,7 @@ export default {
                     let beginDateVal = this.queryParams.createTimeStart
                     if (beginDateVal) {
                         return (
-                            time.getTime() < new Date(beginDateVal).getTime()
+                            time.getTime() < new Date(beginDateVal).getTime() - 1 * 24 * 60 * 60 * 1000
                         )
                     }
                 }
@@ -323,8 +323,10 @@ export default {
         },
         onProvince (key) {
             this.form.provinceId = key || ''
-            this.form.cityId = null
+            this.form.cityId = ''
+            this.form.cityName = ''
             this.form.countryId = ''
+            this.form.countryName = ''
             if (key.length > 0) {
                 const province = this.provinceList.filter(item => {
                     return item.provinceId === this.form.provinceId
@@ -333,8 +335,10 @@ export default {
             }
         },
         onCity (key) {
+            console.log('没走吗')
             this.form.cityId = key || ''
             this.form.countryId = ''
+            this.form.countryName = ''
             if (key.length > 0) {
                 const city = this.getCity.filter(item => {
                     return item.cityId === this.form.cityId
