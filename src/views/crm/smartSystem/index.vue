@@ -17,20 +17,21 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <h-button type="primary" @click="getList">查询</h-button>
+                    <h-button type="primary" @click="onFindList">查询</h-button>
                     <h-button @click="onReset">重置</h-button>
                 </div>
             </div>
-            <div class="query-cont-row">
+            <div class="query-cont-row mb20">
                 <h-button type="primary" @click="onAddInfo">新增智能化系统</h-button>
             </div>
             <!-- end search bar -->
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <h-button table @click="onApproval(slotProps.data.row)" v-if="slotProps.data.row.status==1">审核</h-button>
-                    <h-button table @click="onLook(slotProps.data.row)">查看详情</h-button>
-                    <h-button table @click="onApprovalRecord(slotProps.data.row)">审批记录</h-button>
+                    <h-button table @click="onAddInfo(slotProps.data.row)">编辑</h-button>
+                    <h-button table @click="onMove(slotProps.data.row,'up')">上移</h-button>
+                    <h-button table @click="onMove(slotProps.data.row,'down')">下移</h-button>
+                    <h-button table @click="onDelete(slotProps.data.row)">删除</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -42,10 +43,10 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { CreateElement } from 'vue'
 import { Action, Getter, State } from 'vuex-class'
-import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
 import ImageAddToken from '@/components/imageAddToken/index.vue'
 import { deepCopy } from '@/utils/utils'
 import './css/css.scss'
+import { getIntelligentList, deleteIntelligent, getIntelligentDown, getIntelligentUp } from './api/index'
 
 import moment from 'moment'
 // 定义类型
@@ -57,67 +58,36 @@ interface Query{
     name: 'Smartsystem',
     components: {
         hosJoyTable,
-        OssFileHosjoyUpload,
         ImageAddToken
     }
 })
 export default class Smartsystem extends Vue {
-    $refs!: {
-        form: HTMLFormElement
-    }
     moment = moment
     uploadParameters = {
         updateUid: '',
         reservedName: false
     }
 
-    private dialogVisible:boolean = false
-    private comfirmVisble:boolean = false
-    private examineVisble:boolean = false
-    private recordVisible:boolean = false
     private _queryParams:Query = {}
-    private totalMoney:number = 0
-    private id:number|string = null
-
     queryParams:Query = {
         pageSize: 10,
         pageNumber: 1,
         prepaymentNo: '',
         projectName: '',
-        distributorName: '',
-        subsectionCode: '',
-        status: '',
-        applyUser: '',
-        applyTimeStart: '',
-        applyTimeEnd: ''
+        distributorName: ''
     }
-    auditForm = {
-        resource: '',
-        remark: ''
-    }
-
     page = {
         total: 0
     }
     private tableLabel:tableLabelProps = [
-        { label: '智能化系统名称', prop: 'prepaymentNo' },
-        { label: '关联的工程方案', prop: 'subsectionName' },
-        { label: '创建时间', prop: 'distributor' },
+        { label: '智能化系统名称', prop: 'intelligentSystemName' },
+        { label: '关联的工程方案', prop: 'schemeName' },
+        { label: '创建时间', prop: 'createTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '更新时间', prop: 'projectName', displayAs: 'YYYY-MM-DD HH:mm:ss' },
-        { label: '更新人', prop: 'applyAmount', displayAs: 'money' }
+        { label: '更新人', prop: 'updateBy' }
     ]
     private tableData = []
     @State('userInfo') userInfo: any
-    get options () {
-        return {
-            type: 'date',
-            valueFormat: 'yyyy-MM-ddTHH:mm:ss',
-            format: 'yyyy-MM-ddTHH:mm:ss',
-            startTime: this.queryParams.applyTimeStart,
-            endTime: this.queryParams.applyTimeEnd
-        }
-    }
-    // validator: (rule, value, callback) => {
     auditRules = {
         resource: [
             { required: true, message: '请选择审核结果', trigger: 'blur' }
@@ -126,20 +96,37 @@ export default class Smartsystem extends Vue {
             { required: true, message: '请填写审核备注', trigger: 'blur' }
         ]
     }
-    detailRules = {
-        payVouchers: [
-            { required: true, message: '上传上游支付凭证不能为空', trigger: 'blur' }
-        ],
-        payDate: [
-            { required: true, message: '上游支付日期不能为空', trigger: 'blur' }
-        ]
-    }
-    public onAddInfo (val): void {
-        this.$router.push({ path: '/goodwork/systemdetail' })
-    }
 
+    public onAddInfo (val): void {
+        this.$router.push({ path: '/goodwork/systemdetail', query: { id: val } })
+    }
+    // 重置
     public onReset (): void {
         this.queryParams = deepCopy(this._queryParams)
+    }
+    // 查询列表
+    public async onFindList () {
+        const data = await getIntelligentList(this.queryParams)
+    }
+    // 上下移动
+    public async onMove (val, type) {
+        if (type == 'up') {
+            await getIntelligentDown(val)
+        } else {
+            await getIntelligentDown(val)
+        }
+    }
+    // 删除
+    public onDelete (val) {
+        this.$confirm('删除后小程序端无法查看，是否继续删除？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(async () => {
+            const data = await deleteIntelligent(val)
+        }).catch(() => {
+
+        })
     }
 
     public async mounted () {
