@@ -68,7 +68,7 @@
                 </template>
             </hosJoyTable>
         </div>
-        <el-dialog title="预付款支付单详情" :visible.sync="dialogVisible" width="600px" :close-on-click-modal=false :before-close="()=>{dialogVisible = false}">
+        <el-dialog title="上游预付款支付单详情" :visible.sync="dialogVisible" width="600px" :close-on-click-modal=false :before-close="()=>{dialogVisible = false}">
             <div class="advance_wrap">
                 <h3>项目信息</h3>
                 <el-row type="flex" class="row-bg">
@@ -226,8 +226,8 @@
         <!-- 记录 -->
         <el-dialog title="审批记录" :visible.sync="recordVisible" width="30%" :before-close="()=>{recordVisible = false}">
             <div class="advance_wrap">
-                <p>预付款支付钉钉审批流程</p>
-                <p class="advance_wrap-msg">{{recordInfo.distributor}}申请预付款支付{{recordInfo.applyAmount|fundMoneyHasTail}}元</p>
+                <p>上游预付款支付钉钉审批流程</p>
+                <p class="advance_wrap-msg">{{recordInfo.distributor}}申请上游预付款支付{{recordInfo.applyAmount|fundMoneyHasTail}}元</p>
                 <el-timeline>
                     <el-timeline-item v-for="(item, index) in records" :key="index" color='#ff7a45' :hide-timestamp="true">
                         <p>{{item.operator}}/{{item.operationName}}</p>
@@ -316,7 +316,10 @@ export default class Advancelist extends Vue {
         status: '',
         applyUser: '',
         applyTimeStart: '',
-        applyTimeEnd: ''
+        applyTimeEnd: '',
+        authCode: sessionStorage.getItem('authCode')
+            ? JSON.parse(sessionStorage.getItem('authCode') || '')
+            : ''
     }
     pickerOptions={
         disabledDate (time) {
