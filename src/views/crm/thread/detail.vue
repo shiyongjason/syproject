@@ -342,7 +342,7 @@ const _flowUpRequest = {
     noNeedFlowReason: '',
     picUrls: [],
     remark: '',
-    type: 2 // 跟进类型 1：当面拜访 2：电话/微信沟通/邮件等
+    type: 1 // 跟进类型 1：当面拜访 2：电话/微信沟通/邮件等
 }
 
 @Component({
