@@ -40,7 +40,7 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="onQuery(queryParams)">查询</el-button>
+                    <el-button type="primary" class="ml20" @click="onConditonQuery()">查询</el-button>
                 </div>
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="addNewProject">+新增项目</el-button>
@@ -315,11 +315,11 @@ export default {
         }),
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            this.onQuery(this.queryParams)
+            this.onQuery()
         },
         onSizeChange (val) {
             this.queryParams.pageSize = val
-            this.onQuery(this.queryParams)
+            this.onQuery()
         },
         onProvince (key) {
             this.form.provinceId = key || ''
@@ -355,12 +355,16 @@ export default {
                 this.form.countryName = country.length > 0 ? country[0].name : ''
             }
         },
+        onConditonQuery () {
+            this.queryParams.pageNumber = 1
+            this.onQuery()
+        },
         onSearch () {
             this.queryParams = JSON.parse(JSON.stringify(_queryParams))
-            this.onQuery(this.queryParams)
+            this.onQuery()
         },
-        async onQuery (queryParams) {
-            await this.getClouldControlProjectList(queryParams)
+        async onQuery () {
+            await this.getClouldControlProjectList(this.queryParams)
             this.tableData = this.clouldControlProjectList.records
             this.recordPagination = {
                 pageNumber: this.clouldControlProjectList.current,
