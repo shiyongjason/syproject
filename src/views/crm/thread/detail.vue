@@ -265,13 +265,13 @@
                             </div>
                             <div class="record-dialog-item" style="margin-top:10px">
                                 <el-form-item prop='content' label="跟进内容：" class="textarea">
-                                    <el-input v-model="flowUpRequest.content" placeholder="请输入此次跟进结果/下次跟进事项" style="width:380px;" type="textarea" maxlength="200" show-word-limit rows='2'></el-input>
+                                    <el-input v-model="flowUpRequest.content" placeholder="请输入此次跟进结果/下次跟进事项" style="width:380px;" type="textarea" maxlength="500" show-word-limit rows='2'></el-input>
                                 </el-form-item>
                             </div>
                             <div class="record-dialog-item" v-if="flowUpRequest.type != 1">
-                                <el-form-item label="附件（不超过8个）："></el-form-item>
+                                <el-form-item label="附件（不超过9个）："></el-form-item>
                                 <div>
-                                    <OssFileHosjoyUpload :showPreView='true' v-model="flowUpRequest.picUrls" :fileNum=8 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px">
+                                    <OssFileHosjoyUpload :showPreView='true' v-model="flowUpRequest.picUrls" :fileNum=9 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px">
                                         <div class="a-line">
                                             <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                                         </div>
