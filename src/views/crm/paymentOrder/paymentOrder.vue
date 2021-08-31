@@ -183,7 +183,7 @@ import FundsDialog from '@/views/crm/funds/components/fundsDialog'
 import * as Auths from '@/utils/auth_const'
 import LoanTransferContent from './components/LoanTransferContent'
 import ViewHandoverRecords from './components/ViewHandoverRecords'
-import { getLoanTransferContent, getLoanTransferRecord, getLoanTransferCheck, approvalHistory } from './api/index'
+import { getLoanTransferContent, getLoanTransferRecord, getLoanTransferCheck, approvalHistory, getNewAdvance } from './api/index'
 import UploadPayDialog from '../funds/components/uploadPayDialog.vue'
 import paymentOrderConst from '@/views/crm/paymentOrder/const'
 import moment from 'moment'
@@ -426,8 +426,10 @@ export default {
             }
             // this.drawer && this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
         },
-        onUploadPay (val) {
-            this.$refs.uploadpaydialog.onDialogClick(val, 1)
+        async    onUploadPay (val) {
+            // 调用接口查询最新的账单信息
+            const { data } = await getNewAdvance(val.id)
+            this.$refs.uploadpaydialog.onDialogClick(val, 1, data.fundAmount)
         },
         handleClose () {
             this.drawerPur = false
