@@ -48,8 +48,8 @@ export default class Systemdetail extends Vue {
         intelligentSystemDetail: '',
         schemeId: []
     }
-    private loading: boolean = false
-    private engineList: Array<any> = []
+    public loading: boolean = false
+    public engineList: Array<any> = []
 
     menus = [
         'head', // 标题
