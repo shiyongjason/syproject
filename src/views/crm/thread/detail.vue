@@ -129,13 +129,13 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item v-if="threadDetail.userSource == 3" prop="manufacturer">
-                                <el-select v-model="threadDetail.manufacturer" placeholder="请添加厂商信息" filterable clearable>
-                                    <el-option v-for="item in manufacturerOption" :key="item.companyCode" :label="item.companyName" :value="item.companyCode"></el-option>
+                                <el-select v-model="threadDetail.manufacturer" placeholder="请添加厂商信息" filterable clearable :remote-method="tianyanchaSearchesList" remote reserve-keyword>
+                                    <el-option v-for="item in manufacturerOption" :key="item.id" :label="item.name" :value="item.name"></el-option>
                                 </el-select>
                             </el-form-item>
                             <el-form-item v-if="threadDetail.userSource == 4" prop="oldCompanyName">
-                                <el-select v-model="threadDetail.oldCompanyName" placeholder="请添加老客户信息" :remote-method="tianyanchaSearchesList" filterable clearable remote reserve-keyword>
-                                    <el-option v-for="item in oldCompanyNameOption" :key="item.id" :label="item.name" :value="item.name"></el-option>
+                                <el-select v-model="threadDetail.oldCompanyName" placeholder="请添加老客户信息" filterable clearable>
+                                    <el-option v-for="item in oldCompanyNameOption" :key="item.companyCode" :label="item.companyName" :value="item.companyName"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
@@ -176,7 +176,7 @@
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
-                            <el-form-item label="">
+                            <el-form-item label="" prop="address">
                                 <el-input v-model="threadDetail.address" maxlength="100" placeholder="请输入详细地址"></el-input>
                             </el-form-item>
                         </div>
@@ -409,8 +409,10 @@ export default class ThreadDetail extends Vue {
         provinceId: [
             { required: true, message: '请选择省、市、区', trigger: 'change' },
             { validator: (rule, value, callback) => {
-                if (this.threadDetail.provinceId == '' || this.threadDetail.cityId == '' || this.threadDetail.countryId == '') {
-                    return callback(new Error('请选择省、市、区'))
+                if (this.threadDetail) {
+                    if (this.threadDetail.provinceId == '' || this.threadDetail.cityId == '' || this.threadDetail.countryId == '') {
+                        return callback(new Error('请选择省、市、区'))
+                    }
                 }
                 return callback()
             },
@@ -595,6 +597,7 @@ export default class ThreadDetail extends Vue {
             return
         }
         const res = this.provinceList.filter(item => {
+            console.log(item)
             return item.provinceId === key
         })
     }
@@ -742,21 +745,21 @@ export default class ThreadDetail extends Vue {
 
     // 客户来源选择
     userSourceChange (value) {
-        value == 3 && this.getCompanyList()
+        value == 4 && this.getCompanyList()
     }
 
     // 获取公司列表
     async getCompanyList () {
         const res = await companyList({})
-        this.manufacturerOption = res.data
+        this.oldCompanyNameOption = res.data
     }
     // 天眼查
     async tianyanchaSearchesList (query) {
         if (query !== '') {
             const res = await tianyanchaSearches({ word: query })
-            this.oldCompanyNameOption = res.data.items
+            this.manufacturerOption = res.data.items
         } else {
-            this.oldCompanyNameOption = []
+            this.manufacturerOption = []
         }
     }
 
