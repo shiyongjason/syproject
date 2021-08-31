@@ -1,29 +1,40 @@
 import axios, { AxiosPromise } from 'axios'
 
+// 列表
 export const getIntelligentList: (params: any) => AxiosPromise<any> = (params) => {
-    return axios.get('/member/api/boss/intelligent', {})
+    return axios.get('/memeber/api/boss/intelligent', { params })
 }
 
+// 上移
 export const getIntelligentUp: (params: any) => AxiosPromise<any> = (params) => {
-    return axios.get('/member/api/boss/intelligent/{id}/move-up', {})
+    return axios.patch(`/memeber/api/boss/intelligent/${params.id}/move-up`, {})
 }
 
+// 下移
 export const getIntelligentDown: (params: any) => AxiosPromise<any> = (params) => {
-    return axios.get('/member/api/boss/intelligent/{id}/move-down', {})
+    return axios.patch(`/memeber/api/boss/intelligent/${params.id}/move-down`, {})
 }
 
+// 删除
 export const deleteIntelligent: (id: any) => AxiosPromise<any> = (id) => {
-    return axios.delete(`/member/api/boss/intelligent/${id}`, {})
+    return axios.delete(`/memeber/api/boss/intelligent/${id}`, {})
 }
 
-export const saveIntelligent: (params: any) => AxiosPromise<any> = (params) => {
-    return axios.get(`/member/api/boss/intelligent`, params)
+// 新增智能化系统
+export const addIntelligent: (params: any) => AxiosPromise<any> = (params) => {
+    return axios.post(`/memeber/api/boss/intelligent`, params)
 }
 
+// 智能化系统详情
 export const getIntelligent: (id: any) => AxiosPromise<any> = (id) => {
-    return axios.get(`/member/api/boss/intelligent/${id}`, {})
+    return axios.get(`/memeber/api/boss/intelligent/${id}`, {})
+}
+// 修改智能化系统
+export const saveIntelligent: (id: any) => AxiosPromise<any> = (params) => {
+    return axios.put(`/memeber/api/boss/intelligent/${params.id}`, params)
 }
 
+// 智能化选择工程方案列表
 export const getSchemeList: (params: any) => AxiosPromise<any> = (params) => {
-    return axios.get(`/member/api/boss/intelligent/scheme`, { params })
+    return axios.get(`/memeber/api/boss/intelligent/scheme`, { params })
 }
