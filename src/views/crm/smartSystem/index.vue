@@ -83,7 +83,6 @@ export default class Smartsystem extends Vue {
     @State('userInfo') userInfo: any
 
     public onAddInfo (val, type): void {
-        console.log(val)
         if (type == 'edit') {
             this.$router.push({ path: '/goodwork/systemdetail', query: { id: val.id } })
         } else {

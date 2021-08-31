@@ -106,7 +106,6 @@ export default class Systemdetail extends Vue {
     // 查询方案
     public async onGetScheme () {
         const { data: params } = await getSchemeList(this.params.id)
-        console.log(params)
         this.params = params
     }
     // 查询详情
@@ -160,24 +159,10 @@ export default class Systemdetail extends Vue {
         }
     }
     public mounted () {
-        // this.$nextTick(() => {
-        // this.$refs['form'].clearValidate()
-        // this.$refs['form'].resetFields()
-        // })
-        console.log(this.form)
         this.onGetScheme()
         if (this.$route.query.id) {
             this.getIntelligentDetail()
         }
-    }
-    beforeRouteEnter (to, from, next) {
-        clearCache('systemDetail')
-        // console.log(to)
-        // if (from.name == 'systemDetail') {
-        console.log('111')
-        next()
-        //     // this.$refs['form'].resetFields()
-        // }
     }
 }
 </script>
