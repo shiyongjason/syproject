@@ -175,14 +175,14 @@
                         </el-form-item>
                         <el-form-item v-if="threadForm.userSource == 3" class="flex_item" prop="manufacturer">
                             <span class="ml10 mr10">-</span>
-                            <el-select v-model="threadForm.manufacturer" placeholder="请添加厂商信息" filterable clearable>
-                                <el-option v-for="item in manufacturerOption" :key="item.companyCode" :label="item.companyName" :value="item.companyName"></el-option>
+                            <el-select v-model="threadForm.manufacturer" placeholder="请添加厂商信息" filterable clearable :remote-method="tianyanchaSearchesList" remote reserve-keyword>
+                                <el-option v-for="item in manufacturerOption" :key="item.id" :label="item.name" :value="item.name"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item v-if="threadForm.userSource == 4" class="flex_item" prop="oldCompanyName">
                             <span class="ml10 mr10">-</span>
-                            <el-select v-model="threadForm.oldCompanyName" placeholder="请添加老客户信息" :remote-method="tianyanchaSearchesList" filterable clearable remote reserve-keyword>
-                                <el-option v-for="item in oldCompanyNameOption" :key="item.id" :label="item.name" :value="item.name"></el-option>
+                            <el-select v-model="threadForm.oldCompanyName" placeholder="请添加老客户信息" filterable clearable>
+                                <el-option v-for="item in oldCompanyNameOption" :key="item.companyCode" :label="item.companyName" :value="item.companyName"></el-option>
                             </el-select>
                         </el-form-item>
                     </div>
@@ -790,21 +790,21 @@ export default class Thread extends Vue {
 
     // 客户来源选择
     userSourceChange (value) {
-        value == 3 && this.getCompanyList()
+        value == 4 && this.getCompanyList()
     }
 
     // 获取公司列表
     async getCompanyList () {
         const res = await companyList({})
-        this.manufacturerOption = res.data
+        this.oldCompanyNameOption = res.data
     }
     // 天眼查
     async tianyanchaSearchesList (query) {
         if (query !== '') {
             const res = await tianyanchaSearches({ word: query })
-            this.oldCompanyNameOption = res.data.items
+            this.manufacturerOption = res.data.items
         } else {
-            this.oldCompanyNameOption = []
+            this.manufacturerOption = []
         }
     }
 
