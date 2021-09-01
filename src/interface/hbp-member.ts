@@ -546,6 +546,19 @@ export interface Clue {
      */
     userSource?: string
 
+    /**
+     * 常做项目类型后台传值
+     * @type {string}
+     * @memberof Clue
+     */
+     usualProjectType?: string
+
+    /**
+     * 常做项目类型
+     * @type {Array}
+     * @memberof Clue
+     */
+     projectType?: Array<number>
 }
 
 /**

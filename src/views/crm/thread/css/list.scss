@@ -23,6 +23,12 @@
     margin-bottom: 15px;
 }
 
+.multiple-tags {
+    /deep/ .el-select .el-input:not(:first-child) {
+        margin-left: 0;
+    }
+}
+
 .flex {
     display: flex;
     margin-bottom: 0;

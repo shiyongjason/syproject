@@ -158,7 +158,7 @@
                             </el-form-item>
                         </div>
                         <div class="project-detail-item area-select">
-                            <el-form-item label="客户地址：" prop="provinceId">
+                            <el-form-item label="客户地址：" prop="countryId">
                                 <el-select v-model="threadDetail.provinceId" @change="onProvince" placeholder="省" clearable>
                                     <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
                                     </el-option>
@@ -186,8 +186,8 @@
                         </el-form-item>
                         </div>
                         <div class="add-cont__row">
-                            <el-form-item label="常做项目类型" prop="usualProjectType">
-                                <el-select v-model="threadDetail.usualProjectType" placeholder="请选择" clearable>
+                            <el-form-item label="常做项目类型" prop="projectType">
+                                <el-select v-model="threadDetail.projectType" multiple placeholder="请选择" clearable>
                                     <el-option v-for="item in projectTypeOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
@@ -406,18 +406,8 @@ export default class ThreadDetail extends Vue {
         deviceBrand: [
             { required: true, message: '请输入主营品牌', trigger: 'blur' }
         ],
-        provinceId: [
-            { required: true, message: '请选择省、市、区', trigger: 'change' },
-            { validator: (rule, value, callback) => {
-                if (this.threadDetail) {
-                    if (this.threadDetail.provinceId == '' || this.threadDetail.cityId == '' || this.threadDetail.countryId == '') {
-                        return callback(new Error('请选择省、市、区'))
-                    }
-                }
-                return callback()
-            },
-            trigger: 'change'
-            }
+        countryId: [
+            { required: true, message: '请选择省、市、区', trigger: 'change' }
         ],
         address: [
             { required: true, message: '请输入详细地址', trigger: 'blur' }
@@ -425,7 +415,7 @@ export default class ThreadDetail extends Vue {
         cooperatedFirstParty: [
             { required: true, message: '请输入已合作甲方', trigger: 'blur' }
         ],
-        usualProjectType: [
+        projectType: [
             { required: true, message: '请选择常做项目类型', trigger: 'change' }
         ]
     }
@@ -566,6 +556,7 @@ export default class ThreadDetail extends Vue {
 
     @validateForm('threadDetailForm')
     async onUpDateThreadDetail () {
+        this.threadDetail.usualProjectType = this.threadDetail.projectType.join(',')
         const parms = { ...this.threadDetail }
         parms.updateBy = this.userInfo.employeeName
         if (!parms.provinceId || parms.provinceId.length === 0) {
