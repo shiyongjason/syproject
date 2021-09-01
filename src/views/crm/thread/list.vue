@@ -232,8 +232,8 @@
                         </el-form-item>
                     </div>
                     <div class="add-cont__row multiple-tags">
-                        <el-form-item label="常做项目类型" prop="usualProjectType">
-                            <el-select v-model="threadForm.usualProjectType" placeholder="请选择" multiple clearable>
+                        <el-form-item label="常做项目类型" prop="projectType">
+                            <el-select v-model="threadForm.projectType" placeholder="请选择" multiple clearable>
                                 <el-option v-for="item in projectTypeOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
@@ -423,7 +423,7 @@ export default class Thread extends Vue {
         cooperatedFirstParty: [
             { required: true, message: '请输入已合作甲方', trigger: 'blur' }
         ],
-        usualProjectType: [
+        projectType: [
             { required: true, message: '请选择常做项目类型', trigger: 'change' }
         ]
     }
@@ -728,7 +728,7 @@ export default class Thread extends Vue {
     async addThreadSubmit () {
         this.threadForm.createBy = this.userInfo.employeeName
         this.threadForm.createPhone = this.userInfo.phoneNumber
-        this.threadForm.usualProjectType = this.threadForm.usualProjectType.join(',')
+        this.threadForm.usualProjectType = this.threadForm.projectType.join(',')
         this.threadForm.origin = 5
         this.threadFormRef.validate(async (valid) => {
             if (valid) {
@@ -813,7 +813,7 @@ export default class Thread extends Vue {
         this.currentThread = val
         const { data } = await getThreadDetail(val.id)
         if (data.usualProjectType) {
-            data.usualProjectType = data.usualProjectType.split(',').map(v => Number(v))
+            data.projectType = data.usualProjectType.split(',').map(v => Number(v))
         }
         this.threadDetail = data
         this.drawer = true
