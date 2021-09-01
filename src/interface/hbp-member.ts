@@ -546,6 +546,12 @@ export interface Clue {
      */
     userSource?: string
 
+    /**
+     * 常做项目类型
+     * @type {any}
+     * @memberof Clue
+     */
+     usualProjectType?: any
 }
 
 /**

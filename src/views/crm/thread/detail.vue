@@ -187,7 +187,7 @@
                         </div>
                         <div class="add-cont__row">
                             <el-form-item label="常做项目类型" prop="usualProjectType">
-                                <el-select v-model="threadDetail.usualProjectType" placeholder="请选择" clearable>
+                                <el-select v-model="threadDetail.usualProjectType" multiple placeholder="请选择" clearable>
                                     <el-option v-for="item in projectTypeOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
@@ -566,6 +566,7 @@ export default class ThreadDetail extends Vue {
 
     @validateForm('threadDetailForm')
     async onUpDateThreadDetail () {
+        this.threadDetail.usualProjectType = this.threadDetail.usualProjectType.join(',')
         const parms = { ...this.threadDetail }
         parms.updateBy = this.userInfo.employeeName
         if (!parms.provinceId || parms.provinceId.length === 0) {
