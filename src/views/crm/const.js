@@ -107,6 +107,7 @@ export const CREDITLEVEL = [
     { key: 4, value: 'B' },
     { key: 5, value: 'C+' },
     { key: 6, value: 'C' },
+    { key: 8, value: 'C-' },
     { key: 7, value: 'D' }
 ]
 
