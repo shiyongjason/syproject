@@ -27,6 +27,26 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
+                    <div class="query-col__label">签署方式：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.signedWay" placeholder="请选择">
+                            <el-option label="全部" value=""></el-option>
+                            <el-option label="电子签" value="1"></el-option>
+                            <el-option label="线下签" value="0"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__label">签署方企业来源：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.signedFirm" placeholder="请选择">
+                            <el-option label="全部" value=""></el-option>
+                            <el-option label="指定企业" value="1"></el-option>
+                            <el-option label="合同企业" value="0"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont__col">
                     <h-button type="primary" @click="searchList(1)">查询</h-button>
                     <h-button @click="onRest">重置</h-button>
                 </div>
@@ -39,7 +59,8 @@
             <div class="query-cont__row">
                 <el-tag size="medium" class="tag_top">已筛选 {{paginationInfo.total||0}} 项</el-tag>
             </div>
-            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" @pagination="searchList" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" actionWidth='375' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" @pagination="searchList" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" actionWidth='375' isAction
+                :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
 
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onCopy(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_CONTRACT_COPY)">复制</h-button>
@@ -77,6 +98,8 @@ export default {
                 templateName: '',
                 typeId: '',
                 status: '',
+                signedWay: '',
+                signedFirm: '',
                 pageNumber: 1,
                 pageSize: 10
             },
@@ -90,6 +113,8 @@ export default {
                 { label: '合同模板编号', prop: 'templateNo', width: '100' },
                 { label: '合同模板名称', prop: 'templateName', width: '200' },
                 { label: '合同类型', prop: 'typeName', width: '100' },
+                { label: '签署方式', prop: 'signedWay', width: '100' },
+                { label: '签署方企业来源', prop: 'signedFirm', width: '100' },
                 { label: '状态', prop: 'status', dicData: [{ value: 0, label: '已禁用' }, { value: 1, label: '已启用' }], width: '80' },
                 { label: '启用/禁用时间', prop: 'enableTime', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', width: '200' },
                 { label: '最近维护时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', width: '200' },

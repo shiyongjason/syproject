@@ -6,7 +6,7 @@
                     <el-input v-model="signerTempForm.signerName" placeholder="请输入" maxlength="50"></el-input>
                 </el-form-item>
                 <el-form-item label="签署方类型：" prop="signerType">
-                    <el-radio-group v-model="signerTempForm.signerType" :disabled=isEdit @change="changeRadio">
+                    <el-radio-group v-model="signerTempForm.signerType" :disabled=isEdit>
                         <el-radio :label=1>企业</el-radio>
                         <el-radio :label=2>个人</el-radio>
                     </el-radio-group>
@@ -53,7 +53,13 @@
                 <el-form-item label="签署方类型：" prop="">
                     企业
                 </el-form-item>
-                <el-form-item label="平台企业：" prop="caId">
+                <el-form-item label="签署方企业来源：" prop="signerWay">
+                    <el-radio-group v-model="signerTempForm.signerType" :disabled=isEdit @change="changeRadio">
+                        <el-radio :label=1>指定企业</el-radio>
+                        <el-radio :label=2>合同企业</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="签署方企业名称：" prop="caId" v-if="signerTempForm.signerType==1">
                     <!-- <el-select v-model="signerTempForm.caId" placeholder="请选择平台企业" @change="changeCa">
                         <el-option v-for="item in caOptions" :key="item.id" :label="item.companyName" :value="item.id">
                         </el-option>
@@ -64,6 +70,10 @@
                         </template>
                     </el-autocomplete> -->
 
+                    <HAutocomplete ref="HAutocomplete" :placeholder="'请选择'" :maxlength=60 @back-event="backFindCA" :selectObj="paramCA" :selectArr="restaurants" v-if="restaurants" :remove-value='removeValue' :isSettimeout=false>
+                    </HAutocomplete>
+                </el-form-item>
+                <el-form-item label="请选择合同企业：" prop="caId" v-if="signerTempForm.signerType==2">
                     <HAutocomplete ref="HAutocomplete" :placeholder="'请选择'" :maxlength=60 @back-event="backFindCA" :selectObj="paramCA" :selectArr="restaurants" v-if="restaurants" :remove-value='removeValue' :isSettimeout=false>
                     </HAutocomplete>
                 </el-form-item>
@@ -92,11 +102,11 @@ export default {
     props: {
         customSignAll: {
             type: Array,
-            default: () => {}
+            default: () => { }
         },
         customSignEx: {
             type: Array,
-            default: () => {}
+            default: () => { }
         }
     },
     data () {
@@ -115,6 +125,7 @@ export default {
                 signerType: 1,
                 paramId: '',
                 caId: '',
+                signerWay: 1,
                 createTime: '',
                 createBy: '',
                 agent: '',
@@ -132,6 +143,7 @@ export default {
                 signerType: 1,
                 paramId: '',
                 caId: '',
+                signerWay: 1,
                 createTime: '',
                 createBy: '',
                 agent: '',
@@ -172,6 +184,9 @@ export default {
                 ],
                 caId: [
                     { required: true, message: '请选择平台企业', trigger: 'change' }
+                ],
+                signerWay: [
+                    { required: true, message: '请选择签署方企业来源', trigger: 'change' }
                 ],
                 agent: [
                     { required: true, message: '经办人', trigger: 'blur' }
@@ -291,7 +306,7 @@ export default {
                     await this.$refs.HAutocomplete.clearInput()
                     this.$refs.signerTempS.clearValidate()
                     if (val == 1) {
-                    // 搜索下拉 回显数据
+                        // 搜索下拉 回显数据
                         this.paramCA = {
                             selectCode: this.signerTempForm.caId,
                             selectName: this.signerTempForm.paramGroupName
@@ -416,7 +431,7 @@ export default {
     color: #999;
     font-size: 14px;
 }
- /deep/ .el-dialog .el-input{
+/deep/ .el-dialog .el-input {
     width: 280px;
 }
 /deep/ .el-select .el-input {
