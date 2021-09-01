@@ -29,8 +29,7 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { State, Action } from 'vuex-class'
 import { interfaceUrl } from '@/api/config'
-import { saveIntelligent, addIntelligent, getIntelligent, getSchemeList } from './api/index'
-import { clearCache } from '@/utils/index'
+import { saveIntelligent, addIntelligent, getIntelligent, getSchemeList, getIntelligentList } from './api/index'
 
 @Component({
     name: 'Systemdetail'
@@ -50,6 +49,7 @@ export default class Systemdetail extends Vue {
     }
     private loading: boolean = false
     private engineList: Array<any> = []
+    tableData = []
 
     menus = [
         'head', // 标题
@@ -76,7 +76,20 @@ export default class Systemdetail extends Vue {
     }
     rules = {
         intelligentSystemName: [
-            { required: true, message: '请输入智能化系统名称', trigger: 'blur' }
+            { required: true, message: '请输入智能化系统名称', trigger: 'blur' },
+            {
+                validator: (rule, value, callback) => {
+                    this.tableData.map(item => {
+                        if (!this.$route.query.id) {
+                            if (item == value) {
+                                return callback(new Error('该名称已存在'))
+                            }
+                        }
+                    })
+                    return callback()
+                },
+                trigger: 'blur'
+            }
         ],
         intelligentSystemDetail: [
             {
@@ -102,6 +115,14 @@ export default class Systemdetail extends Vue {
     }
     get uploadImgServer () {
         return interfaceUrl + 'tms/files/upload-list'
+    }
+    // 列表详情
+    public async getList () {
+        const { data: tableData } = await getIntelligentList(this.queryParams)
+        let data = []
+        tableData.map(item => {
+            this.tableData.push(item.intelligentSystemName)
+        })
     }
     // 查询方案
     public async onGetScheme () {
@@ -143,6 +164,7 @@ export default class Systemdetail extends Vue {
                                 id: this.$route.query.id
                             }
                             await saveIntelligent(form)
+                            this.$message.success(`智能化系统保存成功！`)
                         } else {
                             await addIntelligent(this.form)
                         }
@@ -163,10 +185,12 @@ export default class Systemdetail extends Vue {
         if (this.$route.query.id) {
             this.getIntelligentDetail()
         }
+        this.getList()
     }
 }
 </script>
-<style scoped>
+
+<style lang="scss" scoped>
 /deep/ .el-select__tags {
     margin-left: 10px;
 }

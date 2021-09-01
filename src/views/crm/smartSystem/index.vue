@@ -28,8 +28,8 @@
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="tableLabel" :data="tableData" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
                     <h-button table @click="onAddInfo(slotProps.data.row, 'edit')">编辑</h-button>
-                    <h-button table @click="onMove(slotProps.data.row,'up')">上移</h-button>
-                    <h-button table @click="onMove(slotProps.data.row,'down')">下移</h-button>
+                    <h-button table @click="onMove(slotProps.data.row,'up')" v-if="slotProps.data.$index != 0">上移</h-button>
+                    <h-button table @click="onMove(slotProps.data.row,'down')" v-if="slotProps.data.$index != tableData.length-1">下移</h-button>
                     <h-button table @click="onDelete(slotProps.data.row)">删除</h-button>
                 </template>
             </hosJoyTable>
@@ -115,7 +115,8 @@ export default class Smartsystem extends Vue {
             cancelButtonText: '取消',
             type: 'warning'
         }).then(async () => {
-            const data = await deleteIntelligent(val.id)
+            await deleteIntelligent(val.id)
+            this.$message.success(`智能化系统删除成功！`)
             this.getList()
         }).catch(() => {
 
