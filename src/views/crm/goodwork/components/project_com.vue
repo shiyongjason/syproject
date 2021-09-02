@@ -161,7 +161,7 @@ import { mapGetters, mapState } from 'vuex'
 import * as newAuth from '@/utils/auth_const'
 import OssFileHosJoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
 import { ccpBaseUrl } from '@/api/config'
-import { putProjectDetail, saveCreditLevel } from './../api/index'
+import { putProjectDetail, saveCreditLevel, getDictionary } from './../api/index'
 import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, NEW_STATUS_TYPE, PROJECTLEVEL } from '../../const'
 export default {
     name: 'projectcom',
