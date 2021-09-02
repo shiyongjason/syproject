@@ -310,6 +310,7 @@ export default {
             // projectDetail: 'crmmanage/projectDetail',
             crmdepList: 'crmmanage/crmdepList'
         }),
+        // 监听是否选中了其他客户
         isCheckOtherRole () {
             return this.projectForm.customerRoleArr && this.projectForm.customerRoleArr.length > 0 && this.projectForm.customerRoleArr.map(item => item.includes('41')).filter(val => val).length
         }
@@ -336,8 +337,10 @@ export default {
             immediate: true
         },
         // 监听清空其他客户角色
-        isCheckOtherRole () {
-            this.projectForm.otherCustomerRole = ''
+        isCheckOtherRole (val) {
+            if (!val) {
+                this.projectForm.otherCustomerRole = ''
+            }
         }
     },
     mounted () {
