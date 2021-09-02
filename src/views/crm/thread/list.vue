@@ -240,12 +240,12 @@
                     </div>
                     <div class="add-cont__row">
                         <el-form-item label="合作伙伴" prop="partner">
-                            <el-input type="textarea" :rows="2" v-model="threadForm.partner" maxlength="200" placeholder="请输入合作伙伴"></el-input>
+                            <el-input type="textarea" :rows="2" v-model="threadForm.partner" maxlength="200" placeholder="请输入合作伙伴" show-word-limit></el-input>
                         </el-form-item>
                     </div>
                     <div class="add-cont__row">
                         <el-form-item label="常用区域品牌名称">
-                            <el-input type="textarea" :rows="2" v-model="threadForm.usualRegionBrand" maxlength="200" placeholder="请输入区域品牌名称，多个用逗号隔开"></el-input>
+                            <el-input type="textarea" :rows="2" v-model="threadForm.usualRegionBrand" maxlength="200" placeholder="请输入区域品牌名称，多个用逗号隔开" show-word-limit></el-input>
                         </el-form-item>
                     </div>
                     <div class="add-cont__row">
