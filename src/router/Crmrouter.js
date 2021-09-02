@@ -548,7 +548,7 @@ export default [
                     title: '新增/编辑智能化系统管理',
                     tagName: '新增/编辑智能化系统管理',
                     parentName: '好橙工',
-                    isMenu: true,
+                    isMenu: false,
                     icon: '',
                     showMenuAs: '/goodwork/smartsystem'
                 },

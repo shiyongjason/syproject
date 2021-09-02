@@ -76,20 +76,7 @@ export default class Systemdetail extends Vue {
     }
     rules = {
         intelligentSystemName: [
-            { required: true, message: '请输入智能化系统名称', trigger: 'blur' },
-            {
-                validator: (rule, value, callback) => {
-                    this.tableData.map(item => {
-                        if (!this.$route.query.id) {
-                            if (item == value) {
-                                return callback(new Error('该名称已存在'))
-                            }
-                        }
-                    })
-                    return callback()
-                },
-                trigger: 'blur'
-            }
+            { required: true, message: '请输入智能化系统名称', trigger: 'blur' }
         ],
         intelligentSystemDetail: [
             {

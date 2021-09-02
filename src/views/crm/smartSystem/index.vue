@@ -23,14 +23,12 @@
                 <h-button type="primary" @click="onAddInfo">新增智能化系统</h-button>
             </div>
             <!-- end search bar -->
-            <!-- <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction
-                :isActionFixed='tableData&&tableData.length>0'> -->
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="tableLabel" :data="tableData" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <h-button table @click="onAddInfo(slotProps.data.row, 'edit')">编辑</h-button>
-                    <h-button table @click="onMove(slotProps.data.row,'up')" v-if="slotProps.data.$index != 0">上移</h-button>
-                    <h-button table @click="onMove(slotProps.data.row,'down')" v-if="slotProps.data.$index != tableData.length-1">下移</h-button>
-                    <h-button table @click="onDelete(slotProps.data.row)">删除</h-button>
+                    <h-button table @click="onAddInfo(slotProps.data.row, 'edit')" v-if="hosAuthCheck(smartedit)">编辑</h-button>
+                    <h-button table @click="onMove(slotProps.data.row,'up')" v-if="slotProps.data.$index != 0&&hosAuthCheck(smartmove)">上移</h-button>
+                    <h-button table @click="onMove(slotProps.data.row,'down')" v-if="(slotProps.data.$index != tableData.length-1)&&hosAuthCheck(smartmove)">下移</h-button>
+                    <h-button table @click="onDelete(slotProps.data.row)" v-if="hosAuthCheck(smartdelete)">删除</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -47,6 +45,8 @@ import { deepCopy } from '@/utils/utils'
 import './css/css.scss'
 import { getIntelligentList, deleteIntelligent, getIntelligentDown, getIntelligentUp } from './api/index'
 
+import { CRM_SMART_EDIDT, CRM_SMART_MOVE, CRM_SMART_DELETE } from '@/utils/auth_const'
+
 import moment from 'moment'
 // 定义类型
 interface Query {
@@ -62,14 +62,15 @@ interface Query {
 })
 export default class Smartsystem extends Vue {
     moment = moment
+    smartedit = CRM_SMART_EDIDT
+    smartmove = CRM_SMART_MOVE
+    smartdelete = CRM_SMART_DELETE
     private _queryParams: Query = {}
     queryParams: Query = {
         intelligentSystemName: '',
         schemeName: ''
     }
-    // page = {
-    //     total: 0
-    // }
+
     tableLabel = [
         { label: '智能化系统名称', prop: 'intelligentSystemName' },
         { label: '关联的工程方案', prop: 'schemeName' },

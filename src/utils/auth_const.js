@@ -402,3 +402,8 @@ export const CRM_ADV_FLOOR_OPERATE = 117633
 export const CRM_ADV_FLOOR_EDIT = 117634
 export const CRM_ADV_FLOOR_DELETE = 117635
 export const CRM_ADV_FLOOR_MOVE = 117636
+
+// 智能化系统
+export const CRM_SMART_EDIDT = 11851
+export const CRM_SMART_MOVE = 11852
+export const CRM_SMART_DELETE = 11853
