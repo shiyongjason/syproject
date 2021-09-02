@@ -110,9 +110,9 @@
                         </div>
                         <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
                     </div>
-                    <div class="approvalRemark" v-if="item.approvalRemark" :key="index+'approvalRemark'">
+                    <!-- <div class="approvalRemark" v-if="item.approvalRemark" :key="index+'approvalRemark'">
                         {{item.operatorType==1&&(item.operationName=='审核通过了'||item.operationName=='审核拒绝了')?'审批备注':'备注'}}：{{item.approvalRemark}}
-                    </div>
+                    </div> -->
                 </template>
             </div>
             <div class="history-bttom">
