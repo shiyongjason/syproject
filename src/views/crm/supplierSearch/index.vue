@@ -9,13 +9,7 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col__label">创建人：</div>
-                <div class="query-col__input">
-                    <el-input v-model="queryParams.createBy" placeholder="请输入" maxlength="50"></el-input>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col__label">应支付日期：</div>
+                <div class="query-col__label">创建时间：</div>
                 <div class="query-col__input">
                     <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
                     </HDatePicker>
@@ -40,6 +34,7 @@
 </template>
 
 <script>
+import { deepCopy } from '@/utils/utils'
 
 import { mapActions, mapGetters } from 'vuex'
 
@@ -50,8 +45,8 @@ export default {
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                startDate: '',
-                endDate: '',
+                startTime: '',
+                endTime: '',
                 supplierName: '',
                 createBy: ''
             },
@@ -69,10 +64,10 @@ export default {
         options () {
             return {
                 type: 'datetime',
-                valueFormat: 'yyyy-MM-dd',
-                format: 'yyyy-MM-dd',
-                startTime: this.queryParams.startDate,
-                endTime: this.queryParams.endDate
+                valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+                format: 'yyyy-MM-dd HH:mm:ss',
+                startTime: this.queryParams.startTime,
+                endTime: this.queryParams.endTime
             }
         },
         ...mapGetters({
@@ -82,13 +77,13 @@ export default {
     },
     methods: {
         onStartChange (val) {
-            this.queryParams.startDate = val
+            this.queryParams.startTime = val
         },
         onEndChange (val) {
-            this.queryParams.endDate = val
+            this.queryParams.endTime = val
         },
         onReset () {
-            this.queryParams = { ...this.queryParamsTemp }
+            this.queryParams = deepCopy(this.queryParamsTemp)
             this.findPurchaseList(this.queryParams)
         },
         handleSizeChange (val) {
@@ -104,7 +99,7 @@ export default {
         })
     },
     mounted () {
-        this.queryParamsTemp = { ...this.queryParams }
+        this.queryParamsTemp = deepCopy(this.queryParams)
         this.findPurchaseList(this.queryParams)
     }
 }

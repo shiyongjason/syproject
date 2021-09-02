@@ -18,7 +18,7 @@
         <div class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 85px">支付单金额：</font><span>
                 {{ data.applyAmount|fundMoneyHasTail}} 元</span></div>
-            <div class="info-layout-item"><font style="flex: 0 0 100px">上游支付形式：</font><span>
+            <div class="info-layout-item"><font style="flex: 0 0 100px">上游支付方式：</font><span>
                  {{paymentType.get(data.supplierPaymentType)}}
             </span></div>
         </div>
