@@ -97,7 +97,7 @@
             <hosJoyTable localName="V3.5.1" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template #action="slotProps">
                     <h-button table v-if="hosAuthCheck(upstreamPayDetail)"  @click="viewDetail(slotProps.data.row.paymentOrderId)">查看详情</h-button>
-                    <h-button table v-if="changeLoanTransferStatusAuthCheck(slotProps.data.row)"  @click="onShowChangeLoanTransferStatus(slotProps.data.row.loanTransferId)">变更交接状态</h-button>
+                    <h-button table v-if="slotProps.data.row.showChangeButton"  @click="onShowChangeLoanTransferStatus(slotProps.data.row.loanTransferId)">变更交接状态</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -114,7 +114,7 @@
                 </el-tabs>
             </div>
             <!-- 全部支付完隐藏按钮 -->
-            <div class="drawer-content-footer" v-if="activeName == 'upstreamPaymentInformation' && upstreamPaymentInformation.totalAmount != upstreamPaymentInformation.paidAmount && hosAuthCheck(upstreamPayment)">
+            <div class="drawer-content-footer" v-if="activeName == 'upstreamPaymentInformation' && upstreamPaymentInformation.showButton && hosAuthCheck(upstreamPayment)">
                 <h-button style="margin-top:20px" type="primary" @click="payInfoApi">立即上游支付</h-button>
             </div>
         </el-drawer>
@@ -137,7 +137,7 @@
                         <el-form-item label="上游供应商：">
                             {{ prevPaymentDetail.supplierCompanyName }}
                         </el-form-item>
-                        <el-form-item label="上游支付形式：">
+                        <el-form-item label="上游支付方式：">
                             {{paymentType.get(prevPaymentDetail.supplierPaymentType)}}
                         </el-form-item>
                         <el-form-item label="上游货款方式：">

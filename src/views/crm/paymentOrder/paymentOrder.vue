@@ -55,15 +55,6 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col__label">是否签署确认函：</div>
-                    <div class="query-col__input">
-                        <el-select v-model="queryParams.sign" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.value" :value="item.key" v-for="item in signList" :key="item.key"></el-option>
-                        </el-select>
-                    </div>
-                </div>
-
-                <div class="query-cont-col">
                     <div class="query-col__label">合作方式：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.dealerCooperationMethod" placeholder="请选择" :clearable=true>
@@ -102,9 +93,6 @@
                 <template slot="status" slot-scope="scope">
                     <span class="colblue">{{ paymentOrderStatusOptions.get(scope.data.row.status) }}</span>
                 </template>
-                <template slot="sign" slot-scope="scope">
-                    <span>{{ scope.data.row.sign?'是':'否'}}</span>
-                </template>
                 <template slot="applyName" slot-scope="scope">
                     <p>{{scope.data.row.applyName}}</p>
                     <p v-if="scope.data.row.applyPhone">({{scope.data.row.applyPhone}})</p>
@@ -117,7 +105,8 @@
                     <h-button v-if="scope.data.row.operateStatus&&hosAuthCheck(Auths.LENDER_HANDOVER)" table @click="()=>openLoanTransferContent(scope.data.row.id,scope.data.row.operateStatus)">
                         {{scope.data.row.operateStatus===1?'发起放款交接':'查看放款交接'}}
                     </h-button>
-                    <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW) && (paymentOrderStatusKey.FINANCE_AUDIT === scope.data.row.status || paymentOrderStatusKey.OPERATE_AUDIT === scope.data.row.status)">审核</h-button>
+                    <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW) && (paymentOrderStatusKey.FINANCE_AUDIT === scope.data.row.status)">审核</h-button>
+                    <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW_PROJECT) && (paymentOrderStatusKey.OPERATE_AUDIT === scope.data.row.status)">审核</h-button>
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenFundsDialog(scope.data.row.id, scope.data.row.status)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM) &&
                               (paymentOrderStatusKey.DOWN_PAYMENT_CONFIRM === scope.data.row.status || paymentOrderStatusKey.REMAINING_PAYMENT_CONFIRM === scope.data.row.status)">
                         支付确认
@@ -133,7 +122,7 @@
                     <h-button table @click="openDrawer(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_DETAIL)">查看详情</h-button>
                     <h-button table @click="openDrawerPur(scope.data.row)">审批记录</h-button>
                     <!-- dealerCooperationMethod 1 垫资代采 2 代收代付 -->
-                    <h-button table @click="onUploadPay(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_UPLOADPAY)&&(((scope.data.row.status==9||(scope.data.row.status==1&&scope.data.row.sign)) && scope.data.row.dealerCooperationMethod == 1) || (scope.data.row.dealerCooperationMethod == 2 && scope.data.row.status == 1))">上传支付凭证</h-button>
+                    <h-button table @click="onUploadPay(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_UPLOADPAY)&&(scope.data.row.status == 9 ||scope.data.row.status == 1)">上传支付凭证</h-button>
                 </template>
             </basicTable>
         </div>
@@ -194,7 +183,7 @@ import FundsDialog from '@/views/crm/funds/components/fundsDialog'
 import * as Auths from '@/utils/auth_const'
 import LoanTransferContent from './components/LoanTransferContent'
 import ViewHandoverRecords from './components/ViewHandoverRecords'
-import { getLoanTransferContent, getLoanTransferRecord, getLoanTransferCheck, approvalHistory } from './api/index'
+import { getLoanTransferContent, getLoanTransferRecord, getLoanTransferCheck, approvalHistory, getNewAdvance } from './api/index'
 import UploadPayDialog from '../funds/components/uploadPayDialog.vue'
 import paymentOrderConst from '@/views/crm/paymentOrder/const'
 import moment from 'moment'
@@ -219,8 +208,6 @@ export default {
             loanTransferContentVisible: false,
             Auths,
             dealerList: [{ key: 1, value: '垫资代采' }, { key: 2, value: '代收代付' }],
-            signList: [{ key: 1, value: '是' }, { key: 0, value: '否' }],
-
             queryParams: {
                 paymentOrderNo: '',
                 deptName: '',
@@ -244,7 +231,6 @@ export default {
                 { label: '采购单编号', prop: 'purchaseOrderNo', width: '150' },
                 { label: '金额', prop: 'applyAmount', width: '150', align: 'right' },
                 { label: '状态', prop: 'status', width: '150' },
-                { label: '是否签署确认函', prop: 'sign', width: '150' },
                 { label: '合作方式', prop: 'dealerCooperationMethod', width: '150' },
                 { label: '申请人', prop: 'applyName', width: '150' },
                 { label: '申请时间', prop: 'applyDate', width: '150', formatters: 'dateTimes', sortable: 'applyDate' },
@@ -440,8 +426,10 @@ export default {
             }
             // this.drawer && this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
         },
-        onUploadPay (val) {
-            this.$refs.uploadpaydialog.onDialogClick(val, 1)
+        async    onUploadPay (val) {
+            // 调用接口查询最新的账单信息
+            const { data } = await getNewAdvance(val.id)
+            this.$refs.uploadpaydialog.onDialogClick(val, 1, data.fundAmount)
         },
         handleClose () {
             this.drawerPur = false
