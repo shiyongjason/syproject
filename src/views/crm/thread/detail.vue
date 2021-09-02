@@ -81,7 +81,7 @@
                                     <div class="desc" v-if="item.flowUpProcess">{{ followUpPhaseOption[item.flowUpProcess] && followUpPhaseOption[item.flowUpProcess].label }}</div>
                                     <div class="title-tag" v-if="item.userTag">客户标签</div>
                                     <div class="desc" v-if="item.userTag">
-                                        <span class="desc-title" v-for="value in item.userTag.split(',')" :key="value">{{ customerTagOption[value] && customerTagOption[value].label}}</span>
+                                        {{ userTagWatch(item.userTag) }}
                                     </div>
                                     <div class="title-tag" v-if="item.remark">其他备注</div>
                                     <div class="desc" v-if="item.remark">{{item.remark}}</div>
@@ -280,14 +280,14 @@
                             </div>
                             <div class="record-dialog-item">
                                 <el-form-item prop='flowUpProcess' label="跟进阶段：" class="textarea">
-                                    <el-select v-model="flowUpRequest.flowUpProcess" placeholder="请添加厂商信息" filterable clearable>
+                                    <el-select v-model="flowUpRequest.flowUpProcess" placeholder="请选择跟进阶段" filterable clearable>
                                         <el-option v-for="item in followUpPhaseOption" :key="item.label" :label="item.label" :value="item.value"></el-option>
                                     </el-select>
                                 </el-form-item>
                             </div>
                             <div class="record-dialog-item">
                                 <el-form-item prop='userTag' label="客户标签：" class="textarea">
-                                    <el-select v-model="flowUpRequest.userTag" multiple placeholder="请添加厂商信息" filterable clearable>
+                                    <el-select v-model="flowUpRequest.userTag" multiple placeholder="请选择客户标签" filterable clearable>
                                         <el-option v-for="item in customerTagOption" :key="item.label" :label="item.label" :value="item.value"></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -460,6 +460,19 @@ export default class ThreadDetail extends Vue {
     recordsData: any[] = []
     recordsPagination = ''
     flowUpRequest: FlowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
+
+    userTagWatch (value) {
+        if (!value) return false
+        let result = ''
+        this.customerTagOption.forEach(item => {
+            value.split(',').forEach(child => {
+                if (item.value == child) {
+                    result += item.label + '，'
+                }
+            })
+        })
+        return result.slice(0, -1)
+    }
 
     get addFlowUpRules () {
         let rules = {
