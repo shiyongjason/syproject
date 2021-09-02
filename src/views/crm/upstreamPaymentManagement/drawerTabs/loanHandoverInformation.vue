@@ -13,7 +13,7 @@
         <div class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 85px">采购单金额：</font><span>
                 {{ data.poAmount|fundMoneyHasTail}} 元</span></div>
-            <div class="info-layout-item"><font style="flex: 0 0 120px">预付款核销金额：</font><span>
+            <div class="info-layout-item"><font style="flex: 0 0 120px">上游预付款核销金额：</font><span>
                 {{ data.prepaymentWriteOffAmount|fundMoneyHasTail}} 元</span></div>
         </div>
         <div class="info-layout">
@@ -71,7 +71,7 @@
              <div class="info-layout-item"><font style="flex: 0 0 130px">期望上游支付日期：</font><span>{{data.expectSupplierPaymentDate||'-'}}</span></div>
          </div>
          <div  class="info-layout">
-            <div class="info-layout-item"><font style="flex: 0 0 100px">上游支付形式：</font><span>
+            <div class="info-layout-item"><font style="flex: 0 0 100px">上游支付方式：</font><span>
                 {{paymentType.get(data.supplierPaymentType)}}
             </span></div>
          </div>
