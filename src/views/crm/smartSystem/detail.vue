@@ -11,7 +11,7 @@
                         style="outline: 0;margin-bottom: 12px;width:100%;position:relative;z-index:0" tabindex="0" v-model="form.intelligentSystemDetail"></RichEditor>
                 </el-form-item>
                 <el-form-item label="关联的工程方案：">
-                    <el-select placeholder="请选择" v-model="form.schemeId" multiple :clearable='true' style="margin-left: -10px;">
+                    <el-select placeholder="请选择" v-model="form.schemeId" multiple  style="margin-left: -10px;">
                         <el-option v-for=" item in params" :label="item.schemeTitle" :value="item.id" :key="item.id">
                         </el-option>
                     </el-select>
@@ -35,7 +35,7 @@ import { saveIntelligent, addIntelligent, getIntelligent, getSchemeList, getInte
     name: 'Systemdetail'
 })
 export default class Systemdetail extends Vue {
-    [x: string]: any
+    // [x: string]: any
     @State('userInfo') userInfo: any
     @Action('setNewTags') setNewTags!: Function
 
@@ -117,13 +117,13 @@ export default class Systemdetail extends Vue {
         return interfaceUrl + 'tms/files/upload-list'
     }
     // 列表详情
-    public async getList () {
-        const { data: tableData } = await getIntelligentList(this.queryParams)
-        let data = []
-        tableData.map(item => {
-            this.tableData.push(item.intelligentSystemName)
-        })
-    }
+    // public async getList () {
+    //     const { data: tableData } = await getIntelligentList(this.queryParams)
+    //     // let data = []
+    //     tableData.map(item => {
+    //         this.tableData.push(item.intelligentSystemName)
+    //     })
+    // }
     // 查询方案
     public async onGetScheme () {
         const { data: params } = await getSchemeList(this.params.id)
@@ -185,7 +185,7 @@ export default class Systemdetail extends Vue {
         if (this.$route.query.id) {
             this.getIntelligentDetail()
         }
-        this.getList()
+        // this.getList()
     }
 }
 </script>

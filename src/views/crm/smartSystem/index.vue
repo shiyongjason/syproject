@@ -61,9 +61,7 @@ interface Query {
     }
 })
 export default class Smartsystem extends Vue {
-    [x: string]: any
     moment = moment
-
     private _queryParams: Query = {}
     queryParams: Query = {
         intelligentSystemName: '',
