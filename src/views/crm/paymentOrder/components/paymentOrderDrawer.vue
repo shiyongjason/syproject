@@ -187,7 +187,7 @@
                                 </p>
                                 <p class="col-filed col-66">
                                     <span class="label">审核备注：</span>
-                                    {{ paymentOrderDetail.paymentOrderSegmentFinanceApprovalResponse.approvalRemark }}
+                                    {{ paymentOrderDetail.paymentOrderSegmentFinanceApprovalResponse.approvalRemark||'-' }}
                                 </p>
                             </div>
                         </template>
@@ -268,10 +268,10 @@
                                         </p>
                                     </div>
                                     <!-- 垫资代采才需要签署确认函 -->
-                                    <div class="row-filed confirm-server">
+                                    <div class="row-filed confirm-server" v-if="paymentOrderDetail.payOrderDetail.orderLetterStatus === 1">
                                         《订单及服务费确认函》： <span class="info-status-words">{{ paymentOrderConst.ORDER_LETTER_STATUS.get(paymentOrderDetail.payOrderDetail.orderLetterStatus) ||  '-' }}</span>
                                         <!-- 首付款签约以后-->
-                                        <h-button table class="go-contract-detail" @click="goContractDetail" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONTRACT_SEE) && paymentOrderDetail.payOrderDetail.orderLetterStatus === 1">
+                                        <h-button table class="go-contract-detail" @click="goContractDetail" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONTRACT_SEE)">
                                             查看合同
                                         </h-button>
                                         <!-- 首付款签约以后-->
@@ -466,7 +466,7 @@
                                 </p>
                                 <p class="col-filed col-66">
                                     <span class="label">关闭人：</span>
-                                    {{ paymentOrderDetail.payOrderDetail.closeBy }}（{{ paymentOrderDetail.payOrderDetail.closePhone }}）
+                                    {{ paymentOrderDetail.payOrderDetail.closeBy }}（{{ paymentOrderDetail.payOrderDetail.closePhone ||'-'}}）
                                 </p>
                             </div>
                             <p class="tips">

@@ -107,9 +107,19 @@ export const CREDITLEVEL = [
     { key: 4, value: 'B' },
     { key: 5, value: 'C+' },
     { key: 6, value: 'C' },
+    { key: 8, value: 'C-' },
     { key: 7, value: 'D' }
 ]
-
+// 项目评级
+export const PROJECTLEVEL = [
+    { key: 1, value: 'A+' },
+    { key: 2, value: 'A' },
+    { key: 3, value: 'B+' },
+    { key: 4, value: 'B' },
+    { key: 5, value: 'C+' },
+    { key: 6, value: 'C' },
+    { key: 7, value: 'D' }
+]
 // 资料状态
 export const MATELIST = [
     { key: 1, value: '待提交' },
