@@ -773,13 +773,6 @@ export default class ThreadDetail extends Vue {
         this.onInitGetDate()
         this.stateN = this.threadDetail.customerName
         console.log(' 🚗 🚕 🚙 🚌 🚎 xiaoqiche ', this.threadDetail)
-
-        var arr = [ '3', '4', '5' ]
-        console.log(this.customerTagOption)
-        arr.forEach(v => {
-            // eslint-disable-next-line no-unused-expressions
-            console.log(this.customerTagOption[v])
-        })
     }
 }
 </script>
