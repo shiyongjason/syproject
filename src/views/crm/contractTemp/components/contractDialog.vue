@@ -6,7 +6,7 @@
                     <el-input v-model="signerTempForm.signerName" placeholder="请输入" maxlength="50"></el-input>
                 </el-form-item>
                 <el-form-item label="签署方类型：" prop="signerType">
-                    <el-radio-group v-model="signerTempForm.signerType" :disabled=isEdit>
+                    <el-radio-group v-model="signerTempForm.signerType" :disabled=isEdit @change="changeRadio">
                         <el-radio :label=1>企业</el-radio>
                         <el-radio :label=2>个人</el-radio>
                     </el-radio-group>
@@ -54,12 +54,12 @@
                     企业
                 </el-form-item>
                 <el-form-item label="签署方企业来源：" prop="signerWay">
-                    <el-radio-group v-model="signerTempForm.signerType" :disabled=isEdit @change="changeRadio">
+                    <el-radio-group v-model="signerTempForm.signerWay">
                         <el-radio :label=1>指定企业</el-radio>
                         <el-radio :label=2>合同企业</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="签署方企业名称：" prop="caId" v-if="signerTempForm.signerType==1">
+                <el-form-item label="签署方企业名称：" prop="caId" v-if="signerTempForm.signerWay==1">
                     <!-- <el-select v-model="signerTempForm.caId" placeholder="请选择平台企业" @change="changeCa">
                         <el-option v-for="item in caOptions" :key="item.id" :label="item.companyName" :value="item.id">
                         </el-option>
@@ -73,7 +73,7 @@
                     <HAutocomplete ref="HAutocomplete" :placeholder="'请选择'" :maxlength=60 @back-event="backFindCA" :selectObj="paramCA" :selectArr="restaurants" v-if="restaurants" :remove-value='removeValue' :isSettimeout=false>
                     </HAutocomplete>
                 </el-form-item>
-                <el-form-item label="请选择合同企业：" prop="caId" v-if="signerTempForm.signerType==2">
+                <el-form-item label="请选择合同企业：" prop="caId" v-if="signerTempForm.signerWay==2">
                     <HAutocomplete ref="HAutocomplete" :placeholder="'请选择'" :maxlength=60 @back-event="backFindCA" :selectObj="paramCA" :selectArr="restaurants" v-if="restaurants" :remove-value='removeValue' :isSettimeout=false>
                     </HAutocomplete>
                 </el-form-item>
