@@ -152,7 +152,7 @@ import * as newAuth from '@/utils/auth_const'
 import OssFileHosJoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
 import { ccpBaseUrl } from '@/api/config'
 import { putProjectDetail, saveCreditLevel } from './../api/index'
-import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, NEW_STATUS_TYPE, CREDITLEVEL } from '../../const'
+import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, NEW_STATUS_TYPE, PROJECTLEVEL } from '../../const'
 export default {
     name: 'projectcom',
     props: {
@@ -167,7 +167,7 @@ export default {
     data () {
         return {
             newAuth,
-            droplist: CREDITLEVEL,
+            droplist: PROJECTLEVEL,
             loading: false,
             statusTxt: '',
             dialogVisible: false,
