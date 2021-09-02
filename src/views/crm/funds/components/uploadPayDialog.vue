@@ -41,7 +41,7 @@ export default {
         }
     },
     methods: {
-        async onDialogClick (val, source) {
+        async onDialogClick (val, source, fundMoney) {
             console.log(val)
             this.attachDocs = []
             const { data } = await getBnumber({ companyId: val.companyId })
@@ -49,7 +49,7 @@ export default {
             this.dialogVisible = true
             this.fundId = val.id
             this.companyId = val.companyId
-            this.payMoney = val.applyAmount ? val.applyAmount : val.paymentAmount
+            this.payMoney = source == 1 ? fundMoney : val.applyAmount ? val.applyAmount : val.paymentAmount
             this.type = source || this.type
         },
         handleClose () {
