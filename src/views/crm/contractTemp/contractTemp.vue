@@ -959,8 +959,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-/deep/ .el-form .el-input {
-    width: 270px;
+.contract-temp_txt {
+    /deep/.el-form .el-input {
+        width: 270px;
+    }
 }
 .contract-temp_scenario {
     /deep/.el-textarea {
