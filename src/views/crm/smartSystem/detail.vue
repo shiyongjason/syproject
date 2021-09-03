@@ -11,7 +11,7 @@
                         style="outline: 0;margin-bottom: 12px;width:100%;position:relative;z-index:0" tabindex="0" v-model="form.intelligentSystemDetail"></RichEditor>
                 </el-form-item>
                 <el-form-item label="关联的工程方案：">
-                    <el-select placeholder="请选择" v-model="form.schemeId" multiple  style="margin-left: -10px;">
+                    <el-select placeholder="请选择" v-model="form.schemeId" multiple style="margin-left: -10px;">
                         <el-option v-for=" item in params" :label="item.schemeTitle" :value="item.id" :key="item.id">
                         </el-option>
                     </el-select>
@@ -179,6 +179,7 @@ export default class Systemdetail extends Vue {
 
 <style lang="scss" scoped>
 /deep/ .el-select__tags {
-    margin-left: 10px;
+    margin-left: 15px;
+    overflow: auto;
 }
 </style>
