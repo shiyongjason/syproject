@@ -215,7 +215,8 @@ export const CRM_PURCHASE_ORDER_CONFIRM = 109501 // 确认采购单
 export const CRM_PURCHASE_ORDER_CONFIRM_CHANGE = 109502 // 确认变更
 export const CRM_PURCHASE_ORDER_SEE_DETAIL = 109503 // 查看详情
 // 好程工 支付单管理
-export const CRM_PAYMENT_REVIEW = 109504 // 审核
+export const CRM_PAYMENT_REVIEW = 109504 // 审核 -> 待分财审核
+export const CRM_PAYMENT_REVIEW_PROJECT = 109528 // 审核 -> 待项目运营审核
 export const CRM_PAYMENT_CONFIRM = 109505 // 支付确认
 export const CRM_PAYMENT_PREV = 109506 // 上游支付 支付单-列表 支付单-drawer
 export const CRM_PAYMENT_CONFIRM_RECEIPT = 109507 // 确认收货 支付单-列表 支付单-drawer
@@ -242,12 +243,14 @@ export const CRM_FUNDS_ARREAR_UPLOAD = 1096003 // 尾款上传
 
 // 好程工 后添加
 export const CRM_PURCHASE_ORDER_CONTRACT_SEE = 109521 // 采购单-查看合同
-export const CRM_PAYMENT_REVIEW_DETAIL = 109522 // 支付单-支付单审核
+export const CRM_PAYMENT_REVIEW_DETAIL = 109522 // 支付单-项目运营审核
 export const CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT = 109523 // 支付单- [日期修改,服务费修改]
 // 好橙工 采购单上传共管户信息 2021-05-19
 export const CRM_PURCHASE_CO_MANAGER = 109525
 // 采购单详情去归档按钮权限
 export const CRM_PURCHASE_DETAIL_FILE = 109526
+// 分财审核
+export const CRM_PAYMENT_FINANCE_AUDIT = 109527
 
 // 资金逾期
 export const BRANCH_OVERDUE_SUM_EXPORT = 110003
@@ -407,3 +410,8 @@ export const CRM_ADV_FLOOR_MOVE = 117636
 export const CRM_SMART_EDIDT = 11851
 export const CRM_SMART_MOVE = 11852
 export const CRM_SMART_DELETE = 11853
+// 预付款 支付
+export const CRM_ADVACE_UPSTREAMPAY = 118501
+export const CRM_ADVACE_APPROVE = 118502
+export const CRM_ADVACE_LOOK = 118503
+export const CRM_ADVACE_RECORDS = 118504
