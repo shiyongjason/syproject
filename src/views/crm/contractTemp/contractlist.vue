@@ -29,20 +29,20 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">签署方式：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.signedWay" placeholder="请选择">
+                        <el-select v-model="queryParams.recommendSigner" placeholder="请选择签署方式">
                             <el-option label="全部" value=""></el-option>
                             <el-option label="电子签" value="1"></el-option>
-                            <el-option label="线下签" value="0"></el-option>
+                            <el-option label="线下签" value="2"></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">签署方企业来源：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.signedFirm" placeholder="请选择">
+                        <el-select v-model="queryParams.platformSignSource" placeholder="请选择签署方企业来源">
                             <el-option label="全部" value=""></el-option>
                             <el-option label="指定企业" value="1"></el-option>
-                            <el-option label="合同企业" value="0"></el-option>
+                            <el-option label="合同企业" value="2"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -98,8 +98,8 @@ export default {
                 templateName: '',
                 typeId: '',
                 status: '',
-                signedWay: '',
-                signedFirm: '',
+                recommendSigner: '',
+                platformSignSource: '',
                 pageNumber: 1,
                 pageSize: 10
             },
@@ -113,8 +113,8 @@ export default {
                 { label: '合同模板编号', prop: 'templateNo', width: '100' },
                 { label: '合同模板名称', prop: 'templateName', width: '200' },
                 { label: '合同类型', prop: 'typeName', width: '100' },
-                { label: '签署方式', prop: 'signedWay', width: '100' },
-                { label: '签署方企业来源', prop: 'signedFirm', width: '100' },
+                { label: '签署方式', prop: 'recommendSigner', width: '100', dicData: [{ value: 1, label: '电子签' }, { value: 2, label: '线下签' }] },
+                { label: '签署方企业来源', prop: 'platformSignSource', width: '100', dicData: [{ value: 1, label: '指定企业' }, { value: 2, label: '合同企业' }] },
                 { label: '状态', prop: 'status', dicData: [{ value: 0, label: '已禁用' }, { value: 1, label: '已启用' }], width: '80' },
                 { label: '启用/禁用时间', prop: 'enableTime', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', width: '200' },
                 { label: '最近维护时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', width: '200' },

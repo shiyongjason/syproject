@@ -348,6 +348,37 @@ export default {
             if (val == 0) {
                 this.customTermsForm.parameterValue = ''
             }
+        },
+        'platData' (val) {
+            if (val[0].platformSignSource == 1) {
+                this.platLabel = [
+                    { label: '签署方', prop: 'signerName' },
+                    { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
+                    { label: '签署方企业来源', prop: 'platformSignSource', dicData: [{ value: 1, label: '指定企业' }, { value: 2, label: '合同企业' }] },
+                    { label: '签署方企业名称', prop: 'paramGroupName' },
+                    {
+                        label: '签署要求',
+                        prop: 'signerDemand',
+                        render: (h, scope) => {
+                            return <span>{this.findChinese(scope.row.signerDemand)}</span>
+                        }
+                    }
+                ]
+            } else if (val[0].platformSignSource == 2) {
+                this.platLabel = [
+                    { label: '签署方', prop: 'signerName' },
+                    { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
+                    { label: '签署方企业来源', prop: 'platformSignSource', dicData: [{ value: 1, label: '指定企业' }, { value: 2, label: '合同企业' }] },
+                    { label: '合同企业', prop: 'paramGroupName' },
+                    {
+                        label: '签署要求',
+                        prop: 'signerDemand',
+                        render: (h, scope) => {
+                            return <span>{this.findChinese(scope.row.signerDemand)}</span>
+                        }
+                    }
+                ]
+            }
         }
     },
     async mounted () {
@@ -904,35 +935,6 @@ export default {
             this.busData = singerArr.filter(val => val.signerType == 1)
             this.perData = singerArr.filter(val => val.signerType == 2)
             this.platData = this.contractTempdetail.signerSetting.filter((val) => val.type == 1)
-            if (this.platData[0].signerType == 1) {
-                this.platLabel = [
-                    { label: '签署方', prop: 'signerName' },
-                    { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
-                    { label: '签署方企业来源', prop: 'signerType', dicData: [{ value: 1, label: '指定企业' }, { value: 2, label: '合同企业' }] },
-                    { label: '签署方企业名称', prop: 'paramGroupName' },
-                    {
-                        label: '签署要求',
-                        prop: 'signerDemand',
-                        render: (h, scope) => {
-                            return <span>{this.findChinese(scope.row.signerDemand)}</span>
-                        }
-                    }
-                ]
-            } else if (this.platData[0].signerType == 2) {
-                this.platLabel = [
-                    { label: '签署方', prop: 'signerName' },
-                    { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
-                    { label: '签署方企业来源', prop: 'signerType', dicData: [{ value: 1, label: '指定企业' }, { value: 2, label: '合同企业' }] },
-                    { label: '合同企业', prop: 'paramGroupName' },
-                    {
-                        label: '签署要求',
-                        prop: 'signerDemand',
-                        render: (h, scope) => {
-                            return <span>{this.findChinese(scope.row.signerDemand)}</span>
-                        }
-                    }
-                ]
-            }
             // 获取合同类型约定字段
             this.onChangeparam(this.contractForm.typeId)
             // 绑定click
