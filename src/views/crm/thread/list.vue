@@ -204,7 +204,7 @@
                         </el-form-item>
                     </div>
                     <div class="add-cont__row city-select">
-                        <el-form-item label="客户地址：" prop="provinceId">
+                        <el-form-item label="客户地址：" prop="countryId">
                             <el-select v-model="threadForm.provinceId" @change="onProvinceAdd" placeholder="省" clearable>
                                 <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
                                 </el-option>
@@ -406,16 +406,8 @@ export default class Thread extends Vue {
         deviceBrand: [
             { required: true, message: '请输入主营品牌', trigger: 'blur' }
         ],
-        provinceId: [
-            { required: true, message: '请选择省、市、区', trigger: 'change' },
-            { validator: (rule, value, callback) => {
-                if (this.threadForm.provinceId == '' || this.threadForm.cityId == '' || this.threadForm.countryId == '') {
-                    return callback(new Error('请选择省、市、区'))
-                }
-                return callback()
-            },
-            trigger: 'change'
-            }
+        countryId: [
+            { required: true, message: '请选择省、市、区', trigger: 'change' }
         ],
         address: [
             { required: true, message: '请输入详细地址', trigger: 'blur' }
