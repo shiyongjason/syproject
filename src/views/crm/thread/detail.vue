@@ -81,7 +81,7 @@
                                     <div class="desc" v-if="item.flowUpProcess">{{ followUpPhaseOption[item.flowUpProcess] && followUpPhaseOption[item.flowUpProcess].label }}</div>
                                     <div class="title-tag" v-if="item.userTag">客户标签</div>
                                     <div class="desc" v-if="item.userTag">
-                                        <span class="desc-title" v-for="value in item.userTag.split(',')" :key="value">{{ customerTagOption[value] && customerTagOption[value].label}}</span>
+                                        {{ userTagWatch(item.userTag) }}
                                     </div>
                                     <div class="title-tag" v-if="item.remark">其他备注</div>
                                     <div class="desc" v-if="item.remark">{{item.remark}}</div>
@@ -158,7 +158,7 @@
                             </el-form-item>
                         </div>
                         <div class="project-detail-item area-select">
-                            <el-form-item label="客户地址：" prop="provinceId">
+                            <el-form-item label="客户地址：" prop="countryId">
                                 <el-select v-model="threadDetail.provinceId" @change="onProvince" placeholder="省" clearable>
                                     <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
                                     </el-option>
@@ -186,20 +186,20 @@
                         </el-form-item>
                         </div>
                         <div class="add-cont__row">
-                            <el-form-item label="常做项目类型" prop="usualProjectType">
-                                <el-select v-model="threadDetail.usualProjectType" placeholder="请选择" clearable>
+                            <el-form-item label="常做项目类型" prop="projectType">
+                                <el-select v-model="threadDetail.projectType" multiple placeholder="请选择" clearable>
                                     <el-option v-for="item in projectTypeOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="add-cont__row">
                             <el-form-item label="合作伙伴" prop="partner">
-                                <el-input type="textarea" :rows="2" v-model="threadDetail.partner" maxlength="200" placeholder="请输入合作伙伴"></el-input>
+                                <el-input type="textarea" :rows="2" v-model="threadDetail.partner" maxlength="200" placeholder="请输入合作伙伴" show-word-limit></el-input>
                             </el-form-item>
                         </div>
                         <div class="add-cont__row">
                             <el-form-item label="常用区域品牌名称">
-                                <el-input type="textarea" :rows="2" v-model="threadDetail.usualRegionBrand" maxlength="200" placeholder="请输入区域品牌名称，多个用逗号隔开"></el-input>
+                                <el-input type="textarea" :rows="2" v-model="threadDetail.usualRegionBrand" maxlength="200" placeholder="请输入区域品牌名称，多个用逗号隔开" show-word-limit></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
@@ -280,14 +280,14 @@
                             </div>
                             <div class="record-dialog-item">
                                 <el-form-item prop='flowUpProcess' label="跟进阶段：" class="textarea">
-                                    <el-select v-model="flowUpRequest.flowUpProcess" placeholder="请添加厂商信息" filterable clearable>
+                                    <el-select v-model="flowUpRequest.flowUpProcess" placeholder="请选择跟进阶段" filterable clearable>
                                         <el-option v-for="item in followUpPhaseOption" :key="item.label" :label="item.label" :value="item.value"></el-option>
                                     </el-select>
                                 </el-form-item>
                             </div>
                             <div class="record-dialog-item">
                                 <el-form-item prop='userTag' label="客户标签：" class="textarea">
-                                    <el-select v-model="flowUpRequest.userTag" multiple placeholder="请添加厂商信息" filterable clearable>
+                                    <el-select v-model="flowUpRequest.userTag" multiple placeholder="请选择客户标签" filterable clearable>
                                         <el-option v-for="item in customerTagOption" :key="item.label" :label="item.label" :value="item.value"></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -406,18 +406,8 @@ export default class ThreadDetail extends Vue {
         deviceBrand: [
             { required: true, message: '请输入主营品牌', trigger: 'blur' }
         ],
-        provinceId: [
-            { required: true, message: '请选择省、市、区', trigger: 'change' },
-            { validator: (rule, value, callback) => {
-                if (this.threadDetail) {
-                    if (this.threadDetail.provinceId == '' || this.threadDetail.cityId == '' || this.threadDetail.countryId == '') {
-                        return callback(new Error('请选择省、市、区'))
-                    }
-                }
-                return callback()
-            },
-            trigger: 'change'
-            }
+        countryId: [
+            { required: true, message: '请选择省、市、区', trigger: 'change' }
         ],
         address: [
             { required: true, message: '请输入详细地址', trigger: 'blur' }
@@ -425,7 +415,7 @@ export default class ThreadDetail extends Vue {
         cooperatedFirstParty: [
             { required: true, message: '请输入已合作甲方', trigger: 'blur' }
         ],
-        usualProjectType: [
+        projectType: [
             { required: true, message: '请选择常做项目类型', trigger: 'change' }
         ]
     }
@@ -470,6 +460,19 @@ export default class ThreadDetail extends Vue {
     recordsData: any[] = []
     recordsPagination = ''
     flowUpRequest: FlowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
+
+    userTagWatch (value) {
+        if (!value) return false
+        let result = ''
+        this.customerTagOption.forEach(item => {
+            value.split(',').forEach(child => {
+                if (item.value == child) {
+                    result += item.label + '，'
+                }
+            })
+        })
+        return result.slice(0, -1)
+    }
 
     get addFlowUpRules () {
         let rules = {
@@ -566,6 +569,7 @@ export default class ThreadDetail extends Vue {
 
     @validateForm('threadDetailForm')
     async onUpDateThreadDetail () {
+        this.threadDetail.usualProjectType = this.threadDetail.projectType.join(',')
         const parms = { ...this.threadDetail }
         parms.updateBy = this.userInfo.employeeName
         if (!parms.provinceId || parms.provinceId.length === 0) {

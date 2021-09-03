@@ -47,7 +47,7 @@
                 </div>
             </div>
         </div>
-        <el-dialog :title="form.id?'项目编辑':'新建项目'" :visible.sync="addProject" :before-close="cancelDialog" width="900px" :close-on-click-modal="false">
+        <el-dialog id='el-dialog' :title="form.id?'项目编辑':'新建项目'" :visible.sync="addProject" :before-close="cancelDialog" width="920px" :close-on-click-modal="false">
             <el-form ref="form" :model="form" :rules="rules" label-width="130px" label-position="left">
                 <el-form-item label="项目名称：" prop="projectName">
                     <el-input v-model.trim="form.projectName" show-word-limit placeholder="请输入项目全称" maxlength='50' style="width:356px"></el-input>
@@ -425,6 +425,12 @@ export default {
         },
         addDeviceTypes () {
             this.form.deviceTypes.push({ deviceTypeCode: '', deviceTypeName: '' })
+            let dialog = document.getElementsByClassName('el-dialog__body')[0]
+            if (dialog) {
+                setTimeout(() => {
+                    dialog.scrollTop = dialog.scrollHeight
+                }, 100)
+            }
         },
         deleteDeviceTypes (index) {
             this.form.deviceTypes.splice(index, 1)
