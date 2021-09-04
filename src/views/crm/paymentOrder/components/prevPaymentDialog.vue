@@ -16,7 +16,7 @@
             <el-form-item label="上游供应商：">
                 {{ prevPaymentDetail.supplierCompanyName }}
             </el-form-item>
-            <el-form-item label="上游支付形式：">
+            <el-form-item label="上游支付方式：">
                 {{ prevPaymentDetail.supplierPaymentType | attributeComputed(PaymentOrderDict.supplierPaymentType.list) }}
             </el-form-item>
             <el-form-item label="上游货款方式：">
