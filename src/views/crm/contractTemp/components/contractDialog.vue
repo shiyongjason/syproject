@@ -60,18 +60,18 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="签署方企业名称：" prop="caId" v-if="signerTempForm.platformSignSource==1">
-                    <!-- <el-select v-model="signerTempForm.caId" placeholder="请选择平台企业" @change="changeCa">
+                    <el-select v-model="signerTempForm.caId" placeholder="请选择签署方企业名称" @change="changeCa">
                         <el-option v-for="item in caOptions" :key="item.id" :label="item.companyName" :value="item.id">
                         </el-option>
-                    </el-select> -->
+                    </el-select>
                     <!-- <el-autocomplete class="inline-input" v-model="insertVal" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect" @blur="autocompleteBlur">
                         <template slot-scope="{ item }">
                             <span>{{item.companyName}}</span>
                         </template>
                     </el-autocomplete> -->
 
-                    <HAutocomplete ref="HAutocomplete" :placeholder="'请选择'" :maxlength=60 @back-event="backFindCA" :selectObj="paramCA" :selectArr="restaurants" v-if="restaurants" :remove-value='removeValue' :isSettimeout=false>
-                    </HAutocomplete>
+                    <!-- <HAutocomplete ref="HAutocomplete" :placeholder="'请选择'" :maxlength=60 @back-event="backFindCA" :selectObj="paramCA" :selectArr="restaurants" v-if="restaurants" :remove-value='removeValue' :isSettimeout=false>
+                    </HAutocomplete> -->
                 </el-form-item>
                 <el-form-item label='请选择合同企业' v-if="signerTempForm.platformSignSource==2" prop="platformSigner">
                     <el-select v-model="signerTempForm.platformSigner" placeholder="请选择合同企业" @change="changeId">
@@ -98,9 +98,9 @@
 <script>
 import { deepCopy } from '@/utils/utils'
 import { mapGetters, mapActions } from 'vuex'
-import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+// import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 export default {
-    components: { HAutocomplete },
+    // components: { HAutocomplete },
     props: {
         customSignAll: {
             type: Array,
@@ -190,10 +190,14 @@ export default {
                     { required: true, message: '请选择签署方企业来源', trigger: 'change' }
                 ],
                 caId: [
-                    { required: true, message: '请选择签署方企业名称', trigger: 'change' }
+                    {
+                        required: true, message: '请选择签署方企业名称', trigger: 'change'
+                    }
                 ],
                 platformSigner: [
-                    { required: true, message: '请选择合同企业', trigger: 'change' }
+                    {
+                        required: true, message: '请选择合同企业', trigger: 'change'
+                    }
                 ],
                 agent: [
                     { required: true, message: '经办人', trigger: 'blur' }
@@ -212,27 +216,14 @@ export default {
             },
             removeValue: false,
             // 记录弹出层弹出的时候默认值，以防止调整signatureParam选项的时候，下拉选项的值不对
-            signatureParam: []
+            signatureParam: [],
+            caOrgQueryRequest: {}
         }
-    },
-    watch: {
-        // 'signerTempForm.paramGroup' (value) {
-        //     console.log(value)
-        //     if (value) {
-        //         this.$nextTick(() => {
-        //             if (this.contractType == 2) {
-        //                 this.$refs.signerTempR.clearValidate('paramGroupId')
-        //             } else {
-        //                 this.$refs.signerTempS.clearValidate('paramGroupId')
-        //             }
-        //         })
-        //     }
-        // }
-
     },
     computed: {
         ...mapGetters({
-            caPage: 'contractTemp/caPage'
+            caPage: 'contractTemp/caPage',
+            contratList: 'contractTemp/contratList'
         }),
         customSignOptions () {
             const result = this.customSignAll.filter(item => {
@@ -246,30 +237,9 @@ export default {
     },
     methods: {
         ...mapActions({
-            findCApage: 'contractTemp/findCApage'
+            findCApage: 'contractTemp/findCApage',
+            getContratList: 'contractTemp/getContratList'
         }),
-        // autocompleteBlur () {
-        //     if (!this.insertVal.id) {
-        //         let res = this.restaurants.filter(item => item.companyName == this.insertVal)
-        //         console.log('res', res)
-        //         this.signerTempForm.caId = res.id
-        //     }
-        // },
-        // querySearch (queryString, cb) {
-        //     let restaurants = this.restaurants
-        //     let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
-        //     // 调用 callback 返回建议列表的数据
-        //     cb(results)
-        // },
-        // createFilter (queryString) {
-        //     return (restaurant) => {
-        //         return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1)
-        //     }
-        // },
-        // handleSelect (item) {
-        //     this.signerTempForm.caId = item.id
-        //     this.signerTempForm.paramGroupName = item.companyName
-        // },
         backFindCA (val) {
             this.signerTempForm.caId = val.value.id
             this.signerTempForm.paramGroupName = val.value.companyName
@@ -310,7 +280,7 @@ export default {
                 if (val == 2) {
                     this.$refs.signerTempR.clearValidate()
                 } else {
-                    await this.$refs.HAutocomplete.clearInput()
+                    // await this.$refs.HAutocomplete.clearInput()
                     this.$refs.signerTempS.clearValidate()
                     if (val == 1) {
                         // 搜索下拉 回显数据
@@ -338,13 +308,9 @@ export default {
             }
         },
         async onFindCApage () {
-            await this.findCApage({ pageNumber: 0, pageSize: -1, orgType: 1 })
-            this.caOptions = this.caPage.records
-            this.restaurants = JSON.parse(JSON.stringify(this.caOptions))
-            this.restaurants.map(item => {
-                item.value = item.companyName
-                item.selectCode = item.id
-            })
+            this.caOrgQueryRequest.orgType = 1
+            await this.getContratList(this.caOrgQueryRequest)
+            this.caOptions = this.contratList
         },
         changeRadio (val) {
             this.singerOps = this.contart_arr.filter(item => {
@@ -359,14 +325,21 @@ export default {
             this.signerTempForm.paramId = ''
             this.$refs.signerTempR.clearValidate('paramId')
         },
-        onChangeRadio () {
-            this.signerTempForm.caId = ''
-            this.signerTempForm.caId = ''
-            this.signerTempForm.paramGroupName = ''
-            this.signerTempForm.platformSigner = ''
+        onChangeRadio (val) {
+            this.$nextTick(() => {
+                if (val == 1) {
+                    this.$refs.signerTempS.clearValidate('caId')
+                    this.signerTempForm.caId = ''
+                    this.signerTempForm.paramGroupName = ''
+                } else {
+                    this.$refs.signerTempS.clearValidate('platformSigner')
+                    this.signerTempForm.platformSigner = ''
+                }
+            })
         },
         changeId (val) {
             this.signerTempForm.paramGroupName = this.singerOps.filter(item => item.id == val)[0].groupName
+            this.signerTempForm.platformSigner = this.signerTempForm.paramGroupName
             // var aa = []
             // aa = this.singerOps.filter(item => item.id == val)
         },
@@ -419,12 +392,11 @@ export default {
                     caId: this.signerTempForm.caId,
                     caOrgId: this.signerTempForm.caId,
                     paramGroupName: this.signerTempForm.paramGroupName,
-                    platformSigner: this.signerTempForm.paramGroupName,
+                    platformSigner: this.signerTempForm.platformSigner,
                     platformSignSource: this.signerTempForm.platformSignSource,
                     // agent: '发起人指定',
                     signerDemand: this.signerTempForm.signerDemand
                 }
-                console.log(objParam)
                 this.$refs.signerTempS.validate(valid => {
                     if (valid) {
                         try {
