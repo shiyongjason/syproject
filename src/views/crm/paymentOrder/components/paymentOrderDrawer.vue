@@ -278,6 +278,8 @@
                                     </div>
                                 </template>
                             </template>
+                        </template>
+                        <template v-if="checkPaymentStatus(statusKey.DING_AUDIT)">
                             <!-- 首付款计划 -->
                             <template v-if="paymentOrderDetail.respFundResults.downpaymentFund && checkPaymentStatus(statusKey.DOWN_PAYMENT_WAITING_PAY)">
                                 <div class="row-filed">
