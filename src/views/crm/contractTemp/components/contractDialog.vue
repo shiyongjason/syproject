@@ -53,7 +53,13 @@
                 <el-form-item label="签署方类型：" prop="">
                     企业
                 </el-form-item>
-                <el-form-item label="平台企业：" prop="caId">
+                <el-form-item label="签署方类型：" prop="platformSignSource">
+                    <el-radio-group v-model="signerTempForm.platformSignSource" @change="onChangeRadio">
+                        <el-radio :label=1>指定企业</el-radio>
+                        <el-radio :label=2>合同企业</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="签署方企业名称：" prop="caId" v-if="signerTempForm.platformSignSource==1">
                     <!-- <el-select v-model="signerTempForm.caId" placeholder="请选择平台企业" @change="changeCa">
                         <el-option v-for="item in caOptions" :key="item.id" :label="item.companyName" :value="item.id">
                         </el-option>
@@ -66,6 +72,12 @@
 
                     <HAutocomplete ref="HAutocomplete" :placeholder="'请选择'" :maxlength=60 @back-event="backFindCA" :selectObj="paramCA" :selectArr="restaurants" v-if="restaurants" :remove-value='removeValue' :isSettimeout=false>
                     </HAutocomplete>
+                </el-form-item>
+                <el-form-item label='请选择合同企业' v-if="signerTempForm.platformSignSource==2" prop="platformSigner">
+                    <el-select v-model="signerTempForm.platformSigner" placeholder="请选择合同企业" @change="changeId">
+                        <el-option v-for="item in singerOps" :key="item.id" :label="item.groupName" :value="item.id">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="签署要求：" prop="_signerDemand">
                     <el-checkbox-group v-model="signerTempForm._signerDemand">
@@ -92,11 +104,11 @@ export default {
     props: {
         customSignAll: {
             type: Array,
-            default: () => {}
+            default: () => { }
         },
         customSignEx: {
             type: Array,
-            default: () => {}
+            default: () => { }
         }
     },
     data () {
@@ -114,7 +126,9 @@ export default {
                 signerName: '',
                 signerType: 1,
                 paramId: '',
+                platformSignSource: 1,
                 caId: '',
+                platformSigner: '',
                 createTime: '',
                 createBy: '',
                 agent: '',
@@ -131,7 +145,9 @@ export default {
                 signerName: '',
                 signerType: 1,
                 paramId: '',
+                platformSignSource: 1,
                 caId: '',
+                platformSigner: '',
                 createTime: '',
                 createBy: '',
                 agent: '',
@@ -170,8 +186,14 @@ export default {
                         }
                     }
                 ],
+                platformSignSource: [
+                    { required: true, message: '请选择签署方企业来源', trigger: 'change' }
+                ],
                 caId: [
-                    { required: true, message: '请选择平台企业', trigger: 'change' }
+                    { required: true, message: '请选择签署方企业名称', trigger: 'change' }
+                ],
+                platformSigner: [
+                    { required: true, message: '请选择合同企业', trigger: 'change' }
                 ],
                 agent: [
                     { required: true, message: '经办人', trigger: 'blur' }
@@ -291,7 +313,7 @@ export default {
                     await this.$refs.HAutocomplete.clearInput()
                     this.$refs.signerTempS.clearValidate()
                     if (val == 1) {
-                    // 搜索下拉 回显数据
+                        // 搜索下拉 回显数据
                         this.paramCA = {
                             selectCode: this.signerTempForm.caId,
                             selectName: this.signerTempForm.paramGroupName
@@ -336,6 +358,12 @@ export default {
             }
             this.signerTempForm.paramId = ''
             this.$refs.signerTempR.clearValidate('paramId')
+        },
+        onChangeRadio () {
+            this.signerTempForm.caId = ''
+            this.signerTempForm.caId = ''
+            this.signerTempForm.paramGroupName = ''
+            this.signerTempForm.platformSigner = ''
         },
         changeId (val) {
             this.signerTempForm.paramGroupName = this.singerOps.filter(item => item.id == val)[0].groupName
@@ -389,10 +417,14 @@ export default {
                     signerType: 1, // 签署方类型：1企业
                     signerName: '平台方',
                     caId: this.signerTempForm.caId,
+                    caOrgId: this.signerTempForm.caId,
                     paramGroupName: this.signerTempForm.paramGroupName,
+                    platformSigner: this.signerTempForm.paramGroupName,
+                    platformSignSource: this.signerTempForm.platformSignSource,
                     // agent: '发起人指定',
                     signerDemand: this.signerTempForm.signerDemand
                 }
+                console.log(objParam)
                 this.$refs.signerTempS.validate(valid => {
                     if (valid) {
                         try {
@@ -416,7 +448,7 @@ export default {
     color: #999;
     font-size: 14px;
 }
- /deep/ .el-dialog .el-input{
+/deep/ .el-dialog .el-input {
     width: 280px;
 }
 /deep/ .el-select .el-input {
