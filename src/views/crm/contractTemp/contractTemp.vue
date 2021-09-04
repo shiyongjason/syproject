@@ -28,7 +28,8 @@
                 <div class="contract-temp_name">合同模板内容</div>
                 <div class="contract-temp_flex">
                     <div class="contract-temp_rich">
-                        <RichEditor ref="RichEditor" v-model="contractForm.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%" @change="onchange" @blur="onBlur">
+                        <RichEditor ref="RichEditor" v-model="contractForm.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="outline: 0;margin-bottom: 12px;width:100%;position:relative;z-index:0"
+                            tabindex="0" @change="onchange" @blur="onBlur">
                         </RichEditor>
                     </div>
                     <div class="contract-temp_txt">
@@ -300,18 +301,7 @@ export default {
                 }
             ],
             perData: [],
-            platLabel: [
-                { label: '签署方', prop: 'signerName' },
-                { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
-                { label: '签署企业', prop: 'paramGroupName' },
-                {
-                    label: '签署要求',
-                    prop: 'signerDemand',
-                    render: (h, scope) => {
-                        return <span>{this.findChinese(scope.row.signerDemand)}</span>
-                    }
-                }
-            ],
+            platLabel: [],
             platData: [],
             radio: '',
             bakParams: [],
@@ -357,6 +347,37 @@ export default {
         'customTermsForm.hasDefault' (val) {
             if (val == 0) {
                 this.customTermsForm.parameterValue = ''
+            }
+        },
+        'platData' (val) {
+            if (val[0].platformSignSource == 1) {
+                this.platLabel = [
+                    { label: '签署方', prop: 'signerName' },
+                    { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
+                    { label: '签署方企业来源', prop: 'platformSignSource', dicData: [{ value: 1, label: '指定企业' }, { value: 2, label: '合同企业' }] },
+                    { label: '签署方企业名称', prop: 'paramGroupName' },
+                    {
+                        label: '签署要求',
+                        prop: 'signerDemand',
+                        render: (h, scope) => {
+                            return <span>{this.findChinese(scope.row.signerDemand)}</span>
+                        }
+                    }
+                ]
+            } else if (val[0].platformSignSource == 2) {
+                this.platLabel = [
+                    { label: '签署方', prop: 'signerName' },
+                    { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
+                    { label: '签署方企业来源', prop: 'platformSignSource', dicData: [{ value: 1, label: '指定企业' }, { value: 2, label: '合同企业' }] },
+                    { label: '合同企业', prop: 'paramGroupName' },
+                    {
+                        label: '签署要求',
+                        prop: 'signerDemand',
+                        render: (h, scope) => {
+                            return <span>{this.findChinese(scope.row.signerDemand)}</span>
+                        }
+                    }
+                ]
             }
         }
     },
@@ -531,7 +552,7 @@ export default {
                 return
             }
             let inputWidth = this.keyValue.paramName.length * 14
-            const _temp = `<p><input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}"  
+            const _temp = `<p><input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}"
             style="width:${inputWidth}px;"  value="${this.keyValue.paramName}" readonly></input></p>`
             this.$refs.RichEditor.insertHtml(_temp)
             // document.getElementById(`${this.keyValue.paramKey}_${this.num}`).value = this.keyValue.paramName
@@ -644,7 +665,7 @@ export default {
                             editObj.setAttribute('value', this.customTermsForm.parameterName)
                             editObj.setAttribute('data-content', this.customTermsForm.parameterValue ? this.customTermsForm.parameterValue : '')
                         } else {
-                            _temp = `<input id="contract_sign_${this.num}" class="contract_sign_${this.num}" style="width:${inputWidth}px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
+                            _temp = `<input id="contract_sign_${this.num}" class="contract_sign_${this.num}" style="width:${inputWidth}px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"
                             value="${this.customTermsForm.parameterName}" data-content="${this.customTermsForm.parameterValue}" readonly></input>`
                             this.$refs.RichEditor.insertHtml(_temp)
                         }
@@ -914,7 +935,6 @@ export default {
             this.busData = singerArr.filter(val => val.signerType == 1)
             this.perData = singerArr.filter(val => val.signerType == 2)
             this.platData = this.contractTempdetail.signerSetting.filter((val) => val.type == 1)
-
             // 获取合同类型约定字段
             this.onChangeparam(this.contractForm.typeId)
             // 绑定click
@@ -939,11 +959,13 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-/deep/ .el-form .el-input {
-    width: 270px;
+.contract-temp_txt {
+    /deep/.el-form .el-input {
+        width: 270px;
+    }
 }
-.contract-temp_scenario{
-    /deep/.el-textarea{
+.contract-temp_scenario {
+    /deep/.el-textarea {
         width: 400px;
     }
 }
