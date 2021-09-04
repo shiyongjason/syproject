@@ -18,7 +18,7 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="onBack()">取消</el-button>
-                    <el-button type="primary" @click="onSave" :loading="loading">{{ loading ? '提交中 ...' : '确定' }}</el-button>
+                    <el-button type="primary" @click="onSave" :loading="loading">{{ $route.query.id ? '保存' : '确定' }}</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -29,12 +29,13 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { State, Action } from 'vuex-class'
 import { interfaceUrl } from '@/api/config'
-import { saveIntelligent, addIntelligent, getIntelligent, getSchemeList, getIntelligentList } from './api/index'
+import { saveIntelligent, addIntelligent, getIntelligent, getSchemeList, getRepetition } from './api/index'
 
 @Component({
     name: 'Systemdetail'
 })
 export default class Systemdetail extends Vue {
+    [x: string]: any
     // [x: string]: any
     @State('userInfo') userInfo: any
     @Action('setNewTags') setNewTags!: Function
@@ -50,6 +51,7 @@ export default class Systemdetail extends Vue {
     public loading: boolean = false
     public engineList: Array<any> = []
     tableData = []
+    public repetition: boolean = false
 
     menus = [
         'head', // 标题
@@ -76,7 +78,29 @@ export default class Systemdetail extends Vue {
     }
     rules = {
         intelligentSystemName: [
-            { required: true, message: '请输入智能化系统名称', trigger: 'blur' }
+            { required: true, message: '请输入智能化系统名称', trigger: 'blur' },
+            {
+                validator: async (rule, value, callback) => {
+                    if (this.$route.query.id) {
+                        const { data: repetition } = await getRepetition({
+                            id: this.$route.query.id,
+                            systemName: value
+                        })
+                        this.repetition = repetition
+                    } else {
+                        const { data: repetition } = await getRepetition({
+                            systemName: value
+                        })
+                        this.repetition = repetition
+                    }
+                    if (this.repetition) {
+                        return callback(new Error('该名称已存在'))
+                    }
+                    return callback()
+                },
+                trigger: 'blur'
+            }
+
         ],
         intelligentSystemDetail: [
             {
@@ -103,14 +127,6 @@ export default class Systemdetail extends Vue {
     get uploadImgServer () {
         return interfaceUrl + 'tms/files/upload-list'
     }
-    // 列表详情
-    // public async getList () {
-    //     const { data: tableData } = await getIntelligentList(this.queryParams)
-    //     // let data = []
-    //     tableData.map(item => {
-    //         this.tableData.push(item.intelligentSystemName)
-    //     })
-    // }
     // 查询方案
     public async onGetScheme () {
         const { data: params } = await getSchemeList(this.params.id)
