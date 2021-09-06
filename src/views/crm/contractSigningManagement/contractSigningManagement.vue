@@ -349,8 +349,8 @@ export default {
                 lastId: lastContentId
             })
             let reg = /\sdata-mce-style=".*?"/g
-            this.currentContent = data.contractContent.replace(reg, '')
-            this.lastContent = data.lastContractContent.replace(reg, '')
+            this.currentContent = data.contractContent.replace(reg, '').replace(/ contenteditable="true"/g, ' contenteditable="false"')
+            this.lastContent = data.lastContractContent.replace(reg, '').replace(/ contenteditable="true"/g, ' contenteditable="false"')
             this.currentContent = this.currentContent.replace(/\sdata-mce-src=".*?"/g, '')
             this.lastContent = this.lastContent.replace(/\sdata-mce-src=".*?"/g, '')
             this.currentContent = this.currentContent.replace(/<table(.*?)style="[\s\S]*?"/gi, '<table$1style="border-collapse: collapse"')
