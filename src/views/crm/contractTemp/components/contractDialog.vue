@@ -75,7 +75,7 @@
                 </el-form-item>
                 <el-form-item label='请选择合同企业' v-if="signerTempForm.platformSignSource==2" prop="platformSigner">
                     <el-select v-model="signerTempForm.platformSigner" placeholder="请选择合同企业" @change="changeId">
-                        <el-option v-for="item in singerOps" :key="item.id" :label="item.groupName" :value="item.id">
+                        <el-option v-for="item in contractSingnOps" :key="item.id" :label="item.groupName" :value="item.id">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -118,6 +118,7 @@ export default {
             tract_visible: false,
             contractType: '',
             singerOps: [],
+            contractSingnOps: [],
             caOptions: [],
             singer_busArr: [],
             singer_perArr: [],
@@ -267,7 +268,7 @@ export default {
                         this.signerTempForm.paramId = ''
                     }
                 }
-                // 如果是企业类型 默认 下拉里面 singerType==1
+                // 如果是企业类型 回显
                 this.singerOps = this.contart_arr.filter(val => val.signerType == this.signerTempForm.signerType)
             } else {
                 this.vaild_form = deepCopy(this.copy_signerTempForm)
@@ -313,6 +314,7 @@ export default {
             this.caOptions = this.contratList
         },
         changeRadio (val) {
+            // 获取签署方
             this.singerOps = this.contart_arr.filter(item => {
                 return item.signerType == val
             })
@@ -326,6 +328,10 @@ export default {
             this.$refs.signerTempR.clearValidate('paramId')
         },
         onChangeRadio (val) {
+            // 获取平台方签署合同企业类型
+            this.contractSingnOps = this.contart_arr.filter(item => {
+                return item.selectCode == 'hosjoy_company_name'
+            })
             this.$nextTick(() => {
                 if (val == 1) {
                     this.$refs.signerTempS.clearValidate('caId')
