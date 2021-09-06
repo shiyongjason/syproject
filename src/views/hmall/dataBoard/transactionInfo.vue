@@ -90,6 +90,7 @@
                             <el-option label="微信支付" value="40"></el-option>
                             <el-option label="微信支付(小程序)" value="42"></el-option>
                             <el-option label="支付宝支付" value="50"></el-option>
+                            <el-option label="组合支付" value="5"></el-option>
                         </el-select>
                     </div>
                 </div>
