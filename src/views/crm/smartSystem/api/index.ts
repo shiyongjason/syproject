@@ -38,3 +38,8 @@ export const saveIntelligent: (id: any) => AxiosPromise<any> = (params) => {
 export const getSchemeList: (params: any) => AxiosPromise<any> = (params) => {
     return axios.get(`/memeber/api/boss/intelligent/scheme`, { params })
 }
+
+// 检查名称重复，无返回 重复直接报错
+export const getRepetition: (params: any) => AxiosPromise<any> = (params) => {
+    return axios.get(`/memeber/api/boss/intelligent/check-name`, { params })
+}
