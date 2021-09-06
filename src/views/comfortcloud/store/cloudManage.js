@@ -128,7 +128,10 @@ const state = {
     complaintProcessOrderList: [],
     complaintProcessOrderDetail: {},
     cloudServiceMindList: [],
-    cloudServiceMindListPagination: {}
+    cloudServiceMindListPagination: {},
+    clouldControlProjectList: [],
+    clouldControlProjectDetail: {},
+    clouldControlProjectDevicesTypes: []
 }
 
 const getters = {
@@ -266,7 +269,10 @@ const getters = {
     complaintProcessOrderList: state => state.complaintProcessOrderList,
     complaintProcessOrderDetail: state => state.complaintProcessOrderDetail,
     cloudServiceMindList: state => state.cloudServiceMindList,
-    cloudServiceMindListPagination: state => state.cloudServiceMindListPagination
+    cloudServiceMindListPagination: state => state.cloudServiceMindListPagination,
+    clouldControlProjectList: state => state.clouldControlProjectList,
+    clouldControlProjectDetail: state => state.clouldControlProjectDetail,
+    clouldControlProjectDevicesTypes: state => state.clouldControlProjectDevicesTypes
 }
 
 const mutations = {
@@ -637,6 +643,15 @@ const mutations = {
     },
     [cloud.GET_CLOUD_SERVICE_REMIND_LIST_PAGINATION] (state, payload) {
         state.cloudServiceMindListPagination = payload
+    },
+    [cloud.GET_CLOUD_CONTROL_PROJECT_LIST] (state, payload) {
+        state.clouldControlProjectList = payload
+    },
+    [cloud.GET_CLOUD_CONTROL_PROJECT_DETAIL] (state, payload) {
+        state.clouldControlProjectDetail = payload
+    },
+    [cloud.GET_CLOUD_PROJECT_DEVICES_TYPES] (state, payload) {
+        state.clouldControlProjectDevicesTypes = payload
     }
 }
 
@@ -1181,6 +1196,18 @@ const actions = {
             pageSize: data.data.size,
             total: data.data.total
         })
+    },
+    async getClouldControlProjectList ({ commit }, params) {
+        const { data } = await Api.getControlProjectList(params)
+        commit(cloud.GET_CLOUD_CONTROL_PROJECT_LIST, data)
+    },
+    async getClouldControlProjectDetail ({ commit }, params) {
+        const { data } = await Api.getControlProjectDetail(params)
+        commit(cloud.GET_CLOUD_CONTROL_PROJECT_DETAIL, data)
+    },
+    async getClouldControlProjectDevicesTypes ({ commit }, params) {
+        const { data } = await Api.getControlProjectDevicesTypes(params)
+        commit(cloud.GET_CLOUD_PROJECT_DEVICES_TYPES, data)
     }
 }
 export default {
