@@ -143,9 +143,9 @@ export default {
         async findList () {
             const { data } = await findpostList(this.positionName)
             this.postList = data
-            this.postList.map(value => {
-                value.updateTime = this.datetimeFormat(value.updateTime)
-            })
+            // this.postList.map(value => {
+            //     value.updateTime = this.datetimeFormat(value.updateTime)
+            // })
         },
         // 根据岗位名称搜索
         searchpositionName () {
