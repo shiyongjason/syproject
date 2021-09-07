@@ -529,6 +529,32 @@ export default [
                 ]
             },
             {
+                path: 'smartsystem',
+                name: 'smartsystem',
+                meta: {
+                    title: '智能化系统管理',
+                    tagName: '智能化系统管理',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: '',
+                    showMenuAs: '/goodwork/smartsystem'
+                },
+                component: () => import('@/views/crm/smartSystem/index.vue')
+            },
+            {
+                path: 'systemDetail',
+                name: 'systemDetail',
+                meta: {
+                    title: '新增/编辑智能化系统管理',
+                    tagName: '新增/编辑智能化系统管理',
+                    parentName: '好橙工',
+                    isMenu: false,
+                    icon: '',
+                    showMenuAs: '/goodwork/smartsystem'
+                },
+                component: () => import('@/views/crm/smartSystem/detail.vue')
+            },
+            {
                 path: 'liveplayer',
                 name: 'liveplayer',
                 meta: {
@@ -703,6 +729,42 @@ export default [
                     showMenuAs: '/goodwork/category'
                 },
                 component: () => import('@/views/crm/shopMall/category/detail.vue')
+            },
+            {
+                path: 'supplierSearch',
+                name: 'supplierSearch',
+                meta: {
+                    title: '供应商查询',
+                    tagName: '供应商查询',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/supplierSearch/index.vue')
+            },
+            {
+                path: 'apiCompensationScheme',
+                name: 'apiCompensationScheme',
+                meta: {
+                    title: '接口调用补偿机制',
+                    tagName: '接口调用补偿机制',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/apiCompensationScheme/index.vue')
+            },
+            {
+                path: 'advancelist',
+                name: 'advancelist',
+                meta: {
+                    title: '上游预付款支付单',
+                    tagName: '上游预付款支付单',
+                    parentName: '上游预付款支付单',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/advancePayment/index.vue')
             }
         ]
     }
