@@ -430,7 +430,7 @@ export default class Thread extends Vue {
     maritalStatusOption = MARITAL_STATUS
     workingYearsOption = EMPLOYED_AGE
     userSourceOption = CUSTOM_SOURCE
-    projectTypeOption = PROJECT_TYPE
+    // projectTypeOption = PROJECT_TYPE
     oldCompanyNameOption: any[] = []
     manufacturerOption: any = []
     provinceList: any[] = []
@@ -721,7 +721,7 @@ export default class Thread extends Vue {
     async addThreadSubmit () {
         this.threadForm.createBy = this.userInfo.employeeName
         this.threadForm.createPhone = this.userInfo.phoneNumber
-        this.threadForm.usualProjectType = this.threadForm.projectType.join(',')
+        // this.threadForm.usualProjectType = this.threadForm.projectType.join(',')
         this.threadForm.origin = 5
         this.threadFormRef.validate(async (valid) => {
             if (valid) {
