@@ -16,6 +16,7 @@ import Wisdomrouter from './router/Wisdomrouter'
 import Cloudrouter from './router/Cloudrouter'
 import Crmrouter from './router/Crmrouter'
 import Merchantrouter from "./router/Merchantrouter"
+import Smartrouter from './router/Smartrouter'
 import OssFileUtils from "@/utils/OssFileUtils"
 
 const originalPush = Router.prototype.push
@@ -225,6 +226,7 @@ const routerMapping = [
     ...Jyrouter,
     ...Cloudrouter,
     ...Merchantrouter,
+    ...Smartrouter,
     ...Crmrouter
 ]
 
