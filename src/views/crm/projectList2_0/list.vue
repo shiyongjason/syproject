@@ -508,7 +508,7 @@ export default class ProjectList2 extends Vue {
         { label: '项目名称', prop: 'projectName', width: '230' },
         { label: '项目地址', prop: 'address', width: '300' },
         { label: '项目建筑类型', prop: 'projectBuildingTypeNames', width: '120' },
-        { label: '项目角色', prop: 'projectRoleNames', width: '120' },
+        { label: '客户角色', prop: 'projectRoleNames', width: '120' },
         { label: '项目所处的阶段', prop: 'projectStepString', width: '130' },
         { label: '可从总部采购产品', prop: 'generalGoodsNames', width: '120' },
         { label: '工程项目智能化需求', prop: 'projectIntelligentNeedsNames', width: '150' },
