@@ -9,6 +9,7 @@ export const PROCESS_LIST =
 // 删除待签约、待放款、贷中、合作完成 增加终审通过和终审为通过状态
 export const STATUS_LIST =
     [
+        { key: 1, value: '项目消息' },
         { key: 10, value: '信息待完善' },
         { key: 2, value: '初审中' },
         { key: 3, value: '资料收集中' },
