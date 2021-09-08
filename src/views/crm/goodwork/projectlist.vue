@@ -427,7 +427,7 @@ export default {
                     prop: 'projectSubmitName',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.projectSubmitName}<br/>{scope.row.projectSubmitPhone}</span>
+                        return <span>{scope.row.projectSubmitName || '-'}<br/>{scope.row.projectSubmitPhone}</span>
                     } },
                 { label: '经销商', prop: 'companyName', width: '180', showOverflowTooltip: true },
                 { label: '甲方名称', prop: 'firstPartName', width: '180', showOverflowTooltip: true },
