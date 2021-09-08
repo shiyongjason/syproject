@@ -136,7 +136,8 @@ export default {
                 { label: '商品名称', prop: 'name' },
                 { label: '品牌', prop: 'brandName' },
                 { label: '型号', prop: 'model' },
-                { label: '商品类目', prop: 'category' }
+                { label: '商品类目', prop: 'category' },
+                { label: '提交时间', prop: 'submitTime', formatters: 'dateTime' }
             ] : [
                 { label: 'SPU编码', prop: 'spuCode' },
                 { label: 'SKU编码', prop: 'skuCode' },
@@ -144,7 +145,7 @@ export default {
                 { label: '品牌', prop: 'brandName' },
                 { label: '型号', prop: 'model' },
                 { label: '商品类目', prop: 'category' },
-                { label: '规格', prop: 'optionValues' }
+                { label: '提交时间', prop: 'submitTime', formatters: 'dateTime' }
             ]
         },
         tableData () {
