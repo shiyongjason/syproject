@@ -329,8 +329,9 @@ export default {
         },
         onChangeRadio (val) {
             // 获取平台方签署合同企业类型
+            console.log('this.contart_arr', this.contart_arr)
             this.contractSingnOps = this.contart_arr.filter(item => {
-                return item.selectCode == 'hosjoy_company_name'
+                return (item.selectCode == 'hosjoy_company_name' || item.paramKey == 'hosjoy_company_name')
             })
             this.$nextTick(() => {
                 if (val == 1) {
