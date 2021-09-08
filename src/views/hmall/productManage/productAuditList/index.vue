@@ -55,9 +55,9 @@
                     <div class="query-cont__col">
                         <div class="query-col__lable">提交时间：</div>
                         <div class="query-col__input">
-                            <el-date-picker v-model="queryParams.createTimeFrom" type="datetime" placeholder="起始" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsStart"></el-date-picker>
+                            <el-date-picker v-model="queryParams.submitTimeFrom" type="datetime" placeholder="起始" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsStart"></el-date-picker>
                             <span class="ml10 mr10">-</span>
-                            <el-date-picker v-model="queryParams.createTimeTo" type="datetime" placeholder="截止" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsEnd"></el-date-picker>
+                            <el-date-picker v-model="queryParams.submitTimeTo" type="datetime" placeholder="截止" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsEnd"></el-date-picker>
                         </div>
                     </div>
                 </template>
@@ -121,8 +121,8 @@ export default {
                 model: '',
                 auditStatus: '',
                 enabled: '',
-                createTimeFrom: '',
-                createTimeTo: '',
+                submitTimeFrom: '',
+                submitTimeTo: '',
                 pageNumber: 1,
                 pageSize: 10
             },
@@ -148,7 +148,7 @@ export default {
                 { label: '商品类目', prop: 'category' },
                 { label: '型号', prop: 'model' },
                 { label: '审核状态', prop: 'auditStatus' },
-                { label: '提交时间', prop: 'createTime', formatters: 'dateTime' }
+                { label: '提交时间', prop: 'submitTime', formatters: 'dateTime' }
             ] : [
                 { label: 'SPU编码', prop: 'spuCode' },
                 { label: 'SKU编码', prop: 'skuCode' },
@@ -158,7 +158,7 @@ export default {
                 { label: '型号', prop: 'model' },
                 { label: '规格', prop: 'optionValues' },
                 { label: '审核状态', prop: 'auditStatus' },
-                { label: '提交时间', prop: 'createTime', formatters: 'dateTime' }
+                { label: '提交时间', prop: 'submitTime', formatters: 'dateTime' }
             ]
         },
         tableData () {
@@ -178,7 +178,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    const beginDateVal = this.queryParams.createTimeTo
+                    const beginDateVal = this.queryParams.submitTimeTo
                     if (beginDateVal) {
                         return time.getTime() > new Date(beginDateVal).getTime()
                     }
@@ -188,7 +188,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    const beginDateVal = this.queryParams.createTimeFrom
+                    const beginDateVal = this.queryParams.submitTimeFrom
                     if (beginDateVal) {
                         return time.getTime() < new Date(beginDateVal).getTime() - 8.64e7
                     }
@@ -207,14 +207,14 @@ export default {
         onQueryEnter (e) {
             const keyCode = document.all ? event.keyCode : e.which
             if (keyCode === 13) {
-                this.productType == 'SPU' ? this.getProductSpuList() : this.getProductSkuList()
+                this.productType == 'SPU' ? this.getProductSpuAuditList() : this.getProductSkuAuditList()
             }
         },
         // 搜索操作
         onQuery () {
             this.queryParams.pageNumber = 1
             this.tabParams(this.tabName)
-            this.productType == 'SPU' ? this.getProductSpuList() : this.getProductSkuList()
+            this.productType == 'SPU' ? this.getProductSpuAuditList() : this.getProductSkuAuditList()
         },
         // 重置操作
         onReset () {
@@ -230,11 +230,11 @@ export default {
             this.queryParams = { ...this.resetParams }
             this.tabParams(this.tabName)
             if (productType == 'SPU') {
-                this.getProductSpuList()
+                this.getProductSpuAuditList()
                 this.productType = productType
             } else if (productType == 'SKU') {
                 this.cateKey++
-                this.getProductSkuList()
+                this.getProductSkuAuditList()
                 this.productType = productType
             }
         },
@@ -283,9 +283,9 @@ export default {
                                 operator: this.userInfo.employeeName
                             })
                             this.$message.success('商品批量审核通过！')
-                            this.getProductSpuList()
+                            this.getProductSpuAuditList()
                         } catch (error) {
-                            this.getProductSpuList()
+                            this.getProductSpuAuditList()
                         }
                     }).catch(() => { })
                 })
@@ -301,9 +301,9 @@ export default {
                                 operator: this.userInfo.employeeName
                             })
                             this.$message.success('商品批量审核通过！')
-                            this.getProductSkuList()
+                            this.getProductSkuAuditList()
                         } catch (error) {
-                            this.getProductSkuList()
+                            this.getProductSkuAuditList()
                         }
                     }).catch(() => { })
                 })
@@ -312,11 +312,11 @@ export default {
         // 翻页操作
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            this.productType == 'SPU' ? this.getProductSpuList() : this.getProductSkuList()
+            this.productType == 'SPU' ? this.getProductSpuAuditList() : this.getProductSkuAuditList()
         },
         onSizeChange (val) {
             this.queryParams.pageSize = val
-            this.productType == 'SPU' ? this.getProductSpuList() : this.getProductSkuList()
+            this.productType == 'SPU' ? this.getProductSpuAuditList() : this.getProductSkuAuditList()
         },
         onExport () {
             if (this.tableData.length <= 0) {
@@ -327,13 +327,13 @@ export default {
                     for (let key in this.queryParams) {
                         url += (key + '=' + (this.queryParams[key] == null ? '' : this.queryParams[key]) + '&')
                     }
-                    location.href = B2bUrl + 'product/boss/main-spu/export/audit?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
+                    location.href = B2bUrl + 'product/boss/main-spu/audit/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
                 } else if (this.productType == 'SKU') {
                     let url = ''
                     for (let key in this.queryParams) {
                         url += (key + '=' + (this.queryParams[key] == null ? '' : this.queryParams[key]) + '&')
                     }
-                    location.href = B2bUrl + 'product/boss/main-sku/export/audit?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
+                    location.href = B2bUrl + 'product/boss/main-sku/audit/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
                 }
             }
         },
@@ -351,8 +351,8 @@ export default {
         },
         ...mapActions({
             getBrandOptions: 'productManage/findBrandOptions',
-            findProductSpuList: 'productManage/findProductSpuList',
-            findProductSkuList: 'productManage/findProductSkuList',
+            findProductSpuAuditList: 'productManage/findProductSpuAuditList',
+            findProductSkuAuditList: 'productManage/findProductSkuAuditList',
             batchEffective: 'productManage/batchEffective',
             batchEfficacy: 'productManage/batchEfficacy',
             batchAduitSku: 'productManage/batchAduitSku',
@@ -362,11 +362,11 @@ export default {
             deleteSKU: 'productManage/deleteSKU',
             findCategoryOptions: 'productManage/findCategoryOptions'
         }),
-        async getProductSpuList () {
-            await this.findProductSpuList(this.queryParams)
+        async getProductSpuAuditList () {
+            await this.findProductSpuAuditList(this.queryParams)
         },
-        async getProductSkuList () {
-            await this.findProductSkuList(this.queryParams)
+        async getProductSkuAuditList () {
+            await this.findProductSkuAuditList(this.queryParams)
             // console.log(this.productSkuData)
         },
         async getCategoryOptions () {
@@ -382,9 +382,9 @@ export default {
     },
     activated () {
         if (this.productType == 'SPU') {
-            this.getProductSpuList()
+            this.getProductSpuAuditList()
         } else {
-            this.getProductSkuList()
+            this.getProductSkuAuditList()
         }
     },
     beforeRouteEnter (to, from, next) {
