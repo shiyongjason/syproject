@@ -554,7 +554,6 @@ export default {
         },
         onRemove (index) {
             this.imageUrls.splice(index, 1)
-            console.log('11111')
         },
         onAddSKU () {
             let optionValues = []
