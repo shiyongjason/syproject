@@ -101,7 +101,8 @@
                 已经选中{{selectThread.length}}个，可进行批量操作
                 <h-button table :disabled='selectThread.length === 0' style="margin-left:10px" @click="distributor()">批量分配销售</h-button>
             </el-tag>
-            <hosJoyTable localName="V3.*" ref="hosjoyTable" collapseShow align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="pagination" @selection-change="dialogCheckChange" actionWidth='220' isShowselection isAction :isActionFixed='tableData&&tableData.length>0'>
+            <hosJoyTable localName="V3.*" ref="hosjoyTable" collapseShow align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="pagination"
+                @selection-change="dialogCheckChange" actionWidth='220' isShowselection isAction :isActionFixed='tableData&&tableData.length>0'>
                 <template #deviceCategory="slotProps">
                     {{deviceCategoryString(slotProps.data.row.deviceCategory)}}
                 </template>
@@ -226,28 +227,28 @@
                             <el-input v-model="threadForm.address" maxlength="100" placeholder="请输入详细地址"></el-input>
                         </el-form-item>
                     </div>
-                    <div class="add-cont__row">
+                    <!-- <div class="add-cont__row">
                         <el-form-item label="已合作甲方" prop="cooperatedFirstParty">
                             <el-input type="textarea" :rows="2" v-model="threadForm.cooperatedFirstParty" maxlength="200" placeholder="请输入甲方名称，多个用逗号隔开"></el-input>
                         </el-form-item>
-                    </div>
-                    <div class="add-cont__row multiple-tags">
+                    </div> -->
+                    <!-- <div class="add-cont__row multiple-tags">
                         <el-form-item label="常做项目类型" prop="projectType">
                             <el-select v-model="threadForm.projectType" placeholder="请选择" multiple clearable>
                                 <el-option v-for="item in projectTypeOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
-                    </div>
-                    <div class="add-cont__row">
+                    </div> -->
+                    <!-- <div class="add-cont__row">
                         <el-form-item label="合作伙伴" prop="partner">
                             <el-input type="textarea" :rows="2" v-model="threadForm.partner" maxlength="200" placeholder="请输入合作伙伴" show-word-limit></el-input>
                         </el-form-item>
-                    </div>
-                    <div class="add-cont__row">
+                    </div> -->
+                    <!-- <div class="add-cont__row">
                         <el-form-item label="常用区域品牌名称">
                             <el-input type="textarea" :rows="2" v-model="threadForm.usualRegionBrand" maxlength="200" placeholder="请输入区域品牌名称，多个用逗号隔开" show-word-limit></el-input>
                         </el-form-item>
-                    </div>
+                    </div> -->
                     <div class="add-cont__row">
                         <div class="query-cont__col">
                             <el-form-item label="客户经理：">
@@ -429,8 +430,8 @@ export default class Thread extends Vue {
     maritalStatusOption = MARITAL_STATUS
     workingYearsOption = EMPLOYED_AGE
     userSourceOption = CUSTOM_SOURCE
-    projectTypeOption = PROJECT_TYPE
-    oldCompanyNameOption:any[] = []
+    // projectTypeOption = PROJECT_TYPE
+    oldCompanyNameOption: any[] = []
     manufacturerOption: any = []
     provinceList: any[] = []
     cityList: any[] = []
@@ -720,7 +721,7 @@ export default class Thread extends Vue {
     async addThreadSubmit () {
         this.threadForm.createBy = this.userInfo.employeeName
         this.threadForm.createPhone = this.userInfo.phoneNumber
-        this.threadForm.usualProjectType = this.threadForm.projectType.join(',')
+        // this.threadForm.usualProjectType = this.threadForm.projectType.join(',')
         this.threadForm.origin = 5
         this.threadFormRef.validate(async (valid) => {
             if (valid) {
@@ -820,5 +821,5 @@ export default class Thread extends Vue {
 }
 </script>
 <style lang='scss' scoped>
-@import './css/list.scss';
+@import "./css/list.scss";
 </style>

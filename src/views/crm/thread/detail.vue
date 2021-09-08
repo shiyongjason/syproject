@@ -180,7 +180,7 @@
                                 <el-input v-model="threadDetail.address" maxlength="100" placeholder="请输入详细地址"></el-input>
                             </el-form-item>
                         </div>
-                        <div class="add-cont__row">
+                        <!-- <div class="add-cont__row">
                         <el-form-item label="已合作甲方" prop="cooperatedFirstParty">
                             <el-input type="textarea" :rows="2" v-model="threadDetail.cooperatedFirstParty" maxlength="200" placeholder="请输入甲方名称，多个用逗号隔开"></el-input>
                         </el-form-item>
@@ -201,7 +201,7 @@
                             <el-form-item label="常用区域品牌名称">
                                 <el-input type="textarea" :rows="2" v-model="threadDetail.usualRegionBrand" maxlength="200" placeholder="请输入区域品牌名称，多个用逗号隔开" show-word-limit></el-input>
                             </el-form-item>
-                        </div>
+                        </div> -->
                         <div class="project-detail-item">
                             <el-form-item label="客户经理：">
                                 <el-autocomplete v-model="stateN" :fetch-suggestions="querySearchAsync" placeholder="请选择客户经理" @blur="onBlurItem" :trigger-on-focus="false" @select="handleThreadSelect">
@@ -432,11 +432,11 @@ export default class ThreadDetail extends Vue {
     maritalStatusOption = MARITAL_STATUS
     workingYearsOption = EMPLOYED_AGE
     userSourceOption = CUSTOM_SOURCE
-    oldCompanyNameOption:any[] = []
+    oldCompanyNameOption: any[] = []
     manufacturerOption: any = []
     categorys = DEVICE_CATEGORY
     userDefault = USER_DEFAULT
-    followUpPhaseOption:any[] = FOLLOW_UP_PHASE
+    followUpPhaseOption: any[] = FOLLOW_UP_PHASE
     customerTagOption: any[] = CUSTOMER_TAG
     projectTypeOption = PROJECT_TYPE
     stateN = ''
@@ -569,7 +569,7 @@ export default class ThreadDetail extends Vue {
 
     @validateForm('threadDetailForm')
     async onUpDateThreadDetail () {
-        this.threadDetail.usualProjectType = this.threadDetail.projectType.join(',')
+        // this.threadDetail.usualProjectType = this.threadDetail.projectType.join(',')
         const parms = { ...this.threadDetail }
         parms.updateBy = this.userInfo.employeeName
         if (!parms.provinceId || parms.provinceId.length === 0) {
