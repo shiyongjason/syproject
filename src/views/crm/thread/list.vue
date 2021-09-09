@@ -35,7 +35,6 @@
                             <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
                             </el-option>
                         </el-select>
-
                     </div>
                     <span class="ml10 mr10">-</span>
                     <div class="query-col__input">
@@ -63,6 +62,13 @@
                     <div class="query-col__label">创建时间：</div>
                     <div class="query-col__input">
                         <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="authOptions">
+                        </HDatePicker>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__label">更新时间：</div>
+                    <div class="query-col__input">
+                        <HDatePicker :start-change="onUpdateStartChange" :end-change="onUpdateEndChange" :options="updateAuthOptions">
                         </HDatePicker>
                     </div>
                 </div>
@@ -137,7 +143,7 @@
                 </span>
             </el-dialog>
             <el-dialog title="新增客户线索" :close-on-click-modal='false' :visible.sync="threadVisible" width="50%" :before-close="clearthreadFormData">
-                <el-form :model="threadForm" :rules="rules" ref="threadForm" label-width="130px">
+                <el-form :model="threadForm" :rules="rules" ref="threadForm" label-width="136px">
                     <div class="add-cont__row">
                         <el-form-item prop='userMobile' label="客户手机号：">
                             <el-input placeholder="请输入客户手机号" @blur='phoneBlur' maxlength="11" v-model='threadForm.userMobile'></el-input>
@@ -149,13 +155,57 @@
                         </el-form-item>
                     </div>
                     <div class="add-cont__row">
-                        <el-form-item label="企业名称：">
+                        <el-form-item label="婚姻状况：" prop="maritalStatus">
+                            <el-select v-model="threadForm.maritalStatus" placeholder="请选择">
+                                <el-option v-for="item in maritalStatusOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                    <div class="add-cont__row">
+                        <el-form-item label="从业年限：" prop="workingYears">
+                            <el-select v-model="threadForm.workingYears" placeholder="请选择">
+                                <el-option v-for="item in workingYearsOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                    <div class="add-cont__row flex">
+                        <el-form-item label="客户来源：" prop="userSource">
+                            <el-select v-model="threadForm.userSource" placeholder="请选择" @change="userSourceChange">
+                                <el-option v-for="item in userSourceOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item v-if="threadForm.userSource == 3" class="flex_item" prop="manufacturer">
+                            <span class="ml10 mr10">-</span>
+                            <el-select v-model="threadForm.manufacturer" placeholder="请添加厂商信息" filterable clearable :remote-method="tianyanchaSearchesList" remote reserve-keyword>
+                                <el-option v-for="item in manufacturerOption" :key="item.id" :label="item.name" :value="item.name"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item v-if="threadForm.userSource == 4" class="flex_item" prop="oldCompanyName">
+                            <span class="ml10 mr10">-</span>
+                            <el-select v-model="threadForm.oldCompanyName" placeholder="请添加老客户信息" filterable clearable>
+                                <el-option v-for="item in oldCompanyNameOption" :key="item.companyCode" :label="item.companyName" :value="item.companyName"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                    <div class="add-cont__row">
+                        <el-form-item label="企业名称：" prop="companyName">
                             <el-input placeholder="请输入企业名称" maxlength="50" v-model='threadForm.companyName'></el-input>
                         </el-form-item>
                     </div>
+                    <div class="add-cont__row">
+                        <el-form-item label="主营品类：" prop="deviceCategory">
+                            <el-select v-model="threadForm.deviceCategory" placeholder="请选择" clearable>
+                                <el-option v-for="item in devieCategorys" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                    <div class="add-cont__row">
+                        <el-form-item label="主营品牌：" prop="deviceBrand">
+                            <el-input placeholder="请输入主营品牌" v-model='threadForm.deviceBrand'></el-input>
+                        </el-form-item>
+                    </div>
                     <div class="add-cont__row city-select">
-                        <el-form-item label="">
-                            <div slot="label" style="line-height: 20px;"> 客户地址：</div>
+                        <el-form-item label="客户地址：" prop="countryId">
                             <el-select v-model="threadForm.provinceId" @change="onProvinceAdd" placeholder="省" clearable>
                                 <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
                                 </el-option>
@@ -171,26 +221,34 @@
                                 </el-option>
                             </el-select>
                         </el-form-item>
-
                     </div>
                     <div class="add-cont__row">
-                        <el-form-item label="">
+                        <el-form-item label="" prop="address">
                             <el-input v-model="threadForm.address" maxlength="100" placeholder="请输入详细地址"></el-input>
                         </el-form-item>
                     </div>
-                    <div class="add-cont__row">
-                        <el-form-item label="">
-                            <div slot="label">主营品类：</div>
-                            <el-select v-model="threadForm.deviceCategory" placeholder="请选择">
-                                <el-option v-for="item in devieCategorys" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    <!-- <div class="add-cont__row">
+                        <el-form-item label="已合作甲方" prop="cooperatedFirstParty">
+                            <el-input type="textarea" :rows="2" v-model="threadForm.cooperatedFirstParty" maxlength="200" placeholder="请输入甲方名称，多个用逗号隔开"></el-input>
+                        </el-form-item>
+                    </div> -->
+                    <!-- <div class="add-cont__row multiple-tags">
+                        <el-form-item label="常做项目类型" prop="projectType">
+                            <el-select v-model="threadForm.projectType" placeholder="请选择" multiple clearable>
+                                <el-option v-for="item in projectTypeOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
-                    </div>
-                    <div class="add-cont__row">
-                        <el-form-item label="主营品牌：">
-                            <el-input placeholder="请输入主营品牌" v-model='threadForm.deviceBrand'></el-input>
+                    </div> -->
+                    <!-- <div class="add-cont__row">
+                        <el-form-item label="合作伙伴" prop="partner">
+                            <el-input type="textarea" :rows="2" v-model="threadForm.partner" maxlength="200" placeholder="请输入合作伙伴" show-word-limit></el-input>
                         </el-form-item>
-                    </div>
+                    </div> -->
+                    <!-- <div class="add-cont__row">
+                        <el-form-item label="常用区域品牌名称">
+                            <el-input type="textarea" :rows="2" v-model="threadForm.usualRegionBrand" maxlength="200" placeholder="请输入区域品牌名称，多个用逗号隔开" show-word-limit></el-input>
+                        </el-form-item>
+                    </div> -->
                     <div class="add-cont__row">
                         <div class="query-cont__col">
                             <el-form-item label="客户经理：">
@@ -230,11 +288,11 @@
 <script lang='tsx'>
 import { Vue, Component, Prop, Watch, Ref } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
-import { getChiness, getThreadList, assignmentCustomer, getThreadDetail, createThread, getThreadListCount, checkThreadIsRight } from './api/index'
+import { getChiness, getThreadList, assignmentCustomer, getThreadDetail, createThread, getThreadListCount, checkThreadIsRight, companyList, tianyanchaSearches } from './api/index'
 import detail from './detail.vue'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { ThreadQeuryModel } from './const/model'
-import { THREAD_ORIGIN, DEVICE_CATEGORY } from './const/index'
+import { THREAD_ORIGIN, DEVICE_CATEGORY, MARITAL_STATUS, EMPLOYED_AGE, CUSTOM_SOURCE, PROJECT_TYPE } from './const/index'
 import { Clue, RespBossCluePage } from '@/interface/hbp-member'
 import { Phone } from '@/utils/rules'
 
@@ -289,6 +347,8 @@ export default class Thread extends Vue {
         deviceCategory: null,
         startTime: '',
         endTime: '',
+        maxUpdateTime: '',
+        minUpdateTime: '',
         origin: null,
         pageNumber: 1,
         pageSize: 10,
@@ -302,6 +362,7 @@ export default class Thread extends Vue {
         { label: '企业名称', prop: 'companyName', width: '200' },
         { label: '创建人', prop: 'createBy', width: '120' },
         { label: '创建时间', prop: 'createTime', width: '130', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+        { label: '更新时间', prop: 'updateTime', width: '130', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '所在城市', prop: 'cityName', slot: 'cityName', width: '120' },
         { label: '所属分部', prop: 'customerDeptName', width: '120' },
         { label: '主营品牌', prop: 'deviceBrand', width: '120' },
@@ -321,6 +382,42 @@ export default class Thread extends Vue {
         ],
         userName: [
             { required: true, message: '请输入客户姓名', trigger: 'blur' }
+        ],
+        companyName: [
+            { required: true, message: '请输入企业名称', trigger: 'blur' }
+        ],
+        maritalStatus: [
+            { required: true, message: '请选择婚姻状况', trigger: 'change' }
+        ],
+        workingYears: [
+            { required: true, message: '请选择从业年限', trigger: 'change' }
+        ],
+        userSource: [
+            { required: true, message: '请选择客户来源', trigger: 'change' }
+        ],
+        manufacturer: [
+            { required: true, message: '请添加厂商信息', trigger: 'change' }
+        ],
+        oldCompanyName: [
+            { required: true, message: '请添加老客户信息', trigger: 'change' }
+        ],
+        deviceCategory: [
+            { required: true, message: '请选择主营品类', trigger: 'change' }
+        ],
+        deviceBrand: [
+            { required: true, message: '请输入主营品牌', trigger: 'blur' }
+        ],
+        countryId: [
+            { required: true, message: '请选择省、市、区', trigger: 'change' }
+        ],
+        address: [
+            { required: true, message: '请输入详细地址', trigger: 'blur' }
+        ],
+        cooperatedFirstParty: [
+            { required: true, message: '请输入已合作甲方', trigger: 'blur' }
+        ],
+        projectType: [
+            { required: true, message: '请选择常做项目类型', trigger: 'change' }
         ]
     }
     page = {
@@ -330,6 +427,12 @@ export default class Thread extends Vue {
     }
     origins = THREAD_ORIGIN
     devieCategorys = DEVICE_CATEGORY
+    maritalStatusOption = MARITAL_STATUS
+    workingYearsOption = EMPLOYED_AGE
+    userSourceOption = CUSTOM_SOURCE
+    // projectTypeOption = PROJECT_TYPE
+    oldCompanyNameOption: any[] = []
+    manufacturerOption: any = []
     provinceList: any[] = []
     cityList: any[] = []
     countryList: any[] = []
@@ -357,7 +460,6 @@ export default class Thread extends Vue {
     numberSelectThread: { [name: number]: Clue[] } = {}
     timeout = null
     stateN: string = ''
-
     get authOptions () {
         return {
             valueFormat: 'yyyy-MM-ddTHH:mm',
@@ -365,6 +467,16 @@ export default class Thread extends Vue {
             type: 'datetime',
             startTime: this.queryParams.startTime,
             endTime: this.queryParams.endTime
+        }
+    }
+
+    get updateAuthOptions () {
+        return {
+            valueFormat: 'yyyy-MM-ddTHH:mm',
+            format: 'yyyy-MM-dd HH:mm',
+            type: 'datetime',
+            startTime: this.queryParams.minUpdateTime,
+            endTime: this.queryParams.maxUpdateTime
         }
     }
 
@@ -411,6 +523,12 @@ export default class Thread extends Vue {
     }
     onEndChange (val) {
         this.queryParams.endTime = val
+    }
+    onUpdateStartChange (val) {
+        this.queryParams.minUpdateTime = val
+    }
+    onUpdateEndChange (val) {
+        this.queryParams.maxUpdateTime = val
     }
     onProvince (key) {
         this.queryParams.provinceId = key || ''
@@ -603,6 +721,7 @@ export default class Thread extends Vue {
     async addThreadSubmit () {
         this.threadForm.createBy = this.userInfo.employeeName
         this.threadForm.createPhone = this.userInfo.phoneNumber
+        // this.threadForm.usualProjectType = this.threadForm.projectType.join(',')
         this.threadForm.origin = 5
         this.threadFormRef.validate(async (valid) => {
             if (valid) {
@@ -663,9 +782,32 @@ export default class Thread extends Vue {
         this.findThreadList()
     }
 
+    // 客户来源选择
+    userSourceChange (value) {
+        value == 4 && this.getCompanyList()
+    }
+
+    // 获取公司列表
+    async getCompanyList () {
+        const res = await companyList({})
+        this.oldCompanyNameOption = res.data
+    }
+    // 天眼查
+    async tianyanchaSearchesList (query) {
+        if (query !== '') {
+            const res = await tianyanchaSearches({ word: query })
+            this.manufacturerOption = res.data.items
+        } else {
+            this.manufacturerOption = []
+        }
+    }
+
     async viewDetail (val: RespBossCluePage) {
         this.currentThread = val
         const { data } = await getThreadDetail(val.id)
+        if (data.usualProjectType) {
+            data.projectType = data.usualProjectType.split(',').map(v => Number(v))
+        }
         this.threadDetail = data
         this.drawer = true
         console.log(data)
