@@ -135,10 +135,10 @@
                     <div class="col-filed" v-else>
                         <div class="info-title">分财审核信息</div>
                         <el-form-item label="账户信息是否已确认：" label-width="165px">
-                            {{paymentDetail.paymentOrderSegmentFinanceApprovalResponse.supplierAccountConfirm ? '是' : '否'}}
+                            {{paymentDetail.paymentOrderSegmentFinanceApprovalResponse && paymentDetail.paymentOrderSegmentFinanceApprovalResponse.supplierAccountConfirm ? '是' : '否'}}
                         </el-form-item>
                         <el-form-item label="共管户是否已监管：" label-width="165px">
-                            {{paymentDetail.paymentOrderSegmentFinanceApprovalResponse.coManagerSupervision ? '是' : '否'}}
+                            {{paymentDetail.paymentOrderSegmentFinanceApprovalResponse && paymentDetail.paymentOrderSegmentFinanceApprovalResponse.coManagerSupervision ? '是' : '否'}}
                         </el-form-item>
                         <el-form-item label="审核备注：" label-width="165px">
                             {{paymentDetail.paymentOrderSegmentFinanceApprovalResponse.approvalRemark || '-'}}
