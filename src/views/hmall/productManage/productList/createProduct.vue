@@ -77,7 +77,7 @@
                             <div class="group-spec_tags mt20">
                                 <el-form-item label="规格值：" :prop="`optionTypeList[${index}].optionValues`" :rules="rules.optionValues">
                                     <el-tag class="mr10" v-for="(sItem,sIndex) in item.optionValues" :key="sIndex" @close="onDelOptionValue(index,sIndex)" :closable="!sItem.disabled&&!nowShow">{{sItem.name}}</el-tag>
-                                    <el-input v-model="addValues[index]" @change="onAddOptionVlaue(index)" suffix-icon="el-icon-plus" maxlength="50" placeholder="多个属性值以空格隔开"></el-input>
+                                    <el-input v-model="addValues[index]" @change="onAddOptionVlaue(index)" suffix-icon="el-icon-plus" maxlength="50" placeholder="多个属性值以空格隔开" :disabled="item.name == ''"></el-input>
                                 </el-form-item>
                             </div>
                             <span class="group-spec_close" @click="onDelOptionTemplate(index)" v-if="!(form.auditStatus == 1 && item.disabled)"><i class="el-icon-close"></i></span>
