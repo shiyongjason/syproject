@@ -210,7 +210,7 @@ import serviceFeeToTable from './components/serviceFeeToTable'
 import inputAutocomplete from './components/inputAutocomplete'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { mapState, mapActions } from 'vuex'
-import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi, getPurchaseOrderList, getTYCList } from './api/index'
+import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi, getPurchaseOrderList, getTYCList, getCaList } from './api/index'
 import { ccpBaseUrl } from '@/api/config'
 import Editor from '@tinymce/tinymce-vue'
 import comRender from './comRender'
@@ -298,8 +298,8 @@ export default {
                 }
             },
             /** 此占位符用于修复点击暂不审核和失焦失焦触发重复 */
-            isDealBack: false
-
+            isDealBack: false,
+            hosjoyCaList: []
         }
     },
     computed: {
@@ -383,6 +383,15 @@ export default {
             let list = []
             imgArr.map(item => list.push(item.fileUrl))
             return list
+        },
+        async  onGetCaList () {
+            const { data } = await getCaList({ orgType: 1 })
+            data && data.map(val => {
+                val.label = val.companyName
+                val.value = val.companyName
+                return val
+            })
+            this.hosjoyCaList = data
         },
         async onClickVsPurchaseOrder (item) {
             const response = await getPurchaseOrderList({
@@ -542,6 +551,10 @@ export default {
                                 }
                                 if (_this.currentKey.paramKey == 'purch_order_purch_batch' || _this.currentKey.paramKey == 'purch_batch') {
                                     return [{ value: '一次性采购', label: '一次性采购' }, { value: '分批采购', label: '分批采购' }]
+                                }
+                                // 新的合同企业字段
+                                if (_this.currentKey.paramKey == 'hosjoy_company_name') {
+                                    return _this.hosjoyCaList
                                 }
                             })(this)
                         },
@@ -881,6 +894,9 @@ export default {
                 }
             }
             this.$nextTick(async () => {
+                // 处理下合同企业字段
+                const caOrgName = contractFieldsListBeforeTransfer && contractFieldsListBeforeTransfer.filter(val => val.paramKey == 'hosjoy_company_name')
+
                 const query = {
                     contractId: this.$route.query.id,
                     approver: this.userInfo.employeeName,
@@ -890,7 +906,8 @@ export default {
                     approvalRemark: this.dialog.remark,
                     contractContent: this.detailRes.contractStatus == 6 ? this.contractDocument.innerHTML : '',
                     contractContentBeforeTransfer, // 备份
-                    contractFieldsListBeforeTransfer: JSON.stringify(contractFieldsListBeforeTransfer)// 备份
+                    contractFieldsListBeforeTransfer: JSON.stringify(contractFieldsListBeforeTransfer), // 备份
+                    caOrgName: caOrgName.length > 0 ? caOrgName[0].paramValue : ''
                 }
                 try {
                     await approvalContent(query)
@@ -1686,21 +1703,20 @@ export default {
             return `<font>${obj.fieldDesc}</font>从<font>${this.formatTxt(obj.fieldOriginalContent)}</font>变为<font>${this.formatTxt(obj.fieldContent)}</font>`
         }
     },
+    mounted () {
+    },
     async beforeMount () {
         const { data } = await contractKeyValue(this.$route.query.contractTypeId)
         this.contractKeyValueList = data
+        this.$nextTick(() => {
+            this.onGetCaList()
+        })
         this.init()
     }
 }
 </script>
 <style scoped lang="scss">
-/deep/.approvalcontract-content table td {
-    // border: 1px solid #ccc;
-    // border-right: 1px solid #ccc;
-}
-/deep/ .mce-item-table:not([border]) td {
-    //  border: 1px solid #333 !important;
-}
+
 .approvalRemark {
     font-size: 14px;
     color: #f00;
