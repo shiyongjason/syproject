@@ -59,7 +59,7 @@
                         <el-radio :label=2>合同企业</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="签署方企业名称：" prop="caId" v-if="signerTempForm.platformSignSource==1">
+                <el-form-item label="签署方企业名称：" prop="caId" v-if="signerTempForm.platformSignSource==1" class="plat_signer">
                     <el-select v-model="signerTempForm.caId" placeholder="请选择签署方企业名称" @change="changeCa">
                         <el-option v-for="item in caOptions" :key="item.id" :label="item.companyName" :value="item.id">
                         </el-option>
@@ -73,7 +73,7 @@
                     <!-- <HAutocomplete ref="HAutocomplete" :placeholder="'请选择'" :maxlength=60 @back-event="backFindCA" :selectObj="paramCA" :selectArr="restaurants" v-if="restaurants" :remove-value='removeValue' :isSettimeout=false>
                     </HAutocomplete> -->
                 </el-form-item>
-                <el-form-item label='请选择合同企业' v-if="signerTempForm.platformSignSource==2" prop="platformSigner">
+                <el-form-item label='请选择合同企业' v-if="signerTempForm.platformSignSource==2" prop="platformSigner" >
                     <el-select v-model="signerTempForm.platformSigner" placeholder="请选择合同企业" @change="changeId">
                         <el-option v-for="item in contractSingnOps" :key="item.id" :label="item.groupName" :value="item.id">
                         </el-option>
@@ -427,10 +427,15 @@ export default {
     color: #999;
     font-size: 14px;
 }
-/deep/ .el-dialog .el-input {
-    width: 280px;
-}
+// /deep/ .el-dialog .el-input {
+//     width: 280px;
+// }
 /deep/ .el-select .el-input {
     margin-left: 0;
+}
+ .plat_signer {
+  /deep/   .el-input {
+        width: 260px;
+    }
 }
 </style>
