@@ -8,7 +8,8 @@ const state = {
     tempParams: [],
     caPage: {},
     verData: {},
-    verTempDetail: {}
+    verTempDetail: {},
+    contratList: {}
 }
 
 const getters = {
@@ -18,7 +19,8 @@ const getters = {
     tempParams: state => state.tempParams,
     caPage: state => state.caPage,
     verData: state => state.verData,
-    verTempDetail: state => state.verTempDetail
+    verTempDetail: state => state.verTempDetail,
+    contratList: state => state.contratList
 }
 
 const mutations = {
@@ -42,6 +44,9 @@ const mutations = {
     },
     [types.CONTRACT_TEMP_VER_DETAIL] (state, payload) {
         state.verTempDetail = payload
+    },
+    [types.GET_CONTRAT_LIST] (state, payload) {
+        state.contratList = payload
     }
 }
 // getRecommenderRewardTotal
@@ -73,6 +78,10 @@ const actions = {
     async findVerdetail ({ commit }, params) {
         const { data } = await Api.findVerDetail(params)
         commit(types.CONTRACT_TEMP_VER_DETAIL, data)
+    },
+    async getContratList ({ commit }, params) {
+        const { data } = await Api.getContratList(params)
+        commit(types.GET_CONTRAT_LIST, data)
     }
 }
 export default {

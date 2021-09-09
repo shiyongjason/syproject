@@ -542,7 +542,6 @@ export default {
             })
         },
         onInsertInfo () {
-            console.log('🚀 --- onInsertInfo --- this.keyValue', this.keyValue)
             ++this.num
             if (!this.keyValue || !this.keyValue.paramKey) {
                 this.$message({
@@ -796,9 +795,7 @@ export default {
             // 这里去给table赋值 style
             let tableobj = document.getElementsByClassName('w-e-text')[0].getElementsByTagName('table')
 
-            console.log(111, tableobj, Array.from(tableobj).length)
             Array.from(tableobj).map(item => {
-                console.log(item.getElementsByTagName('tr'))
                 Array.from(item.getElementsByTagName('tr')).map(jtem => {
                     jtem.style.border = '1px solid #333'
                 })
@@ -866,7 +863,6 @@ export default {
                 }
             }
             let _tableset = JSON.parse(JSON.stringify([...this.busData, ...this.perData, ...this.platData]))
-            console.log(this.busData, this.perData)
             // 调整关联签署区，选择的时候是包含中英文的，提交的时候只要提交英文的就好
             _tableset = _tableset.map(item => {
                 item.signatureParam = item.signatureParam ? item.signatureParam.map(i => i.substr(i.indexOf('_') + 1)) : []

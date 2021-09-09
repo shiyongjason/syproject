@@ -30,3 +30,5 @@ export const orgCApage = (params) => axios.get(`/project/api/ca/org/page`, { par
 export const findver = (params) => axios.get(`/project/api/contract-template/versions`, { params })
 
 export const findVerDetail = (params) => axios.get(`/project/api/contract-template/versions/${params}`)
+// 获取合同模板下拉列表
+export const getContratList = (params) => axios.get('/project/api/ca/org/list', { params })
