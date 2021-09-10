@@ -130,6 +130,7 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { postVipsigner } from './api'
 import * as auths from '@/utils/auth_const'
+import { newCache } from '@/utils/index'
 export default {
     name: 'vipapplication',
     data () {
@@ -381,6 +382,9 @@ export default {
         onLinkCom (val) {
             this.$router.push({ path: '/goodwork/authenlist', query: { name: val.companyName } })
         }
+    },
+    beforeUpdate () {
+        newCache('vipapplication')
     }
 }
 </script>

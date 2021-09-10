@@ -313,6 +313,7 @@ import downloadFileAddToken from '@/components/downloadFileAddToken'
 import { USER_DEFAULT } from '@/views/crm/projectList2_0/const/index'
 import { getFlowUp, addFlowUp, getFlowUpCount } from '@/views/crm/projectList2_0/api/index'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
+import { newCache } from '@/utils/index'
 
 const _flowUpRequest = {
     assistantRemark: '', // 协助内容
@@ -903,6 +904,9 @@ export default {
             await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
             this.branchArr = this.crmdepList
         }
+    },
+    beforeUpdate () {
+        newCache('projectlist')
     }
 }
 </script>

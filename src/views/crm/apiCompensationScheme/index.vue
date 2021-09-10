@@ -57,8 +57,9 @@
 </template>
 
 <script>
-import { updateApiCompensationScheme } from './api/index'
 import { mapActions, mapGetters } from 'vuex'
+import { updateApiCompensationScheme } from './api/index'
+import { newCache } from '@/utils/index'
 
 const SYSTEM_TYPE = new Map([ // 1：司库 2：MIS 3：OA
     [ 1, '司库' ],
@@ -142,6 +143,9 @@ export default {
     mounted () {
         this.queryParamsTemp = { ...this.queryParams }
         this.findApiCompensationSchemeList(this.queryParams)
+    },
+    beforeUpdate () {
+        newCache('apiCompensationScheme')
     }
 }
 </script>

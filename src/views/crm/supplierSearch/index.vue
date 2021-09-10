@@ -34,12 +34,12 @@
 </template>
 
 <script>
-import { deepCopy } from '@/utils/utils'
-
 import { mapActions, mapGetters } from 'vuex'
+import { deepCopy } from '@/utils/utils'
+import { newCache } from '@/utils/index'
 
 export default {
-    name: 'index',
+    name: 'supplierSearch',
     data () {
         return {
             queryParams: {
@@ -101,6 +101,9 @@ export default {
     mounted () {
         this.queryParamsTemp = deepCopy(this.queryParams)
         this.findPurchaseList(this.queryParams)
+    },
+    beforeUpdate () {
+        newCache('supplierSearch')
     }
 }
 </script>

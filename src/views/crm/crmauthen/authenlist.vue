@@ -157,8 +157,9 @@ import { deepCopy } from '@/utils/utils'
 import businessDrawer from './components/businessDrawer'
 import { BUS_TYPE_LIST, RISK_TYPE_LIST, AUTEHEN_LIST } from '../const'
 import * as Auths from '@/utils/auth_const'
+import { newCache } from '@/utils/index'
 export default {
-    name: 'projectlist',
+    name: 'authenlist',
     data () {
         return {
             authen_detail: Auths.CRM_AUTHEN_DETAIL,
@@ -354,6 +355,9 @@ export default {
         onLinkship (val) {
             this.$router.push({ path: '/b2b/account/accountManage', query: { account: val } })
         }
+    },
+    beforeUpdate () {
+        newCache('authenlist')
     }
 }
 </script>

@@ -173,6 +173,7 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
+import moment from 'moment'
 import PaymentOrderDrawer from './components/paymentOrderDrawer'
 import ApprovePaymentOrder from './components/approvePaymentOrder'
 import PrevPaymentDialog from './components/prevPaymentDialog'
@@ -186,7 +187,7 @@ import ViewHandoverRecords from './components/ViewHandoverRecords'
 import { getLoanTransferContent, getLoanTransferRecord, getLoanTransferCheck, approvalHistory, getNewAdvance } from './api/index'
 import UploadPayDialog from '../funds/components/uploadPayDialog.vue'
 import paymentOrderConst from '@/views/crm/paymentOrder/const'
-import moment from 'moment'
+import { newCache } from '@/utils/index'
 export default {
     name: 'payOrder',
     components: {
@@ -451,6 +452,9 @@ export default {
             jobNumber: this.userInfo.jobNumber,
             authCode: JSON.parse(sessionStorage.getItem('authCode'))
         })
+    },
+    beforeUpdate () {
+        newCache('payOrder')
     }
 }
 </script>

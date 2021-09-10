@@ -123,7 +123,7 @@ import FundsDict from '@/views/crm/funds/fundsDict'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import UploadDialog from './components/uploadPayDialog.vue'
 import * as Auths from '@/utils/auth_const'
-
+import { newCache } from '@/utils/index'
 export default {
     name: 'funds',
     components: {
@@ -345,6 +345,9 @@ export default {
             authCode: temp
         })
         this.switchName()
+    },
+    beforeUpdate () {
+        newCache('funds')
     }
 }
 </script>

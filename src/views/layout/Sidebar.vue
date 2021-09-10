@@ -1,7 +1,8 @@
 <script>
 import { iframeUrl, jinyun } from '@/api/config'
 import { mapState } from 'vuex'
-
+import { clearCache } from '@/utils/index'
+import { Select } from 'element-ui'
 export default {
     props: {
         menus: {
@@ -28,6 +29,29 @@ export default {
         })
     },
     methods: {
+        async menuClick (path) {
+            const matchedComponent = this.$router.matcher.match(path).matched
+            const Component = matchedComponent[matchedComponent.length - 1].components.default
+            let componentName = ''
+            if (typeof Component === 'function') {
+                try {
+                    // 第一次加载路由的时候，返回的是promise函数，等待加载完成之后，获取name信息
+                    const res = await Component()
+                    componentName = res.default.name
+                } catch (e) {
+                    // ts 的组件，第一次加载之后，第二次依然是function
+                    // VueComponent (options) {
+                    //    this._init(options)
+                    // }
+                    // 非ts的组件，第二次会变成object，直接可以找到name的值
+                    const res = new Component()
+                    componentName = res.$options.name
+                }
+            } else {
+                componentName = Component.name
+            }
+            clearCache(componentName)
+        },
         generateSidebar (menus, parentPath) {
             const result = []
             let token = localStorage.getItem('token')
@@ -64,7 +88,7 @@ export default {
                         )
                     } else {
                         result.push(
-                            <el-menu-item index={path}>
+                            <el-menu-item index={path} onClick={this.menuClick.bind(this, path)}>
                                 {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
                                 <span>{item.meta.title}</span>
                             </el-menu-item>

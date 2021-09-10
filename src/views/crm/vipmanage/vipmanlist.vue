@@ -69,6 +69,7 @@ import { mapActions, mapGetters, mapState } from 'vuex'
 import vipdrawer from './components/vipdrawer'
 import { deepCopy } from '@/utils/utils'
 import * as auths from '@/utils/auth_const'
+import { newCache } from '@/utils/index'
 export default {
     name: 'vipmanage',
     data () {
@@ -211,6 +212,9 @@ export default {
         onLinkCom (val) {
             this.$router.push({ path: '/goodwork/authenlist', query: { name: val.companyName } })
         }
+    },
+    beforeUpdate () {
+        newCache('vipmanage')
     }
 }
 </script>

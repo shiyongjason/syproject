@@ -377,6 +377,7 @@ import { handleSubmit, validateForm } from '@/decorator'
 import { ReqProjectSupply, RespBossProjectSupply } from '@/interface/hbp-member'
 import { ReqBossProjectRefund } from './interface'
 import { CreateElement } from 'vue'
+import { newCache } from '@/utils/index'
 
 const validatorName = (rule, value, callback) => {
     if (!value) {
@@ -920,6 +921,10 @@ export default class ProjectList2 extends Vue {
         // this.findDictionaryList({
         //     item: 'project_intelligent_needs'
         // })
+    }
+
+    beforeUpdate () {
+        newCache('ProjectList2')
     }
 }
 </script>

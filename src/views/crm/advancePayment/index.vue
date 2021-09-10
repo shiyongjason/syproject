@@ -244,6 +244,7 @@
 </template>
 
 <script lang="tsx">
+import moment from 'moment'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { CreateElement } from 'vue'
@@ -251,13 +252,13 @@ import { Action, Getter, State } from 'vuex-class'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
 import ImageAddToken from '@/components/imageAddToken/index.vue'
 import downloadFileAddToken from '@/components/downloadFileAddToken/index.vue'
-
 import { deepCopy } from '@/utils/utils'
 import './css/css.scss'
 import { getPrePayList, getPrePayDetail, submitPrePay, getPreTotal, passPre, passFailPre, getApprovalHistory } from './api/index'
 import { PrepaymentDetailResponse, PrepaymentSupplierSubmitResponse, RespContractSignHistory } from '@/interface/hbp-project'
-import moment from 'moment'
 import { CRM_ADVACE_UPSTREAMPAY, CRM_ADVACE_APPROVE, CRM_ADVACE_LOOK, CRM_ADVACE_RECORDS } from '@/utils/auth_const'
+import { newCache } from '@/utils/index'
+
 // 定义类型
 interface Query{
     [key:string]:any
@@ -493,7 +494,6 @@ export default class Advancelist extends Vue {
         this.payForm.payAmount = this.detailForm.surplusAmount
         this.payForm.payDate = moment(new Date()).format('YYYY-MM-DD')
         this.payForm.payVouchers = []
-        console.log(this.payForm.payDate)
     }
 
     public async mounted () {
@@ -507,6 +507,9 @@ export default class Advancelist extends Vue {
                 ? JSON.parse(sessionStorage.getItem('authCode') || '')
                 : ''
         })
+    }
+    beforeUpdate () {
+        newCache('Advancelist')
     }
 }
 </script>

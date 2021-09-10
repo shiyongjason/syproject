@@ -199,7 +199,7 @@ import {
     getAbolish
 } from './api/index'
 import { mapActions, mapGetters, mapState } from 'vuex'
-import { clearCache, newCache } from '@/utils/index'
+import { newCache } from '@/utils/index'
 import * as Auths from '@/utils/auth_const'
 const _queryParams = {
     pageSize: 10,
@@ -526,19 +526,22 @@ export default {
         await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
         this.branchArr = this.crmdepList
     },
-    beforeRouteEnter (to, from, next) {
+    beforeUpdate () {
         newCache('contractSigningManagement')
-        next()
-    },
-    beforeRouteLeave (to, from, next) {
-        console.log('to: ', to)
-        if (to.name == 'contractSigningManagementDetail' || to.name == 'approveContract' || to.name == 'noTempApprove') {
-            //
-        } else {
-            clearCache('contractSigningManagement')
-        }
-        next()
     }
+    // beforeRouteEnter (to, from, next) {
+    //     newCache('contractSigningManagement')
+    //     next()
+    // },
+    // beforeRouteLeave (to, from, next) {
+    //     console.log('to: ', to)
+    //     if (to.name == 'contractSigningManagementDetail' || to.name == 'approveContract' || to.name == 'noTempApprove') {
+    //         //
+    //     } else {
+    //         clearCache('contractSigningManagement')
+    //     }
+    //     next()
+    // }
 }
 </script>
 <style scoped lang="scss">

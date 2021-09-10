@@ -69,7 +69,7 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import * as Auths from '@/utils/auth_const'
 
 export default {
-    name: 'contractTemp',
+    name: 'contractDetail',
     components: { hosJoyTable },
     data () {
         return {

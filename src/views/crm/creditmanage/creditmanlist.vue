@@ -128,7 +128,7 @@ import { mapActions, mapGetters, mapState } from 'vuex'
 import creditdrawer from './components/creditdrawer'
 import { CREDITLEVEL, MATELIST } from '../const'
 import * as auths from '@/utils/auth_const'
-import { clearCache, newCache } from '@/utils/index'
+import { newCache } from '@/utils/index'
 export default {
     name: 'creditManage',
     data () {
@@ -292,20 +292,23 @@ export default {
     activated () {
         this.searchList()
     },
-    beforeRouteEnter (to, from, next) {
+    // beforeRouteEnter (to, from, next) {
+    //     newCache('creditManage')
+    //     next()
+    // },
+    // beforeRouteLeave (to, from, next) {
+    //     console.log(to.name)
+    //     if (to.name != 'creditDetail') {
+
+    //     } else if (to.name != 'creditApprove') {
+
+    //     } else {
+    //         clearCache('creditManage')
+    //     }
+    //     next()
+    // },
+    beforeUpdate () {
         newCache('creditManage')
-        next()
-    },
-    beforeRouteLeave (to, from, next) {
-        console.log(to.name)
-        if (to.name != 'creditDetail') {
-
-        } else if (to.name != 'creditApprove') {
-
-        } else {
-            clearCache('creditManage')
-        }
-        next()
     }
 }
 </script>

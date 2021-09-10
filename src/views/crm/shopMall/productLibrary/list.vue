@@ -157,6 +157,7 @@ import utils from '@/utils/filters'
 import { CategoryTreeResponse, RespBossSku } from '@/interface/hbp-shop'
 import { CRM_SHOPP_PRODUCTLIBRARY_EDITOR, CRM_SHOPP_PRODUCTLIBRARY_ADD, CRM_SHOPP_PRODUCTLIBRARY_SKU_ONTHESHELVES, CRM_SHOPP_PRODUCTLIBRARY_SKU_RACK, CRM_SHOPP_PRODUCTLIBRARY_SKU_DEL } from '@/utils/auth_const'
 import { getCategoryList } from '../addProduct/api'
+import { newCache } from '@/utils/index'
 const _queryParams = {
     name: '',
     categoryIds: [],
@@ -564,6 +565,10 @@ export default class ProductLibrary extends Vue {
         this.getList()
         const { data } = await getCategoryList({ searchContent: '' })
         this.categoryOptions = data
+    }
+
+    beforeUpdate () {
+        newCache('crmshopMallProductLibrary')
     }
 }
 </script>
