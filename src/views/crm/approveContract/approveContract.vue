@@ -537,6 +537,7 @@ export default {
                     selectCom: {
                         bind: {
                             selectVModel: this.currentKey.paramValue,
+                            style: { width: '300px' },
                             options: (function (t) {
                                 let _this = t
                                 // 判断 key

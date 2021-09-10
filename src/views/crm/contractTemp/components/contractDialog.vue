@@ -53,7 +53,7 @@
                 <el-form-item label="签署方类型：" prop="">
                     企业
                 </el-form-item>
-                <el-form-item label="签署方类型：" prop="platformSignSource">
+                <el-form-item label="签署方企业来源：" prop="platformSignSource">
                     <el-radio-group v-model="signerTempForm.platformSignSource" @change="onChangeRadio">
                         <el-radio :label=1>指定企业</el-radio>
                         <el-radio :label=2>合同企业</el-radio>
@@ -333,16 +333,14 @@ export default {
             this.contractSingnOps = this.contart_arr.filter(item => {
                 return (item.selectCode == 'hosjoy_company_name' || item.paramKey == 'hosjoy_company_name')
             })
-            this.$nextTick(() => {
-                if (val == 1) {
-                    this.$refs.signerTempS.clearValidate('caId')
-                    this.signerTempForm.caId = ''
-                    this.signerTempForm.paramGroupName = ''
-                } else {
-                    this.$refs.signerTempS.clearValidate('platformSigner')
-                    this.signerTempForm.platformSigner = ''
-                }
-            })
+            if (val == 1) {
+                this.signerTempForm.caId = ''
+                this.signerTempForm.paramGroupName = ''
+                // this.$refs.signerTempS.clearValidate('caId')
+            } else {
+                this.signerTempForm.platformSigner = ''
+                // this.$refs.signerTempS.clearValidate('platformSigner')
+            }
         },
         changeId (val) {
             this.signerTempForm.paramGroupName = this.singerOps.filter(item => item.id == val)[0].groupName
