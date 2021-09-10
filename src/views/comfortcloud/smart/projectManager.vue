@@ -48,12 +48,18 @@
             </div>
         </div>
         <el-dialog id='el-dialog' :title="form.id?'项目编辑':'新建项目'" :visible.sync="addProject" :before-close="cancelDialog" width="920px" :close-on-click-modal="false">
-            <el-form ref="form" :model="form" :rules="rules" label-width="130px" label-position="left">
+            <el-form ref="form" :model="form" :rules="rules" label-width="130px" label-position="right">
                 <el-form-item label="项目名称：" prop="projectName">
                     <el-input v-model.trim="form.projectName" show-word-limit placeholder="请输入项目全称" maxlength='50' style="width:356px"></el-input>
                 </el-form-item>
                 <el-form-item label="项目简称：" prop="projectSimpleName">
                     <el-input v-model.trim="form.projectSimpleName" show-word-limit placeholder="请输入项目简称" maxlength='6' style="width:356px"></el-input>
+                </el-form-item>
+                <el-form-item label="公司LOGO：">
+                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="form.logo" ref="uploadImg" @back-event="uploadSuccess" :imgW="60" :imgH="60" />
+                    <div class="upload-tips">
+                        建议尺寸：36*36，图片大小1M以内，支持jpeg,png和jpg格式
+                    </div>
                 </el-form-item>
                 <el-form-item label-width="0px">
                     <div class="city-select">
@@ -96,6 +102,7 @@
                         <el-checkbox label="1">氟机空调集控系统</el-checkbox>
                         <el-checkbox label="2">水机空调集控系统</el-checkbox>
                         <el-checkbox label="3">计费系统</el-checkbox>
+                        <el-checkbox label="4">节能系统</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item label="项目包含设备：" prop="deviceTypes">
@@ -136,7 +143,7 @@
 </template>
 
 <script>
-import { iotUrl } from '@/api/config'
+import { iotUrl, interfaceUrl } from '@/api/config'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { createControlProject, editControlProject } from '../api/index'
 import { getChiness } from '../../hmall/membership/api'
@@ -154,6 +161,7 @@ const _form = {
     companyName: '',
     adminName: '',
     username: '',
+    logo: '',
     projectType: [],
     deviceTypes: []
 }
@@ -258,6 +266,16 @@ export default {
         }
     },
     computed: {
+        uploadInfo () {
+            return {
+                action: interfaceUrl + 'tms/files/upload',
+                data: {
+                    updateUid: this.userInfo.employeeName
+                },
+                accept: 'image/jpeg, image/jpg, image/png',
+                name: 'multiFile'
+            }
+        },
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
@@ -313,6 +331,10 @@ export default {
             getClouldControlProjectDetail: 'getClouldControlProjectDetail',
             getDeviceTypes: 'getClouldControlProjectDevicesTypes'
         }),
+        uploadSuccess (val) {
+            console.log(val)
+            this.form.logo = val.imageUrl
+        },
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
             this.onQuery()
@@ -444,7 +466,6 @@ export default {
         this.onSearch()
         this.getAreacode()
         this.getDeviceTypes()
-        console.log(this.deviceTypes, 'xxxxx')
     }
 }
 </script>
@@ -453,6 +474,15 @@ export default {
 .spanflex {
     font-size: 16px;
     padding-bottom: 10px;
+}
+
+.upload-tips {
+    font-size: 12px;
+    color: #999;
+    display: flex;
+    align-items: center;
+    height: 60px;
+    padding-left: 10px;
 }
 .upload-fault {
     margin-top: 30px;
