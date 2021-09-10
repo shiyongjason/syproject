@@ -59,7 +59,7 @@
                         <el-radio :label=2>合同企业</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="签署方企业名称：" prop="caId" v-if="signerTempForm.platformSignSource==1" class="plat_signer">
+                <el-form-item label="签署方企业名称：" prop="caId" ref='caId' v-if="signerTempForm.platformSignSource==1" class="plat_signer">
                     <el-select v-model="signerTempForm.caId" placeholder="请选择签署方企业名称" @change="changeCa">
                         <el-option v-for="item in caOptions" :key="item.id" :label="item.companyName" :value="item.id">
                         </el-option>
@@ -82,9 +82,6 @@
                 <el-form-item label="签署要求：" prop="_signerDemand">
                     <el-checkbox-group v-model="signerTempForm._signerDemand">
                         <el-checkbox label="1" name="type">企业章</el-checkbox>
-                        <!-- <el-checkbox label="2" name="type">法定代表人章</el-checkbox> -->
-                        <!-- <el-checkbox label="2" name="type">手绘章</el-checkbox>
-                        <el-checkbox label="3" name="type">模板章</el-checkbox> -->
                     </el-checkbox-group>
                 </el-form-item>
             </el-form>
@@ -167,10 +164,10 @@ export default {
                     { required: true, message: '请输入签署方名称', trigger: 'blur' }
                 ],
                 signerType: [
-                    { required: true, message: '请选择签署方类型', trigger: 'change' }
+                    { required: true, message: '请选择签署方类型', trigger: 'blur' }
                 ],
                 signatureParam: [
-                    { required: true, message: '请选择客户签署区', trigger: 'change' }
+                    { required: true, message: '请选择客户签署区', trigger: 'blur' }
                 ],
                 paramId: [
                     {
@@ -196,9 +193,7 @@ export default {
                     }
                 ],
                 platformSigner: [
-                    {
-                        required: true, message: '请选择合同企业', trigger: 'change'
-                    }
+                    { required: true, message: '请选择合同企业', trigger: 'change' }
                 ],
                 agent: [
                     { required: true, message: '经办人', trigger: 'blur' }
@@ -333,14 +328,10 @@ export default {
             this.contractSingnOps = this.contart_arr.filter(item => {
                 return (item.selectCode == 'hosjoy_company_name' || item.paramKey == 'hosjoy_company_name')
             })
-            if (val == 1) {
-                this.signerTempForm.caId = ''
-                this.signerTempForm.paramGroupName = ''
-                // this.$refs.signerTempS.clearValidate('caId')
-            } else {
-                this.signerTempForm.platformSigner = ''
-                // this.$refs.signerTempS.clearValidate('platformSigner')
-            }
+            this.signerTempForm.caId = ''
+            this.signerTempForm.platformSigner = ''
+            this.$refs.signerTempS.clearValidate('caId')
+            this.$refs.signerTempS.clearValidate('platformSigner')
         },
         changeId (val) {
             this.signerTempForm.paramGroupName = this.singerOps.filter(item => item.id == val)[0].groupName
