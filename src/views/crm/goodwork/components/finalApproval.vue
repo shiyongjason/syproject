@@ -596,7 +596,7 @@ export default class FinalApproval extends Vue {
         {
             label: '上游供应商类型',
             prop: 'upstreamSupplierType',
-            width: '130',
+            width: '135',
             className: 'form-table-header',
             showOverflowTooltip: false,
             render: (h: CreateElement, scope: TableRenderParam) => {
@@ -623,10 +623,11 @@ export default class FinalApproval extends Vue {
         {
             label: '上游支付方式',
             prop: 'upstreamPayType',
-            width: '130',
+            width: '135',
             className: 'form-table-header',
             showOverflowTooltip: false,
             render: (h: CreateElement, scope: TableRenderParam) => {
+                console.log(scope.row[scope.column.property])
                 return (
                     <div>
                         <el-select
@@ -635,8 +636,10 @@ export default class FinalApproval extends Vue {
                             placeholder="请选择"
                             value={scope.row[scope.column.property]}
                             onInput={(val) => {
+                                console.log(val.join(','))
                                 scope.row[scope.column.property] = val
                             }}
+                            multiple
                         >
                             <el-option key="1" value={1} label="银行转账">银行转账</el-option>
                             <el-option key="2" value={2} label="银行承兑">银行承兑</el-option>
