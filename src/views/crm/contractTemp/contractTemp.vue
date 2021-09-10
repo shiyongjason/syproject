@@ -714,20 +714,17 @@ export default {
         backToTable (val, Type) {
             if (Type == 2) {
                 if (this.edit_index > -1) {
-                    // this.perData.splice(this.edit_index, 1, val[0])
                     this.$set(this.perData, this.edit_index, val[0])
                 } else {
                     this.perData = this.perData.concat(val)
                 }
             } else if (Type == 1) {
                 if (this.edit_index > -1) {
-                    // this.busData.splice(this.edit_index, 1, val[0])
                     this.$set(this.busData, this.edit_index, val[0])
                 } else {
                     this.busData = this.busData.concat(val)
                 }
             } else {
-                // this.platData = this.platData.concat(val)
                 this.$set(this.platData, 0, val[0])
             }
         },

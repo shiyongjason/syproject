@@ -22,7 +22,7 @@
             </div>
             <div class="query-cont-row">
                 <div class="query-cont__col">
-                    <h-button type="primary" class="ml20" @click="onAdd" v-if="hosAuthCheck(Auths.CRM_LIVE_ADD)">新建落地页</h-button>
+                    <h-button type="primary" class="" @click="onAdd" v-if="hosAuthCheck(Auths.CRM_LIVE_ADD)">新建落地页</h-button>
                 </div>
             </div>
             <!-- end search bar -->
