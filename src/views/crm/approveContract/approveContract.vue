@@ -214,6 +214,7 @@ import { contractKeyValue, getContractsContent, saveContent, approvalContent, ge
 import { ccpBaseUrl } from '@/api/config'
 import Editor from '@tinymce/tinymce-vue'
 import comRender from './comRender'
+import { contractSigningList } from '../contractSigningManagement/api'
 // api:https://www.tiny.cloud/docs/integrations/vue/
 // http://tinymce.ax-z.cn/general/basic-setup.php
 export default {
@@ -537,6 +538,7 @@ export default {
                     selectCom: {
                         bind: {
                             selectVModel: this.currentKey.paramValue,
+                            style: { width: '300px' },
                             options: (function (t) {
                                 let _this = t
                                 // 判断 key
@@ -724,6 +726,7 @@ export default {
                 }
 
             }
+            console.log(comObj)
             return comObj[this.currentKey.inputStyle]
         },
         getTableHtml (array = []) {
@@ -1618,13 +1621,15 @@ export default {
                                 let fields = this.originalContentFieldsList.filter(ktem => ktem.paramKey === jtem.className)[0]
                                 // 遍历dom添加点击事件
                                 jtem.onclick = (event) => {
+                                    console.log(jtem.class)
                                     this.currentKey = {
                                         ...fields,
                                         event,
                                         paramname: jtem.dataset.paramname || '',
-                                        paramValue: fields.paramValue || ''
+                                        paramValue: fields.paramValue || '',
+                                        inputStyle: fields.paramKey == 'hosjoy_company_name' ? '3' : fields.inputStyle
                                     }
-                                    console.log('this.currentKeyxxxooo: ', this.currentKey)
+                                    console.log('this.currentKeyxxxooo: ', this.currentKey, fields)
                                     this.editorDrawer = true
                                     this.$nextTick(() => {
                                         this.$refs['ruleForm'].resetFields()
@@ -1670,6 +1675,13 @@ export default {
             this.contractContentDiv = res.data.contractContent // Div版的合同
             this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
             this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
+            // 这里处理下老数据 hosjoy_name_company
+            this.contractFieldsList.map(item => {
+                if (item.paramKey == 'hosjoy_company_name') {
+                    item.inputStyle = 3
+                }
+                return item
+            })
             if (this.detailRes.contractStatus == 6) {
                 const response = await getPurchaseOrderList({
                     contractId: this.$route.query.id
