@@ -210,7 +210,7 @@ import serviceFeeToTable from './components/serviceFeeToTable'
 import inputAutocomplete from './components/inputAutocomplete'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { mapState, mapActions } from 'vuex'
-import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi, getPurchaseOrderList, getTYCList, getCaList } from './api/index'
+import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi, getPurchaseOrderList, getTYCList, getCaList, findDefaultAccountByCompany } from './api/index'
 import { ccpBaseUrl } from '@/api/config'
 import Editor from '@tinymce/tinymce-vue'
 import comRender from './comRender'
@@ -300,7 +300,8 @@ export default {
             },
             /** 此占位符用于修复点击暂不审核和失焦失焦触发重复 */
             isDealBack: false,
-            hosjoyCaList: []
+            hosjoyCaList: [],
+            tempCurrentKey: ''
         }
     },
     computed: {
@@ -1251,6 +1252,7 @@ export default {
         // 保存 operatorType=3 更新条款
         onSaveContent (operatorType = '') {
             console.log('保存||失焦,operatorType1150: ', operatorType)
+            console.log(this.currentKey)
             if (operatorType) {
                 //  fix 点击图片编辑器会修改一些属性，导致this.contractAfterApi == curHTML.replace(/\ufeff/g, '') 不成立。直接保存。editorDrawer变为false关闭了弹窗
                 let curHTML = this.contractDocument.innerHTML.replace(/ data-mce-selected="1"/g, '')
@@ -1272,11 +1274,24 @@ export default {
                 this.setImg()
                 return
             }
+
             // 1.span里包img2.非必填可上传多图
             if (operatorType == '') {
                 this.$refs.ruleForm.validate(async (valid) => {
                     if (valid) {
-                        this.dealSaveContent(operatorType)
+                        /**
+                         * 当好享家企业名称发生变化的时候，对应的户名，开户行，账号发生变化
+                         */
+                        if (this.currentKey.paramKey === 'hosjoy_company_name' && this.currentKey.paramValue != this.tempCurrentKey.paramValue) {
+                            this.$alert('企业名称发生变化，对应的户名，开户行，账号都会发生变化，请注意修改', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    this.dealSaveContent(operatorType)
+                                }
+                            })
+                        } else {
+                            this.dealSaveContent(operatorType)
+                        }
                     }
                 })
             } else {
@@ -1446,6 +1461,44 @@ export default {
                     }
                 }
             }
+
+            /**
+             * 好享家企业名称变更关联数据的处理
+             * 当paramKey == 'hosjoy_company_name'且对应的值发生变化时执行下面的逻辑
+             */
+            if (this.currentKey.paramKey === 'hosjoy_company_name' && this.currentKey.paramValue != this.tempCurrentKey.paramValue) {
+                const { data } = await findDefaultAccountByCompany({
+                    companyName: this.currentKey.paramValue
+                })
+                tempArr = tempArr.map(item => {
+                    // 好享家收款账户
+                    if (item.paramKey === 'hosjoy_account_name') {
+                        item.paramValue = data[0].accountName
+                        let dom = this.contractDocument.getElementsByClassName(item.paramKey)
+                        Array.from(dom).map(jtem => {
+                            jtem.innerHTML = data[0].accountName
+                        })
+                    }
+                    // 好享家收款账户的开户行
+                    if (item.paramKey === 'hosjoy_account_bank') {
+                        item.paramValue = data[0].accountBank
+                        let dom = this.contractDocument.getElementsByClassName(item.paramKey)
+                        Array.from(dom).map(jtem => {
+                            jtem.innerHTML = data[0].accountBank
+                        })
+                    }
+                    // 好享家收款账户的账号
+                    if (item.paramKey === 'hosjoy_account_number') {
+                        item.paramValue = data[0].accountNumber
+                        let dom = this.contractDocument.getElementsByClassName(item.paramKey)
+                        Array.from(dom).map(jtem => {
+                            jtem.innerHTML = data[0].accountNumber
+                        })
+                    }
+                    return item
+                })
+            }
+
             try {
                 await saveContent({
                     'contractId': this.$route.query.id,
@@ -1538,6 +1591,7 @@ export default {
                                         paramValue: fields.paramValue,
                                         calculationRules: serviceFeeFields.calculationRules
                                     }
+                                    this.tempCurrentKey = JSON.parse(JSON.stringify(this.currentKey))
                                     console.log('this.currentKey-purch_service_fee_form::::', this.currentKey)
                                     this.editorDrawer = true
                                     this.$nextTick(async () => {
@@ -1575,6 +1629,7 @@ export default {
                                             tagName: 'SPAN',
                                             multiple: true
                                         }
+                                        this.tempCurrentKey = JSON.parse(JSON.stringify(this.currentKey))
                                         console.log('this.currentKey-SPAN-非必填字段: ', this.currentKey)
                                         this.editorDrawer = true
                                         this.$nextTick(() => {
@@ -1602,6 +1657,7 @@ export default {
                                         tagName: 'IMG',
                                         multiple: !this.originalContentFieldsList.filter(ktem => ktem.paramKey === item.dataset.key)[0].required
                                     }
+                                    this.tempCurrentKey = JSON.parse(JSON.stringify(this.currentKey))
                                     console.log('imgclick this.currentKey', this.currentKey)
                                     this.oldImg = event.target.currentSrc
                                     console.log('this.oldImg: ', this.oldImg)
@@ -1629,6 +1685,7 @@ export default {
                                         paramValue: fields.paramValue || '',
                                         inputStyle: fields.paramKey == 'hosjoy_company_name' ? '3' : fields.inputStyle
                                     }
+                                    this.tempCurrentKey = JSON.parse(JSON.stringify(this.currentKey))
                                     console.log('this.currentKeyxxxooo: ', this.currentKey, fields)
                                     this.editorDrawer = true
                                     this.$nextTick(() => {
