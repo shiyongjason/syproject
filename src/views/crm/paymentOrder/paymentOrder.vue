@@ -37,12 +37,14 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">申请时间：</div>
                     <div class="query-col__input">
-                        <!-- <el-date-picker v-model="queryParams.startApplyDate" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endApplyDate" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker> -->
                         <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
+                        </HDatePicker>
+                    </div>
+                </div>
+                  <div class="query-cont-col">
+                    <div class="query-col__label">项目运营审核时间：</div>
+                    <div class="query-col__input">
+                        <HDatePicker :start-change="onApproveStart" :end-change="onApproveEnd" :options="apprvoeOptions">
                         </HDatePicker>
                     </div>
                 </div>
@@ -216,6 +218,8 @@ export default {
                 purchaseOrderNo: '',
                 startApplyDate: '',
                 endApplyDate: '',
+                startApprovalTime: '',
+                endApprovalTime: '',
                 status: '',
                 pageSize: 10,
                 pageNumber: 1,
@@ -236,7 +240,8 @@ export default {
                 { label: '申请时间', prop: 'applyDate', width: '150', formatters: 'dateTimes', sortable: 'applyDate' },
                 {
                     label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes', sortable: 'updateTime'
-                }
+                },
+                { label: '项目运营时间', prop: 'approvalTime', width: '150', formatters: 'dateTimes', sortable: 'approvalTime' }
             ],
             paginationInfo: {},
             drawer: false,
@@ -272,6 +277,15 @@ export default {
                 format: 'yyyy-MM-dd HH:mm:ss',
                 startTime: this.queryParams.startApplyDate,
                 endTime: this.queryParams.endApplyDate
+            }
+        },
+        apprvoeOptions () {
+            return {
+                type: 'datetime',
+                valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+                format: 'yyyy-MM-dd HH:mm:ss',
+                startTime: this.queryParams.startApprovalTime,
+                endTime: this.queryParams.endApprovalTime
             }
         },
         ...mapState({
@@ -332,6 +346,12 @@ export default {
         },
         onEndChange (val) {
             this.queryParams.endApplyDate = val
+        },
+        onApproveStart (val) {
+            this.queryParams.startApprovalTime = val
+        },
+        onApproveEnd (val) {
+            this.queryParams.endApprovalTime = val
         },
         fundsDialogClose () {
             this.fundsDialogVisible = false

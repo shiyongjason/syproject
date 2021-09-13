@@ -129,7 +129,7 @@
             <template v-if="resolutionDetail.status==14">
                 <div class="info-finallNo">
                     <h3>终审结果：不通过</h3>
-                    <p>备注信息：{{resolutionDetail.remark}}</p>
+                    <p>备注信息：{{resolutionDetail.remark||'-'}}</p>
                 </div>
             </template>
         </div>
@@ -315,6 +315,7 @@ import { getTYCList, getResolutions, resCustomer, resPurchase, getRecordList, in
 import { useDebounce } from '@/decorator'
 import * as Auths from '@/utils/auth_const'
 import moment from 'moment'
+import { deepCopy } from '@/utils/utils'
 
 @Component({
     name: 'finalApproval',
@@ -527,7 +528,22 @@ export default class FinalApproval extends Vue {
         { label: '设备品牌', prop: 'deviceBrand', width: '120' },
         { label: '上游供应商', prop: 'upstreamSupplierName', width: '120' },
         { label: '上游供应商类型', prop: 'upstreamSupplierType', width: '150', dicData: [{ value: 1, label: '厂商' }, { value: 2, label: '代理商' }, { value: 3, label: '经销商' }] },
-        { label: '上游支付方式', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] },
+        { label: '上游支付方式',
+            prop: 'streamPayTypeName',
+            render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
+                return (
+                    <div>
+                        {
+                            scope.row.streamPayTypeName ? scope.row.streamPayTypeName.map((item, index) => {
+                                return (
+                                    <i style={{ 'fontStyle': 'normal' }}>{item + (index < scope.row.streamPayTypeName.length - 1 ? ',' : '')}</i>
+                                )
+                            })
+                                : '-'
+                        }
+                    </div>
+                )
+            } },
         { label: '设备品类',
             prop: 'deviceCategoryType',
             render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
@@ -547,6 +563,7 @@ export default class FinalApproval extends Vue {
             prop: 'deviceBrand',
             className: 'form-table-header',
             showOverflowTooltip: false,
+            width: '240',
             render: (h: CreateElement, scope: TableRenderParam) => {
                 return (
                     <div>
@@ -623,23 +640,21 @@ export default class FinalApproval extends Vue {
         {
             label: '上游支付方式',
             prop: 'upstreamPayType',
-            width: '135',
-            className: 'form-table-header',
-            showOverflowTooltip: false,
+            width: '320',
+            className: '',
             render: (h: CreateElement, scope: TableRenderParam) => {
-                console.log(scope.row[scope.column.property])
                 return (
                     <div>
                         <el-select
-                            class="miniSelect"
-                            size="mini"
+                            class=""
                             placeholder="请选择"
                             value={scope.row[scope.column.property]}
                             onInput={(val) => {
-                                console.log(val.join(','))
                                 scope.row[scope.column.property] = val
                             }}
                             multiple
+                            style={{ 'width': '260px' }}
+                            size='mini'
                         >
                             <el-option key="1" value={1} label="银行转账">银行转账</el-option>
                             <el-option key="2" value={2} label="银行承兑">银行承兑</el-option>
@@ -652,7 +667,7 @@ export default class FinalApproval extends Vue {
         {
             label: '设备品类',
             prop: 'deviceCategoryType',
-            width: '280',
+            width: '135',
             className: 'form-table-header',
             showOverflowTooltip: false,
             render: (h: CreateElement, scope: TableRenderParam) => {
@@ -839,6 +854,7 @@ export default class FinalApproval extends Vue {
         let flag = true
         tables.forEach(element => {
             console.log('element', element)
+            delete element.upstreamPayTypeName
             if (element['deviceCategoryType'] == 8) {
                 for (var key in element) {
                     if (element[key] != '0' && !element[key]) {
@@ -862,7 +878,11 @@ export default class FinalApproval extends Vue {
     }
     // 保存采购结论
     submit () {
-        this.purForm.projectPurchaseList = [...this.tableForm]
+        this.purForm.projectPurchaseList = deepCopy(this.tableForm)
+        this.purForm.projectPurchaseList.map((item) => {
+            item.upstreamPayType = item.upstreamPayType.join(',')
+            return item
+        })
         this.purForm.updateBy = JSON.parse(sessionStorage.getItem('userInfo') || '').employeeName
         console.log(' 🚗 🚕 🚙 🚌 🚎 ', this.tableForm)
         this.$refs['purchaseConclusionForm'].validate(async (valid) => {

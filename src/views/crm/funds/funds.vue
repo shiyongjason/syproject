@@ -45,11 +45,6 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">应支付日期：</div>
                     <div class="query-col__input">
-                        <!-- <el-date-picker v-model="queryParams.scheduleStartTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('scheduleEndTime')">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.scheduleEndTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('scheduleStartTime')">
-                        </el-date-picker> -->
                         <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
                         </HDatePicker>
                     </div>
@@ -57,11 +52,6 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">支付成功时间：</div>
                     <div class="query-col__input">
-                        <!-- <el-date-picker v-model="queryParams.paidStartTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('paidEndTime')">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.paidEndTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd('paidStartTime')">
-                        </el-date-picker> -->
                         <HDatePicker :start-change="onStartPay" :end-change="onEndPay" :options="payOptions">
                         </HDatePicker>
                     </div>
@@ -93,6 +83,12 @@
                     <span class="colblue" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key"> {{ scope.data.row.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
                     <span v-else>-</span>
                 </template>
+                <template slot="paymentOrderAmount" slot-scope="scope">
+                    <span class="colblue"> {{ scope.data.row.paymentOrderAmount | fundMoneyHasTail }}</span>
+                </template>
+                <template slot='customerName' slot-scope='scope'>
+                    <span>{{scope.data.row.customerName || '-'}} {{scope.data.row.customerName}}</span>
+                </template>
                 <template slot="threeDayEmailStatus" slot-scope="scope">
                     {{emailStatus[scope.data.row.threeDayEmailStatus]}}
                 </template>
@@ -111,7 +107,7 @@
                 </template>
             </basicTable>
             <FundsDialog :is-open="fundsDialogVisible" :detail="fundsDialogDetail" :status="queryParams.repaymentTypeArrays" @onClose="fundsDialogClose"></FundsDialog>
-            <UploadDialog ref="uploaddialog" @onBackSearch ="findFundsList(queryParams)" ></UploadDialog>
+            <UploadDialog ref="uploaddialog" @onBackSearch="findFundsList(queryParams)"></UploadDialog>
         </div>
     </div>
 </template>
@@ -191,7 +187,13 @@ export default {
                 { label: '所属分部', prop: 'subsectionName', width: '150' },
                 { label: '经销商', prop: 'companyName', width: '150' },
                 { label: '所属项目', prop: 'projectName', width: '150' },
+                {
+                    label: '客户经理',
+                    prop: 'customerName',
+                    width: '150'
+                },
                 { label: '支付单编号', prop: 'paymentOrderNo', width: '150' },
+                { label: '支付单金额', prop: 'paymentOrderAmount', width: '150' },
                 { label: '期数', prop: 'feeRepaymentOrder', width: '100', isHidden: this.queryParams.repaymentTypeArrays !== '3' },
                 { label: '金额', prop: 'paymentAmount', width: '150', align: 'right' },
                 { label: '状态', prop: 'paymentFlag', width: '150' },
@@ -349,7 +351,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang='scss'>
 .eltagtop {
     margin-bottom: 10px;
 }
