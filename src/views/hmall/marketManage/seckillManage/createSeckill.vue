@@ -25,7 +25,15 @@
                     <span class="title-cont__label">2.设置规则和优惠</span>
                 </div>
                 <el-form-item label="活动区域：" prop="spikeAreaList">
-                    <el-cascader class="area-cascader" v-model="seckillAreaList" :options="activityAreaData" :props="{multiple: true}" @change="onChangeArea" :disabled="form.spikeSku.length>0"></el-cascader>
+                    <saleableArea
+                        ref="saleableArea"
+                        v-if="areaShow"
+                        :areaList="seckillAreaList"
+                        :disabled="form.spikeSku.length>0"
+                        label="活动区域："
+                        v-on:formSalesAreaList="formSalesAreaList"
+                    />
+                    <!-- <el-cascader class="area-cascader" v-model="seckillAreaList" :options="activityAreaData" :props="{multiple: true}" @change="onChangeArea" :disabled="form.spikeSku.length>0"></el-cascader> -->
                 </el-form-item>
                 <el-form-item label="优惠方式：" prop="discountType">
                     <el-radio-group v-model="form.discountType" :disabled="disabled" @change='radioChange'>
@@ -82,6 +90,7 @@ import { isNum } from '@/utils/validate/format'
 import { interfaceUrl } from '@/api/config'
 import Sortable from 'sortablejs'
 import { saveEvent, editEvent, clickFarming } from '../api/index'
+import saleableArea from '../../components/SaleableArea.vue'
 import moment from 'moment'
 import { DISCOUNT_TYPE_PERCENT, DISCOUNT_TYPE_PRICE, SPIKE_STATUS_PUBLISHED, SPIKE_STATUS_DRAFT } from '../const/index'
 
@@ -106,7 +115,8 @@ const timeValid = (startTime, endTime, callback) => {
 export default {
     name: 'createSeckill',
     components: {
-        hosJoyTable
+        hosJoyTable,
+        saleableArea
     },
     data () {
         return {
@@ -117,6 +127,7 @@ export default {
             otpopoverVisible: false,
             isPending: false,
             sortable: null,
+            areaShow: false,
             form: {
                 spikeName: '',
                 startTime: '',
@@ -452,10 +463,9 @@ export default {
                     return item
                 })
             }
-            console.log(this.form)
             // 编辑或者拷贝的时候选择的商品是从数据库过来的，这个时候已经选择商品的列表是没有信息，需要添加进来
             this.setSelectSeckillProduct(Array.from(new Set(this.form.spikeSku.map(item => item.skuId))).map(item => ({ skuId: item })))
-            this.seckillAreaList = this.form.spikeAreaList.map(item => [item.provinceId, item.cityId])
+            this.seckillAreaList = this.form.spikeAreaList
             this.setTableData(this.form.spikeSku)
         },
         // ======================================== 前后端交互 =====================================================
@@ -523,20 +533,24 @@ export default {
                 }
             })
         },
-        init () {
+        async init () {
             this.getActivityArea()
             // 当复制或者编辑的时候获取活动详情
             if (this.$route.query.id) {
-                this.getEventInfo()
+                await this.getEventInfo()
             }
+            this.areaShow = true
         },
         backPicUrl (file) {
             this.$set(this.form, 'image', file.imageUrl)
             // this.form.image = file.imageUrl
         },
-        onChangeArea (value) {
-            this.form.spikeAreaList = this.objArrToDyadicArr(value)
+        formSalesAreaList (value) {
+            this.form.spikeAreaList = value
         },
+        // onChangeArea (value) {
+        //     this.form.spikeAreaList = this.objArrToDyadicArr(value)
+        // },
         // ======================================== 按钮事件 =====================================================
         // 添加商品事件
         onAddProduct () {
