@@ -213,7 +213,7 @@ export default {
                 this.platLabel = [
                     { label: '签署方', prop: 'signerName' },
                     { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
-                    { label: '签署方企业来源', prop: 'signerType', dicData: [{ value: 1, label: '指定企业' }, { value: 2, label: '合同企业' }] },
+                    { label: '签署方企业来源', prop: 'platformSignSource', dicData: [{ value: 1, label: '指定企业' }, { value: 2, label: '合同企业' }] },
                     { label: '合同企业', prop: 'paramGroupName' },
                     {
                         label: '签署要求',
