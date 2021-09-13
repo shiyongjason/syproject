@@ -13,7 +13,9 @@ const state = {
     productSpuInfo: {},
     productSkuInfo: {},
     optionId: '',
-    optionValueData: []
+    optionValueData: [],
+    productSpuAuditData: {},
+    productSkuAuditData: {}
 }
 
 const getters = {
@@ -68,6 +70,12 @@ const mutations = {
     },
     [types.OPTION_VALUE_DATA] (state, payload) {
         state.optionValueData = payload
+    },
+    [types.PRODUCT_SPU_AUDIT_DATA] (state, payload) {
+        state.productSpuAuditData = payload
+    },
+    [types.PRODUCT_SKU_AUDIT_DATA] (state, payload) {
+        state.productSkuAuditData = payload
     }
 }
 
@@ -156,6 +164,14 @@ const actions = {
     },
     async deleteSKU ({ commit }, params) {
         await instance.delete(`/product/boss/main-sku/${params.id}`, params)
+    },
+    async findProductSpuAuditList ({ commit }, params) {
+        const { data } = await instance.get('/product/boss/main-spu/audit', { params })
+        commit(types.PRODUCT_SPU_DATA, data)
+    },
+    async findProductSkuAuditList ({ commit }, params) {
+        const { data } = await instance.get('/product/boss/main-sku/audit', { params })
+        commit(types.PRODUCT_SKU_DATA, data)
     },
     // 批量审核
     async batchAduitSku ({ commit }, params) {
