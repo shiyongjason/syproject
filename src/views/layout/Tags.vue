@@ -229,7 +229,7 @@ export default {
 
 </script>
 
-<style  lang="scss">
+<style lang="scss" scoped>
 .tabs-container__tags {
     display: flex;
     padding: 0 20px;
