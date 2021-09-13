@@ -116,7 +116,7 @@
                 </b>; 白名单 <b>{{crmauthLoan.whiteListNum||0}}</b>; 黑名单 <b>{{crmauthLoan.blackListNum||0}}</b>; 待审核 <b>{{crmauthLoan.waitToAuditNum||0}}</b></el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 ::rowKey="rowKey" :isShowIndex='true'>
                 <template slot="userAccount" slot-scope="scope">
-                    <span class="colblue" @click="onLinkship(scope.data.row.userAccount)"> {{scope.data.row.userAccount}}</span>
+                    <span class="link-cell" @click="onLinkship(scope.data.row.userAccount)"> {{scope.data.row.userAccount}}</span>
                 </template>
                  <template slot="memberTag" slot-scope="scope">
                      {{memberTagArr[scope.data.row.memberTag-1].value}}
@@ -129,7 +129,7 @@
                      <p>{{scope.data.row.customerManagerPhone||'-'}}</p>
                 </template>
                 <template slot="userName" slot-scope="scope">
-                    <span class="colblue" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
+                    <span class="link-cell" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
                 </template>
                 <template slot="areaname" slot-scope="scope">
                     {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName}}
@@ -363,14 +363,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .colred {
-    color: #ff0000;
+    color: $redColor;
 }
 .colgry {
     color: #06c306;
-}
-.colblue {
-    color: #50b7f7;
-    cursor: pointer;
 }
 .eltagtop {
     margin-bottom: 10px;

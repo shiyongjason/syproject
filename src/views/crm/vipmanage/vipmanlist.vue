@@ -54,7 +54,7 @@
             <el-tag size="medium" class="eltagtop">已筛选 {{vipManagedata.total||0}}； VIP：{{vipPageLoan.vipCount||0}}； VIP目标总额（万元）：{{vipPageLoan.totalTarget||0 |money}} </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :isShowIndex='true'>
                 <template slot="companyName" slot-scope="scope">
-                    <span @click="onLinkCom(scope.data.row)" class="colblue">{{scope.data.row.companyName}}</span>
+                    <span @click="onLinkCom(scope.data.row)" class="link-cell">{{scope.data.row.companyName}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_LOOK_DETAIL)">查看详情</h-button>
@@ -219,53 +219,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.colred {
-    color: #ff7a45;
-}
-.colgry {
-    color: #ccc;
-}
-.colblue {
-    color: #50b7f7;
-    cursor: pointer;
-}
 .eltagtop {
     margin-bottom: 10px;
-}
-.colblue {
-    color: #50b7f7;
-    cursor: pointer;
-}
-.project-record {
-    padding: 10px 0;
-    height: 400px;
-    overflow-y: scroll;
-    /deep/ .el-card__body {
-        padding: 5px;
-        span {
-            color: grey;
-        }
-    }
-}
-.project-plant {
-    display: flex;
-    flex-wrap: wrap;
-    .plantimg {
-        margin: 5px;
-        width: 95px;
-        height: 95px;
-        overflow: hidden;
-        img {
-            width: 95px;
-            height: 100%;
-        }
-    }
-}
-.previewimg {
-    text-align: center;
-    img {
-        width: 500px;
-        padding: 10px;
-    }
 }
 </style>

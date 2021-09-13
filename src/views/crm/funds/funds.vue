@@ -84,13 +84,13 @@
             </el-tag>
             <basicTable :tableData="fundsList" :tableLabel="tableLabel" :pagination="fundsListPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=290 :isShowIndex='true'>
                 <template slot="paymentAmount" slot-scope="scope">
-                    <span class="colblue"> {{ scope.data.row.paymentAmount | fundMoneyHasTail }}</span>
+                    <span> {{ scope.data.row.paymentAmount | fundMoneyHasTail }}</span>
                 </template>
                 <template slot="paymentFlag" slot-scope="scope">
-                    <span class="colblue"> {{ scope.data.row.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list) }}</span>
+                    <span> {{ scope.data.row.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list) }}</span>
                 </template>
                 <template slot="paidTime" slot-scope="scope">
-                    <span class="colblue" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key"> {{ scope.data.row.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                    <span v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key"> {{ scope.data.row.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
                     <span v-else>-</span>
                 </template>
                 <template slot="threeDayEmailStatus" slot-scope="scope">

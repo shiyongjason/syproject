@@ -84,7 +84,7 @@
             <el-tag size="medium" class="eltagtop">已筛选 {{creditdata.total||0}} 项</el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=200 :isShowIndex='true'>
                 <template slot="companyName" slot-scope="scope">
-                    <span @click="onLinkCom(scope.data.row)" class="colblue">{{scope.data.row.companyName}}</span>
+                    <span @click="onLinkCom(scope.data.row)" class="link-cell">{{scope.data.row.companyName}}</span>
                 </template>
                 <template slot="status" slot-scope="scope">
                     <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status==true?'正常':scope.data.row.status==false?'过期':'-'}}</span>
@@ -319,50 +319,7 @@ export default {
 .colgry {
     color: #62b439;
 }
-.colblue {
-    color: #50b7f7;
-    cursor: pointer;
-}
 .eltagtop {
     margin-bottom: 10px;
-}
-.colblue {
-    color: #50b7f7;
-    cursor: pointer;
-}
-.project-record {
-    padding: 10px 0;
-    height: 400px;
-    overflow-y: scroll;
-    /deep/ .el-card__body {
-        padding: 5px;
-        span {
-            color: grey;
-        }
-    }
-}
-.project-plant {
-    display: flex;
-    flex-wrap: wrap;
-    .plantimg {
-        margin: 5px;
-        width: 95px;
-        height: 95px;
-        overflow: hidden;
-        img {
-            width: 95px;
-            height: 100%;
-        }
-    }
-}
-.previewimg {
-    text-align: center;
-    img {
-        width: 500px;
-        padding: 10px;
-    }
-}
-.oss-sts-download {
-    cursor: pointer;
 }
 </style>

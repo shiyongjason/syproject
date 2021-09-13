@@ -90,7 +90,7 @@
             </el-tag>
             <basicTable :tableData="purchaseOrderList" :tableLabel="tableLabel" :pagination="purchaseOrderPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=350 :isShowIndex='true'>
                 <template slot="projectNo" slot-scope="scope">
-                    <span class="colblue" @click="goProjectDetail(scope.data.row)"> {{ scope.data.row.projectNo }}</span>
+                    <span class="link-cell" @click="goProjectDetail(scope.data.row)"> {{ scope.data.row.projectNo }}</span>
                 </template>
                 <template slot="poAmount" slot-scope="scope">
                     <span> {{ scope.data.row.poAmount | fundMoneyHasTail }}</span>
@@ -347,10 +347,6 @@ export default {
 }
 .eltagtop {
     margin-bottom: 10px;
-}
-.colblue {
-    color: #50b7f7;
-    cursor: pointer;
 }
 .seal_records {
     margin-bottom: 10px;

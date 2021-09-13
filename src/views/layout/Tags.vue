@@ -230,12 +230,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tabs-container__tags {
-    display: flex;
-    padding: 0 20px;
-    height: 50px;
-}
-
 .tabs-tags {
     &__cont {
         display: flex;
@@ -272,7 +266,7 @@ export default {
         }
 
         &.active {
-            background: #ff7a45;
+            background: $hosjoyColor;
             color: #ffffff;
 
             a {
@@ -292,47 +286,5 @@ export default {
             }
         }
     }
-}
-.tags-li:not(.active):hover {
-    background: #f8f8f8;
-}
-
-.tags-li.active {
-    color: #fff;
-    border: 1px solid #ff7a45;
-    background-color: #ff7a45;
-}
-
-// .tags-li-title {
-//     float: left;
-//     max-width: 80px;
-//     overflow: hidden;
-//     white-space: nowrap;
-//     text-overflow: ellipsis;
-//     // margin-right: 5px;
-//     margin: 0 10px;
-//     color: #666;
-// }
-
-.tags-li.active .tags-li-title {
-    color: #fff;
-}
-
-.tags-close-box {
-    position: absolute;
-    right: 0;
-    top: 0;
-    box-sizing: border-box;
-    padding-top: 1px;
-    text-align: center;
-    width: 109px;
-    height: 30px;
-    // background: #fff;
-    z-index: 10;
-}
-
-/deep/.el-button--primary {
-    background-color: #ff7a45;
-    border-color: #ff7a45;
 }
 </style>

@@ -82,23 +82,23 @@
             </el-tag>
             <basicTable :tableData="paymentOrderList" :tableLabel="tableLabel" :pagination="paymentOrderPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=450 :isShowIndex='true'>
                 <template slot="applyAmount" slot-scope="scope">
-                    <span class="colblue">{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
+                    <span>{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
                 </template>
                 <template slot="applyDate" slot-scope="scope">
-                    <span class="colblue">{{ scope.data.row.applyDate | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                    <span>{{ scope.data.row.applyDate | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
                 </template>
                 <template slot="updateTime" slot-scope="scope">
-                    <span class="colblue">{{ scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                    <span>{{ scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
                 </template>
                 <template slot="status" slot-scope="scope">
-                    <span class="colblue">{{ paymentOrderStatusOptions.get(scope.data.row.status) }}</span>
+                    <span>{{ paymentOrderStatusOptions.get(scope.data.row.status) }}</span>
                 </template>
                 <template slot="applyName" slot-scope="scope">
                     <p>{{scope.data.row.applyName}}</p>
                     <p v-if="scope.data.row.applyPhone">({{scope.data.row.applyPhone}})</p>
                 </template>
                 <template slot="dealerCooperationMethod" slot-scope="scope">
-                    <span class="colblue">{{ scope.data.row.dealerCooperationMethod==1?'垫资代采':scope.data.row.dealerCooperationMethod==2?'代收代付':'-'}}</span>
+                    <span>{{ scope.data.row.dealerCooperationMethod==1?'垫资代采':scope.data.row.dealerCooperationMethod==2?'代收代付':'-'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <!-- operateStatus 操作按钮 1.发起放款交接 2.查看放款交接  3.null不展示-->

@@ -26,7 +26,7 @@
         </div>
         <basicTable :tableData="supplierList" :tableLabel="tableLabel" :pagination="supplierListPagination" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isShowIndex='true'>
             <template slot="createTime" slot-scope="scope">
-                <span class="colblue"> {{ scope.data.row.createTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                <span> {{ scope.data.row.createTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
             </template>
         </basicTable>
     </div>
