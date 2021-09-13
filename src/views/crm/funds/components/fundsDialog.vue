@@ -71,10 +71,11 @@ export default {
     computed: {
         title () {
             let title = '支付确认'
-
-            // if (this.detail.companyName || this.detail.amount) {
             if (this.detail._seeing) {
                 title = '查看凭证'
+            }
+            if (this.detail._prev) {
+                title = '首付款到账确认'
             }
             return title
         },

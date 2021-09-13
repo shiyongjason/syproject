@@ -99,7 +99,7 @@
                 <template #action="slotProps">
                     <h-button table v-if="hosAuthCheck(upstreamPayDetail)" @click="viewDetail(slotProps.data.row.paymentOrderId)">查看详情</h-button>
                     <h-button table v-if="slotProps.data.row.showChangeButton" @click="onShowChangeLoanTransferStatus(slotProps.data.row.loanTransferId)">变更交接状态</h-button>
-                    <h-button table v-if="hosAuthCheck(prevproof)" @click="handleShowProof(slotProps.data.row.paymentOrderId)">确认首付款到账</h-button>
+                    <h-button table v-if="hosAuthCheck(prevproof)" @click="handleShowProof(slotProps.data.row)">确认首付款到账</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -198,35 +198,7 @@
             </div>
         </el-dialog>
         <!-- 首付款确认 -->
-        <el-dialog :close-on-click-modal='false' title="首付款到账确认" :visible.sync="isProofDialog" width="600px" class="prev-payment-dialog">
-            <div class="prev_wrap">
-                <div class="prev_wrap-box">
-                    首付款金额(元)：
-                </div>
-                <div class="prev_wrap-box">
-                    支付时间：2021-06-02 17:04:47
-                </div>
-            </div>
-            <div class="prev_wrap-proof">
-                <p>支付凭证：</p>
-                <div class="prev_wrap-flex">
-                    <div class="prev_wrap-flexpic">
-                        1
-                    </div>
-                    <div class="prev_wrap-flexpic">
-                        1
-                    </div>
-                    <div class="prev_wrap-flexpic">
-                        1
-                    </div>
-                </div>
-            </div>
-
-            <div slot="footer" class="dialog-footer">
-                <h-button @click="isOpenChangeStatus = false">并未收到</h-button>
-                <h-button type="primary" @click="onChangeLoanTransferStatus">确认收到</h-button>
-            </div>
-        </el-dialog>
+        <FundsDialog :is-open="isProofDialog" :detail="fundsDialogDetail" :status="queryParams.repaymentTypeArrays" @onClose="getList"></FundsDialog>
     </div>
 </template>
 
@@ -246,6 +218,7 @@ import filters from '@/utils/filters'
 import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT, CHANGE_LOAN_TRANSFER_STATUS, UPSTREAM_PAY_EXPORT, PREV_PROOF } from '@/utils/auth_const'
 import moment from 'moment'
 import { LOAN_TRANSFER_STATUS_DONE, UPSTREAM_PAYMENT_STATUS_WAITING } from './const'
+import FundsDialog from '../funds/components/fundsDialog.vue'
 export const PAYMENTTYPE: Map<number | null, string> = new Map([
     [null, '-'],
     [1, '银行转账'],
@@ -276,14 +249,15 @@ enum TabInfoApi {
         loanHandoverInformation,
         upstreamPaymentInformation,
         OssFileHosjoyUpload,
-        elImageAddToken
+        elImageAddToken,
+        FundsDialog
     }
 })
 export default class UpstreamPaymentManagement extends Vue {
     upstreamPayDetail = UPSTREAM_PAY_DETAIL
     upstreamPayment = UPSTREAM_PAY_MENT
     upstreamExport = UPSTREAM_PAY_EXPORT
-prevproof = PREV_PROOF
+    prevproof = PREV_PROOF
     $refs!: {
         form: HTMLFormElement
     }
@@ -349,7 +323,7 @@ prevproof = PREV_PROOF
     loanHandoverInformation:LoanTransferInfoResponse = '' as unknown as LoanTransferInfoResponse
     upstreamPaymentInformation:RespSupplier = '' as unknown as RespSupplier
     prevPaymentDetail:RespSupplierInfo = '' as unknown as RespSupplierInfo
-
+    fundsDialogDetail:Record<string, any> ={}
     PAYMENTSTATUS: Map<number | null, string> = new Map([
         [null, '-'],
         [1, '待支付'],
@@ -492,8 +466,13 @@ prevproof = PREV_PROOF
         this.isShowTabs()
     }
 
-    handleShowProof () {
+    handleShowProof (row) {
         this.isProofDialog = true
+        this.fundsDialogDetail = {
+            orderId: row.paymentOrderId,
+            id: row.downPaymentFundId,
+            _prev: true
+        }
     }
 
     handleClickProof (val) {
@@ -547,6 +526,7 @@ prevproof = PREV_PROOF
         const { data: totalAmountData } = await Api.getUpStreamPaymentTotalAmountApi(this.queryParams)
         this.totalAmount = totalAmountData
         this.editorDrawer = false
+        this.isProofDialog = false
     }
 
     sortChange (e) {
