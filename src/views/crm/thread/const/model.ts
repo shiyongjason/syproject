@@ -7,6 +7,8 @@ export interface ThreadQeuryModel {
     deviceCategory: number;
     startTime: string;
     endTime: string;
+    maxUpdateTime: string,
+    minUpdateTime: string,
     origin: number;
     pageNumber: number;
     pageSize: number;

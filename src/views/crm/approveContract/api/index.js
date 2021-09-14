@@ -16,3 +16,7 @@ export const getPurchaseOrderList = (params) => axios.get(`/project/api/purchase
 
 // 天眼查列表搜索
 export const getTYCList = (params) => axios.get(`/memeber/api/tianyancha/searches`, { params })
+
+export const getCaList = (params) => axios.get(`/project/api/ca/org/list`, { params })
+// 根据好享家企业获取对应的账户信息
+export const findDefaultAccountByCompany = (params) => axios.get('project/api/contract-platform-accounts/list', { params })
