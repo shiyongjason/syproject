@@ -1205,7 +1205,16 @@ export default {
                     let totalMoney = this.$plus(...cellmoneyVals).toString()
                     console.log('🚀 --- checkTableMoney --- totalMoney', totalMoney)
                     if (totalMoney != this.computedServiceFee) {
-                        this.$message.error(`分期金额合计和服务费总额不一致请检查`)
+                        this.$confirm(`分期金额合计已变化${totalMoney}, 是否继续?`, '提示', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'warning'
+                        }).then(() => {
+                            this.computedServiceFee = totalMoney
+                            this.onSaveService()
+                        }).catch(() => {
+
+                        })
                         return false
                     }
                 }
@@ -1217,6 +1226,10 @@ export default {
             if (!isPass) {
                 return
             }
+            //  封装下方法 进行保存服务费表格
+            this.onSaveService()
+        },
+        onSaveService () {
             let serviceFeeEstimate = this.contractFieldsList.filter(item => item.paramKey === 'service_fee_estimate')[0]
             let originalServiceFeeEstimate = this.originalContentFieldsList.filter(item => item.paramKey === 'service_fee_estimate')[0]
             let loanMonth = this.contractFieldsList.filter(item => item.paramKey === 'loan_month')[0]
@@ -1301,6 +1314,7 @@ export default {
                             if (isPass) {
                                 this.dealSaveContent(operatorType)
                             }
+                        }
                         /**
                          * 当好享家企业名称发生变化的时候，对应的户名，开户行，账号发生变化
                          */
