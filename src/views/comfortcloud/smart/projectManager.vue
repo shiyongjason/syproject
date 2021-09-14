@@ -56,7 +56,7 @@
                     <el-input v-model.trim="form.projectSimpleName" show-word-limit placeholder="请输入项目简称" maxlength='6' style="width:356px"></el-input>
                 </el-form-item>
                 <el-form-item label="公司LOGO：">
-                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="form.logo" ref="uploadImg" @back-event="uploadSuccess" :imgW="60" :imgH="60" />
+                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="form.companyLogo" ref="uploadImg" @back-event="uploadSuccess" :imgW="60" :imgH="60" />
                     <div class="upload-tips">
                         建议尺寸：36*36，图片大小1M以内，支持jpeg,png和jpg格式
                     </div>
@@ -102,7 +102,7 @@
                         <el-checkbox label="1">氟机空调集控系统</el-checkbox>
                         <el-checkbox label="2">水机空调集控系统</el-checkbox>
                         <el-checkbox label="3">计费系统</el-checkbox>
-                        <el-checkbox label="4">节能系统</el-checkbox>
+                        <el-checkbox label="11">节能系统</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item label="项目包含设备：" prop="deviceTypes">
@@ -161,7 +161,7 @@ const _form = {
     companyName: '',
     adminName: '',
     username: '',
-    logo: '',
+    companyLogo: '',
     projectType: [],
     deviceTypes: []
 }
@@ -333,7 +333,7 @@ export default {
         }),
         uploadSuccess (val) {
             console.log(val)
-            this.form.logo = val.imageUrl
+            this.form.companyLogo = val.imageUrl
         },
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
