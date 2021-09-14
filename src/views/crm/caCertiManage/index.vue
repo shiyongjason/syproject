@@ -109,6 +109,7 @@
 import { mapActions, mapState } from 'vuex'
 import { tableLabelPerson, tableLabelEnterprise } from './const'
 import { getCAImageBysealId } from './api'
+import { newCache } from '@/utils/index'
 export default {
     name: 'caCertiManage',
     data () {
@@ -242,6 +243,9 @@ export default {
             console.log(1)
             this.drawer = false
         }
+    },
+    beforeUpdate () {
+        newCache('caCertiManage')
     }
 }
 </script>

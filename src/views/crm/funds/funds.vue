@@ -74,10 +74,10 @@
             </el-tag>
             <basicTable :tableData="fundsList" :tableLabel="tableLabel" :pagination="fundsListPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=290 :isShowIndex='true'>
                 <template slot="paymentAmount" slot-scope="scope">
-                    <span > {{ scope.data.row.paymentAmount | fundMoneyHasTail }}</span>
+                    <span> {{ scope.data.row.paymentAmount | fundMoneyHasTail }}</span>
                 </template>
                 <template slot="paymentFlag" slot-scope="scope">
-                    <span > {{ scope.data.row.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list) }}</span>
+                    <span> {{ scope.data.row.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list) }}</span>
                 </template>
                 <template slot="paidTime" slot-scope="scope">
                     <span v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key"> {{ scope.data.row.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
@@ -119,7 +119,7 @@ import FundsDict from '@/views/crm/funds/fundsDict'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import UploadDialog from './components/uploadPayDialog.vue'
 import * as Auths from '@/utils/auth_const'
-
+import { newCache } from '@/utils/index'
 export default {
     name: 'funds',
     components: {
@@ -347,6 +347,9 @@ export default {
             authCode: temp
         })
         this.switchName()
+    },
+    beforeUpdate () {
+        newCache('funds')
     }
 }
 </script>

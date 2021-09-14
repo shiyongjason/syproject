@@ -135,12 +135,8 @@ export default {
         margin-right: 10px;
     }
 }
-    .hand{
-        cursor: pointer;
-    }
-</style>
-<style lang="scss">
-.el-menu--vertical ul {
+
+/deep/ .el-menu--vertical ul {
     background: rgba($color: #191919, $alpha: 0.9);
 
     .el-menu-item,
@@ -154,13 +150,16 @@ export default {
         }
     }
 }
-.el-menu-item:focus {
+/deep/ .el-menu-item:focus {
     background-color: $blackColor !important;
 }
-.el-menu-item:hover {
+/deep/ .el-menu-item:hover {
     background-color: $blackColor !important;
 }
-.el-submenu__title:hover {
+/deep/ .el-submenu__title:hover {
     background-color: $blackColor !important;
+}
+.hand{
+    cursor: pointer;
 }
 </style>

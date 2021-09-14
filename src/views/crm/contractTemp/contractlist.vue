@@ -62,10 +62,11 @@
     </div>
 </template>
 <script>
-import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { mapActions, mapGetters } from 'vuex'
+import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { enableTemp, disableTemp } from './api'
 import * as Auths from '@/utils/auth_const'
+import { newCache } from '@/utils/index'
 export default {
     name: 'contractlist',
     components: { hosJoyTable },
@@ -255,6 +256,9 @@ export default {
     },
     activated () {
         this.searchList()
+    },
+    beforeUpdate () {
+        newCache('contractlist')
     }
 
 }
