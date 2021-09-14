@@ -48,7 +48,10 @@
                     <template v-for="(sItem,sIndex) in item.optionValues">
                         <td :key="sIndex" v-if="item.optionValues.length">
                             <el-form-item label-width='0' :prop="`mainSkus[${index}].optionValues`" :rules="rules.optionValues">
-                                <el-select v-model="item.optionValues[sIndex].id" @change="onChangeValue(index,sIndex)" clearable :disabled="item.disabled">
+                                <el-tooltip :content="skuModel(sItem.optionTypeId, item.optionValues[sIndex].id)" placement="top" v-if="item.disabled">
+                                    <div class="cell">{{skuModel(sItem.optionTypeId, item.optionValues[sIndex].id)}}</div>
+                                </el-tooltip>
+                                <el-select v-model="item.optionValues[sIndex].id" @change="onChangeValue(index,sIndex)" clearable v-else>
                                     <el-option v-for="(i,ssIndex) in optionValuesFilter(sItem.optionTypeId).optionValues" :key="ssIndex" :label="i.name" :value="i.id"></el-option>
                                 </el-select>
                             </el-form-item>
@@ -57,6 +60,11 @@
                     <td class="fixed-width">
                         <el-form-item label-width='0' :prop="`mainSkus[${index}].imageUrls`" :rules="rules.imageUrls">
                             <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" />
+                            <template v-if="item.imageUrls">
+                                <a :href="item.imageUrls" target="_blank" class="ml10" title="查看图片">
+                                    <i class="el-icon-search"></i>
+                                </a>
+                            </template>
                             <input type="hidden" v-model="item.imageUrls">
                         </el-form-item>
                         <!-- <div class="image-wrap" v-if="item.disabled"></div> -->
@@ -266,6 +274,11 @@ export default {
         }
     },
     methods: {
+        skuModel (optionTypeId, id) {
+            const options = this.optionValuesFilter(optionTypeId).optionValues
+            const result = options.filter(item => item.id === id)[0]
+            return result.name
+        },
         optionValuesFilter (id) {
             return this.form.optionTypeList.find(item => item.id == id)
         },
@@ -432,6 +445,13 @@ export default {
             float: none !important;
             display: inline-block;
             vertical-align: middle;
+        }
+
+        .cell {
+            max-width: 150px;
+            padding-right: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 }
