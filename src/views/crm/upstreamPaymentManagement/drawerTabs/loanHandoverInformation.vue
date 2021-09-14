@@ -180,8 +180,9 @@
         </div>
         <div class="info_btnbot">
               <div>
+
                 <el-button type="primary" @click="onArchiveDown" v-if="hosAuthCheck(upstreamDownPurchase)">下载采购合同</el-button>
-                <el-button type="primary" @click="onLoanDown" v-if="hosAuthCheck(upstreamPayDown)">下载放款交接单</el-button>
+                <el-button type="primary" :disabled="status==2" @click="onLoanDown" v-if="hosAuthCheck(upstreamPayDown)">下载放款交接单</el-button>
                 <el-button type="primary" @click="onExport" v-if="hosAuthCheck(upstreamDownBills)&&data.supplierPaymentType==2">下载出票明细</el-button>
               </div>
               <div style="margin-top:10px">
@@ -232,6 +233,7 @@ export default class LoanHandoverInformation extends Vue {
     // @Prop({ default: '' }) readonly userInfo!:any  // fix Property 'userInfo' is used before its initialization 假数据开发的时候加了一个非空定义
     @Prop({ type: Object, required: true, default: '' }) userInfo:any
     @Prop({ default: '' }) readonly paymentOrderId!:any
+    @Prop({ default: '' }) readonly status:number
 
     $refs!: {
         form: HTMLFormElement
@@ -330,6 +332,11 @@ export default class LoanHandoverInformation extends Vue {
     }
 
     onConfirm () {
+        // 首付款待确认给提示
+        if (this.status == 2) {
+            this.$message.warning('请确认首付款是否到账~')
+            return
+        }
         this.infoDialog = true
         this.title = '交接'
     }
@@ -376,6 +383,7 @@ export default class LoanHandoverInformation extends Vue {
     }
 
     mounted () {
+        console.log(this.status)
         this.dialogFormData.updateBy = this.userInfo.employeeName
     }
 }

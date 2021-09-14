@@ -97,9 +97,9 @@
             <hosJoyTable localName="V3.5.1" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList"
                 actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template #action="slotProps">
-                    <h-button table v-if="hosAuthCheck(upstreamPayDetail)" @click="viewDetail(slotProps.data.row.paymentOrderId)">查看详情</h-button>
+                    <h-button table v-if="hosAuthCheck(upstreamPayDetail)" @click="viewDetail(slotProps.data.row.paymentOrderId,slotProps.data.row.status)">查看详情</h-button>
                     <h-button table v-if="slotProps.data.row.showChangeButton" @click="onShowChangeLoanTransferStatus(slotProps.data.row.loanTransferId)">变更交接状态</h-button>
-                    <h-button table v-if="hosAuthCheck(prevproof)" @click="handleShowProof(slotProps.data.row)">确认首付款到账</h-button>
+                    <h-button table v-if="hosAuthCheck(prevproof)&&slotProps.data.row.status==2" @click="handleShowProof(slotProps.data.row)">确认首付款到账</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -108,7 +108,7 @@
                 <!-- 资金部放款操作岗确认后，顶部展示出「上游支付信息」tab页签 -->
                 <el-tabs v-model="activeName" @tab-click="handleTabClick">
                     <el-tab-pane label="放款交接信息" name="loanHandoverInformation">
-                        <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest' @requestBack='getList' :paymentOrderId='paymentOrderId'></loanHandoverInformation>
+                        <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :status='status' :userInfo='userInfo' @requestAgain='onRequest' @requestBack='getList' :paymentOrderId='paymentOrderId'></loanHandoverInformation>
                     </el-tab-pane>
                     <el-tab-pane label="上游支付信息" name="upstreamPaymentInformation" v-if="isTabs">
                         <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation>
@@ -198,7 +198,7 @@
             </div>
         </el-dialog>
         <!-- 首付款确认 -->
-        <FundsDialog :is-open="isProofDialog" :detail="fundsDialogDetail" :status="queryParams.repaymentTypeArrays" @onClose="getList"></FundsDialog>
+        <FundsDialog :is-open="isProofDialog" :detail="fundsDialogDetail" :status="'1'" @onClose="getList"></FundsDialog>
     </div>
 </template>
 
@@ -319,6 +319,7 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     totalAmount:number = 0
+    status:number = null
     activeName:string = 'loanHandoverInformation'
     loanHandoverInformation:LoanTransferInfoResponse = '' as unknown as LoanTransferInfoResponse
     upstreamPaymentInformation:RespSupplier = '' as unknown as RespSupplier
@@ -449,7 +450,7 @@ export default class UpstreamPaymentManagement extends Vue {
         )
     }
 
-    async viewDetail (paymentOrderId) {
+    async viewDetail (paymentOrderId, status) {
         // 初始化数据
         this.activeName = 'loanHandoverInformation'
         if (this.loanHandoverInformation) {
@@ -461,6 +462,7 @@ export default class UpstreamPaymentManagement extends Vue {
         this.paymentOrderId = paymentOrderId
         const { data } = await Api.getLoanHandoverInfoApi(paymentOrderId)
         this.loanHandoverInformation = data
+        this.status = status
         console.log(' 🚗 🚕 🚙 🚌 🚎 userInfo', this.userInfo)
         this.editorDrawer = true
         this.isShowTabs()
