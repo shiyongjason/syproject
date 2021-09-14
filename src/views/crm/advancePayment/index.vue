@@ -286,7 +286,7 @@ export default class Advancelist extends Vue {
     }
      supplierPaymentType : Map<number | null, string> = new Map([
          [null, '-'],
-         [1, '银行转帐'],
+         [1, '银行转账'],
          [2, '银行承兑']
      ])
     advancepay = CRM_ADVACE_UPSTREAMPAY
