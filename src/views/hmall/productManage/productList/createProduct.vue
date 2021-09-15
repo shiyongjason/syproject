@@ -57,6 +57,7 @@
                                     <div class="mask-btn">
                                         <span :class="index==0?'isDisabled':''" @click="onSettingTop(index)">设为主图</span>
                                         <span @click="onRemove(index)">删除图片</span>
+                                        <a target="_blank" :href="item">查看原图</a>
                                     </div>
                                     <img :src="item">
                                     <span v-if="index == 0" class="isDefault">主图</span>
@@ -778,7 +779,7 @@ export default {
     z-index: -1;
     background: rgba($color: #000000, $alpha: 0.65);
 
-    span {
+    span, a {
         float: left;
         margin-left: 14px;
         padding: 0px 12px;
@@ -789,12 +790,7 @@ export default {
         border-radius: 4px;
         background: $hosjoyColor;
         cursor: pointer;
-        &:nth-child(1) {
-            margin-top: 22px;
-        }
-        &:nth-child(2) {
-            margin-top: 14px;
-        }
+        margin-top: 10px;
 
         &:hover {
             background: $hosjoyColorHover;

@@ -47,16 +47,25 @@
                     <template v-for="(sItem,sIndex) in item.optionValues">
                         <td :key="sIndex" v-if="item.optionValues.length">
                             <el-form-item label-width='0' :prop="`mainSkus[${index}].optionValues`" :rules="rules.optionValues">
-                                <el-select v-model="sItem.id" @change="onChangeValue(index,sIndex)" clearable disabled>
-                                    <el-option v-for="i in optionValuesFilter(sItem.optionTypeId)" :key="i.id" :label="i.name" :value="i.id"></el-option>
-                                </el-select>
+                                <el-tooltip :content="skuModel(sItem.optionTypeId, sItem.id)" placement="top">
+                                    <div class="cell">{{skuModel(sItem.optionTypeId, sItem.id)}}</div>
+                                </el-tooltip>
                             </el-form-item>
                         </td>
                     </template>
                     <td class="fixed-width">
                         <el-form-item label-width='0'>
-                            <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" v-if="seeTask==false" />
-                            <img :src="item.imageUrls" style="width:44px;height:44px" v-if="seeTask==true" />
+                            <template v-if="!seeTask">
+                                <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)"  />
+                                <template v-if="item.imageUrls">
+                                    <a :href="item.imageUrls" target="_blank" class="ml10" title="查看图片">
+                                        <i class="el-icon-search"></i>
+                                    </a>
+                                </template>
+                            </template>
+                            <a :href="item.imageUrls" target="_blank" v-else>
+                                <img :src="item.imageUrls" style="width:44px;height:44px" />
+                            </a>
                         </el-form-item>
                     </td>
                     <td>
@@ -262,6 +271,11 @@ export default {
         }
     },
     methods: {
+        skuModel (optionTypeId, id) {
+            const options = this.optionValuesFilter(optionTypeId)
+            const result = options.filter(item => item.id === id)[0]
+            return result.name
+        },
         optionValuesFilter (id) {
             const result = this.optionTypeListFilter.filter(item => item.id == id)
             if (result.length > 0) {
@@ -426,6 +440,13 @@ export default {
             float: none !important;
             display: inline-block;
             vertical-align: middle;
+        }
+
+        .cell {
+            max-width: 150px;
+            padding-right: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 }
