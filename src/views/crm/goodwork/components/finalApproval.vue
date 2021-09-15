@@ -417,22 +417,6 @@ export default class FinalApproval extends Vue {
     }
     get formRules () {
         let rules = {
-            // pledgeNo: [
-            //     {
-            //         required: true,
-            //         validator: (rule, value, callback) => {
-            //             var Reg = /^[A-Za-z0-9]+$/
-            //             if (value && !Reg.test(value)) {
-            //                 return callback(new Error('只能为数字或字母'))
-            //             }
-            //             if (!value) {
-            //                 return callback(new Error('请输入中登网质押编号'))
-            //             }
-            //             return callback()
-            //         },
-            //         trigger: 'blur'
-            //     }
-            // ],
             projectName: [{ required: true, message: '项目名称必填', trigger: 'blur' }],
             levels: [{ required: true, message: '项目评级必选' }],
             contractAmount: [{ required: true, message: '项目合同总额必填', trigger: 'blur' },
@@ -640,7 +624,7 @@ export default class FinalApproval extends Vue {
         {
             label: '上游支付方式',
             prop: 'upstreamPayType',
-            width: '320',
+            width: '250',
             className: '',
             render: (h: CreateElement, scope: TableRenderParam) => {
                 return (
@@ -653,7 +637,7 @@ export default class FinalApproval extends Vue {
                                 scope.row[scope.column.property] = val
                             }}
                             multiple
-                            style={{ 'width': '260px' }}
+                            style={{ 'width': '210px' }}
                             size='mini'
                         >
                             <el-option key="1" value={1} label="银行转账">银行转账</el-option>
@@ -667,7 +651,7 @@ export default class FinalApproval extends Vue {
         {
             label: '设备品类',
             prop: 'deviceCategoryType',
-            width: '135',
+            // width: '400',
             className: 'form-table-header',
             showOverflowTooltip: false,
             render: (h: CreateElement, scope: TableRenderParam) => {
