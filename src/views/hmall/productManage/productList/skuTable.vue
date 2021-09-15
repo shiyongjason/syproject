@@ -450,6 +450,7 @@ export default {
         .cell {
             max-width: 150px;
             padding-right: 10px;
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
