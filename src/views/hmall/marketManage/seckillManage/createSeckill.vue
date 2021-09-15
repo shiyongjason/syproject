@@ -654,35 +654,35 @@ export default {
         },
         // ======================================== 按钮事件 =====================================================
         // ======================================== 数据处理 =====================================================
-        objArrToDyadicArr (value) {
-            const filterResult = this.activityAreaData.filter(item => value.some(i => item.children.some(j => j.value == i[1])))
-                .map(item => ({ label: item.label, value: item.value, children: item.children.filter(i => value.some(j => i.value == j[1])) }))
-            const result = []
-            filterResult.map(item => {
-                item.children.map(sItem => {
-                    result.push({ provinceId: item.value, provinceName: item.label, cityId: sItem.value, cityName: sItem.label, areaId: 0 })
-                })
-            })
-            return result
-        },
-        dyadicArrToObjArr (value) {
-            let result = []
-            const provinceObj = {}
-            const cityArr = this.activityAreaData.map(item => {
-                provinceObj[item.value] = item.children.map(cItem => [item.value, cItem.value])
-                return item.children.map(cItem => [item.value, cItem.value])
-            })
-            value.forEach(item => {
-                if (item.provinceId == '0') {
-                    result = result.concat(cityArr.flat())
-                } else if (item.cityId == '0') {
-                    result = result.concat(provinceObj[item.provinceId])
-                } else {
-                    result.push([item.provinceId, item.cityId])
-                }
-            })
-            return result
-        },
+        // objArrToDyadicArr (value) {
+        //     const filterResult = this.activityAreaData.filter(item => value.some(i => item.children.some(j => j.value == i[1])))
+        //         .map(item => ({ label: item.label, value: item.value, children: item.children.filter(i => value.some(j => i.value == j[1])) }))
+        //     const result = []
+        //     filterResult.map(item => {
+        //         item.children.map(sItem => {
+        //             result.push({ provinceId: item.value, provinceName: item.label, cityId: sItem.value, cityName: sItem.label, areaId: 0 })
+        //         })
+        //     })
+        //     return result
+        // },
+        // dyadicArrToObjArr (value) {
+        //     let result = []
+        //     const provinceObj = {}
+        //     const cityArr = this.activityAreaData.map(item => {
+        //         provinceObj[item.value] = item.children.map(cItem => [item.value, cItem.value])
+        //         return item.children.map(cItem => [item.value, cItem.value])
+        //     })
+        //     value.forEach(item => {
+        //         if (item.provinceId == '0') {
+        //             result = result.concat(cityArr.flat())
+        //         } else if (item.cityId == '0') {
+        //             result = result.concat(provinceObj[item.provinceId])
+        //         } else {
+        //             result.push([item.provinceId, item.cityId])
+        //         }
+        //     })
+        //     return result
+        // },
         /**
          * 对商品数据进行处理，从添加商品页面选择数据之后实际上有些key值是不存在的，比如卖点，限购数量等信息
          * 需要添加这些key和对应的值
