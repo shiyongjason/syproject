@@ -442,9 +442,12 @@ export default {
         },
         async getSelectSkuList () {
             const cityIdList = this.form.spikeAreaList.map(item => item.cityId)
+            const saleAreas = this.form.areas.map(item => {
+                return item.cityId ? { provinceId: item.provinceId, cityId: item.cityId } : { provinceId: item.provinceId }
+            })
             const skuIdList = this.selectSeckillProduct.filter(item => !this.form.spikeSku.some(i => item.skuId == i.skuId)).map(item => item.skuId)
             if (skuIdList.length > 0) {
-                await this.findSelectSkuList({ cityIdList: cityIdList, skuIdList: skuIdList })
+                await this.findSelectSkuList({ cityIdList: cityIdList, skuIdList: skuIdList, saleAreas: saleAreas })
                 this.setTableData(this.form.spikeSku.concat(this.selectSkuData))
             }
         },
