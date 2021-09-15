@@ -1205,8 +1205,8 @@ export default {
                     let totalMoney = this.$plus(...cellmoneyVals).toString()
                     console.log('🚀 --- checkTableMoney --- totalMoney', totalMoney)
                     if (totalMoney != this.computedServiceFee) {
-                        this.$confirm(`分期金额合计已变化${totalMoney}, 是否继续?`, '提示', {
-                            confirmButtonText: '确定',
+                        this.$confirm(`单期服务费累计之和为${totalMoney}元, 是否确认将${totalMoney}元填入服务费总额中?`, '服务费确认', {
+                            confirmButtonText: '确认',
                             cancelButtonText: '取消',
                             type: 'warning'
                         }).then(() => {

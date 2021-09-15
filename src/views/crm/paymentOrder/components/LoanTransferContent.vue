@@ -41,7 +41,7 @@
                 </div>
             </div>
             <template>
-                <div class="info-layout" v-for="item in LoanTransferContent.contractArchiveDocs" :key="item.fileUrl">
+                <div class="info-layout" v-for="(item,index) in LoanTransferContent.contractArchiveDocs" :key="index">
                     <div class="info-layout-item">
                         <!-- <a class="info-layout-item-link" :href="item.fileUrl" target="_bank">{{item.fileName}}</a> -->
                         <downloadFileAddToken isPreview :file-name="item.fileName" :file-url="item.fileUrl" :a-link-words="item.fileName"></downloadFileAddToken>
@@ -181,16 +181,16 @@
         <el-dialog title="收款人信息" :close-on-click-modal='false' :visible.sync="suppDialog" width="750px" :before-close="()=>onCancel('supplierForm')" :modal='false'>
             <el-form id='elform' :model="supplierForm" :rules="supplierRules" label-width="180px" label-position='right' ref="supplierForm">
                 <el-form-item label="供应商名称：" style="marginLeft:-8px">
-                    <el-input placeholder="供应商名称" v-model="supplierForm.supplierCompanyName"  disabled></el-input>
+                    <el-input placeholder="供应商名称" v-model="supplierForm.supplierCompanyName" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="供应商开户行名称：" prop='supplierAccountName' style="marginLeft:-8px">
-                    <el-input placeholder="供应商开户行名称" v-model="supplierForm.supplierAccountName" maxlength="50" ></el-input>
+                    <el-input placeholder="供应商开户行名称" v-model="supplierForm.supplierAccountName" maxlength="50"></el-input>
                 </el-form-item>
                 <el-form-item label="供应商银行账号：" prop='supplierAccountNo' style="marginLeft:-8px">
-                    <el-input placeholder="供应商银行账号" v-model="supplierForm.supplierAccountNo" maxlength="25" ></el-input>
+                    <el-input placeholder="供应商银行账号" v-model="supplierForm.supplierAccountNo" maxlength="25"></el-input>
                 </el-form-item>
                 <el-form-item label="银行联行号：" prop='supplierBankNo' style="marginLeft:-8px">
-                <el-input placeholder="银行联行号" v-model="supplierForm.supplierBankNo" maxlength="12" ></el-input>
+                    <el-input placeholder="银行联行号" v-model="supplierForm.supplierBankNo" maxlength="12"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -209,17 +209,17 @@
                         <!-- 长度为50位以内字母或数字。 -->
                         <el-input placeholder="请输入中登网质押编号" v-model="reviewResolutionForm.pledgeNo" maxlength="50"></el-input>
                     </el-form-item>
-                        <div class="reviewResolutionForm-title">
-                            货款支付流程：
-                        </div>
-                        <el-form-item label="OA货款支付编号：" prop='oaNo' style="marginLeft:-9px">
-                            <el-input placeholder="请输入OA货款支付编号" v-model="reviewResolutionForm.oaNo" maxlength="50"></el-input>
-                        </el-form-item>
-                        <el-form-item label="OA货款支付流程状态：" prop='oaStatus' style="marginLeft:-10px;marginTop:20px" >
-                            <el-select v-model="reviewResolutionForm.oaStatus" placeholder="请选择">
-                                <el-option label="已完结" :value="1"></el-option>
-                            </el-select>
-                        </el-form-item>
+                    <div class="reviewResolutionForm-title">
+                        货款支付流程：
+                    </div>
+                    <el-form-item label="OA货款支付编号：" prop='oaNo' style="marginLeft:-9px">
+                        <el-input placeholder="请输入OA货款支付编号" v-model="reviewResolutionForm.oaNo" maxlength="50"></el-input>
+                    </el-form-item>
+                    <el-form-item label="OA货款支付流程状态：" prop='oaStatus' style="marginLeft:-10px;marginTop:20px">
+                        <el-select v-model="reviewResolutionForm.oaStatus" placeholder="请选择">
+                            <el-option label="已完结" :value="1"></el-option>
+                        </el-select>
+                    </el-form-item>
 
                 </el-form>
             </div>
@@ -239,13 +239,13 @@
                     <font style="font-weight:bold">上游采购合同：</font>
                     <div>
                         <!-- A -->
-                        <div class="file_box" v-for="(item,index) in uploadForm.contractArchiveDocs" :key="item.fileUrl">
+                        <div class="file_box" v-for="(item,index) in uploadForm.contractArchiveDocs" :key="index">
                             <i class="el-icon-paperclip"></i><span>{{item.fileName}}</span>
                             <em> <a @click="()=>handleLink(item.fileUrl)" target="_blank" style="color:#167cd5">预览</a></em>
                             <em @click="()=>handleDelFile(index,uploadForm.contractArchiveDocs)">删除</em>
                         </div>
                         <!-- B -->
-                        <div class="file_box" v-for="(item,index) in uploadForm.loanTransferArchiveDocs" :key="item.fileUrl">
+                        <div class="file_box" v-for="(item,index) in uploadForm.loanTransferArchiveDocs" :key="index">
                             <i class="el-icon-paperclip"></i><span>{{item.fileName}}</span>
                             <em> <a @click="()=>handleLink(item.fileUrl)" target="_blank" style="color:#167cd5">预览</a></em>
                             <em @click="()=>handleDelFile(index,uploadForm.loanTransferArchiveDocs)">删除</em>
@@ -255,13 +255,16 @@
                                 <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                             </div>
                         </OssFileHosjoyUpload>
+                        <el-button type="info" size="mini" class="upload_history" @click="handleShowHistory">
+                            选择历史上传合同
+                        </el-button>
                     </div>
                 </div>
                 <div class="upload-title">
                     <font style="font-weight:bold">单次采购明细附件(若有)：</font>
                     <!-- C -->
                     <div>
-                        <div class="file_box" v-for="(item,index) in uploadForm.purchaseDetailsDocs" :key="item.fileUrl">
+                        <div class="file_box" v-for="(item,index) in uploadForm.purchaseDetailsDocs" :key="index">
                             <i class="el-icon-paperclip"></i><span>{{item.fileName}}</span>
                             <em> <a @click="()=>handleLink(item.fileUrl)" target="_blank" style="color:#167cd5">预览</a></em>
                             <em @click="()=>handleDelFile(index,uploadForm.purchaseDetailsDocs)">删除</em>
@@ -277,6 +280,22 @@
             <div slot="footer" class="dialog-footer">
                 <h-button @click="()=>onCancel('DialogUpload')">取消</h-button>
                 <h-button type="primary" @click="submitLoanTransferDoc">确定</h-button>
+            </div>
+        </el-dialog>
+        <!-- 历史合同dialog -->
+        <el-dialog title="历史上传合同" :close-on-click-modal='false' :visible.sync="openDialogContract" width="750px" :before-close="()=>onCancel('dialogContract')" :modal='false'>
+            <div class="contract_list">
+                <div class="contract_box" v-for="(item,index) in historyCotract" :key="index">
+                    <span class="contract_box-tit">{{item.fileName}}</span>
+                    <span class="contract_box-time">{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</span>
+                    <span class="contract_box-choose" @click="handleChoose(item)">选中</span>
+                </div>
+            </div>
+            <div class="contract_page">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                :current-page="queryParams.pageNumber" :page-size.sync="queryParams.pageSize"
+                layout="total, sizes, prev, pager, next" :total="page.total">
+                </el-pagination>
             </div>
         </el-dialog>
         <!-- 票面金额信息 dialog -->
@@ -311,20 +330,31 @@ import OssFileUtils from '@/utils/OssFileUtils'
 import downloadFileAddToken from '@/components/downloadFileAddToken'
 import utils from '@/utils/filters'
 import { isNum } from '@/utils/validate/format'
+import moment from 'moment'
 // api
-import { postPledgeResolution, getMoreBillAmount, getLoanTransferDoc, postLoanTransferDoc, postBillAmount, postLoanTransfersConfirm, getReviewResolution, postSupplierLoan } from '../api/index'
+import { postPledgeResolution, getMoreBillAmount, getLoanTransferDoc, postLoanTransferDoc, postBillAmount, postLoanTransfersConfirm, getReviewResolution, postSupplierLoan, getHistoryContract } from '../api/index'
 export default {
     name: 'LoanTransferContent',
     components: { OssFileHosjoyUpload, downloadFileAddToken },
     props: ['LoanTransferContent', 'paymentOrderId', 'operateStatus'],
     data () {
         return {
+            moment,
             suppDialog: false,
             // 上游支付方式:1-银行转帐;2-银行承兑
             upstreamPaymentMethod: {
                 bankTransfer: 1,
                 bankAcceptance: 2
             },
+            queryParams: {
+                pageNumber: 1,
+                pageSize: 10,
+                paymentOrderId: ''
+            },
+            page: {
+                total: 0
+            },
+            historyCotract: [],
             activeNames: ['1'],
             action: ccpBaseUrl + 'common/files/upload-old',
             openDialog: false,
@@ -365,7 +395,8 @@ export default {
             loanTransfersConfirm: {
                 paymentOrderId: '',
                 remark: ''
-            }
+            },
+            openDialogContract: false
         }
     },
     computed: {
@@ -474,6 +505,27 @@ export default {
             await postLoanTransfersConfirm(this.loanTransfersConfirm)
             this.$emit('closeLoanTransferContentVisible')
         },
+        // 历史合同数据
+        async handleShowHistory () {
+            this.queryParams.paymentOrderId = this.paymentOrderId
+            const { data } = await getHistoryContract(this.queryParams)
+            this.historyCotract = data.records
+            this.page.total = data.total
+            this.openDialogContract = true
+        },
+        handleChoose (val) {
+            this.uploadForm.loanTransferArchiveDocs.push(val)
+            this.openDialogContract = false
+        },
+        handleSizeChange (val) {
+            console.log(`每页 ${val} 条`)
+            this.queryParams.pageSize = val
+            this.handleShowHistory()
+        },
+        handleCurrentChange (val) {
+            this.queryParams.pageNumber = val
+            this.handleShowHistory()
+        },
         // 提交采购合同信息
         async submitLoanTransferDoc () {
             if (this.uploadForm.contractArchiveDocs.length == 0 && this.uploadForm.loanTransferArchiveDocs.length == 0) {
@@ -531,6 +583,9 @@ export default {
         },
         // 取消弹窗
         onCancel (refForm) {
+            if (refForm === 'dialogContract') {
+                this.openDialogContract = false
+            }
             if (refForm === 'supplierForm') {
                 this.suppDialog = false
                 this.$refs[refForm].resetFields()
