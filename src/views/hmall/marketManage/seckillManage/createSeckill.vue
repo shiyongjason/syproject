@@ -280,7 +280,7 @@ export default {
                     },
                     render: (h, scope) => {
                         return (
-                            <el-form-item prop={`spikeSku[${scope.$index}].inventoryRemainNum`} label={scope.row.cityName} rules={this.inventoryRemainNumRules(scope.row, scope.$index)} label-width="40px" style="margin-top: 20px">
+                            <el-form-item prop={`spikeSku[${scope.$index}].inventoryRemainNum`} label={scope.row.cityName || scope.row.provinceName} rules={this.inventoryRemainNumRules(scope.row, scope.$index)} label-width="40px" style="margin-top: 20px">
                                 <el-input value={scope.row.inventoryRemainNum} style='width:50%' size='mini' onInput={(val) => { this.setOneCol(Number(val.replace(/[^\d]/g, '')), scope, 'inventoryRemainNum') }} disabled={this.disabled}></el-input>
                             </el-form-item>
                         )
