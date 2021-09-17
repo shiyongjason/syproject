@@ -9,8 +9,8 @@
                     <el-input v-model.trim="form.spikeName" placeholder="请输入活动名称" maxlength="255" clearable :disabled="disabled"></el-input>
                 </el-form-item>
                 <el-form-item label="活动时间：" prop="startTime">
-                    <el-date-picker v-model="form.startTime" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :disabled="disabled"></el-date-picker>
-                    <el-date-picker v-model="form.endTime" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :disabled="disabled"></el-date-picker>
+                    <el-date-picker v-model="form.startTime" :clearable=true :editable=true :picker-options="pickerOptionsStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :disabled="disabled"></el-date-picker>
+                    <el-date-picker v-model="form.endTime" :editable=true :clearable=true :picker-options="pickerOptionsEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :disabled="disabled"></el-date-picker>
                     <span class="timeTips" v-if="!disabled">只能创建10分钟后开始的活动</span>
                 </el-form-item>
                 <el-form-item label="活动banner：" prop="image">
