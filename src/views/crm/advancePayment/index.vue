@@ -81,6 +81,9 @@
                     <el-col :span="10" :offset='1'>申请金额(元)：{{detailForm.applyAmount | fundMoneyHasTail}}</el-col>
                     <el-col :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
                 </el-row>
+                <el-row>
+                   <el-col :span="16" :offset='1'>付款主体：{{detailForm.paymentCompanyName||'-'}}</el-col>
+                </el-row>
                 <el-row type="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>上游供应商：{{detailForm.supplierCompanyName||'-'}}</el-col>
                     <el-col :span="10" :offset='1'>供应商开户行名称：{{detailForm.supplierAccountName||'-'}}</el-col>
@@ -286,7 +289,7 @@ export default class Advancelist extends Vue {
     }
      supplierPaymentType : Map<number | null, string> = new Map([
          [null, '-'],
-         [1, '银行转帐'],
+         [1, '银行转账'],
          [2, '银行承兑']
      ])
     advancepay = CRM_ADVACE_UPSTREAMPAY
