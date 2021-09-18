@@ -182,7 +182,7 @@
               <div>
 
                 <el-button type="primary" @click="onArchiveDown" v-if="hosAuthCheck(upstreamDownPurchase)">下载采购合同</el-button>
-                <el-button type="primary" :disabled="status==2" @click="onLoanDown" v-if="hosAuthCheck(upstreamPayDown)">下载放款交接单</el-button>
+                <el-button type="primary" :disabled="status==2||status==1" @click="onLoanDown" v-if="hosAuthCheck(upstreamPayDown)">下载放款交接单</el-button>
                 <el-button type="primary" @click="onExport" v-if="hosAuthCheck(upstreamDownBills)&&data.supplierPaymentType==2">下载出票明细</el-button>
               </div>
               <div style="margin-top:10px">

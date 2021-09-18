@@ -626,6 +626,7 @@ export default class FinalApproval extends Vue {
             prop: 'upstreamPayType',
             width: '250',
             className: '',
+            showOverflowTooltip: false,
             render: (h: CreateElement, scope: TableRenderParam) => {
                 return (
                     <div>
