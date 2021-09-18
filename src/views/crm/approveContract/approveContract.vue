@@ -210,10 +210,11 @@ import serviceFeeToTable from './components/serviceFeeToTable'
 import inputAutocomplete from './components/inputAutocomplete'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { mapState, mapActions } from 'vuex'
-import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi, getPurchaseOrderList, getTYCList } from './api/index'
+import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi, getPurchaseOrderList, getTYCList, getCaList, findDefaultAccountByCompany } from './api/index'
 import { ccpBaseUrl } from '@/api/config'
 import Editor from '@tinymce/tinymce-vue'
 import comRender from './comRender'
+import { contractSigningList } from '../contractSigningManagement/api'
 // api:https://www.tiny.cloud/docs/integrations/vue/
 // http://tinymce.ax-z.cn/general/basic-setup.php
 export default {
@@ -298,8 +299,9 @@ export default {
                 }
             },
             /** 此占位符用于修复点击暂不审核和失焦失焦触发重复 */
-            isDealBack: false
-
+            isDealBack: false,
+            hosjoyCaList: [],
+            tempCurrentKey: ''
         }
     },
     computed: {
@@ -383,6 +385,15 @@ export default {
             let list = []
             imgArr.map(item => list.push(item.fileUrl))
             return list
+        },
+        async  onGetCaList () {
+            const { data } = await getCaList({ orgType: 1 })
+            data && data.map(val => {
+                val.label = val.companyName
+                val.value = val.companyName
+                return val
+            })
+            this.hosjoyCaList = data
         },
         async onClickVsPurchaseOrder (item) {
             const response = await getPurchaseOrderList({
@@ -528,6 +539,7 @@ export default {
                     selectCom: {
                         bind: {
                             selectVModel: this.currentKey.paramValue,
+                            style: { width: '300px' },
                             options: (function (t) {
                                 let _this = t
                                 // 判断 key
@@ -542,6 +554,10 @@ export default {
                                 }
                                 if (_this.currentKey.paramKey == 'purch_order_purch_batch' || _this.currentKey.paramKey == 'purch_batch') {
                                     return [{ value: '一次性采购', label: '一次性采购' }, { value: '分批采购', label: '分批采购' }]
+                                }
+                                // 新的合同企业字段
+                                if (_this.currentKey.paramKey == 'hosjoy_company_name') {
+                                    return _this.hosjoyCaList
                                 }
                             })(this)
                         },
@@ -711,6 +727,7 @@ export default {
                 }
 
             }
+            console.log(comObj)
             return comObj[this.currentKey.inputStyle]
         },
         getTableHtml (array = []) {
@@ -881,6 +898,9 @@ export default {
                 }
             }
             this.$nextTick(async () => {
+                // 处理下合同企业字段
+                const caOrgName = contractFieldsListBeforeTransfer && contractFieldsListBeforeTransfer.filter(val => val.paramKey == 'hosjoy_company_name')
+
                 const query = {
                     contractId: this.$route.query.id,
                     approver: this.userInfo.employeeName,
@@ -890,7 +910,8 @@ export default {
                     approvalRemark: this.dialog.remark,
                     contractContent: this.detailRes.contractStatus == 6 ? this.contractDocument.innerHTML : '',
                     contractContentBeforeTransfer, // 备份
-                    contractFieldsListBeforeTransfer: JSON.stringify(contractFieldsListBeforeTransfer)// 备份
+                    contractFieldsListBeforeTransfer: JSON.stringify(contractFieldsListBeforeTransfer), // 备份
+                    caOrgName: caOrgName.length > 0 ? caOrgName[0].paramValue : ''
                 }
                 try {
                     await approvalContent(query)
@@ -1231,6 +1252,7 @@ export default {
         // 保存 operatorType=3 更新条款
         onSaveContent (operatorType = '') {
             console.log('保存||失焦,operatorType1150: ', operatorType)
+            console.log(this.currentKey)
             if (operatorType) {
                 //  fix 点击图片编辑器会修改一些属性，导致this.contractAfterApi == curHTML.replace(/\ufeff/g, '') 不成立。直接保存。editorDrawer变为false关闭了弹窗
                 let curHTML = this.contractDocument.innerHTML.replace(/ data-mce-selected="1"/g, '')
@@ -1252,11 +1274,24 @@ export default {
                 this.setImg()
                 return
             }
+
             // 1.span里包img2.非必填可上传多图
             if (operatorType == '') {
                 this.$refs.ruleForm.validate(async (valid) => {
                     if (valid) {
-                        this.dealSaveContent(operatorType)
+                        /**
+                         * 当好享家企业名称发生变化的时候，对应的户名，开户行，账号发生变化
+                         */
+                        if (this.currentKey.paramKey === 'hosjoy_company_name' && this.currentKey.paramValue != this.tempCurrentKey.paramValue) {
+                            this.$alert('企业名称发生变化，对应的户名，开户行，账号都会发生变化，请注意修改', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    this.dealSaveContent(operatorType)
+                                }
+                            })
+                        } else {
+                            this.dealSaveContent(operatorType)
+                        }
                     }
                 })
             } else {
@@ -1426,6 +1461,44 @@ export default {
                     }
                 }
             }
+
+            /**
+             * 好享家企业名称变更关联数据的处理
+             * 当paramKey == 'hosjoy_company_name'且对应的值发生变化时执行下面的逻辑
+             */
+            if (this.currentKey.paramKey === 'hosjoy_company_name' && this.currentKey.paramValue != this.tempCurrentKey.paramValue) {
+                const { data } = await findDefaultAccountByCompany({
+                    companyName: this.currentKey.paramValue
+                })
+                tempArr = tempArr.map(item => {
+                    // 好享家收款账户
+                    if (item.paramKey === 'hosjoy_account_name') {
+                        item.paramValue = data[0].accountName
+                        let dom = this.contractDocument.getElementsByClassName(item.paramKey)
+                        Array.from(dom).map(jtem => {
+                            jtem.innerHTML = data[0].accountName
+                        })
+                    }
+                    // 好享家收款账户的开户行
+                    if (item.paramKey === 'hosjoy_account_bank') {
+                        item.paramValue = data[0].accountBank
+                        let dom = this.contractDocument.getElementsByClassName(item.paramKey)
+                        Array.from(dom).map(jtem => {
+                            jtem.innerHTML = data[0].accountBank
+                        })
+                    }
+                    // 好享家收款账户的账号
+                    if (item.paramKey === 'hosjoy_account_number') {
+                        item.paramValue = data[0].accountNumber
+                        let dom = this.contractDocument.getElementsByClassName(item.paramKey)
+                        Array.from(dom).map(jtem => {
+                            jtem.innerHTML = data[0].accountNumber
+                        })
+                    }
+                    return item
+                })
+            }
+
             try {
                 await saveContent({
                     'contractId': this.$route.query.id,
@@ -1518,6 +1591,7 @@ export default {
                                         paramValue: fields.paramValue,
                                         calculationRules: serviceFeeFields.calculationRules
                                     }
+                                    this.tempCurrentKey = JSON.parse(JSON.stringify(this.currentKey))
                                     console.log('this.currentKey-purch_service_fee_form::::', this.currentKey)
                                     this.editorDrawer = true
                                     this.$nextTick(async () => {
@@ -1555,6 +1629,7 @@ export default {
                                             tagName: 'SPAN',
                                             multiple: true
                                         }
+                                        this.tempCurrentKey = JSON.parse(JSON.stringify(this.currentKey))
                                         console.log('this.currentKey-SPAN-非必填字段: ', this.currentKey)
                                         this.editorDrawer = true
                                         this.$nextTick(() => {
@@ -1582,6 +1657,7 @@ export default {
                                         tagName: 'IMG',
                                         multiple: !this.originalContentFieldsList.filter(ktem => ktem.paramKey === item.dataset.key)[0].required
                                     }
+                                    this.tempCurrentKey = JSON.parse(JSON.stringify(this.currentKey))
                                     console.log('imgclick this.currentKey', this.currentKey)
                                     this.oldImg = event.target.currentSrc
                                     console.log('this.oldImg: ', this.oldImg)
@@ -1601,13 +1677,16 @@ export default {
                                 let fields = this.originalContentFieldsList.filter(ktem => ktem.paramKey === jtem.className)[0]
                                 // 遍历dom添加点击事件
                                 jtem.onclick = (event) => {
+                                    console.log(jtem.class)
                                     this.currentKey = {
                                         ...fields,
                                         event,
                                         paramname: jtem.dataset.paramname || '',
-                                        paramValue: fields.paramValue || ''
+                                        paramValue: fields.paramValue || '',
+                                        inputStyle: fields.paramKey == 'hosjoy_company_name' ? '3' : fields.inputStyle
                                     }
-                                    console.log('this.currentKeyxxxooo: ', this.currentKey)
+                                    this.tempCurrentKey = JSON.parse(JSON.stringify(this.currentKey))
+                                    console.log('this.currentKeyxxxooo: ', this.currentKey, fields)
                                     this.editorDrawer = true
                                     this.$nextTick(() => {
                                         this.$refs['ruleForm'].resetFields()
@@ -1653,6 +1732,13 @@ export default {
             this.contractContentDiv = res.data.contractContent // Div版的合同
             this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
             this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
+            // 这里处理下老数据 hosjoy_name_company
+            this.contractFieldsList.map(item => {
+                if (item.paramKey == 'hosjoy_company_name') {
+                    item.inputStyle = 3
+                }
+                return item
+            })
             if (this.detailRes.contractStatus == 6) {
                 const response = await getPurchaseOrderList({
                     contractId: this.$route.query.id
@@ -1686,21 +1772,20 @@ export default {
             return `<font>${obj.fieldDesc}</font>从<font>${this.formatTxt(obj.fieldOriginalContent)}</font>变为<font>${this.formatTxt(obj.fieldContent)}</font>`
         }
     },
+    mounted () {
+    },
     async beforeMount () {
         const { data } = await contractKeyValue(this.$route.query.contractTypeId)
         this.contractKeyValueList = data
+        this.$nextTick(() => {
+            this.onGetCaList()
+        })
         this.init()
     }
 }
 </script>
 <style scoped lang="scss">
-/deep/.approvalcontract-content table td {
-    // border: 1px solid #ccc;
-    // border-right: 1px solid #ccc;
-}
-/deep/ .mce-item-table:not([border]) td {
-    //  border: 1px solid #333 !important;
-}
+
 .approvalRemark {
     font-size: 14px;
     color: #f00;
