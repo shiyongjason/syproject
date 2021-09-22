@@ -94,19 +94,21 @@
                 <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span v-if="totalAmount">累计金额：{{totalAmount|fundMoneyHasTail}}</span></el-tag>
             </div>
             <!-- end search bar -->
-            <hosJoyTable localName="V3.5.1" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+            <hosJoyTable localName="V3.5.1" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList"
+                actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template #action="slotProps">
-                    <h-button table v-if="hosAuthCheck(upstreamPayDetail)"  @click="viewDetail(slotProps.data.row.paymentOrderId)">查看详情</h-button>
-                    <h-button table v-if="slotProps.data.row.showChangeButton"  @click="onShowChangeLoanTransferStatus(slotProps.data.row.loanTransferId)">变更交接状态</h-button>
+                    <h-button table v-if="hosAuthCheck(upstreamPayDetail)" @click="viewDetail(slotProps.data.row.paymentOrderId,slotProps.data.row.status)">查看详情</h-button>
+                    <h-button table v-if="slotProps.data.row.showChangeButton" @click="onShowChangeLoanTransferStatus(slotProps.data.row.loanTransferId)">变更交接状态</h-button>
+                    <h-button table v-if="hosAuthCheck(prevproof)&&slotProps.data.row.status==2" @click="handleShowProof(slotProps.data.row)">确认首付款到账</h-button>
                 </template>
             </hosJoyTable>
         </div>
         <el-drawer class="editordrawerbox" :title="PAYMENTSTATUS.get(this.loanHandoverInformation.paymentStatus)" :visible.sync="editorDrawer" size='620px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
             <div class="drawer-content">
                 <!-- 资金部放款操作岗确认后，顶部展示出「上游支付信息」tab页签 -->
-                 <el-tabs v-model="activeName" @tab-click="handleTabClick">
+                <el-tabs v-model="activeName" @tab-click="handleTabClick">
                     <el-tab-pane label="放款交接信息" name="loanHandoverInformation">
-                        <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest' @requestBack='getList' :paymentOrderId='paymentOrderId'></loanHandoverInformation>
+                        <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :status='status' :userInfo='userInfo' @requestAgain='onRequest' @requestBack='getList' :paymentOrderId='paymentOrderId'></loanHandoverInformation>
                     </el-tab-pane>
                     <el-tab-pane label="上游支付信息" name="upstreamPaymentInformation" v-if="isTabs">
                         <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation>
@@ -118,12 +120,12 @@
                 <h-button style="margin-top:20px" type="primary" @click="payInfoApi">立即上游支付</h-button>
             </div>
         </el-drawer>
-        <el-dialog v-if="isOpen" :close-on-click-modal='false' title="上游支付" :visible.sync="isOpen" width="850px" :before-close="()=> onCancel()" class="prev-payment-dialog" >
+        <el-dialog v-if="isOpen" :close-on-click-modal='false' title="上游支付" :visible.sync="isOpen" width="850px" :before-close="()=> onCancel()" class="prev-payment-dialog">
             <div class="dialog-ctx">
                 <el-form id='elform' :model="dialogFormData" :rules="formRules" label-width="150px" ref="form">
                     <div class="dialog-flex-layout">
                         <el-form-item label="经销商：">
-                        {{ prevPaymentDetail.companyName }}
+                            {{ prevPaymentDetail.companyName }}
                         </el-form-item>
                         <el-form-item label="项目：">
                             {{ prevPaymentDetail.projectName }}
@@ -152,7 +154,7 @@
                         <elImageAddToken style="width: 100px; height: 100px;margin-right:10px; border:1px solid #dad5d5;    border-radius: 5px;" :fileUrl="pic.fileUrl" :fit="'contain'" v-for="(pic,index) in prevPaymentDetail.poDetail" :key='index'></elImageAddToken>
                     </el-form-item>
                     <el-form-item label="支付单货款明细：">
-                       <elImageAddToken style="width: 100px; height: 100px;margin-right:10px; border:1px solid #dad5d5; border-radius: 5px;" :fileUrl="pic.fileUrl" :fit="'contain'" v-for="(pic,index) in prevPaymentDetail.paymentDetail" :key='index'></elImageAddToken>
+                        <elImageAddToken style="width: 100px; height: 100px;margin-right:10px; border:1px solid #dad5d5; border-radius: 5px;" :fileUrl="pic.fileUrl" :fit="'contain'" v-for="(pic,index) in prevPaymentDetail.paymentDetail" :key='index'></elImageAddToken>
                     </el-form-item>
                     <el-form-item label="本次支付金额：" prop="payAmount" style="margin-bottom:20px">
                         <el-input placeholder="请输入" v-model="dialogFormData.payAmount" maxlength="50" v-isNum:2 v-inputMAX='prevPaymentDetail.surplusAmount'></el-input>
@@ -177,7 +179,7 @@
                 <h-button type="primary" @click="onEnterPay">确认支付</h-button>
             </div>
         </el-dialog>
-        <el-dialog :close-on-click-modal='false' title="变更交接状态" :visible.sync="isOpenChangeStatus" width="850px" class="prev-payment-dialog" >
+        <el-dialog :close-on-click-modal='false' title="变更交接状态" :visible.sync="isOpenChangeStatus" width="850px" class="prev-payment-dialog">
             <el-form ref="statusForm" :model="loanTransferStatusForm" :rules="changeRules" label-width="150px">
                 <el-form-item label="变更交接状态到：" prop="changeType" style="margin-bottom:20px">
                     <el-radio-group v-model="loanTransferStatusForm.changeType">
@@ -191,17 +193,20 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <h-button @click="isOpenChangeStatus = false">取消</h-button>
-                <h-button type="primary" @click="onChangeLoanTransferStatus">确定</h-button>
+                <h-button @click="handleClickProof(1)">取消</h-button>
+                <h-button type="primary" @click="handleClickProof(2)">确定</h-button>
             </div>
         </el-dialog>
+        <!-- 首付款确认 -->
+        <FundsDialog :is-open="isProofDialog" :detail="fundsDialogDetail" :status="'1'" @onClose="getList"></FundsDialog>
     </div>
 </template>
 
 <script lang='tsx'>
+import moment from 'moment'
+import { CreateElement } from 'vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
-import { CreateElement } from 'vue'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import elImageAddToken from '@/components/elImageAddToken/index.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
@@ -211,9 +216,10 @@ import { measure, handleSubmit, validateForm } from '@/decorator/index'
 import * as Api from './api/index'
 import { ReqSupplierSubmit, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, RespUpStreamPayment, ReqLoanTransferChange, LoanTransferInfoResponse } from '@/interface/hbp-project'
 import filters from '@/utils/filters'
-import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT, CHANGE_LOAN_TRANSFER_STATUS, UPSTREAM_PAY_EXPORT } from '@/utils/auth_const'
-import moment from 'moment'
+import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT, CHANGE_LOAN_TRANSFER_STATUS, UPSTREAM_PAY_EXPORT, PREV_PROOF } from '@/utils/auth_const'
 import { LOAN_TRANSFER_STATUS_DONE, UPSTREAM_PAYMENT_STATUS_WAITING } from './const'
+import FundsDialog from '../funds/components/fundsDialog.vue'
+import { newCache } from '@/utils/index'
 export const PAYMENTTYPE: Map<number | null, string> = new Map([
     [null, '-'],
     [1, '银行转账'],
@@ -244,14 +250,15 @@ enum TabInfoApi {
         loanHandoverInformation,
         upstreamPaymentInformation,
         OssFileHosjoyUpload,
-        elImageAddToken
+        elImageAddToken,
+        FundsDialog
     }
 })
 export default class UpstreamPaymentManagement extends Vue {
     upstreamPayDetail = UPSTREAM_PAY_DETAIL
     upstreamPayment = UPSTREAM_PAY_MENT
     upstreamExport = UPSTREAM_PAY_EXPORT
-
+    prevproof = PREV_PROOF
     $refs!: {
         form: HTMLFormElement
     }
@@ -272,6 +279,7 @@ export default class UpstreamPaymentManagement extends Vue {
     isTabs:boolean = false
     paymentOrderId:string = ''
     private _queryParams = {}
+    isProofDialog:boolean = false
     queryParams: Query = {
         pageNumber: 1,
         pageSize: 10,
@@ -312,11 +320,12 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     totalAmount:number = 0
+    status:number = null
     activeName:string = 'loanHandoverInformation'
     loanHandoverInformation:LoanTransferInfoResponse = '' as unknown as LoanTransferInfoResponse
     upstreamPaymentInformation:RespSupplier = '' as unknown as RespSupplier
     prevPaymentDetail:RespSupplierInfo = '' as unknown as RespSupplierInfo
-
+    fundsDialogDetail:Record<string, any> ={}
     PAYMENTSTATUS: Map<number | null, string> = new Map([
         [null, '-'],
         [1, '待支付'],
@@ -442,7 +451,7 @@ export default class UpstreamPaymentManagement extends Vue {
         )
     }
 
-    async viewDetail (paymentOrderId) {
+    async viewDetail (paymentOrderId, status) {
         // 初始化数据
         this.activeName = 'loanHandoverInformation'
         if (this.loanHandoverInformation) {
@@ -454,9 +463,23 @@ export default class UpstreamPaymentManagement extends Vue {
         this.paymentOrderId = paymentOrderId
         const { data } = await Api.getLoanHandoverInfoApi(paymentOrderId)
         this.loanHandoverInformation = data
+        this.status = status
         console.log(' 🚗 🚕 🚙 🚌 🚎 userInfo', this.userInfo)
         this.editorDrawer = true
         this.isShowTabs()
+    }
+
+    handleShowProof (row) {
+        this.isProofDialog = true
+        this.fundsDialogDetail = {
+            orderId: row.paymentOrderId,
+            id: row.downPaymentFundId,
+            _prev: true
+        }
+    }
+
+    handleClickProof (val) {
+
     }
 
     onStartChange (val): void {
@@ -506,6 +529,7 @@ export default class UpstreamPaymentManagement extends Vue {
         const { data: totalAmountData } = await Api.getUpStreamPaymentTotalAmountApi(this.queryParams)
         this.totalAmount = totalAmountData
         this.editorDrawer = false
+        this.isProofDialog = false
     }
 
     sortChange (e) {
@@ -612,6 +636,10 @@ export default class UpstreamPaymentManagement extends Vue {
                 ? JSON.parse(sessionStorage.getItem('authCode') || '')
                 : ''
         })
+    }
+
+    beforeUpdate () {
+        newCache('UpstreamPaymentManagement')
     }
 }
 </script>

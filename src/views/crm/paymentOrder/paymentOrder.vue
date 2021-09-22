@@ -37,12 +37,14 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">申请时间：</div>
                     <div class="query-col__input">
-                        <!-- <el-date-picker v-model="queryParams.startApplyDate" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endApplyDate" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker> -->
                         <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
+                        </HDatePicker>
+                    </div>
+                </div>
+                  <div class="query-cont-col">
+                    <div class="query-col__label">项目运营审核时间：</div>
+                    <div class="query-col__input">
+                        <HDatePicker :start-change="onApproveStart" :end-change="onApproveEnd" :options="apprvoeOptions">
                         </HDatePicker>
                     </div>
                 </div>
@@ -82,23 +84,23 @@
             </el-tag>
             <basicTable :tableData="paymentOrderList" :tableLabel="tableLabel" :pagination="paymentOrderPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=450 :isShowIndex='true'>
                 <template slot="applyAmount" slot-scope="scope">
-                    <span class="colblue">{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
+                    <span>{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
                 </template>
                 <template slot="applyDate" slot-scope="scope">
-                    <span class="colblue">{{ scope.data.row.applyDate | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                    <span>{{ scope.data.row.applyDate | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
                 </template>
                 <template slot="updateTime" slot-scope="scope">
-                    <span class="colblue">{{ scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                    <span>{{ scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
                 </template>
                 <template slot="status" slot-scope="scope">
-                    <span class="colblue">{{ paymentOrderStatusOptions.get(scope.data.row.status) }}</span>
+                    <span>{{ paymentOrderStatusOptions.get(scope.data.row.status) }}</span>
                 </template>
                 <template slot="applyName" slot-scope="scope">
                     <p>{{scope.data.row.applyName}}</p>
                     <p v-if="scope.data.row.applyPhone">({{scope.data.row.applyPhone}})</p>
                 </template>
                 <template slot="dealerCooperationMethod" slot-scope="scope">
-                    <span class="colblue">{{ scope.data.row.dealerCooperationMethod==1?'垫资代采':scope.data.row.dealerCooperationMethod==2?'代收代付':'-'}}</span>
+                    <span>{{ scope.data.row.dealerCooperationMethod==1?'垫资代采':scope.data.row.dealerCooperationMethod==2?'代收代付':'-'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <!-- operateStatus 操作按钮 1.发起放款交接 2.查看放款交接  3.null不展示-->
@@ -173,6 +175,7 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
+import moment from 'moment'
 import PaymentOrderDrawer from './components/paymentOrderDrawer'
 import ApprovePaymentOrder from './components/approvePaymentOrder'
 import PrevPaymentDialog from './components/prevPaymentDialog'
@@ -186,7 +189,7 @@ import ViewHandoverRecords from './components/ViewHandoverRecords'
 import { getLoanTransferContent, getLoanTransferRecord, getLoanTransferCheck, approvalHistory, getNewAdvance } from './api/index'
 import UploadPayDialog from '../funds/components/uploadPayDialog.vue'
 import paymentOrderConst from '@/views/crm/paymentOrder/const'
-import moment from 'moment'
+import { newCache } from '@/utils/index'
 export default {
     name: 'payOrder',
     components: {
@@ -216,6 +219,8 @@ export default {
                 purchaseOrderNo: '',
                 startApplyDate: '',
                 endApplyDate: '',
+                startApprovalTime: '',
+                endApprovalTime: '',
                 status: '',
                 pageSize: 10,
                 pageNumber: 1,
@@ -236,7 +241,8 @@ export default {
                 { label: '申请时间', prop: 'applyDate', width: '150', formatters: 'dateTimes', sortable: 'applyDate' },
                 {
                     label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes', sortable: 'updateTime'
-                }
+                },
+                { label: '项目运营时间', prop: 'approvalTime', width: '150', formatters: 'dateTimes', sortable: 'approvalTime' }
             ],
             paginationInfo: {},
             drawer: false,
@@ -272,6 +278,15 @@ export default {
                 format: 'yyyy-MM-dd HH:mm:ss',
                 startTime: this.queryParams.startApplyDate,
                 endTime: this.queryParams.endApplyDate
+            }
+        },
+        apprvoeOptions () {
+            return {
+                type: 'datetime',
+                valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+                format: 'yyyy-MM-dd HH:mm:ss',
+                startTime: this.queryParams.startApprovalTime,
+                endTime: this.queryParams.endApprovalTime
             }
         },
         ...mapState({
@@ -332,6 +347,12 @@ export default {
         },
         onEndChange (val) {
             this.queryParams.endApplyDate = val
+        },
+        onApproveStart (val) {
+            this.queryParams.startApprovalTime = val
+        },
+        onApproveEnd (val) {
+            this.queryParams.endApprovalTime = val
         },
         fundsDialogClose () {
             this.fundsDialogVisible = false
@@ -451,6 +472,9 @@ export default {
             jobNumber: this.userInfo.jobNumber,
             authCode: JSON.parse(sessionStorage.getItem('authCode'))
         })
+    },
+    beforeUpdate () {
+        newCache('payOrder')
     }
 }
 </script>

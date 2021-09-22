@@ -255,3 +255,46 @@
 .reviewResolutionForm-reviewResolutionNo{
     margin: 10px 0;
 }
+.contract_list{
+   height:380px;
+   overflow-y: scroll;
+}
+.contract_page{
+}
+.contract_box{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    position: relative;
+    &::after{
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        right: 0;
+        border-bottom: 1px solid #e5e5e5;
+        transform:scaleY(0.5);
+    }
+    &-tit{
+        display: flex;
+        flex: 1;
+    }
+    &-time{
+        width: 200px;
+        text-align: center;
+    }
+    &-choose{
+        width: 120px;
+        color: #ff7a45;
+        text-align: right;
+        cursor: pointer;
+    }
+}
+/deep/.el-dialog .el-select {
+    width: auto; 
+}
+
+/deep/.el-pagination .el-select .el-input{
+    width: 100px;
+    margin: 0 5px;
+}

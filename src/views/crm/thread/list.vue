@@ -295,6 +295,7 @@ import { ThreadQeuryModel } from './const/model'
 import { THREAD_ORIGIN, DEVICE_CATEGORY, MARITAL_STATUS, EMPLOYED_AGE, CUSTOM_SOURCE, PROJECT_TYPE } from './const/index'
 import { Clue, RespBossCluePage } from '@/interface/hbp-member'
 import { Phone } from '@/utils/rules'
+import { newCache } from '@/utils/index'
 
 @Component({
     name: 'Thread',
@@ -810,13 +811,16 @@ export default class Thread extends Vue {
         }
         this.threadDetail = data
         this.drawer = true
-        console.log(data)
     }
 
     async mounted () {
         this.getAreacode()
         // this.onGetbranch()
         this.findThreadList()
+    }
+
+    beforeUpdate () {
+        newCache('Thread')
     }
 }
 </script>
