@@ -13,10 +13,16 @@ declare global {
     }
   }
 
-    interface TableRenderParam {
-        row: any,
-        column?: any,
-        $index?: number,
+    interface TableRenderParam<T = any> {
+        row: T,
+        column: {
+            /** Property name of the source data */
+            property: string
+            /** Label of the column */
+            label: string
+            [k: string]: any
+        },
+        $index: number,
         [k: string]: any
     }
     /** 好橙工通用类型 */
@@ -36,6 +42,6 @@ declare global {
         }
     }
     /** hosJoyTable column属性 */
-    type tableLabelProps = Array<tableLabelItem>
+    type tableLabelProps<T = any> = Array<tableLabelItem<T>>
 
 }
