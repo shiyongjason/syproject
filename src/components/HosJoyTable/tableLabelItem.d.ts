@@ -1,10 +1,10 @@
 import { ElTableColumn } from 'element-ui/types/table-column'
 import { CreateElement } from 'vue'
 
-interface TableRenderFunc {
-    (h: CreateElement, { row, $index }: TableRenderParam): JSX.Element,
+interface TableRenderFunc<T> {
+    (h: CreateElement, { row, $index }: TableRenderParam<T>): JSX.Element,
 }
-export interface tableLabelItem extends Partial<ElTableColumn> {
+export interface tableLabelItem<T> extends Partial<ElTableColumn> {
     /** 显示的标题 */
     label: string,
     /** 对应列内容的字段名 */
@@ -14,7 +14,7 @@ export interface tableLabelItem extends Partial<ElTableColumn> {
     /** 对应列的最小宽度，与 width 的区别是 width 是固定的，min-width 会把剩余宽度按比例分配给设置了 min-width 的列 */
     minWidth?: string,
     /** 自定义列写法 */
-    render?: TableRenderFunc,
+    render?: TableRenderFunc<T>,
     /**
      * 自定义插槽 [{prop: 'ceshi' , label: '测试插槽', slot : 'ceshi'}]
      * @template <template slot="ceshi" slot-scope="scope">
@@ -36,6 +36,6 @@ export interface tableLabelItem extends Partial<ElTableColumn> {
     /** 数据过滤使用的方法，如果是多选的筛选项，对每一条数据会执行多次，任意一次返回 true 就会显示 */
     filterMethod?: (value?: any, row?: any, column?: any) => any,
     /** 多级表头 */
-    children?: tableLabelItem[],
+    children?: tableLabelItem<T>[],
     // [k: string]: any // element 支持的api只要版本支持，这边都可以用。
 }
