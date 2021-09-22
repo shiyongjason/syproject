@@ -41,7 +41,7 @@
                         </HDatePicker>
                     </div>
                 </div>
-                  <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col__label">项目运营审核时间：</div>
                     <div class="query-col__input">
                         <HDatePicker :start-change="onApproveStart" :end-change="onApproveEnd" :options="apprvoeOptions">
@@ -92,6 +92,9 @@
                 <template slot="updateTime" slot-scope="scope">
                     <span>{{ scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
                 </template>
+                <template slot="approvalTime" slot-scope="scope">
+                    <span>{{ scope.data.row.approvalTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                </template>
                 <template slot="status" slot-scope="scope">
                     <span>{{ paymentOrderStatusOptions.get(scope.data.row.status) }}</span>
                 </template>
@@ -136,8 +139,8 @@
         <ConfirmReceiptDialog :params="paymentParams" :is-open="confirmReceiptVisible" @onClose="confirmReceiptVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery"></ConfirmReceiptDialog>
         <LookReceiptDetail :params="paymentParams" :is-open="lookReceiptVisible" @onClose="lookReceiptVisible = false"></LookReceiptDetail>
         <FundsDialog :detail="fundsDialogDetail" :status="paymentStatus" :is-open="fundsDialogVisible" @onClose="fundsDialogClose"></FundsDialog>
-       <!-- 审批记录 -->
-       <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='500px' :wrapperClosable="false" :beforeClose="handleClose">
+        <!-- 审批记录 -->
+        <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='500px' :wrapperClosable="false" :beforeClose="handleClose">
             <template #connect>
                 <h4 class="purchaseName">货款支付钉钉审批流程 <div style="color:#ff7a45">{{purchaseName}}</div>
                 </h4>
@@ -169,7 +172,7 @@
             </div>
         </el-drawer>
 
-        <UploadPayDialog ref="uploadpaydialog" @onBackSearch="findPaymentOrderList"/>
+        <UploadPayDialog ref="uploadpaydialog" @onBackSearch="findPaymentOrderList" />
     </div>
 </template>
 
@@ -447,7 +450,7 @@ export default {
             }
             // this.drawer && this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
         },
-        async    onUploadPay (val) {
+        async onUploadPay (val) {
             // 调用接口查询最新的账单信息
             const { data } = await getNewAdvance(val.id)
             this.$refs.uploadpaydialog.onDialogClick(val, 1, data.fundAmount)

@@ -179,7 +179,7 @@
                 <h-button type="primary" @click="onEnterPay">确认支付</h-button>
             </div>
         </el-dialog>
-        <el-dialog :close-on-click-modal='false' title="变更交接状态" :visible.sync="isOpenChangeStatus" width="850px" class="prev-payment-dialog">
+         <el-dialog :close-on-click-modal='false' title="变更交接状态" :visible.sync="isOpenChangeStatus" width="850px" class="prev-payment-dialog" >
             <el-form ref="statusForm" :model="loanTransferStatusForm" :rules="changeRules" label-width="150px">
                 <el-form-item label="变更交接状态到：" prop="changeType" style="margin-bottom:20px">
                     <el-radio-group v-model="loanTransferStatusForm.changeType">
@@ -193,8 +193,8 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <h-button @click="handleClickProof(1)">取消</h-button>
-                <h-button type="primary" @click="handleClickProof(2)">确定</h-button>
+                <h-button @click="isOpenChangeStatus = false">取消</h-button>
+                <h-button type="primary" @click="onChangeLoanTransferStatus">确定</h-button>
             </div>
         </el-dialog>
         <!-- 首付款确认 -->
