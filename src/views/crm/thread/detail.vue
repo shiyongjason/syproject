@@ -77,6 +77,12 @@
                                     </template>
                                     <div class="title-tag" v-if="item.content">跟进内容</div>
                                     <div class="desc" v-if="item.content">{{item.content}}</div>
+                                    <div class="title-tag" v-if="item.flowUpProcess">跟进阶段</div>
+                                    <div class="desc" v-if="item.flowUpProcess">{{ followUpPhaseOption[item.flowUpProcess] && followUpPhaseOption[item.flowUpProcess].label }}</div>
+                                    <div class="title-tag" v-if="item.userTag">客户标签</div>
+                                    <div class="desc" v-if="item.userTag">
+                                        {{ userTagWatch(item.userTag) }}
+                                    </div>
                                     <div class="title-tag" v-if="item.remark">其他备注</div>
                                     <div class="desc" v-if="item.remark">{{item.remark}}</div>
                                 </div>
@@ -103,13 +109,56 @@
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
-                            <el-form-item label="企业名称：">
+                            <el-form-item label="婚姻状况：" prop="maritalStatus">
+                                <el-select v-model="threadDetail.maritalStatus" placeholder="请选择">
+                                    <el-option v-for="item in maritalStatusOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </div>
+                        <div class="project-detail-item">
+                            <el-form-item label="从业年限：" prop="workingYears">
+                                <el-select v-model="threadDetail.workingYears" placeholder="请选择">
+                                    <el-option v-for="item in workingYearsOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </div>
+                        <div class="project-detail-item">
+                            <el-form-item label="客户来源：" prop="userSource">
+                                <el-select v-model="threadDetail.userSource" placeholder="请选择" @change="userSourceChange">
+                                    <el-option v-for="item in userSourceOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item v-if="threadDetail.userSource == 3" prop="manufacturer">
+                                <el-select v-model="threadDetail.manufacturer" placeholder="请添加厂商信息" filterable clearable :remote-method="tianyanchaSearchesList" remote reserve-keyword>
+                                    <el-option v-for="item in manufacturerOption" :key="item.id" :label="item.name" :value="item.name"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item v-if="threadDetail.userSource == 4" prop="oldCompanyName">
+                                <el-select v-model="threadDetail.oldCompanyName" placeholder="请添加老客户信息" filterable clearable>
+                                    <el-option v-for="item in oldCompanyNameOption" :key="item.companyCode" :label="item.companyName" :value="item.companyName"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </div>
+
+                        <div class="project-detail-item">
+                            <el-form-item label="企业名称：" prop="companyName">
                                 <el-input placeholder="请输入企业名称" maxlength="50" v-model='threadDetail.companyName'></el-input>
                             </el-form-item>
                         </div>
+                        <div class="project-detail-item">
+                            <el-form-item label="主营品类：" prop="deviceCategory">
+                                <el-select v-model="threadDetail.deviceCategory" placeholder="请选择">
+                                    <el-option v-for="item in categorys" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </div>
+                        <div class="project-detail-item">
+                            <el-form-item label="主营品牌：" prop="deviceBrand">
+                                <el-input placeholder="请输入主营品牌" v-model='threadDetail.deviceBrand'></el-input>
+                            </el-form-item>
+                        </div>
                         <div class="project-detail-item area-select">
-                            <el-form-item label="">
-                                <div slot="label" style="line-height: 20px;"> 客户地址：</div>
+                            <el-form-item label="客户地址：" prop="countryId">
                                 <el-select v-model="threadDetail.provinceId" @change="onProvince" placeholder="省" clearable>
                                     <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
                                     </el-option>
@@ -125,26 +174,34 @@
                                     </el-option>
                                 </el-select>
                             </el-form-item>
-
                         </div>
                         <div class="project-detail-item">
-                            <el-form-item label="">
+                            <el-form-item label="" prop="address">
                                 <el-input v-model="threadDetail.address" maxlength="100" placeholder="请输入详细地址"></el-input>
                             </el-form-item>
                         </div>
-                        <div class="project-detail-item">
-                            <el-form-item label="">
-                                <div slot="label">主营品类：</div>
-                                <el-select v-model="threadDetail.deviceCategory" placeholder="请选择">
-                                    <el-option v-for="item in categorys" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        <!-- <div class="add-cont__row">
+                        <el-form-item label="已合作甲方" prop="cooperatedFirstParty">
+                            <el-input type="textarea" :rows="2" v-model="threadDetail.cooperatedFirstParty" maxlength="200" placeholder="请输入甲方名称，多个用逗号隔开"></el-input>
+                        </el-form-item>
+                        </div>
+                        <div class="add-cont__row">
+                            <el-form-item label="常做项目类型" prop="projectType">
+                                <el-select v-model="threadDetail.projectType" multiple placeholder="请选择" clearable>
+                                    <el-option v-for="item in projectTypeOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
-                        <div class="project-detail-item">
-                            <el-form-item label="主营品牌：">
-                                <el-input placeholder="请输入主营品牌" v-model='threadDetail.deviceBrand'></el-input>
+                        <div class="add-cont__row">
+                            <el-form-item label="合作伙伴" prop="partner">
+                                <el-input type="textarea" :rows="2" v-model="threadDetail.partner" maxlength="200" placeholder="请输入合作伙伴" show-word-limit></el-input>
                             </el-form-item>
                         </div>
+                        <div class="add-cont__row">
+                            <el-form-item label="常用区域品牌名称">
+                                <el-input type="textarea" :rows="2" v-model="threadDetail.usualRegionBrand" maxlength="200" placeholder="请输入区域品牌名称，多个用逗号隔开" show-word-limit></el-input>
+                            </el-form-item>
+                        </div> -->
                         <div class="project-detail-item">
                             <el-form-item label="客户经理：">
                                 <el-autocomplete v-model="stateN" :fetch-suggestions="querySearchAsync" placeholder="请选择客户经理" @blur="onBlurItem" :trigger-on-focus="false" @select="handleThreadSelect">
@@ -208,23 +265,37 @@
                             </div>
                             <div class="record-dialog-item" style="margin-top:10px">
                                 <el-form-item prop='content' label="跟进内容：" class="textarea">
-                                    <el-input v-model="flowUpRequest.content" placeholder="请输入此次跟进结果/下次跟进事项" style="width:380px;" type="textarea" maxlength="200" show-word-limit rows='2'></el-input>
+                                    <el-input v-model="flowUpRequest.content" placeholder="请输入此次跟进结果/下次跟进事项" style="width:380px;" type="textarea" maxlength="500" show-word-limit rows='2'></el-input>
+                                </el-form-item>
+                            </div>
+                            <div class="record-dialog-item" v-if="flowUpRequest.type != 1">
+                                <el-form-item label="附件（不超过9个）："></el-form-item>
+                                <div>
+                                    <OssFileHosjoyUpload :showPreView='true' v-model="flowUpRequest.picUrls" :fileNum=9 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px">
+                                        <div class="a-line">
+                                            <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
+                                        </div>
+                                    </OssFileHosjoyUpload>
+                                </div>
+                            </div>
+                            <div class="record-dialog-item">
+                                <el-form-item prop='flowUpProcess' label="跟进阶段：" class="textarea">
+                                    <el-select v-model="flowUpRequest.flowUpProcess" placeholder="请选择跟进阶段" filterable clearable>
+                                        <el-option v-for="item in followUpPhaseOption" :key="item.label" :label="item.label" :value="item.value"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </div>
+                            <div class="record-dialog-item">
+                                <el-form-item prop='userTag' label="客户标签：" class="textarea">
+                                    <el-select v-model="flowUpRequest.userTag" multiple placeholder="请选择客户标签" filterable clearable>
+                                        <el-option v-for="item in customerTagOption" :key="item.label" :label="item.label" :value="item.value"></el-option>
+                                    </el-select>
                                 </el-form-item>
                             </div>
                             <div class="record-dialog-item">
                                 <el-form-item prop="nextFlowTime" label="下次跟进时间：" class="textarea">
                                     <el-date-picker v-model="flowUpRequest.nextFlowTime" type="datetime" format="yyyy-MM-dd HH:mm" value-format='yyyy-MM-ddTHH:mm' placeholder="选择日期"></el-date-picker>
                                 </el-form-item>
-                            </div>
-                            <div class="record-dialog-item" v-if="flowUpRequest.type != 1">
-                                <el-form-item label="附件（不超过8个）："></el-form-item>
-                                <div>
-                                    <OssFileHosjoyUpload :showPreView='true' v-model="flowUpRequest.picUrls" :fileNum=8 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px">
-                                        <div class="a-line">
-                                            <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
-                                        </div>
-                                    </OssFileHosjoyUpload>
-                                </div>
                             </div>
                             <div class="record-dialog-item">
                                 <el-form-item prop='remark' label="其他备注：" class="textarea">
@@ -247,14 +318,13 @@
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
 import { ccpBaseUrl, ossAliyun, ossOldBucket } from '@/api/config'
-import { getChiness, getFlowUp, getFlowUpCount, addFlowUp, updateThreadDetail, checkThreadIsRight } from './api/index'
+import { getChiness, getFlowUp, getFlowUpCount, addFlowUp, updateThreadDetail, checkThreadIsRight, companyList, tianyanchaSearches } from './api/index'
 import OssFileUtils from '@/utils/OssFileUtils'
 import { State, namespace, Action, Getter } from 'vuex-class'
 import { Clue, FlowUpRequest } from '@/interface/hbp-member'
 import { validateForm, handleSubmit } from '@/decorator'
-import { THREAD_ORIGIN, DEVICE_CATEGORY, USER_DEFAULT } from './const/index'
+import { THREAD_ORIGIN, DEVICE_CATEGORY, USER_DEFAULT, EMPLOYED_AGE, CUSTOM_SOURCE, MARITAL_STATUS, FOLLOW_UP_PHASE, CUSTOMER_TAG, PROJECT_TYPE } from './const/index'
 import { Phone } from '@/utils/rules'
-
 const _flowUpRequest = {
     assistantRemark: '', // 协助内容
     assistants: [], // (2.0项目)协助人员列表
@@ -272,7 +342,7 @@ const _flowUpRequest = {
     noNeedFlowReason: '',
     picUrls: [],
     remark: '',
-    type: 2 // 跟进类型 1：当面拜访 2：电话/微信沟通/邮件等
+    type: 1 // 跟进类型 1：当面拜访 2：电话/微信沟通/邮件等
 }
 
 @Component({
@@ -311,6 +381,42 @@ export default class ThreadDetail extends Vue {
         ],
         userName: [
             { required: true, message: '请输入客户姓名', trigger: 'blur' }
+        ],
+        companyName: [
+            { required: true, message: '请输入企业名称', trigger: 'blur' }
+        ],
+        maritalStatus: [
+            { required: true, message: '请选择婚姻状况', trigger: 'change' }
+        ],
+        workingYears: [
+            { required: true, message: '请选择婚姻状况', trigger: 'change' }
+        ],
+        userSource: [
+            { required: true, message: '请选择客户来源', trigger: 'change' }
+        ],
+        manufacturer: [
+            { required: true, message: '请添加厂商信息', trigger: 'change' }
+        ],
+        oldCompanyName: [
+            { required: true, message: '请添加老客户信息', trigger: 'change' }
+        ],
+        deviceCategory: [
+            { required: true, message: '请选择主营品类', trigger: 'change' }
+        ],
+        deviceBrand: [
+            { required: true, message: '请输入主营品牌', trigger: 'blur' }
+        ],
+        countryId: [
+            { required: true, message: '请选择省、市、区', trigger: 'change' }
+        ],
+        address: [
+            { required: true, message: '请输入详细地址', trigger: 'blur' }
+        ],
+        cooperatedFirstParty: [
+            { required: true, message: '请输入已合作甲方', trigger: 'blur' }
+        ],
+        projectType: [
+            { required: true, message: '请选择常做项目类型', trigger: 'change' }
         ]
     }
 
@@ -323,8 +429,16 @@ export default class ThreadDetail extends Vue {
     provinceList: any[] = []
     cityList: any[] = []
     countryList: any[] = []
+    maritalStatusOption = MARITAL_STATUS
+    workingYearsOption = EMPLOYED_AGE
+    userSourceOption = CUSTOM_SOURCE
+    oldCompanyNameOption: any[] = []
+    manufacturerOption: any = []
     categorys = DEVICE_CATEGORY
     userDefault = USER_DEFAULT
+    followUpPhaseOption: any[] = FOLLOW_UP_PHASE
+    customerTagOption: any[] = CUSTOMER_TAG
+    projectTypeOption = PROJECT_TYPE
     stateN = ''
 
     queryParams = {
@@ -347,10 +461,25 @@ export default class ThreadDetail extends Vue {
     recordsPagination = ''
     flowUpRequest: FlowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
 
+    userTagWatch (value) {
+        if (!value) return false
+        let result = ''
+        this.customerTagOption.forEach(item => {
+            value.split(',').forEach(child => {
+                if (item.value == child) {
+                    result += item.label + '，'
+                }
+            })
+        })
+        return result.slice(0, -1)
+    }
+
     get addFlowUpRules () {
         let rules = {
             picUrls: { required: true, message: '必填项不能为空' },
-            content: { required: true, message: '必填项不能为空', trigger: 'blur' }
+            content: { required: true, message: '必填项不能为空', trigger: 'blur' },
+            flowUpProcess: { required: true, message: '必填项不能为空', trigger: 'change' },
+            userTag: { required: true, message: '必填项不能为空', trigger: 'change' }
         }
         return rules
     }
@@ -440,6 +569,7 @@ export default class ThreadDetail extends Vue {
 
     @validateForm('threadDetailForm')
     async onUpDateThreadDetail () {
+        // this.threadDetail.usualProjectType = this.threadDetail.projectType.join(',')
         const parms = { ...this.threadDetail }
         parms.updateBy = this.userInfo.employeeName
         if (!parms.provinceId || parms.provinceId.length === 0) {
@@ -471,6 +601,7 @@ export default class ThreadDetail extends Vue {
             return
         }
         const res = this.provinceList.filter(item => {
+            console.log(item)
             return item.provinceId === key
         })
     }
@@ -577,6 +708,7 @@ export default class ThreadDetail extends Vue {
     async onSubmitAddRecord () {
         this.flowUpRequest.createBy = this.userInfo.employeeName
         this.flowUpRequest.createPhone = this.userInfo.phoneNumber
+        this.flowUpRequest.userTag = this.flowUpRequest.userTag.toString()
         let query = JSON.parse(JSON.stringify(this.flowUpRequest))
         if (this.flowUpRequest.picUrls) {
             let picUrls = []
@@ -612,6 +744,26 @@ export default class ThreadDetail extends Vue {
         const { data: flowUpCount } = await getFlowUpCount({ bizId: this.threadDetail.id.toString() })
         if (flowUpCount.total) {
             this.flowUpCount = flowUpCount
+        }
+    }
+
+    // 客户来源选择
+    userSourceChange (value) {
+        value == 4 && this.getCompanyList()
+    }
+
+    // 获取公司列表
+    async getCompanyList () {
+        const res = await companyList({})
+        this.oldCompanyNameOption = res.data
+    }
+    // 天眼查
+    async tianyanchaSearchesList (query) {
+        if (query !== '') {
+            const res = await tianyanchaSearches({ word: query })
+            this.manufacturerOption = res.data.items
+        } else {
+            this.manufacturerOption = []
         }
     }
 

@@ -53,26 +53,35 @@
                 <el-form-item label="签署方类型：" prop="">
                     企业
                 </el-form-item>
-                <el-form-item label="平台企业：" prop="caId">
-                    <!-- <el-select v-model="signerTempForm.caId" placeholder="请选择平台企业" @change="changeCa">
+                <el-form-item label="签署方企业来源：" prop="platformSignSource">
+                    <el-radio-group v-model="signerTempForm.platformSignSource" @change="onChangeRadio">
+                        <el-radio :label=1>指定企业</el-radio>
+                        <el-radio :label=2>合同企业</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="签署方企业名称：" prop="caId" ref='caId' v-if="signerTempForm.platformSignSource==1" class="plat_signer">
+                    <el-select v-model="signerTempForm.caId" placeholder="请选择签署方企业名称" @change="changeCa">
                         <el-option v-for="item in caOptions" :key="item.id" :label="item.companyName" :value="item.id">
                         </el-option>
-                    </el-select> -->
+                    </el-select>
                     <!-- <el-autocomplete class="inline-input" v-model="insertVal" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect" @blur="autocompleteBlur">
                         <template slot-scope="{ item }">
                             <span>{{item.companyName}}</span>
                         </template>
                     </el-autocomplete> -->
 
-                    <HAutocomplete ref="HAutocomplete" :placeholder="'请选择'" :maxlength=60 @back-event="backFindCA" :selectObj="paramCA" :selectArr="restaurants" v-if="restaurants" :remove-value='removeValue' :isSettimeout=false>
-                    </HAutocomplete>
+                    <!-- <HAutocomplete ref="HAutocomplete" :placeholder="'请选择'" :maxlength=60 @back-event="backFindCA" :selectObj="paramCA" :selectArr="restaurants" v-if="restaurants" :remove-value='removeValue' :isSettimeout=false>
+                    </HAutocomplete> -->
+                </el-form-item>
+                <el-form-item label='请选择合同企业' v-if="signerTempForm.platformSignSource==2" prop="platformSigner" >
+                    <el-select v-model="signerTempForm.platformSigner" placeholder="请选择合同企业" @change="changeId">
+                        <el-option v-for="item in contractSingnOps" :key="item.id" :label="item.groupName" :value="item.id">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="签署要求：" prop="_signerDemand">
                     <el-checkbox-group v-model="signerTempForm._signerDemand">
                         <el-checkbox label="1" name="type">企业章</el-checkbox>
-                        <!-- <el-checkbox label="2" name="type">法定代表人章</el-checkbox> -->
-                        <!-- <el-checkbox label="2" name="type">手绘章</el-checkbox>
-                        <el-checkbox label="3" name="type">模板章</el-checkbox> -->
                     </el-checkbox-group>
                 </el-form-item>
             </el-form>
@@ -86,17 +95,17 @@
 <script>
 import { deepCopy } from '@/utils/utils'
 import { mapGetters, mapActions } from 'vuex'
-import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+// import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 export default {
-    components: { HAutocomplete },
+    // components: { HAutocomplete },
     props: {
         customSignAll: {
             type: Array,
-            default: () => {}
+            default: () => { }
         },
         customSignEx: {
             type: Array,
-            default: () => {}
+            default: () => { }
         }
     },
     data () {
@@ -106,6 +115,7 @@ export default {
             tract_visible: false,
             contractType: '',
             singerOps: [],
+            contractSingnOps: [],
             caOptions: [],
             singer_busArr: [],
             singer_perArr: [],
@@ -114,7 +124,9 @@ export default {
                 signerName: '',
                 signerType: 1,
                 paramId: '',
+                platformSignSource: 1,
                 caId: '',
+                platformSigner: '',
                 createTime: '',
                 createBy: '',
                 agent: '',
@@ -131,7 +143,9 @@ export default {
                 signerName: '',
                 signerType: 1,
                 paramId: '',
+                platformSignSource: 1,
                 caId: '',
+                platformSigner: '',
                 createTime: '',
                 createBy: '',
                 agent: '',
@@ -150,10 +164,10 @@ export default {
                     { required: true, message: '请输入签署方名称', trigger: 'blur' }
                 ],
                 signerType: [
-                    { required: true, message: '请选择签署方类型', trigger: 'change' }
+                    { required: true, message: '请选择签署方类型', trigger: 'blur' }
                 ],
                 signatureParam: [
-                    { required: true, message: '请选择客户签署区', trigger: 'change' }
+                    { required: true, message: '请选择客户签署区', trigger: 'blur' }
                 ],
                 paramId: [
                     {
@@ -170,8 +184,16 @@ export default {
                         }
                     }
                 ],
+                platformSignSource: [
+                    { required: true, message: '请选择签署方企业来源', trigger: 'change' }
+                ],
                 caId: [
-                    { required: true, message: '请选择平台企业', trigger: 'change' }
+                    {
+                        required: true, message: '请选择签署方企业名称', trigger: 'change'
+                    }
+                ],
+                platformSigner: [
+                    { required: true, message: '请选择合同企业', trigger: 'change' }
                 ],
                 agent: [
                     { required: true, message: '经办人', trigger: 'blur' }
@@ -190,27 +212,14 @@ export default {
             },
             removeValue: false,
             // 记录弹出层弹出的时候默认值，以防止调整signatureParam选项的时候，下拉选项的值不对
-            signatureParam: []
+            signatureParam: [],
+            caOrgQueryRequest: {}
         }
-    },
-    watch: {
-        // 'signerTempForm.paramGroup' (value) {
-        //     console.log(value)
-        //     if (value) {
-        //         this.$nextTick(() => {
-        //             if (this.contractType == 2) {
-        //                 this.$refs.signerTempR.clearValidate('paramGroupId')
-        //             } else {
-        //                 this.$refs.signerTempS.clearValidate('paramGroupId')
-        //             }
-        //         })
-        //     }
-        // }
-
     },
     computed: {
         ...mapGetters({
-            caPage: 'contractTemp/caPage'
+            caPage: 'contractTemp/caPage',
+            contratList: 'contractTemp/contratList'
         }),
         customSignOptions () {
             const result = this.customSignAll.filter(item => {
@@ -224,30 +233,9 @@ export default {
     },
     methods: {
         ...mapActions({
-            findCApage: 'contractTemp/findCApage'
+            findCApage: 'contractTemp/findCApage',
+            getContratList: 'contractTemp/getContratList'
         }),
-        // autocompleteBlur () {
-        //     if (!this.insertVal.id) {
-        //         let res = this.restaurants.filter(item => item.companyName == this.insertVal)
-        //         console.log('res', res)
-        //         this.signerTempForm.caId = res.id
-        //     }
-        // },
-        // querySearch (queryString, cb) {
-        //     let restaurants = this.restaurants
-        //     let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
-        //     // 调用 callback 返回建议列表的数据
-        //     cb(results)
-        // },
-        // createFilter (queryString) {
-        //     return (restaurant) => {
-        //         return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1)
-        //     }
-        // },
-        // handleSelect (item) {
-        //     this.signerTempForm.caId = item.id
-        //     this.signerTempForm.paramGroupName = item.companyName
-        // },
         backFindCA (val) {
             this.signerTempForm.caId = val.value.id
             this.signerTempForm.paramGroupName = val.value.companyName
@@ -275,7 +263,7 @@ export default {
                         this.signerTempForm.paramId = ''
                     }
                 }
-                // 如果是企业类型 默认 下拉里面 singerType==1
+                // 如果是企业类型 回显
                 this.singerOps = this.contart_arr.filter(val => val.signerType == this.signerTempForm.signerType)
             } else {
                 this.vaild_form = deepCopy(this.copy_signerTempForm)
@@ -288,10 +276,10 @@ export default {
                 if (val == 2) {
                     this.$refs.signerTempR.clearValidate()
                 } else {
-                    await this.$refs.HAutocomplete.clearInput()
+                    // await this.$refs.HAutocomplete.clearInput()
                     this.$refs.signerTempS.clearValidate()
                     if (val == 1) {
-                    // 搜索下拉 回显数据
+                        // 搜索下拉 回显数据
                         this.paramCA = {
                             selectCode: this.signerTempForm.caId,
                             selectName: this.signerTempForm.paramGroupName
@@ -316,15 +304,12 @@ export default {
             }
         },
         async onFindCApage () {
-            await this.findCApage({ pageNumber: 0, pageSize: -1, orgType: 1 })
-            this.caOptions = this.caPage.records
-            this.restaurants = JSON.parse(JSON.stringify(this.caOptions))
-            this.restaurants.map(item => {
-                item.value = item.companyName
-                item.selectCode = item.id
-            })
+            this.caOrgQueryRequest.orgType = 1
+            await this.getContratList(this.caOrgQueryRequest)
+            this.caOptions = this.contratList
         },
         changeRadio (val) {
+            // 获取签署方
             this.singerOps = this.contart_arr.filter(item => {
                 return item.signerType == val
             })
@@ -337,8 +322,20 @@ export default {
             this.signerTempForm.paramId = ''
             this.$refs.signerTempR.clearValidate('paramId')
         },
+        onChangeRadio (val) {
+            // 获取平台方签署合同企业类型
+            console.log('this.contart_arr', this.contart_arr)
+            this.contractSingnOps = this.contart_arr.filter(item => {
+                return (item.selectCode == 'hosjoy_company_name' || item.paramKey == 'hosjoy_company_name')
+            })
+            this.signerTempForm.caId = ''
+            this.signerTempForm.platformSigner = ''
+            this.$refs.signerTempS.clearValidate('caId')
+            this.$refs.signerTempS.clearValidate('platformSigner')
+        },
         changeId (val) {
             this.signerTempForm.paramGroupName = this.singerOps.filter(item => item.id == val)[0].groupName
+            this.signerTempForm.platformSigner = this.signerTempForm.paramGroupName
             // var aa = []
             // aa = this.singerOps.filter(item => item.id == val)
         },
@@ -389,7 +386,10 @@ export default {
                     signerType: 1, // 签署方类型：1企业
                     signerName: '平台方',
                     caId: this.signerTempForm.caId,
+                    caOrgId: this.signerTempForm.caId,
                     paramGroupName: this.signerTempForm.paramGroupName,
+                    platformSigner: this.signerTempForm.platformSigner,
+                    platformSignSource: this.signerTempForm.platformSignSource,
                     // agent: '发起人指定',
                     signerDemand: this.signerTempForm.signerDemand
                 }
@@ -416,10 +416,15 @@ export default {
     color: #999;
     font-size: 14px;
 }
- /deep/ .el-dialog .el-input{
-    width: 280px;
-}
+// /deep/ .el-dialog .el-input {
+//     width: 280px;
+// }
 /deep/ .el-select .el-input {
     margin-left: 0;
+}
+ .plat_signer {
+  /deep/   .el-input {
+        width: 260px;
+    }
 }
 </style>

@@ -69,7 +69,7 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import * as Auths from '@/utils/auth_const'
 
 export default {
-    name: 'contractTemp',
+    name: 'contractDetail',
     components: { hosJoyTable },
     data () {
         return {
@@ -130,18 +130,7 @@ export default {
                 }
             ],
             perData: [],
-            platLabel: [
-                { label: '签署方', prop: 'signerName' },
-                { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
-                { label: '签署企业', prop: 'paramGroupName' },
-                {
-                    label: '签署要求',
-                    prop: 'signerDemand',
-                    render: (h, scope) => {
-                        return <span>{this.findChinese(scope.row.signerDemand)}</span>
-                    }
-                }
-            ],
+            platLabel: [],
             platData: [],
             radio: '',
             bakParams: [],
@@ -206,6 +195,35 @@ export default {
             this.perData = singerArr.filter(val => val.signerType == 2)
 
             this.platData = this.verTempDetail.signerSetting.filter((val) => val.type == 1)
+            if (this.platData[0].platformSignSource == 1) {
+                this.platLabel = [
+                    { label: '签署方', prop: 'signerName' },
+                    { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
+                    { label: '签署方企业来源', prop: 'platformSignSource', dicData: [{ value: 1, label: '指定企业' }, { value: 2, label: '合同企业' }] },
+                    { label: '签署方企业名称', prop: 'paramGroupName' },
+                    {
+                        label: '签署要求',
+                        prop: 'signerDemand',
+                        render: (h, scope) => {
+                            return <span>{this.findChinese(scope.row.signerDemand)}</span>
+                        }
+                    }
+                ]
+            } else if (this.platData[0].platformSignSource == 2) {
+                this.platLabel = [
+                    { label: '签署方', prop: 'signerName' },
+                    { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
+                    { label: '签署方企业来源', prop: 'platformSignSource', dicData: [{ value: 1, label: '指定企业' }, { value: 2, label: '合同企业' }] },
+                    { label: '合同企业', prop: 'paramGroupName' },
+                    {
+                        label: '签署要求',
+                        prop: 'signerDemand',
+                        render: (h, scope) => {
+                            return <span>{this.findChinese(scope.row.signerDemand)}</span>
+                        }
+                    }
+                ]
+            }
         },
         onCancelTemp () {
             history.go(-1)
@@ -244,7 +262,6 @@ export default {
     margin-bottom: 10px;
 }
 .contract-temp_flex {
-
 }
 /deep/#editor {
     table {
@@ -265,7 +282,7 @@ export default {
         padding: 3px 5px;
         min-height: 30px;
     }
-    img{
+    img {
         max-width: 500px;
     }
 }

@@ -511,6 +511,54 @@ export interface Clue {
      */
     userName?: string
 
+    /**
+     * 老客户信息
+     * @type {string}
+     * @memberof Clue
+     */
+    oldCompanyName?: string
+
+    /**
+     * 厂商信息
+     * @type {string}
+     * @memberof Clue
+     */
+    manufacturer?: string
+
+    /**
+     * 婚姻状况
+     * @type {string}
+     * @memberof Clue
+     */
+    maritalStatus?: string
+
+    /**
+     * 从业年限
+     * @type {string}
+     * @memberof Clue
+     */
+    workingYears?: string
+
+    /**
+     * 客户来源
+     * @type {string}
+     * @memberof Clue
+     */
+    userSource?: string
+
+    /**
+     * 常做项目类型后台传值
+     * @type {string}
+     * @memberof Clue
+     */
+     usualProjectType?: string
+
+    /**
+     * 常做项目类型
+     * @type {Array}
+     * @memberof Clue
+     */
+     projectType?: Array<number>
 }
 
 /**
@@ -1305,6 +1353,7 @@ export interface FlowUpRequest {
 
     /**
      * (2.0项目)跟进节点 1：首次沟通 2：需求确认 3：提供方案/报价 4：商务洽谈，待签约 5：已签约 6：已回款 7：无需跟进
+     *          跟进阶段 1：初步建立联系 2：初步达成意向 3：方案已推介 4：客户已评级 5：项目推进中 6：首次交易成功 7：合作关闭
      * @type {number | string}
      * @memberof FlowUpRequest
      */
@@ -1366,6 +1415,12 @@ export interface FlowUpRequest {
      */
     updatePhone?: string
 
+    /**
+     * 客户标签(逗号隔开)：1：可发展为集采会员 2：有集采PLUS机会: 3：有严选供应链机会 4：可助力品牌合作 5：可发展为区域KOL
+     * @type {string}
+     * @memberof FlowUpRequest
+     */
+     userTag?: string
 }
 
 /**

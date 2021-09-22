@@ -81,7 +81,7 @@
                 </template>
                 <!-- 企业CA -->
                 <template slot="managerType" slot-scope="scope">
-                    <span>{{scope.data.row.managerType == 1 ? '经办人' : '-'}}</span>
+                    <span>{{scope.data.row.managerType == 1 ? '经办人' :scope.data.row.managerType == 2?'法人': '-'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onDrawerinfo(scope.data.row)">查看印章</h-button>
@@ -109,6 +109,7 @@
 import { mapActions, mapState } from 'vuex'
 import { tableLabelPerson, tableLabelEnterprise } from './const'
 import { getCAImageBysealId } from './api'
+import { newCache } from '@/utils/index'
 export default {
     name: 'caCertiManage',
     data () {
@@ -242,6 +243,9 @@ export default {
             console.log(1)
             this.drawer = false
         }
+    },
+    beforeUpdate () {
+        newCache('caCertiManage')
     }
 }
 </script>

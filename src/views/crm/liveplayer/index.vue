@@ -20,9 +20,9 @@
                     <h-button @click="onReset">重置</h-button>
                 </div>
             </div>
-            <div class="query-cont-row">
+            <div class="button-cont">
                 <div class="query-cont__col">
-                    <h-button type="primary" class="ml20" @click="onAdd" v-if="hosAuthCheck(Auths.CRM_LIVE_ADD)">新建落地页</h-button>
+                    <h-button type="primary" @click="onAdd" v-if="hosAuthCheck(Auths.CRM_LIVE_ADD)">新建落地页</h-button>
                 </div>
             </div>
             <!-- end search bar -->
@@ -47,6 +47,7 @@
 </template>
 
 <script lang='tsx'>
+import moment from 'moment'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
 import { CreateElement } from 'vue'
@@ -55,8 +56,8 @@ import * as Auths from '@/utils/auth_const'
 import * as Api from './api/index'
 import { LiveRoomResponse } from './live'
 import filters from '@/utils/filters'
+import { newCache } from '@/utils/index'
 
-import moment from 'moment'
 const ImageAddToken = require('@/components/imageAddToken/index.vue').default
 
 @Component({
@@ -185,6 +186,10 @@ export default class Liveplayer extends Vue {
     async mounted () {
         this.getList()
         this._queryParams = JSON.parse(JSON.stringify(this.queryParams))
+    }
+
+    beforeUpdate () {
+        newCache('liveplayer')
     }
 }
 </script>

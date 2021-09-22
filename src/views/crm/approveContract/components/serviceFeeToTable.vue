@@ -21,7 +21,7 @@ export default class ServiceFeeToTable extends Vue {
     @Prop({ default: 10000000000 }) readonly calculationRules!:any
     @Prop({ default: 2 }) readonly decimal!:any
 
-    @useDebounce(800)
+    // @useDebounce(800)
     emitServiceFee () {
         this.$emit('onServiceFee')
     }
@@ -40,17 +40,14 @@ export default class ServiceFeeToTable extends Vue {
         if (val.indexOf('.') > 0) {
             money = val.split('.')[0]
             pointNum = val.split('.')[1]
-            console.log('money value: ', money.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '.' + pointNum)
             return money.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '.' + pointNum
         } else {
             money = val.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-            console.log('money value: ', money)
             return money
         }
     }
 
     onInput (val, max:any = '') {
-        console.log('max: ', max)
         let num = this.isNum(val, this.decimal)
         if (num && num.length > 0 && num == '.') {
             num = ''
@@ -61,7 +58,6 @@ export default class ServiceFeeToTable extends Vue {
         }
         num = num.toString()
         num = num.replace(/,/gi, '')
-        console.log('num: ', num)
         if (max) {
             if (Number(num) > max) {
                 this.$message({

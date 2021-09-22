@@ -70,6 +70,7 @@ import { getSkuList, pullSku, bulkPullSku, getCategoryList } from './api/index'
 import { CategoryTreeResponse, RespBossB2bSkuPage } from '@/interface/hbp-shop'
 import { getTreeCateGroy } from '../productLibrary/api'
 import { CRM_SHOPP_ADDPRODUCT_PULL, CRM_SHOPP_ADDPRODUCT_BATCH_PULL, CRM_SHOPP_ADDPRODUCT_EDITOR } from '@/utils/auth_const'
+import { newCache } from '@/utils/index'
 
 const _queryParams = {
     name: '',
@@ -178,6 +179,10 @@ export default class ShopMallAddProduct extends Vue {
         this.getList()
         const { data } = await getCategoryList({ searchContent: '' })
         this.categoryOptions = data
+    }
+
+    beforeUpdate () {
+        newCache('crmshopMall')
     }
 }
 </script>

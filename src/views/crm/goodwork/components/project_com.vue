@@ -122,6 +122,16 @@
                 <el-date-picker v-model="projectForm.estimateSignTime" value-format="yyyy-MM-dd" type="date" placeholder="请选择预计可签约的时间">
                 </el-date-picker>
             </el-form-item>
+            <el-form-item label="客户角色：" prop="customerRoleArr">
+                <el-cascader placeholder="请选择客户角色" v-model="projectForm.customerRoleArr" :show-all-levels="false" :options="customRoleOption" :props="{ multiple: true, label: 'value', value: 'key' }" filterable clearable></el-cascader>
+            </el-form-item>
+            <el-form-item v-if="isCheckOtherRole" prop="otherCustomerRole">
+                <el-input type="text" placeholder="请输入其他客户角色" v-model.trim="projectForm.otherCustomerRole" maxlength="50" clearable></el-input>
+            </el-form-item>
+            <el-form-item label="合作机会分析：" prop="cooperationAnalyse">
+                <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入合作机会分析" v-model="projectForm.cooperationAnalyse" maxlength="500" show-word-limit>
+                </el-input>
+            </el-form-item>
             <el-form-item label="附件：" prop="projectUpload" ref="projectUpload">
                 <OssFileHosJoyUpload v-model="projectForm.projectUpload" accept='.jpeg,.jpg,.png,.BMP,.pdf,.xls,.xlsx,.zip,.rar' :fileSize='20' :fileNum='20' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
                 </OssFileHosJoyUpload>
@@ -151,7 +161,7 @@ import { mapGetters, mapState } from 'vuex'
 import * as newAuth from '@/utils/auth_const'
 import OssFileHosJoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
 import { ccpBaseUrl } from '@/api/config'
-import { putProjectDetail, saveCreditLevel } from './../api/index'
+import { putProjectDetail, saveCreditLevel, getDictionary } from './../api/index'
 import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, NEW_STATUS_TYPE, PROJECTLEVEL } from '../../const'
 export default {
     name: 'projectcom',
@@ -249,8 +259,16 @@ export default {
                             return callback()
                         }
                     }
+                ],
+                customerRoleArr: [
+                    { type: 'array', required: true, message: '请选择客户角色', trigger: 'change' }
+                ],
+                otherCustomerRole: [
+                    { required: true, message: '请输入其他客户角色', trigger: 'blur' }
+                ],
+                cooperationAnalyse: [
+                    { required: true, message: '请输入合作机会分析', trigger: 'blur' }
                 ]
-
             },
             levelsForm: {
                 id: '',
@@ -280,7 +298,8 @@ export default {
                         }
                     }
                 ]
-            }
+            },
+            customRoleOption: []
         }
     },
     computed: {
@@ -290,19 +309,53 @@ export default {
         ...mapGetters({
             // projectDetail: 'crmmanage/projectDetail',
             crmdepList: 'crmmanage/crmdepList'
-        })
+        }),
+        // 监听是否选中了其他客户
+        isCheckOtherRole () {
+            return this.projectForm.customerRoleArr && this.projectForm.customerRoleArr.length > 0 && this.projectForm.customerRoleArr.map(item => item.includes('41')).filter(val => val).length
+        }
     },
     watch: {
         'projectForm.projectUpload' (val) {
             this.$nextTick(() => {
                 if (val) this.$refs['projectUpload'].clearValidate()
             })
+        },
+        'projectForm.customerRole': {
+            handler (val) {
+                if (val) {
+                    let valSplit = val.split(',')
+                    let result = []
+                    for (let i = 0; i < valSplit.length; i += 2) {
+                        result.push(valSplit.slice(i, i + 2))
+                    }
+                    this.projectForm.customerRoleArr = result
+                } else {
+                    this.projectForm.customerRoleArr = []
+                }
+            },
+            immediate: true
+        },
+        // 监听清空其他客户角色
+        isCheckOtherRole (val) {
+            if (!val) {
+                this.projectForm.otherCustomerRole = ''
+            }
         }
     },
     mounted () {
         this.copyStatusForm = { ...this.statusForm }
+        this.getCustomRole()
     },
     methods: {
+        async getCustomRole () {
+            const result = await Promise.all([getDictionary({ item: 'customer_role' }), getDictionary({ item: 'general_contractor' }), getDictionary({ item: 'sub_contractor' }), getDictionary({ item: 'engineering_construction' }), getDictionary({ item: 'other_customer_role' })])
+            result[0].data[0].children = result[1].data
+            result[0].data[1].children = result[2].data
+            result[0].data[2].children = result[3].data
+            result[0].data[3].children = result[4].data
+            this.customRoleOption = result[0].data
+        },
         onLinkBus (val) {
             this.$router.push({ name: 'authenlist', query: { name: val.companyName, code: val.companyCode } })
         },
@@ -378,6 +431,7 @@ export default {
         //     }
         // },
         onSaveproject () {
+            this.projectForm.customerRole = this.projectForm.customerRoleArr.join(',')
             this.projectForm.projectUpload.map(value => {
                 if (!value.url) {
                     value.url = value.fileUrl
@@ -388,11 +442,13 @@ export default {
             if (this.projectForm.pkDeptDoc) {
                 this.projectForm.deptName = this.crmdepList.find(v => v.pkDeptDoc == this.projectForm.pkDeptDoc).deptName || ''
             }
+            // 传值给后台去除customerRoleArr字段，深拷贝下不影响customerRoleArr变量
+            const dataJson = JSON.parse(JSON.stringify(this.projectForm))
+            delete dataJson.customerRoleArr
             this.$refs.ruleForm.validate(async (valid) => {
-                console.log(valid)
                 if (valid) {
                     try {
-                        await putProjectDetail(this.projectForm)
+                        await putProjectDetail(dataJson)
                         this.$message({
                             message: '数据保存成功',
                             type: 'success'

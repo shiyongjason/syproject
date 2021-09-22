@@ -30,13 +30,19 @@ export default {
         state.isFirst = payload
     },
     [ADD_CACHED_INCLUDE] (state, payload) {
-        state.cachedInclude.push(payload)
+        // 当cachedInclude数组中不存在当前的组件名的时候，进行push操作
+        if (!state.cachedInclude.includes(payload)) {
+            state.cachedInclude.push(payload)
+        }
     },
     [REMOVE_CACHED_INCLUDE] (state, payload) {
         state.cachedInclude = state.cachedInclude.filter(item => item !== payload)
     },
     [ADD_CACHED_EXCLUDE] (state, payload) {
-        state.cachedExclude.push(payload)
+        // 当cachedExclude数组中不存在当前的组件名的时候，进行push操作
+        if (!state.cachedExclude.includes(payload)) {
+            state.cachedExclude.push(payload)
+        }
     },
     [REMOVE_CACHED_EXCLUDE] (state, payload) {
         state.cachedExclude = state.cachedExclude.filter(item => item !== payload)
