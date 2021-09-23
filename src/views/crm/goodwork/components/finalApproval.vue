@@ -520,7 +520,7 @@ export default class FinalApproval extends Vue {
                         {
                             scope.row.streamPayTypeName ? scope.row.streamPayTypeName.map((item, index) => {
                                 return (
-                                    <i style={{ 'fontStyle': 'normal' }}>{item + (index < scope.row.streamPayTypeName.length - 1 ? ',' : '')}</i>
+                                    <i style={{ 'fontStyle': 'normal' }}>{item + (index < scope.row.streamPayTypeName.length - 1 ? '；' : '')}</i>
                                 )
                             })
                                 : '-'
