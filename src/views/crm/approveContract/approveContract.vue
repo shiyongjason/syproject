@@ -731,13 +731,13 @@ export default {
                 let tableItem = this.$dividedBy(serviceFeeEstimate.paramValue, loanMonth.paramValue).toFixed(2)
                 const dayObj = { 0: '第一期', 1: '第二期', 2: '第三期', 3: '第四期', 4: '第五期', 5: '第六期', 6: '第七期', 7: '第八期', 8: '第九期', 9: '第十期', 10: '第十一期', 11: '第十二期' }
                 // 表格数据渲染成服务费表格div
-                let tableHead = [`<span style="background: #f7f7f7; border-top: 1px solid #3a3a3a; float: left; height: 80px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; width: 110px; word-break: break-all; padding: 0 3px; font-size: 13px; line-height: 80px; text-align: center;">支付日期</span>`]
+                let tableHead = [`<span contenteditable="false" style="background: #f7f7f7; border-top: 1px solid #3a3a3a; float: left; height: 80px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; width: 110px; word-break: break-all; padding: 0 3px; font-size: 13px; line-height: 80px; text-align: center;">支付日期</span>`]
                 let tableBody = [`<span contenteditable="false" style="float: left; height: 80px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; width: 110px; word-break: break-all; padding: 0 3px; font-size: 13px; line-height: 80px; text-align: center;">支付金额</span>`]
                 let preTotal = this.$multipliedBy(loanMonth.paramValue - 1, tableItem) // 精确乘法
                 let rest = this.$minus(serviceFeeEstimate.paramValue, preTotal) // 精确减法
                 for (let i = 0; i < loanMonth.paramValue * 1; i++) {
                     let head = `<span contenteditable="false" style="background: #f7f7f7; border-top: 1px solid #3a3a3a; float: left; height: 80px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; width: 110px; word-break: break-all; padding: 0 3px; font-size: 13px; line-height: 80px; text-align: center;">${dayObj[i]}</span>`
-                    let body = `<span class="cellmoney" style="float: left; height: 80px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; width: 110px; word-break: break-all; padding: 0 3px; font-size: 13px; display: flex; justify-content: center; align-items: center; text-align: center;">${i == loanMonth.paramValue - 1 ? rest.toFixed(2) : tableItem}<span contenteditable="false"> 元</span></span>`
+                    let body = `<span contenteditable="false" class="cellmoney" style="float: left; height: 80px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; width: 110px; word-break: break-all; padding: 0 3px; font-size: 13px; display: flex; justify-content: center; align-items: center; text-align: center;"><span  contenteditable="true">${i == loanMonth.paramValue - 1 ? rest.toFixed(2) : tableItem}</span><b contenteditable="false" style="padding: 0 0 0 5px">元</b></span>`
                     tableHead.push(head)
                     tableBody.push(body)
                 }
@@ -1182,7 +1182,7 @@ export default {
             let cellmoneys = document.getElementsByClassName('el-drawer__body')[0].getElementsByClassName('cellmoney')
             let cellmoneyVals = []
             Array.from(cellmoneys).map(item => {
-                let txt = item.textContent.replace(' 元', '')
+                let txt = item.textContent.replace('元', '')
                 cellmoneyVals.push(txt)
             })
             if (cellmoneyVals.length > 0) {
@@ -1654,6 +1654,7 @@ export default {
                                         this.showServiceFee = false
                                     }
                                     this.$nextTick(async () => {
+                                        console.log('jtem', jtem)
                                         this.$refs['ruleForm'].resetFields()
                                         //
                                         let loanMonth = this.contractFieldsList.filter(item => item.paramKey === 'loan_month')[0]
@@ -1661,6 +1662,12 @@ export default {
                                             // await this.onServiceFee()
                                             // 进来就是说明合同已经生成了表格。无需再生成。
                                             jtem.setAttribute('contenteditable', 'true')
+                                            console.log(jtem.getElementsByClassName('cellmoney'))
+                                            let cellmoneys = jtem.getElementsByClassName('cellmoney')
+                                            Array.from(cellmoneys).map(item => {
+                                                console.log(item.getElementsByTagName('span')[0].setAttribute('contenteditable', 'true'))
+                                                // item.setAttribute('contenteditable', 'true')
+                                            })
                                             this.serviceFee = jtem.outerHTML
 
                                             // .replace(/ contenteditable="true"/g, ' contenteditable="false"')
