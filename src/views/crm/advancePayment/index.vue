@@ -257,7 +257,7 @@
             <div>
                 <el-form :model="writeOffForm" :rules="writeOffRules" ref="writeOffForm" label-width="100px" class="demo-ruleForm">
                     <el-form-item label="核销原因" prop="writeOffRemark">
-                        <el-input type="textarea"  v-model="writeOffForm.writeOffRemark" maxlength="200"></el-input>
+                        <el-input type="textarea" placeholder="请输入" v-model="writeOffForm.writeOffRemark" maxlength="200"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
@@ -401,7 +401,7 @@ export default class Advancelist extends Vue {
 
     writeOffRules = {
         writeOffRemark: [
-            { required: true, message: '请填写审核备注', trigger: 'blur' }
+            { required: true, message: '请填写核销原因', trigger: 'blur' }
         ]
     }
     auditRules = {
