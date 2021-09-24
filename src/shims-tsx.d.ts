@@ -42,6 +42,6 @@ declare global {
         }
     }
     /** hosJoyTable column属性 */
-    type tableLabelProps<T = any> = Array<tableLabelItem<T>>
+    type tableLabelProps<T extends {} = any> = Array<tableLabelItem<T>>
 
 }
