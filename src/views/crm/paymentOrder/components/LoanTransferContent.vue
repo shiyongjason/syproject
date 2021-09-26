@@ -286,7 +286,9 @@
         <el-dialog title="历史上传合同" :close-on-click-modal='false' :visible.sync="openDialogContract" width="750px" :before-close="()=>onCancel('dialogContract')" :modal='false'>
             <div class="contract_list">
                 <div class="contract_box" v-for="(item,index) in historyCotract" :key="index">
-                    <span class="contract_box-tit">{{item.fileName}}</span>
+                    <span class="contract_box-tit">
+                         <downloadFileAddToken isType="main" isPreview :file-name="item.fileName" :file-url="item.fileUrl" :a-link-words="item.fileName"></downloadFileAddToken>
+                    </span>
                     <span class="contract_box-time">{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</span>
                     <span class="contract_box-choose" @click="handleChoose(item)">选中</span>
                 </div>
