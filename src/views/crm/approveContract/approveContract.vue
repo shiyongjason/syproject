@@ -188,13 +188,11 @@ import serviceFeeToTable from './components/serviceFeeToTable'
 import inputAutocomplete from './components/inputAutocomplete'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { mapState, mapActions } from 'vuex'
-import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi, getPurchaseOrderList, getTYCList, getCaList, findDefaultAccountByCompany } from './api/index'
+import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi, getPurchaseOrderList, getTYCList, getCaList, findDefaultAccountByCompany, findSupplies } from './api/index'
 import { ccpBaseUrl } from '@/api/config'
 import Editor from '@tinymce/tinymce-vue'
 import comRender from './comRender'
-import { contractSigningList } from '../contractSigningManagement/api'
-// api:https://www.tiny.cloud/docs/integrations/vue/
-// http://tinymce.ax-z.cn/general/basic-setup.php
+
 export default {
     name: 'approveContract',
     components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt, 'editor': Editor, comRender, serviceFeeToTable },
@@ -279,6 +277,7 @@ export default {
             /** 此占位符用于修复点击暂不审核和失焦失焦触发重复 */
             isDealBack: false,
             hosjoyCaList: [],
+            supolierCaList: [],
             tempCurrentKey: ''
         }
     },
@@ -379,6 +378,15 @@ export default {
                 return val
             })
             this.hosjoyCaList = data
+        },
+        async  onFindSupplierList (projectId) {
+            const { data } = await findSupplies(projectId)
+            data && data.map(val => {
+                val.label = val.upstreamSupplierName
+                val.value = val.upstreamSupplierName
+                return val
+            })
+            this.supplierCaList = data
         },
         async onClickVsPurchaseOrder (item) {
             const response = await getPurchaseOrderList({
@@ -538,6 +546,10 @@ export default {
                                 // 新的合同企业字段
                                 if (_this.currentKey.paramKey == 'hosjoy_company_name') {
                                     return _this.hosjoyCaList
+                                }
+                                // 新的供应商企业去下拉展示
+                                if (_this.currentKey.paramKey == 'supplier_company_name') {
+                                    return _this.supplierCaList
                                 }
                             })(this)
                         },
@@ -1861,6 +1873,7 @@ export default {
         this.contractKeyValueList = data
         this.$nextTick(() => {
             this.onGetCaList()
+            this.onFindSupplierList(this.$route.query.projectId)
         })
         this.init()
     }
