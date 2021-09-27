@@ -516,8 +516,13 @@ export default {
             this.openDialogContract = true
         },
         handleChoose (val) {
-            this.uploadForm.loanTransferArchiveDocs.push(val)
-            this.openDialogContract = false
+            let _arr = this.uploadForm.loanTransferArchiveDocs.filter(item => JSON.stringify(item.fileUrl) == JSON.stringify(val.fileUrl))
+            if (_arr.length > 0) {
+                this.$message.warning('该合同已被选中了')
+            } else {
+                this.uploadForm.loanTransferArchiveDocs.push(val)
+                this.openDialogContract = false
+            }
         },
         handleSizeChange (val) {
             console.log(`每页 ${val} 条`)
@@ -589,8 +594,8 @@ export default {
                 this.openDialogContract = false
             }
             if (refForm === 'supplierForm') {
-                this.suppDialog = false
                 this.$refs[refForm].resetFields()
+                this.suppDialog = false
                 return
             }
             if (refForm === 'DialogUpload') {
