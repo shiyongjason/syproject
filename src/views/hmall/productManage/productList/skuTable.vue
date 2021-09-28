@@ -277,7 +277,7 @@ export default {
         skuModel (optionTypeId, id) {
             const options = this.optionValuesFilter(optionTypeId).optionValues
             const result = options.filter(item => item.id === id)[0]
-            return result.name
+            return result && result.name
         },
         optionValuesFilter (id) {
             return this.form.optionTypeList.find(item => item.id == id)
