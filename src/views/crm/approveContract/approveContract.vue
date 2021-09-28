@@ -1673,7 +1673,7 @@ export default {
                                         if (loanMonth && fields.paramValue) {
                                             // await this.onServiceFee()
                                             // 进来就是说明合同已经生成了表格。无需再生成。
-                                            jtem.setAttribute('contenteditable', 'true')
+                                            jtem.setAttribute('contenteditable', 'false')
                                             console.log(jtem.getElementsByClassName('cellmoney'))
                                             let cellmoneys = jtem.getElementsByClassName('cellmoney')
                                             Array.from(cellmoneys).map(item => {
