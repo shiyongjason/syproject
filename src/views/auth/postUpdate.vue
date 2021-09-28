@@ -1,29 +1,26 @@
 <template>
     <div class="page-body">
-        <div class="role">
+        <div class="post-update">
             <div class="h-page-title">
-                基本信息
+                岗位信息
             </div>
-            <div class="h-page-flex">
+            <el-form :model="ruleInfo" ref="ruleInfoRef" label-width="100px" class="h-page-flex">
                 <div class="flex-col">
-                    <div class="flex-row">姓名：{{roleInfo.psnname}}</div>
-                    <div class="flex-row">工号：{{roleInfo.psncode}}</div>
+                    <el-form-item class="flex-row" prop="postName" label="岗位名称：" :rules="[{required: true, message: '请输入岗位名称', trigger: 'blur' }]">
+                        <el-input v-model="ruleInfo.postName" maxlength="40" placeholder="请输入岗位名称"></el-input>
+                    </el-form-item>
+                    <el-form-item class="flex-row" label="岗位code：">
+                        <el-input disabled v-model="ruleInfo.postCode" maxlength="40" placeholder="请输入岗位code"></el-input>
+                    </el-form-item>
                 </div>
                 <div class="flex-col">
-                    <div class="flex-row">登录名：{{roleInfo.mobile}}</div>
-                    <div class="flex-row">所属部门：{{roleInfo.deptName}}</div>
-                </div>
-                <div class="flex-col">
-                    <div class="flex-row">钉钉ID：
-                        <el-input v-model="dingCode" maxlength="40" placeholder="请输入钉钉ID" style="width: 224px;"></el-input>
-                    </div>
-                    <div class="flex-row">岗位：
-                        <el-select v-model="positionCodeList" multiple placeholder="岗位信息暂未配置" style="width: 90%;">
+                    <el-form-item class="flex-row" label="岗位管理员：">
+                        <el-select class="change-style" v-model="ruleInfo.positionCodeList" multiple placeholder="请输入好享家员工姓名">
                             <el-option v-for="item in postOptions" :key="item.id" :label="item.positionName" :value="item.positionCode"></el-option>
                         </el-select>
-                    </div>
+                    </el-form-item>
                 </div>
-            </div>
+            </el-form>
             <div class="h-page-title">
                 权限管理
             </div>
@@ -87,66 +84,26 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-        <div class="h-foot" :class="isCollapse ? 'minLeft' : 'maxLeft'">
-            <el-button @click="onCancelRole()">重 置</el-button>
-            <el-button @click="onCancelRole()">取 消</el-button>
-            <el-button type="primary" @click="onSaveRole()">保 存</el-button>
-        </div>
-        <el-dialog :title="layerTitle" :visible.sync="fieldVisible" width="40%" :close-on-click-modal='false' :before-close="onCancelFieldConfig">
-            <div class="h-dialog">
-                <table class="tablelist textCenter" v-if="layerType!=2">
-                    <thead>
-                        <tr>
-                            <td width="30%">菜单</td>
-                            <td width="70%">权限</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>{{ layerAuthName }}</td>
-                            <td style="text-align:left">
-                                <el-checkbox v-model="item.have" :label="item.resourceName" v-for="(item,index) in fieldConfig" :key="index"></el-checkbox>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="tablelist textCenter" v-else>
-                    <thead>
-                        <tr>
-                            <td width="30%">筛选项</td>
-                            <td width="70%">数据范围</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>所属分部</td>
-                            <td>
-                                <div class="treetable">
-                                    <el-tree :data="organizationTree" ref="treetable" :default-checked-keys="checkedkeys" show-checkbox node-key="pkDeptDoc" default-expand-all highlight-current :props="{label:'deptName'}">
-                                    </el-tree>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="h-foot" :class="isCollapse ? 'minLeft' : 'maxLeft'">
+                <el-button @click="onCancelRole()">取 消</el-button>
+                <el-button type="primary" @click="onSavePost()">保 存</el-button>
             </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="onCancelFieldConfig()">取 消</el-button>
-                <el-button type="primary" @click="fieldVisible = false;onGetnodes()">保 存</el-button>
-            </span>
-        </el-dialog>
+        </div>
     </div>
 </template>
 
 <script>
-import { findMenuList, saveAuthRole, getRoleInfo, findpostList, getOrganizationTree } from './api/index'
+import { findMenuList, saveAuthRole, getRoleInfo, findpostList } from './api/index'
 import { mapState } from 'vuex'
 export default {
-    name: 'role',
+    name: 'postUpdate',
     data () {
         return {
-            organizationTree: [],
+            ruleInfo: {
+                postName: '',
+                postCode: 'ADKLSSA_ED',
+                positionCodeList: []
+            },
             currentEmployeeSubsectionsAuthCode: '',
             tableList: [],
             newTableList: [], // newTableList记录初始权限配置，在取消的时候判断是否有权限变更
@@ -155,16 +112,8 @@ export default {
             layerTitle: '', // 弹出层标题
             layerAuthName: '', // 弹出层列表中的表格名称
             layerType: '',
-            roleInfo: {
-                deptName: '',
-                mobile: '',
-                psncode: '',
-                psnname: ''
-            },
             jobNumber: '',
-            postOptions: [],
-            positionCodeList: [],
-            dingCode: '',
+            postOptions: [], // 岗位管理员
             checkedkeys: []
         }
     },
@@ -181,21 +130,11 @@ export default {
         var copyData = JSON.parse(JSON.stringify(data))
         this.handleData(copyData)
         this.tableList = this.handlerTableList(copyData, 0)
-        // console.log(this.tableList)
         this.newTableList = JSON.parse(JSON.stringify(this.tableList))
-        const { data: roleInfo } = await getRoleInfo(this.jobNumber)
-        this.roleInfo = roleInfo
-        this.dingCode = this.roleInfo.dingCode
-        this.positionCodeList = this.roleInfo.positionCodeList
-        const { data: postOptions } = await findpostList('')
-        this.postOptions = postOptions
-        this.getOrganizationTree()
+        // const { data: postOptions } = await findpostList('')
+        // this.postOptions = postOptions
     },
     methods: {
-        async getOrganizationTree () {
-            const { data } = await getOrganizationTree()
-            this.organizationTree = data
-        },
         onGetnodes () {
             if (this.layerType == 2) {
                 const nodeList = this.$refs.treetable.getCheckedNodes()
@@ -366,7 +305,7 @@ export default {
                 }
             })
         },
-        async onSaveRole () {
+        async onSavePost () {
             let resourceObj = {
                 resourceIds: [],
                 authCodes: [],
@@ -380,7 +319,6 @@ export default {
                 authCodes: resourceObj.authCodes,
                 authTypeList: resourceObj.authTypeList,
                 jobNumber: this.jobNumber,
-                dingCode: this.dingCode,
                 positionCodeList: this.positionCodeList,
                 userCode: this.jobNumber
             }
@@ -389,7 +327,7 @@ export default {
             }
             await saveAuthRole(params)
             this.$message({ message: '权限保存成功', type: 'success' })
-            this.$router.push({ path: '/auth/organization' })
+            this.$router.push({ path: '/auth/postset' })
         },
         onCancelRole () {
             if (JSON.stringify(this.newTableList) != JSON.stringify(this.tableList)) {
@@ -399,11 +337,11 @@ export default {
                     cancelButtonText: '确认取消'
                 }).catch(action => {
                     if (action === 'cancel') {
-                        this.$router.push({ path: '/auth/organization' })
+                        this.$router.push({ path: '/auth/postset' })
                     }
                 })
             } else {
-                this.$router.push({ path: '/auth/organization' })
+                this.$router.push({ path: '/auth/postset' })
             }
         },
         onShowFieldConfig (val, item) {
@@ -448,8 +386,6 @@ export default {
                 } else {
                     this.checkedkeys = []
                 }
-                // this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
-                // this.checkedkeys = JSON.stringify(item.employeeSubsections) == '{}' ? JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes)) : []
                 this.cloneEmployeeSubsections = JSON.parse(JSON.stringify(item.employeeSubsections))
             } else {
                 this.cloneConfig = JSON.parse(JSON.stringify(item.authResourceList))
@@ -473,7 +409,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.role {
+.post-update {
     background: #ffffff;
     padding: 20px 24px;
     margin-bottom: 50px;
@@ -486,10 +422,10 @@ export default {
     padding-left: 10px;
 }
 .h-page-flex {
-    min-height: 180px;
+    min-height: 160px;
     padding: 0 10px 10px;
     .flex-col {
-        min-height: 45px;
+        min-height: 80px;
         align-items: center;
         display: flex;
         .flex-row {
@@ -497,7 +433,9 @@ export default {
         }
     }
 }
-
+/deep/.change-style .el-input:not(:first-child) {
+    margin-left: 0px;
+}
 .h-roletable {
     padding: 10px 0;
 }
@@ -587,9 +525,7 @@ export default {
             border-right: none;
         }
         &:last-child {
-            // border-right: 1px solid #DCDFE6;
             border-radius: 0 4px 4px 0;
-            // border-left: none;
         }
     }
     button[disabled] {
@@ -598,7 +534,6 @@ export default {
         border-color: #ddd;
         border-left: 1px solid #ddd !important;
         border-right: 1px solid #ddd !important;
-        // border-left: 1px solid #dcdfe6 !important;
         border-right: 1px solid #ffffff !important;
         &:hover {
             color: #dddddd;
@@ -613,15 +548,5 @@ export default {
     border-color: #ff7a45;
     border-left: 1px solid #ff7a45 !important;
     border-right: 1px solid #ff7a45 !important;
-}
-.h-dialog {
-    margin-top: 20px;
-    .treetable {
-        height: 350px;
-        overflow: scroll;
-    }
-    .el-checkbox {
-        margin-left: 10px;
-    }
 }
 </style>

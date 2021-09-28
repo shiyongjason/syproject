@@ -16,46 +16,30 @@
             <div class="table-cont-btn">
                 <el-button type="primary" @click="onadd">新增岗位</el-button>
             </div>
-            <!--            岗位信息table-->
-            <basicTable :tableLabel="tableLabel" :tableData="postList" :isAction="true" isShowIndex>
+            <!--岗位信息table-->
+            <basicTable :tableLabel="tableLabel" :tableData="postList" :isAction="true" :actionMinWidth="300" isShowIndex>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onupdate(scope.data.row)">修改</el-button>
-                    <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
+                    <el-button class="orangeBtn" @click="onOperate(scope.data.row, 1)">配置人员</el-button>
+                    <el-button class="orangeBtn" @click="onOperate(scope.data.row, 2)">复制</el-button>
+                    <el-button class="orangeBtn" @click="onOperate(scope.data.row, 3)">修改</el-button>
+                    <el-button class="orangeBtn" @click="onOperate(scope.data.row, 4)">删除</el-button>
                 </template>
             </basicTable>
-            <!--            新增岗位dialog-->
-            <el-dialog title='新增岗位' :visible.sync="adddialogVisible" width="500px" height="400px" center>
+            <!-- 岗位配置人员 -->
+            <el-dialog title="配置岗位人员" :visible.sync="postdialogVisible" width="500px" center>
                 <el-form ref="form" :model="ruleForm" :rules="rules" label-position="right" label-width="150px">
-                    <el-form-item label="岗位名称：" prop="addpositionName">
-                        <el-input placeholder="请输入岗位名称" v-model="ruleForm.addpositionName" maxlength="40">
-                        </el-input>
-                        <p v-if="count" class="message">岗位名称已存在</p>
+                    <el-form-item label="岗位名称：">
+                        <span>好橙工产品经理</span>
                     </el-form-item>
-                    <el-form-item label="岗位code：" prop="addpositionCode">
-                        <el-input placeholder="请输入岗位code" v-model="ruleForm.addpositionCode" maxlength="40">
-                        </el-input>
-                        <p v-if="count" class="message">岗位code已存在</p>
+                    <el-form-item label="岗位人员：" prop="postPeople">
+                        <el-select class="change-style" v-model="ruleForm.postPeople" multiple filterable remote reserve-keyword placeholder="请输入员工姓名检索" :remote-method="remotePostPeoMethod" :loading="postPeopleObj.loading">
+                            <el-option v-for="item in postPeopleObj.option" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-                    <el-button @click="adddialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="addsave">保 存</el-button>
-                </span>
-            </el-dialog>
-            <!--            修改岗位dialog-->
-            <el-dialog title="修改岗位" :visible.sync="updatedialogVisible" width="500px" center>
-                <el-form ref="form" :model="ruleForm" :rules="rules" label-position="right" label-width="150px">
-                    <el-form-item label="岗位名称：" prop="updatepositionName">
-                        <el-input placeholder="请输入岗位名称" v-model="ruleForm.updatepositionName" maxlength="40">
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item label="岗位code：" prop="updatepositionCode">
-                        <el-input placeholder="请输入岗位code" v-model="ruleForm.updatepositionCode" maxlength="40">
-                        </el-input>
-                    </el-form-item>
-                </el-form>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="updatedialogVisible = false">取 消</el-button>
+                    <el-button @click="postdialogVisible = false">取 消</el-button>
                     <el-button type="primary" @click="updatesave">保 存</el-button>
                 </span>
             </el-dialog>
@@ -71,36 +55,33 @@ export default {
     name: 'postset',
     data () {
         return {
-            count: 0,
+            // count: 0,
             tableLabel: [
                 { label: '岗位名称', prop: 'positionName' },
                 { label: '岗位code', prop: 'positionCode', icon: 'el-icon-question', content: 'code：实现岗位与后台数据相匹配' },
-                { label: '更新时间', prop: 'updateTime' }
+                { label: '岗位人员', prop: 'positionPeople', icon: 'el-icon-question' },
+                { label: '创建时间', prop: 'creatTime' },
+                { label: '更新时间', prop: 'updateTime' },
+                { label: '操作人', prop: 'people' }
             ],
-            postList: [],
-            adddialogVisible: false,
-            updatedialogVisible: false,
+            postList: [{
+                positionName: '11111'
+            }],
+            postdialogVisible: false,
             positionName: '',
             id: Number,
             ruleForm: {
-                addpositionName: '',
-                addpositionCode: '',
-                updatepositionName: '',
-                updatepositionCode: ''
+                postPeople: []
             },
             rules: {
-                addpositionName: [
-                    { required: true, message: '请输入岗位名称', trigger: 'blur' }
-                ],
-                addpositionCode: [
-                    { required: true, message: '请输入岗位code', trigger: 'blur' }
-                ],
-                updatepositionName: [
-                    { required: true, message: '请输入岗位名称', trigger: 'blur' }
-                ],
-                updatepositionCode: [
-                    { required: true, message: '请输入岗位code', trigger: 'blur' }
+                postPeople: [
+                    { required: true, message: '请选择岗位人员', trigger: 'change' }
                 ]
+            },
+            postPeopleObj: {
+                option: [],
+                list: [],
+                loading: false
             }
         }
     },
@@ -153,78 +134,90 @@ export default {
         },
         // 新增岗位信息
         onadd () {
-            this.adddialogVisible = true
-            this.$nextTick(() => {
-                this.$refs['form'].clearValidate()
+            this.$router.push({
+                path: '/auth/postUpdate'
             })
-            this.count = 0
         },
-        async addsave () {
-            this.$refs['form'].validate(async (validate) => {
-                if (validate) {
-                    await this.postList.map(value => {
-                        if (value.positionName === this.ruleForm.addpositionName && value.positionCode === this.ruleForm.addpositionCode) {
-                            this.count = 1
+        /**
+         * @description: 列表操作
+         * @param {type} 1 配置人员 2 修改 3 复制 4 删除
+         */
+        onOperate (val, type) {
+            switch (type) {
+                case 1:
+                    this.postdialogVisible = true
+                    break
+                case 2:
+                    this.$router.push({
+                        path: '/auth/postUpdate',
+                        query: {
+                            type: type
                         }
                     })
-                    if (!this.count) {
-                        const formData = {
-                            createUid: this.userInfo.jobNumber,
-                            positionName: this.ruleForm.addpositionName,
-                            positionCode: this.ruleForm.addpositionCode
+                    break
+                case 3:
+                    this.$router.push({
+                        path: '/auth/postUpdate',
+                        query: {
+                            type: type
                         }
-                        await addpostList(formData)
+                    })
+                    break
+                case 4:
+                    this.$confirm(`删除该岗位将影响xxx、xxx、xxx的权限，是否确认删除该岗位?`, '确认删除', {
+                        confirmButtonText: '确定删除',
+                        cancelButtonText: '取消'
+                    }).then(async () => {
+                        await deletepostList(val.id)
                         this.findList()
-                        this.adddialogVisible = false
-                        this.ruleForm.addpositionName = ''
-                        this.ruleForm.addpositionCode = ''
-                    } else {
-                    }
-                }
-            })
+                    }).catch(() => {
+                        // 取消删除
+                    })
+                    break
+                default: break
+            }
         },
         // 修改岗位信息
-        onupdate (val) {
-            this.ruleForm.updatepositionName = val.positionName
-            this.ruleForm.updatepositionCode = val.positionCode
-            this.id = val.id
-            this.updatedialogVisible = true
-            this.$refs['form'].clearValidate()
-            this.count = 0
-        },
+        // onupdate (val) {
+        //     this.ruleForm.updatepositionName = val.positionName
+        //     this.ruleForm.updatepositionCode = val.positionCode
+        //     this.id = val.id
+        //     this.postdialogVisible = true
+        //     this.$refs['form'].clearValidate()
+        //     // this.count = 0
+        // },
         async updatesave () {
             this.$refs['form'].validate(async (validate) => {
                 if (validate) {
-                    const formData = {
-                        id: this.id,
-                        positionCode: this.ruleForm.updatepositionCode,
-                        positionName: this.ruleForm.updatepositionName,
-                        updateUid: this.userInfo.jobNumber
-                    }
-                    await updatepostList(formData)
-                    this.updatedialogVisible = false
-                    this.findList()
+                    // const formData = {
+                    //     id: this.id,
+                    //     positionCode: this.ruleForm.updatepositionCode,
+                    //     positionName: this.ruleForm.updatepositionName,
+                    //     updateUid: this.userInfo.jobNumber
+                    // }
+                    // await updatepostList(formData)
+                    // this.postdialogVisible = false
+                    // this.findList()
                 }
             })
         },
-        // 删除岗位信息
-        onDelete (val) {
-            this.$confirm(`是否确认删除该公司平台?`, '确认删除', {
-                confirmButtonText: '确定删除',
-                cancelButtonText: '取消'
-            }).then(async () => {
-                await deletepostList(val.id)
-                this.findList()
-            }).catch(() => {
-                // 取消删除
-            })
-        },
-        renderHeader (h, { column }) {
-            console.log(column)
+        // 配置人员=>岗位人员检索
+        remotePostPeoMethod (val) {
+            if (val !== '') {
+                this.postPeopleObj.loading = true
+                setTimeout(() => {
+                    this.postPeopleObj.loading = false
+                    this.postPeopleObj.option = this.postPeopleObj.list.filter(item => {
+                        return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+                    })
+                }, 500)
+            } else {
+                this.postPeopleObj.option = []
+            }
         }
     },
     mounted () {
-        this.findList()
+        // this.findList()
     }
 }
 </script>
@@ -253,6 +246,10 @@ table {
     }
 }
 
+/deep/.change-style .el-input:not(:first-child) {
+    margin-left: 0px;
+}
+
 img {
     padding-left: 7px;
     margin-left: -7px;
@@ -267,8 +264,8 @@ img {
     font-size: 12px;
     color: $grayColor;
 }
-.message{
-    color: #F56C6C;
+.message {
+    color: #f56c6c;
     font-size: 12px;
     line-height: 1;
     padding-top: 4px;
