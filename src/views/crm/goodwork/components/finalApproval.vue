@@ -547,7 +547,7 @@ export default class FinalApproval extends Vue {
             prop: 'deviceBrand',
             className: 'form-table-header',
             showOverflowTooltip: false,
-            width: '240',
+            width: '200',
             render: (h: CreateElement, scope: TableRenderParam) => {
                 return (
                     <div>
@@ -652,7 +652,7 @@ export default class FinalApproval extends Vue {
         {
             label: '设备品类',
             prop: 'deviceCategoryType',
-            // width: '400',
+            width: '360',
             className: 'form-table-header',
             showOverflowTooltip: false,
             render: (h: CreateElement, scope: TableRenderParam) => {
