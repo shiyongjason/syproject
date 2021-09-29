@@ -1,0 +1,21 @@
+.custom-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 8px;
+  }
+  .flex-wrap{
+      display: flex;
+      .page-left{
+          width: 40%;
+      }
+      .page-right{
+        width: 40%;
+    }
+    .page-center{
+        width: 20%;
+        border: 1px solid #e5e5;
+    }
+  }
