@@ -9,8 +9,8 @@
                     <el-input v-model.trim="form.spikeName" placeholder="请输入活动名称" maxlength="255" clearable :disabled="disabled"></el-input>
                 </el-form-item>
                 <el-form-item label="活动时间：" prop="startTime">
-                    <el-date-picker v-model="form.startTime" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :disabled="disabled"></el-date-picker>
-                    <el-date-picker v-model="form.endTime" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :disabled="disabled"></el-date-picker>
+                    <el-date-picker v-model="form.startTime" :clearable=true :editable=true :picker-options="pickerOptionsStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :disabled="disabled"></el-date-picker>
+                    <el-date-picker v-model="form.endTime" :editable=true :clearable=true :picker-options="pickerOptionsEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :disabled="disabled"></el-date-picker>
                     <span class="timeTips" v-if="!disabled">只能创建10分钟后开始的活动</span>
                 </el-form-item>
                 <el-form-item label="活动banner：" prop="image">
@@ -25,7 +25,15 @@
                     <span class="title-cont__label">2.设置规则和优惠</span>
                 </div>
                 <el-form-item label="活动区域：" prop="spikeAreaList">
-                    <el-cascader class="area-cascader" v-model="seckillAreaList" :options="activityAreaData" :props="{multiple: true}" @change="onChangeArea" :disabled="form.spikeSku.length>0"></el-cascader>
+                    <saleableArea
+                        ref="saleableArea"
+                        v-if="areaShow"
+                        :areaList="seckillAreaList"
+                        :disabled="form.spikeSku.length>0"
+                        label="活动区域："
+                        v-on:formSalesAreaList="formSalesAreaList"
+                    />
+                    <!-- <el-cascader class="area-cascader" v-model="seckillAreaList" :options="activityAreaData" :props="{multiple: true}" @change="onChangeArea" :disabled="form.spikeSku.length>0"></el-cascader> -->
                 </el-form-item>
                 <el-form-item label="优惠方式：" prop="discountType">
                     <el-radio-group v-model="form.discountType" :disabled="disabled" @change='radioChange'>
@@ -82,6 +90,7 @@ import { isNum } from '@/utils/validate/format'
 import { interfaceUrl } from '@/api/config'
 import Sortable from 'sortablejs'
 import { saveEvent, editEvent, clickFarming } from '../api/index'
+import saleableArea from '../../components/SaleableArea.vue'
 import moment from 'moment'
 import { DISCOUNT_TYPE_PERCENT, DISCOUNT_TYPE_PRICE, SPIKE_STATUS_PUBLISHED, SPIKE_STATUS_DRAFT } from '../const/index'
 
@@ -106,7 +115,8 @@ const timeValid = (startTime, endTime, callback) => {
 export default {
     name: 'createSeckill',
     components: {
-        hosJoyTable
+        hosJoyTable,
+        saleableArea
     },
     data () {
         return {
@@ -117,6 +127,7 @@ export default {
             otpopoverVisible: false,
             isPending: false,
             sortable: null,
+            areaShow: false,
             form: {
                 spikeName: '',
                 startTime: '',
@@ -269,7 +280,7 @@ export default {
                     },
                     render: (h, scope) => {
                         return (
-                            <el-form-item prop={`spikeSku[${scope.$index}].inventoryRemainNum`} label={scope.row.cityName} rules={this.inventoryRemainNumRules(scope.row, scope.$index)} label-width="40px" style="margin-top: 20px">
+                            <el-form-item prop={`spikeSku[${scope.$index}].inventoryRemainNum`} label={scope.row.cityName || scope.row.provinceName} rules={this.inventoryRemainNumRules(scope.row, scope.$index)} label-width="40px" style="margin-top: 20px">
                                 <el-input value={scope.row.inventoryRemainNum} style='width:50%' size='mini' onInput={(val) => { this.setOneCol(Number(val.replace(/[^\d]/g, '')), scope, 'inventoryRemainNum') }} disabled={this.disabled}></el-input>
                             </el-form-item>
                         )
@@ -431,9 +442,12 @@ export default {
         },
         async getSelectSkuList () {
             const cityIdList = this.form.spikeAreaList.map(item => item.cityId)
+            const saleAreas = this.form.spikeAreaList.map(item => {
+                return item.cityId ? { provinceId: item.provinceId, provinceName: item.provinceName, cityId: item.cityId, cityName: item.cityName } : { provinceId: item.provinceId, provinceName: item.provinceName }
+            })
             const skuIdList = this.selectSeckillProduct.filter(item => !this.form.spikeSku.some(i => item.skuId == i.skuId)).map(item => item.skuId)
             if (skuIdList.length > 0) {
-                await this.findSelectSkuList({ cityIdList: cityIdList, skuIdList: skuIdList })
+                await this.findSelectSkuList({ cityIdList: cityIdList, skuIdList: skuIdList, saleAreas: saleAreas })
                 this.setTableData(this.form.spikeSku.concat(this.selectSkuData))
             }
         },
@@ -452,10 +466,9 @@ export default {
                     return item
                 })
             }
-            console.log(this.form)
             // 编辑或者拷贝的时候选择的商品是从数据库过来的，这个时候已经选择商品的列表是没有信息，需要添加进来
             this.setSelectSeckillProduct(Array.from(new Set(this.form.spikeSku.map(item => item.skuId))).map(item => ({ skuId: item })))
-            this.seckillAreaList = this.form.spikeAreaList.map(item => [item.provinceId, item.cityId])
+            this.seckillAreaList = this.form.spikeAreaList
             this.setTableData(this.form.spikeSku)
         },
         // ======================================== 前后端交互 =====================================================
@@ -523,20 +536,24 @@ export default {
                 }
             })
         },
-        init () {
+        async init () {
             this.getActivityArea()
             // 当复制或者编辑的时候获取活动详情
             if (this.$route.query.id) {
-                this.getEventInfo()
+                await this.getEventInfo()
             }
+            this.areaShow = true
         },
         backPicUrl (file) {
             this.$set(this.form, 'image', file.imageUrl)
             // this.form.image = file.imageUrl
         },
-        onChangeArea (value) {
-            this.form.spikeAreaList = this.objArrToDyadicArr(value)
+        formSalesAreaList (value) {
+            this.form.spikeAreaList = value
         },
+        // onChangeArea (value) {
+        //     this.form.spikeAreaList = this.objArrToDyadicArr(value)
+        // },
         // ======================================== 按钮事件 =====================================================
         // 添加商品事件
         onAddProduct () {
@@ -640,35 +657,35 @@ export default {
         },
         // ======================================== 按钮事件 =====================================================
         // ======================================== 数据处理 =====================================================
-        objArrToDyadicArr (value) {
-            const filterResult = this.activityAreaData.filter(item => value.some(i => item.children.some(j => j.value == i[1])))
-                .map(item => ({ label: item.label, value: item.value, children: item.children.filter(i => value.some(j => i.value == j[1])) }))
-            const result = []
-            filterResult.map(item => {
-                item.children.map(sItem => {
-                    result.push({ provinceId: item.value, provinceName: item.label, cityId: sItem.value, cityName: sItem.label, areaId: 0 })
-                })
-            })
-            return result
-        },
-        dyadicArrToObjArr (value) {
-            let result = []
-            const provinceObj = {}
-            const cityArr = this.activityAreaData.map(item => {
-                provinceObj[item.value] = item.children.map(cItem => [item.value, cItem.value])
-                return item.children.map(cItem => [item.value, cItem.value])
-            })
-            value.forEach(item => {
-                if (item.provinceId == '0') {
-                    result = result.concat(cityArr.flat())
-                } else if (item.cityId == '0') {
-                    result = result.concat(provinceObj[item.provinceId])
-                } else {
-                    result.push([item.provinceId, item.cityId])
-                }
-            })
-            return result
-        },
+        // objArrToDyadicArr (value) {
+        //     const filterResult = this.activityAreaData.filter(item => value.some(i => item.children.some(j => j.value == i[1])))
+        //         .map(item => ({ label: item.label, value: item.value, children: item.children.filter(i => value.some(j => i.value == j[1])) }))
+        //     const result = []
+        //     filterResult.map(item => {
+        //         item.children.map(sItem => {
+        //             result.push({ provinceId: item.value, provinceName: item.label, cityId: sItem.value, cityName: sItem.label, areaId: 0 })
+        //         })
+        //     })
+        //     return result
+        // },
+        // dyadicArrToObjArr (value) {
+        //     let result = []
+        //     const provinceObj = {}
+        //     const cityArr = this.activityAreaData.map(item => {
+        //         provinceObj[item.value] = item.children.map(cItem => [item.value, cItem.value])
+        //         return item.children.map(cItem => [item.value, cItem.value])
+        //     })
+        //     value.forEach(item => {
+        //         if (item.provinceId == '0') {
+        //             result = result.concat(cityArr.flat())
+        //         } else if (item.cityId == '0') {
+        //             result = result.concat(provinceObj[item.provinceId])
+        //         } else {
+        //             result.push([item.provinceId, item.cityId])
+        //         }
+        //     })
+        //     return result
+        // },
         /**
          * 对商品数据进行处理，从添加商品页面选择数据之后实际上有些key值是不存在的，比如卖点，限购数量等信息
          * 需要添加这些key和对应的值
