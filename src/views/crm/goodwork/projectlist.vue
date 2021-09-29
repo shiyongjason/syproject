@@ -907,6 +907,15 @@ export default {
     },
     beforeUpdate () {
         newCache('projectlist')
+    },
+    beforeRouteEnter (to, from, next) {
+        if (from.name === 'informationDetail') {
+            next(vm => {
+                vm.searchList()
+            })
+        } else {
+            next()
+        }
     }
 }
 </script>
