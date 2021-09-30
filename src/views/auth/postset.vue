@@ -7,7 +7,7 @@
                         <el-input placeholder="请输入岗位名称进行检索" v-model="positionName" style="width: 415px" maxlength="25">
                         </el-input>
                     </div>
-                    <el-button type="primary" @click="searchpositionName()">查询
+                    <el-button type="primary" @click="findList()">查询
                     </el-button>
                 </div>
             </div>
@@ -19,6 +19,7 @@
             <!--岗位信息table-->
             <basicTable :tableLabel="tableLabel" :tableData="postList" :isAction="true" :actionMinWidth="300" isShowIndex>
                 <template slot="action" slot-scope="scope">
+                    <!-- v-if="scope.data.row.admin"  -->
                     <el-button class="orangeBtn" @click="onOperate(scope.data.row, 1)">配置人员</el-button>
                     <el-button class="orangeBtn" @click="onOperate(scope.data.row, 2)">复制</el-button>
                     <el-button class="orangeBtn" @click="onOperate(scope.data.row, 3)">修改</el-button>
@@ -32,14 +33,11 @@
                         <span>好橙工产品经理</span>
                     </el-form-item>
                     <el-form-item label="岗位人员：" prop="postPeople">
-                        <el-select class="change-style" v-model="ruleForm.postPeople" multiple filterable remote reserve-keyword placeholder="请输入员工姓名检索" :remote-method="remotePostPeoMethod" :loading="postPeopleObj.loading">
-                            <el-option v-for="item in postPeopleObj.option" :key="item.value" :label="item.label" :value="item.value">
-                            </el-option>
-                        </el-select>
+                        <employeeSelect v-model="ruleForm.postPeople" ref="postPersonRef"></employeeSelect>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-                    <el-button @click="postdialogVisible = false">取 消</el-button>
+                    <el-button @click="onCancel">取 消</el-button>
                     <el-button type="primary" @click="updatesave">保 存</el-button>
                 </span>
             </el-dialog>
@@ -48,25 +46,22 @@
 </template>
 
 <script>
-import { findpostList, addpostList, updatepostList, deletepostList } from './api/index'
+import { findpostList, addpostList, updatepostList, postSave, deletepostList, postConfiguration } from './api/index'
+import employeeSelect from './components/employeeSelect.vue'
 import { mapState } from 'vuex'
-
 export default {
     name: 'postset',
     data () {
         return {
-            // count: 0,
             tableLabel: [
                 { label: '岗位名称', prop: 'positionName' },
                 { label: '岗位code', prop: 'positionCode', icon: 'el-icon-question', content: 'code：实现岗位与后台数据相匹配' },
-                { label: '岗位人员', prop: 'positionPeople', icon: 'el-icon-question' },
-                { label: '创建时间', prop: 'creatTime' },
+                { label: '岗位人员', prop: 'userName', icon: 'el-icon-question' },
+                { label: '创建时间', prop: 'createTime' },
                 { label: '更新时间', prop: 'updateTime' },
-                { label: '操作人', prop: 'people' }
+                { label: '操作人', prop: 'updateBy' }
             ],
-            postList: [{
-                positionName: '11111'
-            }],
+            postList: [],
             postdialogVisible: false,
             positionName: '',
             id: Number,
@@ -78,12 +73,11 @@ export default {
                     { required: true, message: '请选择岗位人员', trigger: 'change' }
                 ]
             },
-            postPeopleObj: {
-                option: [],
-                list: [],
-                loading: false
-            }
+            positionCode: ''
         }
+    },
+    components: {
+        employeeSelect
     },
     computed: {
         ...mapState({
@@ -91,80 +85,64 @@ export default {
         })
     },
     methods: {
-        // 日期格式转换
-        datetimeFormat (longTypeDate) {
-            var datetimeType = ''
-            var date = new Date()
-            date.setTime(longTypeDate)
-            let year = date.getFullYear()
-            let month = date.getMonth() + 1
-            if (month < 10) {
-                month = '0' + month
-            }
-            let day = date.getDate()
-            if (day < 10) {
-                day = '0' + day
-            }
-            let hours = date.getHours()
-            if (hours < 10) {
-                hours = '0' + hours
-            }
-            let minute = date.getMinutes()
-            if (minute < 10) {
-                minute = '0' + minute
-            }
-            let second = date.getSeconds()
-            if (second < 10) {
-                second = '0' + second
-            }
-            datetimeType = year + '-' + month + '-' + day + ' ' + hours + ':' + minute + ':' + second// yyyy-MM-dd 00:00:00格式日期
-            return datetimeType
-        },
         // 查询岗位信息列表
         async findList () {
             const { data } = await findpostList(this.positionName)
+            if (data.length > 0) {
+                data.forEach(v => {
+                    v.createTime = v.createTime.replace('T', ' ')
+                    v.updateTime = v.createTime.replace('T', ' ')
+                })
+            }
             this.postList = data
-            // this.postList.map(value => {
-            //     value.updateTime = this.datetimeFormat(value.updateTime)
-            // })
-        },
-        // 根据岗位名称搜索
-        searchpositionName () {
-            this.findList()
         },
         // 新增岗位信息
         onadd () {
             this.$router.push({
-                path: '/auth/postUpdate'
+                path: '/auth/postUpdate',
+                query: {
+                    type: 1
+                }
             })
         },
         /**
          * @description: 列表操作
          * @param {type} 1 配置人员 2 修改 3 复制 4 删除
          */
-        onOperate (val, type) {
+        async onOperate (val, type) {
             switch (type) {
                 case 1:
+                    //  配置人员
                     this.postdialogVisible = true
+                    this.positionCode = val.positionCode
+                    const { data } = await postConfiguration(val.positionCode)
+                    if (data && data.length > 0) {
+                        this.ruleForm.postPeople = data.map(v => v.userName)
+                    }
                     break
                 case 2:
+                    // 修改
                     this.$router.push({
                         path: '/auth/postUpdate',
                         query: {
-                            type: type
+                            type: type,
+                            id: val.id
                         }
                     })
                     break
                 case 3:
+                    // 复制
                     this.$router.push({
                         path: '/auth/postUpdate',
                         query: {
-                            type: type
+                            type: type,
+                            id: val.id
                         }
                     })
                     break
                 case 4:
-                    this.$confirm(`删除该岗位将影响xxx、xxx、xxx的权限，是否确认删除该岗位?`, '确认删除', {
+                    // 删除
+                    this.$confirm(`删除该岗位将影响${val.userName || '--'}的权限，是否确认删除该岗位?`, '确认删除', {
                         confirmButtonText: '确定删除',
                         cancelButtonText: '取消'
                     }).then(async () => {
@@ -177,47 +155,29 @@ export default {
                 default: break
             }
         },
-        // 修改岗位信息
-        // onupdate (val) {
-        //     this.ruleForm.updatepositionName = val.positionName
-        //     this.ruleForm.updatepositionCode = val.positionCode
-        //     this.id = val.id
-        //     this.postdialogVisible = true
-        //     this.$refs['form'].clearValidate()
-        //     // this.count = 0
-        // },
+        // 岗位配置-取消
+        onCancel () {
+            this.postdialogVisible = false
+            this.$refs['form'].clearValidate()
+            this.$refs.postPersonRef.option = []
+        },
+        // 岗位配置-保存
         async updatesave () {
             this.$refs['form'].validate(async (validate) => {
                 if (validate) {
-                    // const formData = {
-                    //     id: this.id,
-                    //     positionCode: this.ruleForm.updatepositionCode,
-                    //     positionName: this.ruleForm.updatepositionName,
-                    //     updateUid: this.userInfo.jobNumber
-                    // }
-                    // await updatepostList(formData)
-                    // this.postdialogVisible = false
-                    // this.findList()
+                    const dataJson = {
+                        positionCode: this.positionCode,
+                        jobNumber: this.ruleForm.postPeople
+                    }
+                    await postSave(dataJson)
+                    this.postdialogVisible = false
+                    this.findList()
                 }
             })
-        },
-        // 配置人员=>岗位人员检索
-        remotePostPeoMethod (val) {
-            if (val !== '') {
-                this.postPeopleObj.loading = true
-                setTimeout(() => {
-                    this.postPeopleObj.loading = false
-                    this.postPeopleObj.option = this.postPeopleObj.list.filter(item => {
-                        return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
-                    })
-                }, 500)
-            } else {
-                this.postPeopleObj.option = []
-            }
         }
     },
     mounted () {
-        // this.findList()
+        this.findList()
     }
 }
 </script>
@@ -244,10 +204,6 @@ table {
     .el-dialog__body {
         min-height: 0px;
     }
-}
-
-/deep/.change-style .el-input:not(:first-child) {
-    margin-left: 0px;
 }
 
 img {

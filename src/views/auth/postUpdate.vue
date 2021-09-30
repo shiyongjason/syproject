@@ -10,14 +10,12 @@
                         <el-input v-model="ruleInfo.postName" maxlength="40" placeholder="请输入岗位名称"></el-input>
                     </el-form-item>
                     <el-form-item class="flex-row" label="岗位code：">
-                        <el-input disabled v-model="ruleInfo.postCode" maxlength="40" placeholder="请输入岗位code"></el-input>
+                        <el-input disabled v-model="ruleInfo.postCode" maxlength="40"></el-input>
                     </el-form-item>
                 </div>
                 <div class="flex-col">
                     <el-form-item class="flex-row" label="岗位管理员：">
-                        <el-select class="change-style" v-model="ruleInfo.positionCodeList" multiple placeholder="请输入好享家员工姓名">
-                            <el-option v-for="item in postOptions" :key="item.id" :label="item.positionName" :value="item.positionCode"></el-option>
-                        </el-select>
+                        <employeeSelect v-model="ruleInfo.positionCodeList"></employeeSelect>
                     </el-form-item>
                 </div>
             </el-form>
@@ -93,7 +91,8 @@
 </template>
 
 <script>
-import { findMenuList, saveAuthRole, getRoleInfo, findpostList } from './api/index'
+import { addpostList, postDetail, postAuthList, updatepostList, postConfiguration } from './api/index'
+import employeeSelect from './components/employeeSelect.vue'
 import { mapState } from 'vuex'
 export default {
     name: 'postUpdate',
@@ -101,7 +100,7 @@ export default {
         return {
             ruleInfo: {
                 postName: '',
-                postCode: 'ADKLSSA_ED',
+                postCode: '',
                 positionCodeList: []
             },
             currentEmployeeSubsectionsAuthCode: '',
@@ -114,8 +113,15 @@ export default {
             layerType: '',
             jobNumber: '',
             postOptions: [], // 岗位管理员
-            checkedkeys: []
+            checkedkeys: [],
+
+            // 接收参数
+            queryId: '',
+            queryType: '' // 1 新增岗位 2 复制 3 修改
         }
+    },
+    components: {
+        employeeSelect
     },
     computed: {
         ...mapState({
@@ -124,17 +130,52 @@ export default {
         })
     },
     async mounted () {
+        // type 1 新增岗位 2 复制 3 修改
+        const { type, id } = this.$route.query
+        this.queryId = id
+        this.queryType = type
         this.tableList = []
-        this.jobNumber = this.$route.query.jobNumber
-        const { data } = await findMenuList(this.jobNumber)
-        var copyData = JSON.parse(JSON.stringify(data))
-        this.handleData(copyData)
-        this.tableList = this.handlerTableList(copyData, 0)
-        this.newTableList = JSON.parse(JSON.stringify(this.tableList))
-        // const { data: postOptions } = await findpostList('')
-        // this.postOptions = postOptions
+        switch (parseInt(type)) {
+            case 1:
+                this.postAuthList()
+                break
+            case 2:
+                this.getDetail()
+                break
+            case 3:
+                this.getDetail()
+                break
+            default: break
+        }
     },
     methods: {
+        // 岗位新增-权限集合
+        async postAuthList () {
+            const { data } = await postAuthList()
+            let copyData = JSON.parse(JSON.stringify(data))
+            this.handleData(copyData)
+            this.tableList = this.handlerTableList(copyData, 0)
+            this.newTableList = JSON.parse(JSON.stringify(this.tableList))
+        },
+        // 岗位复制修改
+        async getDetail () {
+            const { data } = await postDetail(this.queryId)
+            let copyData = JSON.parse(JSON.stringify(data.employeeAuthList))
+            this.handleData(copyData)
+            this.tableList = this.handlerTableList(copyData, 0)
+            this.newTableList = JSON.parse(JSON.stringify(this.tableList))
+
+            // 修改时回显
+            if (this.queryType == 3) {
+                this.ruleInfo.postName = data.positionName
+                this.ruleInfo.postCode = data.positionCode
+                const result = await postConfiguration(data.positionCode)
+                if (result.data && result.data.length > 0) {
+                    this.ruleInfo.positionCodeList = result.data.map(v => v.userName)
+                }
+                // this.ruleInfo.positionCodeList = data.positionAdmin ? data.positionAdmin.map(val => val.jobNumber) : []
+            }
+        },
         onGetnodes () {
             if (this.layerType == 2) {
                 const nodeList = this.$refs.treetable.getCheckedNodes()
@@ -306,28 +347,38 @@ export default {
             })
         },
         async onSavePost () {
-            let resourceObj = {
-                resourceIds: [],
-                authCodes: [],
-                authTypeList: [],
-                employeeSubsections: []
-            }
-            this.handlerRoleFilter(JSON.parse(JSON.stringify(this.tableList)), resourceObj)
-            const params = {
-                employeeSubsections: resourceObj.employeeSubsections,
-                resourceIds: resourceObj.resourceIds,
-                authCodes: resourceObj.authCodes,
-                authTypeList: resourceObj.authTypeList,
-                jobNumber: this.jobNumber,
-                positionCodeList: this.positionCodeList,
-                userCode: this.jobNumber
-            }
-            if (params.authCodes.length < 1) {
-                this.$message({ message: '请勾选数据范围配置', type: 'warning' })
-            }
-            await saveAuthRole(params)
-            this.$message({ message: '权限保存成功', type: 'success' })
-            this.$router.push({ path: '/auth/postset' })
+            this.$refs['ruleInfoRef'].validate(async (validate) => {
+                if (validate) {
+                    let resourceObj = {
+                        resourceIds: [],
+                        authCodes: [],
+                        authTypeList: [],
+                        employeeSubsections: []
+                    }
+                    this.handlerRoleFilter(JSON.parse(JSON.stringify(this.tableList)), resourceObj)
+                    const params = {
+                        employeeSubsections: resourceObj.employeeSubsections,
+                        resourceIds: resourceObj.resourceIds,
+                        authCodes: resourceObj.authCodes,
+                        authTypeList: resourceObj.authTypeList,
+                        jobNumber: this.ruleInfo.positionCodeList,
+                        positionName: this.ruleInfo.postName
+                    }
+                    if (params.authCodes.length < 1) {
+                        this.$message({ message: '请勾选数据范围配置', type: 'warning' })
+                    }
+                    console.log(params)
+                    // 修改传递Id
+                    if (this.queryType == 3) {
+                        params.id = this.queryId
+                        await updatepostList(params)
+                    } else {
+                        await addpostList(params)
+                    }
+                    this.$message({ message: '岗位保存成功', type: 'success' })
+                    this.$router.push({ path: '/auth/postset' })
+                }
+            })
         },
         onCancelRole () {
             if (JSON.stringify(this.newTableList) != JSON.stringify(this.tableList)) {
@@ -432,9 +483,6 @@ export default {
             flex: 1;
         }
     }
-}
-/deep/.change-style .el-input:not(:first-child) {
-    margin-left: 0px;
 }
 .h-roletable {
     padding: 10px 0;

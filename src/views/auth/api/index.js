@@ -16,16 +16,31 @@ export const findBOSSOrganization = () => axios.get('/uaa/department/getDepartme
 export const findOrganizationEmployee = (params) => axios.post('/uaa/employee/queryListByDeptCode', params)
 
 // 查询岗位信息
-export const findpostList = (params) => axios.get(`/uaa/position/list?positionName=${params}`, params)
+export const findpostList = (params) => axios.get(`/uaa/position?positionName=${params}`, params)
 
 // 增加岗位信息
 export const addpostList = (params) => axios.post('/uaa/position', params)
 
 // 更新岗位信息
-export const updatepostList = (params) => axios.put('/uaa/position', params)
+export const updatepostList = (params) => axios.put(`/uaa/position/${params.id}`, params)
 
 // 删除岗位信息
 export const deletepostList = (params) => axios.delete(`/uaa/position/${params}`, params)
+
+// 人员信息
+export const getEmployeeInfo = (params) => axios.get(`/uaa/employee/contracts/${params}`, params)
+
+// 岗位人员查询
+export const postConfiguration = (params) => axios.get(`/uaa/position/user?positionCode=${params}`, params)
+
+// 岗位保存
+export const postSave = (params) => axios.post('/uaa/position/user', params)
+
+// 岗位详情
+export const postDetail = (params) => axios.get(`/uaa/position/${params}`, params)
+
+// 岗位新增-权限集合
+export const postAuthList = (params) => axios.get('/uaa/position/auth-list', params)
 
 /*
     路由配置
