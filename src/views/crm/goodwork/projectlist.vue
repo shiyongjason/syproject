@@ -228,17 +228,16 @@
             </div>
             <div class="project-plant" v-if="title=='工地打卡记录'">
                 <div class="plantimg" @click="onHandlePictureCardPreview(item)" v-for="(item,index) in plantList" :key="index">
-                    <imageAddToken :src="item.punchImageUrl" alt=""></imageAddToken>
+                    <imageAddToken :fileUrl="item.punchImageUrl" alt="" isNeedClick></imageAddToken>
                 </div>
-
             </div>
             <span slot="footer" class="dialog-footer">
                 <h-button @click="()=>onCloneRecordDialog()">取消</h-button>
             </span>
         </el-dialog>
-        <el-dialog title="预览" :visible.sync="imgVisible">
+        <el-dialog title="预览" :visible.sync="imgVisible" @close='onClose'>
             <div class="previewimg">
-                <img :src="dialogImageUrl" alt="">
+                <imageAddToken v-if="isShow" :fileUrl="dialogImageUrl" alt=""></imageAddToken>
             </div>
         </el-dialog>
         <!-- 添加跟进记录 -->
@@ -504,7 +503,9 @@ export default {
             title: '',
             imgVisible: false,
             dialogImageUrl: '',
-            plantList: []
+            plantList: [],
+
+            isShow: false
         }
     },
     components: {
@@ -890,16 +891,22 @@ export default {
                 this.dialogRecord = this.projectRecord
             } else {
                 this.title = '工地打卡记录'
+                this.plantList = []
                 await this.findPunchlist({ projectId: val.id })
                 this.plantList = this.punchList
+                console.log(this.plantList)
             }
 
             this.dialogVisible = true
             console.log('recordDialog', this.$refs.recordDialog)
         },
         onHandlePictureCardPreview (val) {
+            this.isShow = true
             this.dialogImageUrl = val.punchImageUrl
             this.imgVisible = true
+        },
+        onClose () {
+            this.isShow = false
         },
         async onGetbranch () {
             await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
