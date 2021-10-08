@@ -31,11 +31,12 @@
                   <div class="query-cont-col">
                     <div class="query-col__label">放款交接状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.status" placeholder="请选择" multiple :clearable=true>
-                            <el-option :label="value" :value="key" v-for="[key, value] of paymentOrderStatusOptions" :key="key"></el-option>
+                        <el-select v-model="queryParams.lenderList" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.value" :value="item.key" v-for="item in lenderList" :key="item.key"></el-option>
                         </el-select>
                     </div>
                 </div>
+
                 <div class="query-cont-col">
                     <div class="query-col__label">采购单编号：</div>
                     <div class="query-col__input">
@@ -79,8 +80,8 @@
                   <div class="query-cont-col">
                     <div class="query-col__label">上游支付进度：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.status" placeholder="请选择" multiple :clearable=true>
-                            <el-option :label="value" :value="key" v-for="[key, value] of paymentOrderStatusOptions" :key="key"></el-option>
+                        <el-select v-model="queryParams.progressList" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.value" :value="item.key" v-for="item in progressList" :key="item.key"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -241,6 +242,8 @@ export default {
             loanTransferContentVisible: false,
             Auths,
             dealerList: [{ key: 1, value: '垫资代采' }, { key: 2, value: '代收代付' }],
+            lenderList: [{ key: 1, value: '已对接' }, { key: 2, value: '待对接' }],
+            progressList: [{ key: 1, value: '待支付' }, { key: 2, value: '已支付' }, { key: 2, value: '部分支付' }],
             queryParams: {
                 paymentOrderNo: '',
                 deptName: '',
