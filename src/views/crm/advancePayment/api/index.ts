@@ -29,3 +29,7 @@ export const passFailPre: (id, params) => AxiosPromise<void> = (id, params) => {
 export const getApprovalHistory: (params) => AxiosPromise<RespContractSignHistory[]> = (params) => {
     return axios.get(`/project/api/contract-approval/${params}/prepayment-order/approval-history`)
 }
+
+export const saveWriteOff: (id, params) => AxiosPromise = (id, params) => {
+    return axios.patch(`/project/api/prepayments/boss/${id}/write-off`, params)
+}

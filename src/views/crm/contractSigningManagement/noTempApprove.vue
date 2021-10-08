@@ -15,11 +15,11 @@
             </div>
             <div class="contract-flex">
                 <div>
-                    <hosjoyUpload :fileSize=20 :fileNum=100 :limit=100 v-model="contractList" accept='.doc,.pdf,.docx,.xlsx' :showPreView=false :action='action' :uploadParameters='uploadParameters' @successCb='()=>{handleSuccessCb(contractList)}'>
+                    <hosjoyUpload :fileSize=20 :fileNum=100 :limit=100 v-model="contractList" accept='.doc,.pdf,.docx,.xlsx,.xls' :showPreView=false :action='action' :uploadParameters='uploadParameters' @successCb='()=>{handleSuccessCb(contractList)}'>
                         <h-button type="primary">上传合同</h-button>
                     </hosjoyUpload>
                 </div>
-                <div class="contract-flex_tips">（请先点击上方“下载原始合同”，下载后在本地进行编辑修订，修订完成后在此上传，上传格式为.doc/.docx/.xlsx/.pdf等格式)</div>
+                <div class="contract-flex_tips">（请先点击上方“下载原始合同”，下载后在本地进行编辑修订，修订完成后在此上传，上传格式为.doc/.docx/.xlsx/.xls/.pdf等格式)</div>
                 <div v-for="(item,index) in contractList" :key="index" class="contract-flex_preview">
                     <div class="preview_name">合同：</div>
                     {{item.fileName}}

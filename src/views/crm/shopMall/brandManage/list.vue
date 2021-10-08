@@ -86,6 +86,7 @@ import { getListApi, postBrands, getBrands } from './api'
 import { BrandDetailResponse, BrandShopExtendResponse } from '@/interface/hbp-shop'
 import { CRM_SHOPP_PRODUCTLABEL_VIEW, CRM_SHOPP_PRODUCTLABEL_EDIT } from '@/utils/auth_const'
 import Clipboard from 'clipboard'
+import { newCache } from '@/utils/index'
 
 const _queryParams = {
     brandCode: '',
@@ -332,6 +333,10 @@ export default class brandManage extends Vue {
 
     mounted () {
         this.getList()
+    }
+
+    beforeUpdate () {
+        newCache('crmshopMallbrandManage')
     }
 }
 </script>
