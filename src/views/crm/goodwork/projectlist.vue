@@ -228,16 +228,16 @@
             </div>
             <div class="project-plant" v-if="title=='工地打卡记录'">
                 <div class="plantimg" @click="onHandlePictureCardPreview(item)" v-for="(item,index) in plantList" :key="index">
-                    <imageAddToken :fileUrl="item.punchImageUrl" alt="" isNeedClick></imageAddToken>
+                    <imageToken :fileUrl="item.punchImageUrl" alt=""></imageToken>
                 </div>
             </div>
             <span slot="footer" class="dialog-footer">
                 <h-button @click="()=>onCloneRecordDialog()">取消</h-button>
             </span>
         </el-dialog>
-        <el-dialog title="预览" :visible.sync="imgVisible" @close='onClose'>
+        <el-dialog title="预览" :visible.sync="imgVisible">
             <div class="previewimg">
-                <imageAddToken v-if="isShow" :fileUrl="dialogImageUrl" alt=""></imageAddToken>
+                <imageToken v-if="imgVisible" :fileUrl="dialogImageUrl" alt=""></imageToken>
             </div>
         </el-dialog>
         <!-- 添加跟进记录 -->
@@ -312,7 +312,7 @@ import downloadFileAddToken from '@/components/downloadFileAddToken'
 import { USER_DEFAULT } from '@/views/crm/projectList2_0/const/index'
 import { getFlowUp, addFlowUp, getFlowUpCount } from '@/views/crm/projectList2_0/api/index'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
-import imageAddToken from '@/components/imageAddToken'
+import imageToken from './components/imageToken'
 import { newCache } from '@/utils/index'
 
 const _flowUpRequest = {
@@ -503,13 +503,11 @@ export default {
             title: '',
             imgVisible: false,
             dialogImageUrl: '',
-            plantList: [],
-
-            isShow: false
+            plantList: []
         }
     },
     components: {
-        projectDrawer, hosJoyTable, downloadFileAddToken, OssFileHosjoyUpload, imageAddToken
+        projectDrawer, hosJoyTable, downloadFileAddToken, OssFileHosjoyUpload, imageToken
     },
     watch: {
         'flowUpRequest.type' (val) {
@@ -901,12 +899,8 @@ export default {
             console.log('recordDialog', this.$refs.recordDialog)
         },
         onHandlePictureCardPreview (val) {
-            this.isShow = true
             this.dialogImageUrl = val.punchImageUrl
             this.imgVisible = true
-        },
-        onClose () {
-            this.isShow = false
         },
         async onGetbranch () {
             await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
@@ -1133,9 +1127,11 @@ export default {
     }
 }
 .previewimg {
+    width: 100%;
     text-align: center;
     img {
         width: 500px;
+        height: 100%;
         padding: 10px;
     }
 }

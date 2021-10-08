@@ -13,10 +13,6 @@ export default {
             type: String,
             required: false,
             default: ''
-        },
-        isNeedClick: {
-            type: Boolean,
-            default: false
         }
     },
     data () {
@@ -26,10 +22,6 @@ export default {
     },
     methods: {
         async handle () {
-            // 在好橙工项目下打卡记录是弹窗预览
-            if (this.isNeedClick) {
-                return
-            }
             this.fileUrlAddToken = await OssFileUtils.getUrl(this.fileUrl)
             console.log(this.fileUrl)
             console.log(this.fileUrlAddToken)
