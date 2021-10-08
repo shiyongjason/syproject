@@ -228,17 +228,16 @@
             </div>
             <div class="project-plant" v-if="title=='工地打卡记录'">
                 <div class="plantimg" @click="onHandlePictureCardPreview(item)" v-for="(item,index) in plantList" :key="index">
-                    <img :src="item.punchImageUrl" alt="">
+                    <imageAddToken :fileUrl="item.punchImageUrl" alt="" isNeedClick></imageAddToken>
                 </div>
-
             </div>
             <span slot="footer" class="dialog-footer">
                 <h-button @click="()=>onCloneRecordDialog()">取消</h-button>
             </span>
         </el-dialog>
-        <el-dialog title="预览" :visible.sync="imgVisible">
+        <el-dialog title="预览" :visible.sync="imgVisible" @close='onClose'>
             <div class="previewimg">
-                <img :src="dialogImageUrl" alt="">
+                <imageAddToken v-if="isShow" :fileUrl="dialogImageUrl" alt=""></imageAddToken>
             </div>
         </el-dialog>
         <!-- 添加跟进记录 -->
@@ -313,6 +312,7 @@ import downloadFileAddToken from '@/components/downloadFileAddToken'
 import { USER_DEFAULT } from '@/views/crm/projectList2_0/const/index'
 import { getFlowUp, addFlowUp, getFlowUpCount } from '@/views/crm/projectList2_0/api/index'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
+import imageAddToken from '@/components/imageAddToken'
 import { newCache } from '@/utils/index'
 
 const _flowUpRequest = {
@@ -503,11 +503,13 @@ export default {
             title: '',
             imgVisible: false,
             dialogImageUrl: '',
-            plantList: []
+            plantList: [],
+
+            isShow: false
         }
     },
     components: {
-        projectDrawer, hosJoyTable, downloadFileAddToken, OssFileHosjoyUpload
+        projectDrawer, hosJoyTable, downloadFileAddToken, OssFileHosjoyUpload, imageAddToken
     },
     watch: {
         'flowUpRequest.type' (val) {
@@ -889,16 +891,22 @@ export default {
                 this.dialogRecord = this.projectRecord
             } else {
                 this.title = '工地打卡记录'
+                this.plantList = []
                 await this.findPunchlist({ projectId: val.id })
                 this.plantList = this.punchList
+                console.log(this.plantList)
             }
 
             this.dialogVisible = true
             console.log('recordDialog', this.$refs.recordDialog)
         },
         onHandlePictureCardPreview (val) {
+            this.isShow = true
             this.dialogImageUrl = val.punchImageUrl
             this.imgVisible = true
+        },
+        onClose () {
+            this.isShow = false
         },
         async onGetbranch () {
             await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
