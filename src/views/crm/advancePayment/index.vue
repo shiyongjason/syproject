@@ -63,6 +63,7 @@
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
                     <h-button table @click="onApproval(slotProps.data.row)" v-if="hosAuthCheck(advanceapprove)&&slotProps.data.row.status==1">审核</h-button>
+                    <h-button table @click="onWriteOff(slotProps.data.row)">核销</h-button>
                     <h-button table @click="onLook(slotProps.data.row)" v-if="hosAuthCheck(advancelook)"> 查看详情</h-button>
                     <h-button table @click="onApprovalRecord(slotProps.data.row)" v-if="hosAuthCheck(advancerecords)">审批记录</h-button>
                 </template>
@@ -109,6 +110,14 @@
                     <el-col :span="10" :offset='1'>审核结果：{{detailForm.approvalStatus==1?'通过':detailForm.approvalStatus==2?'不通过':'-'}}</el-col>
                     <el-col :span="10" :offset='1'>审核备注：{{detailForm.approvalRemark||'-'}}</el-col>
                 </el-row>
+                    <el-row ype="flex" class="row-bg">
+                    <el-col :span="10" :offset='1'>核销人：{{detailForm.writeOffUser||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>核销时间：{{detailForm.writeOffTime?moment(detailForm.writeOffTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
+
+                </el-row>
+                <el-row>
+                      <el-col :span="20" :offset='1'>核销原因：{{detailForm.writeOffRemark||'-'}}</el-col>
+                </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>应向上游支付(元)：{{detailForm.totalAmount|fundMoneyHasTail}}</el-col>
                     <el-col :span="10" :offset='1'>已向上游支付(元)：{{detailForm.paidAmount|fundMoneyHasTail}}</el-col>
@@ -118,7 +127,7 @@
                     <el-col :span="10" :offset='1'>支付日期：{{item.payDate}}</el-col>
                     <el-col :span="10" :offset='1'>操作人：{{item.createBy}}</el-col>
                     <el-col :span="10" :offset='1'>操作时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</el-col>
-                    <el-col :span="20" :offset='1' >上游支付凭证：
+                    <el-col :span="20" :offset='1'>上游支付凭证：
                         <div>
                             <div class="advance_wrap-pic1" v-for="(v,index) in item.payVouchers" :key="index">
                                 <!-- <ImageAddToken :fileUrl="v.fileUrl" alt="" /> -->
@@ -223,7 +232,7 @@
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="comfirmVisble = false">取 消</el-button>
-                <el-button type="primary"  @click="onSubmitPay">确认支付</el-button>
+                <el-button type="primary" @click="onSubmitPay">确认支付</el-button>
             </span>
         </el-dialog>
         <!-- 记录 -->
@@ -243,10 +252,25 @@
                 </p>
             </div>
         </el-dialog>
+        <!-- 核销 -->
+        <el-dialog title="核销" :visible.sync="writeOffVisible" width="30%" :before-close="()=>{writeOffVisible = false,this.$refs['writeOffForm'].clearValidate()}">
+            <div>
+                <el-form :model="writeOffForm" :rules="writeOffRules" ref="writeOffForm" label-width="100px" class="demo-ruleForm">
+                    <el-form-item label="核销原因" prop="writeOffRemark">
+                        <el-input type="textarea" placeholder="请输入" v-model="writeOffForm.writeOffRemark" maxlength="200"></el-input>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="onSaveWriteOff">确认核销</el-button>
+                <el-button @click="()=>{writeOffVisible = false,this.$refs['writeOffForm'].clearValidate()}">取 消</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script lang="tsx">
+import moment from 'moment'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { CreateElement } from 'vue'
@@ -254,13 +278,13 @@ import { Action, Getter, State } from 'vuex-class'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
 import ImageAddToken from '@/components/imageAddToken/index.vue'
 import downloadFileAddToken from '@/components/downloadFileAddToken/index.vue'
-
 import { deepCopy } from '@/utils/utils'
 import './css/css.scss'
-import { getPrePayList, getPrePayDetail, submitPrePay, getPreTotal, passPre, passFailPre, getApprovalHistory } from './api/index'
+import { getPrePayList, getPrePayDetail, submitPrePay, getPreTotal, passPre, passFailPre, getApprovalHistory, saveWriteOff } from './api/index'
 import { PrepaymentDetailResponse, PrepaymentSupplierSubmitResponse, RespContractSignHistory } from '@/interface/hbp-project'
-import moment from 'moment'
 import { CRM_ADVACE_UPSTREAMPAY, CRM_ADVACE_APPROVE, CRM_ADVACE_LOOK, CRM_ADVACE_RECORDS } from '@/utils/auth_const'
+import { newCache } from '@/utils/index'
+
 // 定义类型
 interface Query{
     [key:string]:any
@@ -297,6 +321,7 @@ export default class Advancelist extends Vue {
     advancelook = CRM_ADVACE_LOOK
     advancerecords = CRM_ADVACE_RECORDS
 
+    private writeOffVisible:boolean = false
     private dialogVisible:boolean = false
     private comfirmVisble:boolean = false
     private examineVisble:boolean = false
@@ -323,6 +348,9 @@ export default class Advancelist extends Vue {
         authCode: sessionStorage.getItem('authCode')
             ? JSON.parse(sessionStorage.getItem('authCode') || '')
             : ''
+    }
+    writeOffForm = {
+        writeOffRemark: ''
     }
     pickerOptions={
         disabledDate (time) {
@@ -371,13 +399,11 @@ export default class Advancelist extends Vue {
         }
     }
 
-    // pickerBeginDateBefore：{
-    //         disabledDate(time){
-    //             return time.getTime() < Date.now()-8.64e7   //如果当天可选，就不用减8.64e7
-    //         }
-    //     }
-
-    // validator: (rule, value, callback) => {
+    writeOffRules = {
+        writeOffRemark: [
+            { required: true, message: '请填写核销原因', trigger: 'blur' }
+        ]
+    }
     auditRules = {
         resource: [
             { required: true, message: '请选择审核结果', trigger: 'blur' }
@@ -487,6 +513,27 @@ export default class Advancelist extends Vue {
         this.getList()
     }
 
+    public onWriteOff (val):void{
+        this.writeOffForm.writeOffRemark = ''
+        if (val.status != 5) {
+            this.$message.warning('上游预付款支付单非待核销状态，不能手工变更为已核销状态')
+        } else {
+            this.writeOffVisible = true
+            this.id = val.id
+        }
+    }
+
+    public onSaveWriteOff () {
+        this.$refs['writeOffForm'].validate(async value => {
+            if (value) {
+                await saveWriteOff(this.id, { writeOffRemark: this.writeOffForm.writeOffRemark })
+                this.$message.success('核销成功')
+                this.writeOffVisible = false
+                this.getList()
+            }
+        })
+    }
+
     public onConfirmUpper (): void {
         // 上游支付
         this.comfirmVisble = true
@@ -496,7 +543,6 @@ export default class Advancelist extends Vue {
         this.payForm.payAmount = this.detailForm.surplusAmount
         this.payForm.payDate = moment(new Date()).format('YYYY-MM-DD')
         this.payForm.payVouchers = []
-        console.log(this.payForm.payDate)
     }
 
     public async mounted () {
@@ -510,6 +556,9 @@ export default class Advancelist extends Vue {
                 ? JSON.parse(sessionStorage.getItem('authCode') || '')
                 : ''
         })
+    }
+    beforeUpdate () {
+        newCache('Advancelist')
     }
 }
 </script>

@@ -40,13 +40,13 @@
             </div>
             <basicTable is-action :tableData="apiCompensationSchemeList" :tableLabel="tableLabel" :pagination="apiCompensationSchemePagination" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isShowIndex='true'>
                 <template slot="systemType" slot-scope="scope">
-                    <span class="colblue">{{SYSTEM_TYPE.get(scope.data.row.systemType)}}</span>
+                    <span>{{SYSTEM_TYPE.get(scope.data.row.systemType)}}</span>
                 </template>
                 <template slot="interfaceType" slot-scope="scope">
-                    <span class="colblue">{{INTERFACE_TYPE.get(scope.data.row.interfaceType)}}</span>
+                    <span>{{INTERFACE_TYPE.get(scope.data.row.interfaceType)}}</span>
                 </template>
                 <template slot="createTime" slot-scope="scope">
-                    <span class="colblue">{{ scope.data.row.createTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                    <span>{{ scope.data.row.createTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button v-if="!scope.data.row.resolved" table @click="reCall(scope.data.row)">问题处理</h-button>
@@ -57,8 +57,9 @@
 </template>
 
 <script>
-import { updateApiCompensationScheme } from './api/index'
 import { mapActions, mapGetters } from 'vuex'
+import { updateApiCompensationScheme } from './api/index'
+import { newCache } from '@/utils/index'
 
 const SYSTEM_TYPE = new Map([ // 1：司库 2：MIS 3：OA
     [ 1, '司库' ],
@@ -142,6 +143,9 @@ export default {
     mounted () {
         this.queryParamsTemp = { ...this.queryParams }
         this.findApiCompensationSchemeList(this.queryParams)
+    },
+    beforeUpdate () {
+        newCache('apiCompensationScheme')
     }
 }
 </script>

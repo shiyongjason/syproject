@@ -350,7 +350,7 @@ export default {
             }
         },
         'platData' (val) {
-            if (val[0].platformSignSource == 1) {
+            if (val && val[0].platformSignSource == 1) {
                 this.platLabel = [
                     { label: '签署方', prop: 'signerName' },
                     { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
@@ -364,7 +364,7 @@ export default {
                         }
                     }
                 ]
-            } else if (val[0].platformSignSource == 2) {
+            } else if (val && val[0].platformSignSource == 2) {
                 this.platLabel = [
                     { label: '签署方', prop: 'signerName' },
                     { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
