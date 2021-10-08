@@ -48,14 +48,14 @@
     </div>
 </template>
 <script lang='tsx'>
+import { CreateElement } from 'vue'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import { getCateGoryList, moveUpCategroy, moveDownCategroy, deleteCategory, getComfirCategory } from './api/index'
-import { CreateElement } from 'vue'
 import { deepCopy } from '@/utils/utils'
 import { CRM_CATEGORY_ADD, CRM_CATEGORY_EDIT, CRM_CATEGORY_DETELE, CRM_CATEGORY_LOOK, CRM_CATEGORY_MOVE } from '@/utils/auth_const'
-
+import { newCache } from '@/utils/index'
 @Component({
     name: 'Categroies',
     components: {
@@ -170,6 +170,10 @@ export default class Categroies extends Vue {
     mounted () {
         this.getList()
         this._queryParams = deepCopy(this.queryParams)
+    }
+
+    beforeUpdate () {
+        newCache('Categroies')
     }
 }
 </script>

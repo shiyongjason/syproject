@@ -90,7 +90,7 @@
             </el-tag>
             <basicTable :tableData="purchaseOrderList" :tableLabel="tableLabel" :pagination="purchaseOrderPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=350 :isShowIndex='true'>
                 <template slot="projectNo" slot-scope="scope">
-                    <span class="colblue" @click="goProjectDetail(scope.data.row)"> {{ scope.data.row.projectNo }}</span>
+                    <span class="link-cell" @click="goProjectDetail(scope.data.row)"> {{ scope.data.row.projectNo }}</span>
                 </template>
                 <template slot="poAmount" slot-scope="scope">
                     <span> {{ scope.data.row.poAmount | fundMoneyHasTail }}</span>
@@ -151,15 +151,16 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapState } from 'vuex'
+import moment from 'moment'
 import purchaseOrderDrawer from '@/views/crm/purchaseOrder/components/purchaseOrderDrawer'
 import purchaseOrderDialog from '@/views/crm/purchaseOrder/components/purchaseOrderDialog'
 import uploadCoManagerPhotos from '@/views/crm/purchaseOrder/components/uploadCoManagerPhotos'
-import { mapActions, mapGetters, mapState } from 'vuex'
 import PurchaseOrderDialogStatus from './dialogStatus'
 import PurchaseOrderDict from './purchaseOrderDict'
 import * as Auths from '@/utils/auth_const'
 import { getSeals } from './api/index'
-import moment from 'moment'
+import { newCache } from '@/utils/index'
 export default {
     name: 'purchaseOrder',
     data () {
@@ -333,6 +334,9 @@ export default {
             jobNumber: this.userInfo.jobNumber,
             authCode: JSON.parse(sessionStorage.getItem('authCode'))
         })
+    },
+    beforeUpdate () {
+        newCache('purchaseOrder')
     }
 }
 </script>
@@ -343,10 +347,6 @@ export default {
 }
 .eltagtop {
     margin-bottom: 10px;
-}
-.colblue {
-    color: #50b7f7;
-    cursor: pointer;
 }
 .seal_records {
     margin-bottom: 10px;

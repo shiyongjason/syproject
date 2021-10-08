@@ -29,3 +29,9 @@ $value in $style {
     clear: both;
     visibility: hidden
 }
+
+// Table cell带链接的样式
+.link-cell {
+    color: $linkColor;
+    cursor: pointer;
+}
