@@ -342,7 +342,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .autocompleterow {
     display: inline-flex;
     margin-right: 24px;

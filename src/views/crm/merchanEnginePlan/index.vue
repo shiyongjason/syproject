@@ -51,7 +51,7 @@ import { mapGetters, mapActions, mapState } from 'vuex'
 import { getCrmPlanList, deleteProjectScheme } from './api/index'
 import { iotUrl } from '@/api/config'
 import H5Preview from './H5Preview.vue'
-
+import { newCache } from '@/utils/index'
 export default {
     name: 'crmplan',
     components: {
@@ -140,6 +140,9 @@ export default {
                 })
             }).catch(() => { })
         }
+    },
+    beforeUpdate () {
+        newCache('crmplan')
     }
 }
 </script>

@@ -40,4 +40,22 @@
             flex: 0 0 350px;
         }
     }
+    .prev_wrap{
+        display: flex;
+        &-box{
+            margin-right: 50px;
+        }
+        &-proof{
+            margin-top: 15px;
+        }
+        &-flex{
+            display: flex;
+            flex-wrap: wrap;
+
+        }
+        &-flexpic{
+            width: 100px;
+            margin: 10px;
+        }
+    }
 }

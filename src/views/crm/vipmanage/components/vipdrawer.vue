@@ -360,7 +360,7 @@ export default {
         &-flex {
             flex: 1;
             &:nth-child(1) {
-                color: #ff7a45;
+                color: $hosjoyColor;
             }
             &:nth-child(2) {
                 text-align: right;

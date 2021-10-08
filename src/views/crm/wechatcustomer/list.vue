@@ -73,14 +73,14 @@
     </div>
 </template>
 <script>
-// import { findProducts, findBossSource, changeSpustatus, getBrands } from './api/index'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { REGISTEROR } from '../const'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import detailDrawer from './components/detailDrawer'
 import { deepCopy } from '@/utils/utils'
+import { newCache } from '@/utils/index'
 export default {
-    name: 'projectlist',
+    name: 'wechatlist',
     data () {
         return {
             registeor: REGISTEROR,
@@ -222,6 +222,9 @@ export default {
             }
             this.searchList()
         }
+    },
+    beforeUpdate () {
+        newCache('wechatlist')
     }
 }
 </script>
