@@ -28,6 +28,30 @@
                         <el-input v-model="queryParams.companyName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
+                  <div class="query-cont__col">
+                    <div class="query-col__label">已支付金额：</div>
+                    <div class="query-col__input">
+                 <el-input v-model="queryParams.minPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">元</template></el-input>
+                        -
+                        <el-input v-model="queryParams.maxPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">元</template></el-input>
+                    </div>
+                </div>
+                  <div class="query-cont__col">
+                    <div class="query-col__label">支付待确认金额：</div>
+                    <div class="query-col__input">
+                         <el-input v-model="queryParams.minPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">元</template></el-input>
+                        -
+                        <el-input v-model="queryParams.maxPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">元</template></el-input>
+                    </div>
+                </div>
+                  <div class="query-cont__col">
+                    <div class="query-col__label">剩余应支付金额：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.minPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">元</template></el-input>
+                        -
+                        <el-input v-model="queryParams.maxPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">元</template></el-input>
+                    </div>
+                </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">项目：</div>
                     <div class="query-col__input">
@@ -195,6 +219,10 @@ export default {
                 { label: '期数', prop: 'feeRepaymentOrder', width: '100', isHidden: this.queryParams.repaymentTypeArrays !== '3' },
                 { label: '金额', prop: 'paymentAmount', width: '150', align: 'right' },
                 { label: '状态', prop: 'paymentFlag', width: '150' },
+                { label: '剩余货款总金额', prop: 'paymentAmount', width: '150', align: 'center' },
+                { label: '已支付金额', prop: 'paymentAmount', width: '150', align: 'center' },
+                { label: '支付待确认金额', prop: 'paymentAmount', width: '150', align: 'center' },
+                { label: '待支付金额', prop: 'paymentAmount', width: '150', align: 'center' },
                 {
                     label: '应支付日期',
                     prop: 'schedulePaymentDate',

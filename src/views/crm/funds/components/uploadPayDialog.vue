@@ -1,8 +1,48 @@
 <template>
     <div>
         <el-dialog title="上传支付凭证" :visible.sync="dialogVisible" width="45%" :before-close="handleClose">
+
+             <!-- <el-form >
+
+        <el-form-item label="剩余应支付金额：" >
+               {{payMoney|fundMoneyHasTail}} 元
+        </el-form-item>
+           <el-form-item>
+             <el-input v-model="queryParams.maxPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">元</template></el-input>
+           <el-button @click="dialogVisible = false">全部</el-button>
+        </el-form-item>
+        <el-form-item label="剩余应支付金额：" >
+               {{payMoney|fundMoneyHasTail}} 元
+        </el-form-item>
+        <el-form-item class="uploadpay_third" >
+        <p class="uploadpay_second"><i>*</i>支付凭证：</p>
+        <p class="uploadpay_third">（请上传JPG/PNG/JPEG等主流图片格式，最多上传9张，单张大小不得超过20M）</p>
+        </el-form-item>
+            <el-form-item >
+          <HosJoyUpload v-model="attachDocs" :showPreView=true :fileSize=20 :action='action' :fileNum='9' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb()}" accept='.jpg,.png,jpeg' style="margin:10px 0 0 5px">
+                </HosJoyUpload>
+        </el-form-item >
+                  <el-form-item v-if="batchNumber>0" class="uploadpay_bot">
+当前经销商还有{{batchNumber}}条待支付账单，你可能想<b @click="onAllPay">“批量支付”</b>？
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="onSavePay">确 定</el-button>
+      </div> -->
             <div class="uploadpay">
-                <p>应支付金额：{{payMoney|fundMoneyHasTail}} 元</p>
+                <!-- <el-form >
+           <el-form-item>
+             <el-input v-model="queryParams.maxPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">元</template></el-input>
+           <el-button @click="dialogVisible = false">全部</el-button>
+        </el-form-item>
+        <el-form-item label="剩余应支付金额：" >
+               {{payMoney|fundMoneyHasTail}} 元
+        </el-form-item>
+                </el-form > -->
+                <p>剩余应支付金额：{{payMoney|fundMoneyHasTail}} 元</p>
+                <input type="text" >
+                 <button @click="dialogVisible = false">取 消</button>
                 <p class="uploadpay_second"><i>*</i>支付凭证：</p>
                 <p class="uploadpay_third">（请上传JPG/PNG/JPEG等主流图片格式，最多上传9张，单张大小不得超过20M）</p>
                 <HosJoyUpload v-model="attachDocs" :showPreView=true :fileSize=20 :action='action' :fileNum='9' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb()}" accept='.jpg,.png,jpeg' style="margin:10px 0 0 5px">
@@ -37,7 +77,13 @@ export default {
             companyId: '',
             batchNumber: '',
             payMoney: 0,
-            type: 2
+            type: 2,
+            rules: {
+                name: [
+                    { required: true, message: '请输入活动名称', trigger: 'blur' },
+                    { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                ]
+            }
         }
     },
     methods: {
@@ -101,18 +147,23 @@ export default {
             color: red;
         }
     }
-    &_second{
+    &_second {
         font-size: 16px;
     }
-    &_third{
+    &_third {
         color: #909399;
     }
-    b{
+    b {
         color: skyblue;
         cursor: pointer;
     }
 }
 .uploadpay_bot {
     margin-top: 20px;
+}
+
+.uploadpay_second i {
+    color: red;
+    font-size: 16px;
 }
 </style>

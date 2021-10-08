@@ -14,10 +14,10 @@ const FundsDict = Object.freeze({
                 key: 2,
                 value: '已支付'
             },
-            {
-                key: 3,
-                value: '支付失败'
-            },
+            // {
+            //     key: 3,
+            //     value: '支付失败'
+            // },
             {
                 key: 4,
                 value: '已取消'
