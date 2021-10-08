@@ -476,10 +476,10 @@
                             </p>
                         </template>
                     </div>
-                    <!-- 支付单关闭展示关闭原因
+                    <!-- 支付单关闭展示关闭原因 -->
                     <p v-if="statusKey.CLOSED === paymentOrderDetail.payOrderDetail.status" class="tips">
                         支付单关闭原因：{{ paymentOrderDetail.payOrderDetail.closeReason }}
-                    </p> -->
+                    </p>
                     <div class="drawer-footer">
                         <div class="drawer-button">
                             <h-button type="default" @click="handleClose">取消</h-button>

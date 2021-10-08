@@ -28,6 +28,14 @@
                         <el-input v-model="queryParams.purchaseOrderName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
+                  <div class="query-cont-col">
+                    <div class="query-col__label">放款交接状态：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.status" placeholder="请选择" multiple :clearable=true>
+                            <el-option :label="value" :value="key" v-for="[key, value] of paymentOrderStatusOptions" :key="key"></el-option>
+                        </el-select>
+                    </div>
+                </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">采购单编号：</div>
                     <div class="query-col__input">
@@ -66,6 +74,14 @@
                     <div class="query-col__label">申请人：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.applyName" placeholder="请输入" maxlength="50"></el-input>
+                    </div>
+                </div>
+                  <div class="query-cont-col">
+                    <div class="query-col__label">上游支付进度：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.status" placeholder="请选择" multiple :clearable=true>
+                            <el-option :label="value" :value="key" v-for="[key, value] of paymentOrderStatusOptions" :key="key"></el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -108,7 +124,7 @@
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW) && (paymentOrderStatusKey.FINANCE_AUDIT === scope.data.row.status)">审核</h-button>
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW_PROJECT) && (paymentOrderStatusKey.OPERATE_AUDIT === scope.data.row.status)">审核</h-button>
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenFundsDialog(scope.data.row.id, scope.data.row.status)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM) &&
-                              (paymentOrderStatusKey.DOWN_PAYMENT_CONFIRM === scope.data.row.status || paymentOrderStatusKey.REMAINING_PAYMENT_CONFIRM === scope.data.row.status)">
+                              (paymentOrderStatusKey.DOWN_PAYMENT_CONFIRM === scope.data.row.status || paymentOrderStatusKey.REMAINING_PAYMENT_CONFIRM === scope.data.row.status)&&scope.data.row.status!=9">
                         支付确认
                     </h-button>
                     <!-- <h-button table @click="tableOpenPrevPayDialog(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV) && (
@@ -122,7 +138,8 @@
                     <h-button table @click="openDrawer(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_DETAIL)">查看详情</h-button>
                     <h-button table @click="openDrawerPur(scope.data.row)">审批记录</h-button>
                     <!-- dealerCooperationMethod 1 垫资代采 2 代收代付 -->
-                    <h-button table @click="onUploadPay(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_UPLOADPAY)&&(scope.data.row.status == 9 ||scope.data.row.status == 1)">上传支付凭证</h-button>
+                    <h-button table @click="onUploadPay(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_UPLOADPAY)&&(scope.data.row.status == 1)">上传支付凭证</h-button>
+                    <h-button table @click="onDistribution(scope.data.row)" v-if="scope.data.row.status == 8||scope.data.row.status == 14||scope.data.row.status == 0||scope.data.row.status == 15||scope.data.row.status == 1||scope.data.row.status == 2 ">取消支付单</h-button>
                 </template>
             </basicTable>
         </div>
@@ -152,6 +169,7 @@
                 <div v-if="editHistory.length==0">暂无审批记录</div>
             </template>
         </h-drawer>
+
         <!-- 查看放款交接 -->
         <el-drawer v-if="loanTransferContentVisible" class="editordrawerbox" :title="operateStatus==1?'发起放款交接':'查看放款交接'" :visible.sync="loanTransferContentVisible" size='650px' :modal-append-to-body="false" :wrapperClosable='false' :before-close='editorDrawerClose'>
             <div class="drawer-content">
@@ -168,6 +186,21 @@
         </el-drawer>
 
         <UploadPayDialog ref="uploadpaydialog" @onBackSearch="findPaymentOrderList"/>
+
+           <el-dialog   title="取消支付单确认" :visible.sync="dialogVisible" :before-close="()=>dialogVisible = false">
+            <el-form style="margin:0 20px"  inline=false  :model="ruleForm" :rules="rules" ref="ruleForm" label-width="25px" class="demo-ruleForm">
+                <el-form-item prop=""  >
+                    <span>取消原因:</span>
+                    <el-input  type="textarea" v-model="ruleForm.remark" maxlength="200" show-word-limit :rows="6"></el-input>
+                    <p>其他说明:(可上传补充材料作为取消凭证，上传格式为PDF/JPG/JPEG/PNG)</p>
+                    <h-button table @click="onUploadPay(scope.data.row)" >+ 上传支付凭证</h-button>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <h-button @click="dialogVisible = false">取消</h-button>
+                <h-button type="primary" @click="submitForm" >确认</h-button>
+            </span>
+           </el-dialog>
     </div>
 </template>
 
@@ -230,6 +263,8 @@ export default {
                 { label: '采购单名称', prop: 'purchaseOrderName', width: '200' },
                 { label: '采购单编号', prop: 'purchaseOrderNo', width: '150' },
                 { label: '金额', prop: 'applyAmount', width: '150', align: 'right' },
+                { label: '上游支付进度', prop: 'status', width: '150' },
+                { label: '放款交接状态', prop: 'status', width: '150' },
                 { label: '状态', prop: 'status', width: '150' },
                 { label: '合作方式', prop: 'dealerCooperationMethod', width: '150' },
                 { label: '申请人', prop: 'applyName', width: '150' },
@@ -246,6 +281,7 @@ export default {
             approvePaymentVisible: false,
             prevPaymentVisible: false,
             lookPrevPaymentVisible: false,
+            dialogVisible: false,
             confirmReceiptVisible: false,
             lookReceiptVisible: false,
             fundsDialogVisible: false,
@@ -261,7 +297,16 @@ export default {
             // 审批记录
             approvalList: [],
             purchaseName: '',
-            editHistory: []
+            editHistory: [],
+            rules: {
+                remark: [
+                    { required: true, message: '请输入', trigger: 'blur' }
+                ]
+
+            },
+            ruleForm: {
+                remark: ''
+            }
         }
     },
     computed: {
@@ -434,6 +479,42 @@ export default {
         handleClose () {
             this.drawerPur = false
         },
+        // ----------------------
+        // 支付单取消
+        submitForm () {
+            this.ruleForm.updateBy = this.userInfo.employeeName
+            this.$refs.ruleForm.validate(async (valid) => {
+                if (valid) {
+                    try {
+                        await postVipsigner(this.ruleForm)
+                        this.dialogVisible = false
+                        this.$message({
+                            message: `取消成功`,
+                            type: 'success'
+                        })
+                        this.searchList()
+                    } catch (error) {
+
+                    }
+                } else {
+
+                }
+            })
+        },
+
+        onDistribution (val) {
+            this.stateN = ''
+            // console.log(val, this.copyRuleForm)
+            this.ruleForm = { ...this.copyRuleForm, companyVipId: val.id, pkDeptDoc: val.pkDeptDoc }
+            // this.ruleForm.companyVipId = val.id
+            // this.ruleForm.pkDeptDoc = val.pkDeptDoc
+            this.dialogVisible = true
+            this.$nextTick(() => {
+                this.$refs.ruleForm.clearValidate()
+            })
+        },
+
+        // ------------------------------------
         ...mapActions({
             findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList',
             findCrmdeplist: 'crmmanage/findCrmdeplist'
@@ -456,6 +537,7 @@ export default {
 </script>
 
 <style scoped lang='scss' >
+
 .eltagtop {
     margin-bottom: 10px;
 }
@@ -490,4 +572,5 @@ export default {
         color: #f00;
     }
 }
+
 </style>
