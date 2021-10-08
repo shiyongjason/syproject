@@ -18,7 +18,7 @@
                         <el-input v-model="dingCode" maxlength="40" placeholder="请输入钉钉ID" style="width: 224px;"></el-input>
                     </div>
                     <div class="flex-row">岗位：
-                        <el-select v-model="positionCodeList" multiple placeholder="岗位信息暂未配置" style="width: 90%;">
+                        <el-select v-model="positionCodeList" multiple filterable placeholder="岗位信息暂未配置" style="width: 90%;">
                             <el-option v-for="item in postOptions" :key="item.id" :label="item.positionName" :value="item.positionCode"></el-option>
                         </el-select>
                     </div>
@@ -140,7 +140,7 @@
 </template>
 
 <script>
-import { findMenuList, saveAuthRole, getRoleInfo, findpostList, getOrganizationTree } from './api/index'
+import { findMenuList, saveAuthRole, getRoleInfo, findpostList, getOrganizationTree, dynamicMatchPermission } from './api/index'
 import { mapState } from 'vuex'
 export default {
     name: 'role',
@@ -174,15 +174,22 @@ export default {
             userInfo: state => state.userInfo
         })
     },
+    watch: {
+        positionCodeList: {
+            handler (o) {
+                this.getDynamicMenuData()
+            },
+            immediate: true
+        }
+    },
     async mounted () {
-        this.tableList = []
         this.jobNumber = this.$route.query.jobNumber
-        const { data } = await findMenuList(this.jobNumber)
-        var copyData = JSON.parse(JSON.stringify(data))
-        this.handleData(copyData)
-        this.tableList = this.handlerTableList(copyData, 0)
+        // const { data } = await findMenuList(this.jobNumber)
+        // var copyData = JSON.parse(JSON.stringify(data))
+        // this.handleData(copyData)
+        // this.tableList = this.handlerTableList(copyData, 0)
         // console.log(this.tableList)
-        this.newTableList = JSON.parse(JSON.stringify(this.tableList))
+        // this.newTableList = JSON.parse(JSON.stringify(this.tableList))
         const { data: roleInfo } = await getRoleInfo(this.jobNumber)
         this.roleInfo = roleInfo
         this.dingCode = this.roleInfo.dingCode
@@ -192,6 +199,19 @@ export default {
         this.getOrganizationTree()
     },
     methods: {
+        // 动态获取权限
+        async getDynamicMenuData () {
+            const positionId = this.positionCodeList && this.positionCodeList.length > 0 ? this.positionCodeList.join(',') : ''
+            const dataJson = {
+                jobNumber: this.$route.query.jobNumber,
+                positionId: positionId
+            }
+            const { data } = await dynamicMatchPermission(dataJson)
+            let copyData = JSON.parse(JSON.stringify(data))
+            this.handleData(copyData)
+            this.tableList = this.handlerTableList(copyData, 0)
+            this.newTableList = JSON.parse(JSON.stringify(this.tableList))
+        },
         async getOrganizationTree () {
             const { data } = await getOrganizationTree()
             this.organizationTree = data

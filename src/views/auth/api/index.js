@@ -69,3 +69,6 @@ export const getOrganizationTree = () => axios.get(`/uaa/department/region-subse
 // 大区和分部
 export const getRegionsubs = (params) => axios.get(`/uaa/department/region-subsections`, { params })
 export const getJobSubs = (params) => axios.get(`/uaa/employee/subsection/${params.jobNumber}/${params.authCode}`)
+
+// 查询具体员工的权限（动态匹配岗位权限）
+export const dynamicMatchPermission = (params) => axios.get(`/uaa/employee/position-auth-list/${params.jobNumber}`, { params })

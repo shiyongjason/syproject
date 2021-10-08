@@ -415,3 +415,7 @@ export const CRM_ADVACE_UPSTREAMPAY = 118501
 export const CRM_ADVACE_APPROVE = 118502
 export const CRM_ADVACE_LOOK = 118503
 export const CRM_ADVACE_RECORDS = 118504
+// 权限管理-岗位设置
+export const AUTH_POSTSET_COPY = 13000
+export const AUTH_POSTSET_UPDATE = 13001
+export const AUTH_POSTSET_DELETE = 13002

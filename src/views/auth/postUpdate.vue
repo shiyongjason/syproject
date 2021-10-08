@@ -100,7 +100,7 @@ export default {
         return {
             ruleInfo: {
                 postName: '',
-                postCode: '',
+                postCode: '- -',
                 positionCodeList: []
             },
             currentEmployeeSubsectionsAuthCode: '',
@@ -173,7 +173,6 @@ export default {
                 if (result.data && result.data.length > 0) {
                     this.ruleInfo.positionCodeList = result.data.map(v => v.userName)
                 }
-                // this.ruleInfo.positionCodeList = data.positionAdmin ? data.positionAdmin.map(val => val.jobNumber) : []
             }
         },
         onGetnodes () {

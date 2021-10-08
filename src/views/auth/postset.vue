@@ -19,11 +19,10 @@
             <!--岗位信息table-->
             <basicTable :tableLabel="tableLabel" :tableData="postList" :isAction="true" :actionMinWidth="300" isShowIndex>
                 <template slot="action" slot-scope="scope">
-                    <!-- v-if="scope.data.row.admin"  -->
-                    <el-button class="orangeBtn" @click="onOperate(scope.data.row, 1)">配置人员</el-button>
-                    <el-button class="orangeBtn" @click="onOperate(scope.data.row, 2)">复制</el-button>
-                    <el-button class="orangeBtn" @click="onOperate(scope.data.row, 3)">修改</el-button>
-                    <el-button class="orangeBtn" @click="onOperate(scope.data.row, 4)">删除</el-button>
+                    <el-button v-if="scope.data.row.admin" class="orangeBtn" @click="onOperate(scope.data.row, 1)">配置人员</el-button>
+                    <el-button v-if="hosAuthCheck(Auths.AUTH_POSTSET_COPY)" class="orangeBtn" @click="onOperate(scope.data.row, 2)">复制</el-button>
+                    <el-button v-if="hosAuthCheck(Auths.AUTH_POSTSET_UPDATE)" class="orangeBtn" @click="onOperate(scope.data.row, 3)">修改</el-button>
+                    <el-button v-if="hosAuthCheck(Auths.AUTH_POSTSET_DELETE)" class="orangeBtn" @click="onOperate(scope.data.row, 4)">删除</el-button>
                 </template>
             </basicTable>
             <!-- 岗位配置人员 -->
@@ -48,6 +47,7 @@
 <script>
 import { findpostList, addpostList, updatepostList, postSave, deletepostList, postConfiguration } from './api/index'
 import employeeSelect from './components/employeeSelect.vue'
+import * as Auths from '@/utils/auth_const'
 import { mapState } from 'vuex'
 export default {
     name: 'postset',
@@ -142,7 +142,7 @@ export default {
                     break
                 case 4:
                     // 删除
-                    this.$confirm(`删除该岗位将影响${val.userName || '--'}的权限，是否确认删除该岗位?`, '确认删除', {
+                    this.$confirm(`删除该岗位将影响 [ ${val.userName || '--'} ] 的权限，是否确认删除该岗位?`, '确认删除', {
                         confirmButtonText: '确定删除',
                         cancelButtonText: '取消'
                     }).then(async () => {
