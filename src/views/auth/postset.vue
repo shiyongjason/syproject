@@ -35,7 +35,7 @@
                         <span>好橙工产品经理</span>
                     </el-form-item>
                     <el-form-item label="岗位人员：" prop="postPeople">
-                        <employeeSelect v-model="ruleForm.postPeople" ref="postPersonRef"></employeeSelect>
+                        <employeeSelect v-model="ruleForm.postPeople" ref="postPersonRef" :option="postOptions"></employeeSelect>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -77,7 +77,8 @@ export default {
                     { required: true, message: '请选择岗位人员', trigger: 'change' }
                 ]
             },
-            positionCode: ''
+            positionCode: '',
+            postOptions: []
         }
     },
     components: {
@@ -121,7 +122,13 @@ export default {
                     this.positionCode = val.positionCode
                     const { data } = await postConfiguration(val.positionCode)
                     if (data && data.length > 0) {
-                        this.ruleForm.postPeople = data.map(v => v.userName)
+                        this.postOptions = data.map(v => {
+                            return {
+                                psncode: v.jobNumber,
+                                psnname: v.userName
+                            }
+                        })
+                        this.ruleForm.postPeople = data.map(v => v.jobNumber)
                     }
                     break
                 case 2:
