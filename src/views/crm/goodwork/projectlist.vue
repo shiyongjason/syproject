@@ -228,7 +228,7 @@
             </div>
             <div class="project-plant" v-if="title=='工地打卡记录'">
                 <div class="plantimg" @click="onHandlePictureCardPreview(item)" v-for="(item,index) in plantList" :key="index">
-                    <img :src="item.punchImageUrl" alt="">
+                    <imageAddToken :src="item.punchImageUrl" alt=""></imageAddToken>
                 </div>
 
             </div>
@@ -313,6 +313,7 @@ import downloadFileAddToken from '@/components/downloadFileAddToken'
 import { USER_DEFAULT } from '@/views/crm/projectList2_0/const/index'
 import { getFlowUp, addFlowUp, getFlowUpCount } from '@/views/crm/projectList2_0/api/index'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
+import imageAddToken from '@/components/imageAddToken'
 import { newCache } from '@/utils/index'
 
 const _flowUpRequest = {
@@ -507,7 +508,7 @@ export default {
         }
     },
     components: {
-        projectDrawer, hosJoyTable, downloadFileAddToken, OssFileHosjoyUpload
+        projectDrawer, hosJoyTable, downloadFileAddToken, OssFileHosjoyUpload, imageAddToken
     },
     watch: {
         'flowUpRequest.type' (val) {
