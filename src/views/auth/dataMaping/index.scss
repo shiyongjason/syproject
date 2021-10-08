@@ -5,17 +5,31 @@
     justify-content: space-between;
     font-size: 14px;
     padding-right: 8px;
-  }
-  .flex-wrap{
-      display: flex;
-      .page-left{
-          width: 40%;
-      }
-      .page-right{
-        width: 40%;
-    }
-    .page-center{
+}
+.flex-wrap {
+    display: flex;
+    .page-left {
         width: 20%;
         border: 1px solid #e5e5;
+        padding: 10px;
     }
-  }
+    .page-right {
+        width: 65%;
+        border: 1px solid #e5e5;
+        padding: 10px;
+    }
+    .page-center {
+        width: 10%;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+    }
+}
+.page-right-tree {
+    .el-tag {
+        margin-right: 10px;
+    }
+}
+.page-title{
+    margin-bottom:10px
+}
