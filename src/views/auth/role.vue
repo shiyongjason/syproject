@@ -429,6 +429,8 @@ export default {
         },
         async onResetRole () {
             await resetPermission({ jobNumber: this.jobNumber })
+            this.getDynamicMenuData()
+            this.positionCodeList = []
         },
         onShowFieldConfig (val, item) {
             // 当选择全部的时候，设置所有的配置都是选中状态

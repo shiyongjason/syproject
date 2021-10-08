@@ -14,16 +14,16 @@ export default {
         }
     },
     props: {
-        // 是否回显
-        postCode: {
-            type: String,
-            default: ''
-        }
+        // 修改岗位管理员-回显option
+        postOptions: Array
     },
     watch: {
-        postCode: {
+        postOptions: {
             handler (o) {
-                o && this.getSelectionData(o)
+                if (o && o.length > 0) {
+                    console.log(o)
+                    this.option = o
+                }
             },
             immediate: true
         }
@@ -38,19 +38,6 @@ export default {
             } else {
                 this.option = []
             }
-        },
-        async getSelectionData (val) {
-            this.loading = true
-            const { data } = await Api.postConfiguration(val)
-            if (data && data.length > 0) {
-                this.option = data.map(val => {
-                    return {
-                        psncode: val.jobNumber,
-                        psnname: val.userName
-                    }
-                })
-            }
-            this.loading = false
         }
     }
 }
