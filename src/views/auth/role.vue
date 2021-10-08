@@ -89,7 +89,7 @@
             </div>
         </div>
         <div class="h-foot" :class="isCollapse ? 'minLeft' : 'maxLeft'">
-            <el-button @click="onCancelRole()">重 置</el-button>
+            <el-button @click="onResetRole()">重 置</el-button>
             <el-button @click="onCancelRole()">取 消</el-button>
             <el-button type="primary" @click="onSaveRole()">保 存</el-button>
         </div>
@@ -140,7 +140,7 @@
 </template>
 
 <script>
-import { findMenuList, saveAuthRole, getRoleInfo, findpostList, getOrganizationTree, dynamicMatchPermission } from './api/index'
+import { findMenuList, saveAuthRole, getRoleInfo, findpostList, getOrganizationTree, dynamicMatchPermission, resetPermission } from './api/index'
 import { mapState } from 'vuex'
 export default {
     name: 'role',
@@ -176,7 +176,7 @@ export default {
     },
     watch: {
         positionCodeList: {
-            handler (o) {
+            handler () {
                 this.getDynamicMenuData()
             },
             immediate: true
@@ -201,10 +201,10 @@ export default {
     methods: {
         // 动态获取权限
         async getDynamicMenuData () {
-            const positionId = this.positionCodeList && this.positionCodeList.length > 0 ? this.positionCodeList.join(',') : ''
+            const positionCode = this.positionCodeList && this.positionCodeList.length > 0 ? this.positionCodeList.join(',') : ''
             const dataJson = {
                 jobNumber: this.$route.query.jobNumber,
-                positionId: positionId
+                positionCode: positionCode
             }
             const { data } = await dynamicMatchPermission(dataJson)
             let copyData = JSON.parse(JSON.stringify(data))
@@ -406,6 +406,7 @@ export default {
             }
             if (params.authCodes.length < 1) {
                 this.$message({ message: '请勾选数据范围配置', type: 'warning' })
+                return
             }
             await saveAuthRole(params)
             this.$message({ message: '权限保存成功', type: 'success' })
@@ -425,6 +426,9 @@ export default {
             } else {
                 this.$router.push({ path: '/auth/organization' })
             }
+        },
+        async onResetRole () {
+            await resetPermission({ jobNumber: this.jobNumber })
         },
         onShowFieldConfig (val, item) {
             // 当选择全部的时候，设置所有的配置都是选中状态

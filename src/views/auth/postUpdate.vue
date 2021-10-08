@@ -15,7 +15,7 @@
                 </div>
                 <div class="flex-col">
                     <el-form-item class="flex-row" label="岗位管理员：">
-                        <employeeSelect v-model="ruleInfo.positionCodeList"></employeeSelect>
+                        <employeeSelect v-model="ruleInfo.positionCodeList" :postCode="ruleInfo.postCode"></employeeSelect>
                     </el-form-item>
                 </div>
             </el-form>
@@ -100,7 +100,7 @@ export default {
         return {
             ruleInfo: {
                 postName: '',
-                postCode: '- -',
+                postCode: '',
                 positionCodeList: []
             },
             currentEmployeeSubsectionsAuthCode: '',
@@ -169,9 +169,12 @@ export default {
             if (this.queryType == 3) {
                 this.ruleInfo.postName = data.positionName
                 this.ruleInfo.postCode = data.positionCode
-                const result = await postConfiguration(data.positionCode)
-                if (result.data && result.data.length > 0) {
-                    this.ruleInfo.positionCodeList = result.data.map(v => v.userName)
+                // const result = await postConfiguration(data.positionCode)
+                // if (result.data && result.data.length > 0) {
+                //     this.ruleInfo.positionCodeList = result.data.map(v => v.jobNumber)
+                // }
+                if (data.positionAdmin && data.positionAdmin.length > 0) {
+                    this.ruleInfo.positionCodeList = data.positionAdmin.map(v => v.jobNumber)
                 }
             }
         },
@@ -365,6 +368,7 @@ export default {
                     }
                     if (params.authCodes.length < 1) {
                         this.$message({ message: '请勾选数据范围配置', type: 'warning' })
+                        return
                     }
                     console.log(params)
                     // 修改传递Id

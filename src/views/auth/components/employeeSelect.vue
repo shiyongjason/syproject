@@ -13,6 +13,21 @@ export default {
             option: []
         }
     },
+    props: {
+        // 是否回显
+        postCode: {
+            type: String,
+            default: ''
+        }
+    },
+    watch: {
+        postCode: {
+            handler (o) {
+                o && this.getSelectionData(o)
+            },
+            immediate: true
+        }
+    },
     methods: {
         async remotePostPeoMethod (val) {
             if (val !== '') {
@@ -23,6 +38,19 @@ export default {
             } else {
                 this.option = []
             }
+        },
+        async getSelectionData (val) {
+            this.loading = true
+            const { data } = await Api.postConfiguration(val)
+            if (data && data.length > 0) {
+                this.option = data.map(val => {
+                    return {
+                        psncode: val.jobNumber,
+                        psnname: val.userName
+                    }
+                })
+            }
+            this.loading = false
         }
     }
 }

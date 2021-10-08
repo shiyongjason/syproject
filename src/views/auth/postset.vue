@@ -20,9 +20,12 @@
             <basicTable :tableLabel="tableLabel" :tableData="postList" :isAction="true" :actionMinWidth="300" isShowIndex>
                 <template slot="action" slot-scope="scope">
                     <el-button v-if="scope.data.row.admin" class="orangeBtn" @click="onOperate(scope.data.row, 1)">配置人员</el-button>
-                    <el-button v-if="hosAuthCheck(Auths.AUTH_POSTSET_COPY)" class="orangeBtn" @click="onOperate(scope.data.row, 2)">复制</el-button>
-                    <el-button v-if="hosAuthCheck(Auths.AUTH_POSTSET_UPDATE)" class="orangeBtn" @click="onOperate(scope.data.row, 3)">修改</el-button>
-                    <el-button v-if="hosAuthCheck(Auths.AUTH_POSTSET_DELETE)" class="orangeBtn" @click="onOperate(scope.data.row, 4)">删除</el-button>
+                    <!-- v-if="hosAuthCheck(Auths.AUTH_POSTSET_COPY)" -->
+                    <el-button class="orangeBtn" @click="onOperate(scope.data.row, 2)">复制</el-button>
+                    <!-- v-if="hosAuthCheck(Auths.AUTH_POSTSET_UPDATE)" -->
+                    <el-button class="orangeBtn" @click="onOperate(scope.data.row, 3)">修改</el-button>
+                    <!-- v-if="hosAuthCheck(Auths.AUTH_POSTSET_DELETE)" -->
+                    <el-button class="orangeBtn" @click="onOperate(scope.data.row, 4)">删除</el-button>
                 </template>
             </basicTable>
             <!-- 岗位配置人员 -->
@@ -53,6 +56,7 @@ export default {
     name: 'postset',
     data () {
         return {
+            Auths,
             tableLabel: [
                 { label: '岗位名称', prop: 'positionName' },
                 { label: '岗位code', prop: 'positionCode', icon: 'el-icon-question', content: 'code：实现岗位与后台数据相匹配' },

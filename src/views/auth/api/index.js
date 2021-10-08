@@ -72,3 +72,6 @@ export const getJobSubs = (params) => axios.get(`/uaa/employee/subsection/${para
 
 // 查询具体员工的权限（动态匹配岗位权限）
 export const dynamicMatchPermission = (params) => axios.get(`/uaa/employee/position-auth-list/${params.jobNumber}`, { params })
+
+// 重置权限
+export const resetPermission = (params) => axios.patch(`/uaa/employee/${params.jobNumber}/reset`)
