@@ -324,6 +324,9 @@ export const UPSTREAM_PAY_EXPORT = 800207
 // 支付单管理放款交接
 export const LENDER_HANDOVER = 800208
 
+// 首付款待确认
+export const PREV_PROOF = 800209
+
 // 删除该企业
 export const CRM_AUTHEN_DELETE = 109601
 // 修改客户经理
@@ -415,3 +418,7 @@ export const CRM_ADVACE_UPSTREAMPAY = 118501
 export const CRM_ADVACE_APPROVE = 118502
 export const CRM_ADVACE_LOOK = 118503
 export const CRM_ADVACE_RECORDS = 118504
+// 权限管理-岗位设置
+export const AUTH_POSTSET_COPY = 13000
+export const AUTH_POSTSET_UPDATE = 13001
+export const AUTH_POSTSET_DELETE = 13002

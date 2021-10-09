@@ -6,6 +6,62 @@
   "description": "好享家后台图标管理",
   "glyphs": [
     {
+      "icon_id": "24575356",
+      "name": "舒适云logo",
+      "font_class": "shushiyunlogo",
+      "unicode": "e65a",
+      "unicode_decimal": 58970
+    },
+    {
+      "icon_id": "22755608",
+      "name": "hosjoy_offline",
+      "font_class": "hosjoy_offline",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
+      "icon_id": "22755609",
+      "name": "hosjoy_online",
+      "font_class": "hosjoy_online",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
+      "icon_id": "22755610",
+      "name": "hosjoy_reimbursement",
+      "font_class": "hosjoy_reimbursement",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "22755611",
+      "name": "hosjoy_total",
+      "font_class": "hosjoy_total",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    },
+    {
+      "icon_id": "22755612",
+      "name": "hosjoy_overdue@3x",
+      "font_class": "a-hosjoy_overdue3x",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
+      "icon_id": "22755613",
+      "name": "hosjoy_withdrawal",
+      "font_class": "hosjoy_withdrawal",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
+      "icon_id": "22755614",
+      "name": "hosjoy_advance",
+      "font_class": "hosjoy_advance",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
       "icon_id": "17920432",
       "name": "shushiyun_merchant",
       "font_class": "shushiyun_merchant1",
