@@ -60,6 +60,7 @@ export default {
 
         },
         onAllPay () {
+            this.dialogVisible = false
             this.$router.push({ path: '/goodwork/batchpay', query: { companyId: this.companyId } })
         },
         async onSavePay () {
