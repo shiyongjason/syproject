@@ -1,29 +1,24 @@
 <template>
     <div class="page-body">
-        <div class="role">
+        <div class="post-update">
             <div class="h-page-title">
-                基本信息
+                岗位信息
             </div>
-            <div class="h-page-flex">
+            <el-form :model="ruleInfo" ref="ruleInfoRef" label-width="100px" class="h-page-flex">
                 <div class="flex-col">
-                    <div class="flex-row">姓名：{{roleInfo.psnname}}</div>
-                    <div class="flex-row">工号：{{roleInfo.psncode}}</div>
+                    <el-form-item class="flex-row" prop="postName" label="岗位名称：" :rules="[{required: true, message: '请输入岗位名称', trigger: 'blur' }]">
+                        <el-input v-model="ruleInfo.postName" maxlength="40" placeholder="请输入岗位名称"></el-input>
+                    </el-form-item>
+                    <el-form-item class="flex-row" label="岗位code：">
+                        <el-input disabled v-model="ruleInfo.postCode" maxlength="40"></el-input>
+                    </el-form-item>
                 </div>
                 <div class="flex-col">
-                    <div class="flex-row">登录名：{{roleInfo.mobile}}</div>
-                    <div class="flex-row">所属部门：{{roleInfo.deptName}}</div>
+                    <el-form-item class="flex-row" label="岗位管理员：">
+                        <employeeSelect v-model="ruleInfo.positionCodeList" :postOptions="postOptions"></employeeSelect>
+                    </el-form-item>
                 </div>
-                <div class="flex-col">
-                    <div class="flex-row">钉钉ID：
-                        <el-input v-model="dingCode" maxlength="40" placeholder="请输入钉钉ID" style="width: 224px;"></el-input>
-                    </div>
-                    <div class="flex-row">岗位：
-                        <el-select v-model="positionCodeList" multiple filterable placeholder="岗位信息暂未配置" style="width: 90%;">
-                            <el-option v-for="item in postOptions" :key="item.id" :label="item.positionName" :value="item.positionCode"></el-option>
-                        </el-select>
-                    </div>
-                </div>
-            </div>
+            </el-form>
             <div class="h-page-title">
                 权限管理
             </div>
@@ -87,66 +82,27 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-        <div class="h-foot" :class="isCollapse ? 'minLeft' : 'maxLeft'">
-            <el-button @click="onResetRole()">重 置</el-button>
-            <el-button @click="onCancelRole()">取 消</el-button>
-            <el-button type="primary" @click="onSaveRole()">保 存</el-button>
-        </div>
-        <el-dialog :title="layerTitle" :visible.sync="fieldVisible" width="40%" :close-on-click-modal='false' :before-close="onCancelFieldConfig">
-            <div class="h-dialog">
-                <table class="tablelist textCenter" v-if="layerType!=2">
-                    <thead>
-                        <tr>
-                            <td width="30%">菜单</td>
-                            <td width="70%">权限</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>{{ layerAuthName }}</td>
-                            <td style="text-align:left">
-                                <el-checkbox v-model="item.have" :label="item.resourceName" v-for="(item,index) in fieldConfig" :key="index"></el-checkbox>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="tablelist textCenter" v-else>
-                    <thead>
-                        <tr>
-                            <td width="30%">筛选项</td>
-                            <td width="70%">数据范围</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>所属分部</td>
-                            <td>
-                                <div class="treetable">
-                                    <el-tree :data="organizationTree" ref="treetable" :default-checked-keys="checkedkeys" show-checkbox node-key="pkDeptDoc" default-expand-all highlight-current :props="{label:'deptName'}">
-                                    </el-tree>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="h-foot" :class="isCollapse ? 'minLeft' : 'maxLeft'">
+                <el-button @click="onCancelRole()">取 消</el-button>
+                <el-button type="primary" @click="onSavePost()">保 存</el-button>
             </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="onCancelFieldConfig()">取 消</el-button>
-                <el-button type="primary" @click="fieldVisible = false;onGetnodes()">保 存</el-button>
-            </span>
-        </el-dialog>
+        </div>
     </div>
 </template>
 
 <script>
-import { findMenuList, saveAuthRole, getRoleInfo, findpostList, getOrganizationTree, dynamicMatchPermission, resetPermission } from './api/index'
+import { addpostList, postDetail, postAuthList, updatepostList, postConfiguration } from './api/index'
+import employeeSelect from './components/employeeSelect.vue'
 import { mapState } from 'vuex'
 export default {
-    name: 'role',
+    name: 'postUpdate',
     data () {
         return {
-            organizationTree: [],
+            ruleInfo: {
+                postName: '',
+                postCode: '',
+                positionCodeList: []
+            },
             currentEmployeeSubsectionsAuthCode: '',
             tableList: [],
             newTableList: [], // newTableList记录初始权限配置，在取消的时候判断是否有权限变更
@@ -155,18 +111,17 @@ export default {
             layerTitle: '', // 弹出层标题
             layerAuthName: '', // 弹出层列表中的表格名称
             layerType: '',
-            roleInfo: {
-                deptName: '',
-                mobile: '',
-                psncode: '',
-                psnname: ''
-            },
             jobNumber: '',
-            postOptions: [],
-            positionCodeList: [],
-            dingCode: '',
-            checkedkeys: []
+            postOptions: [], // 岗位管理员
+            checkedkeys: [],
+
+            // 接收参数
+            queryId: '',
+            queryType: '' // 1 新增岗位 2 复制 3 修改
         }
+    },
+    components: {
+        employeeSelect
     },
     computed: {
         ...mapState({
@@ -174,47 +129,56 @@ export default {
             userInfo: state => state.userInfo
         })
     },
-    watch: {
-        positionCodeList: {
-            handler () {
-                this.getDynamicMenuData()
-            },
-            immediate: true
+    async mounted () {
+        // type 1 新增岗位 2 复制 3 修改
+        const { type, id } = this.$route.query
+        this.queryId = id
+        this.queryType = type
+        this.tableList = []
+        switch (parseInt(type)) {
+            case 1:
+                this.postAuthList()
+                break
+            case 2:
+                this.getDetail()
+                break
+            case 3:
+                this.getDetail()
+                break
+            default: break
         }
     },
-    async mounted () {
-        this.jobNumber = this.$route.query.jobNumber
-        // const { data } = await findMenuList(this.jobNumber)
-        // var copyData = JSON.parse(JSON.stringify(data))
-        // this.handleData(copyData)
-        // this.tableList = this.handlerTableList(copyData, 0)
-        // console.log(this.tableList)
-        // this.newTableList = JSON.parse(JSON.stringify(this.tableList))
-        const { data: roleInfo } = await getRoleInfo(this.jobNumber)
-        this.roleInfo = roleInfo
-        this.dingCode = this.roleInfo.dingCode
-        this.positionCodeList = this.roleInfo.positionCodeList
-        const { data: postOptions } = await findpostList('')
-        this.postOptions = postOptions
-        this.getOrganizationTree()
-    },
     methods: {
-        // 动态获取权限
-        async getDynamicMenuData () {
-            const positionCode = this.positionCodeList && this.positionCodeList.length > 0 ? this.positionCodeList.join(',') : ''
-            const dataJson = {
-                jobNumber: this.$route.query.jobNumber,
-                positionCode: positionCode
-            }
-            const { data } = await dynamicMatchPermission(dataJson)
+        // 岗位新增-权限集合
+        async postAuthList () {
+            const { data } = await postAuthList()
             let copyData = JSON.parse(JSON.stringify(data))
             this.handleData(copyData)
             this.tableList = this.handlerTableList(copyData, 0)
             this.newTableList = JSON.parse(JSON.stringify(this.tableList))
         },
-        async getOrganizationTree () {
-            const { data } = await getOrganizationTree()
-            this.organizationTree = data
+        // 岗位复制修改
+        async getDetail () {
+            const { data } = await postDetail(this.queryId)
+            let copyData = JSON.parse(JSON.stringify(data.employeeAuthList))
+            this.handleData(copyData)
+            this.tableList = this.handlerTableList(copyData, 0)
+            this.newTableList = JSON.parse(JSON.stringify(this.tableList))
+
+            // 修改时回显
+            if (this.queryType == 3) {
+                this.ruleInfo.postName = data.positionName
+                this.ruleInfo.postCode = data.positionCode
+                if (data.positionAdmin && data.positionAdmin.length > 0) {
+                    this.postOptions = data.positionAdmin.map(val => {
+                        return {
+                            psncode: val.jobNumber,
+                            psnname: val.userName
+                        }
+                    })
+                    this.ruleInfo.positionCodeList = data.positionAdmin.map(v => v.jobNumber)
+                }
+            }
         },
         onGetnodes () {
             if (this.layerType == 2) {
@@ -386,31 +350,40 @@ export default {
                 }
             })
         },
-        async onSaveRole () {
-            let resourceObj = {
-                resourceIds: [],
-                authCodes: [],
-                authTypeList: [],
-                employeeSubsections: []
-            }
-            this.handlerRoleFilter(JSON.parse(JSON.stringify(this.tableList)), resourceObj)
-            const params = {
-                employeeSubsections: resourceObj.employeeSubsections,
-                resourceIds: resourceObj.resourceIds,
-                authCodes: resourceObj.authCodes,
-                authTypeList: resourceObj.authTypeList,
-                jobNumber: this.jobNumber,
-                dingCode: this.dingCode,
-                positionCodeList: this.positionCodeList,
-                userCode: this.jobNumber
-            }
-            if (params.authCodes.length < 1) {
-                this.$message({ message: '请勾选数据范围配置', type: 'warning' })
-                return
-            }
-            await saveAuthRole(params)
-            this.$message({ message: '权限保存成功', type: 'success' })
-            this.$router.push({ path: '/auth/organization' })
+        async onSavePost () {
+            this.$refs['ruleInfoRef'].validate(async (validate) => {
+                if (validate) {
+                    let resourceObj = {
+                        resourceIds: [],
+                        authCodes: [],
+                        authTypeList: [],
+                        employeeSubsections: []
+                    }
+                    this.handlerRoleFilter(JSON.parse(JSON.stringify(this.tableList)), resourceObj)
+                    const params = {
+                        employeeSubsections: resourceObj.employeeSubsections,
+                        resourceIds: resourceObj.resourceIds,
+                        authCodes: resourceObj.authCodes,
+                        authTypeList: resourceObj.authTypeList,
+                        jobNumber: this.ruleInfo.positionCodeList,
+                        positionName: this.ruleInfo.postName
+                    }
+                    if (params.authCodes.length < 1) {
+                        this.$message({ message: '请勾选数据范围配置', type: 'warning' })
+                        return
+                    }
+                    console.log(params)
+                    // 修改传递Id
+                    if (this.queryType == 3) {
+                        params.id = this.queryId
+                        await updatepostList(params)
+                    } else {
+                        await addpostList(params)
+                    }
+                    this.$message({ message: '岗位保存成功', type: 'success' })
+                    this.$router.push({ path: '/auth/postset' })
+                }
+            })
         },
         onCancelRole () {
             if (JSON.stringify(this.newTableList) != JSON.stringify(this.tableList)) {
@@ -420,19 +393,12 @@ export default {
                     cancelButtonText: '确认取消'
                 }).catch(action => {
                     if (action === 'cancel') {
-                        this.$router.push({ path: '/auth/organization' })
+                        this.$router.push({ path: '/auth/postset' })
                     }
                 })
             } else {
-                this.$router.push({ path: '/auth/organization' })
+                this.$router.push({ path: '/auth/postset' })
             }
-        },
-        async onResetRole () {
-            await resetPermission({ jobNumber: this.jobNumber })
-            this.positionCodeList = []
-            this.tableList = []
-            this.newTableList = []
-            this.getDynamicMenuData()
         },
         onShowFieldConfig (val, item) {
             // 当选择全部的时候，设置所有的配置都是选中状态
@@ -476,8 +442,6 @@ export default {
                 } else {
                     this.checkedkeys = []
                 }
-                // this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
-                // this.checkedkeys = JSON.stringify(item.employeeSubsections) == '{}' ? JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes)) : []
                 this.cloneEmployeeSubsections = JSON.parse(JSON.stringify(item.employeeSubsections))
             } else {
                 this.cloneConfig = JSON.parse(JSON.stringify(item.authResourceList))
@@ -501,7 +465,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.role {
+.post-update {
     background: #ffffff;
     padding: 20px 24px;
     margin-bottom: 50px;
@@ -514,10 +478,10 @@ export default {
     padding-left: 10px;
 }
 .h-page-flex {
-    min-height: 180px;
+    min-height: 160px;
     padding: 0 10px 10px;
     .flex-col {
-        min-height: 45px;
+        min-height: 80px;
         align-items: center;
         display: flex;
         .flex-row {
@@ -525,7 +489,6 @@ export default {
         }
     }
 }
-
 .h-roletable {
     padding: 10px 0;
 }
@@ -615,9 +578,7 @@ export default {
             border-right: none;
         }
         &:last-child {
-            // border-right: 1px solid #DCDFE6;
             border-radius: 0 4px 4px 0;
-            // border-left: none;
         }
     }
     button[disabled] {
@@ -626,7 +587,6 @@ export default {
         border-color: #ddd;
         border-left: 1px solid #ddd !important;
         border-right: 1px solid #ddd !important;
-        // border-left: 1px solid #dcdfe6 !important;
         border-right: 1px solid #ffffff !important;
         &:hover {
             color: #dddddd;
@@ -641,15 +601,5 @@ export default {
     border-color: #ff7a45;
     border-left: 1px solid #ff7a45 !important;
     border-right: 1px solid #ff7a45 !important;
-}
-.h-dialog {
-    margin-top: 20px;
-    .treetable {
-        height: 350px;
-        overflow: scroll;
-    }
-    .el-checkbox {
-        margin-left: 10px;
-    }
 }
 </style>
