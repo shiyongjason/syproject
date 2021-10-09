@@ -20,12 +20,9 @@
             <basicTable :tableLabel="tableLabel" :tableData="postList" :isAction="true" :actionMinWidth="300" isShowIndex>
                 <template slot="action" slot-scope="scope">
                     <el-button v-if="scope.data.row.admin" class="orangeBtn" @click="onOperate(scope.data.row, 1)">配置人员</el-button>
-                    <!-- v-if="hosAuthCheck(Auths.AUTH_POSTSET_COPY)" -->
-                    <el-button class="orangeBtn" @click="onOperate(scope.data.row, 2)">复制</el-button>
-                    <!-- v-if="hosAuthCheck(Auths.AUTH_POSTSET_UPDATE)" -->
-                    <el-button class="orangeBtn" @click="onOperate(scope.data.row, 3)">修改</el-button>
-                    <!-- v-if="hosAuthCheck(Auths.AUTH_POSTSET_DELETE)" -->
-                    <el-button class="orangeBtn" @click="onOperate(scope.data.row, 4)">删除</el-button>
+                    <el-button class="orangeBtn" v-if="hosAuthCheck(Auths.AUTH_POSTSET_COPY)" @click="onOperate(scope.data.row, 2)">复制</el-button>
+                    <el-button class="orangeBtn" v-if="hosAuthCheck(Auths.AUTH_POSTSET_UPDATE)" @click="onOperate(scope.data.row, 3)">修改</el-button>
+                    <el-button class="orangeBtn" v-if="hosAuthCheck(Auths.AUTH_POSTSET_DELETE)" @click="onOperate(scope.data.row, 4)">删除</el-button>
                 </template>
             </basicTable>
             <!-- 岗位配置人员 -->
