@@ -21,7 +21,7 @@
                 </div>
                 <el-input placeholder="输入关键字进行过滤" v-model="filterBoss">
                 </el-input>
-                <el-tree ref="rightTree" :data="data" node-key="id" show-checkbox :expand-on-click-node="false" default-expand-all :check-strictly='true' @check-change="handleCheckChange" draggable @node-drag-end="handleDragEnd"  :allow-drop="allowDrop" :filter-node-method="filterBossNode">
+                <el-tree ref="rightTree" :data="data" node-key="id" show-checkbox :expand-on-click-node="false" default-expand-all :check-strictly='true' @check-change="handleCheckChange" draggable @node-drag-end="handleDragEnd" :allow-drop="allowDrop" :filter-node-method="filterBossNode">
                     <span class="custom-tree-node" slot-scope="{ node, data }">
                         <span>{{ node.label }} </span>
                         <span class="page-right-tree">
@@ -42,6 +42,17 @@
                 </el-tree>
             </div>
         </div>
+        <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+            <el-form ref="form" :model="form" label-width="80px">
+                    <el-form-item label="名称">
+                        <el-input v-model="form.name"></el-input>
+                    </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
         <el-button type="primary" @click="handleSumbit">确定</el-button>
     </div>
 </template>
@@ -65,7 +76,8 @@ export default class Datamaping extends Vue {
     bossData: Record<string, string> = {}
     filterEhr:string = ''
     filterBoss:string = ''
-
+    dialogVisible:boolean = false
+    form = {}
     data1: Array<any> = [
         {
             id: 1,
@@ -288,6 +300,7 @@ export default class Datamaping extends Vue {
 
     append (data) {
         // 弹窗
+        this.dialogVisible = true
         const newChild = { id: this.id++, label: 'testtest', children: [] }
         if (!data.children) {
             this.$set(data, 'children', [])
@@ -314,6 +327,10 @@ export default class Datamaping extends Vue {
         } else {
             return true
         }
+    }
+
+    handleClose () {
+        this.dialogVisible = false
     }
 
     handleSumbit () {
