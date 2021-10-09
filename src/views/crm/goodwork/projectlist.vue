@@ -228,9 +228,8 @@
             </div>
             <div class="project-plant" v-if="title=='工地打卡记录'">
                 <div class="plantimg" @click="onHandlePictureCardPreview(item)" v-for="(item,index) in plantList" :key="index">
-                    <img :src="item.punchImageUrl" alt="">
+                    <imageToken :fileUrl="item.punchImageUrl" alt=""></imageToken>
                 </div>
-
             </div>
             <span slot="footer" class="dialog-footer">
                 <h-button @click="()=>onCloneRecordDialog()">取消</h-button>
@@ -238,7 +237,7 @@
         </el-dialog>
         <el-dialog title="预览" :visible.sync="imgVisible">
             <div class="previewimg">
-                <img :src="dialogImageUrl" alt="">
+                <imageToken v-if="imgVisible" :fileUrl="dialogImageUrl" alt=""></imageToken>
             </div>
         </el-dialog>
         <!-- 添加跟进记录 -->
@@ -313,6 +312,7 @@ import downloadFileAddToken from '@/components/downloadFileAddToken'
 import { USER_DEFAULT } from '@/views/crm/projectList2_0/const/index'
 import { getFlowUp, addFlowUp, getFlowUpCount } from '@/views/crm/projectList2_0/api/index'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
+import imageToken from './components/imageToken'
 import { newCache } from '@/utils/index'
 
 const _flowUpRequest = {
@@ -507,7 +507,7 @@ export default {
         }
     },
     components: {
-        projectDrawer, hosJoyTable, downloadFileAddToken, OssFileHosjoyUpload
+        projectDrawer, hosJoyTable, downloadFileAddToken, OssFileHosjoyUpload, imageToken
     },
     watch: {
         'flowUpRequest.type' (val) {
@@ -889,8 +889,10 @@ export default {
                 this.dialogRecord = this.projectRecord
             } else {
                 this.title = '工地打卡记录'
+                this.plantList = []
                 await this.findPunchlist({ projectId: val.id })
                 this.plantList = this.punchList
+                console.log(this.plantList)
             }
 
             this.dialogVisible = true
@@ -1125,9 +1127,11 @@ export default {
     }
 }
 .previewimg {
+    width: 100%;
     text-align: center;
     img {
         width: 500px;
+        height: 100%;
         padding: 10px;
     }
 }
