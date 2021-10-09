@@ -21,7 +21,6 @@ export default {
         postOptions: {
             handler (o) {
                 if (o && o.length > 0) {
-                    console.log(o)
                     this.option = o
                 }
             },

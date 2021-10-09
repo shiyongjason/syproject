@@ -92,8 +92,8 @@ export default {
             const { data } = await findpostList(this.positionName)
             if (data.length > 0) {
                 data.forEach(v => {
-                    v.createTime = v.createTime.replace('T', ' ')
-                    v.updateTime = v.createTime.replace('T', ' ')
+                    v.createTime = v.createTime && v.createTime.replace('T', ' ')
+                    v.updateTime = v.updateTime && v.updateTime.replace('T', ' ')
                 })
             }
             this.postList = data

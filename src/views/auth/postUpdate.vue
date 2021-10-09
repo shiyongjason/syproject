@@ -87,11 +87,54 @@
                 <el-button type="primary" @click="onSavePost()">保 存</el-button>
             </div>
         </div>
+        <el-dialog :title="layerTitle" :visible.sync="fieldVisible" width="40%" :close-on-click-modal='false' :before-close="onCancelFieldConfig">
+            <div class="h-dialog">
+                <table class="tablelist textCenter" v-if="layerType!=2">
+                    <thead>
+                        <tr>
+                            <td width="30%">菜单</td>
+                            <td width="70%">权限</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ layerAuthName }}</td>
+                            <td style="text-align:left">
+                                <el-checkbox v-model="item.have" :label="item.resourceName" v-for="(item,index) in fieldConfig" :key="index"></el-checkbox>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="tablelist textCenter" v-else>
+                    <thead>
+                        <tr>
+                            <td width="30%">筛选项</td>
+                            <td width="70%">数据范围</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>所属分部</td>
+                            <td>
+                                <div class="treetable">
+                                    <el-tree :data="organizationTree" ref="treetable" :default-checked-keys="checkedkeys" show-checkbox node-key="pkDeptDoc" default-expand-all highlight-current :props="{label:'deptName'}">
+                                    </el-tree>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="onCancelFieldConfig()">取 消</el-button>
+                <el-button type="primary" @click="fieldVisible = false;onGetnodes()">保 存</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-import { addpostList, postDetail, postAuthList, updatepostList, postConfiguration } from './api/index'
+import { addpostList, postDetail, postAuthList, updatepostList, postConfiguration, getOrganizationTree } from './api/index'
 import employeeSelect from './components/employeeSelect.vue'
 import { mapState } from 'vuex'
 export default {
@@ -103,6 +146,7 @@ export default {
                 postCode: '',
                 positionCodeList: []
             },
+            organizationTree: [],
             currentEmployeeSubsectionsAuthCode: '',
             tableList: [],
             newTableList: [], // newTableList记录初始权限配置，在取消的时候判断是否有权限变更
@@ -135,6 +179,7 @@ export default {
         this.queryId = id
         this.queryType = type
         this.tableList = []
+        this.getOrganizationTree()
         switch (parseInt(type)) {
             case 1:
                 this.postAuthList()
@@ -149,6 +194,10 @@ export default {
         }
     },
     methods: {
+        async getOrganizationTree () {
+            const { data } = await getOrganizationTree()
+            this.organizationTree = data
+        },
         // 岗位新增-权限集合
         async postAuthList () {
             const { data } = await postAuthList()
@@ -164,20 +213,20 @@ export default {
             this.handleData(copyData)
             this.tableList = this.handlerTableList(copyData, 0)
             this.newTableList = JSON.parse(JSON.stringify(this.tableList))
-
+            // 岗位管理员回显
+            if (data.positionAdmin && data.positionAdmin.length > 0) {
+                this.postOptions = data.positionAdmin.map(val => {
+                    return {
+                        psncode: val.jobNumber,
+                        psnname: val.userName
+                    }
+                })
+                this.ruleInfo.positionCodeList = data.positionAdmin.map(v => v.jobNumber)
+            }
             // 修改时回显
             if (this.queryType == 3) {
                 this.ruleInfo.postName = data.positionName
                 this.ruleInfo.postCode = data.positionCode
-                if (data.positionAdmin && data.positionAdmin.length > 0) {
-                    this.postOptions = data.positionAdmin.map(val => {
-                        return {
-                            psncode: val.jobNumber,
-                            psnname: val.userName
-                        }
-                    })
-                    this.ruleInfo.positionCodeList = data.positionAdmin.map(v => v.jobNumber)
-                }
             }
         },
         onGetnodes () {
@@ -411,21 +460,13 @@ export default {
                 this.currentEmployeeSubsectionsAuthCode = item.authCode
             }
             // 用于在取消的时候，返回原来的选中状态
-            if (item.authType == 2 && item.employeeSubsections) {
-                if (JSON.stringify(item.employeeSubsections) != '{}') {
-                    this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
-                }
-            } else if (item.authType == 2 && !item.employeeSubsections) {
-                this.checkedkeys = []
-            }
-            if (this.$refs.treetable) {
-                this.$nextTick(() => {
-                    setTimeout(() => {
-                        this.$refs.treetable.setCheckedKeys(this.checkedkeys)
-                    }, 100)
-                })
-            }
-
+            // if (item.authType == 2 && item.employeeSubsections) {
+            //     if (JSON.stringify(item.employeeSubsections) != '{}') {
+            //         this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
+            //     }
+            // } else if (item.authType == 2 && !item.employeeSubsections) {
+            //     this.checkedkeys = []
+            // }
             this.layerType = item.authType
             // 设置页面敏感信息的高亮是在全部还是配置上
             item.status = val
@@ -445,6 +486,13 @@ export default {
                 this.cloneEmployeeSubsections = JSON.parse(JSON.stringify(item.employeeSubsections))
             } else {
                 this.cloneConfig = JSON.parse(JSON.stringify(item.authResourceList))
+            }
+            if (this.$refs.treetable) {
+                this.$nextTick(() => {
+                    setTimeout(() => {
+                        this.$refs.treetable.setCheckedKeys(this.checkedkeys)
+                    }, 100)
+                })
             }
             this.newItem = item
             // 弹出层title和authName
