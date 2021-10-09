@@ -131,10 +131,10 @@
                     </tbody>
                 </table>
             </div>
-            <span slot="footer" class="dialog-footer">
+            <!-- <span slot="footer" class="dialog-footer">
                 <el-button @click="onCancelFieldConfig()">取 消</el-button>
                 <el-button type="primary" @click="fieldVisible = false;onGetnodes()">保 存</el-button>
-            </span>
+            </span> -->
         </el-dialog>
     </div>
 </template>
