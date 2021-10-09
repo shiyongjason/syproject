@@ -43,33 +43,33 @@
                                 <template v-for="(itemb, indexb) in itema.childAuthList">
                                     <tr v-for="(itemc, indexc) in itemb.childAuthList" :key="`${index}_${indexa}_${indexb}_${indexc}`">
                                         <td :rowspan="computedRowspan(item.childAuthList, 0)" v-if="indexa==0 && indexb==0 && indexc==0">
-                                            <el-checkbox v-model="item.have" @change="onCheckboxChange([item], item.have)">{{item.authName}}</el-checkbox>
+                                            <el-checkbox disabled v-model="item.have" @change="onCheckboxChange([item], item.have)">{{item.authName}}</el-checkbox>
                                         </td>
                                         <td :rowspan="computedRowspan(itema.childAuthList, 0)" v-if="indexb==0 && indexc==0">
                                             <div v-if="itema.authName">
-                                                <el-checkbox v-model="itema.have" @change="onCheckboxChange([item, itema], itema.have)">{{itema.authName}}</el-checkbox>
+                                                <el-checkbox disabled v-model="itema.have" @change="onCheckboxChange([item, itema], itema.have)">{{itema.authName}}</el-checkbox>
                                             </div>
                                         </td>
                                         <td :rowspan="computedRowspan(itemb.childAuthList, 0)" v-if="indexc==0">
                                             <div v-if="itemb.authName">
-                                                <el-checkbox v-model="itemb.have" @change="onCheckboxChange([item, itema, itemb], itemb.have)">{{itemb.authName}}</el-checkbox>
+                                                <el-checkbox disabled v-model="itemb.have" @change="onCheckboxChange([item, itema, itemb], itemb.have)">{{itemb.authName}}</el-checkbox>
                                             </div>
                                         </td>
                                         <td width='300'>
                                             <div v-if="itemc.authName">
-                                                <el-checkbox v-model="itemc.have" @change="onCheckboxChange([item, itema, itemb, itemc], itemc.have)">{{itemc.authName}}</el-checkbox>
+                                                <el-checkbox disabled v-model="itemc.have" @change="onCheckboxChange([item, itema, itemb, itemc], itemc.have)">{{itemc.authName}}</el-checkbox>
                                             </div>
                                         </td>
                                         <template v-if="itemc.authTypeList">
                                             <template v-for="(itemAuthType, authTypeIndex) in itemc.authTypeList">
                                                 <td :key="authTypeIndex + '_authType'" width="300">
                                                     <div v-if="itemAuthType.id">
-                                                        <el-checkbox v-model="itemAuthType.have" @change="onChangeAuthType(itemAuthType)" :disabled="!itemc.have" class="mr10">
+                                                        <el-checkbox v-model="itemAuthType.have" @change="onChangeAuthType(itemAuthType)" disabled class="mr10">
                                                             {{ itemAuthType.authType == 0 ? '敏感字段' : itemAuthType.authType == 1?  '敏感操作' : '敏感数据' }}
                                                         </el-checkbox>
                                                         <div class="el-radio-group">
-                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''" @click="onShowFieldConfig(0, itemAuthType)" :disabled="!itemAuthType.have">全部</button>
-                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''" @click="onShowFieldConfig(1, itemAuthType)" :disabled="!itemAuthType.have">配置</button>
+                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''" @click="onShowFieldConfig(0, itemAuthType)" :disabled="itemAuthType.authType != 1 || !itemAuthType.have">全部</button>
+                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''" @click="onShowFieldConfig(1, itemAuthType)" :disabled="itemAuthType.authType != 1 || !itemAuthType.have">配置</button>
                                                         </div>
                                                     </div>
                                                     <div v-else></div>
@@ -93,7 +93,8 @@
             <el-button @click="onCancelRole()">取 消</el-button>
             <el-button type="primary" @click="onSaveRole()">保 存</el-button>
         </div>
-        <el-dialog :title="layerTitle" :visible.sync="fieldVisible" width="40%" :close-on-click-modal='false' :before-close="onCancelFieldConfig">
+        <!-- :close-on-click-modal='false' :before-close="onCancelFieldConfig" -->
+        <el-dialog :title="layerTitle" :visible.sync="fieldVisible" width="40%">
             <div class="h-dialog">
                 <table class="tablelist textCenter" v-if="layerType!=2">
                     <thead>
@@ -106,7 +107,7 @@
                         <tr>
                             <td>{{ layerAuthName }}</td>
                             <td style="text-align:left">
-                                <el-checkbox v-model="item.have" :label="item.resourceName" v-for="(item,index) in fieldConfig" :key="index"></el-checkbox>
+                                <el-checkbox disabled v-model="item.have" :label="item.resourceName" v-for="(item,index) in fieldConfig" :key="index"></el-checkbox>
                             </td>
                         </tr>
                     </tbody>
@@ -131,10 +132,6 @@
                     </tbody>
                 </table>
             </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="onCancelFieldConfig()">取 消</el-button>
-                <el-button type="primary" @click="fieldVisible = false;onGetnodes()">保 存</el-button>
-            </span>
         </el-dialog>
     </div>
 </template>
@@ -214,22 +211,27 @@ export default {
         },
         async getOrganizationTree () {
             const { data } = await getOrganizationTree()
-            this.organizationTree = data
-        },
-        onGetnodes () {
-            if (this.layerType == 2) {
-                const nodeList = this.$refs.treetable.getCheckedNodes()
-                const subArr = []
-                nodeList && nodeList.map(val => {
-                    if (val.deptCode.indexOf('F') > -1) {
-                        subArr.push(val.pkDeptDoc)
-                    }
+            if (data && data.length > 0) {
+                data.forEach(val => {
+                    val.disabled = true
                 })
-                const employeeSubsections = { authCode: this.currentEmployeeSubsectionsAuthCode, subsectionCodes: subArr }
-                this.newItem.employeeSubsections = employeeSubsections
-                this.$refs.treetable.setCheckedKeys([])
+                this.organizationTree = data
             }
         },
+        // onGetnodes () {
+        //     if (this.layerType == 2) {
+        //         const nodeList = this.$refs.treetable.getCheckedNodes()
+        //         const subArr = []
+        //         nodeList && nodeList.map(val => {
+        //             if (val.deptCode.indexOf('F') > -1) {
+        //                 subArr.push(val.pkDeptDoc)
+        //             }
+        //         })
+        //         const employeeSubsections = { authCode: this.currentEmployeeSubsectionsAuthCode, subsectionCodes: subArr }
+        //         this.newItem.employeeSubsections = employeeSubsections
+        //         this.$refs.treetable.setCheckedKeys([])
+        //     }
+        // },
         // 对后端返回的数据进行处理
         // list必须有3级，如果不够3级，需要增加childAuthList，满足页面展示需求
         // 敏感字段和敏感操作相关配置挂载在3级菜单下面
@@ -445,21 +447,13 @@ export default {
                 this.currentEmployeeSubsectionsAuthCode = item.authCode
             }
             // 用于在取消的时候，返回原来的选中状态
-            if (item.authType == 2 && item.employeeSubsections) {
-                if (JSON.stringify(item.employeeSubsections) != '{}') {
-                    this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
-                }
-            } else if (item.authType == 2 && !item.employeeSubsections) {
-                this.checkedkeys = []
-            }
-            if (this.$refs.treetable) {
-                this.$nextTick(() => {
-                    setTimeout(() => {
-                        this.$refs.treetable.setCheckedKeys(this.checkedkeys)
-                    }, 100)
-                })
-            }
-
+            // if (item.authType == 2 && item.employeeSubsections) {
+            //     if (JSON.stringify(item.employeeSubsections) != '{}') {
+            //         this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
+            //     }
+            // } else if (item.authType == 2 && !item.employeeSubsections) {
+            //     this.checkedkeys = []
+            // }
             this.layerType = item.authType
             // 设置页面敏感信息的高亮是在全部还是配置上
             item.status = val
@@ -476,26 +470,31 @@ export default {
                 } else {
                     this.checkedkeys = []
                 }
-                // this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
-                // this.checkedkeys = JSON.stringify(item.employeeSubsections) == '{}' ? JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes)) : []
                 this.cloneEmployeeSubsections = JSON.parse(JSON.stringify(item.employeeSubsections))
             } else {
                 this.cloneConfig = JSON.parse(JSON.stringify(item.authResourceList))
+            }
+            if (this.$refs.treetable) {
+                this.$nextTick(() => {
+                    setTimeout(() => {
+                        this.$refs.treetable.setCheckedKeys(this.checkedkeys)
+                    }, 100)
+                })
             }
             this.newItem = item
             // 弹出层title和authName
             this.layerTitle = item.authType == 0 ? '敏感字段' : item.authType == 0 ? '敏感操作' : '数据范围'
             this.layerAuthName = item.authName
             this.layerType = item.authType
-        },
-        onCancelFieldConfig () {
-            if (this.layerType == 2) {
-                this.$refs.treetable.setCheckedKeys([])
-            }
-            this.newItem.employeeSubsections = this.cloneEmployeeSubsections ? this.cloneEmployeeSubsections : {}
-            this.newItem.authResourceList = this.cloneConfig ? this.cloneConfig : []
-            this.fieldVisible = false
         }
+        // onCancelFieldConfig () {
+        //     if (this.layerType == 2) {
+        //         this.$refs.treetable.setCheckedKeys([])
+        //     }
+        //     this.newItem.employeeSubsections = this.cloneEmployeeSubsections ? this.cloneEmployeeSubsections : {}
+        //     this.newItem.authResourceList = this.cloneConfig ? this.cloneConfig : []
+        //     this.fieldVisible = false
+        // }
     }
 }
 </script>
