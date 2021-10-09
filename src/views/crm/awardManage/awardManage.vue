@@ -81,7 +81,7 @@
 import { mapActions, mapState } from 'vuex'
 import { updateRecommenderPaid } from '@/views/crm/awardManage/api'
 import { CRM_AWARD_SEND } from '@/utils/auth_const'
-
+import { newCache } from '@/utils/index'
 export default {
     name: 'awardManage',
     data () {
@@ -210,6 +210,9 @@ export default {
     mounted () {
         this.queryParamsTemp = { ...this.queryParams }
         this.onQuery()
+    },
+    beforeUpdate () {
+        newCache('awardManage')
     }
 }
 </script>
