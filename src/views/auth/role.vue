@@ -445,20 +445,13 @@ export default {
                 this.currentEmployeeSubsectionsAuthCode = item.authCode
             }
             // 用于在取消的时候，返回原来的选中状态
-            if (item.authType == 2 && item.employeeSubsections) {
-                if (JSON.stringify(item.employeeSubsections) != '{}') {
-                    this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
-                }
-            } else if (item.authType == 2 && !item.employeeSubsections) {
-                this.checkedkeys = []
-            }
-            if (this.$refs.treetable) {
-                this.$nextTick(() => {
-                    setTimeout(() => {
-                        this.$refs.treetable.setCheckedKeys(this.checkedkeys)
-                    }, 100)
-                })
-            }
+            // if (item.authType == 2 && item.employeeSubsections) {
+            //     if (JSON.stringify(item.employeeSubsections) != '{}') {
+            //         this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
+            //     }
+            // } else if (item.authType == 2 && !item.employeeSubsections) {
+            //     this.checkedkeys = []
+            // }
 
             this.layerType = item.authType
             // 设置页面敏感信息的高亮是在全部还是配置上
@@ -476,8 +469,13 @@ export default {
                 } else {
                     this.checkedkeys = []
                 }
-                // this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
-                // this.checkedkeys = JSON.stringify(item.employeeSubsections) == '{}' ? JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes)) : []
+                if (this.$refs.treetable) {
+                    this.$nextTick(() => {
+                        setTimeout(() => {
+                            this.$refs.treetable.setCheckedKeys(this.checkedkeys)
+                        }, 100)
+                    })
+                }
                 this.cloneEmployeeSubsections = JSON.parse(JSON.stringify(item.employeeSubsections))
             } else {
                 this.cloneConfig = JSON.parse(JSON.stringify(item.authResourceList))
