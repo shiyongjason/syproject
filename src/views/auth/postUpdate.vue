@@ -213,20 +213,20 @@ export default {
             this.handleData(copyData)
             this.tableList = this.handlerTableList(copyData, 0)
             this.newTableList = JSON.parse(JSON.stringify(this.tableList))
-
+            // 岗位管理员回显
+            if (data.positionAdmin && data.positionAdmin.length > 0) {
+                this.postOptions = data.positionAdmin.map(val => {
+                    return {
+                        psncode: val.jobNumber,
+                        psnname: val.userName
+                    }
+                })
+                this.ruleInfo.positionCodeList = data.positionAdmin.map(v => v.jobNumber)
+            }
             // 修改时回显
             if (this.queryType == 3) {
                 this.ruleInfo.postName = data.positionName
                 this.ruleInfo.postCode = data.positionCode
-                if (data.positionAdmin && data.positionAdmin.length > 0) {
-                    this.postOptions = data.positionAdmin.map(val => {
-                        return {
-                            psncode: val.jobNumber,
-                            psnname: val.userName
-                        }
-                    })
-                    this.ruleInfo.positionCodeList = data.positionAdmin.map(v => v.jobNumber)
-                }
             }
         },
         onGetnodes () {
