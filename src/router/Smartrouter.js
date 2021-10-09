@@ -22,6 +22,18 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/comfortcloud/smart/projectManager.vue')
+            },
+            {
+                path: 'equipmentUpgrade',
+                name: 'equipmentUpgrade',
+                meta: {
+                    title: '设备升级',
+                    tagName: '设备升级',
+                    parentName: '舒适云智能化',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/comfortcloud/smart/equipmentUpgrade.vue')
             }
         ]
     }

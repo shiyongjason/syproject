@@ -99,11 +99,13 @@
                 </el-form-item>
                 <el-form-item label="项目类型：" prop="projectType">
                     <el-checkbox-group v-model="form.projectType">
-                        <el-checkbox label="1">氟机空调集控系统</el-checkbox>
-                        <el-checkbox label="2">水机空调集控系统</el-checkbox>
-                        <el-checkbox label="3">计费系统</el-checkbox>
-                        <el-checkbox label="11">节能系统</el-checkbox>
+                        <el-checkbox v-for="[key, value] of projectTypeOptions" :key="key" :label="key">{{value}}</el-checkbox>
                     </el-checkbox-group>
+                </el-form-item>
+                <el-form-item label="计费方式：" prop="feeType" v-if="showFeeType">
+                    <el-radio-group v-model="form.feeType">
+                        <el-radio v-for="[key, value] of feeTypeOptions" :key="key" :label="key">{{value}}</el-radio>
+                    </el-radio-group>
                 </el-form-item>
                 <el-form-item label="项目包含设备：" prop="deviceTypes">
                     <el-button type="primary" @click="addDeviceTypes">新增</el-button>
@@ -147,6 +149,7 @@ import { iotUrl, interfaceUrl } from '@/api/config'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { createControlProject, editControlProject } from '../api/index'
 import { getChiness } from '../../hmall/membership/api'
+import { PROJECT_TYPE_KEY, PROJECT_TYPE_OPTIONS, FEE_TYPE_OPTIONS } from './const.js'
 
 const _form = {
     projectName: '',
@@ -163,7 +166,8 @@ const _form = {
     username: '',
     companyLogo: '',
     projectType: [],
-    deviceTypes: []
+    deviceTypes: [],
+    feeType: ''
 }
 
 const _queryParams = {
@@ -178,6 +182,11 @@ const _queryParams = {
 }
 export default {
     name: 'projectManager',
+    watch: {
+        'form.projectType' (val) {
+            // TODO：如果不包含计费系统，计费方式就清空
+        }
+    },
     data () {
         const checkDeviceTypeRule = (rule, value, callback) => {
             let isHas = false
@@ -260,9 +269,14 @@ export default {
                 ],
                 projectType: [
                     { required: true, message: '请选择项目类型', trigger: 'blur' }
+                ],
+                feeType: [
+                    { required: true, message: '请选择计费方式', trigger: 'blur' }
                 ]
             },
-            loading: false
+            loading: false,
+            projectTypeOptions: PROJECT_TYPE_OPTIONS,
+            feeTypeOptions: FEE_TYPE_OPTIONS
         }
     },
     computed: {
@@ -316,6 +330,9 @@ export default {
             }
             return []
         },
+        showFeeType () {
+            return this.form.projectType.includes(PROJECT_TYPE_KEY.BILLING_SYSTEM)
+        },
         ...mapGetters({
             clouldControlProjectList: 'clouldControlProjectList',
             clouldControlProjectDetail: 'clouldControlProjectDetail',
@@ -332,7 +349,6 @@ export default {
             getDeviceTypes: 'getClouldControlProjectDevicesTypes'
         }),
         uploadSuccess (val) {
-            console.log(val)
             this.form.companyLogo = val.imageUrl
         },
         onCurrentChange (val) {
@@ -403,7 +419,6 @@ export default {
             this.addProject = true
         },
         async saveProject () {
-            console.log(this.form)
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     if (this.form.id) {
