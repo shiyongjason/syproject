@@ -148,6 +148,26 @@ const routerMapping = [
                     component: './views/auth/datamaping'
                 },
                 component: () => import('./views/auth/dataMaping')
+            }, 
+            {
+                path: 'postUpdate',
+                name: 'postUpdate',
+                meta: {
+                    title: '新增/编辑岗位',
+                    isMenu: false,
+                    icon: '',
+                    component: './views/auth/postUpdate',
+                    func: (menus, route) => {
+                        const len = menus.length
+                        menus.splice(len - 1, 0, {
+                            path: '/auth/postset',
+                            meta: {
+                                title: ''
+                            }
+                        })
+                    }
+                },
+                component: () => import('./views/auth/postUpdate')
             }
         ]
     },
