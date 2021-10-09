@@ -31,8 +31,8 @@
                   <div class="query-cont-col">
                     <div class="query-col__label">放款交接状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.lenderList" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.value" :value="item.key" v-for="item in lenderList" :key="item.key"></el-option>
+                        <el-select v-model="queryParams.loanTransferStatus" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.value" :value="item.key" v-for="item in loanTransferStatus" :key="item.key"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -67,7 +67,7 @@
                     <div class="query-col__label">合作方式：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.dealerCooperationMethod" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.value" :value="item.key" v-for="item in dealerList" :key="item.key"></el-option>
+                            <el-option :label="item.value" :value="item.key" v-for="item in dealerCooperationMethod" :key="item.key"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -80,8 +80,8 @@
                   <div class="query-cont-col">
                     <div class="query-col__label">上游支付进度：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.progressList" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.value" :value="item.key" v-for="item in progressList" :key="item.key"></el-option>
+                        <el-select v-model="queryParams.paymentStatus" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.value" :value="item.key" v-for="item in paymentStatus" :key="item.key"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -241,9 +241,9 @@ export default {
             activeName: 'LoanTransferContent',
             loanTransferContentVisible: false,
             Auths,
-            dealerList: [{ key: 1, value: '垫资代采' }, { key: 2, value: '代收代付' }],
-            lenderList: [{ key: 1, value: '已对接' }, { key: 2, value: '待对接' }],
-            progressList: [{ key: 1, value: '待支付' }, { key: 2, value: '已支付' }, { key: 2, value: '部分支付' }],
+            dealerCooperationMethod: [{ key: 1, value: '垫资代采' }, { key: 2, value: '代收代付' }],
+            loanTransferStatus: [{ key: 2, value: '已对接' }, { key: 1, value: '待对接' }],
+            paymentStatus: [{ key: 1, value: '待支付' }, { key: 3, value: '已支付' }, { key: 2, value: '部分支付' }],
             queryParams: {
                 paymentOrderNo: '',
                 deptName: '',
@@ -266,8 +266,8 @@ export default {
                 { label: '采购单名称', prop: 'purchaseOrderName', width: '200' },
                 { label: '采购单编号', prop: 'purchaseOrderNo', width: '150' },
                 { label: '金额', prop: 'applyAmount', width: '150', align: 'right' },
-                { label: '上游支付进度', prop: 'status', width: '150' },
-                { label: '放款交接状态', prop: 'status', width: '150' },
+                { label: '上游支付进度', prop: 'paymentStatus', width: '150' },
+                { label: '放款交接状态', prop: 'loanTransferStatus', width: '150' },
                 { label: '状态', prop: 'status', width: '150' },
                 { label: '合作方式', prop: 'dealerCooperationMethod', width: '150' },
                 { label: '申请人', prop: 'applyName', width: '150' },
@@ -288,7 +288,7 @@ export default {
             confirmReceiptVisible: false,
             lookReceiptVisible: false,
             fundsDialogVisible: false,
-            paymentStatus: '',
+            // paymentStatus: '',
             paymentParams: {}, // 公共
             fundsDialogDetail: {},
             paymentOrderId: '',
