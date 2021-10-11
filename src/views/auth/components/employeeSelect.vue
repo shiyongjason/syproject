@@ -1,6 +1,9 @@
 <template>
-    <el-select class="change-style" v-bind="$attrs" placeholder="请输入员工姓名检索" v-on="$listeners" multiple filterable remote clearable reserve-keyword :remote-method="remotePostPeoMethod" :loading="loading">
-        <el-option v-for="item in option" :key="item.psncode" :label="item.psnname" :value="item.psncode"></el-option>
+    <el-select class="change-style" v-bind="$attrs" placeholder="请输入员工姓名检索" v-on="$listeners" multiple filterable remote reserve-keyword :remote-method="remotePostPeoMethod" :loading="loading">
+        <el-option v-for="item in option" :key="item.psncode" :label="item.psnname" :value="item.psncode">
+            <span style="float: left">{{ item.psnname }}</span>
+            <span style="float: right;color: #8492a6; font-size: 12px;">{{ item.mobile || '' }}</span>
+        </el-option>
     </el-select>
 </template>
 
@@ -15,11 +18,15 @@ export default {
     },
     props: {
         // 修改岗位管理员-回显option
-        postOptions: Array
+        postOptions: {
+            type: Array,
+            default: () => []
+        }
     },
     watch: {
         postOptions: {
             handler (o) {
+                console.log(o)
                 if (o && o.length > 0) {
                     this.option = o
                 }
