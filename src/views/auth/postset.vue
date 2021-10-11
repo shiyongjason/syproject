@@ -119,6 +119,7 @@ export default {
                     this.positionCode = val.positionCode
                     const { data } = await postConfiguration(val.positionCode)
                     this.postOptions = []
+                    this.ruleForm.postPeople = []
                     if (data && data.length > 0) {
                         this.postOptions = data.map(v => {
                             return {
