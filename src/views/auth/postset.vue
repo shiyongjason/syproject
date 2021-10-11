@@ -151,7 +151,13 @@ export default {
                     break
                 case 4:
                     // 删除
-                    this.$confirm(`删除该岗位将影响 [ ${val.userName || '--'} ] 的权限，是否确认删除该岗位?`, '确认删除', {
+                    let text = ''
+                    if (val.userName) {
+                        text = `删除该岗位将影响 [ ${val.userName || '--'} ] 的权限，是否确认删除该岗位?`
+                    } else {
+                        text = '是否确认删除改岗位？'
+                    }
+                    this.$confirm(text, '确认删除', {
                         confirmButtonText: '确定删除',
                         cancelButtonText: '取消'
                     }).then(async () => {
