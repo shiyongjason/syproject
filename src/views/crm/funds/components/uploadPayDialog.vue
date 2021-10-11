@@ -41,7 +41,7 @@
         </el-form-item>
                 </el-form > -->
                 <p>剩余应支付金额：{{payMoney|fundMoneyHasTail}} 元</p>
-                <el-input type="text" v-model="name"  @input="forceUpdate"  placeholder="请输入"  maxlength="50"  ></el-input>
+                <el-input type="text"   @input="forceUpdate"  placeholder="请输入"  maxlength="50"  ></el-input>
                 <span @click="allIn" style="color:skyblue;display:inline-block;width:50px;height:50px;text-align:center">全部</span>
                 <p class="uploadpay_second"><i>*</i>支付凭证：</p>
                 <p class="uploadpay_third">（请上传JPG/PNG/JPEG等主流图片格式，最多上传9张，单张大小不得超过20M）</p>

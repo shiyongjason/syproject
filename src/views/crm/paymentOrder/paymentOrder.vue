@@ -80,8 +80,8 @@
                   <div class="query-cont-col">
                     <div class="query-col__label">上游支付进度：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.paymentStatus" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.value" :value="item.key" v-for="item in paymentStatus" :key="item.key"></el-option>
+                        <el-select v-model="queryParams.payStatus" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.value" :value="item.key" v-for="item in payStatus" :key="item.key"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -189,13 +189,14 @@
         <UploadPayDialog ref="uploadpaydialog" @onBackSearch="findPaymentOrderList"/>
 
            <el-dialog   title="取消支付单确认" :visible.sync="dialogVisible" :before-close="()=>dialogVisible = false">
-            <el-form style="margin:0 20px"  inline=false  :model="ruleForm" :rules="rules" ref="ruleForm" label-width="25px" class="demo-ruleForm">
+            <el-form style="margin:0 20px" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="25px" class="demo-ruleForm">
                 <el-form-item prop=""  >
                     <span>取消原因:</span>
                     <el-input  type="textarea" v-model="ruleForm.remark" maxlength="200" show-word-limit :rows="6"></el-input>
                     <p>其他说明:(可上传补充材料作为取消凭证，上传格式为PDF/JPG/JPEG/PNG)</p>
-                    <h-button table @click="onUploadPay(scope.data.row)" >+ 上传支付凭证</h-button>
+                    <h-button>+上传支付凭证</h-button>
                 </el-form-item>
+
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <h-button @click="dialogVisible = false">取消</h-button>
@@ -214,6 +215,7 @@ import LookPrevPaymentDialog from './components/lookPrevPaymentDialog'
 import ConfirmReceiptDialog from './components/confirmReceiptDialog'
 import LookReceiptDetail from './components/lookReceiptDetail'
 import FundsDialog from '@/views/crm/funds/components/fundsDialog'
+
 import * as Auths from '@/utils/auth_const'
 import LoanTransferContent from './components/LoanTransferContent'
 import ViewHandoverRecords from './components/ViewHandoverRecords'
@@ -243,7 +245,7 @@ export default {
             Auths,
             dealerCooperationMethod: [{ key: 1, value: '垫资代采' }, { key: 2, value: '代收代付' }],
             loanTransferStatus: [{ key: 2, value: '已对接' }, { key: 1, value: '待对接' }],
-            paymentStatus: [{ key: 1, value: '待支付' }, { key: 3, value: '已支付' }, { key: 2, value: '部分支付' }],
+            payStatus: [{ key: 1, value: '待支付' }, { key: 3, value: '已支付' }, { key: 2, value: '部分支付' }],
             queryParams: {
                 paymentOrderNo: '',
                 deptName: '',
@@ -288,7 +290,7 @@ export default {
             confirmReceiptVisible: false,
             lookReceiptVisible: false,
             fundsDialogVisible: false,
-            // paymentStatus: '',
+            paymentStatus: '',
             paymentParams: {}, // 公共
             fundsDialogDetail: {},
             paymentOrderId: '',
@@ -346,6 +348,7 @@ export default {
             this.activeName = 'LoanTransferContent'
             this.operateStatus = null
         },
+
         async handleClickTabs (tab, event) {
             if (tab.name === 'ViewHandoverRecords') {
                 const { data } = await getLoanTransferRecord(this.paymentOrderId)

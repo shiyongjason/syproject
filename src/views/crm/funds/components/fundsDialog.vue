@@ -13,12 +13,25 @@
                         支付时间：{{moment(FundsDict.paidTime).format('YY-MM-DD HH:mm:ss')}}
                     </p>
                 </div>
-                <div class="label">支付凭证：</div>
-                <p class="content">
+                <div class="use-box">
+                   <div class="span-filed" >
+                       <p class="coll-filed">支付金额：qqqq</p>
+                       <p class="coll-filed">支付时间：fsdf </p>
+                   </div>
+                    <div class="span-filed">
+                       <p class="coll-filed">支付成功时间：sssss</p>
+                       <p class="coll-filed"><span>操作人：111111111111111111111111111111111</span>
+
+                       </p>
+                   </div>
+                  <div class="span-filed">支付凭证：</div>
+                  <p class="content span-filed">
                     <span class="img-box" :key="item.fileUrl" v-for="item in dialogDetail.attachDocList">
                         <imageAddToken :file-url="item.fileUrl" />
                     </span>
-                </p>
+                  </p>
+                </div>
+
             </div>
         </div>
         <span slot="footer" class="dialog-footer" v-if="!detail._seeing">
@@ -136,6 +149,7 @@ export default {
 <style scoped lang="scss">
 /deep/.el-dialog__body {
     min-height: 150px;
+    padding: 12px 12px;
 }
 .info-content {
     display: flex;
@@ -149,8 +163,8 @@ export default {
     margin-right: 20px;
 }
 .img-info {
-    width: 80px;
-    height: 80px;
+    width: 30px;
+    height: 0px;
     cursor: pointer;
     margin-right: 10px;
 }
@@ -164,8 +178,8 @@ export default {
         flex-wrap: wrap;
         span {
             display: flex;
-            width: 80px;
-            height: 80px;
+            width: 42px;
+            height: 42px;
             margin-bottom: 12px;
             margin-right: 12px;
             cursor: pointer;
@@ -175,13 +189,38 @@ export default {
         img {
             display: block;
             margin: auto;
-            max-height: 78px;
-            max-width: 78px;
+            max-height: 40px;
+            max-width: 40px;
         }
     }
     .label {
         flex: 0 0 100px;
         margin-top: 20px;
     }
+
 }
+.use-box{
+    background-color: #f2f2f4;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+    .span-filed {
+        display: flex;
+        padding: 2px;
+ font-size: 12px;
+        justify-content: space-between;
+        .coll-filed {
+            display: flex;
+            padding-right: 15px;
+            color: #333333;
+             font-size: 12px;
+            font-weight: 400;
+            cursor: default;
+            line-height: 15px;
+            box-sizing: border-box;
+
+        }
+
+    }
 </style>
