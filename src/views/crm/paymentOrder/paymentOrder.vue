@@ -80,8 +80,8 @@
                   <div class="query-cont-col">
                     <div class="query-col__label">上游支付进度：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.payStatus" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.value" :value="item.key" v-for="item in payStatus" :key="item.key"></el-option>
+                        <el-select v-model="queryParams.paymentStatus" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.value" :value="item.key" v-for="item in paymentStatus" :key="item.key"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -151,7 +151,7 @@
         <LookPrevPaymentDialog :params="paymentParams" :is-open="lookPrevPaymentVisible" @onClose="lookPrevPaymentVisible = false"></LookPrevPaymentDialog>
         <ConfirmReceiptDialog :params="paymentParams" :is-open="confirmReceiptVisible" @onClose="confirmReceiptVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery"></ConfirmReceiptDialog>
         <LookReceiptDetail :params="paymentParams" :is-open="lookReceiptVisible" @onClose="lookReceiptVisible = false"></LookReceiptDetail>
-        <FundsDialog :detail="fundsDialogDetail" :status="paymentStatus" :is-open="fundsDialogVisible" @onClose="fundsDialogClose"></FundsDialog>
+        <FundsDialog :detail="fundsDialogDetail" :status="status" :is-open="fundsDialogVisible" @onClose="fundsDialogClose"></FundsDialog>
        <!-- 审批记录 -->
        <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='500px' :wrapperClosable="false" :beforeClose="handleClose">
             <template #connect>
@@ -245,7 +245,7 @@ export default {
             Auths,
             dealerCooperationMethod: [{ key: 1, value: '垫资代采' }, { key: 2, value: '代收代付' }],
             loanTransferStatus: [{ key: 2, value: '已对接' }, { key: 1, value: '待对接' }],
-            payStatus: [{ key: 1, value: '待支付' }, { key: 3, value: '已支付' }, { key: 2, value: '部分支付' }],
+            paymentStatus: [{ key: 1, value: '待支付' }, { key: 3, value: '已支付' }, { key: 2, value: '部分支付' }],
             queryParams: {
                 paymentOrderNo: '',
                 deptName: '',
@@ -290,7 +290,7 @@ export default {
             confirmReceiptVisible: false,
             lookReceiptVisible: false,
             fundsDialogVisible: false,
-            paymentStatus: '',
+            status: '',
             paymentParams: {}, // 公共
             fundsDialogDetail: {},
             paymentOrderId: '',
@@ -435,7 +435,7 @@ export default {
         openFundsDialog (row, status) {
             this.fundsDialogVisible = true
             this.fundsDialogDetail = row
-            this.paymentStatus = status
+            this.status = status
         },
         openConfirmReceiptDialog (params) {
             this.paymentParams = params
