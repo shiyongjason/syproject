@@ -430,11 +430,18 @@ export default {
             }
         },
         async onResetRole () {
-            await resetPermission({ jobNumber: this.jobNumber })
-            this.positionCodeList = []
-            this.tableList = []
-            this.newTableList = []
-            this.getDynamicMenuData()
+            this.$confirm(`执行该操作将清除该人员所有岗位和权限，是否确认继续？`, '重置确认', {
+                confirmButtonText: '确定继续',
+                cancelButtonText: '取消'
+            }).then(async () => {
+                await resetPermission({ jobNumber: this.jobNumber })
+                this.positionCodeList = []
+                this.tableList = []
+                this.newTableList = []
+                this.getDynamicMenuData()
+            }).catch(() => {
+                // 取消删除
+            })
         },
         onShowFieldConfig (val, item) {
             // 当选择全部的时候，设置所有的配置都是选中状态

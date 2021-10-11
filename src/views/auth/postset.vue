@@ -32,7 +32,7 @@
                         <span>好橙工产品经理</span>
                     </el-form-item>
                     <el-form-item label="岗位人员：" prop="postPeople">
-                        <employeeSelect v-model="ruleForm.postPeople" ref="postPersonRef" :option="postOptions"></employeeSelect>
+                        <employeeSelect v-model="ruleForm.postPeople" ref="postPersonRef" :postOptions="postOptions"></employeeSelect>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -118,6 +118,7 @@ export default {
                     this.postdialogVisible = true
                     this.positionCode = val.positionCode
                     const { data } = await postConfiguration(val.positionCode)
+                    this.postOptions = []
                     if (data && data.length > 0) {
                         this.postOptions = data.map(v => {
                             return {
@@ -150,7 +151,13 @@ export default {
                     break
                 case 4:
                     // 删除
-                    this.$confirm(`删除该岗位将影响 [ ${val.userName || '--'} ] 的权限，是否确认删除该岗位?`, '确认删除', {
+                    let text = ''
+                    if (val.userName) {
+                        text = `删除该岗位将影响 [ ${val.userName || '--'} ] 的权限，是否确认删除该岗位?`
+                    } else {
+                        text = '是否确认删除改岗位？'
+                    }
+                    this.$confirm(text, '确认删除', {
                         confirmButtonText: '确定删除',
                         cancelButtonText: '取消'
                     }).then(async () => {
