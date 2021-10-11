@@ -22,15 +22,22 @@ import '@/utils/validate/index.js'
 import precisionMethods from '@/utils/bignumber.js'
 import './class-component-hooks'
 // 接入 sentry
-import * as Sentry from '@sentry/browser'
-import { Vue as VueIntegration } from '@sentry/integrations'
-if (process.env.NODE_ENV === 'production') {
-    Sentry.init({
-        dsn: 'https://96d38d85c5da49bfacdada98edca3ea7@sentry.hosjoy.com/4',
-        integrations: [new VueIntegration({ Vue, attachProps: true, logErrors: true })],
-        release: process.env.RELEASE_VERSION,
-        environment: process.env.VUE_APP_TITLE || process.env.NODE_ENV
-    })
+// import * as Sentry from '@sentry/browser'
+// import { Vue as VueIntegration } from '@sentry/integrations'
+// if (process.env.NODE_ENV === 'production') {
+//     Sentry.init({
+//         dsn: 'https://96d38d85c5da49bfacdada98edca3ea7@sentry.hosjoy.com/4',
+//         integrations: [new VueIntegration({ Vue, attachProps: true, logErrors: true })],
+//         release: process.env.RELEASE_VERSION,
+//         environment: process.env.VUE_APP_TITLE || process.env.NODE_ENV
+//     })
+// }
+
+// 解决bug-keepAlive导致跳转蒙层遮盖
+try {
+    HosjoyUI.Drawer.components['el-drawer'].props.modalAppendToBody.default = false
+} catch (e) {
+    console.log(e)
 }
 
 Vue.config.productionTip = false
