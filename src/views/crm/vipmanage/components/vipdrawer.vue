@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-drawer title="详情" :visible.sync="drawer" :before-close="handleClose" size="50%">
+        <el-drawer title="详情" :modal-append-to-body="false" :visible.sync="drawer" :before-close="handleClose" size="50%">
             <div class="drawer-wrap">
                 <div class="drawer-wrap_title">{{companyName}}</div>
                 <div class="drawer-wrap_btn">
@@ -360,7 +360,7 @@ export default {
         &-flex {
             flex: 1;
             &:nth-child(1) {
-                color: #ff7a45;
+                color: $hosjoyColor;
             }
             &:nth-child(2) {
                 text-align: right;

@@ -321,10 +321,6 @@ export default {
 .eltagtop {
     margin-bottom: 10px;
 }
-.colblue {
-    color: #50b7f7;
-    cursor: pointer;
-}
 .project-record {
     padding: 10px 0;
     height: 400px;
