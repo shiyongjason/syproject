@@ -407,10 +407,6 @@ export default {
                 positionCodeList: this.positionCodeList,
                 userCode: this.jobNumber
             }
-            if (params.authCodes.length < 1) {
-                this.$message({ message: '请勾选数据范围配置', type: 'warning' })
-                return
-            }
             await saveAuthRole(params)
             this.$message({ message: '权限保存成功', type: 'success' })
             this.$router.push({ path: '/auth/organization' })
