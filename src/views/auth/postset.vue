@@ -32,7 +32,7 @@
                         <span>好橙工产品经理</span>
                     </el-form-item>
                     <el-form-item label="岗位人员：" prop="postPeople">
-                        <employeeSelect v-model="ruleForm.postPeople" ref="postPersonRef" :option="postOptions"></employeeSelect>
+                        <employeeSelect v-model="ruleForm.postPeople" ref="postPersonRef" :postOptions="postOptions"></employeeSelect>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -118,6 +118,7 @@ export default {
                     this.postdialogVisible = true
                     this.positionCode = val.positionCode
                     const { data } = await postConfiguration(val.positionCode)
+                    this.postOptions = []
                     if (data && data.length > 0) {
                         this.postOptions = data.map(v => {
                             return {
