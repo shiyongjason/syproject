@@ -8,7 +8,7 @@
                     </div>
                     <el-input placeholder="输入关键字进行过滤" v-model="filterEhr">
                     </el-input>
-                    <el-tree ref="leftTree" :data="data1" show-checkbox :expand-on-click-node="false" :check-strictly='true' node-key="id" default-expand-all :filter-node-method="filterEhrNode">
+                    <el-tree ref="leftTree" :data="data1" show-checkbox :expand-on-click-node="false" :check-strictly='true' node-key="id" default-expand-all :props="{label:'deptname',children:'childNodeList'}" :filter-node-method="filterEhrNode">
                     </el-tree>
                 </div>
                 <div class="page-center">
@@ -22,7 +22,7 @@
                     </div>
                     <el-input placeholder="输入关键字进行过滤" v-model="filterBoss">
                     </el-input>
-                    <el-tree ref="rightTree" :data="data" node-key="id" show-checkbox :expand-on-click-node="false" default-expand-all :check-strictly='true' @check-change="handleCheckChange" draggable @node-drag-end="handleDragEnd" :allow-drop="allowDrop" :filter-node-method="filterBossNode">
+                    <el-tree ref="rightTree" :data="data" node-key="id" show-checkbox :expand-on-click-node="false" default-expand-all :check-strictly='true' @check-change="handleCheckChange" draggable :props="{label:'deptname',children:'childNodeList'}" @node-drag-end="handleDragEnd" :allow-drop="allowDrop" :filter-node-method="filterBossNode">
                         <span class="custom-tree-node" slot-scope="{ node, data }">
                             <span>{{ node.label }} </span>
                             <span class="page-right-tree">
@@ -53,16 +53,16 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="handleSaveNode">确 定</el-button>
             </span>
         </el-dialog>
-
     </div>
 </template>
 
 <script lang='tsx'>
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { State } from 'vuex-class'
+import { findOrganizationTree, findEhrTree } from './api/index'
 import './index.scss'
 
 @Component({
@@ -81,111 +81,8 @@ export default class Datamaping extends Vue {
     filterBoss:string = ''
     dialogVisible:boolean = false
     form = {}
-    data1: Array<any> = [
-        {
-            id: 1,
-            label: '一级 1',
-            children: [
-                {
-                    id: 4,
-                    label: '二级 1-1',
-                    children: [
-                        {
-                            id: 9,
-                            label: '三级 1-1-1',
-                            ehrNode: [{ label: '西部世界' }]
-                        },
-                        {
-                            id: 10,
-                            label: '三级 1-1-2',
-                            ehrNode: [{ label: '西部世界2' }]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            id: 2,
-            label: '一级 2',
-            children: [
-                {
-                    id: 5,
-                    label: '二级 2-1'
-                },
-                {
-                    id: 6,
-                    label: '二级 2-2'
-                }
-            ]
-        },
-        {
-            id: 3,
-            label: '一级 3',
-            children: [
-                {
-                    id: 7,
-                    label: '二级 3-1'
-                },
-                {
-                    id: 8,
-                    label: '二级 3-2',
-                    children: [
-                        {
-                            id: 11,
-                            label: '三级 3-2-1'
-                        },
-                        {
-                            id: 12,
-                            label: '三级 3-2-2'
-                        },
-                        {
-                            id: 13,
-                            label: '三级 3-2-3'
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-    data: Array<any> = [
-        {
-            id: 1,
-            label: '一级 1',
-            disabled: true,
-            children: [
-                {
-                    id: 4,
-                    label: '二级 1-1',
-                    disabled: true,
-                    children: [
-                        {
-                            id: 9,
-                            label: '三级 1-1-1'
-                        },
-                        {
-                            id: 10,
-                            label: '三级 1-1-2'
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            id: 2,
-            label: '一级 2',
-            disabled: true,
-            children: [
-                {
-                    id: 5,
-                    label: '二级 2-1'
-                },
-                {
-                    id: 6,
-                    label: '二级 2-2'
-                }
-            ]
-        }
-    ]
+    data1: Array<any> = []
+    data: Array<any> = []
     defaultProps = {
         children: 'children',
         label: 'label'
@@ -201,7 +98,7 @@ export default class Datamaping extends Vue {
 
     filterEhrNode (value, data) {
         if (!value) return true
-        return data.label.indexOf(value) !== -1
+        return data.deptname.indexOf(value) !== -1
     }
     filterBossNode (value, data) {
         if (!value) return true
@@ -255,9 +152,9 @@ export default class Datamaping extends Vue {
     onCheckLastStage (data) {
         return data.map(item => {
             // item.ehrNode = ''
-            if (item.children && item.children.length > 0) {
+            if (item.childNodeList && item.childNodeList.length > 0) {
                 item.disabled = true
-                item.children = this.onCheckLastStage(item.children)
+                item.childNodeList = this.onCheckLastStage(item.childNodeList)
             }
             return item
         })
@@ -305,16 +202,19 @@ export default class Datamaping extends Vue {
     onClickEHR () {
         return this.$refs.leftTree.getCheckedNodes()
     }
+    // 编辑节点
     edit (data) {
         // 弹窗
         this.dialogVisible = true
     }
+    // 新增节点
     append (data) {
-        const newChild = { id: this.id++, label: 'testtest', children: [] }
-        if (!data.children) {
-            this.$set(data, 'children', [])
+        console.log('新增', data)
+        const newChild = { id: this.id++, deptname: 'testtest', childNodeList: [] }
+        if (!data.childNodeList) {
+            this.$set(data, 'childNodeList', [])
         }
-        data.children.push(newChild)
+        data.childNodeList.push(newChild)
     }
 
     remove (node, data) {
@@ -345,10 +245,23 @@ export default class Datamaping extends Vue {
         console.log(this.data)
     }
 
+    handleSaveNode () {
+
+    }
+
+    private async findBossTree () {
+        const { data } = await findOrganizationTree()
+    }
+
+    private async findEhrTree () {
+        const { data } = await findEhrTree()
+        this.data1 = this.onCheckLastStage(data.departmentNodeVOS)
+        this.data = this.onCheckLastStage(data.departmentNodeVOS)
+    }
+
     mounted () {
-        this.data1 = this.onCheckLastStage(this.data1)
-        this.data = this.onCheckLastStage(this.data)
-        console.log(this.data)
+        this.findBossTree()
+        this.findEhrTree()
     }
 }
 </script>
