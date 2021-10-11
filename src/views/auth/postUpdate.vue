@@ -38,33 +38,33 @@
                                 <template v-for="(itemb, indexb) in itema.childAuthList">
                                     <tr v-for="(itemc, indexc) in itemb.childAuthList" :key="`${index}_${indexa}_${indexb}_${indexc}`">
                                         <td :rowspan="computedRowspan(item.childAuthList, 0)" v-if="indexa==0 && indexb==0 && indexc==0">
-                                            <el-checkbox v-model="item.have" @change="onCheckboxChange([item], item.have)">{{item.authName}}</el-checkbox>
+                                            <el-checkbox :disabled="isAdminDisabled" v-model="item.have" @change="onCheckboxChange([item], item.have)">{{item.authName}}</el-checkbox>
                                         </td>
                                         <td :rowspan="computedRowspan(itema.childAuthList, 0)" v-if="indexb==0 && indexc==0">
                                             <div v-if="itema.authName">
-                                                <el-checkbox v-model="itema.have" @change="onCheckboxChange([item, itema], itema.have)">{{itema.authName}}</el-checkbox>
+                                                <el-checkbox :disabled="isAdminDisabled" v-model="itema.have" @change="onCheckboxChange([item, itema], itema.have)">{{itema.authName}}</el-checkbox>
                                             </div>
                                         </td>
                                         <td :rowspan="computedRowspan(itemb.childAuthList, 0)" v-if="indexc==0">
                                             <div v-if="itemb.authName">
-                                                <el-checkbox v-model="itemb.have" @change="onCheckboxChange([item, itema, itemb], itemb.have)">{{itemb.authName}}</el-checkbox>
+                                                <el-checkbox :disabled="isAdminDisabled" v-model="itemb.have" @change="onCheckboxChange([item, itema, itemb], itemb.have)">{{itemb.authName}}</el-checkbox>
                                             </div>
                                         </td>
                                         <td width='300'>
                                             <div v-if="itemc.authName">
-                                                <el-checkbox v-model="itemc.have" @change="onCheckboxChange([item, itema, itemb, itemc], itemc.have)">{{itemc.authName}}</el-checkbox>
+                                                <el-checkbox :disabled="isAdminDisabled" v-model="itemc.have" @change="onCheckboxChange([item, itema, itemb, itemc], itemc.have)">{{itemc.authName}}</el-checkbox>
                                             </div>
                                         </td>
                                         <template v-if="itemc.authTypeList">
                                             <template v-for="(itemAuthType, authTypeIndex) in itemc.authTypeList">
                                                 <td :key="authTypeIndex + '_authType'" width="300">
                                                     <div v-if="itemAuthType.id">
-                                                        <el-checkbox v-model="itemAuthType.have" @change="onChangeAuthType(itemAuthType)" :disabled="!itemc.have" class="mr10">
+                                                        <el-checkbox v-model="itemAuthType.have" @change="onChangeAuthType(itemAuthType)" :disabled="!itemc.have || isAdminDisabled" class="mr10">
                                                             {{ itemAuthType.authType == 0 ? '敏感字段' : itemAuthType.authType == 1?  '敏感操作' : '敏感数据' }}
                                                         </el-checkbox>
                                                         <div class="el-radio-group">
-                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''" @click="onShowFieldConfig(0, itemAuthType)" :disabled="!itemAuthType.have">全部</button>
-                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''" @click="onShowFieldConfig(1, itemAuthType)" :disabled="!itemAuthType.have">配置</button>
+                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''" @click="onShowFieldConfig(0, itemAuthType)" :disabled="!itemAuthType.have || isAdminDisabled">全部</button>
+                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''" @click="onShowFieldConfig(1, itemAuthType)" :disabled="!itemAuthType.have || isAdminDisabled">配置</button>
                                                         </div>
                                                     </div>
                                                     <div v-else></div>
@@ -134,7 +134,7 @@
 </template>
 
 <script>
-import { addpostList, postDetail, postAuthList, updatepostList, postConfiguration, getOrganizationTree } from './api/index'
+import { addpostList, postDetail, postAuthList, updatepostList, getOrganizationTree } from './api/index'
 import employeeSelect from './components/employeeSelect.vue'
 import { mapState } from 'vuex'
 export default {
@@ -158,7 +158,7 @@ export default {
             jobNumber: '',
             postOptions: [], // 岗位管理员
             checkedkeys: [],
-
+            isAdminDisabled: false, // 当是超级管理员 权限全部禁用
             // 接收参数
             queryId: '',
             queryType: '' // 1 新增岗位 2 复制 3 修改
@@ -227,6 +227,9 @@ export default {
             if (this.queryType == 3) {
                 this.ruleInfo.postName = data.positionName
                 this.ruleInfo.postCode = data.positionCode
+
+                // 当是超级管理员，权限需全部禁用不能修改
+                this.isAdminDisabled = data.positionCode === 'SUPERADMIN'
             }
         },
         onGetnodes () {
