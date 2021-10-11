@@ -28,7 +28,7 @@
                         <el-input v-model="queryParams.companyName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
-                  <div class="query-cont__col">
+                  <div class="query-cont__col"  v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">
                     <div class="query-col__label">已支付金额：</div>
                     <div class="query-col__input">
                  <el-input v-model="queryParams.minPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">元</template></el-input>
@@ -36,7 +36,7 @@
                         <el-input v-model="queryParams.maxPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">元</template></el-input>
                     </div>
                 </div>
-                  <div class="query-cont__col">
+                  <div class="query-cont__col"  v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">
                     <div class="query-col__label">支付待确认金额：</div>
                     <div class="query-col__input">
                          <el-input v-model="queryParams.minPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">元</template></el-input>
@@ -44,7 +44,7 @@
                         <el-input v-model="queryParams.maxPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">元</template></el-input>
                     </div>
                 </div>
-                  <div class="query-cont__col">
+                  <div class="query-cont__col"  v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">
                     <div class="query-col__label">剩余应支付金额：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.minPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">元</template></el-input>
