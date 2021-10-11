@@ -89,11 +89,10 @@
             </div>
         </div>
         <div class="h-foot" :class="isCollapse ? 'minLeft' : 'maxLeft'">
-            <el-button @click="onResetRole()">重 置</el-button>
+            <el-button v-if="hosAuthCheck(Auths.AUTH_POSTSET_RESET)" @click="onResetRole()">重 置</el-button>
             <el-button @click="onCancelRole()">取 消</el-button>
             <el-button type="primary" @click="onSaveRole()">保 存</el-button>
         </div>
-        <!-- :close-on-click-modal='false' :before-close="onCancelFieldConfig" -->
         <el-dialog :title="layerTitle" :visible.sync="fieldVisible" width="40%">
             <div class="h-dialog">
                 <table class="tablelist textCenter" v-if="layerType!=2">
@@ -138,6 +137,7 @@
 
 <script>
 import { findMenuList, saveAuthRole, getRoleInfo, findpostList, getOrganizationTree, dynamicMatchPermission, resetPermission } from './api/index'
+import * as Auths from '@/utils/auth_const'
 import { mapState } from 'vuex'
 export default {
     name: 'role',
@@ -162,7 +162,8 @@ export default {
             postOptions: [],
             positionCodeList: [],
             dingCode: '',
-            checkedkeys: []
+            checkedkeys: [],
+            Auths
         }
     },
     computed: {
