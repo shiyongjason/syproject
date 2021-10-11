@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-dialog title="上传支付凭证" :visible.sync="dialogVisible" width="45%" :before-close="handleClose">
+        <el-dialog title="上传支付凭证" :visible.sync="dialogVisible" width="45%" :before-close="handleClose" :modal-append-to-body="false">
             <div class="uploadpay">
                 <p>应支付金额：{{payMoney|fundMoneyHasTail}} 元</p>
                 <p class="uploadpay_second"><i>*</i>支付凭证：</p>
@@ -60,6 +60,7 @@ export default {
 
         },
         onAllPay () {
+            this.dialogVisible = false
             this.$router.push({ path: '/goodwork/batchpay', query: { companyId: this.companyId } })
         },
         async onSavePay () {
