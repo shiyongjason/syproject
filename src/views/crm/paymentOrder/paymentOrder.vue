@@ -189,6 +189,8 @@
                     </el-tab-pane>
                 </el-tabs>
             </div>
+        </el-drawer>
+
         <UploadPayDialog ref="uploadpaydialog" @onBackSearch="findPaymentOrderList"/>
 
            <el-dialog   title="取消支付单确认" :visible.sync="dialogVisible" :before-close="()=>dialogVisible = false">
