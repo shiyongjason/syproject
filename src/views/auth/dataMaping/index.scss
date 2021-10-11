@@ -8,14 +8,15 @@
 }
 .flex-wrap {
     display: flex;
+    margin-bottom: 20px;
     .page-left {
         width: 20%;
-        border: 1px solid #e5e5;
+        border: 1px solid #e5e5ee;
         padding: 10px;
     }
     .page-right {
         width: 65%;
-        border: 1px solid #e5e5;
+        border: 1px solid #e5e5ee;
         padding: 10px;
     }
     .page-center {
@@ -31,5 +32,15 @@
     }
 }
 .page-title{
-    margin-bottom:10px
+    margin-bottom:10px;
+    position: relative;
+    padding-left: 10px;
+    &::before{
+        content: '';
+        border-left: 2px solid #FF7A45;
+        height: 90%;
+        position: absolute;
+        top: 0px;
+        left: 0;
+    }
 }

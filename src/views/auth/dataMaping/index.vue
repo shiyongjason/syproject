@@ -1,59 +1,62 @@
 <template>
     <div class="page-body B2b">
-        <div class="page-body-cont flex-wrap">
-            <div class="page-left">
-                <div class="page-title">
-                    EHR组织机构
+        <div class="page-body-cont">
+            <div class="page-body-main flex-wrap">
+                <div class="page-left">
+                    <div class="page-title">
+                        EHR组织机构
+                    </div>
+                    <el-input placeholder="输入关键字进行过滤" v-model="filterEhr">
+                    </el-input>
+                    <el-tree ref="leftTree" :data="data1" show-checkbox :expand-on-click-node="false" :check-strictly='true' node-key="id" default-expand-all :filter-node-method="filterEhrNode">
+                    </el-tree>
                 </div>
-                <el-input placeholder="输入关键字进行过滤" v-model="filterEhr">
-                </el-input>
-                <el-tree ref="leftTree" :data="data1" show-checkbox :expand-on-click-node="false" :check-strictly='true' node-key="id" default-expand-all :filter-node-method="filterEhrNode">
-                </el-tree>
-            </div>
-            <div class="page-center">
-                <el-button type="text" size="mini" @click="onMatching">
-                    批量匹配
-                </el-button>
-            </div>
-            <div class="page-right">
-                <div class="page-title">
-                    Boss组织机构
+                <div class="page-center">
+                    <el-button type="text" size="mini" @click="onMatching">
+                        批量匹配
+                    </el-button>
                 </div>
-                <el-input placeholder="输入关键字进行过滤" v-model="filterBoss">
-                </el-input>
-                <el-tree ref="rightTree" :data="data" node-key="id" show-checkbox :expand-on-click-node="false" default-expand-all :check-strictly='true' @check-change="handleCheckChange" draggable @node-drag-end="handleDragEnd" :allow-drop="allowDrop" :filter-node-method="filterBossNode">
-                    <span class="custom-tree-node" slot-scope="{ node, data }">
-                        <span>{{ node.label }} </span>
-                        <span class="page-right-tree">
-                            <template v-for="(item,index) in data.ehrNode">
-                                <el-tag closable @close='handleCloseTag(data.ehrNode,item,index)' size="mini" type="info" :key=item.id>{{item.label}}</el-tag>
-                            </template>
-                            <el-button type="text" size="mini" @click="() => append(data)">
-                                编辑
-                            </el-button>
-                            <el-button type="text" size="mini" @click="() => append(data)">
-                                新增
-                            </el-button>
-                            <el-button type="text" size="mini" @click="() => remove(node, data)">
-                                删除
-                            </el-button>
+                <div class="page-right">
+                    <div class="page-title">
+                        Boss组织机构
+                    </div>
+                    <el-input placeholder="输入关键字进行过滤" v-model="filterBoss">
+                    </el-input>
+                    <el-tree ref="rightTree" :data="data" node-key="id" show-checkbox :expand-on-click-node="false" default-expand-all :check-strictly='true' @check-change="handleCheckChange" draggable @node-drag-end="handleDragEnd" :allow-drop="allowDrop" :filter-node-method="filterBossNode">
+                        <span class="custom-tree-node" slot-scope="{ node, data }">
+                            <span>{{ node.label }} </span>
+                            <span class="page-right-tree">
+                                <template v-for="(item,index) in data.ehrNode">
+                                    <el-tag closable @close='handleCloseTag(data.ehrNode,item,index,node)' size="mini" type="info" :key=item.id>{{item.label}}</el-tag>
+                                </template>
+                                <el-button type="text" size="mini" @click="() => edit(data)">
+                                    编辑
+                                </el-button>
+                                <el-button type="text" size="mini" @click="() => append(data)">
+                                    新增
+                                </el-button>
+                                <el-button type="text" size="mini" @click="() => remove(node, data)">
+                                    删除
+                                </el-button>
+                            </span>
                         </span>
-                    </span>
-                </el-tree>
+                    </el-tree>
+                </div>
             </div>
+             <el-button type="primary" @click="handleSumbit">确定</el-button>
         </div>
         <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
             <el-form ref="form" :model="form" label-width="80px">
-                    <el-form-item label="名称">
-                        <el-input v-model="form.name"></el-input>
-                    </el-form-item>
+                <el-form-item label="名称">
+                    <el-input v-model="form.name"></el-input>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
             </span>
         </el-dialog>
-        <el-button type="primary" @click="handleSumbit">确定</el-button>
+
     </div>
 </template>
 
@@ -157,13 +160,11 @@ export default class Datamaping extends Vue {
                     children: [
                         {
                             id: 9,
-                            label: '三级 1-1-1',
-                            ehrNode: [{ label: '西部世界' }]
+                            label: '三级 1-1-1'
                         },
                         {
                             id: 10,
-                            label: '三级 1-1-2',
-                            ehrNode: [{ label: '西部世界2' }]
+                            label: '三级 1-1-2'
                         }
                     ]
                 }
@@ -225,7 +226,7 @@ export default class Datamaping extends Vue {
         this.$refs.rightTree.setCheckedKeys([])
     }
 
-    // 递归 匹配
+    // 递归 匹配  boss 数据  ehr数据
     checkMaping (val, data, ehr) {
         return data.map((item: any) => {
             if (item.id == val.id) {
@@ -250,9 +251,10 @@ export default class Datamaping extends Vue {
             return item
         })
     }
+    // 重组数据 末级有 父级不可以选
     onCheckLastStage (data) {
         return data.map(item => {
-            item.ehrNode = []
+            // item.ehrNode = ''
             if (item.children && item.children.length > 0) {
                 item.disabled = true
                 item.children = this.onCheckLastStage(item.children)
@@ -260,27 +262,33 @@ export default class Datamaping extends Vue {
             return item
         })
     }
-    onCheckEhr (data, val) {
+    onCheckEhr (data, val, index) {
         return data.map(item => {
             if (item.id == val.id) {
                 item.disabled = false
                 if (item.ehrNode) {
-                    item.ehrNode.filter(i => i.id != val.id)
+                    console.log(1, index)
+                    // item.ehrNode.filter(i => i.id != val.id)
+                    item.ehrNode.splice(index, 1)
                 }
             }
             if (item.children) {
-                item.children = this.onCheckEhr(item.children, val)
+                item.children = this.onCheckEhr(item.children, val, index)
             }
             return item
         })
     }
     // 放弃当个映射
-    handleCloseTag (data, val, index) {
-        console.log(123, data, val)
-        data.splice(index, 1)
-        // this.$set(data, index, '')
-        this.data1 = this.onCheckEhr(this.data1, val)
-        // this.$forceUpdate()
+    handleCloseTag (data, val, index, node) {
+        console.log(123, val)
+        this.$nextTick(() => {
+            // node.data.ehrNode.splice(index, 1)
+            this.data = this.onCheckEhr(this.data, node.data, index)
+            // this.$set(data, index, '')
+            // 重新渲染ehr 数据
+            this.data1 = this.onCheckEhr(this.data1, val, index)
+            // this.$forceUpdate()
+        })
     }
     // tree 单选
     handleCheckChange (data, checked) {
@@ -297,10 +305,11 @@ export default class Datamaping extends Vue {
     onClickEHR () {
         return this.$refs.leftTree.getCheckedNodes()
     }
-
-    append (data) {
+    edit (data) {
         // 弹窗
         this.dialogVisible = true
+    }
+    append (data) {
         const newChild = { id: this.id++, label: 'testtest', children: [] }
         if (!data.children) {
             this.$set(data, 'children', [])
@@ -316,12 +325,11 @@ export default class Datamaping extends Vue {
     }
 
     handleDragEnd (draggingNode, dropNode, dropType, ev) {
-        console.log('tree drag end: ', dropNode && dropNode.label, dropType)
+        // console.log('tree drag end: ', dropNode && dropNode.label, dropType)
     }
 
     // 节点平级移动
     allowDrop (draggingNode, dropNode, type) {
-        console.log(draggingNode, dropNode)
         if (dropNode.data.label === '二级 3-1') {
             return type !== 'inner'
         } else {

@@ -1,5 +1,6 @@
 <template>
-    <img :src="fileUrlAddToken" alt="img">
+    <!-- <img  alt="img"> -->
+      <el-image :src="fileUrlAddToken" alt="img" v-if="fileUrlAddToken" lazy></el-image>
 </template>
 
 <script>
