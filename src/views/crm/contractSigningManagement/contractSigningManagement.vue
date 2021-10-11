@@ -39,8 +39,8 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
-                        <el-select placeholder="请选择" v-model="queryParams.contractStatusArrays" :clearable=true>
-                            <el-option :label="item.label" :value="item.value" v-for="item in contractStatus" :key="item.label"></el-option>
+                        <el-select placeholder="请选择" v-model="queryParams.contractStatus" multiple :clearable=true >
+                            <el-option :label="item.label" :value="item.value" v-for="item in contractStatus" :key="item.value" ></el-option>
                         </el-select>
                     </div>
                 </div>
