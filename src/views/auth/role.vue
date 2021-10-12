@@ -188,10 +188,13 @@ export default {
         this.positionCodeList = this.roleInfo.positionList.map(val => val.positionCode)
         this.getOrganizationTree()
 
-        // 之前权限岗位没有岗位管理员，不能进行删除 详情接口positionList与岗位list进行比对，不相同则不删除
+        // 不是当前岗位管理员 只做展示不做删除
         const { data: positionList } = await adminPost()
         if (positionList && positionList.length > 0) {
-            const filterList = this.roleInfo.positionList.map(val => positionList.filter(item => item.positionCode === val.positionCode)[0])
+            let filterList = []
+            if (this.roleInfo.positionList && this.roleInfo.positionList.length > 0) {
+                filterList = this.roleInfo.positionList.map(val => positionList.filter(item => item.positionCode === val.positionCode)[0])
+            }
             if (filterList && filterList.length > 0) {
                 filterList.forEach((item, index) => {
                     if (!item) {
@@ -200,8 +203,9 @@ export default {
                 })
             }
             const result = positionList.concat(this.roleInfo.positionList)
+            // 数组对象去重
             this.postOptions = this.removeArr(result)
-            // 操作DOM去除删除键
+            // 不是当前岗位管理员-去除tag删除键
             try {
                 this.$nextTick(() => {
                     const selectorAll = this.$refs.selectClearRef.$el.querySelectorAll('.el-tag__close')
