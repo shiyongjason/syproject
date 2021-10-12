@@ -30,9 +30,9 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col__lable">商品型号：</div>
+                    <div class="query-col__lable">商品系列：</div>
                     <div class="query-col__input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.model" placeholder="请输入商品型号">
+                        <el-input type="text" maxlength="50" v-model="queryParams.model" placeholder="请输入商品系列">
                         </el-input>
                     </div>
                 </div>
@@ -122,7 +122,7 @@ export default {
                 { label: '商品名称', prop: 'spuName' },
                 { label: '品牌', prop: 'brandName' },
                 { label: '商品类目', prop: 'category' },
-                { label: '型号', prop: 'model' },
+                { label: '系列', prop: 'model' },
                 // { label: '销售价格', prop: 'categoryNames' },
                 { label: '上架状态', prop: 'isOnShelf' },
                 { label: '是否共享', prop: 'isShared' },
