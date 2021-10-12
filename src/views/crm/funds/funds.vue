@@ -146,7 +146,7 @@ import FundsDialog from './components/fundsDialog'
 import FundsDict from '@/views/crm/funds/fundsDict'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import UploadDialog from './components/uploadPayDialog.vue'
-import ReduleDialog from './components/reduleDialog.vue'
+import ReduleDialog from './components/redulePayDialog.vue'
 import * as Auths from '@/utils/auth_const'
 import { newCache } from '@/utils/index'
 export default {

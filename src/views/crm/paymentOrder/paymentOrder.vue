@@ -112,9 +112,18 @@
                 <template slot="approvalTime" slot-scope="scope">
                     <span>{{ scope.data.row.approvalTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
                 </template>
-                <template slot="status" slot-scope="scope">
+                <template slot="paymentStatus" slot-scope="scope">
+                    <p>{{ paymentStatusOptions.get(scope.data.row.paymentStatus) }}</p>
+                     <p><span>{{scope.data.row.paidAmount}}</span>/<span>{{scope.data.row.totalAmount}}</span></p>
+                </template>
+               <template slot="status" slot-scope="scope">
                     <span>{{ paymentOrderStatusOptions.get(scope.data.row.status) }}</span>
                 </template>
+                    <template slot="loanTransferStatus" slot-scope="scope">
+                    <p>{{ dealerCooperaiionStutas.get(scope.data.row.loanTransferStatus) }}</p>
+                    <p>({{scope.data.row.loanTransferDate | formatDate('YYYY-MM-DD HH:mm:ss')}})</p>
+                </template>
+
                 <template slot="applyName" slot-scope="scope">
                     <p>{{scope.data.row.applyName}}</p>
                     <p v-if="scope.data.row.applyPhone">({{scope.data.row.applyPhone}})</p>
@@ -310,7 +319,8 @@ export default {
             loanTransferRecord: '',
             paymentOrderStatusOptions: paymentOrderConst.PAYMENT_ORDER_STATUS_OPTIONS,
             paymentOrderStatusKey: paymentOrderConst.PAYMENT_ORDER_STATUS_KEY,
-
+            paymentStatusOptions: paymentOrderConst.PAYMENT_STATUS_OPTIONS,
+            dealerCooperaiionStutas: paymentOrderConst.DEALER_COOPERATION_STUTAS,
             // 审批记录
             approvalList: [],
             purchaseName: '',
@@ -573,7 +583,6 @@ export default {
 </script>
 
 <style scoped lang='scss' >
-
 .eltagtop {
     margin-bottom: 10px;
 }
@@ -608,5 +617,4 @@ export default {
         color: #f00;
     }
 }
-
 </style>

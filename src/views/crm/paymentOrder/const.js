@@ -10,7 +10,12 @@ const PAYMENT_ORDER_STATUS_OPTIONS = new Map([
     [11, '支付单完成'],
     [12, '支付单关闭']
 ])
+const PAYMENT_STATUS_OPTIONS = new Map([
+    [1, '待支付'],
+    [2, '部分支付'],
+    [3, '已支付']
 
+])
 const PAYMENT_ORDER_STATUS_ALL = new Map([
     [0, '待项目运营审核'],
     [1, '首付款待支付'],
@@ -145,5 +150,6 @@ export default {
     PAYMENT_FLAG,
     PAYMENT_FLAG_KEY,
     DEALER_SCHEDULE,
-    DEALER_COOPERATION_STUTAS
+    DEALER_COOPERATION_STUTAS,
+    PAYMENT_STATUS_OPTIONS
 }

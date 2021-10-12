@@ -17,6 +17,8 @@ export const updateServiceUnPay = (params) => axios.patch('/project/api/payment-
 export const updateFinalPay = (params) => axios.patch('/project/api/payment-orders/balance-received', params)
 // boss 资金列表 剩余货款支付确认收到
 export const updateFinalUnPay = (params) => axios.patch('/project/api/payment-orders/balance-not-received', params)
+// boss 资金列表 剩余货款支付确认收到
+export const newFinalUnPay = (params) => axios.put('/project/api/boss/remain-payment/confirm', params)
 
 // 支付凭证保存
 export const payVoucher = (params) => axios.post('/project/api/batch-funds/boss/pay-voucher', params)
