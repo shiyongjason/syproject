@@ -63,8 +63,8 @@
                                                             {{ itemAuthType.authType == 0 ? '敏感字段' : itemAuthType.authType == 1?  '敏感操作' : '敏感数据' }}
                                                         </el-checkbox>
                                                         <div class="el-radio-group">
-                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''" @click="onShowFieldConfig(0, itemAuthType)" :disabled="!itemAuthType.have || isAdminDisabled">全部</button>
-                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''" @click="onShowFieldConfig(1, itemAuthType)" :disabled="!itemAuthType.have || isAdminDisabled">配置</button>
+                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''" @click="onShowFieldConfig(0, itemAuthType,item)" :disabled="!itemAuthType.have || isAdminDisabled">全部</button>
+                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''" @click="onShowFieldConfig(1, itemAuthType,item)" :disabled="!itemAuthType.have || isAdminDisabled">配置</button>
                                                         </div>
                                                     </div>
                                                     <div v-else></div>
@@ -117,7 +117,7 @@
                             <td>所属分部</td>
                             <td>
                                 <div class="treetable">
-                                    <el-tree :data="organizationTree" ref="treetable" :default-checked-keys="checkedkeys" show-checkbox node-key="pkDeptDoc" default-expand-all highlight-current :props="{label:'deptName'}">
+                                    <el-tree  :key="new Date().getSeconds()" :data="organizationTree" ref="treetable" :default-checked-keys="checkedkeys" show-checkbox :node-key=nodeKey default-expand-all highlight-current :props=defaultProps>
                                     </el-tree>
                                 </div>
                             </td>
@@ -134,7 +134,7 @@
 </template>
 
 <script>
-import { addpostList, postDetail, postAuthList, updatepostList, getOrganizationTree } from './api/index'
+import { addpostList, postDetail, postAuthList, updatepostList, getOrganizationTree, findNewOrganizationTree } from './api/index'
 import employeeSelect from './components/employeeSelect.vue'
 import { mapState } from 'vuex'
 export default {
@@ -146,7 +146,11 @@ export default {
                 postCode: '',
                 positionCodeList: []
             },
+            defaultProps: {},
+            nodeKey: '',
             organizationTree: [],
+            newOrganizationTree: [],
+            oldOrganizationTree: [],
             currentEmployeeSubsectionsAuthCode: '',
             tableList: [],
             newTableList: [], // newTableList记录初始权限配置，在取消的时候判断是否有权限变更
@@ -179,7 +183,8 @@ export default {
         this.queryId = id
         this.queryType = type
         this.tableList = []
-        this.getOrganizationTree()
+        this.getOldOrganizationTree()
+        this.getNewOrganizationTree()
         switch (parseInt(type)) {
             case 1:
                 this.postAuthList()
@@ -194,9 +199,13 @@ export default {
         }
     },
     methods: {
-        async getOrganizationTree () {
+        async getOldOrganizationTree () {
             const { data } = await getOrganizationTree()
-            this.organizationTree = data
+            this.oldOrganizationTree = data
+        },
+        async getNewOrganizationTree () {
+            const { data } = await findNewOrganizationTree(1)
+            this.newOrganizationTree = data.organizationNodeList
         },
         // 岗位新增-权限集合
         async postAuthList () {
@@ -232,13 +241,17 @@ export default {
                 this.isAdminDisabled = data.positionCode === 'SUPERADMIN'
             }
         },
+        // 获取组织树 选中 code
         onGetnodes () {
             if (this.layerType == 2) {
                 const nodeList = this.$refs.treetable.getCheckedNodes()
+                console.log(nodeList)
                 const subArr = []
                 nodeList && nodeList.map(val => {
-                    if (val.deptCode.indexOf('F') > -1) {
+                    if (val.deptCode && val.deptCode.indexOf('F') > -1) {
                         subArr.push(val.pkDeptDoc)
+                    } else {
+                        subArr.push(val.organizationCode)
                     }
                 })
                 const employeeSubsections = { authCode: this.currentEmployeeSubsectionsAuthCode, subsectionCodes: subArr }
@@ -452,7 +465,8 @@ export default {
                 this.$router.push({ path: '/auth/postset' })
             }
         },
-        onShowFieldConfig (val, item) {
+        onShowFieldConfig (val, item, obj) {
+            this.organizationTree = []
             // 当选择全部的时候，设置所有的配置都是选中状态
             if (val == 0) {
                 item.authResourceList && item.authResourceList.filter(item => {
@@ -468,11 +482,25 @@ export default {
             this.fieldVisible = !!val
             this.fieldConfig = item.authResourceList
             // 用于在取消的时候，返回原来的选中状态
+            // 兼容 好智慧 新组织树
+            console.log(item, obj)
+            if (obj.sign == 'HZH') {
+                this.nodeKey = 'id'
+                this.defaultProps = { label: 'organizationName', children: 'childOrganizations' }
+                this.organizationTree = this.newOrganizationTree
+            } else {
+                this.nodeKey = 'pkDeptDoc'
+                this.defaultProps = { label: 'deptName' }
+                this.organizationTree = this.oldOrganizationTree
+            }
+            this.$forceUpdate()
+            console.log(1, this.defaultProps)
             if (item.authType == 2) {
                 if (item.employeeSubsections) {
                     if (JSON.stringify(item.employeeSubsections) == '{}') {
                         this.checkedkeys = []
                     } else {
+                        // 判断回显 组织 选中状态
                         this.checkedkeys = JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
                     }
                 } else {
