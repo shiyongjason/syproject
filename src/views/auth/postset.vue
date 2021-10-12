@@ -32,7 +32,7 @@
                         <span>好橙工产品经理</span>
                     </el-form-item>
                     <el-form-item label="岗位人员：" prop="postPeople">
-                        <employeeSelect v-model="ruleForm.postPeople" ref="postPersonRef" :option="postOptions"></employeeSelect>
+                        <employeeSelect v-model="ruleForm.postPeople" ref="postPersonRef" :postOptions="postOptions"></employeeSelect>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { findpostList, addpostList, updatepostList, postSave, deletepostList, postConfiguration } from './api/index'
+import { findpostList, postSave, deletepostList, postConfiguration } from './api/index'
 import employeeSelect from './components/employeeSelect.vue'
 import * as Auths from '@/utils/auth_const'
 import { mapState } from 'vuex'
@@ -92,8 +92,8 @@ export default {
             const { data } = await findpostList(this.positionName)
             if (data.length > 0) {
                 data.forEach(v => {
-                    v.createTime = v.createTime.replace('T', ' ')
-                    v.updateTime = v.createTime.replace('T', ' ')
+                    v.createTime = v.createTime && v.createTime.replace('T', ' ')
+                    v.updateTime = v.updateTime && v.updateTime.replace('T', ' ')
                 })
             }
             this.postList = data
@@ -118,6 +118,8 @@ export default {
                     this.postdialogVisible = true
                     this.positionCode = val.positionCode
                     const { data } = await postConfiguration(val.positionCode)
+                    this.postOptions = []
+                    this.ruleForm.postPeople = []
                     if (data && data.length > 0) {
                         this.postOptions = data.map(v => {
                             return {
@@ -150,7 +152,13 @@ export default {
                     break
                 case 4:
                     // 删除
-                    this.$confirm(`删除该岗位将影响 [ ${val.userName || '--'} ] 的权限，是否确认删除该岗位?`, '确认删除', {
+                    let text = ''
+                    if (val.userName) {
+                        text = `删除该岗位将影响 [ ${val.userName} ] 的权限，是否确认删除该岗位?`
+                    } else {
+                        text = '是否确认删除改岗位？'
+                    }
+                    this.$confirm(text, '确认删除', {
                         confirmButtonText: '确定删除',
                         cancelButtonText: '取消'
                     }).then(async () => {
