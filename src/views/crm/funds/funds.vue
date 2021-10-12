@@ -28,7 +28,7 @@
                         <el-input v-model="queryParams.companyName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
-                  <div class="query-cont__col"  v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">
+                  <div class="query-cont__col" v-if="queryParams.repaymentTypeArrays==2" >
                     <div class="query-col__label">已支付金额：</div>
                     <div class="query-col__input">
                  <el-input v-model="queryParams.minPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">元</template></el-input>
@@ -36,7 +36,7 @@
                         <el-input v-model="queryParams.maxPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">元</template></el-input>
                     </div>
                 </div>
-                  <div class="query-cont__col"  v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">
+                  <div class="query-cont__col" v-if="queryParams.repaymentTypeArrays==2" >
                     <div class="query-col__label">支付待确认金额：</div>
                     <div class="query-col__input">
                          <el-input v-model="queryParams.minPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">元</template></el-input>
@@ -44,7 +44,7 @@
                         <el-input v-model="queryParams.maxPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">元</template></el-input>
                     </div>
                 </div>
-                  <div class="query-cont__col"  v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">
+                  <div class="query-cont__col" v-if="queryParams.repaymentTypeArrays==2" >
                     <div class="query-col__label">剩余应支付金额：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.minPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">元</template></el-input>
@@ -128,10 +128,14 @@
                     <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.payBatch&&scope.data.row.paymentFlag==1">
                         批量确认
                     </h-button>
+                     <h-button table @click="onPayDetail(scope.data.row)" v-if="queryParams.repaymentTypeArrays =='2'">
+                     支付确认
+                    </h-button>
                 </template>
             </basicTable>
             <FundsDialog :is-open="fundsDialogVisible" :detail="fundsDialogDetail" :status="queryParams.repaymentTypeArrays" @onClose="fundsDialogClose"></FundsDialog>
             <UploadDialog ref="uploaddialog" @onBackSearch="findFundsList(queryParams)"></UploadDialog>
+            <ReduleDialog :is-open="fundsDialogVisible"  :detail="reduleDialogDetail" :status="queryParams.repaymentTypeArrays"  @onClose="fundsDialogClose"></ReduleDialog>
         </div>
     </div>
 </template>
@@ -142,12 +146,13 @@ import FundsDialog from './components/fundsDialog'
 import FundsDict from '@/views/crm/funds/fundsDict'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import UploadDialog from './components/uploadPayDialog.vue'
+import ReduleDialog from './components/reduleDialog.vue'
 import * as Auths from '@/utils/auth_const'
 import { newCache } from '@/utils/index'
 export default {
     name: 'funds',
     components: {
-        FundsDialog, UploadDialog
+        FundsDialog, UploadDialog, ReduleDialog
     },
     data () {
         return {
@@ -172,6 +177,7 @@ export default {
             },
             fundsDialogVisible: false,
             fundsDialogDetail: {},
+            reduleDialogDetail: {},
             FundsDict,
             PaymentOrderDict,
             labelName: '',
@@ -221,10 +227,10 @@ export default {
                 { label: '期数', prop: 'feeRepaymentOrder', width: '100', isHidden: this.queryParams.repaymentTypeArrays !== '3' },
                 { label: '金额', prop: 'paymentAmount', width: '150' },
                 { label: '状态', prop: 'paymentFlag', width: '150' },
-                { label: '剩余货款总金额', prop: 'paymentAmount', width: '150', align: 'center' },
-                { label: '已支付金额', prop: 'paymentAmount', width: '150', align: 'center' },
-                { label: '支付待确认金额', prop: 'paymentAmount', width: '150', align: 'center' },
-                { label: '待支付金额', prop: 'paymentAmount', width: '150', align: 'center' },
+                { label: '剩余货款总金额', prop: 'totalAmount', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays !== '2' },
+                { label: '已支付金额', prop: 'paidAmount', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays !== '2' },
+                { label: '支付待确认金额', prop: 'unconfirmedAmount', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays !== '2' },
+                { label: '待支付金额', prop: 'unpaidAmount', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays !== '2' },
                 {
                     label: '应支付日期',
                     prop: 'schedulePaymentDate',
@@ -328,6 +334,13 @@ export default {
         onPayEnter (row) {
             this.fundsDialogVisible = true
             this.fundsDialogDetail = {
+                orderId: row.orderId,
+                id: row.id
+            }
+        },
+        onPayDetail (row) {
+            this.fundsDialogVisible = true
+            this.reduleDialogDetail = {
                 orderId: row.orderId,
                 id: row.id
             }

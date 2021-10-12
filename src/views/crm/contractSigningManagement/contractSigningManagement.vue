@@ -87,7 +87,7 @@
                     <div class="table-tab">待分财修订</div>
                 </el-badge>
                 <el-badge :value="riskManagerWaitingNum" class="item" style="margin:0 30px">
-                    <div class="table-tab">待风控修订</div>
+                    <div class="table-tab">待运营修订</div>
                 </el-badge>
                 <el-badge :value="lawManagerWaitingNum" class="item">
                     <div class="table-tab">待法务修订</div>
@@ -114,7 +114,7 @@
         <el-drawer title="查看信息" v-if="drawerVisible" :visible.sync="drawerVisible" :wrapperClosable="false" size='580px' :beforeClose="() => drawerVisible=false" class="contentdrawerbox">
             <div slot="title">审核记录</div>
             <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
-            <!-- {{detailRes.contractStatus == 2?'合同待分财审核':detailRes.contractStatus == 4?'合同待风控审核':detailRes.contractStatus == 6?'合同待法务审核':''}} -->
+            <!-- {{detailRes.contractStatus == 2?'合同待分财审核':detailRes.contractStatus == 4?'合同待运营审核':detailRes.contractStatus == 6?'合同待法务审核':''}} -->
             <div v-if="drawerVisible" style="text-align: center;font-size: 18px;">{{getContractStatusTxt(detailRes.contractStatus)}}</div>
             <div class="history-css">
                 <div v-if="historyList&&historyList.length==0">暂无数据</div>
@@ -221,7 +221,7 @@ const _queryParams = {
     createTimeOrder: null, // asc 或 desc
     updateTimeOrder: null// asc 或 desc
 }
-const _dicData = [{ value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待风控审核' }, { value: 5, label: '风控审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }, { value: 15, label: '用印发起失败' }, { value: 16, label: '发起线上待客户签署' }, { value: 17, label: '合同废止' }]
+const _dicData = [{ value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待运营审核' }, { value: 5, label: '运营审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }, { value: 15, label: '用印发起失败' }, { value: 16, label: '发起线上待客户签署' }, { value: 17, label: '合同废止' }]
 
 const _fileData = [{ value: true, label: '是' }, { value: false, label: '否' }]
 export default {
