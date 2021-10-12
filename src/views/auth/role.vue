@@ -188,7 +188,7 @@ export default {
         this.positionCodeList = this.roleInfo.positionList.map(val => val.positionCode)
         this.getOrganizationTree()
 
-        // 不是当前岗位管理员 只做展示不做删除
+        // 不是当前岗位管理员 只做展示不做删除（详情positionList字段与岗位list对比，相同则删除，不相同禁止操作）
         const { data: positionList } = await adminPost()
         if (positionList && positionList.length > 0) {
             let filterList = []
