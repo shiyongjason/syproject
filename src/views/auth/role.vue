@@ -182,45 +182,49 @@ export default {
     },
     async mounted () {
         this.jobNumber = this.$route.query.jobNumber
-        const { data: roleInfo } = await getRoleInfo(this.jobNumber)
-        this.roleInfo = roleInfo
-        this.dingCode = this.roleInfo.dingCode
-        this.positionCodeList = this.roleInfo.positionList.map(val => val.positionCode)
-        this.getOrganizationTree()
 
-        // 不是当前岗位管理员 只做展示不做删除（详情positionList字段与岗位list对比，相同则删除，不相同禁止操作）
-        const { data: positionList } = await adminPost()
-        if (positionList && positionList.length > 0) {
-            let filterList = []
-            if (this.roleInfo.positionList && this.roleInfo.positionList.length > 0) {
-                filterList = this.roleInfo.positionList.map(val => positionList.filter(item => item.positionCode === val.positionCode)[0])
-            }
-            if (filterList && filterList.length > 0) {
-                filterList.forEach((item, index) => {
-                    if (!item) {
-                        this.roleInfo.positionList[index].disabled = true
-                    }
-                })
-            }
-            const result = positionList.concat(this.roleInfo.positionList)
-            // 数组对象去重
-            this.postOptions = this.removeArr(result)
-            // 不是当前岗位管理员-去除tag删除键
-            try {
-                this.$nextTick(() => {
-                    const selectorAll = this.$refs.selectClearRef.$el.querySelectorAll('.el-tag__close')
-                    this.roleInfo.positionList.forEach((item, index) => {
-                        if (item.disabled) {
-                            selectorAll[index].remove()
-                        }
-                    })
-                })
-            } catch (error) {
-                console.log(error)
-            }
-        }
+        this.getOrganizationTree()
+        this.getInitData()
     },
     methods: {
+        async getInitData () {
+            const { data: roleInfo } = await getRoleInfo(this.jobNumber)
+            this.roleInfo = roleInfo
+            this.dingCode = this.roleInfo.dingCode
+
+            // 不是当前岗位管理员 只做展示不做删除（详情positionList字段与岗位list接口对比，相同则删除，不相同禁止操作）
+            const { data: positionList } = await adminPost()
+            if (positionList && positionList.length > 0) {
+                let filterList = []
+                if (this.roleInfo.positionList && this.roleInfo.positionList.length > 0) {
+                    this.positionCodeList = this.roleInfo.positionList.map(val => val.positionCode)
+                    filterList = this.roleInfo.positionList.map(val => positionList.filter(item => item.positionCode === val.positionCode)[0])
+                }
+                if (filterList && filterList.length > 0) {
+                    filterList.forEach((item, index) => {
+                        if (!item) {
+                            this.roleInfo.positionList[index].disabled = true
+                        }
+                    })
+                }
+                const result = positionList.concat(this.roleInfo.positionList)
+                // 数组对象去重
+                this.postOptions = this.removeArr(result)
+                // 不是当前岗位管理员-去除tag删除键
+                try {
+                    this.$nextTick(() => {
+                        const selectorAll = this.$refs.selectClearRef.$el.querySelectorAll('.el-tag__close')
+                        this.roleInfo.positionList.forEach((item, index) => {
+                            if (item.disabled) {
+                                selectorAll[index].remove()
+                            }
+                        })
+                    })
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+        },
         // 动态获取权限
         async getDynamicMenuData () {
             const positionCode = this.positionCodeList && this.positionCodeList.length > 0 ? this.positionCodeList.join(',') : ''
@@ -445,6 +449,7 @@ export default {
                 this.positionCodeList = []
                 this.tableList = []
                 this.newTableList = []
+                this.getInitData()
                 this.getDynamicMenuData()
             }).catch(() => {
                 // 取消删除
