@@ -7,7 +7,7 @@
             <el-form :model="ruleInfo" ref="ruleInfoRef" label-width="100px" class="h-page-flex">
                 <div class="flex-col">
                     <el-form-item class="flex-row" prop="postName" label="岗位名称：" :rules="[{required: true, message: '请输入岗位名称', trigger: 'blur' }]">
-                        <el-input v-model="ruleInfo.postName" maxlength="40" placeholder="请输入岗位名称"></el-input>
+                        <el-input v-model="ruleInfo.postName" maxlength="30" placeholder="请输入岗位名称"></el-input>
                     </el-form-item>
                     <el-form-item class="flex-row" label="岗位code：">
                         <el-input disabled v-model="ruleInfo.postCode" maxlength="40"></el-input>

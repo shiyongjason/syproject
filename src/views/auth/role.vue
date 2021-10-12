@@ -18,8 +18,8 @@
                         <el-input v-model="dingCode" maxlength="40" placeholder="请输入钉钉ID" style="width: 224px;"></el-input>
                     </div>
                     <div class="flex-row">岗位：
-                        <el-select v-model="positionCodeList" multiple filterable placeholder="岗位信息暂未配置" style="width: 90%;">
-                            <el-option v-for="item in postOptions" :key="item.id" :label="item.positionName" :value="item.positionCode"></el-option>
+                        <el-select ref="selectClearRef" v-model="positionCodeList" multiple filterable placeholder="岗位信息暂未配置" style="width: 90%;">
+                            <el-option v-for="item in postOptions" :key="item.id" :label="item.positionName" :value="item.positionCode" :disabled="item.disabled"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import { saveAuthRole, getRoleInfo, findpostList, getOrganizationTree, dynamicMatchPermission, resetPermission } from './api/index'
+import { saveAuthRole, getRoleInfo, findpostList, getOrganizationTree, dynamicMatchPermission, resetPermission, adminPost } from './api/index'
 import * as Auths from '@/utils/auth_const'
 import { mapState } from 'vuex'
 export default {
@@ -185,10 +185,40 @@ export default {
         const { data: roleInfo } = await getRoleInfo(this.jobNumber)
         this.roleInfo = roleInfo
         this.dingCode = this.roleInfo.dingCode
-        this.positionCodeList = this.roleInfo.positionCodeList
-        const { data: postOptions } = await findpostList('')
-        this.postOptions = postOptions
+        this.positionCodeList = this.roleInfo.positionList.map(val => val.positionCode)
         this.getOrganizationTree()
+
+        // 不是当前岗位管理员 只做展示不做删除（详情positionList字段与岗位list对比，相同则删除，不相同禁止操作）
+        const { data: positionList } = await adminPost()
+        if (positionList && positionList.length > 0) {
+            let filterList = []
+            if (this.roleInfo.positionList && this.roleInfo.positionList.length > 0) {
+                filterList = this.roleInfo.positionList.map(val => positionList.filter(item => item.positionCode === val.positionCode)[0])
+            }
+            if (filterList && filterList.length > 0) {
+                filterList.forEach((item, index) => {
+                    if (!item) {
+                        this.roleInfo.positionList[index].disabled = true
+                    }
+                })
+            }
+            const result = positionList.concat(this.roleInfo.positionList)
+            // 数组对象去重
+            this.postOptions = this.removeArr(result)
+            // 不是当前岗位管理员-去除tag删除键
+            try {
+                this.$nextTick(() => {
+                    const selectorAll = this.$refs.selectClearRef.$el.querySelectorAll('.el-tag__close')
+                    this.roleInfo.positionList.forEach((item, index) => {
+                        if (item.disabled) {
+                            selectorAll[index].remove()
+                        }
+                    })
+                })
+            } catch (error) {
+                console.log(error)
+            }
+        }
     },
     methods: {
         // 动态获取权限
@@ -462,6 +492,11 @@ export default {
             this.layerTitle = item.authType == 0 ? '敏感字段' : item.authType == 0 ? '敏感操作' : '数据范围'
             this.layerAuthName = item.authName
             this.layerType = item.authType
+        },
+        // 数组对象去重
+        removeArr (arr) {
+            const res = new Map()
+            return arr.filter((arr) => !res.has(arr.positionCode) && res.set(arr.positionCode, 1))
         }
     }
 }
