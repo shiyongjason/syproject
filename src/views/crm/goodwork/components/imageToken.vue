@@ -16,7 +16,7 @@ export default {
             type: String,
             required: true
         },
-        // 缩放-节省加载时间
+        // 缩放-图片变小节省加载时间
         isResize: {
             type: Boolean,
             default: false

@@ -18,8 +18,8 @@
                         <el-input v-model="dingCode" maxlength="40" placeholder="请输入钉钉ID" style="width: 224px;"></el-input>
                     </div>
                     <div class="flex-row">岗位：
-                        <el-select v-model="positionCodeList" multiple filterable placeholder="岗位信息暂未配置" style="width: 90%;">
-                            <el-option v-for="item in postOptions" :key="item.id" :label="item.positionName" :value="item.positionCode"></el-option>
+                        <el-select ref="selectClearRef" v-model="positionCodeList" multiple filterable placeholder="岗位信息暂未配置" style="width: 90%;">
+                            <el-option v-for="item in postOptions" :key="item.id" :label="item.positionName" :value="item.positionCode" :disabled="item.disabled"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import { findMenuList, saveAuthRole, getRoleInfo, findpostList, getOrganizationTree, dynamicMatchPermission, resetPermission } from './api/index'
+import { saveAuthRole, getRoleInfo, findpostList, getOrganizationTree, dynamicMatchPermission, resetPermission, adminPost } from './api/index'
 import * as Auths from '@/utils/auth_const'
 import { mapState } from 'vuex'
 export default {
@@ -182,19 +182,39 @@ export default {
     },
     async mounted () {
         this.jobNumber = this.$route.query.jobNumber
-        // const { data } = await findMenuList(this.jobNumber)
-        // var copyData = JSON.parse(JSON.stringify(data))
-        // this.handleData(copyData)
-        // this.tableList = this.handlerTableList(copyData, 0)
-        // console.log(this.tableList)
-        // this.newTableList = JSON.parse(JSON.stringify(this.tableList))
         const { data: roleInfo } = await getRoleInfo(this.jobNumber)
         this.roleInfo = roleInfo
         this.dingCode = this.roleInfo.dingCode
-        this.positionCodeList = this.roleInfo.positionCodeList
-        const { data: postOptions } = await findpostList('')
-        this.postOptions = postOptions
+        this.positionCodeList = this.roleInfo.positionList.map(val => val.positionCode)
         this.getOrganizationTree()
+
+        // 之前权限岗位没有岗位管理员，不能进行删除 详情接口positionList与岗位list进行比对，不相同则不删除
+        const { data: positionList } = await adminPost()
+        if (positionList && positionList.length > 0) {
+            const filterList = this.roleInfo.positionList.map(val => positionList.filter(item => item.positionCode === val.positionCode)[0])
+            if (filterList && filterList.length > 0) {
+                filterList.forEach((item, index) => {
+                    if (!item) {
+                        this.roleInfo.positionList[index].disabled = true
+                    }
+                })
+            }
+            const result = positionList.concat(this.roleInfo.positionList)
+            this.postOptions = this.removeArr(result)
+            // 操作DOM去除删除键
+            try {
+                this.$nextTick(() => {
+                    const selectorAll = this.$refs.selectClearRef.$el.querySelectorAll('.el-tag__close')
+                    this.roleInfo.positionList.forEach((item, index) => {
+                        if (item.disabled) {
+                            selectorAll[index].remove()
+                        }
+                    })
+                })
+            } catch (error) {
+                console.log(error)
+            }
+        }
     },
     methods: {
         // 动态获取权限
@@ -219,20 +239,6 @@ export default {
                 this.organizationTree = data
             }
         },
-        // onGetnodes () {
-        //     if (this.layerType == 2) {
-        //         const nodeList = this.$refs.treetable.getCheckedNodes()
-        //         const subArr = []
-        //         nodeList && nodeList.map(val => {
-        //             if (val.deptCode.indexOf('F') > -1) {
-        //                 subArr.push(val.pkDeptDoc)
-        //             }
-        //         })
-        //         const employeeSubsections = { authCode: this.currentEmployeeSubsectionsAuthCode, subsectionCodes: subArr }
-        //         this.newItem.employeeSubsections = employeeSubsections
-        //         this.$refs.treetable.setCheckedKeys([])
-        //     }
-        // },
         // 对后端返回的数据进行处理
         // list必须有3级，如果不够3级，需要增加childAuthList，满足页面展示需求
         // 敏感字段和敏感操作相关配置挂载在3级菜单下面
@@ -450,14 +456,6 @@ export default {
             if (val == 1) {
                 this.currentEmployeeSubsectionsAuthCode = item.authCode
             }
-            // 用于在取消的时候，返回原来的选中状态
-            // if (item.authType == 2 && item.employeeSubsections) {
-            //     if (JSON.stringify(item.employeeSubsections) != '{}') {
-            //         this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
-            //     }
-            // } else if (item.authType == 2 && !item.employeeSubsections) {
-            //     this.checkedkeys = []
-            // }
             this.layerType = item.authType
             // 设置页面敏感信息的高亮是在全部还是配置上
             item.status = val
@@ -490,15 +488,12 @@ export default {
             this.layerTitle = item.authType == 0 ? '敏感字段' : item.authType == 0 ? '敏感操作' : '数据范围'
             this.layerAuthName = item.authName
             this.layerType = item.authType
+        },
+        // 数组对象去重
+        removeArr (arr) {
+            const res = new Map()
+            return arr.filter((arr) => !res.has(arr.positionCode) && res.set(arr.positionCode, 1))
         }
-        // onCancelFieldConfig () {
-        //     if (this.layerType == 2) {
-        //         this.$refs.treetable.setCheckedKeys([])
-        //     }
-        //     this.newItem.employeeSubsections = this.cloneEmployeeSubsections ? this.cloneEmployeeSubsections : {}
-        //     this.newItem.authResourceList = this.cloneConfig ? this.cloneConfig : []
-        //     this.fieldVisible = false
-        // }
     }
 }
 </script>

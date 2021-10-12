@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { findpostList, addpostList, updatepostList, postSave, deletepostList, postConfiguration } from './api/index'
+import { findpostList, postSave, deletepostList, postConfiguration } from './api/index'
 import employeeSelect from './components/employeeSelect.vue'
 import * as Auths from '@/utils/auth_const'
 import { mapState } from 'vuex'
@@ -154,7 +154,7 @@ export default {
                     // 删除
                     let text = ''
                     if (val.userName) {
-                        text = `删除该岗位将影响 [ ${val.userName || '--'} ] 的权限，是否确认删除该岗位?`
+                        text = `删除该岗位将影响 [ ${val.userName} ] 的权限，是否确认删除该岗位?`
                     } else {
                         text = '是否确认删除改岗位？'
                     }
