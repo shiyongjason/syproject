@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import { findMenuList, saveAuthRole, getRoleInfo, findpostList, getOrganizationTree, dynamicMatchPermission, resetPermission } from './api/index'
+import { saveAuthRole, getRoleInfo, findpostList, getOrganizationTree, dynamicMatchPermission, resetPermission } from './api/index'
 import * as Auths from '@/utils/auth_const'
 import { mapState } from 'vuex'
 export default {
@@ -182,12 +182,6 @@ export default {
     },
     async mounted () {
         this.jobNumber = this.$route.query.jobNumber
-        // const { data } = await findMenuList(this.jobNumber)
-        // var copyData = JSON.parse(JSON.stringify(data))
-        // this.handleData(copyData)
-        // this.tableList = this.handlerTableList(copyData, 0)
-        // console.log(this.tableList)
-        // this.newTableList = JSON.parse(JSON.stringify(this.tableList))
         const { data: roleInfo } = await getRoleInfo(this.jobNumber)
         this.roleInfo = roleInfo
         this.dingCode = this.roleInfo.dingCode
@@ -219,20 +213,6 @@ export default {
                 this.organizationTree = data
             }
         },
-        // onGetnodes () {
-        //     if (this.layerType == 2) {
-        //         const nodeList = this.$refs.treetable.getCheckedNodes()
-        //         const subArr = []
-        //         nodeList && nodeList.map(val => {
-        //             if (val.deptCode.indexOf('F') > -1) {
-        //                 subArr.push(val.pkDeptDoc)
-        //             }
-        //         })
-        //         const employeeSubsections = { authCode: this.currentEmployeeSubsectionsAuthCode, subsectionCodes: subArr }
-        //         this.newItem.employeeSubsections = employeeSubsections
-        //         this.$refs.treetable.setCheckedKeys([])
-        //     }
-        // },
         // 对后端返回的数据进行处理
         // list必须有3级，如果不够3级，需要增加childAuthList，满足页面展示需求
         // 敏感字段和敏感操作相关配置挂载在3级菜单下面
@@ -450,14 +430,6 @@ export default {
             if (val == 1) {
                 this.currentEmployeeSubsectionsAuthCode = item.authCode
             }
-            // 用于在取消的时候，返回原来的选中状态
-            // if (item.authType == 2 && item.employeeSubsections) {
-            //     if (JSON.stringify(item.employeeSubsections) != '{}') {
-            //         this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
-            //     }
-            // } else if (item.authType == 2 && !item.employeeSubsections) {
-            //     this.checkedkeys = []
-            // }
             this.layerType = item.authType
             // 设置页面敏感信息的高亮是在全部还是配置上
             item.status = val
@@ -491,14 +463,6 @@ export default {
             this.layerAuthName = item.authName
             this.layerType = item.authType
         }
-        // onCancelFieldConfig () {
-        //     if (this.layerType == 2) {
-        //         this.$refs.treetable.setCheckedKeys([])
-        //     }
-        //     this.newItem.employeeSubsections = this.cloneEmployeeSubsections ? this.cloneEmployeeSubsections : {}
-        //     this.newItem.authResourceList = this.cloneConfig ? this.cloneConfig : []
-        //     this.fieldVisible = false
-        // }
     }
 }
 </script>

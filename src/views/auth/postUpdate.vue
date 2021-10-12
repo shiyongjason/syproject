@@ -158,7 +158,7 @@ export default {
             jobNumber: '',
             postOptions: [], // 岗位管理员
             checkedkeys: [],
-            isAdminDisabled: false, // 当是超级管理员 权限全部禁用
+            isAdminDisabled: false, // 当是超级管理员 权限全部禁用,不能随意修改
             // 接收参数
             queryId: '',
             queryType: '' // 1 新增岗位 2 复制 3 修改
@@ -462,14 +462,6 @@ export default {
             if (val == 1) {
                 this.currentEmployeeSubsectionsAuthCode = item.authCode
             }
-            // 用于在取消的时候，返回原来的选中状态
-            // if (item.authType == 2 && item.employeeSubsections) {
-            //     if (JSON.stringify(item.employeeSubsections) != '{}') {
-            //         this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
-            //     }
-            // } else if (item.authType == 2 && !item.employeeSubsections) {
-            //     this.checkedkeys = []
-            // }
             this.layerType = item.authType
             // 设置页面敏感信息的高亮是在全部还是配置上
             item.status = val
