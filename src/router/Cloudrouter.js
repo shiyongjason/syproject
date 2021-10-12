@@ -7,7 +7,7 @@ export default [
         meta: {
             title: '舒适云概览',
             isMenu: true,
-            icon: 'hosjoy_shushiyun'
+            icon: 'shushiyunlogo'
         },
         component: Layout,
         children: [
