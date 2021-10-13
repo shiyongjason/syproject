@@ -26,7 +26,6 @@ export default {
     watch: {
         postOptions: {
             handler (o) {
-                console.log(o)
                 if (o && o.length > 0) {
                     this.option = o
                 }
