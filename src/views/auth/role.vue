@@ -18,7 +18,7 @@
                         <el-input v-model="dingCode" maxlength="40" placeholder="请输入钉钉ID" style="width: 224px;"></el-input>
                     </div>
                     <div class="flex-row">岗位：
-                        <el-select ref="selectClearRef" v-model="positionCodeList" multiple filterable placeholder="岗位信息暂未配置" style="width: 90%;">
+                        <el-select ref="selectClearRef" v-model="positionCodeList" multiple placeholder="岗位信息暂未配置" style="width: 90%;">
                             <el-option v-for="item in postOptions" :key="item.id" :label="item.positionName" :value="item.positionCode" :disabled="item.disabled"></el-option>
                         </el-select>
                     </div>
