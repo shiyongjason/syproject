@@ -3,10 +3,11 @@
         <div v-show="toggle" class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <div class="query-col-title">分部：</div>
-                    <div class="query-col-input">
+                    <div class="query-col-title">所属区域：</div>
+                    <!-- <div class="query-col-input">
                         <HAutocomplete :selectArr="branchList" @back-event="backPlat" placeholder="请输入分部名称" :selectObj="branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                    </div>
+                    </div> -->
+
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">目标年份：</div>
@@ -54,7 +55,9 @@ import { interfaceUrl } from '@/api/config'
 import branchTable from './components/branch.vue'
 import { departmentAuth } from '@/mixins/userAuth'
 import { getOldTableTop } from '@/utils/getTableTop'
-import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+// import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import RegionCascader from './components/regionCascader.vue'
+
 import { AUTH_WIXDOM_BRANCH_TARGET_EXPORT, AUTH_WIXDOM_BRANCH_TARGET_BULK_IMPORT, AUTH_WIXDOM_BRANCH_TARGET_DOWN_TEMPLATE } from '@/utils/auth_const'
 export default {
     name: 'branchTarget',
