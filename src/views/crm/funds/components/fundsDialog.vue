@@ -242,7 +242,7 @@ export default {
     background-color: #f2f2f4;
     flex-direction: column;
     border-radius: 5px;
-    font-size: 12px;
+    font-size: 14px;
     flex-wrap: wrap;
     margin-bottom: 10px;
     .span-filed {
@@ -252,7 +252,7 @@ export default {
         .coll-filed {
             display: flex;
             padding-right: 15px;
-            font-size: 12px;
+            font-size: 14px;
             color: #333333;
             font-weight: 400;
             cursor: default;
