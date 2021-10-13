@@ -7,7 +7,7 @@
                     <!-- <div class="query-col-input">
                         <HAutocomplete :selectArr="branchList" @back-event="backPlat" placeholder="请输入分部名称" :selectObj="branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div> -->
-
+<RegionCascader/>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">目标年份：</div>
@@ -101,7 +101,7 @@ export default {
     },
     components: {
         branchTable,
-        HAutocomplete
+        RegionCascader
     },
     methods: {
         exportHref () {
