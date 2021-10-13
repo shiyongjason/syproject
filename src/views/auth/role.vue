@@ -194,12 +194,11 @@ export default {
 
             // 不是当前岗位管理员 只做展示不做删除（详情positionList字段与岗位list接口对比，相同则删除，不相同禁止操作）
             const { data: positionList } = await adminPost()
-            if (positionList && positionList.length > 0) {
-                let filterList = []
-                if (this.roleInfo.positionList && this.roleInfo.positionList.length > 0) {
-                    this.positionCodeList = this.roleInfo.positionList.map(val => val.positionCode)
-                    filterList = this.roleInfo.positionList.map(val => positionList.filter(item => item.positionCode === val.positionCode)[0])
-                }
+            if (this.roleInfo.positionList && this.roleInfo.positionList.length > 0) {
+                this.positionCodeList = this.roleInfo.positionList.map(val => val.positionCode)
+
+                // 根据positionCode进行对比，不相同disabled = true
+                const filterList = this.roleInfo.positionList.map(val => positionList.filter(item => item.positionCode === val.positionCode)[0])
                 if (filterList && filterList.length > 0) {
                     filterList.forEach((item, index) => {
                         if (!item) {
@@ -207,22 +206,21 @@ export default {
                         }
                     })
                 }
-                const result = positionList.concat(this.roleInfo.positionList)
-                // 数组对象去重
-                this.postOptions = this.removeArr(result)
-                // 不是当前岗位管理员-去除tag删除键
-                try {
-                    this.$nextTick(() => {
-                        const selectorAll = this.$refs.selectClearRef.$el.querySelectorAll('.el-tag__close')
-                        this.roleInfo.positionList.forEach((item, index) => {
-                            if (item.disabled) {
-                                selectorAll[index].remove()
-                            }
-                        })
+            }
+            this.postOptions = positionList.concat(this.roleInfo.positionList.filter(v => v.disabled))
+
+            // 不是当前岗位管理员-去除tag删除键
+            try {
+                this.$nextTick(() => {
+                    const selectorAll = this.$refs.selectClearRef.$el.querySelectorAll('.el-tag__close')
+                    this.roleInfo.positionList.forEach((item, index) => {
+                        if (item.disabled) {
+                            selectorAll[index].remove()
+                        }
                     })
-                } catch (error) {
-                    console.log(error)
-                }
+                })
+            } catch (error) {
+                console.log(error)
             }
         },
         // 动态获取权限
@@ -497,11 +495,6 @@ export default {
             this.layerTitle = item.authType == 0 ? '敏感字段' : item.authType == 0 ? '敏感操作' : '数据范围'
             this.layerAuthName = item.authName
             this.layerType = item.authType
-        },
-        // 数组对象去重
-        removeArr (arr) {
-            const res = new Map()
-            return arr.filter((arr) => !res.has(arr.positionCode) && res.set(arr.positionCode, 1))
         }
     }
 }
