@@ -6,7 +6,7 @@
                 <p>剩余应支付金额：{{unpaidAmount|fundMoneyHasTail}} 元</p>
                 <el-form :model="uploadpayForm" :rules="rules" ref="uploadpayForm" label-width="130px">
                     <el-form-item label="本次支付金额：" prop="paidAmount">
-                        <el-input v-model.trim="uploadpayForm.paidAmount" v-isNum:2="uploadpayForm.paidAmount" placeholder="请输入" maxlength="50" v-inputMAX='payMoney'><template slot="append">元</template></el-input>
+                        <el-input v-model.trim="uploadpayForm.paidAmount" v-isNum:2="uploadpayForm.paidAmount" placeholder="请输入" maxlength="50" v-inputMAX='unpaidAmount'><template slot="append">元</template></el-input>
                         <span style="width:50px;height:50px;text-align:center;margin-left:10px;color:#13C2C2" @click="handleAll">全部</span>
                     </el-form-item>
                 </el-form>
@@ -70,7 +70,7 @@ export default {
             this.repaymentType = val.repaymentType
             this.uploadpayForm.paidAmount = ''
             this.$nextTick(() => {
-                this.$refs.uploadpayForm.clearValidate()
+                this.$refs.uploadpayForm && this.$refs.uploadpayForm.clearValidate()
             })
         },
         handleClose () {
@@ -85,7 +85,7 @@ export default {
             this.$router.push({ path: '/goodwork/batchpay', query: { companyId: this.companyId } })
         },
         handleAll () {
-            this.uploadpayForm.paidAmount = this.payMoney
+            this.uploadpayForm.paidAmount = this.unpaidAmount
         },
         async onSavePay () {
             if (this.type == 2) {
