@@ -439,12 +439,11 @@ export default {
             }
         },
         async onResetRole () {
-            this.$confirm(`执行该操作将清除该人员所有岗位和权限，是否确认继续？`, '重置确认', {
+            this.$confirm(`执行该操作将清除该人员非岗位对应的权限，是否确认继续？`, '重置确认', {
                 confirmButtonText: '确定继续',
                 cancelButtonText: '取消'
             }).then(async () => {
                 await resetPermission({ jobNumber: this.jobNumber })
-                this.positionCodeList = []
                 this.tableList = []
                 this.newTableList = []
                 this.getInitData()
