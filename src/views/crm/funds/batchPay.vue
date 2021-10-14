@@ -65,8 +65,9 @@ export default {
 
             },
             batchDetail: {},
-            fundId: [],
-            paymentAmount: [],
+            // fundId: [],
+            // paymentAmount: [],
+            fundBatchList: [],
             payTotal: 0
         }
     },
@@ -97,12 +98,13 @@ export default {
             this.onGetList(this.queryParams)
         },
         handleSelectionChange (row) {
-            this.fundId = []
-            this.paymentAmount = []
+            this.fundBatchList = []
             this.payTotal = 0
             row && row.map(item => {
-                this.fundId.push(item.id)
-                this.paymentAmount.push(item.paymentAmount)
+                this.fundBatchList.push({
+                    fundId: item.id,
+                    paymentAmount: item.paymentAmount
+                })
                 this.payTotal = item.paymentAmount + this.payTotal
             })
             // 求和
@@ -116,12 +118,11 @@ export default {
         },
         async onSubmit () {
             const params = {
-                fundId: this.fundId,
-                paymentAmount: this.paymentAmount,
+                fundBatchList: this.fundBatchList,
                 attachDocs: this.docPos,
                 companyId: this.$route.query.companyId
             }
-            if (this.fundId.length == 0) {
+            if (this.fundBatchList.length == 0) {
                 this.$message({
                     message: '请选择要支付的账单~',
                     type: 'warning'
