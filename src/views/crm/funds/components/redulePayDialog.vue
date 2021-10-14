@@ -1,50 +1,52 @@
 <template>
-    <el-dialog :title="title" :visible.sync="isOpen" :close-on-click-modal=false width="650px" :before-close="()=> $emit('onClose')">
-
-          <div class="info-content" v-if="this.status === FundsDict.repaymentTypeArrays.list[2].key">
-            <div class="row-filed">
-                  <div class="use-box"  v-if="this.status === FundsDict.repaymentTypeArrays.list[2].key">
-                   <div class="span-filed" >
-                       <p class="coll-filed">支付金额：qqqq</p>
-                       <p class="coll-filed">支付时间：fsdf </p>
-                   </div>
-                    <div class="span-filed">
-                    <p class="coll-filed">
-                        支付凭证：
-                    <span class="img-box" :key="item.fileUrl" v-for="item in dialogDetail.attachDocList">
-                       <imageAddToken :file-url="item.fileUrl" />
-                    </span>
-                    </p>
-                       <p class="coll-filed"><span>操作人：111111111111111111111111111111111</span>
-                       </p>
-                   </div>
-                   <div class="span-filed" >
-                       <p class="coll-filed">是否确认收到经销商***支付的***元货款？</p>
-                   </div>
-                </div>
+    <el-dialog :title="title" :visible.sync="isOpen" :close-on-click-modal=false width="670px" :before-close="()=> $emit('onClose')">
+        <div class="remain_wrap" v-for="(item) in dialogDetail&&dialogDetail.fundDetailResponseList" :key="item.id">
+            <div class="remian_wrap-top">
+                <el-row>
+                    <el-col :span="12">
+                        本次支付金额（元）：{{item.paymentAmount|fundMoneyHasTail}}
+                    </el-col>
+                    <el-col :span="12">
+                        支付时间：{{moment(item.updateTime).format('yyyy-MM-DD HH:mm:ss')}}
+                    </el-col>
+                    <el-col class="mt10" :span="12">
+                        操作人：{{item.createBy}} {{item.phone||'-'}}
+                    </el-col>
+                </el-row>
+                <el-row class="mt10">
+                    支付凭证：
+                    <div class="remian_voucher">
+                        <span class="img-box" :key="i.id" v-for="(i) in item.attachDocResponseList">
+                            <imageAddToken :file-url="i.fileUrl" />
+                        </span>
+                    </div>
+                </el-row>
+                <el-row class="mt10" v-if="title!='查看凭证'">
+                    <p style="color:#9999">是否确认收到经销商<span style="color:red">{{companyName}}</span>支付的<span style="color:red">{{item.paymentAmount|fundMoneyHasTail}}</span>元货款？</p>
+                </el-row>
+            </div>
+            <div class="remian_wrap-bot" v-if="title!='查看凭证'">
+                <span class="mr10"><i class="el-icon-warning" style="color:#E6A23C"></i> 确认到账后，将释放掉经销商 <span>{{item.paymentAmount|fundMoneyHasTail}}</span> 元的剩余代采购额度</span>
+                <h-button type="assist" @click="handleReceived(1,item)">确认收到</h-button>
+                <h-button @click="onUnReceived(2,item)">并未收到</h-button>
             </div>
         </div>
-        <span slot="footer" class="dialog-footer" >
-            <span > <i class="el-icon-warning" style="color:red"></i> 确认到账后，将释放掉经销商 <span>500</span> 元的剩余代采购额度</span>
-            <h-button type="assist" @click="onReceived">确认收到</h-button>
-            <h-button type="primary" @click="onUnReceived">并未收到</h-button>
+        <p class="remain_mes"  v-if="dialogDetail.fundDetailResponseList.length==0">暂无数据</p>
+        <span slot="footer" class="dialog-footer" v-if="title=='查看凭证'">
+            <span>剩余货款支付进度：{{dialogDetail.paidAmount | moneyShow}}/{{dialogDetail.paymentAmount | moneyShow}}</span>
+            <el-button @click="()=> $emit('onClose')">取 消</el-button>
         </span>
     </el-dialog>
 </template>
-
 <script>
-import FundsDict from '../fundsDict'
 import {
-    getFundsTicket,
-    updateFinalPay, updateFinalUnPay,
-    updateFirstPay,
-    updateFirstUnPay,
-    updateServicePay,
-    updateServiceUnPay,
-    newFinalUnPay
+    findRemainPayDetail,
+    findRemainPayConfirm,
+    updateRemainPayConfirm
 } from '../api'
 import { mapState } from 'vuex'
 import imageAddToken from '@/components/imageAddToken'
+import { moneyShow, fundMoneyHasTail } from '@/utils/filters'
 import moment from 'moment'
 export default {
     name: 'redulePayDialog',
@@ -55,73 +57,43 @@ export default {
         isOpen: {
             type: Boolean,
             default: false
-        },
-        detail: {
-            type: Object,
-            required: true
-        },
-        status: {
-            type: String,
-            required: true
         }
 
     },
     data () {
         return {
-            fundDetailId,
-            confirmType: {},
-            FundsDict
+            dialogDetail: { fundDetailResponseList: [] },
+            moment,
+            title: '',
+            companyName: ''
         }
     },
     computed: {
-        title () {
-            let title = '支付确认'
-            return title
-        },
         ...mapState({
             userInfo: state => state.userInfo
         })
     },
     methods: {
-        async onReceived () {
-            console.log(this.detail)
+        async handleReceived (val, item) {
             const params = {
-                // paymentOrderId: this.detail.orderId,
-                fundId: this.detail.id
+                fundDetailId: item.id,
+                updateBy: JSON.parse(sessionStorage.getItem('userInfo')).employeeName,
+                confirmType: val
             }
-            await newFinalUnPay(params)
+            await updateRemainPayConfirm(params)
             this.$emit('onClose')
         },
-        async onUnReceived () {
-            const params = {
-                paymentOrderId: this.detail.orderId,
-                fundId: this.detail.id
-            }
-            if (this.status === FundsDict.repaymentTypeArrays.list[0].key) {
-                await updateFirstUnPay(params)
-            }
-            if (this.status === FundsDict.repaymentTypeArrays.list[1].key) {
-                await updateServiceUnPay(params)
-            }
-            if (this.status === FundsDict.repaymentTypeArrays.list[2].key) {
-                await newFinalUnPay(params)
-            }
-            this.$emit('onClose')
-        },
-        async getFundsTicket () {
-            const { data } = await getFundsTicket(this.detail.id)
+        async getFundsTicket (val) {
+            const { data } = await findRemainPayDetail(val.id)
             console.log(data)
             this.dialogDetail = data
+            this.title = '查看凭证'
         },
-        goDetail (url) {
-            window.open(url)
-        }
-    },
-    watch: {
-        isOpen (value) {
-            if (value) {
-                this.getFundsTicket()
-            }
+        async findRemainPayConfirm (val) {
+            const { data } = await findRemainPayConfirm(val.id)
+            this.dialogDetail = data
+            this.companyName = val.companyName
+            this.title = `支付确认 | 剩余货款支付进度:${data.paidAmount | moneyShow}/${data.paymentAmount | moneyShow}`
         }
     }
 }
@@ -129,84 +101,33 @@ export default {
 
 <style scoped lang="scss">
 /deep/.el-dialog__body {
-    min-height: 150px;
+    max-height: 450px;
+    overflow-y: scroll;
 }
-.info-content {
-    display: flex;
-    flex-direction: column;
-    .img-box {
-        margin: 10px 10px 0 0;
-    }
-}
-.tips {
-    color: #8d8d8d;
-    margin-right: 20px;
-}
-.img-info {
-    width: 80px;
-    height: 80px;
-    cursor: pointer;
-    margin-right: 10px;
-}
-.row-filed {
-    &-flex {
-        display: flex;
-        flex-direction: row;
-    }
-    .content {
-        display: flex;
-        flex-wrap: wrap;
-        span {
-            display: flex;
-            width: 80px;
-            height: 80px;
-            margin-bottom: 12px;
-            margin-right: 12px;
-            cursor: pointer;
-            border: 1px solid #e5e5e5;
-            box-sizing: border-box;
-        }
-        img {
-            display: block;
-            margin: auto;
-            max-height: 78px;
-            max-width: 78px;
-        }
-    }
-    .label {
-        flex: 0 0 100px;
-        margin-top: 20px;
-    }
-}
-
-.use-box {
-    display: flex;
-    background-color: #f2f2f4;
-    flex-direction: column;
-    border-radius: 5px;
-    font-size: 12px;
-    flex-wrap: wrap;
+.remain_wrap {
+    border: 1px solid #e5e5ee;
+    padding: 10px;
     margin-bottom: 10px;
-    .span-filed {
-        display: flex;
-        padding: 5px;
-        justify-content: space-between;
-        .coll-filed {
-            display: flex;
-            padding-right: 15px;
-            font-size: 12px;
-            color: #333333;
-            font-weight: 400;
-            cursor: default;
-            line-height: 15px;
-            box-sizing: border-box;
-        }
-    }
+    box-shadow: 2px 2px 3px #e5e5e5;
+}
+.remian_voucher{
+    display: flex;
+}
+.remain_mes{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.img-box {
+    width: 60px;
+    height: 60px;
+    border: 1px solid #e5e5e5;
+    margin: 10px 0 0 10px;
+    display: block;
+    box-shadow: 1px 1px 2px #e5e5e5;
+    overflow:hidden;
     img {
-        display: block;
-        margin: auto;
-        max-height: 32px;
-        max-width: 32px;
+        width: 60px;
     }
 }
 </style>
