@@ -66,8 +66,7 @@
                 <!--  -->
                 <div class="tab-layout-title">
                     <span></span>
-                    <!-- &&hosAuthCheck(Auths.CRM_WORK_FINAL_EDITPUR) -->
-                    <div class="tab-layout-title-box">采购结论<h-button table @click="onEditPur" v-if="(resolutionDetail.resolutionStatus==1||resolutionDetail.resolutionStatus==3)">编辑</h-button>
+                    <div class="tab-layout-title-box">采购结论<h-button table @click="onEditPur" v-if="(resolutionDetail.resolutionStatus==1||resolutionDetail.resolutionStatus==3)&&hosAuthCheck(Auths.CRM_WORK_FINAL_EDITPUR)">编辑</h-button>
                     </div>
                 </div>
                 <div class="item">
@@ -316,7 +315,7 @@ import { getTYCList, getResolutions, resCustomer, resPurchase, getRecordList, in
 import { useDebounce } from '@/decorator'
 import * as Auths from '@/utils/auth_const'
 import moment from 'moment'
-import { deepCopy } from '@/utils/utils'
+import { deepCopy, isRepeat } from '@/utils/utils'
 
 @Component({
     name: 'finalApproval',
@@ -791,11 +790,16 @@ export default class FinalApproval extends Vue {
 
     // 添加采购信息
     onAddItem () {
-        console.log(this.tableForm)
+        const newArr = this.tableForm.map(val => val.upstreamSupplierName)
+        if (isRepeat(newArr)) {
+            this.$message.warning('供应商不可重复')
+            return
+        }
         let _temp = {
             'deviceBrand': '',
             'deviceCategory': '',
             'deviceCategoryType': '',
+            'otherDeviceCategory': '',
             'upstreamPayType': '',
             'upstreamSupplierName': '',
             'upstreamSupplierType': '' }
@@ -823,14 +827,20 @@ export default class FinalApproval extends Vue {
     }
     // 校验表格
     onValidTable (tables) {
+        const newArr = tables.map(val => val.upstreamSupplierName)
+        if (isRepeat(newArr)) {
+            this.$message.warning('供应商不可重复')
+            return
+        }
+
         let flag = true
         tables.forEach(element => {
             console.log('element', element)
+            delete element.deviceCategory
             delete element.upstreamPayTypeName
             if (element['deviceCategoryType'].includes(8)) {
                 for (var key in element) {
                     if (element[key] != '0' && !element[key]) {
-                        this.$message.warning('请完善表格的必填项数据!')
                         flag = false // 终止程序
                         return
                     }
@@ -840,13 +850,15 @@ export default class FinalApproval extends Vue {
                 element['deviceCategory'] = '其他'
                 for (var keys in element) {
                     if (element[keys] != '0' && !element[keys]) {
-                        this.$message.warning('请完善表格的必填项数据!')
                         flag = false // 终止程序
                         return
                     }
                 }
             }
         })
+        if (!flag) {
+            this.$message.warning('请完善表格的必填项数据!')
+        }
         return flag
     }
     // 保存采购结论
