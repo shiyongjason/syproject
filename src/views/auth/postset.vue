@@ -29,7 +29,7 @@
             <el-dialog title="配置岗位人员" :visible.sync="postdialogVisible" width="500px" center>
                 <el-form ref="form" :model="ruleForm" :rules="rules" label-position="right" label-width="150px">
                     <el-form-item label="岗位名称：">
-                        <span>好橙工产品经理</span>
+                        <span>{{ postName }}</span>
                     </el-form-item>
                     <el-form-item label="岗位人员：" prop="postPeople">
                         <employeeSelect v-model="ruleForm.postPeople" ref="postPersonRef" :postOptions="postOptions"></employeeSelect>
@@ -75,7 +75,8 @@ export default {
                 ]
             },
             positionCode: '',
-            postOptions: []
+            postOptions: [],
+            postName: ''
         }
     },
     components: {
@@ -117,6 +118,7 @@ export default {
                     //  配置人员
                     this.postdialogVisible = true
                     this.positionCode = val.positionCode
+                    this.postName = val.positionName
                     const { data } = await postConfiguration(val.positionCode)
                     this.postOptions = []
                     this.ruleForm.postPeople = []

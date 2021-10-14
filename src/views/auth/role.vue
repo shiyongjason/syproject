@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import { saveAuthRole, getRoleInfo, findpostList, getOrganizationTree, dynamicMatchPermission, resetPermission, adminPost } from './api/index'
+import { saveAuthRole, getRoleInfo, getOrganizationTree, dynamicMatchPermission, resetPermission, adminPost } from './api/index'
 import * as Auths from '@/utils/auth_const'
 import { mapState } from 'vuex'
 export default {
