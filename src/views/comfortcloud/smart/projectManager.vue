@@ -99,13 +99,15 @@
                 </el-form-item>
                 <el-form-item label="项目类型：" prop="projectType">
                     <el-checkbox-group v-model="form.projectType">
-                        <el-checkbox v-for="[key, value] of projectTypeOptions" :key="key" :label="key">{{value}}</el-checkbox>
+                        <el-checkbox v-for="[key, value] of projectTypeOptions" :key="key" :label="key">
+                            {{value}}
+                            <el-form-item prop="feeType" v-if="showFeeType && key === projectTypeKey.BILLING_SYSTEM" class="inline-form-item">
+                                <el-radio-group v-model="form.feeType">
+                                    <el-radio v-for="[key, value] of feeTypeOptions" :key="key" :label="key">{{value}}</el-radio>
+                                </el-radio-group>
+                            </el-form-item>
+                        </el-checkbox>
                     </el-checkbox-group>
-                </el-form-item>
-                <el-form-item label="计费方式：" prop="feeType" v-if="showFeeType">
-                    <el-radio-group v-model="form.feeType">
-                        <el-radio v-for="[key, value] of feeTypeOptions" :key="key" :label="key">{{value}}</el-radio>
-                    </el-radio-group>
                 </el-form-item>
                 <el-form-item label="项目包含设备：" prop="deviceTypes">
                     <el-button type="primary" @click="addDeviceTypes">新增</el-button>
@@ -184,7 +186,9 @@ export default {
     name: 'projectManager',
     watch: {
         'form.projectType' (val) {
-            // TODO：如果不包含计费系统，计费方式就清空
+            if (!val.includes(PROJECT_TYPE_KEY.BILLING_SYSTEM)) {
+                this.form.feeType = ''
+            }
         }
     },
     data () {
@@ -276,7 +280,8 @@ export default {
             },
             loading: false,
             projectTypeOptions: PROJECT_TYPE_OPTIONS,
-            feeTypeOptions: FEE_TYPE_OPTIONS
+            feeTypeOptions: FEE_TYPE_OPTIONS,
+            projectTypeKey: PROJECT_TYPE_KEY
         }
     },
     computed: {
@@ -416,6 +421,14 @@ export default {
         async editProject (id) {
             await this.getClouldControlProjectDetail({ id: id })
             this.form = this.clouldControlProjectDetail
+            // 编辑页面拆分projectType为两个变量
+            let index = this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM) + 1 || this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_ELECTRICITY_METER) + 1 || this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_HEAT_METER) + 1
+            if (index > 0) {
+                this.$set(this.form, 'feeType', `${this.form.projectType[index - 1] - PROJECT_TYPE_KEY.BILLING_SYSTEM}`)
+                this.form.projectType[index - 1] = PROJECT_TYPE_KEY.BILLING_SYSTEM
+            } else {
+                this.$set(this.form, 'feeType', '')
+            }
             this.addProject = true
         },
         async saveProject () {
@@ -423,9 +436,9 @@ export default {
                 if (valid) {
                     if (this.form.id) {
                         console.log('编辑', this.form.id)
-                        await editControlProject({ ...this.form, updateBy: this.userInfo.employeeName })
+                        await editControlProject({ ...this._resolveForm(), updateBy: this.userInfo.employeeName })
                     } else {
-                        await createControlProject({ ...this.form, createBy: this.userInfo.employeeName })
+                        await createControlProject({ ...this._resolveForm(), createBy: this.userInfo.employeeName })
                     }
                     if (this.$refs.form) {
                         console.log('新增', this.form.id)
@@ -437,6 +450,25 @@ export default {
                     return false
                 }
             })
+        },
+        /**
+         * 处理form表单
+         * 后端是将计费系统设置成3个projectType类型，当时在页面上用一个独立字段更加合理一些
+         * 所以这里在提交之前，将feeType和projectType进行合并处理
+         * projectType包含计费系统的时候   projectType对应的值 = projectType的值 + feeType的值
+         *
+         * @returns 返回处理后的Form
+         */
+        _resolveForm () {
+            let resultForm = JSON.parse(JSON.stringify(this.form))
+            // 说明Form中的projectType包含计费系统
+            if (this.showFeeType) {
+                let index = resultForm.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM)
+                if (index > 0 && resultForm.feeType) {
+                    resultForm.projectType[index] = `${resultForm.projectType[index] * 1 + resultForm.feeType * 1}`
+                }
+            }
+            return resultForm
         },
         cancelDialog () {
             this.currentDeviceType = null
@@ -516,7 +548,13 @@ export default {
     // align-items: center;
     flex-direction: row;
 }
-
+.inline-form-item {
+    display: inline-block;
+    margin-left: 30px;
+}
+/deep/ .el-checkbox {
+    display: block;
+}
 /deep/ .city-select .el-input {
     width: 164px !important;
 }
