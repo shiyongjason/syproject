@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-cascader placeholder="选择" :options="trees" :props="{ multiple: true,value:'organizationCode',label:'organizationName',children:'childOrganizations'}" :collapse-tags=true @change="handleChange" clearable filterable></el-cascader>
+        <el-cascader placeholder="选择" v-model="optarr" :options="trees" :props="{ multiple: true,value:'organizationCode',label:'organizationName',children:'childOrganizations'}" :collapse-tags=true @change="handleChange" clearable filterable></el-cascader>
     </div>
 </template>
 <script>
@@ -16,6 +16,7 @@ export default {
     data () {
         return {
             trees: [],
+            optarr: '',
             jobNumber: JSON.parse(sessionStorage.getItem('userInfo')).jobNumber,
             authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
         }
@@ -29,6 +30,9 @@ export default {
             let _codeArr = []
             val.map(item => _codeArr.push(item[item.length - 1]))
             this.$emit('backEvent', _codeArr)
+        },
+        onBackRest () {
+            this.optarr = ''
         }
     },
     mounted () {

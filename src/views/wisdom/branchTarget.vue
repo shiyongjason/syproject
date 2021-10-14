@@ -7,7 +7,7 @@
                     <!-- <div class="query-col-input">
                         <HAutocomplete :selectArr="branchList" @back-event="backPlat" placeholder="请输入分部名称" :selectObj="branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div> -->
-                    <RegionCascader :authCode="authCode" @backEvent='findRegionCode' />
+                    <RegionCascader ref="cascader" @backEvent='findRegionCode' />
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">目标年份：</div>
@@ -65,7 +65,6 @@ export default {
     mixins: [departmentAuth, getOldTableTop],
     data: function () {
         return {
-            authCodeL: '',
             uploadLoading: false,
             exportAuth: AUTH_WIXDOM_BRANCH_TARGET_EXPORT,
             importAuth: AUTH_WIXDOM_BRANCH_TARGET_BULK_IMPORT,
@@ -78,7 +77,9 @@ export default {
                 pageSize: 10,
                 pageNumber: 1,
                 organizationCodes: '',
-                date: new Date()
+                date: new Date(),
+                jobNumber: '',
+                authCode: ''
             },
             queryParamsTemp: {
             },
@@ -173,10 +174,14 @@ export default {
                 selectCode: '',
                 selectName: ''
             }
+            this.$refs.cascader.onBackRest()
             this.onQuery(this.queryParams)
         }
     },
     mounted () {
+        let userInfo = sessionStorage.getItem('userInfo')
+        this.queryParams.jobNumber = JSON.parse(userInfo).jobNumber
+        this.queryParams.authCode = JSON.parse(sessionStorage.getItem('authCode'))
         this.queryParamsReset = JSON.parse(JSON.stringify(this.queryParams))
         this.onQuery(this.queryParams)
         this.countHeight()

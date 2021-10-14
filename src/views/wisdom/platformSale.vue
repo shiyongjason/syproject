@@ -5,7 +5,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">所属地域：</div>
                     <div class="query-col-input">
-                        <RegionCascader :authCode="authCode" @backEvent="findRegionCode"/>
+                        <RegionCascader ref="cascader" @backEvent="findRegionCode"/>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -94,7 +94,6 @@ export default {
     mixins: [departmentAuth],
     data: function () {
         return {
-            authCode: '',
             toggle: true,
             exportAuth: AUTH_WIXDOM_PLATFORM_SALE_EXPORT,
             deptType: DEPT_TYPE,
@@ -150,6 +149,8 @@ export default {
                 onlineTimeEnd: '',
                 incremental: '', // 增量
                 organizationCodes: '',
+                authCode: '',
+                jobNumber: '',
                 companyCode: '', // 公司编码
                 tagetType: '0' // 目标类型
             },
@@ -415,6 +416,7 @@ export default {
         },
         async onReset () {
             this.queryParams = { ...this.queryParamsRest }
+            this.$refs.cascader.onBackRest()
             this.selectAuth = {
                 regionObj: {
                     selectCode: '',
@@ -437,6 +439,9 @@ export default {
         }
     },
     async mounted () {
+        let userInfo = sessionStorage.getItem('userInfo')
+        this.queryParams.jobNumber = JSON.parse(userInfo).jobNumber
+        this.queryParams.authCode = JSON.parse(sessionStorage.getItem('authCode'))
         this.newBossAuth(['P'])
         await this.onQuery(this.queryParams)
         this.getPlatformSaleSum()

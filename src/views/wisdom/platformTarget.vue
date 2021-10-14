@@ -5,7 +5,7 @@
                 <div class="query-cont-col">
                     <div class="query-cont-title">所属地域：</div>
                     <div class="query-cont-input">
-                        <RegionCascader :authCode="authCode" @backEvent = 'findRegionCode'/>
+                        <RegionCascader ref="cascader" @backEvent = 'findRegionCode'/>
                     </div>
                 </div>
                 <div class="query-cont-col amount">
@@ -101,7 +101,6 @@ export default {
     mixins: [departmentAuth, getOldTableTop],
     data () {
         return {
-            authCode: '',
             uploadLoading: false,
             exportAuth: AUTH_WIXDOM_PLATFORM_TARGET_EXPORT,
             importAuth: AUTH_WIXDOM_PLATFORM_TARGET_BULK_IMPORT,
@@ -131,6 +130,7 @@ export default {
                 incremental: '',
                 targetDate: `${(new Date()).getFullYear()}`,
                 cityCode: '',
+                jobNumber: '',
                 pageNumber: 1,
                 pageSize: 10
             },
@@ -194,9 +194,12 @@ export default {
         })
     },
     async mounted () {
-        if (this.userInfo.oldDeptCode !== 'top') {
-            this.searchParams.subsectionCode = this.userInfo.oldDeptCode
-        }
+        let userInfo = sessionStorage.getItem('userInfo')
+        this.searchParams.jobNumber = JSON.parse(userInfo).jobNumber
+        this.searchParams.authCode = JSON.parse(sessionStorage.getItem('authCode'))
+        // if (this.userInfo.oldDeptCode !== 'top') {
+        //     this.searchParams.subsectionCode = this.userInfo.oldDeptCode
+        // }
         this.companyData.params.companyCode = this.userInfo.oldDeptCode
         this.cityData.params.companyCode = this.userInfo.oldDeptCode
         this.onFindTableList(this.searchParams)
@@ -208,6 +211,9 @@ export default {
         this.countHeight()
     },
     methods: {
+        findRegionCode (val) {
+            this.searchParams.organizationCodes = val.toString()
+        },
         uploadProcess () {
             this.uploadLoading = true
         },
@@ -324,6 +330,7 @@ export default {
         },
         onReset () {
             this.searchParams = { ...this.searchParamsReset }
+            this.$refs.cascader.onBackRest()
             this.selectAuth = {
                 branchObj: {
                     selectCode: '',

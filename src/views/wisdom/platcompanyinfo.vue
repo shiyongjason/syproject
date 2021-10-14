@@ -6,7 +6,7 @@
                     <div class="query-col-title">所属地域：</div>
                     <div class="query-col-input">
                         <!-- <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete> -->
-                        <RegionCascader :authCode="authCode" @backEvent='findRegionCode'/>
+                        <RegionCascader ref="cascader" @backEvent='findRegionCode'/>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -81,7 +81,9 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 provinceCode: '',
-                organizationCodes: ''
+                organizationCodes: '',
+                authCode: '',
+                jobNumber: ''
             },
             selectAuth: {
                 branchObj: {
@@ -120,6 +122,9 @@ export default {
         })
     },
     async  mounted () {
+        let userInfo = sessionStorage.getItem('userInfo')
+        this.searchParams.jobNumber = JSON.parse(userInfo).jobNumber
+        this.searchParams.authCode = JSON.parse(sessionStorage.getItem('authCode'))
         this.provinceDataList = await this.findProvinceAndCity(0)
         this.findCompanyList(this.searchParams)
         // this.newBossAuth(['F', 'P'])
@@ -143,6 +148,7 @@ export default {
         },
         onReset () {
             this.searchParams = { ...this.searchParamsReset }
+            this.$refs.cascader.onBackRest()
             this.selectAuth = {
                 branchObj: {
                     selectCode: '',

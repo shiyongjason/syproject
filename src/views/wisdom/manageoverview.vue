@@ -25,7 +25,7 @@
                 </div> -->
                 <div class="query-cont-col">
                     <div class="query-col-title">所属地域：</div>
-                    <RegionCascader  @backEvent='findRegioCode' />
+                    <RegionCascader ref="cascader"  @backEvent='findRegioCode' />
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">时间：</div>
@@ -160,6 +160,7 @@ export default {
         },
         onReset () {
             this.formData = { ...this.formDataReset }
+            this.$refs.cascader.onBackRest()
             this.$nextTick(() => {
                 this.onSearchForm()
             })
