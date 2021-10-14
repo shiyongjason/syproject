@@ -121,7 +121,9 @@ export default {
                     endDate: '',
                     regionCode: '',
                     startDate: '',
-                    subsectionCode: ''
+                    authCode: '',
+                    jobNumber: '',
+                    organizationCodes: ''
                 }
             }
         }

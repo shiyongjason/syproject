@@ -3,11 +3,11 @@
         <div v-show="toggle" class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <div class="query-col-title">所属区域：</div>
+                    <div class="query-col-title">所属地域：</div>
                     <!-- <div class="query-col-input">
                         <HAutocomplete :selectArr="branchList" @back-event="backPlat" placeholder="请输入分部名称" :selectObj="branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div> -->
-<RegionCascader/>
+                    <RegionCascader :authCode="authCode" @backEvent='findRegionCode' />
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">目标年份：</div>
@@ -29,7 +29,8 @@
                 </div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="baseUrl + 'rms/api/subsection/target/import'" :data="{createUser: userInfo.employeeName}" :headers='headersData' :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
+                        <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="baseUrl + 'rms/api/subsection/target/import'" :data="{createUser: userInfo.employeeName}" :headers='headersData' :on-success="isSuccess" :on-error="isError" auto-upload
+                            :on-progress="uploadProcess">
                             <el-button v-if="hosAuthCheck(importAuth)" type="default" style="margin-left:0">
                                 批量导入
                             </el-button>
@@ -64,6 +65,7 @@ export default {
     mixins: [departmentAuth, getOldTableTop],
     data: function () {
         return {
+            authCodeL: '',
             uploadLoading: false,
             exportAuth: AUTH_WIXDOM_BRANCH_TARGET_EXPORT,
             importAuth: AUTH_WIXDOM_BRANCH_TARGET_BULK_IMPORT,
@@ -75,7 +77,7 @@ export default {
             queryParams: {
                 pageSize: 10,
                 pageNumber: 1,
-                subsectionCode: '',
+                organizationCodes: '',
                 date: new Date()
             },
             queryParamsTemp: {
@@ -104,6 +106,9 @@ export default {
         RegionCascader
     },
     methods: {
+        findRegionCode (val) {
+            this.queryParams.organizationCodes = val.toString()
+        },
         exportHref () {
             exportBranchTarget(this.queryParamsTemp)
         },
@@ -168,14 +173,12 @@ export default {
                 selectCode: '',
                 selectName: ''
             }
-            this.newBossAuth(['F'])
             this.onQuery(this.queryParams)
         }
     },
     mounted () {
         this.queryParamsReset = JSON.parse(JSON.stringify(this.queryParams))
         this.onQuery(this.queryParams)
-        this.newBossAuth(['F'])
         this.countHeight()
     }
 }

@@ -245,7 +245,6 @@ export default {
         onGetnodes () {
             if (this.layerType == 2) {
                 const nodeList = this.$refs.treetable.getCheckedNodes()
-                console.log(nodeList)
                 const subArr = []
                 nodeList && nodeList.map(val => {
                     if (val.deptCode && val.deptCode.indexOf('F') > -1) {
@@ -437,7 +436,6 @@ export default {
                         this.$message({ message: '请勾选数据范围配置', type: 'warning' })
                         return
                     }
-                    console.log(params)
                     // 修改传递Id
                     if (this.queryType == 3) {
                         params.id = this.queryId
@@ -483,9 +481,8 @@ export default {
             this.fieldConfig = item.authResourceList
             // 用于在取消的时候，返回原来的选中状态
             // 兼容 好智慧 新组织树
-            console.log(item, obj)
             if (obj.sign == 'HZH') {
-                this.nodeKey = 'id'
+                this.nodeKey = 'organizationCode'
                 this.defaultProps = { label: 'organizationName', children: 'childOrganizations' }
                 this.organizationTree = this.newOrganizationTree
             } else {
@@ -494,13 +491,13 @@ export default {
                 this.organizationTree = this.oldOrganizationTree
             }
             this.$forceUpdate()
-            console.log(1, this.defaultProps)
             if (item.authType == 2) {
                 if (item.employeeSubsections) {
                     if (JSON.stringify(item.employeeSubsections) == '{}') {
                         this.checkedkeys = []
                     } else {
                         // 判断回显 组织 选中状态
+                        console.log('car', item.employeeSubsections.subsectionCodes)
                         this.checkedkeys = JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
                     }
                 } else {

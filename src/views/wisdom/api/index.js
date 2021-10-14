@@ -438,4 +438,4 @@ export const findPlatformTargetPlat = (params) => {
     return axios.get('rms/api/company/target/companies', { params })
 }
 // 新的组织树
-export const findNewOrganizationTree = (type) => axios.get(`/uaa/api/organization/tree/${type}`)
+export const findNewOrganizationTree = (type, jobNumber, authCode) => axios.get(`/uaa/api/organization/tree/${type}/${jobNumber}/${authCode}`)

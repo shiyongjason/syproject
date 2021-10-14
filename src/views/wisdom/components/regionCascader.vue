@@ -8,19 +8,21 @@ import { findNewOrganizationTree } from '../api/index'
 export default {
     name: 'regioncascader',
     props: {
-        authCode: {
-            type: String,
-            default: ''
-        }
+        // authCode: {
+        //     type: String,
+        //     default: ''
+        // }
     },
     data () {
         return {
-            trees: []
+            trees: [],
+            jobNumber: JSON.parse(sessionStorage.getItem('userInfo')).jobNumber,
+            authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
         }
     },
     methods: {
         async findTrees () {
-            const { data } = await findNewOrganizationTree(1)
+            const { data } = await findNewOrganizationTree(1, this.jobNumber, this.authCode)
             this.trees = data.organizationNodeList
         },
         handleChange (val) {

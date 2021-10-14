@@ -2,10 +2,11 @@
     <div class="page-body amount">
         <div v-show="toggle" class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col" v-if="branch">
-                    <div class="query-col-title">分部：</div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">所属地域：</div>
                     <div class="query-col-input">
-                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                        <!-- <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete> -->
+                        <RegionCascader :authCode="authCode" @backEvent='findRegionCode'/>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -19,7 +20,7 @@
                             <el-option v-for="item in provinceDataList" :key="item.cityId" :label="item.cityName" :value="item.cityId">
                             </el-option>
                         </el-select>
-                        <div class="line ml5 mr5">-</div>
+                        <div class="mt10 ml5 mr5">-</div>
                         <el-select v-model="searchParams.cityCode" placeholder="市" :clearable=true>
                             <el-option v-for="item in cityList" :key="item.cityId" :label="item.cityName" :value="item.cityId">
                             </el-option>
@@ -56,6 +57,7 @@
 import { findCompanyList, findPaltList, findProvinceAndCity } from './api/index.js'
 import platCompanyTable from './components/platCompanyTable'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import RegionCascader from './components/regionCascader.vue'
 import { departmentAuth } from '@/mixins/userAuth'
 import { getOldTableTop } from '@/utils/getTableTop'
 import { mapState } from 'vuex'
@@ -79,8 +81,7 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 provinceCode: '',
-                subsectionCode: ''
-                // sortInfos: [{ 'field': 'updateTime', 'sort': 'desc' }]
+                organizationCodes: ''
             },
             selectAuth: {
                 branchObj: {
@@ -108,7 +109,8 @@ export default {
     },
     components: {
         HAutocomplete,
-        platCompanyTable
+        platCompanyTable,
+        RegionCascader
     },
     computed: {
         ...mapState({
@@ -120,7 +122,7 @@ export default {
     async  mounted () {
         this.provinceDataList = await this.findProvinceAndCity(0)
         this.findCompanyList(this.searchParams)
-        this.newBossAuth(['F', 'P'])
+        // this.newBossAuth(['F', 'P'])
         this.searchParamsReset = { ...this.searchParams }
         this.countHeight()
     },
@@ -136,6 +138,9 @@ export default {
         }
     },
     methods: {
+        findRegionCode (val) {
+            this.searchParams.organizationCodes = val.toString()
+        },
         onReset () {
             this.searchParams = { ...this.searchParamsReset }
             this.selectAuth = {

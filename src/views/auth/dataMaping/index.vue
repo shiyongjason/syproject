@@ -8,11 +8,11 @@
                     </div>
                     <el-input placeholder="输入关键字进行过滤" v-model="filterEhr">
                     </el-input>
-                    <el-tree ref="leftTree" :data="ehrList" show-checkbox :expand-on-click-node="false" :check-strictly='true' node-key="id" default-expand-all :props="{label:'deptname',children:'children'}" :filter-node-method="filterEhrNode">
+                    <el-tree ref="leftTree" :data="ehrList" show-checkbox :expand-on-click-node="false" :check-strictly='true' node-key="id" default-expand-all @check-change="handleChangeEhr" :props="{label:'deptname',children:'children'}" :filter-node-method="filterEhrNode">
                     </el-tree>
                 </div>
                 <div class="page-center">
-                    <el-button type="text" size="mini" @click="onMatching">
+                    <el-button type="info"  size="mini" @click="onMatching" :disabled=isDisabled>
                         批量匹配
                     </el-button>
                 </div>
@@ -22,7 +22,7 @@
                     </div>
                     <el-input placeholder="输入关键字进行过滤" v-model="filterBoss">
                     </el-input>
-                    <el-tree ref="rightTree" :data="bossList" node-key="id" show-checkbox :expand-on-click-node="false" default-expand-all :check-strictly='true' @check-change="handleCheckChange" draggable :props="{label:'organizationName',children:'childOrganizations'}"
+                    <el-tree ref="rightTree" :data="bossList" node-key="id" show-checkbox :expand-on-click-node="false" default-expand-all :check-strictly='true' @check-change="handleChangeBoss" draggable :props="{label:'organizationName',children:'childOrganizations'}"
                         @node-drag-end="handleDragEnd" :allow-drop="allowDrop" :filter-node-method="filterBossNode">
                         <span class="custom-tree-node" slot-scope="{ node, data }">
                             <span>{{ node.label }} </span>
@@ -78,6 +78,8 @@ export default class Datamaping extends Vue {
     id: number = 1010
     ehrData: Record<string, string> = {}
     bossData: Record<string, string> = {}
+    bossTreeNodes:Array<any> = []
+    ehrTreeNodes:Array<any> = []
     filterEhr:string = ''
     filterBoss:string = ''
     dialogVisible:boolean = false
@@ -86,7 +88,7 @@ export default class Datamaping extends Vue {
     type:string = ''
     ehrList: Array<any> = []
     bossList: Array<any> = []
-
+    isDisabled: boolean = true
     @Watch('filterEhr') findEhr (val) {
         this.$refs.leftTree.filter(val)
     }
@@ -110,19 +112,19 @@ export default class Datamaping extends Vue {
     }
 
     onMatching () {
-        const bossData = this.onClickBoss()
-        const ehrData = this.onClickEHR()
-        if (ehrData.length == 0) {
-            this.$message.warning('请选择EHR组织机构节点')
-            return
-        }
-        if (bossData.length == 0) {
-            this.$message.warning('请选择Boss组织机构节点')
-            return
-        }
+        // const bossData = this.onClickBoss()
+        // const ehrData = this.onClickEHR()
+        // if (ehrData.length == 0) {
+        //     this.$message.warning('请选择EHR组织机构节点')
+        //     return
+        // }
+        // if (bossData.length == 0) {
+        //     this.$message.warning('请选择Boss组织机构节点')
+        //     return
+        // }
         // console.log(this.checkMaping(this.bossData, this.data, this.ehrData))
-        ehrData.map(item => {
-            this.bossList = this.checkMaping(bossData[0], this.bossList, item)
+        this.ehrTreeNodes.map(item => {
+            this.bossList = this.checkMaping(this.bossTreeNodes[0], this.bossList, item)
             this.checkMaping(item, this.ehrList, '')
         })
         this.$refs.rightTree.setCheckedKeys([])
@@ -217,18 +219,33 @@ export default class Datamaping extends Vue {
         })
     }
     // tree 单选
-    handleCheckChange (data, checked) {
+    handleChangeBoss (data, checked) {
         if (checked) {
             this.$refs.rightTree.setCheckedKeys([data.id])
         }
+        this.onClickBoss()
+    }
+
+    handleChangeEhr () {
+        this.onClickEHR()
     }
 
     onClickBoss () {
-        return this.$refs.rightTree.getCheckedNodes()
+        this.bossTreeNodes = this.$refs.rightTree.getCheckedNodes()
+        if (this.bossTreeNodes.length > 0 && this.ehrTreeNodes.length > 0) {
+            this.isDisabled = false
+        } else {
+            this.isDisabled = true
+        }
     }
 
     onClickEHR () {
-        return this.$refs.leftTree.getCheckedNodes()
+        this.ehrTreeNodes = this.$refs.leftTree.getCheckedNodes()
+        if (this.bossTreeNodes.length > 0 && this.ehrTreeNodes.length > 0) {
+            this.isDisabled = false
+        } else {
+            this.isDisabled = true
+        }
     }
     // 编辑节点
     edit (data) {

@@ -25,7 +25,7 @@
                 </div> -->
                 <div class="query-cont-col">
                     <div class="query-col-title">所属地域：</div>
-                    <RegionCascader :authCode="authCode" @backEvent='findRegioCode' />
+                    <RegionCascader  @backEvent='findRegioCode' />
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">时间：</div>
@@ -82,7 +82,7 @@ import {
 export default {
     data () {
         return {
-            authCode: '',
+
             firstAuth: AUTH_MANAGE_OVERVIEW_SURVEY,
             secondAuth: AUTH_MANAGE_OVERVIEW_ONLINE,
             thirdAuth: AUTH_MANAGE_OVERVIEW_MARKET,
@@ -90,7 +90,9 @@ export default {
             formData: {
                 endDate: `${(new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 9 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1)))}`,
                 startDate: `${(new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 9 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1)))}`,
-                organizationCodes: ''
+                organizationCodes: '',
+                jobNumber: '',
+                authCode: ''
             },
             activeName: 'first',
             deptType: DEPT_TYPE,
@@ -133,17 +135,20 @@ export default {
         }
     },
     watch: {
-        async 'formData.regionCode' (newV, oldV) {
-            if (newV) {
-                this.formData.subsectionCode = this.userInfo.deptType === this.deptType[2] ? this.userInfo.oldDeptCode : ''
-                await this.onFindBranchList(newV)
-            } else {
-                this.formData.subsectionCode = ''
-                await this.onFindBranchList()
-            }
-        }
+        // async 'formData.regionCode' (newV, oldV) {
+        //     if (newV) {
+        //         this.formData.subsectionCode = this.userInfo.deptType === this.deptType[2] ? this.userInfo.oldDeptCode : ''
+        //         await this.onFindBranchList(newV)
+        //     } else {
+        //         this.formData.subsectionCode = ''
+        //         await this.onFindBranchList()
+        //     }
+        // }
     },
     async mounted () {
+        let userInfo = sessionStorage.getItem('userInfo')
+        this.formData.jobNumber = JSON.parse(userInfo).jobNumber
+        this.formData.authCode = JSON.parse(sessionStorage.getItem('authCode'))
         this.formDataReset = { ...this.formData }
         // this.onFindRegionList()
         // this.onFindBranchList()

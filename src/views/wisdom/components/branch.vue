@@ -40,7 +40,7 @@ export default {
         return {
             tableLabel: [
                 { label: '分部编码', prop: 'subsectionCode', width: 80 },
-                { label: '分部', prop: 'subsectionName', choosed: true, width: 80 },
+                { label: '地域', prop: 'subsectionName', choosed: true, width: 80 },
                 { label: '目标年份', prop: 'date', choosed: true, width: 80 },
                 { label: '新增会员店目标/家', prop: 'memberShopTarget', choosed: true, width: 130 },
                 { label: '保底目标/万',
