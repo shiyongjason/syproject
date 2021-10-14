@@ -6,6 +6,17 @@ function isObject (object) {
     return typeof object === 'object'
 }
 
+// 数组判断是否重复
+export function isRepeat (arr) {
+    var hash = {}
+    for (var i in arr) {
+        if (hash[arr[i]]) {
+            return true
+        }
+        hash[arr[i]] = true
+    }
+    return false
+}
 export function deepCopy (object) {
     let resultObject = {}
     // 如果是数组
