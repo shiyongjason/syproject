@@ -14,7 +14,7 @@
         </div>
         <div class="page-body-cont">
             <div class="table-cont-btn">
-                <el-button type="primary" @click="onadd">新增岗位</el-button>
+                <el-button type="primary" v-if="hosAuthCheck(Auths.AUTH_POSTSET_ADD)" @click="onadd">新增岗位</el-button>
             </div>
             <!--岗位信息table-->
             <basicTable :tableLabel="tableLabel" :tableData="postList" :isAction="true" :actionMinWidth="300" isShowIndex>
