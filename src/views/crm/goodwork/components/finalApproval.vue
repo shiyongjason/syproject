@@ -294,7 +294,7 @@
         <el-dialog title="终审" :close-on-click-modal='false' :visible.sync="lastDialog" width="25%" :before-close="handleCloseLast" :modal='false'>
             <el-form :model="lastForm" :rules="lastFormRules" ref="lastForm" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="备注信息：" prop="remark">
-                    <el-input   type="textarea"  :autosize="{ minRows: 5, maxRows: 10}" v-model="lastForm.remark" maxlength="500"></el-input>
+                    <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 10}" v-model="lastForm.remark" maxlength="500"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -531,10 +531,11 @@ export default class FinalApproval extends Vue {
         { label: '设备品类',
             prop: 'deviceCategoryType',
             render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
+                // {scope.row.deviceCategoryType && this.category[scope.row.deviceCategoryType - 1]?.name}
                 return (
                     <div>
-                        {scope.row.deviceCategoryType && this.category[scope.row.deviceCategoryType - 1]?.name}
-                        {scope.row.deviceCategoryType == 8 ? '(' + scope.row.deviceCategory + ')' : ''}
+                        {scope.row.deviceCategory}
+                        {scope.row.otherDeviceCategory ? '(' + scope.row.otherDeviceCategory + ')' : ''}
                     </div>
                 )
             }
@@ -661,6 +662,7 @@ export default class FinalApproval extends Vue {
                         <el-select
                             class="miniSelect"
                             size="mini"
+                            multiple
                             placeholder="请选择"
                             value={scope.row[scope.column.property]}
                             onInput={(val) => {
@@ -683,15 +685,15 @@ export default class FinalApproval extends Vue {
                             })}
                         </el-select>
                         {
-                            scope.row[scope.column.property] == 8 &&
+                            scope.row[scope.column.property].includes(8) &&
                            <el-input
                                class="categorymini"
                                size="mini"
                                placeholder="请输入"
-                               value={scope.row.deviceCategory}
+                               value={scope.row.otherDeviceCategory}
                                onInput={(val) => {
                                    console.log(' 🚗 🚕 🚙 🚌 🚎其它 ', val)
-                                   scope.row.deviceCategory = val
+                                   scope.row.otherDeviceCategory = val
                                }}
                                maxlength={15}
                                style="width:130px"
@@ -840,7 +842,7 @@ export default class FinalApproval extends Vue {
         tables.forEach(element => {
             console.log('element', element)
             delete element.upstreamPayTypeName
-            if (element['deviceCategoryType'] == 8) {
+            if (element['deviceCategoryType'].includes(8)) {
                 for (var key in element) {
                     if (element[key] != '0' && !element[key]) {
                         this.$message.warning('请完善表格的必填项数据!')
@@ -849,6 +851,7 @@ export default class FinalApproval extends Vue {
                     }
                 }
             } else {
+                delete element.otherDeviceCategory
                 element['deviceCategory'] = '其他'
                 for (var keys in element) {
                     if (element[keys] != '0' && !element[keys]) {
@@ -863,16 +866,18 @@ export default class FinalApproval extends Vue {
     }
     // 保存采购结论
     submit () {
-        this.purForm.projectPurchaseList = deepCopy(this.tableForm)
-        this.purForm.projectPurchaseList.map((item) => {
-            item.upstreamPayType = item.upstreamPayType.join(',')
-            return item
+        let tableFormList = deepCopy(this.tableForm)
+        tableFormList = tableFormList?.map((item:any) => {
+            return Object.assign(item, {
+                deviceCategoryType: item.deviceCategoryType.join(','),
+                upstreamPayType: item.upstreamPayType.join(',')
+            })
         })
         this.purForm.updateBy = JSON.parse(sessionStorage.getItem('userInfo') || '').employeeName
-        console.log(' 🚗 🚕 🚙 🚌 🚎 ', this.tableForm)
         this.$refs['purchaseConclusionForm'].validate(async (valid) => {
             if (valid) {
-                if (this.onValidTable(this.tableForm)) {
+                if (this.onValidTable(tableFormList)) {
+                    this.purForm.projectPurchaseList = tableFormList
                     await resPurchase(this.purForm)
                     this.onFindRes()
                     this.purchaseConclusionVisible = false
@@ -924,6 +929,9 @@ export default class FinalApproval extends Vue {
     async onEditPur () {
         this.purchaseConclusionVisible = true
         const { data } = await getResolutions(this.finalFormID)
+        data.resolutionPurchaseList.forEach(val => {
+            val.deviceCategoryType = val.deviceCategoryType ? val.deviceCategoryType.split(',').map(val => Number(val)) : []
+        })
         this.purForm = { ...this.purForm, ...data }
         this.tableForm = data.resolutionPurchaseList || []
     }
@@ -990,5 +998,5 @@ export default class FinalApproval extends Vue {
 </script>
 
 <style  lang='scss' scoped>
-@import "../css/finalApproval.scss";
+@import '../css/finalApproval.scss';
 </style>
