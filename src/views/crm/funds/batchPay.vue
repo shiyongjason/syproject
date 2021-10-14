@@ -66,6 +66,7 @@ export default {
             },
             batchDetail: {},
             fundId: [],
+            paymentAmount: [],
             payTotal: 0
         }
     },
@@ -86,7 +87,6 @@ export default {
             })
         },
         onSortChange (val) {
-            console.log(val)
             if (val) {
                 this.queryParams['sort.property'] = val.prop + ''
                 this.queryParams['sort.direction'] = val.order === 'ascending' ? 'ASC' : 'DESC'
@@ -98,9 +98,11 @@ export default {
         },
         handleSelectionChange (row) {
             this.fundId = []
+            this.paymentAmount = []
             this.payTotal = 0
             row && row.map(item => {
                 this.fundId.push(item.id)
+                this.paymentAmount.push(item.paymentAmount)
                 this.payTotal = item.paymentAmount + this.payTotal
             })
             // 求和
@@ -115,6 +117,7 @@ export default {
         async onSubmit () {
             const params = {
                 fundId: this.fundId,
+                paymentAmount: this.paymentAmount,
                 attachDocs: this.docPos,
                 companyId: this.$route.query.companyId
             }
