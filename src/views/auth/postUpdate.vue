@@ -232,9 +232,9 @@ export default {
                 })
                 this.ruleInfo.positionCodeList = data.positionAdmin.map(v => v.jobNumber)
             }
+            this.ruleInfo.postName = data.positionName
             // 修改时回显
             if (this.queryType == 3) {
-                this.ruleInfo.postName = data.positionName
                 this.ruleInfo.postCode = data.positionCode
 
                 // 当是超级管理员，权限需全部禁用不能修改

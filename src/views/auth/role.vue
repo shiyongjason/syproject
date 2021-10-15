@@ -18,7 +18,7 @@
                         <el-input v-model="dingCode" maxlength="40" placeholder="请输入钉钉ID" style="width: 224px;"></el-input>
                     </div>
                     <div class="flex-row">岗位：
-                        <el-select ref="selectClearRef" v-model="positionCodeList" multiple filterable placeholder="岗位信息暂未配置" style="width: 90%;">
+                        <el-select ref="selectClearRef" v-model="positionCodeList" multiple placeholder="岗位信息暂未配置" style="width: 90%;">
                             <el-option v-for="item in postOptions" :key="item.id" :label="item.positionName" :value="item.positionCode" :disabled="item.disabled"></el-option>
                         </el-select>
                     </div>
@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import { saveAuthRole, getRoleInfo, findpostList, getOrganizationTree, dynamicMatchPermission, resetPermission, adminPost } from './api/index'
+import { saveAuthRole, getRoleInfo, getOrganizationTree, dynamicMatchPermission, resetPermission, adminPost } from './api/index'
 import * as Auths from '@/utils/auth_const'
 import { mapState } from 'vuex'
 export default {
@@ -439,12 +439,11 @@ export default {
             }
         },
         async onResetRole () {
-            this.$confirm(`执行该操作将清除该人员所有岗位和权限，是否确认继续？`, '重置确认', {
+            this.$confirm(`执行该操作将清除该人员非岗位对应的权限，是否确认继续？`, '重置确认', {
                 confirmButtonText: '确定继续',
                 cancelButtonText: '取消'
             }).then(async () => {
                 await resetPermission({ jobNumber: this.jobNumber })
-                this.positionCodeList = []
                 this.tableList = []
                 this.newTableList = []
                 this.getInitData()

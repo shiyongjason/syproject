@@ -1,8 +1,7 @@
 <template>
     <el-select class="change-style" v-bind="$attrs" placeholder="请输入员工姓名检索" v-on="$listeners" multiple filterable remote reserve-keyword :remote-method="remotePostPeoMethod" :loading="loading">
         <el-option v-for="item in option" :key="item.psncode" :label="item.psnname" :value="item.psncode">
-            <span style="float: left">{{ item.psnname }}</span>
-            <span style="float: right;color: #8492a6; font-size: 12px;">{{ item.mobile || '' }}</span>
+            <span>{{ item.psnname }}  {{ item.mobile ? `(${item.mobile})` : '' }}</span>
         </el-option>
     </el-select>
 </template>
