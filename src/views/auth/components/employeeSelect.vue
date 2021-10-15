@@ -1,0 +1,54 @@
+<template>
+    <el-select class="change-style" v-bind="$attrs" placeholder="请输入员工姓名检索" v-on="$listeners" multiple filterable remote reserve-keyword :remote-method="remotePostPeoMethod" :loading="loading">
+        <el-option v-for="item in option" :key="item.psncode" :label="item.psnname" :value="item.psncode">
+            <span>{{ item.psnname }}  {{ item.mobile ? `(${item.mobile})` : '' }}</span>
+        </el-option>
+    </el-select>
+</template>
+
+<script>
+import * as Api from '../api'
+export default {
+    data () {
+        return {
+            loading: false,
+            option: []
+        }
+    },
+    props: {
+        // 修改岗位管理员-回显option
+        postOptions: {
+            type: Array,
+            default: () => []
+        }
+    },
+    watch: {
+        postOptions: {
+            handler (o) {
+                if (o && o.length > 0) {
+                    this.option = o
+                }
+            },
+            immediate: true
+        }
+    },
+    methods: {
+        async remotePostPeoMethod (val) {
+            if (val !== '') {
+                this.loading = true
+                const { data } = await Api.getEmployeeInfo(val)
+                this.option = data
+                this.loading = false
+            } else {
+                this.option = []
+            }
+        }
+    }
+}
+</script>
+
+<style lang="scss">
+.change-style .el-input:not(:first-child) {
+    margin-left: 0px;
+}
+</style>
