@@ -84,6 +84,7 @@
                             <span class="group-spec_close" @click="onDelOptionTemplate(index)" v-if="!(form.auditStatus == 1 && item.disabled)"><i class="el-icon-close"></i></span>
                         </div>
                         <h-button type="create" class="mb20" @click="onAddOptionTemplate" :disabled="disabled">添加规格</h-button>
+                        <span class="ml10 isGrayColor">建议规格名为：型号，规格，颜色</span>
                     </div>
                     <skuTable ref="skuTable" :formData.sync="form"></skuTable>
                     <h-button type="create" class="mb20" v-if="form.optionTypeList.length>0" @click="onAddSKU">+</h-button>
