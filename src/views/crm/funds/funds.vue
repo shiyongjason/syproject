@@ -120,22 +120,30 @@
                     {{emailStatus[scope.data.row.currDayEmailStatus]}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="onPayEnter(scope.data.row)" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)&&!scope.data.row.payBatch">支付确认</h-button>
                     <h-button table @click="seePayEnter(scope.data.row)" v-if="hasSeePayEnterAuth(queryParams.repaymentTypeArrays)">查看凭证</h-button>
                     <h-button table @click="onUploadPay(scope.data.row)" v-if="(scope.data.row.paymentFlag==0||scope.data.row.paymentFlag==3)&&hosAuthCheck(Auths.CRM_FUNDS_DOWN_UPLOAD)">
                         上传支付凭证
                     </h-button>
-                    <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.payBatch&&scope.data.row.paymentFlag==1">
-                        批量确认
-                    </h-button>
-                    <h-button table @click="onPayDetail(scope.data.row)" v-if="scope.data.row.repaymentType =='2'">
-                        支付确认
-                    </h-button>
+                    <template v-if="scope.data.row.repaymentType !='2'">
+                        <h-button table @click="onPayEnter(scope.data.row)" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)&&!scope.data.row.payBatch">支付确认</h-button>
+                        <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.showPayBatchConfirm&&scope.data.row.paymentFlag==1">
+                            批量确认
+                        </h-button>
+                    </template>
+                    <template v-if="scope.data.row.repaymentType =='2'">
+                        <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.showPayBatchConfirm">
+                            批量确认
+                        </h-button>
+                        <h-button table @click="onPayDetail(scope.data.row)" v-if="scope.data.row.showPayConfirm">
+                            支付确认
+                        </h-button>
+                    </template>
+
                 </template>
             </basicTable>
             <FundsDialog :is-open="fundsDialogVisible" :detail="fundsDialogDetail" :status="queryParams.repaymentTypeArrays" @onClose="fundsDialogClose"></FundsDialog>
             <UploadDialog ref="uploaddialog" @onBackSearch="findFundsList(queryParams)"></UploadDialog>
-            <ReduleDialog :is-open="reduleDialogVisible" ref="reduleDialog"  @onClose="fundsDialogClose"></ReduleDialog>
+            <ReduleDialog :is-open="reduleDialogVisible" ref="reduleDialog" @onClose="fundsDialogClose"></ReduleDialog>
         </div>
     </div>
 </template>
@@ -352,7 +360,7 @@ export default {
             if (row.repaymentType == 2) {
                 // 剩余货款展示新的支付确认
                 this.reduleDialogVisible = true
-                this.$refs.reduleDialog.findRemainPayConfirm(row)
+                this.$refs.reduleDialog.findRemainConfirm(row)
             }
         },
         seePayEnter (row) {

@@ -89,7 +89,7 @@ export default {
             this.dialogDetail = data
             this.title = '查看凭证'
         },
-        async findRemainPayConfirm (val) {
+        async findRemainConfirm (val) {
             const { data } = await findRemainPayConfirm(val.id)
             this.dialogDetail = data
             this.companyName = val.companyName
