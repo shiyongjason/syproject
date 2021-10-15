@@ -308,9 +308,9 @@
                                             {{ paymentOrderDetail.respFundResults.downpaymentFund.paidTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}
                                         </template>
                                         <template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === paymentFlagKey.CONFIRM">
-                                            <h-button table class="ml-20" v-if="hosAuthCheck(Auths.CRM_DOWN_PAYMENT_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.downpaymentFund.id,FundsDict.repaymentTypeArrays.list[0].key)">
+                                            <!-- <h-button table class="ml-20" v-if="hosAuthCheck(Auths.CRM_DOWN_PAYMENT_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.downpaymentFund.id,FundsDict.repaymentTypeArrays.list[0].key)">
                                                 {{ paymentOrderConst.PAYMENT_FLAG.get(paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag) }}
-                                            </h-button>
+                                            </h-button> -->
                                         </template>
                                         <template v-else>
                                             <span class="info-status ml-20">
