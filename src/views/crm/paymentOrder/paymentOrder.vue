@@ -154,7 +154,7 @@
                     <!-- dealerCooperationMethod 1 垫资代采 2 代收代付 -->
                     <h-button table @click="onUploadPay(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_UPLOADPAY)&&(scope.data.row.status == 1)">上传支付凭证</h-button>
                     <!-- hosAuthCheck(Auths.CRM_PAYMENT_CANCEL) -->
-                    <h-button table @click="onDistribution(scope.data.row)">取消支付单</h-button>
+                    <h-button table @click="onDistribution(scope.data.row)" v-if="scope.data.row.showCancel">取消支付单</h-button>
                 </template>
             </basicTable>
         </div>
