@@ -28,7 +28,7 @@
                         <el-input v-model="queryParams.purchaseOrderName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
-                  <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col__label">放款交接状态：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.loanTransferStatus" placeholder="请选择" :clearable=true>
@@ -79,7 +79,7 @@
                         <el-input v-model="queryParams.applyName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
-                  <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col__label">上游支付进度：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.paymentStatus" placeholder="请选择" :clearable=true>
@@ -114,12 +114,12 @@
                 </template>
                 <template slot="paymentStatus" slot-scope="scope">
                     <p>{{ paymentStatusOptions.get(scope.data.row.paymentStatus) }}</p>
-                     <p><span>{{scope.data.row.paidAmount}}</span>/<span>{{scope.data.row.totalAmount}}</span></p>
+                    <p><span>{{scope.data.row.paidAmount}}</span>/<span>{{scope.data.row.totalAmount}}</span></p>
                 </template>
-               <template slot="status" slot-scope="scope">
+                <template slot="status" slot-scope="scope">
                     <span>{{ paymentOrderStatusOptions.get(scope.data.row.status) }}</span>
                 </template>
-                    <template slot="loanTransferStatus" slot-scope="scope">
+                <template slot="loanTransferStatus" slot-scope="scope">
                     <p>{{ dealerCooperaiionStutas.get(scope.data.row.loanTransferStatus) }}</p>
                     <p>({{scope.data.row.loanTransferDate | formatDate('YYYY-MM-DD HH:mm:ss')}})</p>
                 </template>
@@ -158,19 +158,18 @@
                 </template>
             </basicTable>
         </div>
-        <PaymentOrderDrawer :drawer=drawer @backEvent='paymentOrderBackEvent' @openApproveDialog="openApproveDialog" @openPrevPayDialog="openPrevPayDialog" @openFundsDialog="openFundsDialog" @openConfirmReceiptDialog="openConfirmReceiptDialog" @openLookReceiptDetail="openLookReceiptDetail"
-            @openLookPrevPaymentDialog="openLookPrevPaymentDialog" :row="paymentOrderRow" ref="paymentOrderDrawer"></PaymentOrderDrawer>
+        <PaymentOrderDrawer :drawer=drawer @backEvent='paymentOrderBackEvent' @openApproveDialog="openApproveDialog" @openPrevPayDialog="openPrevPayDialog" @openFundsDialog="openFundsDialog" @openConfirmReceiptDialog="openConfirmReceiptDialog" @openLookReceiptDetail="openLookReceiptDetail" @openLookPrevPaymentDialog="openLookPrevPaymentDialog" :row="paymentOrderRow" ref="paymentOrderDrawer"></PaymentOrderDrawer>
         <ApprovePaymentOrder :is-open="approvePaymentVisible" :paymentDetail="paymentDetail" @onClose="approvePaymentVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery"></ApprovePaymentOrder>
         <PrevPaymentDialog :params="paymentParams" :is-open="prevPaymentVisible" @onClose="prevPaymentVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery('prevPaymentVisible')" @onCloseDialogAndQueryDetail="onCloseDialogAndQueryDetail"></PrevPaymentDialog>
         <LookPrevPaymentDialog :params="paymentParams" :is-open="lookPrevPaymentVisible" @onClose="lookPrevPaymentVisible = false"></LookPrevPaymentDialog>
         <ConfirmReceiptDialog :params="paymentParams" :is-open="confirmReceiptVisible" @onClose="confirmReceiptVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery"></ConfirmReceiptDialog>
         <LookReceiptDetail :params="paymentParams" :is-open="lookReceiptVisible" @onClose="lookReceiptVisible = false"></LookReceiptDetail>
         <FundsDialog :detail="fundsDialogDetail" :status="status" :is-open="fundsDialogVisible" @onClose="fundsDialogClose"></FundsDialog>
-       <!-- 审批记录 -->
-       <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='500px' :wrapperClosable="false" :beforeClose="handleClose">
-        <FundsDialog :detail="fundsDialogDetail" :status="paymentStatus" :is-open="fundsDialogVisible" @onClose="fundsDialogClose"></FundsDialog>
         <!-- 审批记录 -->
-        <!-- <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='500px' :wrapperClosable="false" :beforeClose="handleClose"> -->
+        <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='500px' :wrapperClosable="false" :beforeClose="handleClose">
+            <FundsDialog :detail="fundsDialogDetail" :status="paymentStatus" :is-open="fundsDialogVisible" @onClose="fundsDialogClose"></FundsDialog>
+            <!-- 审批记录 -->
+            <!-- <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='500px' :wrapperClosable="false" :beforeClose="handleClose"> -->
             <template #connect>
                 <h4 class="purchaseName">货款支付钉钉审批流程 <div style="color:#ff7a45">{{purchaseName}}</div>
                 </h4>
@@ -202,24 +201,9 @@
                 </el-tabs>
             </div>
         </el-drawer>
-
-        <UploadPayDialog ref="uploadpaydialog" @onBackSearch="findPaymentOrderList"/>
-
-           <el-dialog   title="取消支付单确认" :visible.sync="dialogVisible" :before-close="()=>dialogVisible = false">
-            <el-form style="margin:0 20px" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="25px" class="demo-ruleForm">
-                <el-form-item prop=""  >
-                    <span>取消原因:</span>
-                    <el-input  type="textarea" v-model="ruleForm.remark" maxlength="200" show-word-limit :rows="6"></el-input>
-                    <p>其他说明:(可上传补充材料作为取消凭证，上传格式为PDF/JPG/JPEG/PNG)</p>
-                    <h-button>+上传支付凭证</h-button>
-                </el-form-item>
-
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <h-button @click="dialogVisible = false">取消</h-button>
-                <h-button type="primary" @click="submitForm" >确认</h-button>
-            </span>
-           </el-dialog>
+        <UploadPayDialog ref="uploadpaydialog" @onBackSearch="findPaymentOrderList" />
+        <!-- 取消支付单 -->
+        <CancelPayment ref="cancelPaymentRef" :visible.sync="visibleCancel" @close="handleCancel"></CancelPayment>
     </div>
 </template>
 
@@ -233,6 +217,7 @@ import LookPrevPaymentDialog from './components/lookPrevPaymentDialog'
 import ConfirmReceiptDialog from './components/confirmReceiptDialog'
 import LookReceiptDetail from './components/lookReceiptDetail'
 import FundsDialog from '@/views/crm/funds/components/fundsDialog'
+import CancelPayment from './components/cancelPayment.vue'
 
 import * as Auths from '@/utils/auth_const'
 import LoanTransferContent from './components/LoanTransferContent'
@@ -253,7 +238,8 @@ export default {
         FundsDialog,
         LoanTransferContent,
         ViewHandoverRecords,
-        UploadPayDialog
+        UploadPayDialog,
+        CancelPayment
     },
     data () {
         return {
@@ -307,10 +293,10 @@ export default {
             approvePaymentVisible: false,
             prevPaymentVisible: false,
             lookPrevPaymentVisible: false,
-            dialogVisible: false,
             confirmReceiptVisible: false,
             lookReceiptVisible: false,
             fundsDialogVisible: false,
+            visibleCancel: false,
             status: '',
             paymentParams: {}, // 公共
             fundsDialogDetail: {},
@@ -325,15 +311,8 @@ export default {
             approvalList: [],
             purchaseName: '',
             editHistory: [],
-            rules: {
-                remark: [
-                    { required: true, message: '请输入', trigger: 'blur' }
-                ]
-
-            },
-            ruleForm: {
-                remark: ''
-            }
+            // 取消支付单
+            paramsPaymentId: ''
         }
     },
     computed: {
@@ -367,8 +346,6 @@ export default {
             return {
                 ...this.queryParams,
                 status: this.queryParams.status.join(',')
-                // authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '',
-                // jobNumber: this.userInfo.jobNumber
             }
         }
     },
@@ -400,7 +377,6 @@ export default {
                 await getLoanTransferCheck(paymentOrderId)
             }
             this.operateStatus = operateStatus
-            // this.operateStatus = 1
             this.paymentOrderId = paymentOrderId
             const { data } = await getLoanTransferContent(paymentOrderId)
             this.loanTransferContentVisible = true
@@ -512,7 +488,6 @@ export default {
             } else {
                 this.findPaymentOrderList(this.queryParamsUseQuery)
             }
-            // this.drawer && this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
         },
         async onUploadPay (val) {
             // 调用接口查询最新的账单信息
@@ -522,42 +497,15 @@ export default {
         handleClose () {
             this.drawerPur = false
         },
-        // ----------------------
-        // 支付单取消
-        submitForm () {
-            this.ruleForm.updateBy = this.userInfo.employeeName
-            this.$refs.ruleForm.validate(async (valid) => {
-                if (valid) {
-                    try {
-                        await postVipsigner(this.ruleForm)
-                        this.dialogVisible = false
-                        this.$message({
-                            message: `取消成功`,
-                            type: 'success'
-                        })
-                        this.searchList()
-                    } catch (error) {
-
-                    }
-                } else {
-
-                }
-            })
-        },
-
         onDistribution (val) {
-            this.stateN = ''
-            // console.log(val, this.copyRuleForm)
-            this.ruleForm = { ...this.copyRuleForm, companyVipId: val.id, pkDeptDoc: val.pkDeptDoc }
-            // this.ruleForm.companyVipId = val.id
-            // this.ruleForm.pkDeptDoc = val.pkDeptDoc
-            this.dialogVisible = true
-            this.$nextTick(() => {
-                this.$refs.ruleForm.clearValidate()
-            })
+            this.visibleCancel = true
+            console.log(val)
+            this.paramsPaymentId = val.id
         },
-
-        // ------------------------------------
+        // 取消支付单-关闭
+        handleCancel () {
+            this.visibleCancel = false
+        },
         ...mapActions({
             findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList',
             findCrmdeplist: 'crmmanage/findCrmdeplist'

@@ -100,7 +100,7 @@
                 actionWidth='420' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template slot="action" slot-scope="scope">
                     <h-button v-if="scope.data.row.contractStatus===2&&hosAuthCheck(Auths.CRM_CONTRACT_FIN)" table @click="approveContract(scope.data.row,1)">分财审核</h-button>
-                    <h-button v-if="scope.data.row.contractStatus===4&&hosAuthCheck(Auths.CRM_CONTRACT_RISK)" table @click="approveContract(scope.data.row,2)">风控审核</h-button>
+                    <h-button v-if="scope.data.row.contractStatus===4&&hosAuthCheck(Auths.CRM_CONTRACT_RISK)" table @click="approveContract(scope.data.row,2)">运营审核</h-button>
                     <h-button v-if="scope.data.row.contractStatus===6&&hosAuthCheck(Auths.CRM_CONTRACT_LEGAL)" table @click="approveContract(scope.data.row,3)">法务审核</h-button>
                     <h-button table @click="openDetail(scope.data.row)">查看合同</h-button>
                     <h-button table @click="getHistory(scope.data.row)">审核记录</h-button>
@@ -476,7 +476,10 @@ export default {
             if (val) {
                 this.queryParams.pageNumber = 1
             }
-            const { data } = await contractSigningList(this.queryParams)
+            let dataJson = JSON.parse(JSON.stringify(this.queryParams))
+            // 字段修改 原本使用contractStatus 后续改成contractStatusArrays字段
+            dataJson.contractStatusArrays = dataJson.contractStatus.join(',')
+            const { data } = await contractSigningList(dataJson)
             if (data) {
                 this.tableData = data.records
                 this.page.total = data.total
