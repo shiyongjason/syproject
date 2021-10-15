@@ -138,8 +138,7 @@
                     </h-button>
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW) && (paymentOrderStatusKey.FINANCE_AUDIT === scope.data.row.status)">审核</h-button>
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW_PROJECT) && (paymentOrderStatusKey.OPERATE_AUDIT === scope.data.row.status)">审核</h-button>
-                    <h-button table @click="$refs.paymentOrderDrawer.tableOpenFundsDialog(scope.data.row.id, scope.data.row.status)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM) &&
-                              (paymentOrderStatusKey.DOWN_PAYMENT_CONFIRM === scope.data.row.status || paymentOrderStatusKey.REMAINING_PAYMENT_CONFIRM === scope.data.row.status)&&scope.data.row.status!=9">
+                    <h-button table @click="$refs.paymentOrderDrawer.tableOpenFundsDialog(scope.data.row.id, scope.data.row.status)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM) && scope.data.row.status == 2">
                         支付确认
                     </h-button>
                     <!-- <h-button table @click="tableOpenPrevPayDialog(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV) && (
@@ -168,8 +167,6 @@
         <!-- 审批记录 -->
         <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='500px' :wrapperClosable="false" :beforeClose="handleClose">
             <FundsDialog :detail="fundsDialogDetail" :status="paymentStatus" :is-open="fundsDialogVisible" @onClose="fundsDialogClose"></FundsDialog>
-            <!-- 审批记录 -->
-            <!-- <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='500px' :wrapperClosable="false" :beforeClose="handleClose"> -->
             <template #connect>
                 <h4 class="purchaseName">货款支付钉钉审批流程 <div style="color:#ff7a45">{{purchaseName}}</div>
                 </h4>
@@ -203,7 +200,7 @@
         </el-drawer>
         <UploadPayDialog ref="uploadpaydialog" @onBackSearch="findPaymentOrderList" />
         <!-- 取消支付单 -->
-        <CancelPayment ref="cancelPaymentRef" :visible.sync="visibleCancel" @close="handleCancel"></CancelPayment>
+        <CancelPayment ref="cancelPaymentRef" :visible.sync="visibleCancel" @close="handleCancel" @confirm="handleConfirm"></CancelPayment>
     </div>
 </template>
 
@@ -497,14 +494,25 @@ export default {
         handleClose () {
             this.drawerPur = false
         },
+        // 取消支付单-回显
         onDistribution (val) {
             this.visibleCancel = true
-            console.log(val)
             this.paramsPaymentId = val.id
         },
         // 取消支付单-关闭
         handleCancel () {
             this.visibleCancel = false
+        },
+        // 取消支付单-确定 刷新列表
+        handleConfirm () {
+            this.visibleCancel = false
+            this.findPaymentOrderList(this.queryParamsUseQuery)
+            this.findCrmdeplist({
+                deptType: 'F',
+                pkDeptDoc: this.userInfo.pkDeptDoc,
+                jobNumber: this.userInfo.jobNumber,
+                authCode: JSON.parse(sessionStorage.getItem('authCode'))
+            })
         },
         ...mapActions({
             findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList',

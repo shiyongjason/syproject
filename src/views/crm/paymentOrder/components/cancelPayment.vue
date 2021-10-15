@@ -31,8 +31,7 @@ export default {
             uploadParameters: {
                 updateUid: '',
                 reservedName: true
-            },
-            attachDocs: []
+            }
         }
     },
     components: { HosJoyUpload },
@@ -44,17 +43,19 @@ export default {
                     let dataJson = { ...this.ruleForm, paymentOrderId: this.$parent.paramsPaymentId }
                     try {
                         await cancelPayment(dataJson)
+                        this.$emit('confirm')
                         this.$message({
                             message: `取消成功`,
                             type: 'success'
                         })
-                        this.$emit('close')
                     } catch (error) { }
                 }
             })
         },
         onClose () {
             this.$refs.ruleForm.clearValidate()
+            this.$refs.ruleForm.resetFields()
+            this.ruleForm.attachDocRequestList = []
             this.$emit('close')
         }
     }
