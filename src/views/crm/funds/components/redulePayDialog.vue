@@ -10,7 +10,7 @@
                         支付时间：{{moment(item.updateTime).format('yyyy-MM-DD HH:mm:ss')}}
                     </el-col>
                     <el-col class="mt10" :span="12">
-                        操作人：{{item.createBy}} {{item.createPhone||'-'}}
+                        操作人：{{item.createBy}} ({{item.createPhone||'-'}})
                     </el-col>
                 </el-row>
                 <el-row class="mt10">
@@ -28,7 +28,7 @@
             <div class="remian_wrap-bot" v-if="title!='查看凭证'">
                 <span class="mr10"><i class="el-icon-warning" style="color:#E6A23C"></i> 确认到账后，将释放掉经销商 <span>{{item.paymentAmount|fundMoneyHasTail}}</span> 元的剩余代采购额度</span>
                 <h-button type="assist" @click="handleReceived(1,item)">确认收到</h-button>
-                <h-button @click="onUnReceived(2,item)">并未收到</h-button>
+                <h-button @click="handleReceived(2,item)">并未收到</h-button>
             </div>
         </div>
         <p class="remain_mes"  v-if="dialogDetail.fundDetailResponseList.length==0">暂无数据</p>
