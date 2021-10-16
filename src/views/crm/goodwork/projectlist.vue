@@ -228,7 +228,7 @@
             </div>
             <div class="project-plant" v-if="title=='工地打卡记录'">
                 <div class="plantimg" @click="onHandlePictureCardPreview(item)" v-for="(item,index) in plantList" :key="index">
-                    <imageToken :fileUrl="item.punchImageUrl" alt=""></imageToken>
+                    <imageToken isResize :fileUrl="item.punchImageUrl"></imageToken>
                 </div>
             </div>
             <span slot="footer" class="dialog-footer">
@@ -237,7 +237,7 @@
         </el-dialog>
         <el-dialog title="预览" :visible.sync="imgVisible">
             <div class="previewimg">
-                <imageToken v-if="imgVisible" :fileUrl="dialogImageUrl" alt=""></imageToken>
+                <imageToken :fileUrl="dialogImageUrl" alt=""></imageToken>
             </div>
         </el-dialog>
         <!-- 添加跟进记录 -->
@@ -1116,10 +1116,13 @@ export default {
     display: flex;
     flex-wrap: wrap;
     .plantimg {
+        display: flex;
         margin: 5px;
         width: 95px;
         height: 95px;
         overflow: hidden;
+        align-items: center;
+        justify-content: center;
         img {
             width: 95px;
             height: 100%;
@@ -1127,13 +1130,9 @@ export default {
     }
 }
 .previewimg {
-    width: 100%;
+    padding: 10px;
+    height: 500px;
     text-align: center;
-    img {
-        width: 500px;
-        height: 100%;
-        padding: 10px;
-    }
 }
 /deep/.query-cont__col .query-col__input .el-input {
     width: 150px;
