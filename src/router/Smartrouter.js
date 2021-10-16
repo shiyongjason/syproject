@@ -24,8 +24,8 @@ export default [
                 component: () => import('@/views/comfortcloud/smart/projectManager.vue')
             },
             {
-                path: 'equipmentUpgrade',
-                name: 'equipmentUpgrade',
+                path: 'deviceUpgrades',
+                name: 'deviceUpgrades',
                 meta: {
                     title: '设备升级',
                     tagName: '设备升级',
@@ -33,7 +33,19 @@ export default [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/comfortcloud/smart/equipmentUpgrade.vue')
+                component: () => import('@/views/comfortcloud/smart/device_upgrades/deviceUpgrades.vue')
+            },
+            {
+                path: 'deviceUpgradesDetail',
+                name: 'deviceUpgradesDetail',
+                meta: {
+                    title: '设备升级详情',
+                    tagName: '设备升级详情',
+                    parentName: '舒适云智能化',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/comfortcloud/smart/device_upgrades/deviceUpgradesDetail.vue')
             }
         ]
     }

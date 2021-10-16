@@ -26,3 +26,9 @@ export const FEE_TYPE_OPTIONS = new Map([
     ['1', '智能电表'],
     ['0', '智能空开']
 ])
+
+// 是否是通用升级
+export const DEVICE_UPGRADE_IS_COMMON_KEY = {
+    YES: '1',
+    NO: '0'
+}
