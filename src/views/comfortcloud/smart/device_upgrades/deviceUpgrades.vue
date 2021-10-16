@@ -228,7 +228,8 @@ export default class EquipmentUpgrade extends Vue {
             operator: ''
         }
         this.$nextTick(() => {
-            (this.$refs.form as any).clearValidate()
+            (this.$refs.form as any).clearValidate();
+            (this.$refs.upload as any).clearFiles()
         })
     }
     /**
