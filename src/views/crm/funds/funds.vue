@@ -318,7 +318,11 @@ export default {
                 return this.hosAuthCheck(this.Auths.CRM_FUNDS_SERVICE_FUND_SEE)
             }
         },
-        handleClick () {
+        handleClick (val) {
+            // 剩余贷款 状态去除支付失败（key == 3）状态
+            if (val.name == 2) {
+                this.FundsDict.paymentFlagArrays.list = this.FundsDict.paymentFlagArrays.list.filter(val => val.key != 3)
+            }
             const { repaymentTypeArrays } = this.queryParams
             this.queryParams = { ...this.queryParamsTemp, repaymentTypeArrays }
             this.findFundsList(this.queryParamsUseQuery)
