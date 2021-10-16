@@ -1,6 +1,7 @@
 <template>
     <div class="page-body B2b">
         <div class="page-body-cont">
+            <div class="title-cont"><span class="title-cont__label">{{`设备${isCommon ? '通用' : '定向'}升级`}}</span></div>
             <div class="upgrade-content">
                 <div class="upgrade-content__row">
                     <div class="upgrade-content__col">
@@ -14,7 +15,7 @@
                 </div>
                 <div class="upgrade-content__row">
                     <div class="upgrade-content__col">
-                        <h2>{{ `${isCommon ? '通用' : '定向'}升级固件版本`}}：</h2>
+                        <h2>{{`${isCommon ? '通用' : '定向'}升级固件版本`}}：</h2>
                         <div>{{ detailInfo.version }}</div>
                     </div>
                     <div class="upgrade-content__col">
@@ -57,7 +58,7 @@
             </div>
         </div>
         <el-dialog title="新增数据" :visible.sync="showAddDialog" width="30%">
-            <el-form ref="form" :model="form" :rules="rules">
+            <el-form ref="form" :model="form" :rules="rules" label-width="100px">
                 <el-form-item label="设备ID：" prop="iotId">
                     <el-input v-model.trim="form.iotId" placeholder="请输入设备ID"></el-input>
                 </el-form-item>
@@ -216,7 +217,7 @@ export default class EquipmentUpgrade extends Vue {
             type: 'warning'
         }).then(async () => {
             await deleteDeviceUpgradesDirectional({ id, phone: this.userInfo.user_name })
-            this.$message('设备删除成功！')
+            this.$message.success('设备删除成功！')
             this.onQuery()
         }).catch(() => {
 
@@ -241,6 +242,7 @@ export default class EquipmentUpgrade extends Vue {
                 this.form.operator = this.userInfo.employeeName
                 this.form.phone = this.userInfo.user_name
                 await createDeviceUpgradesDirectional(this.form)
+                this.$message.success('设备新增成功！')
                 this.showAddDialog = false
                 this.onQuery()
             }
@@ -344,12 +346,12 @@ export default class EquipmentUpgrade extends Vue {
 
 <style lang="scss" scoped>
 .upgrade-content {
-    margin-bottom: 30px;
+    margin-bottom: 40px;
     font-size: 14px;
     line-height: 20px;
     &__row {
         display: flex;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
     }
     &__col {
         display: flex;
@@ -359,7 +361,8 @@ export default class EquipmentUpgrade extends Vue {
     h2 {
         min-width: 50px;
         font-size: 14px;
-        color: #303133;
+        line-height: 20px;
+        color: #606266;
         font-weight: 400;
     }
 }
