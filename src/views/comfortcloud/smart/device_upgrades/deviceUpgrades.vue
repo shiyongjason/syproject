@@ -22,8 +22,8 @@
             </div>
             <div class="page-table">
                 <basicTable :isShowIndex="false" :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
-                    <template slot="address" slot-scope="scope">
-                        {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName+scope.data.row.address}}
+                    <template slot="createTime" slot-scope="scope">
+                        {{ moment(scope.data.row.createTime).format('YYYY-MM-DD HH:mm:ss') }}
                     </template>
                     <template slot="action" slot-scope="scope">
                         <h-button table @click="onShowEditDevice(scope.data.row)">编辑</h-button>
@@ -45,9 +45,9 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="设备固件：" prop="version">
-                        <el-upload class="upload-fault" ref="upload" :show-file-list="false" :on-change="onChangeFile" :on-success="onUploadSuccess" :on-error="onUploadError" v-bind="uploadData" :disabled="!form.type">
+                        <el-upload class="upload-fault" ref="upload" :show-file-list="false" :on-change="onChangeFile" :on-success="onUploadSuccess" :on-error="onUploadError" v-bind="uploadData" :disabled="!form.type || !!form.version">
                             <div v-if="form.version">{{form.version}}<i class="el-icon-delete ml10"  @click="onRemoveFile"></i></div>
-                            <el-button type="primary" slot="trigger" :disabled="!form.type">上传固件</el-button>
+                            <el-button type="primary" slot="trigger" :disabled="!form.type || !!form.version">上传固件</el-button>
                         </el-upload>
                     </el-form-item>
                     <el-form-item label="备注：" prop='remark'>
@@ -66,10 +66,12 @@
 <script lang='tsx'>
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { State } from 'vuex-class'
+import moment from 'moment'
 import { findDeviceUpgrades, findDeviceUpgradesInfo, findDeviceTypes, createDeviceUpgrades, updateDeviceUpgrades, deleteDeviceUpgrades } from '../api/index'
 import * as Api from '@/interface/iot-api'
 import { DEVICE_UPGRADE_IS_COMMON_KEY } from '../const'
 import { ccpBaseUrl } from '@/api/config'
+import { newCache } from '@/utils/index'
 
 interface Query {
     [key: string]: any
@@ -79,6 +81,7 @@ interface Query {
     name: 'deviceUpgrade'
 })
 export default class EquipmentUpgrade extends Vue {
+    moment = moment
     // 搜索条件
     queryParams: Query = {
         iotId: '',
@@ -176,9 +179,13 @@ export default class EquipmentUpgrade extends Vue {
         this.findDeviceTypes(this.queryParams.isCommon)
     }
 
+    beforeUpdate () {
+        newCache('deviceUpgrade')
+    }
+
     onChangeFile (file) {
         const fileName = file.name
-        const index = fileName.indexOf('.')
+        const index = fileName.lastIndexOf('.')
         this.form.version = fileName.substr(0, index)
     }
 
@@ -221,7 +228,8 @@ export default class EquipmentUpgrade extends Vue {
             operator: ''
         }
         this.$nextTick(() => {
-            (this.$refs.form as any).clearValidate()
+            (this.$refs.form as any).clearValidate();
+            (this.$refs.upload as any).clearFiles()
         })
     }
     /**
@@ -260,7 +268,7 @@ export default class EquipmentUpgrade extends Vue {
             this.form.phone = this.userInfo.user_name
             this.form.isCommon = this.queryParams.isCommon * 1
             this.form.id ? await updateDeviceUpgrades(this.form) : await createDeviceUpgrades(this.form)
-            this.$message(this.form.id ? '设备升级修改成功' : '设备升级新增成功！')
+            this.$message.success(this.form.id ? '设备升级信息修改成功！' : '设备升级信息新增成功！')
             this.onQuery()
             this.showDrawer = false
             this.loading = false
@@ -284,7 +292,7 @@ export default class EquipmentUpgrade extends Vue {
             type: 'warning'
         }).then(async () => {
             await deleteDeviceUpgrades({ id, phone: this.userInfo.user_name })
-            this.$message('设备删除成功！')
+            this.$message.success('设备升级信息删除成功！')
             this.onQuery()
         }).catch(() => {
 
