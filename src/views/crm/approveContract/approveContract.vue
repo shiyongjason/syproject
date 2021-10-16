@@ -8,7 +8,7 @@
         <div class="page-body-cont approvalcontract">
             <div class="approvalcontract-head">
                 <div>
-                    {{detailRes.contractStatus == 2 ? '分财' : detailRes.contractStatus == 4 ? '风控' : '法务'}}审核合同<em class="contentvs" @click="contentvsVisible = true" v-if="detailRes.contractStatus == 6&&contentvsData&&contentvsData.length>0">合同对比</em>
+                    {{detailRes.contractStatus == 2 ? '分财' : detailRes.contractStatus == 4 ? '运营' : '法务'}}审核合同<em class="contentvs" @click="contentvsVisible = true" v-if="detailRes.contractStatus == 6&&contentvsData&&contentvsData.length>0">合同对比</em>
                 </div>
                 <h-button type="primary" @click="getHistory">审核及签署流程</h-button>
             </div>
@@ -20,7 +20,7 @@
                         <div class="loader-txt">合同拼命加载中...</div>
                     </div>
                     <div class="approvalcontract-content-layout">
-                        <!-- 分财、风控预览——纯html -->
+                        <!-- 分财、运营预览——纯html -->
                         <div class="approvalcontract-content" v-html='contractContentDiv' v-if="detailRes.contractStatus != 6"></div>
                         <!-- 法务预览html——编辑器 -->
                         <div class="approvalcontract-content-legal-affairs" v-if="detailRes.contractStatus == 6">
@@ -56,7 +56,7 @@
         <el-drawer class="contentdrawerbox" size="600px" :visible.sync="drawerVisible" :with-header="false" :wrapperClosable='false'>
             <div slot="title">审核记录</div>
             <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
-            <div style="text-align: center;font-size: 18px;">{{detailRes.contractStatus == 2?'待分财审核':detailRes.contractStatus == 4?'待风控审核':detailRes.contractStatus == 6?'待法务审核':''}}</div>
+            <div style="text-align: center;font-size: 18px;">{{detailRes.contractStatus == 2?'待分财审核':detailRes.contractStatus == 4?'待运营审核':detailRes.contractStatus == 6?'待法务审核':''}}</div>
             <div class="history-css">
                 <div v-if="historyList&&historyList.length==0">暂无数据</div>
                 <template v-else v-for="(item,index) in historyList">
@@ -895,7 +895,7 @@ export default {
                 const query = {
                     contractId: this.$route.query.id,
                     approver: this.userInfo.employeeName,
-                    // 合同审批角色 1：分财 2：风控 3：法务
+                    // 合同审批角色 1：分财 2：运营 3：法务
                     approverRole: this.$route.query.role,
                     approvalStatus: this.dialog.status,
                     approvalRemark: this.dialog.remark,
@@ -1008,7 +1008,7 @@ export default {
             }
             await saveContent({
                 'contractId': this.$route.query.id,
-                // 合同审批角色 1：分财 2：风控 3：法务
+                // 合同审批角色 1：分财 2：运营 3：法务
                 'approverRole': this.$route.query.role,
                 'type': 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
                 'fieldName': this.currentKey.paramKey, // 编辑字段
@@ -1093,7 +1093,7 @@ export default {
             })
             console.log({
                 'contractId': this.$route.query.id,
-                // 合同审批角色 1：分财 2：风控 3：法务
+                // 合同审批角色 1：分财 2：运营 3：法务
                 'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
                 'type': 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
                 'fieldName': this.currentKey.paramKey, // 编辑字段
@@ -1106,7 +1106,7 @@ export default {
             })
             await saveContent({
                 'contractId': this.$route.query.id,
-                // 合同审批角色 1：分财 2：风控 3：法务
+                // 合同审批角色 1：分财 2：运营 3：法务
                 'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
                 'type': 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
                 'fieldName': this.currentKey.paramKey, // 编辑字段
@@ -1165,7 +1165,7 @@ export default {
 
                 await saveContent({
                     'contractId': this.$route.query.id,
-                    // 合同审批角色 1：分财 2：风控 3：法务
+                    // 合同审批角色 1：分财 2：运营 3：法务
                     'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
                     'type': 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
                     'fieldName': propName, // 编辑字段
@@ -1571,7 +1571,7 @@ export default {
             try {
                 await saveContent({
                     'contractId': this.$route.query.id,
-                    // 合同审批角色 1：分财 2：风控 3：法务
+                    // 合同审批角色 1：分财 2：运营 3：法务
                     'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
                     'type': operatorType || 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
                     'fieldName': operatorType ? '' : this.fieldName, // 编辑字段
