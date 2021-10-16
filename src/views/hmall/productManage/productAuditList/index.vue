@@ -39,7 +39,7 @@
                         </div>
                     </div>
                     <div class="query-cont__col">
-                        <div class="query-col__lable">商品型号：</div>
+                        <div class="query-col__lable">商品系列：</div>
                         <div class="query-col__input">
                             <el-input v-model="queryParams.model" maxlength="30" placeholder="请输入" @keyup.enter.native="onQuery"></el-input>
                         </div>
@@ -146,7 +146,7 @@ export default {
                 { label: '商品名称', prop: 'name' },
                 { label: '品牌', prop: 'brandName' },
                 { label: '商品类目', prop: 'category' },
-                { label: '型号', prop: 'model' },
+                { label: '系列', prop: 'model' },
                 { label: '审核状态', prop: 'auditStatus' },
                 { label: '提交时间', prop: 'submitTime', formatters: 'dateTime' }
             ] : [
@@ -155,7 +155,7 @@ export default {
                 { label: '商品名称', prop: 'name' },
                 { label: '品牌', prop: 'brandName' },
                 { label: '商品类目', prop: 'category' },
-                { label: '型号', prop: 'model' },
+                { label: '系列', prop: 'model' },
                 { label: '规格', prop: 'optionValues' },
                 { label: '审核状态', prop: 'auditStatus' },
                 { label: '提交时间', prop: 'submitTime', formatters: 'dateTime' }

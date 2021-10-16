@@ -65,6 +65,7 @@ export default {
     },
     methods: {
         goPurchaseOrderNo (id) {
+            this.$parent.handleClose()
             this.$router.push({
                 path: '/goodwork/purchaseOrder',
                 query: {
