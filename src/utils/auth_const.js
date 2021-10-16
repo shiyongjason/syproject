@@ -421,3 +421,9 @@ export const CRM_ADVACE_RECORDS = 118504
 
 // 舒适云智能化 -- 设备升级详情
 export const COMFORT_SMART_DEVICE_UPGRADE_DETAIL = 118505
+// 权限管理-岗位设置
+export const AUTH_POSTSET_COPY = 13000
+export const AUTH_POSTSET_UPDATE = 13001
+export const AUTH_POSTSET_DELETE = 13002
+export const AUTH_POSTSET_RESET = 13003
+export const AUTH_POSTSET_ADD = 13004

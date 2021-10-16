@@ -33,6 +33,13 @@ import './class-component-hooks'
 //     })
 // }
 
+// 解决bug-keepAlive导致跳转蒙层遮盖
+try {
+    HosjoyUI.Drawer.components['el-drawer'].props.modalAppendToBody.default = false
+} catch (e) {
+    console.log(e)
+}
+
 Vue.config.productionTip = false
 moment.locale('zh-cn')
 Vue.use(ElementUI)
