@@ -107,7 +107,7 @@ interface Query {
 }
 
 @Component({
-    name: 'deviceUpgrade'
+    name: 'deviceUpgradeDetail'
 })
 export default class EquipmentUpgrade extends Vue {
     moment = moment
