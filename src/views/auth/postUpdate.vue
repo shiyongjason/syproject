@@ -1,29 +1,24 @@
 <template>
     <div class="page-body">
-        <div class="role">
+        <div class="post-update">
             <div class="h-page-title">
-                基本信息
+                岗位信息
             </div>
-            <div class="h-page-flex">
+            <el-form :model="ruleInfo" ref="ruleInfoRef" label-width="100px" class="h-page-flex">
                 <div class="flex-col">
-                    <div class="flex-row">姓名：{{roleInfo.psnname}}</div>
-                    <div class="flex-row">工号：{{roleInfo.psncode}}</div>
+                    <el-form-item class="flex-row" prop="postName" label="岗位名称：" :rules="[{required: true, message: '请输入岗位名称', trigger: 'blur' }]">
+                        <el-input v-model="ruleInfo.postName" maxlength="30" placeholder="请输入岗位名称"></el-input>
+                    </el-form-item>
+                    <el-form-item class="flex-row" label="岗位code：">
+                        <el-input disabled v-model="ruleInfo.postCode" maxlength="40"></el-input>
+                    </el-form-item>
                 </div>
                 <div class="flex-col">
-                    <div class="flex-row">登录名：{{roleInfo.mobile}}</div>
-                    <div class="flex-row">所属部门：{{roleInfo.deptName}}</div>
+                    <el-form-item class="flex-row" label="岗位管理员：">
+                        <employeeSelect v-model="ruleInfo.positionCodeList" :postOptions="postOptions"></employeeSelect>
+                    </el-form-item>
                 </div>
-                <div class="flex-col">
-                    <div class="flex-row">钉钉ID：
-                        <el-input v-model="dingCode" maxlength="40" placeholder="请输入钉钉ID" style="width: 224px;"></el-input>
-                    </div>
-                    <div class="flex-row">岗位：
-                        <el-select ref="selectClearRef" v-model="positionCodeList" multiple placeholder="岗位信息暂未配置" style="width: 90%;">
-                            <el-option v-for="item in postOptions" :key="item.id" :label="item.positionName" :value="item.positionCode" :disabled="item.disabled"></el-option>
-                        </el-select>
-                    </div>
-                </div>
-            </div>
+            </el-form>
             <div class="h-page-title">
                 权限管理
             </div>
@@ -43,33 +38,33 @@
                                 <template v-for="(itemb, indexb) in itema.childAuthList">
                                     <tr v-for="(itemc, indexc) in itemb.childAuthList" :key="`${index}_${indexa}_${indexb}_${indexc}`">
                                         <td :rowspan="computedRowspan(item.childAuthList, 0)" v-if="indexa==0 && indexb==0 && indexc==0">
-                                            <el-checkbox disabled v-model="item.have" @change="onCheckboxChange([item], item.have)">{{item.authName}}</el-checkbox>
+                                            <el-checkbox :disabled="isAdminDisabled" v-model="item.have" @change="onCheckboxChange([item], item.have)">{{item.authName}}</el-checkbox>
                                         </td>
                                         <td :rowspan="computedRowspan(itema.childAuthList, 0)" v-if="indexb==0 && indexc==0">
                                             <div v-if="itema.authName">
-                                                <el-checkbox disabled v-model="itema.have" @change="onCheckboxChange([item, itema], itema.have)">{{itema.authName}}</el-checkbox>
+                                                <el-checkbox :disabled="isAdminDisabled" v-model="itema.have" @change="onCheckboxChange([item, itema], itema.have)">{{itema.authName}}</el-checkbox>
                                             </div>
                                         </td>
                                         <td :rowspan="computedRowspan(itemb.childAuthList, 0)" v-if="indexc==0">
                                             <div v-if="itemb.authName">
-                                                <el-checkbox disabled v-model="itemb.have" @change="onCheckboxChange([item, itema, itemb], itemb.have)">{{itemb.authName}}</el-checkbox>
+                                                <el-checkbox :disabled="isAdminDisabled" v-model="itemb.have" @change="onCheckboxChange([item, itema, itemb], itemb.have)">{{itemb.authName}}</el-checkbox>
                                             </div>
                                         </td>
                                         <td width='300'>
                                             <div v-if="itemc.authName">
-                                                <el-checkbox disabled v-model="itemc.have" @change="onCheckboxChange([item, itema, itemb, itemc], itemc.have)">{{itemc.authName}}</el-checkbox>
+                                                <el-checkbox :disabled="isAdminDisabled" v-model="itemc.have" @change="onCheckboxChange([item, itema, itemb, itemc], itemc.have)">{{itemc.authName}}</el-checkbox>
                                             </div>
                                         </td>
                                         <template v-if="itemc.authTypeList">
                                             <template v-for="(itemAuthType, authTypeIndex) in itemc.authTypeList">
                                                 <td :key="authTypeIndex + '_authType'" width="300">
                                                     <div v-if="itemAuthType.id">
-                                                        <el-checkbox v-model="itemAuthType.have" @change="onChangeAuthType(itemAuthType)" disabled class="mr10">
+                                                        <el-checkbox v-model="itemAuthType.have" @change="onChangeAuthType(itemAuthType)" :disabled="!itemc.have || isAdminDisabled" class="mr10">
                                                             {{ itemAuthType.authType == 0 ? '敏感字段' : itemAuthType.authType == 1?  '敏感操作' : '敏感数据' }}
                                                         </el-checkbox>
                                                         <div class="el-radio-group">
-                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''" @click="onShowFieldConfig(0, itemAuthType)" :disabled="itemAuthType.status != 0 || !itemAuthType.have">全部</button>
-                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''" @click="onShowFieldConfig(1, itemAuthType)" :disabled="itemAuthType.status != 1 || !itemAuthType.have">配置</button>
+                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''" @click="onShowFieldConfig(0, itemAuthType)" :disabled="!itemAuthType.have || isAdminDisabled">全部</button>
+                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''" @click="onShowFieldConfig(1, itemAuthType)" :disabled="!itemAuthType.have || isAdminDisabled">配置</button>
                                                         </div>
                                                     </div>
                                                     <div v-else></div>
@@ -87,13 +82,12 @@
                     </tbody>
                 </table>
             </div>
+            <div class="h-foot" :class="isCollapse ? 'minLeft' : 'maxLeft'">
+                <el-button @click="onCancelRole()">取 消</el-button>
+                <el-button type="primary" @click="onSavePost()">保 存</el-button>
+            </div>
         </div>
-        <div class="h-foot" :class="isCollapse ? 'minLeft' : 'maxLeft'">
-            <el-button v-if="hosAuthCheck(Auths.AUTH_POSTSET_RESET)" @click="onResetRole()">重 置</el-button>
-            <el-button @click="onCancelRole()">取 消</el-button>
-            <el-button type="primary" @click="onSaveRole()">保 存</el-button>
-        </div>
-        <el-dialog :title="layerTitle" :visible.sync="fieldVisible" width="40%">
+        <el-dialog :title="layerTitle" :visible.sync="fieldVisible" width="40%" :close-on-click-modal='false' :before-close="onCancelFieldConfig">
             <div class="h-dialog">
                 <table class="tablelist textCenter" v-if="layerType!=2">
                     <thead>
@@ -106,7 +100,7 @@
                         <tr>
                             <td>{{ layerAuthName }}</td>
                             <td style="text-align:left">
-                                <el-checkbox disabled v-model="item.have" :label="item.resourceName" v-for="(item,index) in fieldConfig" :key="index"></el-checkbox>
+                                <el-checkbox v-model="item.have" :label="item.resourceName" v-for="(item,index) in fieldConfig" :key="index"></el-checkbox>
                             </td>
                         </tr>
                     </tbody>
@@ -131,18 +125,27 @@
                     </tbody>
                 </table>
             </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="onCancelFieldConfig()">取 消</el-button>
+                <el-button type="primary" @click="fieldVisible = false;onGetnodes()">保 存</el-button>
+            </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
-import { saveAuthRole, getRoleInfo, getOrganizationTree, dynamicMatchPermission, resetPermission, adminPost } from './api/index'
-import * as Auths from '@/utils/auth_const'
+import { addpostList, postDetail, postAuthList, updatepostList, getOrganizationTree } from './api/index'
+import employeeSelect from './components/employeeSelect.vue'
 import { mapState } from 'vuex'
 export default {
-    name: 'role',
+    name: 'postUpdate',
     data () {
         return {
+            ruleInfo: {
+                postName: '',
+                postCode: '',
+                positionCodeList: []
+            },
             organizationTree: [],
             currentEmployeeSubsectionsAuthCode: '',
             tableList: [],
@@ -152,19 +155,17 @@ export default {
             layerTitle: '', // 弹出层标题
             layerAuthName: '', // 弹出层列表中的表格名称
             layerType: '',
-            roleInfo: {
-                deptName: '',
-                mobile: '',
-                psncode: '',
-                psnname: ''
-            },
             jobNumber: '',
-            postOptions: [],
-            positionCodeList: [],
-            dingCode: '',
+            postOptions: [], // 岗位管理员
             checkedkeys: [],
-            Auths
+            isAdminDisabled: false, // 当是超级管理员 权限全部禁用,不能随意修改
+            // 接收参数
+            queryId: '',
+            queryType: '' // 1 新增岗位 2 复制 3 修改
         }
+    },
+    components: {
+        employeeSelect
     },
     computed: {
         ...mapState({
@@ -172,77 +173,77 @@ export default {
             userInfo: state => state.userInfo
         })
     },
-    watch: {
-        positionCodeList: {
-            handler () {
-                this.getDynamicMenuData()
-            },
-            immediate: true
+    async mounted () {
+        // type 1 新增岗位 2 复制 3 修改
+        const { type, id } = this.$route.query
+        this.queryId = id
+        this.queryType = type
+        this.tableList = []
+        this.getOrganizationTree()
+        switch (parseInt(type)) {
+            case 1:
+                this.postAuthList()
+                break
+            case 2:
+                this.getDetail()
+                break
+            case 3:
+                this.getDetail()
+                break
+            default: break
         }
     },
-    async mounted () {
-        this.jobNumber = this.$route.query.jobNumber
-
-        this.getOrganizationTree()
-        this.getInitData()
-    },
     methods: {
-        async getInitData () {
-            const { data: roleInfo } = await getRoleInfo(this.jobNumber)
-            this.roleInfo = roleInfo
-            this.dingCode = this.roleInfo.dingCode
-
-            // 不是当前岗位管理员 只做展示不做删除（详情positionList字段与岗位list接口对比，相同则删除，不相同禁止操作）
-            const { data: positionList } = await adminPost()
-            if (this.roleInfo.positionList && this.roleInfo.positionList.length > 0) {
-                this.positionCodeList = this.roleInfo.positionList.map(val => val.positionCode)
-
-                // 根据positionCode进行对比，不相同disabled = true
-                const filterList = this.roleInfo.positionList.map(val => positionList.filter(item => item.positionCode === val.positionCode)[0])
-                if (filterList && filterList.length > 0) {
-                    filterList.forEach((item, index) => {
-                        if (!item) {
-                            this.roleInfo.positionList[index].disabled = true
-                        }
-                    })
-                }
-            }
-            this.postOptions = positionList.concat(this.roleInfo.positionList.filter(v => v.disabled))
-
-            // 不是当前岗位管理员-去除tag删除键
-            try {
-                this.$nextTick(() => {
-                    const selectorAll = this.$refs.selectClearRef.$el.querySelectorAll('.el-tag__close')
-                    this.roleInfo.positionList.forEach((item, index) => {
-                        if (item.disabled) {
-                            selectorAll[index].remove()
-                        }
-                    })
-                })
-            } catch (error) {
-                console.log(error)
-            }
+        async getOrganizationTree () {
+            const { data } = await getOrganizationTree()
+            this.organizationTree = data
         },
-        // 动态获取权限
-        async getDynamicMenuData () {
-            const positionCode = this.positionCodeList && this.positionCodeList.length > 0 ? this.positionCodeList.join(',') : ''
-            const dataJson = {
-                jobNumber: this.$route.query.jobNumber,
-                positionCode: positionCode
-            }
-            const { data } = await dynamicMatchPermission(dataJson)
+        // 岗位新增-权限集合
+        async postAuthList () {
+            const { data } = await postAuthList()
             let copyData = JSON.parse(JSON.stringify(data))
             this.handleData(copyData)
             this.tableList = this.handlerTableList(copyData, 0)
             this.newTableList = JSON.parse(JSON.stringify(this.tableList))
         },
-        async getOrganizationTree () {
-            const { data } = await getOrganizationTree()
-            if (data && data.length > 0) {
-                data.forEach(val => {
-                    val.disabled = true
+        // 岗位复制修改
+        async getDetail () {
+            const { data } = await postDetail(this.queryId)
+            let copyData = JSON.parse(JSON.stringify(data.employeeAuthList))
+            this.handleData(copyData)
+            this.tableList = this.handlerTableList(copyData, 0)
+            this.newTableList = JSON.parse(JSON.stringify(this.tableList))
+            // 岗位管理员回显
+            if (data.positionAdmin && data.positionAdmin.length > 0) {
+                this.postOptions = data.positionAdmin.map(val => {
+                    return {
+                        psncode: val.jobNumber,
+                        psnname: val.userName
+                    }
                 })
-                this.organizationTree = data
+                this.ruleInfo.positionCodeList = data.positionAdmin.map(v => v.jobNumber)
+            }
+            this.ruleInfo.postName = data.positionName
+            // 修改时回显
+            if (this.queryType == 3) {
+                this.ruleInfo.postCode = data.positionCode
+
+                // 当是超级管理员，权限需全部禁用不能修改
+                this.isAdminDisabled = data.positionCode === 'SUPERADMIN'
+            }
+        },
+        onGetnodes () {
+            if (this.layerType == 2) {
+                const nodeList = this.$refs.treetable.getCheckedNodes()
+                const subArr = []
+                nodeList && nodeList.map(val => {
+                    if (val.deptCode.indexOf('F') > -1) {
+                        subArr.push(val.pkDeptDoc)
+                    }
+                })
+                const employeeSubsections = { authCode: this.currentEmployeeSubsectionsAuthCode, subsectionCodes: subArr }
+                this.newItem.employeeSubsections = employeeSubsections
+                this.$refs.treetable.setCheckedKeys([])
             }
         },
         // 对后端返回的数据进行处理
@@ -401,27 +402,40 @@ export default {
                 }
             })
         },
-        async onSaveRole () {
-            let resourceObj = {
-                resourceIds: [],
-                authCodes: [],
-                authTypeList: [],
-                employeeSubsections: []
-            }
-            this.handlerRoleFilter(JSON.parse(JSON.stringify(this.tableList)), resourceObj)
-            const params = {
-                employeeSubsections: resourceObj.employeeSubsections,
-                resourceIds: resourceObj.resourceIds,
-                authCodes: resourceObj.authCodes,
-                authTypeList: resourceObj.authTypeList,
-                jobNumber: this.jobNumber,
-                dingCode: this.dingCode,
-                positionCodeList: this.positionCodeList,
-                userCode: this.jobNumber
-            }
-            await saveAuthRole(params)
-            this.$message({ message: '权限保存成功', type: 'success' })
-            this.$router.push({ path: '/auth/organization' })
+        async onSavePost () {
+            this.$refs['ruleInfoRef'].validate(async (validate) => {
+                if (validate) {
+                    let resourceObj = {
+                        resourceIds: [],
+                        authCodes: [],
+                        authTypeList: [],
+                        employeeSubsections: []
+                    }
+                    this.handlerRoleFilter(JSON.parse(JSON.stringify(this.tableList)), resourceObj)
+                    const params = {
+                        employeeSubsections: resourceObj.employeeSubsections,
+                        resourceIds: resourceObj.resourceIds,
+                        authCodes: resourceObj.authCodes,
+                        authTypeList: resourceObj.authTypeList,
+                        jobNumber: this.ruleInfo.positionCodeList,
+                        positionName: this.ruleInfo.postName
+                    }
+                    if (params.authCodes.length < 1) {
+                        this.$message({ message: '请勾选数据范围配置', type: 'warning' })
+                        return
+                    }
+                    console.log(params)
+                    // 修改传递Id
+                    if (this.queryType == 3) {
+                        params.id = this.queryId
+                        await updatepostList(params)
+                    } else {
+                        await addpostList(params)
+                    }
+                    this.$message({ message: '岗位保存成功', type: 'success' })
+                    this.$router.push({ path: '/auth/postset' })
+                }
+            })
         },
         onCancelRole () {
             if (JSON.stringify(this.newTableList) != JSON.stringify(this.tableList)) {
@@ -431,26 +445,12 @@ export default {
                     cancelButtonText: '确认取消'
                 }).catch(action => {
                     if (action === 'cancel') {
-                        this.$router.push({ path: '/auth/organization' })
+                        this.$router.push({ path: '/auth/postset' })
                     }
                 })
             } else {
-                this.$router.push({ path: '/auth/organization' })
+                this.$router.push({ path: '/auth/postset' })
             }
-        },
-        async onResetRole () {
-            this.$confirm(`执行该操作将清除该人员非岗位对应的权限，是否确认继续？`, '重置确认', {
-                confirmButtonText: '确定继续',
-                cancelButtonText: '取消'
-            }).then(async () => {
-                await resetPermission({ jobNumber: this.jobNumber })
-                this.tableList = []
-                this.newTableList = []
-                this.getInitData()
-                this.getDynamicMenuData()
-            }).catch(() => {
-                // 取消删除
-            })
         },
         onShowFieldConfig (val, item) {
             // 当选择全部的时候，设置所有的配置都是选中状态
@@ -494,13 +494,21 @@ export default {
             this.layerTitle = item.authType == 0 ? '敏感字段' : item.authType == 0 ? '敏感操作' : '数据范围'
             this.layerAuthName = item.authName
             this.layerType = item.authType
+        },
+        onCancelFieldConfig () {
+            if (this.layerType == 2) {
+                this.$refs.treetable.setCheckedKeys([])
+            }
+            this.newItem.employeeSubsections = this.cloneEmployeeSubsections ? this.cloneEmployeeSubsections : {}
+            this.newItem.authResourceList = this.cloneConfig ? this.cloneConfig : []
+            this.fieldVisible = false
         }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-.role {
+.post-update {
     background: #ffffff;
     padding: 20px 24px;
     margin-bottom: 50px;
@@ -513,10 +521,10 @@ export default {
     padding-left: 10px;
 }
 .h-page-flex {
-    min-height: 180px;
+    min-height: 160px;
     padding: 0 10px 10px;
     .flex-col {
-        min-height: 45px;
+        min-height: 80px;
         align-items: center;
         display: flex;
         .flex-row {
@@ -524,7 +532,6 @@ export default {
         }
     }
 }
-
 .h-roletable {
     padding: 10px 0;
 }
@@ -614,9 +621,7 @@ export default {
             border-right: none;
         }
         &:last-child {
-            // border-right: 1px solid #DCDFE6;
             border-radius: 0 4px 4px 0;
-            // border-left: none;
         }
     }
     button[disabled] {
@@ -625,7 +630,6 @@ export default {
         border-color: #ddd;
         border-left: 1px solid #ddd !important;
         border-right: 1px solid #ddd !important;
-        // border-left: 1px solid #dcdfe6 !important;
         border-right: 1px solid #ffffff !important;
         &:hover {
             color: #dddddd;
@@ -640,15 +644,5 @@ export default {
     border-color: #ff7a45;
     border-left: 1px solid #ff7a45 !important;
     border-right: 1px solid #ff7a45 !important;
-}
-.h-dialog {
-    margin-top: 20px;
-    .treetable {
-        height: 350px;
-        overflow: scroll;
-    }
-    .el-checkbox {
-        margin-left: 10px;
-    }
 }
 </style>
