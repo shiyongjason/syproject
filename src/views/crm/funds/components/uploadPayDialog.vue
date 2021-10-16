@@ -60,12 +60,12 @@ export default {
             console.log(val)
             this.attachDocs = []
             const { data } = await getBnumber({ companyId: val.companyId })
+            this.unpaidAmount = val.unpaidAmount
             this.batchNumber = data
             this.dialogVisible = true
             this.fundId = val.id
             this.companyId = val.companyId
             this.payMoney = source == 1 ? fundMoney : val.applyAmount ? val.applyAmount : val.paymentAmount
-            this.unpaidAmount = val.unpaidAmount
             this.type = source || this.type
             this.repaymentType = val.repaymentType
             this.uploadpayForm.paidAmount = ''
@@ -98,6 +98,7 @@ export default {
                                     fundId: this.fundId,
                                     urlList: this.attachDocs,
                                     paidAmount: this.uploadpayForm.paidAmount,
+                                    createPhone: JSON.parse(sessionStorage.getItem('userInfo')).phoneNumber,
                                     createBy: JSON.parse(sessionStorage.getItem('userInfo')).employeeName
                                 }
                                 await updateRemainPayment(params)

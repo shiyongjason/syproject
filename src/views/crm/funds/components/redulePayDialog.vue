@@ -10,7 +10,7 @@
                         支付时间：{{moment(item.updateTime).format('yyyy-MM-DD HH:mm:ss')}}
                     </el-col>
                     <el-col class="mt10" :span="12">
-                        操作人：{{item.createBy}} {{item.phone||'-'}}
+                        操作人：{{item.createBy}} {{item.createPhone||'-'}}
                     </el-col>
                 </el-row>
                 <el-row class="mt10">
@@ -78,6 +78,7 @@ export default {
             const params = {
                 fundDetailId: item.id,
                 updateBy: JSON.parse(sessionStorage.getItem('userInfo')).employeeName,
+                updatePhone: JSON.parse(sessionStorage.getItem('userInfo')).phoneNumber,
                 confirmType: val
             }
             await updateRemainPayConfirm(params)
