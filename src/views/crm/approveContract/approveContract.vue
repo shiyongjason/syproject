@@ -228,9 +228,6 @@ export default {
                 content_css: '/tinymce/skins/mycontent.css',
                 resize: false,
                 statusbar: false
-                // autoresize_on_init: false,
-                // branding: false,
-                // autoresize_overflow_padding: 0
             },
             uploadParameters: {
                 updateUid: '',
