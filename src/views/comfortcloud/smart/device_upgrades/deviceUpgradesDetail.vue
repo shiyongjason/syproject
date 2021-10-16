@@ -5,7 +5,7 @@
                 <div class="upgrade-content__row">
                     <div class="upgrade-content__col">
                         <h2>设备型号：</h2>
-                        <div>{{ detailInfo.type }}</div>
+                        <div>{{ detailInfo.typeName }}</div>
                     </div>
                     <div class="upgrade-content__col">
                         <h2>升级完成：</h2>
@@ -25,7 +25,7 @@
                 <div class="upgrade-content__row">
                     <div class="upgrade-content__col">
                         <h2>备注：</h2>
-                        <div>{{ detailInfo.remark }}</div>
+                        <div>{{ detailInfo.remark || '-' }}</div>
                     </div>
                 </div>
             </div>

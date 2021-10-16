@@ -45,7 +45,8 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="设备固件：" prop="version">
-                        <el-upload class="upload-fault" ref="upload" :file-list="fileList" v-bind="uploadData" :disabled="!form.type">
+                        <el-upload class="upload-fault" ref="upload" :show-file-list="false" :on-change="onChangeFile" :on-success="onUploadSuccess" :on-error="onUploadError" v-bind="uploadData" :disabled="!form.type">
+                            <div v-if="form.version">{{form.version}}<i class="el-icon-delete ml10"  @click="onRemoveFile"></i></div>
                             <el-button type="primary" slot="trigger" :disabled="!form.type">上传固件</el-button>
                         </el-upload>
                     </el-form-item>
@@ -109,7 +110,6 @@ export default class EquipmentUpgrade extends Vue {
     }
     // 设备类型可选项
     deviceTypeOptions: any = []
-    fileList: any[] = []
     loading: boolean = false
 
     tableData: any[] = []
@@ -141,6 +141,7 @@ export default class EquipmentUpgrade extends Vue {
 
     get uploadData () {
         return {
+            name: 'multiFile',
             action: `${ccpBaseUrl}common/files/iot-upload`,
             limit: 1,
             autoUpload: false,
@@ -150,7 +151,8 @@ export default class EquipmentUpgrade extends Vue {
                 AccessKeyId: '5ksbfewexbfc'
             },
             data: {
-                id: this.factorySecretId
+                type: this.form.type,
+                factorySecretId: this.factorySecretId
             }
         }
     }
@@ -169,14 +171,20 @@ export default class EquipmentUpgrade extends Vue {
         this.onQuery()
     }
 
-    @Watch('fileList')
-    onFileChange (val) {
-        console.log(val)
-    }
-
     mounted () {
         this.onQuery()
         this.findDeviceTypes(this.queryParams.isCommon)
+    }
+
+    onChangeFile (file) {
+        const fileName = file.name
+        const index = fileName.indexOf('.')
+        this.form.version = fileName.substr(0, index)
+    }
+
+    onRemoveFile () {
+        (this.$refs.upload as any).clearFiles()
+        this.form.version = ''
     }
 
     /**
@@ -232,14 +240,11 @@ export default class EquipmentUpgrade extends Vue {
         (this.$refs.form as any).validate(async (valid) => {
             if (valid) {
                 try {
-                    this.form.operator = this.userInfo.employeeName
-                    this.form.phone = this.userInfo.user_name
-                    await (this.$refs.upload as any).submit()
-                    this.form.id ? await updateDeviceUpgrades(this.form) : await createDeviceUpgrades(this.form)
-                    this.$message(this.form.id ? '修改设备升级成功' : '新增设备升级成功！')
-                    this.onQuery()
-                    this.showDrawer = false
-                    this.loading = false
+                    if ((this.$refs.upload as any).uploadFiles.length > 0 && (this.$refs.upload as any).uploadFiles[0].percentage != 100) {
+                        (this.$refs.upload as any).submit()
+                    } else {
+                        this.onFormSubmit()
+                    }
                 } catch (e) {
                     this.loading = false
                 }
@@ -248,6 +253,30 @@ export default class EquipmentUpgrade extends Vue {
             }
         })
     }
+
+    async onFormSubmit () {
+        try {
+            this.form.operator = this.userInfo.employeeName
+            this.form.phone = this.userInfo.user_name
+            this.form.isCommon = this.queryParams.isCommon * 1
+            this.form.id ? await updateDeviceUpgrades(this.form) : await createDeviceUpgrades(this.form)
+            this.$message(this.form.id ? '设备升级修改成功' : '设备升级新增成功！')
+            this.onQuery()
+            this.showDrawer = false
+            this.loading = false
+        } catch (e) {
+            this.loading = false
+        }
+    }
+
+    onUploadSuccess () {
+        this.onFormSubmit()
+    }
+
+    onUploadError () {
+        this.loading = false
+    }
+
     onDeleteDevice (id) {
         this.$confirm('删除数据后设备会默认升级到通用版本，请确认是否继续删除？', '提示', {
             confirmButtonText: '确定',

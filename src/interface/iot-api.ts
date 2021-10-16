@@ -12397,6 +12397,13 @@ export interface UpgradeDetailResponse {
     completeUpgrade?: number | string
 
     /**
+     * 设备型号对应的上传id
+     * @type {string}
+     * @memberof UpgradeDetailResponse
+     */
+    factorySecretId?: string
+
+    /**
      * 未完成升级数量
      * @type {number | string}
      * @memberof UpgradeDetailResponse
@@ -12404,7 +12411,7 @@ export interface UpgradeDetailResponse {
     incompleteUpgrade?: number | string
 
     /**
-     * 1通用 2定向
+     * 1通用 0定向
      * @type {number | string}
      * @memberof UpgradeDetailResponse
      */
@@ -12418,11 +12425,18 @@ export interface UpgradeDetailResponse {
     remark?: string
 
     /**
-     * 设备型号
+     * 设备型号-编码
      * @type {string}
      * @memberof UpgradeDetailResponse
      */
     type?: string
+
+    /**
+     * 设备型号
+     * @type {string}
+     * @memberof UpgradeDetailResponse
+     */
+    typeName?: string
 
     /**
      * 版本号
