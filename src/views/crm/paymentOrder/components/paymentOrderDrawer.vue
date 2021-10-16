@@ -472,8 +472,8 @@
                                 支付单关闭原因：{{ paymentOrderDetail.payOrderDetail.closeReason }}
                             </p>
                             <div class="close_voucher">
-                                <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetailcloseAttachDocResponseList">
-                                    <imageAddToken :file-url="item.url" />
+                                <span class="img-box" :key="item.fileUrl" v-for="item in paymentOrderDetail.payOrderDetail.closeAttachDocResponseList">
+                                    <imageAddToken :file-url="item.fileUrl" />
                                 </span>
                             </div>
                         </template>
