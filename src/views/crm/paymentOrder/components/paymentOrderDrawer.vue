@@ -296,8 +296,7 @@
                                         <span class="label">应支付时间：</span>
                                         {{ paymentOrderDetail.respFundResults.downpaymentFund.schedulePaymentDate | momentFormat('YYYY-MM-DD') }}
                                         <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
-                                            <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow('首付款', paymentOrderDetail.respFundResults.downpaymentFund, false)"
-                                                v-if="canUpdatePaymentInfo(paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag)" class="info-img-edit">
+                                            <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow('首付款', paymentOrderDetail.respFundResults.downpaymentFund, false)" v-if="canUpdatePaymentInfo(paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag)" class="info-img-edit">
                                         </template>
                                     </p>
                                     <p class="col-filed col-40 need-center">
@@ -309,9 +308,9 @@
                                             {{ paymentOrderDetail.respFundResults.downpaymentFund.paidTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}
                                         </template>
                                         <template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === paymentFlagKey.CONFIRM">
-                                            <h-button table class="ml-20" v-if="hosAuthCheck(Auths.CRM_DOWN_PAYMENT_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.downpaymentFund.id,FundsDict.repaymentTypeArrays.list[0].key)">
+                                            <!-- <h-button table class="ml-20" v-if="hosAuthCheck(Auths.CRM_DOWN_PAYMENT_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.downpaymentFund.id,FundsDict.repaymentTypeArrays.list[0].key)">
                                                 {{ paymentOrderConst.PAYMENT_FLAG.get(paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag) }}
-                                            </h-button>
+                                            </h-button> -->
                                         </template>
                                         <template v-else>
                                             <span class="info-status ml-20">
@@ -334,15 +333,13 @@
                                             <span class="label">第{{ index + 1 }}期服务费：</span>
                                             {{ item.paymentAmount  | fundMoneyHasTail }} 元
                                             <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
-                                                <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow(`第${index + 1}期服务费`, item)"
-                                                    v-if="canUpdatePaymentInfo(item.paymentFlag)" class="info-img-edit">
+                                                <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow(`第${index + 1}期服务费`, item)" v-if="canUpdatePaymentInfo(item.paymentFlag)" class="info-img-edit">
                                             </template>
                                         </p>
                                         <p class="col-filed col-30">
                                             <span class="label">应支付时间：</span>{{ item.schedulePaymentDate }}
                                             <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
-                                                <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow(`第${index + 1}期服务费`, item)"
-                                                    v-if="canUpdatePaymentInfo(item.paymentFlag)" class="info-img-edit">
+                                                <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow(`第${index + 1}期服务费`, item)" v-if="canUpdatePaymentInfo(item.paymentFlag)" class="info-img-edit">
                                             </template>
                                         </p>
                                         <div class="col-filed col-40 service-pay-time need-center">
@@ -356,9 +353,9 @@
                                                 </template>
                                             </p>
                                             <template v-if="item.paymentFlag === paymentFlagKey.CONFIRM">
-                                                <h-button table v-if="hosAuthCheck(Auths.CRM_SERVICE_FUND_CONFIRM)" @click="openFundsDialog(item.id, FundsDict.repaymentTypeArrays.list[1].key)">
+                                                <!-- <h-button table v-if="hosAuthCheck(Auths.CRM_SERVICE_FUND_CONFIRM)" @click="openFundsDialog(item.id, FundsDict.repaymentTypeArrays.list[1].key)">
                                                     {{ paymentOrderConst.PAYMENT_FLAG.get(item.paymentFlag) }}
-                                                </h-button>
+                                                </h-button> -->
                                             </template>
                                             <template v-else>
                                                 <span class="info-status">
@@ -421,7 +418,7 @@
                                     </div>
                                 </template>
                             </template>
-                            <template v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod == 1">
+                            <!-- <template v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod == 1">
                                 <template v-if="paymentOrderDetail.respFundResults.arrearFund">
                                     <div class="row-filed">
                                         <p class="col-filed">
@@ -457,7 +454,7 @@
                                         </p>
                                     </div>
                                 </template>
-                            </template>
+                            </template> -->
                         </template>
                         <!-- 异常流：支付单关闭 -->
                         <template v-if="statusKey.CLOSED === paymentOrderDetail.payOrderDetail.status">
@@ -474,10 +471,15 @@
                             <p class="tips">
                                 支付单关闭原因：{{ paymentOrderDetail.payOrderDetail.closeReason }}
                             </p>
+                            <div class="close_voucher">
+                                <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetailcloseAttachDocResponseList">
+                                    <imageAddToken :file-url="item.url" />
+                                </span>
+                            </div>
                         </template>
                     </div>
-                    <!-- 支付单关闭展示关闭原因
-                    <p v-if="statusKey.CLOSED === paymentOrderDetail.payOrderDetail.status" class="tips">
+                    <!-- 支付单关闭展示关闭原因 -->
+                    <!-- <p v-if="statusKey.CLOSED === paymentOrderDetail.payOrderDetail.status" class="tips">
                         支付单关闭原因：{{ paymentOrderDetail.payOrderDetail.closeReason }}
                     </p> -->
                     <div class="drawer-footer">
@@ -949,7 +951,7 @@ export default {
 .tips {
     color: red;
     font-size: 12px;
-    padding: 30px;
+    padding: 10px;
 }
 .service-pay-time {
     display: flex;

@@ -29,6 +29,15 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col__label">放款交接状态：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.loanTransferStatus" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.value" :value="item.key" v-for="item in loanTransferStatus" :key="item.key"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+
+                <div class="query-cont-col">
                     <div class="query-col__label">采购单编号：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.purchaseOrderNo" placeholder="请输入" maxlength="50"></el-input>
@@ -37,12 +46,14 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">申请时间：</div>
                     <div class="query-col__input">
-                        <!-- <el-date-picker v-model="queryParams.startApplyDate" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endApplyDate" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker> -->
                         <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
+                        </HDatePicker>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col__label">项目运营审核时间：</div>
+                    <div class="query-col__input">
+                        <HDatePicker :start-change="onApproveStart" :end-change="onApproveEnd" :options="apprvoeOptions">
                         </HDatePicker>
                     </div>
                 </div>
@@ -58,7 +69,7 @@
                     <div class="query-col__label">合作方式：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.dealerCooperationMethod" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.value" :value="item.key" v-for="item in dealerList" :key="item.key"></el-option>
+                            <el-option :label="item.value" :value="item.key" v-for="item in dealerCooperationMethod" :key="item.key"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -66,6 +77,14 @@
                     <div class="query-col__label">申请人：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.applyName" placeholder="请输入" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col__label">上游支付进度：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.paymentStatus" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.value" :value="item.key" v-for="item in paymentStatus" :key="item.key"></el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -82,23 +101,35 @@
             </el-tag>
             <basicTable :tableData="paymentOrderList" :tableLabel="tableLabel" :pagination="paymentOrderPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=450 :isShowIndex='true'>
                 <template slot="applyAmount" slot-scope="scope">
-                    <span class="colblue">{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
+                    <span>{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
                 </template>
                 <template slot="applyDate" slot-scope="scope">
-                    <span class="colblue">{{ scope.data.row.applyDate | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                    <span>{{ scope.data.row.applyDate | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
                 </template>
                 <template slot="updateTime" slot-scope="scope">
-                    <span class="colblue">{{ scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                    <span>{{ scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                </template>
+                <template slot="approvalTime" slot-scope="scope">
+                    <span>{{ scope.data.row.approvalTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                </template>
+                <template slot="paymentStatus" slot-scope="scope">
+                    <p>{{ paymentStatusOptions.get(scope.data.row.paymentStatus) }}</p>
+                    <p><span>{{scope.data.row.paidAmount}}</span>/<span>{{scope.data.row.totalAmount}}</span></p>
                 </template>
                 <template slot="status" slot-scope="scope">
-                    <span class="colblue">{{ paymentOrderStatusOptions.get(scope.data.row.status) }}</span>
+                    <span>{{ paymentOrderStatusOptions.get(scope.data.row.status) }}</span>
                 </template>
+                <template slot="loanTransferStatus" slot-scope="scope">
+                    <p>{{ dealerCooperaiionStutas.get(scope.data.row.loanTransferStatus) }}</p>
+                    <p>({{scope.data.row.loanTransferDate | formatDate('YYYY-MM-DD HH:mm:ss')}})</p>
+                </template>
+
                 <template slot="applyName" slot-scope="scope">
                     <p>{{scope.data.row.applyName}}</p>
                     <p v-if="scope.data.row.applyPhone">({{scope.data.row.applyPhone}})</p>
                 </template>
                 <template slot="dealerCooperationMethod" slot-scope="scope">
-                    <span class="colblue">{{ scope.data.row.dealerCooperationMethod==1?'垫资代采':scope.data.row.dealerCooperationMethod==2?'代收代付':'-'}}</span>
+                    <span>{{ scope.data.row.dealerCooperationMethod==1?'垫资代采':scope.data.row.dealerCooperationMethod==2?'代收代付':'-'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <!-- operateStatus 操作按钮 1.发起放款交接 2.查看放款交接  3.null不展示-->
@@ -107,8 +138,7 @@
                     </h-button>
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW) && (paymentOrderStatusKey.FINANCE_AUDIT === scope.data.row.status)">审核</h-button>
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW_PROJECT) && (paymentOrderStatusKey.OPERATE_AUDIT === scope.data.row.status)">审核</h-button>
-                    <h-button table @click="$refs.paymentOrderDrawer.tableOpenFundsDialog(scope.data.row.id, scope.data.row.status)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM) &&
-                              (paymentOrderStatusKey.DOWN_PAYMENT_CONFIRM === scope.data.row.status || paymentOrderStatusKey.REMAINING_PAYMENT_CONFIRM === scope.data.row.status)">
+                    <h-button table @click="$refs.paymentOrderDrawer.tableOpenFundsDialog(scope.data.row.id, scope.data.row.status)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM) && scope.data.row.status == 2">
                         支付确认
                     </h-button>
                     <!-- <h-button table @click="tableOpenPrevPayDialog(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV) && (
@@ -122,20 +152,22 @@
                     <h-button table @click="openDrawer(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_DETAIL)">查看详情</h-button>
                     <h-button table @click="openDrawerPur(scope.data.row)">审批记录</h-button>
                     <!-- dealerCooperationMethod 1 垫资代采 2 代收代付 -->
-                    <h-button table @click="onUploadPay(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_UPLOADPAY)&&(scope.data.row.status == 9 ||scope.data.row.status == 1)">上传支付凭证</h-button>
+                    <h-button table @click="onUploadPay(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_UPLOADPAY)&&(scope.data.row.status == 1)">上传支付凭证</h-button>
+                    <!-- hosAuthCheck(Auths.CRM_PAYMENT_CANCEL) -->
+                    <h-button table @click="onDistribution(scope.data.row)" v-if="scope.data.row.showCancel">取消支付单</h-button>
                 </template>
             </basicTable>
         </div>
-        <PaymentOrderDrawer :drawer=drawer @backEvent='paymentOrderBackEvent' @openApproveDialog="openApproveDialog" @openPrevPayDialog="openPrevPayDialog" @openFundsDialog="openFundsDialog" @openConfirmReceiptDialog="openConfirmReceiptDialog" @openLookReceiptDetail="openLookReceiptDetail"
-            @openLookPrevPaymentDialog="openLookPrevPaymentDialog" :row="paymentOrderRow" ref="paymentOrderDrawer"></PaymentOrderDrawer>
+        <PaymentOrderDrawer :drawer=drawer @backEvent='paymentOrderBackEvent' @openApproveDialog="openApproveDialog" @openPrevPayDialog="openPrevPayDialog" @openFundsDialog="openFundsDialog" @openConfirmReceiptDialog="openConfirmReceiptDialog" @openLookReceiptDetail="openLookReceiptDetail" @openLookPrevPaymentDialog="openLookPrevPaymentDialog" :row="paymentOrderRow" ref="paymentOrderDrawer"></PaymentOrderDrawer>
         <ApprovePaymentOrder :is-open="approvePaymentVisible" :paymentDetail="paymentDetail" @onClose="approvePaymentVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery"></ApprovePaymentOrder>
         <PrevPaymentDialog :params="paymentParams" :is-open="prevPaymentVisible" @onClose="prevPaymentVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery('prevPaymentVisible')" @onCloseDialogAndQueryDetail="onCloseDialogAndQueryDetail"></PrevPaymentDialog>
         <LookPrevPaymentDialog :params="paymentParams" :is-open="lookPrevPaymentVisible" @onClose="lookPrevPaymentVisible = false"></LookPrevPaymentDialog>
         <ConfirmReceiptDialog :params="paymentParams" :is-open="confirmReceiptVisible" @onClose="confirmReceiptVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery"></ConfirmReceiptDialog>
         <LookReceiptDetail :params="paymentParams" :is-open="lookReceiptVisible" @onClose="lookReceiptVisible = false"></LookReceiptDetail>
-        <FundsDialog :detail="fundsDialogDetail" :status="paymentStatus" :is-open="fundsDialogVisible" @onClose="fundsDialogClose"></FundsDialog>
-       <!-- 审批记录 -->
-       <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='500px' :wrapperClosable="false" :beforeClose="handleClose">
+        <FundsDialog :detail="fundsDialogDetail" :status="status" :is-open="fundsDialogVisible" @onClose="fundsDialogClose"></FundsDialog>
+        <!-- 审批记录 -->
+        <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='500px' :wrapperClosable="false" :beforeClose="handleClose">
+            <FundsDialog :detail="fundsDialogDetail" :status="paymentStatus" :is-open="fundsDialogVisible" @onClose="fundsDialogClose"></FundsDialog>
             <template #connect>
                 <h4 class="purchaseName">货款支付钉钉审批流程 <div style="color:#ff7a45">{{purchaseName}}</div>
                 </h4>
@@ -152,6 +184,7 @@
                 <div v-if="editHistory.length==0">暂无审批记录</div>
             </template>
         </h-drawer>
+
         <!-- 查看放款交接 -->
         <el-drawer v-if="loanTransferContentVisible" class="editordrawerbox" :title="operateStatus==1?'发起放款交接':'查看放款交接'" :visible.sync="loanTransferContentVisible" size='650px' :modal-append-to-body="false" :wrapperClosable='false' :before-close='editorDrawerClose'>
             <div class="drawer-content">
@@ -166,13 +199,15 @@
                 </el-tabs>
             </div>
         </el-drawer>
-
-        <UploadPayDialog ref="uploadpaydialog" @onBackSearch="findPaymentOrderList"/>
+        <UploadPayDialog ref="uploadpaydialog" @onBackSearch="findPaymentOrderList" />
+        <!-- 取消支付单 -->
+        <CancelPayment ref="cancelPaymentRef" :visible.sync="visibleCancel" @close="handleCancel" @confirm="handleConfirm"></CancelPayment>
     </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
+import moment from 'moment'
 import PaymentOrderDrawer from './components/paymentOrderDrawer'
 import ApprovePaymentOrder from './components/approvePaymentOrder'
 import PrevPaymentDialog from './components/prevPaymentDialog'
@@ -180,13 +215,15 @@ import LookPrevPaymentDialog from './components/lookPrevPaymentDialog'
 import ConfirmReceiptDialog from './components/confirmReceiptDialog'
 import LookReceiptDetail from './components/lookReceiptDetail'
 import FundsDialog from '@/views/crm/funds/components/fundsDialog'
+import CancelPayment from './components/cancelPayment.vue'
+
 import * as Auths from '@/utils/auth_const'
 import LoanTransferContent from './components/LoanTransferContent'
 import ViewHandoverRecords from './components/ViewHandoverRecords'
 import { getLoanTransferContent, getLoanTransferRecord, getLoanTransferCheck, approvalHistory, getNewAdvance } from './api/index'
 import UploadPayDialog from '../funds/components/uploadPayDialog.vue'
 import paymentOrderConst from '@/views/crm/paymentOrder/const'
-import moment from 'moment'
+import { newCache } from '@/utils/index'
 export default {
     name: 'payOrder',
     components: {
@@ -199,7 +236,8 @@ export default {
         FundsDialog,
         LoanTransferContent,
         ViewHandoverRecords,
-        UploadPayDialog
+        UploadPayDialog,
+        CancelPayment
     },
     data () {
         return {
@@ -207,7 +245,9 @@ export default {
             activeName: 'LoanTransferContent',
             loanTransferContentVisible: false,
             Auths,
-            dealerList: [{ key: 1, value: '垫资代采' }, { key: 2, value: '代收代付' }],
+            dealerCooperationMethod: [{ key: 1, value: '垫资代采' }, { key: 2, value: '代收代付' }],
+            loanTransferStatus: [{ key: 2, value: '已对接' }, { key: 1, value: '待对接' }],
+            paymentStatus: [{ key: 1, value: '待支付' }, { key: 3, value: '已支付' }, { key: 2, value: '部分支付' }],
             queryParams: {
                 paymentOrderNo: '',
                 deptName: '',
@@ -216,6 +256,8 @@ export default {
                 purchaseOrderNo: '',
                 startApplyDate: '',
                 endApplyDate: '',
+                startApprovalTime: '',
+                endApprovalTime: '',
                 status: '',
                 pageSize: 10,
                 pageNumber: 1,
@@ -230,13 +272,16 @@ export default {
                 { label: '采购单名称', prop: 'purchaseOrderName', width: '200' },
                 { label: '采购单编号', prop: 'purchaseOrderNo', width: '150' },
                 { label: '金额', prop: 'applyAmount', width: '150', align: 'right' },
+                { label: '上游支付进度', prop: 'paymentStatus', width: '150' },
+                { label: '放款交接状态', prop: 'loanTransferStatus', width: '150' },
                 { label: '状态', prop: 'status', width: '150' },
                 { label: '合作方式', prop: 'dealerCooperationMethod', width: '150' },
                 { label: '申请人', prop: 'applyName', width: '150' },
                 { label: '申请时间', prop: 'applyDate', width: '150', formatters: 'dateTimes', sortable: 'applyDate' },
                 {
                     label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes', sortable: 'updateTime'
-                }
+                },
+                { label: '项目运营时间', prop: 'approvalTime', width: '150', formatters: 'dateTimes', sortable: 'approvalTime' }
             ],
             paginationInfo: {},
             drawer: false,
@@ -249,7 +294,8 @@ export default {
             confirmReceiptVisible: false,
             lookReceiptVisible: false,
             fundsDialogVisible: false,
-            paymentStatus: '',
+            visibleCancel: false,
+            status: '',
             paymentParams: {}, // 公共
             fundsDialogDetail: {},
             paymentOrderId: '',
@@ -257,11 +303,14 @@ export default {
             loanTransferRecord: '',
             paymentOrderStatusOptions: paymentOrderConst.PAYMENT_ORDER_STATUS_OPTIONS,
             paymentOrderStatusKey: paymentOrderConst.PAYMENT_ORDER_STATUS_KEY,
-
+            paymentStatusOptions: paymentOrderConst.PAYMENT_STATUS_OPTIONS,
+            dealerCooperaiionStutas: paymentOrderConst.DEALER_COOPERATION_STUTAS,
             // 审批记录
             approvalList: [],
             purchaseName: '',
-            editHistory: []
+            editHistory: [],
+            // 取消支付单
+            paramsPaymentId: ''
         }
     },
     computed: {
@@ -272,6 +321,15 @@ export default {
                 format: 'yyyy-MM-dd HH:mm:ss',
                 startTime: this.queryParams.startApplyDate,
                 endTime: this.queryParams.endApplyDate
+            }
+        },
+        apprvoeOptions () {
+            return {
+                type: 'datetime',
+                valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+                format: 'yyyy-MM-dd HH:mm:ss',
+                startTime: this.queryParams.startApprovalTime,
+                endTime: this.queryParams.endApprovalTime
             }
         },
         ...mapState({
@@ -286,8 +344,6 @@ export default {
             return {
                 ...this.queryParams,
                 status: this.queryParams.status.join(',')
-                // authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '',
-                // jobNumber: this.userInfo.jobNumber
             }
         }
     },
@@ -298,6 +354,7 @@ export default {
             this.activeName = 'LoanTransferContent'
             this.operateStatus = null
         },
+
         async handleClickTabs (tab, event) {
             if (tab.name === 'ViewHandoverRecords') {
                 const { data } = await getLoanTransferRecord(this.paymentOrderId)
@@ -318,7 +375,6 @@ export default {
                 await getLoanTransferCheck(paymentOrderId)
             }
             this.operateStatus = operateStatus
-            // this.operateStatus = 1
             this.paymentOrderId = paymentOrderId
             const { data } = await getLoanTransferContent(paymentOrderId)
             this.loanTransferContentVisible = true
@@ -332,6 +388,12 @@ export default {
         },
         onEndChange (val) {
             this.queryParams.endApplyDate = val
+        },
+        onApproveStart (val) {
+            this.queryParams.startApprovalTime = val
+        },
+        onApproveEnd (val) {
+            this.queryParams.endApprovalTime = val
         },
         fundsDialogClose () {
             this.fundsDialogVisible = false
@@ -384,7 +446,7 @@ export default {
         openFundsDialog (row, status) {
             this.fundsDialogVisible = true
             this.fundsDialogDetail = row
-            this.paymentStatus = status
+            this.status = status
         },
         openConfirmReceiptDialog (params) {
             this.paymentParams = params
@@ -424,15 +486,34 @@ export default {
             } else {
                 this.findPaymentOrderList(this.queryParamsUseQuery)
             }
-            // this.drawer && this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
         },
-        async    onUploadPay (val) {
+        async onUploadPay (val) {
             // 调用接口查询最新的账单信息
             const { data } = await getNewAdvance(val.id)
             this.$refs.uploadpaydialog.onDialogClick(val, 1, data.fundAmount)
         },
         handleClose () {
             this.drawerPur = false
+        },
+        // 取消支付单-回显
+        onDistribution (val) {
+            this.visibleCancel = true
+            this.paramsPaymentId = val.id
+        },
+        // 取消支付单-关闭
+        handleCancel () {
+            this.visibleCancel = false
+        },
+        // 取消支付单-确定 刷新列表
+        handleConfirm () {
+            this.visibleCancel = false
+            this.findPaymentOrderList(this.queryParamsUseQuery)
+            this.findCrmdeplist({
+                deptType: 'F',
+                pkDeptDoc: this.userInfo.pkDeptDoc,
+                jobNumber: this.userInfo.jobNumber,
+                authCode: JSON.parse(sessionStorage.getItem('authCode'))
+            })
         },
         ...mapActions({
             findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList',
@@ -451,6 +532,9 @@ export default {
             jobNumber: this.userInfo.jobNumber,
             authCode: JSON.parse(sessionStorage.getItem('authCode'))
         })
+    },
+    beforeUpdate () {
+        newCache('payOrder')
     }
 }
 </script>

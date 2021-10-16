@@ -129,7 +129,7 @@
             <template v-if="resolutionDetail.status==14">
                 <div class="info-finallNo">
                     <h3>终审结果：不通过</h3>
-                    <p>备注信息：{{resolutionDetail.remark}}</p>
+                    <p>备注信息：{{resolutionDetail.remark||'-'}}</p>
                 </div>
             </template>
         </div>
@@ -294,7 +294,7 @@
         <el-dialog title="终审" :close-on-click-modal='false' :visible.sync="lastDialog" width="25%" :before-close="handleCloseLast" :modal='false'>
             <el-form :model="lastForm" :rules="lastFormRules" ref="lastForm" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="备注信息：" prop="remark">
-                    <el-input   type="textarea"  :autosize="{ minRows: 5, maxRows: 10}" v-model="lastForm.remark" maxlength="500"></el-input>
+                    <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 10}" v-model="lastForm.remark" maxlength="500"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -315,6 +315,7 @@ import { getTYCList, getResolutions, resCustomer, resPurchase, getRecordList, in
 import { useDebounce } from '@/decorator'
 import * as Auths from '@/utils/auth_const'
 import moment from 'moment'
+import { deepCopy, isRepeat } from '@/utils/utils'
 
 @Component({
     name: 'finalApproval',
@@ -416,22 +417,6 @@ export default class FinalApproval extends Vue {
     }
     get formRules () {
         let rules = {
-            // pledgeNo: [
-            //     {
-            //         required: true,
-            //         validator: (rule, value, callback) => {
-            //             var Reg = /^[A-Za-z0-9]+$/
-            //             if (value && !Reg.test(value)) {
-            //                 return callback(new Error('只能为数字或字母'))
-            //             }
-            //             if (!value) {
-            //                 return callback(new Error('请输入中登网质押编号'))
-            //             }
-            //             return callback()
-            //         },
-            //         trigger: 'blur'
-            //     }
-            // ],
             projectName: [{ required: true, message: '项目名称必填', trigger: 'blur' }],
             levels: [{ required: true, message: '项目评级必选' }],
             contractAmount: [{ required: true, message: '项目合同总额必填', trigger: 'blur' },
@@ -524,47 +509,29 @@ export default class FinalApproval extends Vue {
         return rules
     }
     tableLabel: tableLabelProps = [
-        { label: '设备品牌', prop: 'deviceBrand', width: '120' },
         { label: '上游供应商', prop: 'upstreamSupplierName', width: '120' },
+        { label: '设备品牌', prop: 'deviceBrand', width: '120' },
         { label: '上游供应商类型', prop: 'upstreamSupplierType', width: '150', dicData: [{ value: 1, label: '厂商' }, { value: 2, label: '代理商' }, { value: 3, label: '经销商' }] },
-        { label: '上游支付方式', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] },
-        { label: '设备品类',
-            prop: 'deviceCategoryType',
+        { label: '上游支付方式',
+            prop: 'streamPayTypeName',
             render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
                 return (
                     <div>
-                        {scope.row.deviceCategoryType && this.category[scope.row.deviceCategoryType - 1]?.name}
-                        {scope.row.deviceCategoryType == 8 ? '(' + scope.row.deviceCategory + ')' : ''}
+                        {
+                            scope.row.streamPayTypeName ? scope.row.streamPayTypeName.map((item, index) => {
+                                return (
+                                    <i style={{ 'fontStyle': 'normal' }}>{item + (index < scope.row.streamPayTypeName.length - 1 ? '；' : '')}</i>
+                                )
+                            })
+                                : '-'
+                        }
                     </div>
                 )
-            }
-        }
+            } },
+        { label: '设备品类', prop: 'deviceCategory' }
     ];
 
     formTableLabel: tableLabelProps = [
-        {
-            label: '设备品牌',
-            prop: 'deviceBrand',
-            className: 'form-table-header',
-            showOverflowTooltip: false,
-            render: (h: CreateElement, scope: TableRenderParam) => {
-                return (
-                    <div>
-                        <el-input
-                            class="mini"
-                            size="mini"
-                            placeholder="请输入"
-                            value={scope.row[scope.column.property]}
-                            onInput={(val) => {
-                                scope.row[scope.column.property] = val
-                            }}
-                            maxlength={20}
-                        ></el-input>
-                        {/* <p class='required-txt'>222</p>**/}
-                    </div>
-                )
-            }
-        },
         {
             label: '上游供应商',
             prop: 'upstreamSupplierName',
@@ -584,11 +551,32 @@ export default class FinalApproval extends Vue {
                             }}
                             fetch-suggestions={this.querySearch}
                             hide-loading
-                            // remoteMethod
                             maxlength={50}
                         >
                         </el-autocomplete>
-                        {/* <p class='required-txt'>222</p>**/}
+                    </div>
+                )
+            }
+        },
+        {
+            label: '设备品牌',
+            prop: 'deviceBrand',
+            className: 'form-table-header',
+            showOverflowTooltip: false,
+            width: '200',
+            render: (h: CreateElement, scope: TableRenderParam) => {
+                return (
+                    <div>
+                        <el-input
+                            class="mini"
+                            size="mini"
+                            placeholder="请输入"
+                            value={scope.row[scope.column.property]}
+                            onInput={(val) => {
+                                scope.row[scope.column.property] = val
+                            }}
+                            maxlength={20}
+                        ></el-input>
                     </div>
                 )
             }
@@ -596,7 +584,7 @@ export default class FinalApproval extends Vue {
         {
             label: '上游供应商类型',
             prop: 'upstreamSupplierType',
-            width: '130',
+            width: '135',
             className: 'form-table-header',
             showOverflowTooltip: false,
             render: (h: CreateElement, scope: TableRenderParam) => {
@@ -615,7 +603,6 @@ export default class FinalApproval extends Vue {
                             <el-option key="2" value={2} label="代理商">代理商</el-option>
                             <el-option key="3" value={3} label="经销商">经销商</el-option>
                         </el-select>
-                        {/* <p class='required-txt'>222</p>**/}
                     </div>
                 )
             }
@@ -623,25 +610,26 @@ export default class FinalApproval extends Vue {
         {
             label: '上游支付方式',
             prop: 'upstreamPayType',
-            width: '130',
-            className: 'form-table-header',
+            width: '250',
+            className: '',
             showOverflowTooltip: false,
             render: (h: CreateElement, scope: TableRenderParam) => {
                 return (
                     <div>
                         <el-select
-                            class="miniSelect"
-                            size="mini"
+                            class=""
                             placeholder="请选择"
                             value={scope.row[scope.column.property]}
                             onInput={(val) => {
                                 scope.row[scope.column.property] = val
                             }}
+                            multiple
+                            style={{ 'width': '210px' }}
+                            size='mini'
                         >
                             <el-option key="1" value={1} label="银行转账">银行转账</el-option>
                             <el-option key="2" value={2} label="银行承兑">银行承兑</el-option>
                         </el-select>
-                        {/* <p class='required-txt'>222</p>**/}
                     </div>
                 )
             }
@@ -649,7 +637,7 @@ export default class FinalApproval extends Vue {
         {
             label: '设备品类',
             prop: 'deviceCategoryType',
-            width: '280',
+            width: '360',
             className: 'form-table-header',
             showOverflowTooltip: false,
             render: (h: CreateElement, scope: TableRenderParam) => {
@@ -658,14 +646,16 @@ export default class FinalApproval extends Vue {
                         <el-select
                             class="miniSelect"
                             size="mini"
+                            multiple
                             placeholder="请选择"
                             value={scope.row[scope.column.property]}
                             onInput={(val) => {
-                                if (val == 8) {
-                                    scope.row.deviceCategory = ''
+                                if (val.includes(8)) {
+                                    scope.row.otherDeviceCategory = ''
                                 }
                                 scope.row[scope.column.property] = val
                             }}
+                            style={{ 'width': scope.row[scope.column.property].includes(8) ? '' : '240px' }}
                         >
                             {this.category.map((item, index) => {
                                 return (
@@ -680,18 +670,17 @@ export default class FinalApproval extends Vue {
                             })}
                         </el-select>
                         {
-                            scope.row[scope.column.property] == 8 &&
+                            scope.row[scope.column.property].includes(8) &&
                            <el-input
                                class="categorymini"
                                size="mini"
                                placeholder="请输入"
-                               value={scope.row.deviceCategory}
+                               value={scope.row.otherDeviceCategory}
                                onInput={(val) => {
-                                   console.log(' 🚗 🚕 🚙 🚌 🚎其它 ', val)
-                                   scope.row.deviceCategory = val
+                                   scope.row.otherDeviceCategory = val
                                }}
                                maxlength={15}
-                               style="width:130px"
+                               style="width:100px"
                            ></el-input>
                         }
 
@@ -801,15 +790,20 @@ export default class FinalApproval extends Vue {
 
     // 添加采购信息
     onAddItem () {
+        const newArr = this.tableForm.map(val => val.upstreamSupplierName)
+        if (isRepeat(newArr)) {
+            this.$message.warning('供应商不可重复')
+            return
+        }
         let _temp = {
             'deviceBrand': '',
             'deviceCategory': '',
             'deviceCategoryType': '',
+            'otherDeviceCategory': '',
             'upstreamPayType': '',
             'upstreamSupplierName': '',
             'upstreamSupplierType': '' }
         this.tableForm.push(_temp)
-        console.log(' 🚗 🚕 🚙 🚌 🚎 add', this.tableForm)
     }
 
     // 添加设备品类
@@ -833,38 +827,54 @@ export default class FinalApproval extends Vue {
     }
     // 校验表格
     onValidTable (tables) {
+        const newArr = tables.map(val => val.upstreamSupplierName)
+        if (isRepeat(newArr)) {
+            this.$message.warning('供应商不可重复')
+            return
+        }
+
         let flag = true
         tables.forEach(element => {
             console.log('element', element)
-            if (element['deviceCategoryType'] == 8) {
+            delete element.deviceCategory
+            delete element.upstreamPayTypeName
+            if (element['deviceCategoryType'].includes(8)) {
                 for (var key in element) {
                     if (element[key] != '0' && !element[key]) {
-                        this.$message.warning('请完善表格的必填项数据!')
                         flag = false // 终止程序
                         return
                     }
                 }
             } else {
+                delete element.otherDeviceCategory
                 element['deviceCategory'] = '其他'
                 for (var keys in element) {
                     if (element[keys] != '0' && !element[keys]) {
-                        this.$message.warning('请完善表格的必填项数据!')
                         flag = false // 终止程序
                         return
                     }
                 }
             }
         })
+        if (!flag) {
+            this.$message.warning('请完善表格的必填项数据!')
+        }
         return flag
     }
     // 保存采购结论
     submit () {
-        this.purForm.projectPurchaseList = [...this.tableForm]
+        let tableFormList = deepCopy(this.tableForm)
+        tableFormList = tableFormList?.map((item:any) => {
+            return Object.assign(item, {
+                deviceCategoryType: item.deviceCategoryType.join(','),
+                upstreamPayType: item.upstreamPayType.join(',')
+            })
+        })
         this.purForm.updateBy = JSON.parse(sessionStorage.getItem('userInfo') || '').employeeName
-        console.log(' 🚗 🚕 🚙 🚌 🚎 ', this.tableForm)
         this.$refs['purchaseConclusionForm'].validate(async (valid) => {
             if (valid) {
-                if (this.onValidTable(this.tableForm)) {
+                if (this.onValidTable(tableFormList)) {
+                    this.purForm.projectPurchaseList = tableFormList
                     await resPurchase(this.purForm)
                     this.onFindRes()
                     this.purchaseConclusionVisible = false
@@ -916,6 +926,9 @@ export default class FinalApproval extends Vue {
     async onEditPur () {
         this.purchaseConclusionVisible = true
         const { data } = await getResolutions(this.finalFormID)
+        data.resolutionPurchaseList.forEach(val => {
+            val.deviceCategoryType = val.deviceCategoryType ? val.deviceCategoryType.split(',').map(val => Number(val)) : []
+        })
         this.purForm = { ...this.purForm, ...data }
         this.tableForm = data.resolutionPurchaseList || []
     }
@@ -982,5 +995,5 @@ export default class FinalApproval extends Vue {
 </script>
 
 <style  lang='scss' scoped>
-@import "../css/finalApproval.scss";
+@import '../css/finalApproval.scss';
 </style>

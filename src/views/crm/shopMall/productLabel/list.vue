@@ -84,6 +84,7 @@ import utils from '@/utils/filters'
 import { cancelRecommend, recommend } from './api'
 import { CRM_SHOPP_PRODUCTLABEL_RECOMMEND, CRM_SHOPP_PRODUCTLABEL_CANCELRECOMMEND, CRM_SHOPP_PRODUCTLABEL_BATCH_RECOMMEND, CRM_SHOPP_PRODUCTLABEL_BATCH_CANCEL } from '@/utils/auth_const'
 import { getCategoryList } from '../addProduct/api'
+import { newCache } from '@/utils/index'
 
 const _queryParams = {
     name: '',
@@ -290,6 +291,10 @@ export default class ProductLabel extends Vue {
         this.getList()
         const { data } = await getCategoryList({ searchContent: '' })
         this.categoryOptions = data
+    }
+
+    beforeUpdate () {
+        newCache('crmshopMallProductLabel')
     }
 }
 </script>

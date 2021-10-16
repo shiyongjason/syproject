@@ -63,3 +63,7 @@ export const approvalHistory = (paymentOrderId) => axios.get(`/project/api/contr
 export const postSupplierLoan = (params) => axios.post(`/project/api/loan-transfers/boss/supplier`, params)
 //
 export const getNewAdvance = (paymentOrderId) => axios.get(`/project/api/payment-orders/${paymentOrderId}/advance`)
+//  放款交接历史合同文件
+export const getHistoryContract = (params) => axios.get(`/project/api/loan-transfers/history-file`, { params })
+// 支付单管理取消支付单
+export const cancelPayment = (params) => axios.post(`/project/api/payment-orders/boss/cancel`, params)

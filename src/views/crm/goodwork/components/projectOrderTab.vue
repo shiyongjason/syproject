@@ -1,20 +1,18 @@
 <template>
     <div class="collect-wrap">
-        <div></div>
         <el-button type="primary" @click="onAddPurchase" class="mb20" v-if="hosAuthCheck(Auths.CRM_WORK_FINAL_ADDPUR)">新增采购单</el-button>
         <basicTable :tableData="purchaseOrderList" :tableLabel="tableLabel" :pagination="purchaseOrderPagination" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 :isShowIndex='true'>
             <template slot="poAmount" slot-scope="scope">
                 <span> {{ scope.data.row.poAmount | fundMoneyHasTail }}</span>
             </template>
             <template slot="purchaseOrderNo" slot-scope="scope">
-                <span class="blue" @click="goPurchaseOrderNo(scope.data.row.purchaseOrderNo)"> {{ scope.data.row.purchaseOrderNo}}</span>
+                <span class="link-cell" @click="goPurchaseOrderNo(scope.data.row.purchaseOrderNo)"> {{ scope.data.row.purchaseOrderNo}}</span>
             </template>
             <template slot="status" slot-scope="scope">
-                <span class="colblue"> {{ scope.data.row.status | attributeComputed(PurchaseOrderDict.status.list) }}</span>
+                <span> {{ scope.data.row.status | attributeComputed(PurchaseOrderDict.status.list) }}</span>
             </template>
             <template slot="action" slot-scope="scope">
                 <h-button table @click="onDeletePurchase(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_WORK_FINAL_DELETEPUR)">删除</h-button>
-
             </template>
         </basicTable>
     </div>
@@ -67,6 +65,7 @@ export default {
     },
     methods: {
         goPurchaseOrderNo (id) {
+            this.$parent.handleClose()
             this.$router.push({
                 path: '/goodwork/purchaseOrder',
                 query: {
@@ -120,9 +119,5 @@ export default {
 .collect-wrap {
     margin-top: 50px;
     padding: 20px 20px 200px;
-}
-.blue {
-    color: #50b7f7;
-    cursor: pointer;
 }
 </style>
