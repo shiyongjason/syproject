@@ -418,3 +418,6 @@ export const CRM_ADVACE_UPSTREAMPAY = 118501
 export const CRM_ADVACE_APPROVE = 118502
 export const CRM_ADVACE_LOOK = 118503
 export const CRM_ADVACE_RECORDS = 118504
+
+// 舒适云智能化 -- 设备升级详情
+export const COMFORT_SMART_DEVICE_UPGRADE_DETAIL = 118505
