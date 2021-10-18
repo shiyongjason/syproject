@@ -40,7 +40,7 @@
                         {{ form.id }}
                     </el-form-item>
                     <el-form-item label="设备型号：" prop="type">
-                        <el-select v-model="form.type" :disabled="isEdit">
+                        <el-select v-model="form.type" :disabled="isEdit" no-data-text="无设备型号">
                             <el-option v-for="item in deviceTypeOptions" :key="item.typeCode" :label="item.typeName" :value="item.typeCode"></el-option>
                         </el-select>
                     </el-form-item>
@@ -49,6 +49,7 @@
                             <div v-if="form.version">{{form.version}}<i class="el-icon-delete ml10"  @click="onRemoveFile"></i></div>
                             <el-button type="primary" slot="trigger" :disabled="!form.type || !!form.version">上传固件</el-button>
                         </el-upload>
+                        <el-input type="hidden" class="hidden-input" v-model="form.version" />
                     </el-form-item>
                     <el-form-item label="备注：" prop='remark'>
                         <el-input type="textarea" rows="6" v-model="form.remark" maxLength="200" placeholder="请填写备注内容"></el-input>
@@ -108,7 +109,7 @@ export default class EquipmentUpgrade extends Vue {
             { required: true, message: '请选择设备型号', trigger: 'change' }
         ],
         version: [
-            { required: true, message: '请填写设备固件' }
+            { required: true, message: '请填写设备固件', trigger: 'change' }
         ]
     }
     // 设备类型可选项
@@ -174,6 +175,11 @@ export default class EquipmentUpgrade extends Vue {
         this.onQuery()
     }
 
+    @Watch('form.type')
+    onFormTypeChange (val) {
+        this.onRemoveFile()
+    }
+
     mounted () {
         this.onQuery()
         this.findDeviceTypes(this.queryParams.isCommon)
@@ -185,8 +191,14 @@ export default class EquipmentUpgrade extends Vue {
 
     onChangeFile (file) {
         const fileName = file.name
-        const index = fileName.lastIndexOf('.')
-        this.form.version = fileName.substr(0, index)
+        const arr = fileName.match(/((\d)+\.)+/)
+        if (arr.length > 0) {
+            this.form.version = arr[0].substr(0, arr[0].length - 1)
+        } else {
+            // 这里做了一个兼容处理，如果这个文件名没有数字+.这样的模式，就取前面的名称作为版本
+            const index = fileName.lastIndexOf('.')
+            this.form.version = fileName.substr(0, index)
+        }
     }
 
     onRemoveFile () {
@@ -236,11 +248,11 @@ export default class EquipmentUpgrade extends Vue {
      * 编辑按钮弹出编辑弹出层
      */
     async onShowEditDevice (params) {
-        this.showDrawer = true
         this.isEdit = true
         const { data } = await findDeviceUpgradesInfo({ id: params.id })
         this.form = data.data
         this.form.id = params.id
+        this.showDrawer = true
     }
 
     onSave () {
@@ -270,6 +282,7 @@ export default class EquipmentUpgrade extends Vue {
             this.form.id ? await updateDeviceUpgrades(this.form) : await createDeviceUpgrades(this.form)
             this.$message.success(this.form.id ? '设备升级信息修改成功！' : '设备升级信息新增成功！')
             this.onQuery()
+            this.findDeviceTypes(this.queryParams.isCommon)
             this.showDrawer = false
             this.loading = false
         } catch (e) {
@@ -315,3 +328,8 @@ export default class EquipmentUpgrade extends Vue {
     }
 }
 </script>
+<style lang="scss" scoped>
+.hidden-input {
+    display: none;
+}
+</style>
