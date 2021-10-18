@@ -418,7 +418,7 @@
                                     </div>
                                 </template>
                             </template>
-                            <!-- <template v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod == 1">
+                            <template v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod == 1">
                                 <template v-if="paymentOrderDetail.respFundResults.arrearFund">
                                     <div class="row-filed">
                                         <p class="col-filed">
@@ -434,17 +434,16 @@
                                             <span class="label">应支付时间：</span>
                                             {{ paymentOrderDetail.respFundResults.arrearFund.schedulePaymentDate }}
                                             <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
-                                                <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow(`尾款`, paymentOrderDetail.respFundResults.arrearFund, false)" class="info-img-edit"
-                                                    v-if="canUpdatePaymentInfo(paymentOrderDetail.respFundResults.arrearFund.paymentFlag)">
+                                                <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow(`尾款`, paymentOrderDetail.respFundResults.arrearFund, false)" class="info-img-edit" v-if="canUpdatePaymentInfo(paymentOrderDetail.respFundResults.arrearFund.paymentFlag)">
                                             </template>
                                         </p>
                                         <p class="col-filed col-50 resp-fund-results">
                                             <span class="label">{{ paymentLabel(paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }}</span>
                                             {{ paymentOrderDetail.respFundResults.arrearFund.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                                             <template v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === paymentFlagKey.CONFIRM">
-                                                <h-button table v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.arrearFund.id,FundsDict.repaymentTypeArrays.list[2].key)">
+                                                <!-- <h-button table v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.arrearFund.id,FundsDict.repaymentTypeArrays.list[2].key)">
                                                     {{ paymentOrderConst.PAYMENT_FLAG.get(paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }}
-                                                </h-button>
+                                                </h-button> -->
                                             </template>
                                             <template v-else>
                                                 <span class="info-status">
@@ -454,7 +453,7 @@
                                         </p>
                                     </div>
                                 </template>
-                            </template> -->
+                            </template>
                         </template>
                         <!-- 异常流：支付单关闭 -->
                         <template v-if="statusKey.CLOSED === paymentOrderDetail.payOrderDetail.status">
@@ -471,7 +470,7 @@
                             <p class="tips">
                                 支付单关闭原因：{{ paymentOrderDetail.payOrderDetail.closeReason }}
                             </p>
-                            <div class="close_voucher">
+                            <div class="close_vocher">
                                 <span class="img-box" :key="item.fileUrl" v-for="item in paymentOrderDetail.payOrderDetail.closeAttachDocResponseList">
                                     <imageAddToken :file-url="item.fileUrl" />
                                 </span>
@@ -1006,6 +1005,23 @@ export default {
     align-items: center;
     .info-status {
         margin-left: 20px;
+    }
+}
+.close_vocher{
+    display: flex;
+    flex-direction: row;
+}
+.img-box {
+    display: flex;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 12px;
+    margin-right: 12px;
+    cursor: pointer;
+    border: 1px solid #e5e5e5;
+    box-sizing: border-box;
+    img {
+        width: 80px;
     }
 }
 .ticket-table {
