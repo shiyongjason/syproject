@@ -434,8 +434,7 @@
                                             <span class="label">应支付时间：</span>
                                             {{ paymentOrderDetail.respFundResults.arrearFund.schedulePaymentDate }}
                                             <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
-                                                <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow(`尾款`, paymentOrderDetail.respFundResults.arrearFund, false)" class="info-img-edit"
-                                                    v-if="canUpdatePaymentInfo(paymentOrderDetail.respFundResults.arrearFund.paymentFlag)">
+                                                <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow(`尾款`, paymentOrderDetail.respFundResults.arrearFund, false)" class="info-img-edit" v-if="canUpdatePaymentInfo(paymentOrderDetail.respFundResults.arrearFund.paymentFlag)">
                                             </template>
                                         </p>
                                         <p class="col-filed col-50 resp-fund-results">
@@ -471,7 +470,7 @@
                             <p class="tips">
                                 支付单关闭原因：{{ paymentOrderDetail.payOrderDetail.closeReason }}
                             </p>
-                            <div class="close_voucher">
+                            <div class="close_vocher">
                                 <span class="img-box" :key="item.fileUrl" v-for="item in paymentOrderDetail.payOrderDetail.closeAttachDocResponseList">
                                     <imageAddToken :file-url="item.fileUrl" />
                                 </span>
@@ -1008,9 +1007,22 @@ export default {
         margin-left: 20px;
     }
 }
-.img-box{
-    padding: 5px;
-    width: 50px;
+.close_vocher{
+    display: flex;
+    flex-direction: row;
+}
+.img-box {
+    display: flex;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 12px;
+    margin-right: 12px;
+    cursor: pointer;
+    border: 1px solid #e5e5e5;
+    box-sizing: border-box;
+    img {
+        width: 80px;
+    }
 }
 .ticket-table {
     display: table;
