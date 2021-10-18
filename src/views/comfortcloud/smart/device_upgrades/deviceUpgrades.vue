@@ -193,13 +193,11 @@ export default class EquipmentUpgrade extends Vue {
         const fileName = file.name
         const arr = fileName.match(/((\d)+\.)+/)
         if (arr.length > 0) {
-            this.$set(this.form, 'version', arr[0].substr(0, arr[0].length - 1))
-            // this.form.version = arr[0].substr(0, arr[0].length - 1)
+            this.form.version = arr[0].substr(0, arr[0].length - 1)
         } else {
             // 这里做了一个兼容处理，如果这个文件名没有数字+.这样的模式，就取前面的名称作为版本
             const index = fileName.lastIndexOf('.')
-            // this.form.version = fileName.substr(0, index)
-            this.$set(this.form, 'version', fileName.substr(0, index))
+            this.form.version = fileName.substr(0, index)
         }
     }
 
@@ -250,11 +248,11 @@ export default class EquipmentUpgrade extends Vue {
      * 编辑按钮弹出编辑弹出层
      */
     async onShowEditDevice (params) {
-        this.showDrawer = true
         this.isEdit = true
         const { data } = await findDeviceUpgradesInfo({ id: params.id })
         this.form = data.data
         this.form.id = params.id
+        this.showDrawer = true
     }
 
     onSave () {
