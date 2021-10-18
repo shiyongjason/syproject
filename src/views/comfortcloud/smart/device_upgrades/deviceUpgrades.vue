@@ -40,7 +40,7 @@
                         {{ form.id }}
                     </el-form-item>
                     <el-form-item label="设备型号：" prop="type">
-                        <el-select v-model="form.type" :disabled="isEdit">
+                        <el-select v-model="form.type" :disabled="isEdit" no-data-text="无设备型号">
                             <el-option v-for="item in deviceTypeOptions" :key="item.typeCode" :label="item.typeName" :value="item.typeCode"></el-option>
                         </el-select>
                     </el-form-item>
@@ -174,6 +174,11 @@ export default class EquipmentUpgrade extends Vue {
         this.onQuery()
     }
 
+    @Watch('form.type')
+    onFormTypeChange (val) {
+        this.onRemoveFile()
+    }
+
     mounted () {
         this.onQuery()
         this.findDeviceTypes(this.queryParams.isCommon)
@@ -185,8 +190,14 @@ export default class EquipmentUpgrade extends Vue {
 
     onChangeFile (file) {
         const fileName = file.name
-        const index = fileName.lastIndexOf('.')
-        this.form.version = fileName.substr(0, index)
+        const arr = fileName.match(/((\d)+\.)+/)
+        if (arr.length > 0) {
+            this.form.version = arr[0].substr(0, arr[0].length - 1)
+        } else {
+            // 这里做了一个兼容处理，如果这个文件名没有数字+.这样的模式，就取前面的名称作为版本
+            const index = fileName.lastIndexOf('.')
+            this.form.version = fileName.substr(0, index)
+        }
     }
 
     onRemoveFile () {
