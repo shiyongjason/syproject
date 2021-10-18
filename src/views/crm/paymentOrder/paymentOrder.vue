@@ -121,7 +121,7 @@
                 </template>
                 <template slot="loanTransferStatus" slot-scope="scope">
                     <p>{{ dealerCooperaiionStutas.get(scope.data.row.loanTransferStatus) }}</p>
-                    <p>({{scope.data.row.loanTransferDate | formatDate('YYYY-MM-DD HH:mm:ss')}})</p>
+                    <p>({{scope.data.row.loanTransferDate | formatDate('YYYY-MM-DD')}})</p>
                 </template>
 
                 <template slot="applyName" slot-scope="scope">
