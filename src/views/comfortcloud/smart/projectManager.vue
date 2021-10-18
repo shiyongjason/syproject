@@ -464,7 +464,7 @@ export default {
             // 说明Form中的projectType包含计费系统
             if (this.showFeeType) {
                 let index = resultForm.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM)
-                if (index > 0 && resultForm.feeType) {
+                if (index >= 0 && resultForm.feeType) {
                     resultForm.projectType[index] = `${resultForm.projectType[index] * 1 + resultForm.feeType * 1}`
                 }
             }
