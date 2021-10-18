@@ -49,6 +49,7 @@
                             <div v-if="form.version">{{form.version}}<i class="el-icon-delete ml10"  @click="onRemoveFile"></i></div>
                             <el-button type="primary" slot="trigger" :disabled="!form.type || !!form.version">上传固件</el-button>
                         </el-upload>
+                        <el-input type="hidden" class="hidden-input" v-model="form.version" />
                     </el-form-item>
                     <el-form-item label="备注：" prop='remark'>
                         <el-input type="textarea" rows="6" v-model="form.remark" maxLength="200" placeholder="请填写备注内容"></el-input>
@@ -108,7 +109,7 @@ export default class EquipmentUpgrade extends Vue {
             { required: true, message: '请选择设备型号', trigger: 'change' }
         ],
         version: [
-            { required: true, message: '请填写设备固件' }
+            { required: true, message: '请填写设备固件', trigger: 'change' }
         ]
     }
     // 设备类型可选项
@@ -192,11 +193,13 @@ export default class EquipmentUpgrade extends Vue {
         const fileName = file.name
         const arr = fileName.match(/((\d)+\.)+/)
         if (arr.length > 0) {
-            this.form.version = arr[0].substr(0, arr[0].length - 1)
+            this.$set(this.form, 'version', arr[0].substr(0, arr[0].length - 1))
+            // this.form.version = arr[0].substr(0, arr[0].length - 1)
         } else {
             // 这里做了一个兼容处理，如果这个文件名没有数字+.这样的模式，就取前面的名称作为版本
             const index = fileName.lastIndexOf('.')
-            this.form.version = fileName.substr(0, index)
+            // this.form.version = fileName.substr(0, index)
+            this.$set(this.form, 'version', fileName.substr(0, index))
         }
     }
 
@@ -327,3 +330,8 @@ export default class EquipmentUpgrade extends Vue {
     }
 }
 </script>
+<style lang="scss" scoped>
+.hidden-input {
+    display: none;
+}
+</style>
