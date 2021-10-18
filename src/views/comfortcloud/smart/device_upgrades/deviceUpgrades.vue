@@ -46,7 +46,7 @@
                     </el-form-item>
                     <el-form-item label="设备固件：" prop="version">
                         <el-upload class="upload-fault" ref="upload" :show-file-list="false" :on-change="onChangeFile" :on-success="onUploadSuccess" :on-error="onUploadError" v-bind="uploadData" :disabled="!form.type || !!form.version">
-                            <div v-if="form.version">{{form.version}}<i class="el-icon-delete ml10"  @click="onRemoveFile"></i></div>
+                            <div v-if="form.version">{{form.version}}<i class="el-icon-delete ml10" @click="onRemoveFile"></i></div>
                             <el-button type="primary" slot="trigger" :disabled="!form.type || !!form.version">上传固件</el-button>
                         </el-upload>
                         <el-input type="hidden" class="hidden-input" v-model="form.version" />
@@ -109,7 +109,8 @@ export default class EquipmentUpgrade extends Vue {
             { required: true, message: '请选择设备型号', trigger: 'change' }
         ],
         version: [
-            { required: true, message: '请填写设备固件', trigger: 'change' }
+            { required: true, message: '请填写设备固件', trigger: 'change' },
+            { max: 15, message: '设备固件最多15位', trigger: 'change' }
         ]
     }
     // 设备类型可选项
@@ -176,8 +177,10 @@ export default class EquipmentUpgrade extends Vue {
     }
 
     @Watch('form.type')
-    onFormTypeChange (val) {
-        this.onRemoveFile()
+    onFormTypeChange (val, preVal) {
+        if (preVal != '' && !this.isEdit) {
+            this.onRemoveFile()
+        }
     }
 
     mounted () {
@@ -191,9 +194,14 @@ export default class EquipmentUpgrade extends Vue {
 
     onChangeFile (file) {
         const fileName = file.name
-        const arr = fileName.match(/((\d)+\.)+/)
-        if (arr.length > 0) {
-            this.form.version = arr[0].substr(0, arr[0].length - 1)
+        const arr = fileName.match(/((\d)+\.?)+/)
+        if (arr && arr.length > 0) {
+            let version = arr[0]
+            if (version.lastIndexOf('.') === version.length - 1) {
+                this.form.version = version.substr(0, version.length - 1)
+            } else {
+                this.form.version = version
+            }
         } else {
             // 这里做了一个兼容处理，如果这个文件名没有数字+.这样的模式，就取前面的名称作为版本
             const index = fileName.lastIndexOf('.')
@@ -202,7 +210,9 @@ export default class EquipmentUpgrade extends Vue {
     }
 
     onRemoveFile () {
-        (this.$refs.upload as any).clearFiles()
+        this.$nextTick(() => {
+            (this.$refs.upload as any).clearFiles()
+        })
         this.form.version = ''
     }
 
@@ -252,6 +262,7 @@ export default class EquipmentUpgrade extends Vue {
         const { data } = await findDeviceUpgradesInfo({ id: params.id })
         this.form = data.data
         this.form.id = params.id
+        console.log(this.form.version)
         this.showDrawer = true
     }
 

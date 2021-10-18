@@ -94,7 +94,7 @@
 </template>
 
 <script lang='tsx'>
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import { State } from 'vuex-class'
 import moment from 'moment'
 import { findDeviceUpgradesInfo, findDeviceUpgradesInfoList, createDeviceUpgradesDirectional, deleteDeviceUpgradesDirectional } from '../api/index'
