@@ -112,7 +112,7 @@
                     </el-col>
                 </el-form-item>
                 <el-form-item label="设备数量：" prop="amount">
-                    <el-input style="width: 200px" placeholder="请输入设备数量" v-model="addRecord.amount" :disabled="!canInputDeviceAmount || isEditRecord"></el-input>
+                    <el-input v-isNum:0 style="width: 200px" placeholder="请输入设备数量" v-model="addRecord.amount" :disabled="!canInputDeviceAmount || isEditRecord"></el-input>
                 </el-form-item>
                 <el-form-item label="设备ID：" prop="iotId">
                     <el-input v-model.trim="addRecord.iotId" show-word-limit placeholder="请输入设备ID" :disabled="canInputDeviceAmount || isEditRecord"></el-input>
@@ -125,7 +125,7 @@
                 <el-form-item label-width="0">
                     <el-col :span="8">
                         <el-form-item label="客户姓名：" prop="dealer">
-                            <el-autocomplete class="inline-input" v-model="addRecord.dealer" :fetch-suggestions="dealerRequest" placeholder="请输入客户姓名" :trigger-on-focus="false" @select="dealerChanged" :disabled="isEditRecord" maxlength="32"></el-autocomplete>
+                            <el-autocomplete class="inline-input" v-model="addRecord.dealer" :fetch-suggestions="dealerRequest" placeholder="请输入客户姓名" :trigger-on-focus="false" @select="dealerChanged" :disabled="isEditRecord" maxlength="20"></el-autocomplete>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8" :offset="3">
