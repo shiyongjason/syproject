@@ -418,7 +418,7 @@
                                     </div>
                                 </template>
                             </template>
-                            <!-- <template v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod == 1">
+                            <template v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod == 1">
                                 <template v-if="paymentOrderDetail.respFundResults.arrearFund">
                                     <div class="row-filed">
                                         <p class="col-filed">
@@ -442,9 +442,9 @@
                                             <span class="label">{{ paymentLabel(paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }}</span>
                                             {{ paymentOrderDetail.respFundResults.arrearFund.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                                             <template v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === paymentFlagKey.CONFIRM">
-                                                <h-button table v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.arrearFund.id,FundsDict.repaymentTypeArrays.list[2].key)">
+                                                <!-- <h-button table v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.arrearFund.id,FundsDict.repaymentTypeArrays.list[2].key)">
                                                     {{ paymentOrderConst.PAYMENT_FLAG.get(paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }}
-                                                </h-button>
+                                                </h-button> -->
                                             </template>
                                             <template v-else>
                                                 <span class="info-status">
@@ -454,7 +454,7 @@
                                         </p>
                                     </div>
                                 </template>
-                            </template> -->
+                            </template>
                         </template>
                         <!-- 异常流：支付单关闭 -->
                         <template v-if="statusKey.CLOSED === paymentOrderDetail.payOrderDetail.status">
@@ -1007,6 +1007,10 @@ export default {
     .info-status {
         margin-left: 20px;
     }
+}
+.img-box{
+    padding: 5px;
+    width: 50px;
 }
 .ticket-table {
     display: table;
