@@ -121,7 +121,7 @@
                 </template>
                 <template slot="loanTransferStatus" slot-scope="scope">
                     <p>{{ dealerCooperaiionStutas.get(scope.data.row.loanTransferStatus) }}</p>
-                    <p>({{scope.data.row.loanTransferDate | formatDate('YYYY-MM-DD HH:mm:ss')}})</p>
+                    <p>({{scope.data.row.loanTransferDate | formatDate('YYYY-MM-DD')}})</p>
                 </template>
 
                 <template slot="applyName" slot-scope="scope">
@@ -280,7 +280,7 @@ export default {
                 {
                     label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes', sortable: 'updateTime'
                 },
-                { label: '项目运营时间', prop: 'approvalTime', width: '150', formatters: 'dateTimes', sortable: 'approvalTime' }
+                { label: '项目运营审核时间', prop: 'approvalTime', width: '150', formatters: 'dateTimes', sortable: 'approvalTime' }
             ],
             paginationInfo: {},
             drawer: false,

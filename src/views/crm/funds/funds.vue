@@ -62,7 +62,7 @@
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.paymentFlagArrays" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.value" :value="item.key" v-for="item in FundsDict.paymentFlagArrays.list" :key="item.key"></el-option>
+                            <el-option :label="item.value" :value="item.key" v-for="item in statusOption" :key="item.key"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -196,7 +196,9 @@ export default {
             FundsDict,
             PaymentOrderDict,
             labelName: '',
-            totalLabelName: ''
+            totalLabelName: '',
+            // 状态
+            statusOption: []
         }
     },
     computed: {
@@ -321,7 +323,9 @@ export default {
         handleClick (val) {
             // 剩余贷款 状态去除支付失败（key == 3）状态
             if (val.name == 2) {
-                this.FundsDict.paymentFlagArrays.list = this.FundsDict.paymentFlagArrays.list.filter(val => val.key != 3)
+                this.statusOption = this.FundsDict.paymentFlagArrays.list.filter(val => val.key != 3)
+            } else {
+                this.statusOption = this.FundsDict.paymentFlagArrays.list
             }
             const { repaymentTypeArrays } = this.queryParams
             this.queryParams = { ...this.queryParamsTemp, repaymentTypeArrays }
@@ -405,6 +409,9 @@ export default {
         })
     },
     mounted () {
+        // 剩余贷款去除支付失败状态处理
+        this.statusOption = this.FundsDict.paymentFlagArrays.list
+
         this.queryParamsTemp = { ...this.queryParams }
         const temp = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
         this.findFundsList(this.queryParamsUseQuery)
