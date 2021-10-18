@@ -275,7 +275,7 @@ export default {
                     { required: true, message: '请选择项目类型', trigger: 'blur' }
                 ],
                 feeType: [
-                    { required: true, message: '请选择计费方式', trigger: 'blur' }
+                    { required: true, message: '请选择计费方式', trigger: 'change' }
                 ]
             },
             loading: false,
