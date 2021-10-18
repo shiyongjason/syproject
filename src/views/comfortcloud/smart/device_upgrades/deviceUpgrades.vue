@@ -281,6 +281,7 @@ export default class EquipmentUpgrade extends Vue {
             this.form.id ? await updateDeviceUpgrades(this.form) : await createDeviceUpgrades(this.form)
             this.$message.success(this.form.id ? '设备升级信息修改成功！' : '设备升级信息新增成功！')
             this.onQuery()
+            this.findDeviceTypes(this.queryParams.isCommon)
             this.showDrawer = false
             this.loading = false
         } catch (e) {
