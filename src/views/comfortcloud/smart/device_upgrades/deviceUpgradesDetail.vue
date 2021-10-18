@@ -244,6 +244,7 @@ export default class EquipmentUpgrade extends Vue {
                 await createDeviceUpgradesDirectional(this.form)
                 this.$message.success('设备新增成功！')
                 this.showAddDialog = false
+                this.onFindDetailInfo()
                 this.onQuery()
             }
         })

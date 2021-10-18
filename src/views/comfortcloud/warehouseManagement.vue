@@ -125,12 +125,12 @@
                 <el-form-item label-width="0">
                     <el-col :span="8">
                         <el-form-item label="客户姓名：" prop="dealer">
-                            <el-autocomplete class="inline-input" v-model="addRecord.dealer" :fetch-suggestions="dealerRequest" placeholder="请输入客户姓名" :trigger-on-focus="false" @select="dealerChanged" :disabled="isEditRecord"></el-autocomplete>
+                            <el-autocomplete class="inline-input" v-model="addRecord.dealer" :fetch-suggestions="dealerRequest" placeholder="请输入客户姓名" :trigger-on-focus="false" @select="dealerChanged" :disabled="isEditRecord" maxlength="32"></el-autocomplete>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8" :offset="3">
                         <el-form-item label="客户电话：" prop="dealerPhone">
-                            <el-input v-model.trim="addRecord.dealerPhone" show-word-limit placeholder="输入客户电话" :disabled="isEditRecord"></el-input>
+                            <el-input v-model.trim="addRecord.dealerPhone" show-word-limit placeholder="输入客户电话" :disabled="isEditRecord" maxlength="11"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-form-item>
