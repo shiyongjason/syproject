@@ -280,7 +280,7 @@ export default {
                 {
                     label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes', sortable: 'updateTime'
                 },
-                { label: '项目运营时间', prop: 'approvalTime', width: '150', formatters: 'dateTimes', sortable: 'approvalTime' }
+                { label: '项目运营审核时间', prop: 'approvalTime', width: '150', formatters: 'dateTimes', sortable: 'approvalTime' }
             ],
             paginationInfo: {},
             drawer: false,
