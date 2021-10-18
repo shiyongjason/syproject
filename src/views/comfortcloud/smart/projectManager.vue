@@ -103,7 +103,7 @@
                             {{value}}
                             <el-form-item prop="feeType" v-if="showFeeType && key === projectTypeKey.BILLING_SYSTEM" class="inline-form-item">
                                 <el-radio-group v-model="form.feeType">
-                                    <el-radio v-for="[key, value] of feeTypeOptions" :key="key" :label="key">{{value}}</el-radio>
+                                    <el-radio v-for="[key, value] of feeTypeOptions" :key="key" :label="key" @click="onRadioClick">{{value}}</el-radio>
                                 </el-radio-group>
                             </el-form-item>
                         </el-checkbox>
@@ -507,6 +507,9 @@ export default {
         async getAreacode () {
             const { data } = await getChiness()
             this.provinceList = data
+        },
+        onRadioClick (e) {
+            e.stopPropagation()
         }
     },
     mounted () {
@@ -554,6 +557,7 @@ export default {
 }
 /deep/ .el-checkbox {
     display: block;
+    width: 200px;
 }
 /deep/ .city-select .el-input {
     width: 164px !important;
@@ -571,5 +575,9 @@ export default {
     padding-top: 10px;
     max-height: 650px; // 最大高度
     overflow: auto;
+}
+/deep/ .el-radio {
+    margin-right: 0;
+    padding-right: 30px;
 }
 </style>
