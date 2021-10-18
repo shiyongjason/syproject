@@ -40,7 +40,8 @@
                         {{ form.id }}
                     </el-form-item>
                     <el-form-item label="设备型号：" prop="type">
-                        <el-select v-model="form.type" :disabled="isEdit" no-data-text="无设备型号">
+                        <span v-if="isEdit">{{form.typeName}}</span>
+                        <el-select v-model="form.type" v-else no-data-text="无设备型号">
                             <el-option v-for="item in deviceTypeOptions" :key="item.typeCode" :label="item.typeName" :value="item.typeCode"></el-option>
                         </el-select>
                     </el-form-item>
@@ -262,7 +263,6 @@ export default class EquipmentUpgrade extends Vue {
         const { data } = await findDeviceUpgradesInfo({ id: params.id })
         this.form = data.data
         this.form.id = params.id
-        console.log(this.form.version)
         this.showDrawer = true
     }
 
