@@ -48,6 +48,8 @@ export default {
                             message: `取消成功`,
                             type: 'success'
                         })
+                        this.ruleForm.attachDocRequestList = []
+                        this.ruleForm.closeReason = ''
                     } catch (error) { }
                 }
             })
@@ -56,6 +58,7 @@ export default {
             this.$refs.ruleForm.clearValidate()
             this.$refs.ruleForm.resetFields()
             this.ruleForm.attachDocRequestList = []
+            this.ruleForm.closeReason = ''
             this.$emit('close')
         }
     }
