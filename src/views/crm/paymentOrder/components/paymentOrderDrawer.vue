@@ -472,7 +472,7 @@
                             </p>
                             <div class="close_vocher">
                                 <span class="img-box" :key="item.fileUrl" v-for="item in paymentOrderDetail.payOrderDetail.closeAttachDocResponseList">
-                                    <imageAddToken :file-url="item.fileUrl" />
+                                    <downloadFileAddToken :file-url="item.fileUrl" isType='main' :a-link-words="item.fileName"/>
                                 </span>
                             </div>
                         </template>
@@ -515,6 +515,8 @@ import FundsDict from '@/views/crm/funds/fundsDict'
 import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import * as Auths from '@/utils/auth_const'
 import imageAddToken from '@/components/imageAddToken'
+import downloadFileAddToken from '@/components/downloadFileAddToken'
+
 import moment from 'moment'
 import { downloadFile } from '@/utils'
 
@@ -577,7 +579,7 @@ export default {
             paymentFlagKey: paymentOrderConst.PAYMENT_FLAG_KEY
         }
     },
-    components: { imageAddToken },
+    components: { imageAddToken, downloadFileAddToken },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
@@ -1007,22 +1009,16 @@ export default {
         margin-left: 20px;
     }
 }
-.close_vocher{
+.close_vocher {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 }
 .img-box {
     display: flex;
-    width: 80px;
-    height: 80px;
     margin-bottom: 12px;
     margin-right: 12px;
     cursor: pointer;
-    border: 1px solid #e5e5e5;
-    box-sizing: border-box;
-    img {
-        width: 80px;
-    }
+    color: #ff7a45;
 }
 .ticket-table {
     display: table;
