@@ -321,6 +321,7 @@ export default class EquipmentUpgrade extends Vue {
                     failNumber: response.data.listNotValid.length
                 }
             }
+            this.onFindDetailInfo()
             this.onQuery()
         } else {
             this.$message.error(response.message)
