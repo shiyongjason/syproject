@@ -4,7 +4,7 @@
             <div class="remian_wrap-top">
                 <el-row>
                     <el-col :span="12">
-                        本次支付金额（元）：{{item.paymentAmount|Filter.fundMoneyHasTail}}
+                        本次支付金额（元）：{{item.paymentAmount|fundMoneyHasTail}}
                     </el-col>
                     <el-col :span="12">
                         支付时间：{{moment(item.updateTime).format('yyyy-MM-DD HH:mm:ss')}}
@@ -22,18 +22,18 @@
                     </div>
                 </el-row>
                 <el-row class="mt10" v-if="title!='查看凭证'">
-                    <p style="color:#9999">是否确认收到经销商<span style="color:red">{{companyName}}</span>支付的<span style="color:red">{{item.paymentAmount|Filter.fundMoneyHasTail}}</span>元货款？</p>
+                    <p style="color:#9999">是否确认收到经销商<span style="color:red">{{companyName}}</span>支付的<span style="color:red">{{item.paymentAmount|fundMoneyHasTail}}</span>元货款？</p>
                 </el-row>
             </div>
             <div class="remian_wrap-bot" v-if="title!='查看凭证'">
-                <span class="mr10"><i class="el-icon-warning" style="color:#E6A23C"></i> 确认到账后，将释放掉经销商 <span>{{item.paymentAmount|Filter.fundMoneyHasTail}}</span> 元的剩余代采购额度</span>
+                <span class="mr10"><i class="el-icon-warning" style="color:#E6A23C"></i> 确认到账后，将释放掉经销商 <span>{{item.paymentAmount|fundMoneyHasTail}}</span> 元的剩余代采购额度</span>
                 <h-button type="assist" @click="handleReceived(1,item)">确认收到</h-button>
                 <h-button @click="handleReceived(2,item)">并未收到</h-button>
             </div>
         </div>
         <p class="remain_mes" v-if="dialogDetail.fundDetailResponseList.length==0">暂无数据</p>
         <span slot="footer" class="dialog-footer" v-if="title=='查看凭证'">
-            <span>剩余货款支付进度：{{dialogDetail.paidAmount | Filter.moneyShow}}/{{dialogDetail.paymentAmount | Filter.moneyShow}}</span>
+            <span>剩余货款支付进度：{{dialogDetail.paidAmount | moneyShow}}/{{dialogDetail.paymentAmount | moneyShow}}</span>
             <el-button @click="()=> $emit('onClose')">取 消</el-button>
         </span>
     </el-dialog>
@@ -46,7 +46,6 @@ import {
 } from '../api'
 import { mapState } from 'vuex'
 import imageAddToken from '@/components/imageAddToken'
-import Filter from '@/utils/filters'
 import moment from 'moment'
 export default {
     name: 'redulePayDialog',
@@ -86,7 +85,6 @@ export default {
         },
         async getFundsTicket (val) {
             const { data } = await findRemainPayDetail(val.id)
-            console.log(data)
             this.dialogDetail = data
             this.title = '查看凭证'
         },
@@ -94,7 +92,7 @@ export default {
             const { data } = await findRemainPayConfirm(val.id)
             this.dialogDetail = data
             this.companyName = val.companyName
-            this.title = `支付确认 | 剩余货款支付进度:${data.paidAmount | Filter.moneyShow}/${data.paymentAmount | Filter.moneyShow}`
+            this.title = `支付确认 | 剩余货款支付进度:${data.paidAmount}/${data.paymentAmount}`
         }
     }
 }
