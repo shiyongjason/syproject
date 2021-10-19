@@ -23,7 +23,7 @@
             <div class="page-table">
                 <basicTable :isShowIndex="false" :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                     <template slot="createTime" slot-scope="scope">
-                        {{ moment(scope.data.row.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+                        {{ scope.data.row.createTime | momentFormat }}
                     </template>
                     <template slot="action" slot-scope="scope">
                         <h-button table @click="onShowEditDevice(scope.data.row)">编辑</h-button>
@@ -68,7 +68,6 @@
 <script lang='tsx'>
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { State } from 'vuex-class'
-import moment from 'moment'
 import { findDeviceUpgrades, findDeviceUpgradesInfo, findDeviceTypes, createDeviceUpgrades, updateDeviceUpgrades, deleteDeviceUpgrades } from '../api/index'
 import * as Api from '@/interface/iot-api'
 import { DEVICE_UPGRADE_IS_COMMON_KEY } from '../const'
@@ -83,7 +82,6 @@ interface Query {
     name: 'deviceUpgrade'
 })
 export default class EquipmentUpgrade extends Vue {
-    moment = moment
     // 搜索条件
     queryParams: Query = {
         iotId: '',
