@@ -126,7 +126,7 @@
                     </h-button>
                     <template v-if="scope.data.row.repaymentType !='2'">
                         <h-button table @click="onPayEnter(scope.data.row)" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)&&!scope.data.row.payBatch">支付确认</h-button>
-                        <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.showPayBatchConfirm&&scope.data.row.paymentFlag==1">
+                        <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.payBatch&&scope.data.row.paymentFlag==1">
                             批量确认
                         </h-button>
                     </template>
