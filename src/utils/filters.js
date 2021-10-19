@@ -1,17 +1,6 @@
 
 import moment from 'moment'
 
-// new Data()过后的时间转YYYY-MM-DD HH:mm
-const formatterTimes = function (time) {
-    const data = new Date(time)
-    const year = data.getFullYear()
-    const month = (data.getMonth() + 1) < 10 ? '0' + (data.getMonth() + 1) : (data.getMonth() + 1)
-    const date = (data.getDate()) < 10 ? '0' + (data.getDate()) : data.getDate()
-    const hour = (data.getHours()) < 10 ? '0' + (data.getHours()) : data.getHours()
-    const minute = (data.getMinutes()) < 10 ? '0' + (data.getMinutes()) : data.getMinutes()
-    return time ? (year + '-' + month + '-' + date + ' ' + hour + ':' + minute) : '-'
-}
-
 // 金额格式化
 const money = function (value, int) {
     // if (val) {
@@ -144,7 +133,6 @@ const attributeComputed = function (key, list) {
 }
 
 export default {
-    formatterTimes,
     formatDateDuration,
     money,
     isNotBlank,
