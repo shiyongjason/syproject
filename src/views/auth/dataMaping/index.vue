@@ -142,7 +142,7 @@ export default class Datamaping extends Vue {
                     this.$refs.leftTree.setCheckedKeys([])
                 } else {
                     ehr = {
-                        ehrDeptCode: ehr.deptcode,
+                        ehrDeptCode: ehr.pkDeptdoc,
                         ehrDeptName: ehr.deptname
                     }
                     if (item.ehrDeptResponseList) {
@@ -167,11 +167,17 @@ export default class Datamaping extends Vue {
     onCheckEhrLastStage (data) {
         return data.map(item => {
             item.children = item.childNodeList
-            item.id = item.deptcode
+            item.id = item.pkDeptdoc
+            // 初始化验证 是否关联
+            console.log('2', item.hasOwnProperty('relativeNewOrganization'))
+            if (item.hasOwnProperty('relativeNewOrganization')) {
+                item.disabled = item.relativeNewOrganization
+            }
             if (item.childNodeList && item.childNodeList.length > 0) {
                 item.disabled = true
                 item.childNodeList = this.onCheckEhrLastStage(item.childNodeList)
             }
+
             return item
         })
     }
@@ -329,7 +335,7 @@ export default class Datamaping extends Vue {
     }
 
     private async findEhrTree () {
-        const { data } = await findEhrTree()
+        const { data } = await findEhrTree(1)
         this.ehrList = this.onCheckEhrLastStage(data.departmentNodeVOS)
         console.log(this.ehrList)
     }

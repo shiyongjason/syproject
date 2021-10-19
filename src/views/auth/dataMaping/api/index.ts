@@ -6,8 +6,8 @@ export const findOrganizationTree: (type) => AxiosPromise<any> = (type) => {
     return axios.get(`/uaa/api/organization/tree/${type}`, { })
 }
 
-export const findEhrTree: () => AxiosPromise<any> = () => {
-    return axios.get('/uaa/department/getDepartmentTree', { })
+export const findEhrTree: (type) => AxiosPromise<any> = (type) => {
+    return axios.get(`/uaa/department/getDepartmentTree/${type}`, { })
 }
 
 export const updateOrganizationTree: (params) => AxiosPromise<any> = (params) => {
