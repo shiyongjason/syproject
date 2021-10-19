@@ -408,7 +408,7 @@ import { handleSubmit, validateForm } from '@/decorator'
 import { ROLE, SALESPHASE, USER_DEFAULT } from './const'
 import filters from '@/utils/filters'
 import { isNum } from '@/utils/validate/format'
-import { PHONE } from '@/utils/rules'
+import { Phone } from '@/utils/rules'
 
 // 默认头像
 
@@ -461,7 +461,7 @@ export default class ProjectList2Detail extends Vue {
     @Getter('projectStore/flowUpProcess') flowUpProcess: DictionaryList
 
     @State('userInfo') userInfo: any
-    validatorPHONE = PHONE
+    validatorPHONE = Phone
     validatorIsChinese=validatorIsChinese
     // 为了解决切换的时候校验的不正常bug
     reCreate:boolean = true
@@ -550,7 +550,7 @@ export default class ProjectList2Detail extends Vue {
     get rulesContact () {
         let rules = {
             // contactName: { required: true, validator: validatorIsChinese, message: '姓名只能为2-24个汉字！', trigger: 'blur' }
-            // contactMobile: { required: true, validator: PHONE, message: '请输入正确的手机号', trigger: 'blur' },
+            // contactMobile: { required: true, validator: Phone, message: '请输入正确的手机号', trigger: 'blur' },
             // roles: { required: true, message: '必填项不能为空', trigger: 'change' }
         }
         return rules
