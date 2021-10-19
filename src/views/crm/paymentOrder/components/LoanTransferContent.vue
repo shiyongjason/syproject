@@ -110,7 +110,7 @@
                     <font style="flex: 0 0 70px">
                         {{LoanTransferContent.billAmountNumber?'更新时间：':'提交时间：'}}
                     </font>
-                    <span>{{LoanTransferContent.billAmountResponse.billAmountCreateTime|formatterTime}}</span>
+                    <span>{{LoanTransferContent.billAmountResponse.billAmountCreateTime|momentFormat}}</span>
                 </div>
             </div>
             <div class='bill-table' v-if="LoanTransferContent.billAmountResponse&&LoanTransferContent.supplierPaymentType!=upstreamPaymentMethod.bankTransfer">
@@ -136,7 +136,7 @@
                                     <font style="flex: 0 0 85px;">{{objIndex==moreBillAmount.length-1?'提交人：':'更新人：'}}</font><span>{{obj.billAmountCreateBy}}</span>
                                 </div>
                                 <div class="info-layout-item">
-                                    <font style="flex: 0 0 70px;">{{objIndex==moreBillAmount.length-1?'提交时间：':'更新时间：'}}</font><span>{{obj.billAmountCreateTime|formatterTime}}</span>
+                                    <font style="flex: 0 0 70px;">{{objIndex==moreBillAmount.length-1?'提交时间：':'更新时间：'}}</font><span>{{obj.billAmountCreateTime|momentFormat}}</span>
                                 </div>
                             </div>
                             <div class='bill-table' v-if="moreBillAmount">

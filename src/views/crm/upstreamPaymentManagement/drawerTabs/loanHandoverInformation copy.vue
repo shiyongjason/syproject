@@ -44,7 +44,7 @@
             </div>
         </div>
         <!-- 货款申请信息 -->
-        <div class="tab-layout-title"><span></span>货款申请信息：<font>申请人：{{data.applyBy||'-'}}</font><font>申请时间：{{data.createTime|formatterTime}}</font></div>
+        <div class="tab-layout-title"><span></span>货款申请信息：<font>申请人：{{data.applyBy||'-'}}</font><font>申请时间：{{data.createTime|momentFormat}}</font></div>
          <div class="info-layout">
              <div class="info-layout-item"><font style="flex: 0 0 130px">供应商开户行名称：</font><span>{{data.supplierAccountName||'-'}}</span></div>
              <div class="info-layout-item"><font style="flex: 0 0 85px">银行联行号：</font><span>{{data.supplierBankNo||'-'}}</span></div>
@@ -58,7 +58,7 @@
          </div>
          <template v-if="data.upPaymentLoanHandoverList&&data.upPaymentLoanHandoverList.length>0">
              <!-- 业财风控确认信息 -->
-            <div class="tab-layout-title"><span></span>业财风控确认信息：<font v-if="data.upPaymentLoanHandoverList[0].confirmBy">确认人：{{data.upPaymentLoanHandoverList[0].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[0].confirmTime">确认时间：{{data.upPaymentLoanHandoverList[0].confirmTime|formatterTime}}</font></div>
+            <div class="tab-layout-title"><span></span>业财风控确认信息：<font v-if="data.upPaymentLoanHandoverList[0].confirmBy">确认人：{{data.upPaymentLoanHandoverList[0].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[0].confirmTime">确认时间：{{data.upPaymentLoanHandoverList[0].confirmTime|momentFormat}}</font></div>
             <div class="info-layout">
                 <template v-if="data.upPaymentLoanHandoverList[0].upPaymentLoanHandoverParamList">
                     <span class="info-layout-span" v-for="item in data.upPaymentLoanHandoverList[0].upPaymentLoanHandoverParamList" :key="item.id">
@@ -71,7 +71,7 @@
                 <div class="info-layout-item"><font style="flex: 0 0 70px">审核备注:</font><span>{{data.upPaymentLoanHandoverList[0].remark||'-'}}</span></div>
             </div>
             <!-- 资金部放款审核岗确认信息 -->
-            <div class="tab-layout-title" v-if="hosAuthCheck(upstreamPayConfirmEx)"><span></span>资金部放款审核岗确认信息：<font v-if="data.upPaymentLoanHandoverList[1].confirmBy">确认人：{{data.upPaymentLoanHandoverList[1].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[1].confirmTime">确认时间：{{data.upPaymentLoanHandoverList[1].confirmTime|formatterTime}}</font></div>
+            <div class="tab-layout-title" v-if="hosAuthCheck(upstreamPayConfirmEx)"><span></span>资金部放款审核岗确认信息：<font v-if="data.upPaymentLoanHandoverList[1].confirmBy">确认人：{{data.upPaymentLoanHandoverList[1].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[1].confirmTime">确认时间：{{data.upPaymentLoanHandoverList[1].confirmTime|momentFormat}}</font></div>
             <div class="info-layout" v-if="hosAuthCheck(upstreamPayConfirmEx)">
                 <template v-if="data.upPaymentLoanHandoverList[1].upPaymentLoanHandoverParamList">
                     <span class="info-layout-span" v-for="(item,index) in data.upPaymentLoanHandoverList[1].upPaymentLoanHandoverParamList" :key="item.id">
@@ -81,7 +81,7 @@
             </div>
             <h-button v-if="data.upPaymentLoanHandoverList[1].status==0 && hosAuthCheck(upstreamPayConfirmEx)" style="margin-top:20px" type="primary" @click="()=>onSureInfo(data.upPaymentLoanHandoverList[1].id,1)">确认信息</h-button>
             <!-- 资金部放款操作岗 -->
-            <div class="tab-layout-title" v-if="hosAuthCheck(upstreamPayConfirmLoan)"><span></span>资金部放款操作岗确认信息：<font v-if="data.upPaymentLoanHandoverList[2].confirmBy">确认人：{{data.upPaymentLoanHandoverList[2].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[2].confirmTime">确认时间：{{data.upPaymentLoanHandoverList[2].confirmTime|formatterTime}}</font></div>
+            <div class="tab-layout-title" v-if="hosAuthCheck(upstreamPayConfirmLoan)"><span></span>资金部放款操作岗确认信息：<font v-if="data.upPaymentLoanHandoverList[2].confirmBy">确认人：{{data.upPaymentLoanHandoverList[2].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[2].confirmTime">确认时间：{{data.upPaymentLoanHandoverList[2].confirmTime|momentFormat}}</font></div>
 
             <div class="info-layout" v-if="hosAuthCheck(upstreamPayConfirmLoan)">
                 <template v-if="data.upPaymentLoanHandoverList[2].upPaymentLoanHandoverParamList">
