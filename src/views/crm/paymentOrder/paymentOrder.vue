@@ -87,13 +87,13 @@
                     <span>{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
                 </template>
                 <template slot="applyDate" slot-scope="scope">
-                    <span>{{ scope.data.row.applyDate | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                    <span>{{ scope.data.row.applyDate | momentFormat }}</span>
                 </template>
                 <template slot="updateTime" slot-scope="scope">
-                    <span>{{ scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                    <span>{{ scope.data.row.updateTime | momentFormat }}</span>
                 </template>
                 <template slot="approvalTime" slot-scope="scope">
-                    <span>{{ scope.data.row.approvalTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                    <span>{{ scope.data.row.approvalTime | momentFormat }}</span>
                 </template>
                 <template slot="status" slot-scope="scope">
                     <span>{{ paymentOrderStatusOptions.get(scope.data.row.status) }}</span>

@@ -29,7 +29,7 @@
                         <span class="icon">{{index + 1}}</span>
                         <span class="label">本次上游支付：</span>
                         <span class="orange-main">{{ item.payAmount | fundMoneyHasTail }}元</span>
-                        <span class="info">{{ item.createTime | formatDate('YYYY-MM-DD HH:mm:ss') }} {{ item.createBy }}（{{ item.createPhone||'-' }}）</span>
+                        <span class="info">{{ item.createTime | momentFormat }} {{ item.createBy }}（{{ item.createPhone||'-' }}）</span>
                     </p>
                     <!-- <p style="margin-top:10px">
                         <span class="label">

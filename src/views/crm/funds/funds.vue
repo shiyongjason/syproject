@@ -80,7 +80,7 @@
                     <span> {{ scope.data.row.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list) }}</span>
                 </template>
                 <template slot="paidTime" slot-scope="scope">
-                    <span v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key"> {{ scope.data.row.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                    <span v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key"> {{ scope.data.row.paidTime | momentFormat }}</span>
                     <span v-else>-</span>
                 </template>
                 <template slot="paymentOrderAmount" slot-scope="scope">

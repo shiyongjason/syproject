@@ -46,7 +46,7 @@
                                     <div class="follow-tag">跟进人</div>
                                     <div class="name">{{item.createBy||'-'}} {{item.createPhone}}</div>
                                 </div>
-                                <div class="time">{{item.createTime|formatDate('YYYY/MM/DD HH:mm:ss')}}</div>
+                                <div class="time">{{item.createTime|momentFormat('YYYY/MM/DD HH:mm:ss')}}</div>
                             </div>
                             <div class="content-container" v-if="item.flowUpDynamic&&item.flowUpDynamic.msgType === 'meeting_voice_call'">
                                 <div class='line' />
@@ -100,7 +100,7 @@
                                         <div class='desc'  v-if="item.projectSupplyFlowUp.noNeedFlowReason">{{item.projectSupplyFlowUp.noNeedFlowReason||'-'}}</div>
                                     </template>
                                     <div class="title-tag" v-if="item.nextFlowTime">下次跟进时间</div>
-                                    <div class="desc" v-if="item.nextFlowTime">{{item.nextFlowTime | formatDate('YYYY/MM/DD HH:mm')}}</div>
+                                    <div class="desc" v-if="item.nextFlowTime">{{item.nextFlowTime | momentFormat('YYYY/MM/DD HH:mm')}}</div>
                                     <template v-if="item.customerBackLogWorks&&item.customerBackLogWorks.length">
                                         <div class="title-tag" >邀请同事协助</div>
                                         <div class="desc" v-for="w in item.customerBackLogWorks" :key="w.id">{{w.assignedUserName}} {{w.assignedUserMobile}}</div>
@@ -206,9 +206,9 @@
                             </el-form-item>
                         </div>
                     </el-form>
-                    <div style="color:#606266;line-height:40px"><font class="project-detail-others">创建时间：</font>{{projectDetail.createTime | formatDate('YYYY年MM月DD日 HH:mm:ss')}}</div>
+                    <div style="color:#606266;line-height:40px"><font class="project-detail-others">创建时间：</font>{{projectDetail.createTime | momentFormat('YYYY年MM月DD日 HH:mm:ss')}}</div>
                     <div style="color:#606266;line-height:40px"><font class="project-detail-others">创建人：</font>{{projectDetail.createBy}}（{{projectDetail.createPhone}}）</div>
-                    <div style="color:#606266;line-height:40px"><font class="project-detail-others">最近维护时间：</font>{{projectDetail.updateTime | formatDate('YYYY年MM月DD日 HH:mm:ss')}}</div>
+                    <div style="color:#606266;line-height:40px"><font class="project-detail-others">最近维护时间：</font>{{projectDetail.updateTime | momentFormat('YYYY年MM月DD日 HH:mm:ss')}}</div>
                     <div style="color:#606266;line-height:40px;margin-bottom:20px">
                         <font class="project-detail-others">最近维护人：</font>
                         <template v-if="projectDetail.updateBy">

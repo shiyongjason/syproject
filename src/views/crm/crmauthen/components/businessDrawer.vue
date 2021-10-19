@@ -239,7 +239,7 @@
                                     <p v-else>-</p>
                                 </el-form-item>
                                 <el-form-item label="关联/认证时间：">
-                                    <p v-if="authenticationDetail.authenticationTime"> {{authenticationDetail.authenticationTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</p>
+                                    <p v-if="authenticationDetail.authenticationTime"> {{authenticationDetail.authenticationTime | momentFormat}}</p>
                                     <p v-else>-</p>
                                 </el-form-item>
                                 <el-form-item label="关联/认证人：">
