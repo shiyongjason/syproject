@@ -446,7 +446,7 @@ export default class UpstreamPaymentManagement extends Vue {
         return (
             <div>
                 { scope.row.loanTransferStatus == 1 ? '待对接' : scope.row.loanTransferStatus == 2 ? '已对接' : '-' }
-                { scope.row.loanTransferStatus == 2 && <p>({ filters.formatterDate(scope.row.loanTransferDate) })</p> }
+                { scope.row.loanTransferStatus == 2 && <p>({ filters.momentFormat(scope.row.loanTransferDate, 'YYYY-MM-DD') })</p> }
             </div>
         )
     }

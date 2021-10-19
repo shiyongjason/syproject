@@ -11,15 +11,6 @@ const formatterTimes = function (time) {
     const minute = (data.getMinutes()) < 10 ? '0' + (data.getMinutes()) : data.getMinutes()
     return time ? (year + '-' + month + '-' + date + ' ' + hour + ':' + minute) : '-'
 }
-// new Data()过后的时间转YYYY-MM-DD
-const formatterDate = function (time) {
-    const data = new Date(time)
-    const year = data.getFullYear()
-    const month = (data.getMonth() + 1) < 10 ? '0' + (data.getMonth() + 1) : (data.getMonth() + 1)
-    const date = (data.getDate()) < 10 ? '0' + (data.getDate()) : data.getDate()
-
-    return time ? (year + '-' + month + '-' + date) : '-'
-}
 
 // 金额格式化
 const money = function (value, int) {
@@ -154,7 +145,6 @@ const attributeComputed = function (key, list) {
 
 export default {
     formatterTimes,
-    formatterDate,
     formatDateDuration,
     money,
     isNotBlank,

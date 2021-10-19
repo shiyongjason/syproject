@@ -30,7 +30,7 @@
                             <slot v-else-if="item.formatters === 'fundMoneyHaveSpot'" :name="item.prop" :data="scope">{{scope.row[item.prop] | fundMoneyHaveSpot}}</slot>
                             <slot v-else-if="item.formatters === 'dateTime'" :name="item.prop" :data="scope">{{scope.row[item.prop] | momentFormat}}</slot>
                             <slot v-else-if="item.formatters === 'dateTimes'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTimes}}</slot>
-                            <slot v-else-if="item.formatters === 'date'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterDate}}</slot>
+                            <slot v-else-if="item.formatters === 'date'" :name="item.prop" :data="scope">{{scope.row[item.prop] | momentFormat('YYYY-MM-DD')}}</slot>
                             <slot v-else-if="item.colorLeave" :name="item.prop" :data="scope">
                                 <span v-if="scope.row[item.prop] <= item.colorLeave.bound" :class="item.colorLeave.notReach">{{scope.row[item.prop]}}</span>
                                 <span v-else :class="item.colorLeave.reach">{{scope.row[item.prop]}}</span>
@@ -45,7 +45,7 @@
                                     <slot v-else-if="obj.formatters === 'fundMoney'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | fundMoney}}</slot>
                                     <slot v-else-if="obj.formatters === 'dateTime'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | momentFormat}}</slot>
                                     <slot v-else-if="obj.formatters === 'dateTimes'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterTimes}}</slot>
-                                    <slot v-else-if="obj.formatters === 'date'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterDate}}</slot>
+                                    <slot v-else-if="obj.formatters === 'date'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | momentFormat('YYYY-MM-DD')}}</slot>
                                     <slot v-else :name="obj.prop" :data="scope">{{formatter(scope.row[obj.prop])}}</slot>
                                 </template>
                             </el-table-column>
