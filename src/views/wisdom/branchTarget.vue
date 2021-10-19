@@ -134,12 +134,12 @@ export default {
         },
         onQuery (params) {
             this.queryParamsTemp = Object.assign({}, params)
-            this.queryParamsTemp.date = this.$root.$options.filters.formatDate(params.date, 'YYYY')
+            this.queryParamsTemp.date = this.$root.$options.filters.momentFormat(params.date, 'YYYY')
             this.findBrandTargetTable(params)
         },
         async findBrandTargetTable (parentParams) {
             const params = Object.assign({}, parentParams)
-            params.date = this.$root.$options.filters.formatDate(params.date, 'YYYY')
+            params.date = this.$root.$options.filters.momentFormat(params.date, 'YYYY')
             const { data } = await findBrandTargetTable(params)
             this.tableData = data.data.list
             this.paginationData = {
