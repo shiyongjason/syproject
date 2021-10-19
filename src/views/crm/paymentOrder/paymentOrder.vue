@@ -99,7 +99,7 @@
             <el-tag size="medium" class="eltagtop">已筛选 {{ paymentOrderPagination.total }}
                 项,支付单总金额：<b>{{ paymentOrderPagination.amount | fundMoneyHasTail }}</b>元;
             </el-tag>
-            <basicTable :tableData="paymentOrderList" :tableLabel="tableLabel" :pagination="paymentOrderPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=450 :isShowIndex='true'>
+            <basicTable :tableData="paymentOrderList" :tableLabel="tableLabel" :pagination="paymentOrderPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=480 :isShowIndex='true'>
                 <template slot="applyAmount" slot-scope="scope">
                     <span>{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
                 </template>
