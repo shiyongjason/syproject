@@ -17,7 +17,7 @@
                 </div>
                 <div class="upstreamPaymentInformation-item-info-item">
                     <div style="width:260px"><font>操作人：</font><i>{{item.createBy?item.createBy + '(' + item.createPhone + ')':'-'}}</i></div>
-                    <div style="width:220px"><font>操作时间：</font><i>{{item.createTime||'-'|formatterTime}}</i></div>
+                    <div style="width:220px"><font>操作时间：</font><i>{{item.createTime||'-'|momentFormat}}</i></div>
                 </div>
                 <!-- 支付银行：若上游支付方式为银行承兑时，展示此项；若上游支付方式为银行转账时，不展示此项。 -->
                 <!-- <div class="upstreamPaymentInformation-item-info-item" v-if="data.supplierPaymentType == 2">
