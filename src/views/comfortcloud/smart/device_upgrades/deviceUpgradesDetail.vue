@@ -84,7 +84,7 @@
         <el-dialog title="定向升级设备导入结果" :visible.sync="showErrorDialog" class="upload-show" width="800px" :close-on-click-modal="false">
             <div class="mb10">导入成功：{{ errorInfo.successNumber }}条</div>
             <div class="mb10">导入失败：{{ errorInfo.failNumber }}条</div>
-            <basicTable :isShowIndex="false" :tableLabel="errorTableLabel" :tableData="errorTableData" :isPagination="false" :isAction="false" :maxHeight="300">
+            <basicTable :isShowIndex="false" :tableLabel="errorTableLabel" :tableData="errorTableData" :isPagination="false" :isAction="false" :maxHeight="300" v-if="errorTableData.length > 0">
             </basicTable>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="showErrorDialog = false">确定</el-button>
@@ -314,15 +314,11 @@ export default class EquipmentUpgrade extends Vue {
         this.showImportDialog = false
         if (response.code === 200) {
             // 如果失败弹出失败对话框
-            if (response.data.listNotValid.length > 0) {
-                this.showErrorDialog = true
-                this.errorTableData = response.data.listNotValid
-                this.errorInfo = {
-                    successNumber: response.data.alreadyInSize,
-                    failNumber: response.data.listNotValid.length
-                }
-            } else {
-                this.$message.success('设备导入成功！')
+            this.showErrorDialog = true
+            this.errorTableData = response.data.listNotValid
+            this.errorInfo = {
+                successNumber: response.data.alreadyInSize,
+                failNumber: response.data.listNotValid.length
             }
             this.onFindDetailInfo()
             this.onQuery()
