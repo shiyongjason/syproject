@@ -411,7 +411,6 @@ export default {
     mounted () {
         // 剩余贷款去除支付失败状态处理
         this.statusOption = this.FundsDict.paymentFlagArrays.list
-
         this.queryParamsTemp = { ...this.queryParams }
         const temp = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
         this.findFundsList(this.queryParamsUseQuery)
@@ -425,6 +424,20 @@ export default {
     },
     beforeUpdate () {
         newCache('funds')
+    },
+    activated () {
+        // 解决HAM-37384bug 批量确认跳转过来因为keep-alive缓存没有执行mounted
+        this.statusOption = this.FundsDict.paymentFlagArrays.list
+        this.queryParamsTemp = { ...this.queryParams }
+        const temp = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
+        this.findFundsList(this.queryParamsUseQuery)
+        this.findCrmdeplist({
+            deptType: 'F',
+            pkDeptDoc: this.userInfo.pkDeptDoc,
+            jobNumber: this.userInfo.jobNumber,
+            authCode: temp
+        })
+        this.switchName()
     }
 }
 </script>
