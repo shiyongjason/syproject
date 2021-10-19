@@ -218,6 +218,7 @@ export default class EquipmentUpgrade extends Vue {
         }).then(async () => {
             await deleteDeviceUpgradesDirectional({ id, phone: this.userInfo.user_name })
             this.$message.success('设备删除成功！')
+            this.onFindDetailInfo()
             this.onQuery()
         }).catch(() => {
 
@@ -320,7 +321,10 @@ export default class EquipmentUpgrade extends Vue {
                     successNumber: response.data.alreadyInSize,
                     failNumber: response.data.listNotValid.length
                 }
+            } else {
+                this.$message.success('设备导入成功！')
             }
+            this.onFindDetailInfo()
             this.onQuery()
         } else {
             this.$message.error(response.message)
