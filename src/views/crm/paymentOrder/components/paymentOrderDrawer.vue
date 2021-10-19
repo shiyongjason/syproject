@@ -413,7 +413,7 @@
                                         </p>
                                     </div>
                                     <div class="row-filed">
-                                        <h-button type="assist" @click="openConfirmReceipt" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && (paymentOrderDetail.respGoodsAmount.goodsAmount !== paymentOrderDetail.respGoodsAmount.totalAmount)">确认收货
+                                        <h-button type="assist" @click="openConfirmReceipt" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && ((paymentOrderDetail.respGoodsAmount.goodsAmount !== paymentOrderDetail.respGoodsAmount.totalAmount)&&paymentOrderDetail.payOrderDetail.status!=statusKey.CLOSED)">确认收货
                                         </h-button>
                                     </div>
                                 </template>
@@ -763,7 +763,7 @@ export default {
         checkPaymentStatus (displayStatus) {
             // 这个是有状态顺序的，按照这个顺序来判定阶段，displayStatus的是指在什么阶段显示数据，那么displayStatus之后的状态都显示
             const statusOrderList = [this.statusKey.FINANCE_AUDIT, this.statusKey.OPERATE_AUDIT, this.statusKey.DING_AUDIT,
-                this.statusKey.DOWN_PAYMENT_WAITING_PAY, this.statusKey.DOWN_PAYMENT_CONFIRM, this.statusKey.CLOSED, this.statusKey.WAITING_RECEIVED,
+                this.statusKey.DOWN_PAYMENT_WAITING_PAY, this.statusKey.DOWN_PAYMENT_CONFIRM, this.statusKey.WAITING_RECEIVED, this.statusKey.CLOSED,
                 this.statusKey.REMAINING_PAYMENT_WAITING_PAY, this.statusKey.REMAINING_PAYMENT_CONFIRM, this.statusKey.FINISH]
             const sIndex = statusOrderList.indexOf(displayStatus)
             const statusList = statusOrderList.filter((item, index) => index >= sIndex)
