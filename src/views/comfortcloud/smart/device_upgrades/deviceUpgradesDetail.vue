@@ -49,7 +49,7 @@
             <div class="page-table">
                 <basicTable :isShowIndex="false" :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="!isCommon">
                     <template slot="createTime" slot-scope="scope">
-                        {{ moment(scope.data.row.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+                        {{ scope.data.row.createTime | momentFormat }}
                     </template>
                     <template slot="action" slot-scope="scope">
                         <h-button table @click="onDeleteDevice(scope.data.row.id)">删除</h-button>
@@ -96,7 +96,6 @@
 <script lang='tsx'>
 import { Vue, Component } from 'vue-property-decorator'
 import { State } from 'vuex-class'
-import moment from 'moment'
 import { findDeviceUpgradesInfo, findDeviceUpgradesInfoList, createDeviceUpgradesDirectional, deleteDeviceUpgradesDirectional } from '../api/index'
 import * as Api from '@/interface/iot-api'
 import { iotUrl } from '@/api/config'
@@ -110,7 +109,6 @@ interface Query {
     name: 'deviceUpgradeDetail'
 })
 export default class EquipmentUpgrade extends Vue {
-    moment = moment
     // 搜索条件
     queryParams: Query = {
         id: this.$route.query.id,
