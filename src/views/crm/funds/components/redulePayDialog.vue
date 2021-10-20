@@ -50,6 +50,7 @@ import {
 import { mapState } from 'vuex'
 import imageAddToken from '@/components/imageAddToken'
 import moment from 'moment'
+import FiltUtil from '@/utils/filters'
 export default {
     name: 'redulePayDialog',
     components: {
@@ -65,7 +66,6 @@ export default {
     data () {
         return {
             dialogDetail: { fundDetailResponseList: [] },
-            moment,
             title: '',
             companyName: ''
         }
@@ -76,6 +76,7 @@ export default {
         })
     },
     methods: {
+        moment,
         async handleReceived (val, item) {
             const params = {
                 fundDetailId: item.id,
@@ -95,17 +96,7 @@ export default {
             const { data } = await findRemainPayConfirm(val.id)
             this.dialogDetail = data
             this.companyName = val.companyName
-            this.title = `支付确认 | 剩余货款支付进度:${this.moneyShowFun(data.paidAmount)}/${this.moneyShowFun(data.paymentAmount)}`
-        },
-        // 用于金额显示，千分位格式，保留两位小数，0返回0.00
-        moneyShowFun (val) {
-            if (val) {
-                return val.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-            } else if (val == 0) {
-                return '0.00'
-            } else {
-                return '-'
-            }
+            this.title = `支付确认 | 剩余货款支付进度:${FiltUtil.moneyShow(data.paidAmount)}/${FiltUtil.moneyShow(data.paymentAmount)}`
         }
     }
 }
