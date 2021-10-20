@@ -1012,6 +1012,7 @@ export default {
 .close_vocher {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
 }
 .img-box {
     display: flex;

@@ -4,19 +4,21 @@
     <a @click="handle" class="download-default" target="_blank" v-else-if="isType === 'default'">{{aLinkWords}}</a>
     <div class="download-flex" v-else-if="isType==='preview'">
         <div class="pdfimg" v-if="_checkPicType(fileUrl,['.jpg','.gif','.png','.jpeg'])">
-           <imageAddToken :file-url="fileUrl" />
+            <a @click="handle">
+                <imageAddToken :file-url="fileUrl" />
+            </a>
         </div>
         <div class="pdfimg" v-if="_checkPicType(fileUrl,['.pdf'])">
-            <img :src="pdfbase">
+            <a @click="handle"> <img :src="pdfbase"></a>
         </div>
         <div class="pdfimg" v-else-if="_checkPicType(fileUrl,['.xls','.xlsx'])">
-            <img :src="xlsbase">
+            <a @click="handle"> <img :src="xlsbase"></a>
         </div>
         <div class="pdfimg" v-else-if="_checkPicType(fileUrl,['.zip','.rar'])">
-            <img :src="zipbase">
+            <a @click="handle"> <img :src="zipbase"></a>
         </div>
         <div class="pdfimg" v-else-if="_checkPicType(fileUrl,['.doc','.docx','.word'])">
-            <img :src="worldbase">
+            <a @click="handle"> <img :src="worldbase"></a>
         </div>
     </div>
 </template>
