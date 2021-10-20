@@ -434,9 +434,9 @@ export const PURCHASEORDER_LINK_PROJECTLIST = 1000002
 export const PURCHASEORDER_LINK_PAYMENTORDER = 1000003
 // 2.0项目列表 - 点击企业名称 查看企业管理列表 authenlist
 export const PROJECTLIST2_LINK_AUTHENLIST = 1000004
-// 企业管理 - 点击管理员手机号 查看B2B管理 账号管理 accountManage 需要在B2B 账号管理里面里配置
+// 企业管理 - 点击管理员手机号 查看B2B管理 账号管理 需要在B2B 账号管理里面里配置
 export const AUTHENLIST_LINK_ACCOUNTMANAGE_PHONE = 1000005
-// 企业管理 - 点击管理员姓名 查看B2B管理 账号管理 accountManage 需要在B2B 账号管理里面里配置
+// 企业管理 - 点击管理员姓名 查看B2B管理 账号管理 需要在B2B 账号管理里面里配置
 export const AUTHENLIST_LINK_ACCOUNTMANAGE_NAME = 1000006
 // 好橙工信用管理 - 点击企业名称 查看企业管理列表 authenlist
 export const CREDITMANLIST_LINK_AUTHENLIST = 1000007
