@@ -7,7 +7,10 @@
                         本次支付金额（元）：{{item.paymentAmount|fundMoneyHasTail}}
                     </el-col>
                     <el-col :span="12">
-                        支付时间：{{moment(item.updateTime).format('yyyy-MM-DD HH:mm:ss')}}
+                        支付时间：{{moment(item.createTime).format('yyyy-MM-DD HH:mm:ss')}}
+                    </el-col>
+                    <el-col :span="12" class="mt10">
+                        支付成功时间：{{moment(item.paymentConfirmTime).format('yyyy-MM-DD HH:mm:ss')}}
                     </el-col>
                     <el-col class="mt10" :span="12">
                         操作人：{{item.createBy}} ({{item.createPhone||'-'}})
