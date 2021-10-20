@@ -10,7 +10,7 @@
                         支付时间：{{moment(item.updateTime).format('yyyy-MM-DD HH:mm:ss')}}
                     </el-col>
                     <el-col class="mt10" :span="12">
-                        操作人：{{item.createBy}} {{item.phone||'-'}}
+                        操作人：{{item.createBy}} ({{item.createPhone||'-'}})
                     </el-col>
                 </el-row>
                 <el-row class="mt10">
@@ -28,10 +28,10 @@
             <div class="remian_wrap-bot" v-if="title!='查看凭证'">
                 <span class="mr10"><i class="el-icon-warning" style="color:#E6A23C"></i> 确认到账后，将释放掉经销商 <span>{{item.paymentAmount|fundMoneyHasTail}}</span> 元的剩余代采购额度</span>
                 <h-button type="assist" @click="handleReceived(1,item)">确认收到</h-button>
-                <h-button @click="onUnReceived(2,item)">并未收到</h-button>
+                <h-button @click="handleReceived(2,item)">并未收到</h-button>
             </div>
         </div>
-        <p class="remain_mes"  v-if="dialogDetail.fundDetailResponseList.length==0">暂无数据</p>
+        <p class="remain_mes" v-if="dialogDetail.fundDetailResponseList.length==0">暂无数据</p>
         <span slot="footer" class="dialog-footer" v-if="title=='查看凭证'">
             <span>剩余货款支付进度：{{dialogDetail.paidAmount | moneyShow}}/{{dialogDetail.paymentAmount | moneyShow}}</span>
             <el-button @click="()=> $emit('onClose')">取 消</el-button>
@@ -46,7 +46,6 @@ import {
 } from '../api'
 import { mapState } from 'vuex'
 import imageAddToken from '@/components/imageAddToken'
-import { moneyShow, fundMoneyHasTail } from '@/utils/filters'
 import moment from 'moment'
 export default {
     name: 'redulePayDialog',
@@ -78,6 +77,7 @@ export default {
             const params = {
                 fundDetailId: item.id,
                 updateBy: JSON.parse(sessionStorage.getItem('userInfo')).employeeName,
+                updatePhone: JSON.parse(sessionStorage.getItem('userInfo')).phoneNumber,
                 confirmType: val
             }
             await updateRemainPayConfirm(params)
@@ -85,7 +85,6 @@ export default {
         },
         async getFundsTicket (val) {
             const { data } = await findRemainPayDetail(val.id)
-            console.log(data)
             this.dialogDetail = data
             this.title = '查看凭证'
         },
@@ -93,7 +92,7 @@ export default {
             const { data } = await findRemainPayConfirm(val.id)
             this.dialogDetail = data
             this.companyName = val.companyName
-            this.title = `支付确认 | 剩余货款支付进度:${data.paidAmount | moneyShow}/${data.paymentAmount | moneyShow}`
+            this.title = `支付确认 | 剩余货款支付进度:${data.paidAmount}/${data.paymentAmount}`
         }
     }
 }
@@ -110,10 +109,10 @@ export default {
     margin-bottom: 10px;
     box-shadow: 2px 2px 3px #e5e5e5;
 }
-.remian_voucher{
+.remian_voucher {
     display: flex;
 }
-.remain_mes{
+.remain_mes {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -125,7 +124,7 @@ export default {
     margin: 10px 0 0 10px;
     display: block;
     box-shadow: 1px 1px 2px #e5e5e5;
-    overflow:hidden;
+    overflow: hidden;
     img {
         width: 60px;
     }

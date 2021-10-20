@@ -62,7 +62,7 @@
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.paymentFlagArrays" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.value" :value="item.key" v-for="item in FundsDict.paymentFlagArrays.list" :key="item.key"></el-option>
+                            <el-option :label="item.value" :value="item.key" v-for="item in statusOption" :key="item.key"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -121,12 +121,12 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="seePayEnter(scope.data.row)" v-if="hasSeePayEnterAuth(queryParams.repaymentTypeArrays)">查看凭证</h-button>
-                    <h-button table @click="onUploadPay(scope.data.row)" v-if="(scope.data.row.paymentFlag==0||scope.data.row.paymentFlag==3)&&hosAuthCheck(Auths.CRM_FUNDS_DOWN_UPLOAD)">
+                    <h-button table @click="onUploadPay(scope.data.row)" v-if="(scope.data.row.paymentFlag==0||scope.data.row.paymentFlag==3)&&hosAuthCheck(Auths.CRM_FUNDS_DOWN_UPLOAD)&&scope.data.row.unpaidAmount != 0">
                         上传支付凭证
                     </h-button>
                     <template v-if="scope.data.row.repaymentType !='2'">
                         <h-button table @click="onPayEnter(scope.data.row)" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)&&!scope.data.row.payBatch">支付确认</h-button>
-                        <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.showPayBatchConfirm&&scope.data.row.paymentFlag==1">
+                        <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.payBatch&&scope.data.row.paymentFlag==1">
                             批量确认
                         </h-button>
                     </template>
@@ -196,7 +196,9 @@ export default {
             FundsDict,
             PaymentOrderDict,
             labelName: '',
-            totalLabelName: ''
+            totalLabelName: '',
+            // 状态
+            statusOption: []
         }
     },
     computed: {
@@ -318,7 +320,13 @@ export default {
                 return this.hosAuthCheck(this.Auths.CRM_FUNDS_SERVICE_FUND_SEE)
             }
         },
-        handleClick () {
+        handleClick (val) {
+            // 剩余贷款 状态去除支付失败（key == 3）状态
+            if (val.name == 2) {
+                this.statusOption = this.FundsDict.paymentFlagArrays.list.filter(val => val.key != 3)
+            } else {
+                this.statusOption = this.FundsDict.paymentFlagArrays.list
+            }
             const { repaymentTypeArrays } = this.queryParams
             this.queryParams = { ...this.queryParamsTemp, repaymentTypeArrays }
             this.findFundsList(this.queryParamsUseQuery)
@@ -401,6 +409,8 @@ export default {
         })
     },
     mounted () {
+        // 剩余贷款去除支付失败状态处理
+        this.statusOption = this.FundsDict.paymentFlagArrays.list
         this.queryParamsTemp = { ...this.queryParams }
         const temp = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
         this.findFundsList(this.queryParamsUseQuery)
@@ -414,6 +424,20 @@ export default {
     },
     beforeUpdate () {
         newCache('funds')
+    },
+    activated () {
+        // 解决HAM-37384bug 批量确认跳转过来因为keep-alive缓存没有执行mounted
+        this.statusOption = this.FundsDict.paymentFlagArrays.list
+        this.queryParamsTemp = { ...this.queryParams }
+        const temp = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
+        this.findFundsList(this.queryParamsUseQuery)
+        this.findCrmdeplist({
+            deptType: 'F',
+            pkDeptDoc: this.userInfo.pkDeptDoc,
+            jobNumber: this.userInfo.jobNumber,
+            authCode: temp
+        })
+        this.switchName()
     }
 }
 </script>

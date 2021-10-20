@@ -99,7 +99,7 @@
             <el-tag size="medium" class="eltagtop">已筛选 {{ paymentOrderPagination.total }}
                 项,支付单总金额：<b>{{ paymentOrderPagination.amount | fundMoneyHasTail }}</b>元;
             </el-tag>
-            <basicTable :tableData="paymentOrderList" :tableLabel="tableLabel" :pagination="paymentOrderPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=450 :isShowIndex='true'>
+            <basicTable :tableData="paymentOrderList" :tableLabel="tableLabel" :pagination="paymentOrderPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=480 :isShowIndex='true'>
                 <template slot="applyAmount" slot-scope="scope">
                     <span>{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
                 </template>
@@ -121,7 +121,7 @@
                 </template>
                 <template slot="loanTransferStatus" slot-scope="scope">
                     <p>{{ dealerCooperaiionStutas.get(scope.data.row.loanTransferStatus) }}</p>
-                    <p>({{scope.data.row.loanTransferDate | formatDate('YYYY-MM-DD HH:mm:ss')}})</p>
+                    <p>({{scope.data.row.loanTransferDate | formatDate('YYYY-MM-DD')}})</p>
                 </template>
 
                 <template slot="applyName" slot-scope="scope">
@@ -153,8 +153,7 @@
                     <h-button table @click="openDrawerPur(scope.data.row)">审批记录</h-button>
                     <!-- dealerCooperationMethod 1 垫资代采 2 代收代付 -->
                     <h-button table @click="onUploadPay(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_UPLOADPAY)&&(scope.data.row.status == 1)">上传支付凭证</h-button>
-                    <!-- hosAuthCheck(Auths.CRM_PAYMENT_CANCEL) -->
-                    <h-button table @click="onDistribution(scope.data.row)" v-if="scope.data.row.showCancel">取消支付单</h-button>
+                    <h-button table @click="onDistribution(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CANCEL) && scope.data.row.showCancel">取消支付单</h-button>
                 </template>
             </basicTable>
         </div>
@@ -281,7 +280,7 @@ export default {
                 {
                     label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes', sortable: 'updateTime'
                 },
-                { label: '项目运营时间', prop: 'approvalTime', width: '150', formatters: 'dateTimes', sortable: 'approvalTime' }
+                { label: '项目运营审核时间', prop: 'approvalTime', width: '150', formatters: 'dateTimes', sortable: 'approvalTime' }
             ],
             paginationInfo: {},
             drawer: false,

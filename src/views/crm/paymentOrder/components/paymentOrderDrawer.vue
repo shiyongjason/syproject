@@ -413,12 +413,12 @@
                                         </p>
                                     </div>
                                     <div class="row-filed">
-                                        <h-button type="assist" @click="openConfirmReceipt" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && (paymentOrderDetail.respGoodsAmount.goodsAmount !== paymentOrderDetail.respGoodsAmount.totalAmount)">确认收货
+                                        <h-button type="assist" @click="openConfirmReceipt" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && ((paymentOrderDetail.respGoodsAmount.goodsAmount !== paymentOrderDetail.respGoodsAmount.totalAmount)&&paymentOrderDetail.payOrderDetail.status!=statusKey.CLOSED)">确认收货
                                         </h-button>
                                     </div>
                                 </template>
                             </template>
-                            <!-- <template v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod == 1">
+                            <template v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod == 1">
                                 <template v-if="paymentOrderDetail.respFundResults.arrearFund">
                                     <div class="row-filed">
                                         <p class="col-filed">
@@ -434,17 +434,16 @@
                                             <span class="label">应支付时间：</span>
                                             {{ paymentOrderDetail.respFundResults.arrearFund.schedulePaymentDate }}
                                             <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
-                                                <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow(`尾款`, paymentOrderDetail.respFundResults.arrearFund, false)" class="info-img-edit"
-                                                    v-if="canUpdatePaymentInfo(paymentOrderDetail.respFundResults.arrearFund.paymentFlag)">
+                                                <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow(`尾款`, paymentOrderDetail.respFundResults.arrearFund, false)" class="info-img-edit" v-if="canUpdatePaymentInfo(paymentOrderDetail.respFundResults.arrearFund.paymentFlag)">
                                             </template>
                                         </p>
                                         <p class="col-filed col-50 resp-fund-results">
                                             <span class="label">{{ paymentLabel(paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }}</span>
                                             {{ paymentOrderDetail.respFundResults.arrearFund.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                                             <template v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === paymentFlagKey.CONFIRM">
-                                                <h-button table v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.arrearFund.id,FundsDict.repaymentTypeArrays.list[2].key)">
+                                                <!-- <h-button table v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.arrearFund.id,FundsDict.repaymentTypeArrays.list[2].key)">
                                                     {{ paymentOrderConst.PAYMENT_FLAG.get(paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }}
-                                                </h-button>
+                                                </h-button> -->
                                             </template>
                                             <template v-else>
                                                 <span class="info-status">
@@ -454,7 +453,7 @@
                                         </p>
                                     </div>
                                 </template>
-                            </template> -->
+                            </template>
                         </template>
                         <!-- 异常流：支付单关闭 -->
                         <template v-if="statusKey.CLOSED === paymentOrderDetail.payOrderDetail.status">
@@ -471,9 +470,9 @@
                             <p class="tips">
                                 支付单关闭原因：{{ paymentOrderDetail.payOrderDetail.closeReason }}
                             </p>
-                            <div class="close_voucher">
-                                <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetailcloseAttachDocResponseList">
-                                    <imageAddToken :file-url="item.url" />
+                            <div class="close_vocher">
+                                <span class="img-box" :key="item.fileUrl" v-for="item in paymentOrderDetail.payOrderDetail.closeAttachDocResponseList">
+                                    <downloadFileAddToken :file-url="item.fileUrl" isType='main' :a-link-words="item.fileName"/>
                                 </span>
                             </div>
                         </template>
@@ -516,6 +515,8 @@ import FundsDict from '@/views/crm/funds/fundsDict'
 import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import * as Auths from '@/utils/auth_const'
 import imageAddToken from '@/components/imageAddToken'
+import downloadFileAddToken from '@/components/downloadFileAddToken'
+
 import moment from 'moment'
 import { downloadFile } from '@/utils'
 
@@ -578,7 +579,7 @@ export default {
             paymentFlagKey: paymentOrderConst.PAYMENT_FLAG_KEY
         }
     },
-    components: { imageAddToken },
+    components: { imageAddToken, downloadFileAddToken },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
@@ -762,7 +763,7 @@ export default {
         checkPaymentStatus (displayStatus) {
             // 这个是有状态顺序的，按照这个顺序来判定阶段，displayStatus的是指在什么阶段显示数据，那么displayStatus之后的状态都显示
             const statusOrderList = [this.statusKey.FINANCE_AUDIT, this.statusKey.OPERATE_AUDIT, this.statusKey.DING_AUDIT,
-                this.statusKey.DOWN_PAYMENT_WAITING_PAY, this.statusKey.DOWN_PAYMENT_CONFIRM, this.statusKey.CLOSED, this.statusKey.WAITING_RECEIVED,
+                this.statusKey.DOWN_PAYMENT_WAITING_PAY, this.statusKey.DOWN_PAYMENT_CONFIRM, this.statusKey.WAITING_RECEIVED, this.statusKey.CLOSED,
                 this.statusKey.REMAINING_PAYMENT_WAITING_PAY, this.statusKey.REMAINING_PAYMENT_CONFIRM, this.statusKey.FINISH]
             const sIndex = statusOrderList.indexOf(displayStatus)
             const statusList = statusOrderList.filter((item, index) => index >= sIndex)
@@ -1007,6 +1008,17 @@ export default {
     .info-status {
         margin-left: 20px;
     }
+}
+.close_vocher {
+    display: flex;
+    flex-direction: column;
+}
+.img-box {
+    display: flex;
+    margin-bottom: 12px;
+    margin-right: 12px;
+    cursor: pointer;
+    color: #ff7a45;
 }
 .ticket-table {
     display: table;

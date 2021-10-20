@@ -6,7 +6,8 @@
                 <p>剩余应支付金额：{{unpaidAmount|fundMoneyHasTail}} 元</p>
                 <el-form :model="uploadpayForm" :rules="rules" ref="uploadpayForm" label-width="130px">
                     <el-form-item label="本次支付金额：" prop="paidAmount">
-                        <el-input v-model.trim="uploadpayForm.paidAmount" v-isNum:2="uploadpayForm.paidAmount" placeholder="请输入" maxlength="50" v-inputMAX='unpaidAmount'><template slot="append">元</template></el-input>
+                        <!-- unpaidAmount-inputMAX指令金额不刷新问题 -->
+                        <el-input v-if="unpaidAmount" v-model.trim="uploadpayForm.paidAmount" v-isNum:2="uploadpayForm.paidAmount" placeholder="请输入" maxlength="50" v-inputMAX='unpaidAmount'><template slot="append">元</template></el-input>
                         <span style="width:50px;height:50px;text-align:center;margin-left:10px;color:#13C2C2" @click="handleAll">全部</span>
                     </el-form-item>
                 </el-form>
@@ -57,15 +58,20 @@ export default {
     },
     methods: {
         async onDialogClick (val, source, fundMoney) {
-            console.log(val)
             this.attachDocs = []
+            this.unpaidAmount = 0
             const { data } = await getBnumber({ companyId: val.companyId })
+            this.unpaidAmount = val.unpaidAmount || 0
+            if (val.unpaidAmount == 0) {
+                this.isZero = true
+            } else {
+                this.isZero = false
+            }
             this.batchNumber = data
             this.dialogVisible = true
             this.fundId = val.id
             this.companyId = val.companyId
             this.payMoney = source == 1 ? fundMoney : val.applyAmount ? val.applyAmount : val.paymentAmount
-            this.unpaidAmount = val.unpaidAmount
             this.type = source || this.type
             this.repaymentType = val.repaymentType
             this.uploadpayForm.paidAmount = ''
@@ -98,6 +104,7 @@ export default {
                                     fundId: this.fundId,
                                     urlList: this.attachDocs,
                                     paidAmount: this.uploadpayForm.paidAmount,
+                                    createPhone: JSON.parse(sessionStorage.getItem('userInfo')).phoneNumber,
                                     createBy: JSON.parse(sessionStorage.getItem('userInfo')).employeeName
                                 }
                                 await updateRemainPayment(params)
