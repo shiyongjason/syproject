@@ -472,7 +472,7 @@
                             </p>
                             <div class="close_vocher">
                                 <span class="img-box" :key="item.fileUrl" v-for="item in paymentOrderDetail.payOrderDetail.closeAttachDocResponseList">
-                                    <downloadFileAddToken :file-url="item.fileUrl" isType='main' :a-link-words="item.fileName"/>
+                                    <downloadFileAddToken isPreview isType='preview' :file-url="item.fileUrl" :a-link-words="item.fileName"/>
                                 </span>
                             </div>
                         </template>
@@ -1011,7 +1011,8 @@ export default {
 }
 .close_vocher {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 .img-box {
     display: flex;
