@@ -258,6 +258,13 @@ export default {
             this.searchList()
         }
     },
+    activated () {
+        // 解决VIP申请、VIP管理、信用管理keep-alive缓存问题
+        if (this.$route.query.name) {
+            this.queryParams.companyName = this.$route.query.name
+            this.searchList()
+        }
+    },
     methods: {
         ...mapActions({
             findBusinesspage: 'crmauthen/findBusinesspage',

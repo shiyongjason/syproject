@@ -208,13 +208,12 @@ export default {
                 }
             }
             this.postOptions = positionList.concat(this.roleInfo.positionList.filter(v => v.disabled))
-
             // 不是当前岗位管理员-去除tag删除键
             try {
                 this.$nextTick(() => {
                     const selectorAll = this.$refs.selectClearRef.$el.querySelectorAll('.el-tag__close')
                     this.roleInfo.positionList.forEach((item, index) => {
-                        if (item.disabled) {
+                        if (item.disabled && selectorAll[index]) {
                             selectorAll[index].remove()
                         }
                     })
