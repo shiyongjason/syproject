@@ -6,7 +6,8 @@
                 <span> {{ scope.data.row.poAmount | fundMoneyHasTail }}</span>
             </template>
             <template slot="purchaseOrderNo" slot-scope="scope">
-                <span class="link-cell" @click="goPurchaseOrderNo(scope.data.row.purchaseOrderNo)"> {{ scope.data.row.purchaseOrderNo}}</span>
+                <span v-if="hosAuthCheck(Auths.PROJECTLIST2_LINK_AUTHENLIST)" class="link-cell" @click="goPurchaseOrderNo(scope.data.row.purchaseOrderNo)"> {{ scope.data.row.purchaseOrderNo}}</span>
+                <span v-else>{{ scope.data.row.purchaseOrderNo}}</span>
             </template>
             <template slot="status" slot-scope="scope">
                 <span> {{ scope.data.row.status | attributeComputed(PurchaseOrderDict.status.list) }}</span>

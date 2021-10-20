@@ -241,7 +241,8 @@
                             <div class="payment-table">
                                 <basicTable :tableData="purchaseOrderDetail.payOrderDetails" :tableLabel="tableLabel" :isMultiple="false" :isAction="false" :isShowIndex='true'>
                                     <template slot="paymentOrderNo" slot-scope="scope">
-                                        <span class="link-cell" @click="goPaymentDetail(scope.data.row.paymentOrderNo)">{{ scope.data.row.paymentOrderNo }}</span>
+                                        <span v-if="hosAuthCheck(Auths.PURCHASEORDER_LINK_PAYMENTORDER)" class="link-cell" @click="goPaymentDetail(scope.data.row.paymentOrderNo)">{{ scope.data.row.paymentOrderNo }}</span>
+                                        <span v-else>{{ scope.data.row.paymentOrderNo }}</span>
                                     </template>
                                     <template slot="status" slot-scope="scope">
                                         <span>{{ scope.data.row.status | attributeComputed(PaymentOrderDict.status.list) }}</span>
@@ -280,6 +281,7 @@ import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import PureCollapseTr from '@/views/crm/purchaseOrder/components/pureCollapseTr'
 import PurchaseOrderDialogStatus from '@/views/crm/purchaseOrder/dialogStatus'
 import ImageAddToken from '@/components/imageAddToken'
+import * as Auths from '@/utils/auth_const'
 export default {
     name: 'purchaseOrderDrawer',
     props: {
@@ -294,6 +296,7 @@ export default {
     },
     data () {
         return {
+            Auths,
             options: {
                 direction: 'rtl',
                 size: '40%',

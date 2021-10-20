@@ -84,7 +84,8 @@
             <el-tag size="medium" class="eltagtop">已筛选 {{creditdata.total||0}} 项</el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=200 :isShowIndex='true'>
                 <template slot="companyName" slot-scope="scope">
-                    <span @click="onLinkCom(scope.data.row)" class="link-cell">{{scope.data.row.companyName}}</span>
+                    <span v-if="hosAuthCheck(auths.CREDITMANLIST_LINK_AUTHENLIST)" @click="onLinkCom(scope.data.row)" class="link-cell">{{scope.data.row.companyName}}</span>
+                    <span v-else>{{scope.data.row.companyName}}</span>
                 </template>
                 <template slot="status" slot-scope="scope">
                     <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status==true?'正常':scope.data.row.status==false?'过期':'-'}}</span>
