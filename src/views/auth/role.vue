@@ -445,7 +445,6 @@ export default {
                 await resetPermission({ jobNumber: this.jobNumber })
                 this.tableList = []
                 this.newTableList = []
-                this.getInitData()
                 this.getDynamicMenuData()
             }).catch(() => {
                 // 取消删除
