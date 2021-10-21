@@ -133,6 +133,7 @@ export default {
     overflow: hidden;
     img {
         width: 60px;
+        height: 60px;
     }
 }
 </style>
