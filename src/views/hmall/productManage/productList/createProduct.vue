@@ -10,8 +10,8 @@
                     <el-autocomplete class="form-input_big" v-model="form.brandName" :fetch-suggestions="querySearchAsyncBrand" @select="handleSelectBrand" @blur="handleBlurBrand" :debounce="500" :maxlength="30" placeholder="请输入商品品牌" :disabled="showMore&&nowShow"></el-autocomplete>
                     <span class="ml10 isGrayColor">如果没有对应的品牌，请联系运营人员添加!</span>
                 </el-form-item>
-                <el-form-item label="商品型号：" prop="model">
-                    <el-autocomplete class="form-input_big autocomplete" v-model="form.model" :fetch-suggestions="querySearchAsyncModel" @select="handleSelectModel" :debounce="500" :maxlength="50" placeholder="请输入商品型号" :disabled="showMore&&nowShow">
+                <el-form-item label="商品系列：" prop="model">
+                    <el-autocomplete class="form-input_big autocomplete" v-model="form.model" :fetch-suggestions="querySearchAsyncModel" @select="handleSelectModel" :debounce="500" :maxlength="50" placeholder="请输入商品系列" :disabled="showMore&&nowShow">
                         <template slot-scope="{item}">
                             <el-tooltip effect="dark" :content="item.value" placement="top">
                                 <span class="autocomplete-select_item">{{item.value}}</span>
@@ -84,6 +84,7 @@
                             <span class="group-spec_close" @click="onDelOptionTemplate(index)" v-if="!(form.auditStatus == 1 && item.disabled)"><i class="el-icon-close"></i></span>
                         </div>
                         <h-button type="create" class="mb20" @click="onAddOptionTemplate" :disabled="disabled">添加规格</h-button>
+                        <span class="ml10 isGrayColor">建议规格名为：型号，规格，颜色</span>
                     </div>
                     <skuTable ref="skuTable" :formData.sync="form"></skuTable>
                     <h-button type="create" class="mb20" v-if="form.optionTypeList.length>0" @click="onAddSKU">+</h-button>
@@ -174,7 +175,7 @@ export default {
                     { required: true, message: '请选择商品品牌', trigger: 'change' }
                 ],
                 model: [
-                    { required: true, message: '请选择商品型号', trigger: 'change' }
+                    { required: true, message: '请选择商品系列', trigger: 'change' }
                 ],
                 categoryId: [
                     { required: true, message: '请选择商品型类目', trigger: 'change' }
@@ -779,7 +780,8 @@ export default {
     z-index: -1;
     background: rgba($color: #000000, $alpha: 0.65);
 
-    span, a {
+    span,
+    a {
         float: left;
         margin-left: 14px;
         padding: 0px 12px;
