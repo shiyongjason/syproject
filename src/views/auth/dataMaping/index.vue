@@ -174,7 +174,7 @@ export default class Datamaping extends Vue {
                 item.disabled = item.relativeNewOrganization
             }
             if (item.childNodeList && item.childNodeList.length > 0) {
-                item.disabled = true
+                // item.disabled = true
                 item.childNodeList = this.onCheckEhrLastStage(item.childNodeList)
             }
 
