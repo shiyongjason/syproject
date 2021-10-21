@@ -1,47 +1,8 @@
 
 import moment from 'moment'
 
-// new Data()过后的时间转YYYY-MM-DD HH:mm
-const formatterTime = function (time) {
-    const data = new Date(time)
-    const year = data.getFullYear()
-    const month = (data.getMonth() + 1) < 10 ? '0' + (data.getMonth() + 1) : (data.getMonth() + 1)
-    const date = (data.getDate()) < 10 ? '0' + (data.getDate()) : data.getDate()
-    const hour = (data.getHours()) < 10 ? '0' + (data.getHours()) : data.getHours()
-    const minute = (data.getMinutes()) < 10 ? '0' + (data.getMinutes()) : data.getMinutes()
-    const second = (data.getSeconds()) < 10 ? '0' + (data.getSeconds()) : data.getSeconds()
-    return time ? (year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second) : '-'
-}
-// new Data()过后的时间转YYYY-MM-DD HH:mm
-const formatterTimes = function (time) {
-    const data = new Date(time)
-    const year = data.getFullYear()
-    const month = (data.getMonth() + 1) < 10 ? '0' + (data.getMonth() + 1) : (data.getMonth() + 1)
-    const date = (data.getDate()) < 10 ? '0' + (data.getDate()) : data.getDate()
-    const hour = (data.getHours()) < 10 ? '0' + (data.getHours()) : data.getHours()
-    const minute = (data.getMinutes()) < 10 ? '0' + (data.getMinutes()) : data.getMinutes()
-    return time ? (year + '-' + month + '-' + date + ' ' + hour + ':' + minute) : '-'
-}
-// new Data()过后的时间转YYYY-MM-DD
-const formatterDate = function (time) {
-    const data = new Date(time)
-    const year = data.getFullYear()
-    const month = (data.getMonth() + 1) < 10 ? '0' + (data.getMonth() + 1) : (data.getMonth() + 1)
-    const date = (data.getDate()) < 10 ? '0' + (data.getDate()) : data.getDate()
-
-    return time ? (year + '-' + month + '-' + date) : '-'
-}
-
 // 金额格式化
 const money = function (value, int) {
-    // if (val) {
-    //     const res = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-    //     return res
-    // }
-    // if (val == 0) {
-    //     return 0
-    // }
-    // return '-'
     if (value == null) return '-'
     let money = ''
     let pointNum = ''
@@ -55,44 +16,46 @@ const money = function (value, int) {
         return money
     }
 }
-// 资金台账金额格式
-const fundMoney = function (val, int) {
+
+/**
+ * 金额格式化
+ * TODO：这个方法小数点后超过4位会有格式化问题
+ *
+ * @param {*} val 要格式化的原始数据
+ * @param {Integer} decimalPlaces 正整数，保留小数位
+ * @param {boolean} hasPad 小数不满足位数时，是否使用0进行补充，默认true
+ */
+const moneyFormat = function (val, decimalPlaces = 2, hasPad = true) {
     if (val) {
-        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-    } else if (val === 0) {
-        return val
-    } else {
-        return '-'
-    }
-}
-// 资金台账金额格式 11.11
-const fundMoneyHasTail = function (val, int) {
-    if (val) {
-        const _val = Number(val).toFixed(2)
-        return (_val + '').replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-    } else if (val === 0) {
-        return Number(val).toFixed(2)
-    } else {
-        return '-'
-    }
-}
-// 资金台账金额格式
-const fundMoneyHaveSpot = function (val, int) {
-    if (val) {
-        let head = ''
-        let foot = ''
-        if (val.toString().indexOf('.') > -1) {
-            head = (val.toString().slice(0, val.toString().indexOf('.'))).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-            foot = val.toString().substr(val.toString().indexOf('.'), 3)
-        } else {
-            head = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        // 针对可能的非数字输入做了一点兼容性处理
+        val = val * 1
+        if (isNaN(val)) {
+            return '-'
         }
-        return `${head}${foot}`
-    } else if (val === 0) {
-        return val
+        val = hasPad ? val.toFixed(decimalPlaces).toString() : val.toString()
+        return val.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    } else if (val == 0) {
+        // 这里防止decimalPlaces传递成字符串，做了兼容处理
+        return hasPad ? '0.'.padEnd(decimalPlaces - 0 + 2, 0) : 0
+    } else {
+        return '-'
     }
-    return '-'
 }
+
+/**
+ * 日期格式化。利用moment进行日期格式化
+ *
+ * @param {*} value 要格式化的数据
+ * @param {*} type 格式化类型，就是转化为什么格式，比如：YYYY-MM-DD，默认值：YYYY-MM-DD HH:mm:ss
+ */
+const momentFormat = function (value = new Date(), type = 'YYYY-MM-DD HH:mm:ss') {
+    if (value) {
+        return moment(value).format(type)
+    } else {
+        return '-'
+    }
+}
+
 const formatDateDuration = function (time) {
     if (!time) return '-'
     let tempTime = ''
@@ -106,34 +69,9 @@ const formatDateDuration = function (time) {
     }
     return tempTime
 }
+
 function isNotBlank (value) {
     return value || '-'
-}
-
-// 用于金额显示，千分位格式，保留两位小数，0返回0.00
-const moneyShow = function (val) {
-    if (val) {
-        return val.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-    } else if (val == 0) {
-        return '0.00'
-    } else {
-        return '-'
-    }
-}
-
-// *
-//  * @name formatTime 时间格式化工具，二次封装moment
-//  *
-//  * @param {date} [value=new Date()] 时间格式参数
-//  * @param {string} [type='YYYY-MM-DD HH:mm'] 格式化类型
-//  *
-
-const momentFormat = function (value = new Date(), type = 'YYYY-MM-DD HH:mm:ss') {
-    if (value) {
-        return moment(value).format(type)
-    } else {
-        return '-'
-    }
 }
 
 const percentageShow = function (value) {
@@ -164,16 +102,10 @@ const attributeComputed = function (key, list) {
 }
 
 export default {
-    formatterTime,
-    formatterTimes,
-    formatterDate,
     formatDateDuration,
     money,
     isNotBlank,
-    fundMoneyHasTail,
-    fundMoney,
-    moneyShow,
-    fundMoneyHaveSpot,
+    moneyFormat,
     momentFormat,
     percentageShow,
     percenShow,

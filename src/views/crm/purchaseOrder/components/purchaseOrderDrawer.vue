@@ -38,7 +38,7 @@
                                 {{ `${purchaseOrderDetail.purchaseOrder.createBy}（${purchaseOrderDetail.purchaseOrder.createPhone}）` }}
                             </p>
                             <p class="col-filed">
-                                创建时间: {{ purchaseOrderDetail.purchaseOrder.createTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
+                                创建时间: {{ purchaseOrderDetail.purchaseOrder.createTime | momentFormat }}
                             </p>
                         </div>
                         <div class="row-filed">
@@ -68,13 +68,13 @@
                                     提交人：{{ `${purchaseOrderDetail.purchaseOrder.submitBy}（${purchaseOrderDetail.purchaseOrder.submitPhone}）` }}
                                 </p>
                                 <p class="col-filed">
-                                    提交时间：{{ purchaseOrderDetail.purchaseOrder.submitTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
+                                    提交时间：{{ purchaseOrderDetail.purchaseOrder.submitTime | momentFormat }}
                                 </p>
                             </div>
                             <template v-if="purchaseOrderDetail.purchaseOrder && purchaseOrderDetail.purchaseOrder.status !== PurchaseOrderDict.status.list[1].key">
                                 <div class="row-filed">
                                     <p class="col-filed">
-                                        采购单金额： {{ purchaseOrderDetail.purchaseOrder.poAmount | fundMoneyHasTail }}元
+                                        采购单金额： {{ purchaseOrderDetail.purchaseOrder.poAmount | moneyFormat }}元
                                     </p>
                                     <template v-if="purchaseOrderDetail.poInfo">
                                         <p class="col-filed">
@@ -152,7 +152,7 @@
                                 </div>
                                 <div class="row-filed">
                                     <p class="col-filed">
-                                        更新时间：{{ purchaseOrderDetail.purchaseOrder.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
+                                        更新时间：{{ purchaseOrderDetail.purchaseOrder.updateTime | momentFormat }}
                                     </p>
                                     <p class="col-filed">
                                         更新人：{{ purchaseOrderDetail.purchaseOrder.updateBy }}（{{ purchaseOrderDetail.purchaseOrder.updatePhone }}）
@@ -170,17 +170,17 @@
                                             <p class="jumbotron-title">采购单变更：{{ item.changeResult | attributeComputed(PurchaseOrderDict.changeResult.list) }}！</p>
                                             <p>
                                                 提交变更人：{{ item.submitBy }}（{{ item.submitPhone }}） 提交变更时间：{{
-                                                item.submitTime | formatDate('YYYY-MM-DD HH:mm:ss')
+                                                item.submitTime | momentFormat
                                             }}
                                             </p>
                                             <p>
                                                 变更备注：{{ item.changeReason || '-' }}
                                             </p>
                                             <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[0].key">
-                                                确认变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 确认变更时间：{{item.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}} 免息方式：{{ item.freeInterestType | attributeComputed(PurchaseOrderDict.freeInterestType.list)}}
+                                                确认变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 确认变更时间：{{item.updateTime | momentFormat}} 免息方式：{{ item.freeInterestType | attributeComputed(PurchaseOrderDict.freeInterestType.list)}}
                                             </p>
                                             <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[1].key">
-                                                驳回变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 驳回变更时间：{{item.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
+                                                驳回变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 驳回变更时间：{{item.updateTime | momentFormat}}
                                             </p>
                                             <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[1].key">
                                                 驳回原因：{{item.remark || '-'}}
@@ -247,7 +247,7 @@
                                         <span>{{ scope.data.row.status | attributeComputed(PaymentOrderDict.status.list) }}</span>
                                     </template>
                                     <template slot="applyAmount" slot-scope="scope">
-                                        <span>{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
+                                        <span>{{ scope.data.row.applyAmount | moneyFormat }}</span>
                                     </template>
                                 </basicTable>
                             </div>

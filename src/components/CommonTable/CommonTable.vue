@@ -25,12 +25,12 @@
                         v-bind="item">
                         <template slot-scope="scope">
                             <slot v-if="item.formatters === 'money'" :name="item.prop" :data="scope">{{scope.row[item.prop] | money}}</slot>
-                            <slot v-else-if="item.formatters === 'moneyShow'" :name="item.prop" :data="scope">{{scope.row[item.prop] | moneyShow}}</slot>
-                            <slot v-else-if="item.formatters === 'fundMoney'" :name="item.prop" :data="scope">{{scope.row[item.prop] | fundMoney}}</slot>
-                            <slot v-else-if="item.formatters === 'fundMoneyHaveSpot'" :name="item.prop" :data="scope">{{scope.row[item.prop] | fundMoneyHaveSpot}}</slot>
-                            <slot v-else-if="item.formatters === 'dateTime'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTime}}</slot>
-                            <slot v-else-if="item.formatters === 'dateTimes'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTimes}}</slot>
-                            <slot v-else-if="item.formatters === 'date'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterDate}}</slot>
+                            <slot v-else-if="item.formatters === 'moneyShow'" :name="item.prop" :data="scope">{{scope.row[item.prop] | moneyFormat}}</slot>
+                            <slot v-else-if="item.formatters === 'fundMoney'" :name="item.prop" :data="scope">{{scope.row[item.prop] | moneyFormat(2, false)}}</slot>
+                            <slot v-else-if="item.formatters === 'fundMoneyHaveSpot'" :name="item.prop" :data="scope">{{scope.row[item.prop] | moneyFormat(2, false)}}</slot>
+                            <slot v-else-if="item.formatters === 'dateTime'" :name="item.prop" :data="scope">{{scope.row[item.prop] | momentFormat}}</slot>
+                            <slot v-else-if="item.formatters === 'dateTimes'" :name="item.prop" :data="scope">{{scope.row[item.prop] | momentFormat('YYYY-MM-DD HH:mm')}}</slot>
+                            <slot v-else-if="item.formatters === 'date'" :name="item.prop" :data="scope">{{scope.row[item.prop] | momentFormat('YYYY-MM-DD')}}</slot>
                             <slot v-else-if="item.colorLeave" :name="item.prop" :data="scope">
                                 <span v-if="scope.row[item.prop] <= item.colorLeave.bound" :class="item.colorLeave.notReach">{{scope.row[item.prop]}}</span>
                                 <span v-else :class="item.colorLeave.reach">{{scope.row[item.prop]}}</span>
@@ -41,11 +41,11 @@
                             <el-table-column v-for="obj in item.tableLabel" :key="obj.label" :label="obj.label" :prop="obj.prop" :sortable="obj.sortable" :align="obj.align?obj.align:'center'" :min-width="obj.width?obj.width:''" :show-overflow-tooltip="true" v-bind="obj">
                                 <template slot-scope="scope">
                                     <slot v-if="obj.formatters === 'money'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | money}}</slot>
-                                    <slot v-else-if="obj.formatters === 'moneyShow'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | moneyShow}}</slot>
-                                    <slot v-else-if="obj.formatters === 'fundMoney'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | fundMoney}}</slot>
-                                    <slot v-else-if="obj.formatters === 'dateTime'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterTime}}</slot>
-                                    <slot v-else-if="obj.formatters === 'dateTimes'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterTimes}}</slot>
-                                    <slot v-else-if="obj.formatters === 'date'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterDate}}</slot>
+                                    <slot v-else-if="obj.formatters === 'moneyShow'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | moneyFormat}}</slot>
+                                    <slot v-else-if="obj.formatters === 'fundMoney'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | moneyFormat(2, false)}}</slot>
+                                    <slot v-else-if="obj.formatters === 'dateTime'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | momentFormat}}</slot>
+                                    <slot v-else-if="obj.formatters === 'dateTimes'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | momentFormat('YYYY-MM-DD HH:mm')}}</slot>
+                                    <slot v-else-if="obj.formatters === 'date'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | momentFormat('YYYY-MM-DD')}}</slot>
                                     <slot v-else :name="obj.prop" :data="scope">{{formatter(scope.row[obj.prop])}}</slot>
                                 </template>
                             </el-table-column>

@@ -135,8 +135,8 @@ export default {
                 this.queryParams.pageNumber = val
             }
             const { ...params } = this.queryParams
-            if (params.startDate) params.startDate = this.$root.$options.filters.formatterTime(params.startDate)
-            if (params.endDate) params.endDate = this.$root.$options.filters.formatterTime(params.endDate)
+            if (params.startDate) params.startDate = this.$root.$options.filters.momentFormat(params.startDate)
+            if (params.endDate) params.endDate = this.$root.$options.filters.momentFormat(params.endDate)
             const { data } = await findActiveList(params)
             this.tableData = data.records
             this.paginationData = {

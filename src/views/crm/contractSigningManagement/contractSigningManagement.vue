@@ -175,7 +175,7 @@
                             </div>
                         </template>
                     </div>
-                    <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
+                    <div class="history-css-right">{{item.operationTime | momentFormat('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
                 </div>
             </div>
             <div class="history-bttom">
