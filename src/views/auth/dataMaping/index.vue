@@ -30,7 +30,10 @@
                                 <template v-for="(item,index) in data.ehrDeptResponseList">
                                     <el-tag closable @close='handleCloseTag(data.ehrDeptResponseList,item,index,node)' size="mini" type="info" :key=item.id>{{item.ehrDeptName}}</el-tag>
                                 </template>
-                                <el-button type="text" size="mini" @click="() => edit(data,'edit')">
+
+                            </span>
+                            <span>
+                                 <el-button type="text" size="mini" @click="() => edit(data,'edit')">
                                     编辑
                                 </el-button>
                                 <el-button type="text" size="mini" @click="() => append(data,'add')">

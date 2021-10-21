@@ -31,6 +31,8 @@
     }
 }
 .page-right-tree {
+    width: 700px;
+    overflow-x: scroll;
     .el-tag {
         margin-right: 10px;
     }
