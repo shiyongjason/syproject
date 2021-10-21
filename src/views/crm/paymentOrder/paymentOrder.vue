@@ -342,7 +342,9 @@ export default {
         queryParamsUseQuery () {
             return {
                 ...this.queryParams,
-                status: this.queryParams.status.join(',')
+                status: this.queryParams.status.join(','),
+                jobNumber: this.userInfo.jobNumber,
+                authCode: JSON.parse(sessionStorage.getItem('authCode'))
             }
         }
     },
