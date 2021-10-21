@@ -74,7 +74,7 @@
                             <template v-if="purchaseOrderDetail.purchaseOrder && purchaseOrderDetail.purchaseOrder.status !== PurchaseOrderDict.status.list[1].key">
                                 <div class="row-filed">
                                     <p class="col-filed">
-                                        采购单金额： {{ purchaseOrderDetail.purchaseOrder.poAmount | fundMoneyHasTail }}元
+                                        采购单金额： {{ purchaseOrderDetail.purchaseOrder.poAmount | moneyFormat }}元
                                     </p>
                                     <template v-if="purchaseOrderDetail.poInfo">
                                         <p class="col-filed">
@@ -247,7 +247,7 @@
                                         <span>{{ scope.data.row.status | attributeComputed(PaymentOrderDict.status.list) }}</span>
                                     </template>
                                     <template slot="applyAmount" slot-scope="scope">
-                                        <span>{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
+                                        <span>{{ scope.data.row.applyAmount | moneyFormat }}</span>
                                     </template>
                                 </basicTable>
                             </div>

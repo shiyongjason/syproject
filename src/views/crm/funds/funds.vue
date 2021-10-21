@@ -70,11 +70,11 @@
                 </el-tab-pane>
             </el-tabs>
             <el-tag size="medium" class="eltagtop">已筛选 {{ fundsListPagination.total }}
-                项,{{ totalLabelName }}总金额：<b>{{ fundsListPagination.amount | fundMoneyHasTail }} </b>元;
+                项,{{ totalLabelName }}总金额：<b>{{ fundsListPagination.amount | moneyFormat }} </b>元;
             </el-tag>
             <basicTable :tableData="fundsList" :tableLabel="tableLabel" :pagination="fundsListPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=290 :isShowIndex='true'>
                 <template slot="paymentAmount" slot-scope="scope">
-                    <span> {{ scope.data.row.paymentAmount | fundMoneyHasTail }}</span>
+                    <span> {{ scope.data.row.paymentAmount | moneyFormat }}</span>
                 </template>
                 <template slot="paymentFlag" slot-scope="scope">
                     <span> {{ scope.data.row.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list) }}</span>
@@ -84,7 +84,7 @@
                     <span v-else>-</span>
                 </template>
                 <template slot="paymentOrderAmount" slot-scope="scope">
-                    <span> {{ scope.data.row.paymentOrderAmount | fundMoneyHasTail }}</span>
+                    <span> {{ scope.data.row.paymentOrderAmount | moneyFormat }}</span>
                 </template>
                 <template slot='customerName' slot-scope='scope'>
                     <span>{{scope.data.row.customerName || '-'}} {{scope.data.row.customerMobile}}</span>

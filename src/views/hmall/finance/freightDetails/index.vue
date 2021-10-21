@@ -14,7 +14,7 @@
                         <i class="icon iconfont hosjoy_money"></i>
                     </div>
                     <div class="balance-col-money">
-                        <p>{{freightBankAccountInfo.totalBalance | moneyShow}}</p>
+                        <p>{{freightBankAccountInfo.totalBalance | moneyFormat}}</p>
                         <p>APP运费总资产<span>（元）</span></p>
                     </div>
 

@@ -97,7 +97,7 @@ export default class EquipmentUpgrade extends Vue {
     // 展示新增/修改升级抽屉
     showDrawer: boolean = false
     isEdit: boolean = false
-    form: Api.UpgradeRequest & { id?: number } = {
+    form: any = {
         type: '',
         version: '',
         remark: '',
@@ -156,7 +156,7 @@ export default class EquipmentUpgrade extends Vue {
             },
             data: {
                 type: this.form.type,
-                factorySecretId: this.factorySecretId
+                factorySecretId: this.factorySecretId || this.form.factorySecretId
             }
         }
     }

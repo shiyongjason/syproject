@@ -12,15 +12,15 @@
         </div>
         <div class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 85px">采购单金额：</font><span>
-                {{ data.poAmount|fundMoneyHasTail}} 元</span></div>
+                {{ data.poAmount|moneyFormat}} 元</span></div>
             <div class="info-layout-item"><font style="flex: 0 0 120px">上游预付款核销金额：</font><span>
-                {{ data.prepaymentWriteOffAmount|fundMoneyHasTail}} 元</span></div>
+                {{ data.prepaymentWriteOffAmount|moneyFormat}} 元</span></div>
         </div>
         <div class="info-layout">
              <div class="info-layout-item"><font style="flex: 0 0 100px">剩余货款金额：</font><span>
-                {{ data.noPayAmount|fundMoneyHasTail}} 元</span></div>
+                {{ data.noPayAmount|moneyFormat}} 元</span></div>
             <div class="info-layout-item"><font style="flex: 0 0 85px">支付单金额：</font><span>
-                {{ data.applyAmount|fundMoneyHasTail}} 元</span></div>
+                {{ data.applyAmount|moneyFormat}} 元</span></div>
         </div>
         <div class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 85px">首付款比例：</font>
@@ -89,7 +89,7 @@
         <div style="margin-left:10px">
         <div class="info_box">
              <div class="info_box-icon"><i class="el-icon-s-claim"></i>预付款到好享家账户</div>
-             <div class="info_box-txt"><font>预付款金额：{{data.advancePaymentAmount|fundMoneyHasTail}}元</font><font> 确认到账时间：{{data.confirmArrivalTime|momentFormat}}</font><font>确认人：{{data.confirmArrivalBy}}</font></div>
+             <div class="info_box-txt"><font>预付款金额：{{data.advancePaymentAmount|moneyFormat}}元</font><font> 确认到账时间：{{data.confirmArrivalTime|momentFormat}}</font><font>确认人：{{data.confirmArrivalBy}}</font></div>
             <div  class="info-layout">
             <div class="info-layout-item">
                 <div class="info-layout-img" v-for="(item,index) in data.advancePaymentVouchers" :key="index">
@@ -143,11 +143,11 @@
             </div>
              <div class="info_box-table--flex" v-for="(item,index) in data.billAmountResponse.billAmountDetail" :key="index">
                 <div class="info_box-table--left">第{{item.number}}张票</div>
-                <div class="info_box-table--left">{{item.amount|fundMoneyHasTail}}</div>
+                <div class="info_box-table--left">{{item.amount|moneyFormat}}</div>
             </div>
              <div class="info_box-table--flex">
                 <div class="info_box-table--left">合计</div>
-                <div class="info_box-table--left">{{data.billAmountResponse.totalAmount|fundMoneyHasTail}}</div>
+                <div class="info_box-table--left">{{data.billAmountResponse.totalAmount|moneyFormat}}</div>
             </div>
         </div>
         <transition name="fade" mode="out-in">
@@ -164,11 +164,11 @@
                     </div>
                     <div class="info_box-table--flex" v-for="(jtem,jndex) in item.billAmountDetail" :key="jndex">
                         <div class="info_box-table--left">第{{jtem.number}}张票</div>
-                        <div class="info_box-table--left">{{jtem.amount|fundMoneyHasTail}}</div>
+                        <div class="info_box-table--left">{{jtem.amount|moneyFormat}}</div>
                     </div>
                     <div class="info_box-table--flex">
                         <div class="info_box-table--left">合计</div>
-                        <div class="info_box-table--left">{{item.totalAmount|fundMoneyHasTail}}</div>
+                        <div class="info_box-table--left">{{item.totalAmount|moneyFormat}}</div>
                     </div>
                 </div>
             </div>

@@ -80,11 +80,11 @@
                 </div>
             </div>
             <el-tag size="medium" class="eltagtop">已筛选 {{ paymentOrderPagination.total }}
-                项,支付单总金额：<b>{{ paymentOrderPagination.amount | fundMoneyHasTail }}</b>元;
+                项,支付单总金额：<b>{{ paymentOrderPagination.amount | moneyFormat }}</b>元;
             </el-tag>
             <basicTable :tableData="paymentOrderList" :tableLabel="tableLabel" :pagination="paymentOrderPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=450 :isShowIndex='true'>
                 <template slot="applyAmount" slot-scope="scope">
-                    <span>{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
+                    <span>{{ scope.data.row.applyAmount | moneyFormat }}</span>
                 </template>
                 <template slot="applyDate" slot-scope="scope">
                     <span>{{ scope.data.row.applyDate | momentFormat }}</span>

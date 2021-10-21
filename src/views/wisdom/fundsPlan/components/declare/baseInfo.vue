@@ -38,7 +38,7 @@
                 <div class="query-cont-col">
                     <el-form-item label="好享家注资占用额：">
                         <div class="w250">
-                            <span>{{fundDetail.fundplanMain.hxjFundAmount | fundMoneyHaveSpot}}&nbsp;万元</span>
+                            <span>{{fundDetail.fundplanMain.hxjFundAmount | moneyFormat(2, false)}}&nbsp;万元</span>
                         </div>
                     </el-form-item>
                 </div>
@@ -98,7 +98,7 @@
                     <el-form-item label="在贷余额：">
                         <div class="w250">
                             <span v-if="!fundDetail.respFundPlanLoan">-</span>
-                            <span v-else>{{fundDetail.respFundPlanLoan.loanBalance | fundMoney}}</span>
+                            <span v-else>{{fundDetail.respFundPlanLoan.loanBalance | moneyFormat(2, false)}}</span>
                             <span class="dw">万元</span>
                         </div>
                     </el-form-item>
@@ -123,7 +123,7 @@
                 <div class="query-cont-col">
                     <el-form-item :label="`当前逾期余额：`">
                         <div class="w250">
-                            <span>{{fundDetail.respFundPlanLoan.overdueAmount | fundMoney}}</span>
+                            <span>{{fundDetail.respFundPlanLoan.overdueAmount | moneyFormat(2, false)}}</span>
                             <span class="dw">万元</span>
                         </div>
                     </el-form-item>

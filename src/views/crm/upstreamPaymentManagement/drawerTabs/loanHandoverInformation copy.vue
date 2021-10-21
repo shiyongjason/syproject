@@ -11,13 +11,13 @@
         </div>
         <div class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 85px">采购单金额：</font><span>
-                {{ data.poAmount|fundMoneyHasTail}} 元</span></div>
+                {{ data.poAmount|moneyFormat}} 元</span></div>
             <div class="info-layout-item"><font style="flex: 0 0 100px">剩余货款金额：</font><span>
-                {{ data.noPayAmount|fundMoneyHasTail}} 元</span></div>
+                {{ data.noPayAmount|moneyFormat}} 元</span></div>
         </div>
         <div class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 85px">支付单金额：</font><span>
-                {{ data.applyAmount|fundMoneyHasTail}} 元</span></div>
+                {{ data.applyAmount|moneyFormat}} 元</span></div>
             <div class="info-layout-item"><font style="flex: 0 0 100px">上游支付方式：</font><span>
                  {{paymentType.get(data.supplierPaymentType)}}
             </span></div>

@@ -18,7 +18,7 @@
                     <el-button size="medium" type="primary"><i class="el-icon-upload file-icon"></i>上 传 文 件</el-button>
                 </HosJoyUpload>
                 <div class="batch_bot">
-                    <span>应支付总额(元)：{{payTotal|fundMoneyHasTail}}</span>
+                    <span>应支付总额(元)：{{payTotal|moneyFormat}}</span>
                     <el-button type="primary" @click="onSubmit">确定并提交</el-button>
                 </div>
             </div>
@@ -30,8 +30,6 @@
 import HosjoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import { ccpBaseUrl } from '@/api/config'
-import { fundMoneyHasTail } from '@/utils/filters'
-
 import { getFundsPayBatch, payVoucherBatch } from './api/index'
 export default {
     name: 'batchpay',
