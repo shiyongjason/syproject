@@ -17,6 +17,8 @@ export const updateServiceUnPay = (params) => axios.patch('/project/api/payment-
 export const updateFinalPay = (params) => axios.patch('/project/api/payment-orders/balance-received', params)
 // boss 资金列表 剩余货款支付确认收到
 export const updateFinalUnPay = (params) => axios.patch('/project/api/payment-orders/balance-not-received', params)
+// boss 资金列表 剩余货款支付确认收到
+export const newFinalUnPay = (params) => axios.put('/project/api/boss/remain-payment/confirm', params)
 
 // 支付凭证保存
 export const payVoucher = (params) => axios.post('/project/api/batch-funds/boss/pay-voucher', params)
@@ -35,3 +37,11 @@ export const payReceived = (params) => axios.patch('/project/api/batch-funds/bos
 export const payNoReceived = (params) => axios.patch('/project/api/batch-funds/boss/pay-not-receive-batch', params)
 // 批量待确认
 export const confirmPay = (params) => axios.get('/project/api/batch-funds/boss/to-be-confirmed', { params })
+// 剩余货款查看凭证
+export const findRemainPayDetail = (params) => axios.get(`/project/api/fund/boss/${params}/remain-payment-detail`)
+// 剩余货款支付
+export const updateRemainPayment = (params) => axios.post('/project/api/fund/boss/remain-payment', params)
+// 支付确认详情
+export const findRemainPayConfirm = (params) => axios.get(`/project/api/fund/boss/${params}/remain-payment-confirm-detail`)
+// 剩余货款支付确认
+export const updateRemainPayConfirm = (params) => axios.put(`/project/api/fund/boss/remain-payment/confirm`, params)

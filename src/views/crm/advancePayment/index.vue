@@ -334,6 +334,7 @@ export default class Advancelist extends Vue {
         distributor: '',
         applyAmount: ''
     }
+    @State('userInfo') userInfo: any
     queryParams:Query = {
         pageSize: 10,
         pageNumber: 1,
@@ -345,6 +346,7 @@ export default class Advancelist extends Vue {
         applyUser: '',
         applyTimeStart: '',
         applyTimeEnd: '',
+        jobNumber: '',
         authCode: sessionStorage.getItem('authCode')
             ? JSON.parse(sessionStorage.getItem('authCode') || '')
             : ''
@@ -386,7 +388,6 @@ export default class Advancelist extends Vue {
 
     ]
     private tableData = []
-    @State('userInfo') userInfo: any
     @Getter('crmmanage/crmdepList') crmdepList!: Array<HCGCommonInterface.Branch>
     @Action('crmmanage/findCrmdeplist') findCrmdeplist!: Function
     get options () {
@@ -445,6 +446,7 @@ export default class Advancelist extends Vue {
     }
 
     public async getList () {
+        this.queryParams.jobNumber = this.userInfo.jobNumber as string
         const res:any = await Promise.all([getPreTotal(this.queryParams), getPrePayList(this.queryParams)])
         this.tableData = res[1].data.records
         this.page.total = res[1].data.total as number
@@ -562,3 +564,7 @@ export default class Advancelist extends Vue {
     }
 }
 </script>
+
+function jobNumber(queryParams: Query, jobNumber: any, jobNumber: any): Query {
+    throw new Error('Function not implemented.')
+}
