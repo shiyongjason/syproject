@@ -325,7 +325,7 @@ export default {
         // 递归处理数据
         resolveData (data, parentIsFold = true, grondIsFold = true, pcategoryName = '') {
             return data.map((item, index, arr) => {
-                item.lastModifyTime = this.$root.$options.filters.formatterTime(item.lastModifyTime)
+                item.lastModifyTime = this.$root.$options.filters.momentFormat(item.lastModifyTime)
                 item.pcategoryName = pcategoryName
 
                 // 在数组中的数据，必定是非折叠的

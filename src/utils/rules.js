@@ -1,11 +1,5 @@
 import * as regular from './regular'
 
-export const PHONE = (rule, value, callback) => {
-    if (!(regular.phoneRegular.test(value))) {
-        return callback(new Error('手机号码格式不正确'))
-    }
-    return callback()
-}
 export const Phone = (rule, value, callback) => {
     if (!(regular.phoneRegular.test(value))) {
         return callback(new Error('手机号码格式不正确'))

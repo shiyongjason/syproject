@@ -6,7 +6,7 @@
                 <div class="td">{{ item.contractName }}</div>
                 <div class="td"><span class="info-status" v-if="item.effectiveState === 1">{{ item.effectiveState | attributeComputed(PurchaseOrderDict.contractIsRunning.list) }}</span></div>
                 <div class="td">{{ item.contractStatus | attributeComputed(PurchaseOrderDict.contractStatus.list) }}</div>
-                <div class="td">{{ item.signedTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</div>
+                <div class="td">{{ item.signedTime | momentFormat }}</div>
                 <div class="td">{{ item.createBy }}</div>
                 <div class="td">
                     <h-button table v-if="hosAuthCheck(CRM_PURCHASE_ORDER_CONTRACT_SEE)" @click="goContractDetail(item.contractId)">查看合同</h-button>

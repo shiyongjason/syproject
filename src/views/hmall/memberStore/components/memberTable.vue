@@ -22,7 +22,7 @@
             </el-table-column>
             <el-table-column align="center" label="申请日期">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.createTime">{{scope.row.createTime | formatterTime}}</span>
+                    <span v-if="scope.row.createTime">{{scope.row.createTime | momentFormat}}</span>
                     <span v-else v-text="'-'"></span>
                 </template>
             </el-table-column>

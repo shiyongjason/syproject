@@ -180,7 +180,7 @@
 import { mapActions, mapState, mapGetters } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { updateDevelopsign } from '../../api'
-import { PHONE, checkIdCard } from '@/utils/rules'
+import { Phone, checkIdCard } from '@/utils/rules'
 export default {
     name: 'signForm',
     props: {
@@ -201,7 +201,7 @@ export default {
                 ],
                 signerPhone: [
                     { required: true, message: '请输入签约人电话', trigger: 'blur' },
-                    { validator: PHONE, trigger: 'blur' }
+                    { validator: Phone, trigger: 'blur' }
                 ],
                 signerId: [
                     { required: true, message: '请输入签约人身份号', trigger: 'blur' },

@@ -8,7 +8,7 @@
                     <ul class="purchase-order-info">
                         <li>
                             <span class="label">采购单金额：</span>
-                            <span>{{ dialogDetail.poInfo.poAmount | fundMoneyHasTail }}元</span>
+                            <span>{{ dialogDetail.poInfo.poAmount | moneyFormat }}元</span>
                         </li>
                         <li class="info-img-group">
                             <span class="label">采购明细表：</span>
