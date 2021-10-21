@@ -31,7 +31,7 @@
             <div class="remian_wrap-bot" v-if="title!='查看凭证'">
                 <span class="mr10"><i class="el-icon-warning" style="color:#E6A23C"></i> 确认到账后，将释放掉经销商 <span>{{item.paymentAmount|fundMoneyHasTail}}</span> 元的剩余代采购额度</span>
             </div>
-            <div class="mt10">
+            <div class="mt10" v-if="title!='查看凭证'">
                 <h-button type="assist" @click="handleReceived(1,item)">确认收到</h-button>
                 <h-button @click="handleReceived(2,item)">并未收到</h-button>
             </div>
