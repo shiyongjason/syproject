@@ -229,6 +229,7 @@ export const CRM_ARREAR_FUND_CONFIRM = 109513 // 尾款账单-支付确认
 export const CRM_REVIEW_RECEIPT_DETAIL = 109514 // 查看收货明细
 export const CRM_PAYMENT_REVIEW_DOWN = 109524
 export const CRM_PAYMENT_UPLOADPAY = 1097001 // 上传凭证
+export const CRM_PAYMENT_CANCEL = 1097002 // 取消支付单
 
 // 好程工 资金
 export const CRM_FUNDS_DOWN_PAYMENT_FUND_CONFIRM = 109515 // 首付款账单-支付确认
@@ -427,3 +428,22 @@ export const AUTH_POSTSET_UPDATE = 13001
 export const AUTH_POSTSET_DELETE = 13002
 export const AUTH_POSTSET_RESET = 13003
 export const AUTH_POSTSET_ADD = 13004
+
+// 好橙工项目 - 点击采购单编号 查看采购单列表 purchaseOrder
+export const PROJECTLIST_LINK_PIRCHASEORDER = 1000001
+// 采购单 - 点击项目编号 查看项目列表 projectlist
+export const PURCHASEORDER_LINK_PROJECTLIST = 1000002
+// 采购单 - 点击支付单编号 查看支付单列表 paymentOrder
+export const PURCHASEORDER_LINK_PAYMENTORDER = 1000003
+// 2.0项目列表 - 点击企业名称 查看企业管理列表 authenlist
+export const PROJECTLIST2_LINK_AUTHENLIST = 1000004
+// 企业管理 - 点击管理员手机号 查看B2B管理 账号管理 需要在B2B 账号管理里面里配置
+export const AUTHENLIST_LINK_ACCOUNTMANAGE_PHONE = 1000005
+// 企业管理 - 点击管理员姓名 查看B2B管理 账号管理 需要在B2B 账号管理里面里配置
+export const AUTHENLIST_LINK_ACCOUNTMANAGE_NAME = 1000006
+// 好橙工信用管理 - 点击企业名称 查看企业管理列表 authenlist
+export const CREDITMANLIST_LINK_AUTHENLIST = 1000007
+// 好橙工VIP管理列表 - 点击企业名称 查看企业管理列表 authenlist
+export const VIPMANLIST_LINK_AUTHENLIST = 1000008
+// 好橙工VIP申请列表 - 点击企业名称 查看企业管理列表 authenlist
+export const APPLICATIONLIST_LINK_AUTHENLIST = 1000009

@@ -90,7 +90,8 @@
             </el-tag>
             <basicTable :tableData="purchaseOrderList" :tableLabel="tableLabel" :pagination="purchaseOrderPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=350 :isShowIndex='true'>
                 <template slot="projectNo" slot-scope="scope">
-                    <span class="link-cell" @click="goProjectDetail(scope.data.row)"> {{ scope.data.row.projectNo }}</span>
+                    <span v-if="hosAuthCheck(Auths.PURCHASEORDER_LINK_PROJECTLIST)" class="link-cell" @click="goProjectDetail(scope.data.row)"> {{ scope.data.row.projectNo }}</span>
+                    <span v-else>{{ scope.data.row.projectNo }}</span>
                 </template>
                 <template slot="poAmount" slot-scope="scope">
                     <span> {{ scope.data.row.poAmount | moneyFormat }}</span>
