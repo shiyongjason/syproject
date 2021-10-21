@@ -272,9 +272,9 @@ export default {
         },
         queryParamsUseQuery () {
             return {
-                ...this.queryParams
-                // authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '',
-                // jobNumber: this.userInfo.jobNumber
+                ...this.queryParams,
+                authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '',
+                jobNumber: this.userInfo.jobNumber
             }
         }
     },
