@@ -23,7 +23,7 @@ const money = function (value, int) {
  *
  * @param {*} val 要格式化的原始数据
  * @param {Integer} decimalPlaces 正整数，保留小数位
- * @param {boolean} hasPad 小数不满足位数时，是否使用0进行补充，默认true
+ * @param {boolean} hasPad 小数不满足位数时，是否使用0进行补充，默认true，且hasPad = false时，decimalPlaces无效
  */
 const moneyFormat = function (val, decimalPlaces = 2, hasPad = true) {
     if (val) {

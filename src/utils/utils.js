@@ -27,6 +27,19 @@ export function deepCopy (object) {
     }
     return resultObject
 }
+
+// 数组判断是否重复
+export function isRepeat (arr) {
+    let obj = {}
+    for (let i in arr) {
+        if (obj[arr[i]]) {
+            return true
+        }
+        obj[arr[i]] = true
+    }
+    return false
+}
+
 export const ossDownload = (url, fileName, ext = '') => {
     let downDom = document.createElement('a')
     if (fileName.toLowerCase().indexOf('.png') !== -1 || fileName.toLowerCase().indexOf('.jpg') !== -1 || fileName.toLowerCase().indexOf('.jpeg') !== -1) {
