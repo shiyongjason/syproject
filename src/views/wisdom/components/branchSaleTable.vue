@@ -15,11 +15,11 @@
                 </template>
                 <template slot-scope="scope" slot="overallActual">
                     <span v-if="scope.data.row.overallActual === null || scope.data.row.overallActual === '-'">-</span>
-                    <span v-else>{{scope.data.row.overallActual | money}}</span>
+                    <span v-else>{{scope.data.row.overallActual | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="overallGoal">
                     <span v-if="scope.data.row.overallGoal === null || scope.data.row.overallGoal === '-'">-</span>
-                    <span v-else>{{scope.data.row.overallGoal | money}}</span>
+                    <span v-else>{{scope.data.row.overallGoal | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="overallAchievementRate">
                     <span v-if="scope.data.row.overallAchievementRate === null || scope.data.row.overallAchievementRate === '-'">-</span>
@@ -27,12 +27,12 @@
                 </template>
                 <template slot-scope="scope" slot="overallGap">
                     <span v-if="scope.data.row.overallGoal === null || scope.data.row.overallGoal === '-'">-</span>
-                    <span v-else-if="scope.data.row.overallGap > 0" style="color: red">{{scope.data.row.overallGap | money}}</span>
+                    <span v-else-if="scope.data.row.overallGap > 0" style="color: red">{{scope.data.row.overallGap | moneyFormat(3, false)}}</span>
                     <span v-else>0</span>
                 </template>
                 <template slot-scope="scope" slot="ringRatioUpperMoon">
                     <span v-if="scope.data.row.ringRatioUpperMoon === null || scope.data.row.ringRatioUpperMoon === '-'">-</span>
-                    <span v-else>{{scope.data.row.ringRatioUpperMoon | money}}</span>
+                    <span v-else>{{scope.data.row.ringRatioUpperMoon | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="ringRatio">
                     <span v-if="scope.data.row.ringRatio === null || scope.data.row.ringRatio === '-'">-</span>
@@ -40,7 +40,7 @@
                 </template>
                 <template slot-scope="scope" slot="compositePeriod">
                     <span v-if="scope.data.row.compositePeriod === null || scope.data.row.compositePeriod === '-'">-</span>
-                    <span v-else>{{scope.data.row.compositePeriod | money}}</span>
+                    <span v-else>{{scope.data.row.compositePeriod | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="compoundYearOnYear">
                     <span v-if="scope.data.row.compoundYearOnYear === null || scope.data.row.compoundYearOnYear === '-'">-</span>
@@ -48,7 +48,7 @@
                 </template>
                 <template slot-scope="scope" slot="comparablePeriod">
                     <span v-if="scope.data.row.comparablePeriod === null || scope.data.row.comparablePeriod === '-'">-</span>
-                    <span v-else>{{scope.data.row.comparablePeriod | money}}</span>
+                    <span v-else>{{scope.data.row.comparablePeriod | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="comparableYearOnYear">
                     <span v-if="scope.data.row.comparableYearOnYear === null || scope.data.row.comparableYearOnYear === '-'">-</span>
@@ -56,11 +56,11 @@
                 </template>
                 <template slot-scope="scope" slot="stockActual">
                     <span v-if="scope.data.row.stockActual === null || scope.data.row.stockActual === '-'">-</span>
-                    <span v-else>{{scope.data.row.stockActual | money}}</span>
+                    <span v-else>{{scope.data.row.stockActual | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="stockTarget">
                     <span v-if="scope.data.row.stockTarget === null || scope.data.row.stockTarget === '-'">-</span>
-                    <span v-else>{{scope.data.row.stockTarget | money}}</span>
+                    <span v-else>{{scope.data.row.stockTarget | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="stockAchievementRate">
                     <span v-if="scope.data.row.stockAchievementRate === null || scope.data.row.stockAchievementRate === '-'">-</span>
@@ -68,7 +68,7 @@
                 </template>
                 <template slot-scope="scope" slot="stockSamePeriod">
                     <span v-if="scope.data.row.stockSamePeriod === null || scope.data.row.stockSamePeriod === '-'">-</span>
-                    <span v-else>{{scope.data.row.stockSamePeriod | money}}</span>
+                    <span v-else>{{scope.data.row.stockSamePeriod | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="stockYearOnYear">
                     <span v-if="scope.data.row.stockYearOnYear === null || scope.data.row.stockYearOnYear === '-'">-</span>
@@ -80,11 +80,11 @@
                 </template>
                 <template slot-scope="scope" slot="incrementActual">
                     <span v-if="scope.data.row.incrementActual === null || scope.data.row.incrementActual === '-'">-</span>
-                    <span v-else>{{scope.data.row.incrementActual | money}}</span>
+                    <span v-else>{{scope.data.row.incrementActual | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="incrementTarget">
                     <span v-if="scope.data.row.incrementTarget === null || scope.data.row.incrementTarget === '-'">-</span>
-                    <span v-else>{{scope.data.row.incrementTarget | money}}</span>
+                    <span v-else>{{scope.data.row.incrementTarget | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="incrementAchievingRate">
                     <span v-if="scope.data.row.incrementAchievingRate === null || scope.data.row.incrementAchievingRate === '-'">-</span>
@@ -96,11 +96,11 @@
                 </template>
                 <template slot-scope="scope" slot="annualAccumulation">
                     <span v-if="scope.data.row.annualAccumulation === null || scope.data.row.annualAccumulation === '-'">-</span>
-                    <span v-else>{{scope.data.row.annualAccumulation | money}}</span>
+                    <span v-else>{{scope.data.row.annualAccumulation | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="annualTarget">
                     <span v-if="scope.data.row.annualTarget === null || scope.data.row.annualTarget === '-'">-</span>
-                    <span v-else>{{scope.data.row.annualTarget | money}}</span>
+                    <span v-else>{{scope.data.row.annualTarget | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="annualAchievingRate">
                     <span v-if="scope.data.row.annualAchievingRate === null || scope.data.row.annualAchievingRate === '-'">-</span>
@@ -108,16 +108,16 @@
                 </template>
                 <template slot-scope="scope" slot="annualCumulativeGap">
                     <span v-if="scope.data.row.annualCumulativeGap === null || scope.data.row.annualCumulativeGap === '-'">-</span>
-                    <span v-else-if="scope.data.row.annualCumulativeGap > 0" style="color: red">{{scope.data.row.annualCumulativeGap | money}}</span>
+                    <span v-else-if="scope.data.row.annualCumulativeGap > 0" style="color: red">{{scope.data.row.annualCumulativeGap | moneyFormat(3, false)}}</span>
                     <span v-else>0</span>
                 </template>
                 <template slot-scope="scope" slot="annualStockReached">
                     <span v-if="scope.data.row.annualStockReached === null || scope.data.row.annualStockReached === '-'">-</span>
-                    <span v-else>{{scope.data.row.annualStockReached | money}}</span>
+                    <span v-else>{{scope.data.row.annualStockReached | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="annualStockTarget">
                     <span v-if="scope.data.row.annualStockTarget === null || scope.data.row.annualStockTarget === '-'">-</span>
-                    <span v-else>{{scope.data.row.annualStockTarget | money}}</span>
+                    <span v-else>{{scope.data.row.annualStockTarget | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="annualStockCompletionRate">
                     <span v-if="scope.data.row.annualStockCompletionRate === null || scope.data.row.annualStockCompletionRate === '-'">-</span>
@@ -125,11 +125,11 @@
                 </template>
                 <template slot-scope="scope" slot="annualIncrementalAchievement">
                     <span v-if="scope.data.row.annualIncrementalAchievement === null || scope.data.row.annualIncrementalAchievement === '-'">-</span>
-                    <span v-else>{{scope.data.row.annualIncrementalAchievement | money}}</span>
+                    <span v-else>{{scope.data.row.annualIncrementalAchievement | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="annualIncrementalGoal">
                     <span v-if="scope.data.row.annualIncrementalGoal === null || scope.data.row.annualIncrementalGoal === '-'">-</span>
-                    <span v-else>{{scope.data.row.annualIncrementalGoal | money}}</span>
+                    <span v-else>{{scope.data.row.annualIncrementalGoal | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="annualIncrementalAchievementRate">
                     <span v-if="scope.data.row.annualIncrementalAchievementRate === null || scope.data.row.annualIncrementalAchievementRate === '-'">-</span>
