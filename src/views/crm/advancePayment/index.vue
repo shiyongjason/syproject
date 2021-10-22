@@ -69,7 +69,7 @@
                 </template>
             </hosJoyTable>
         </div>
-        <el-dialog title="上游预付款支付单详情" :visible.sync="dialogVisible" width="600px" :close-on-click-modal=false :before-close="()=>{dialogVisible = false}">
+        <el-dialog title="上游预付款支付单详情" :visible.sync="dialogVisible" width="700px" :close-on-click-modal=false :before-close="()=>{dialogVisible = false}">
             <div class="advance_wrap">
                 <h3>项目信息</h3>
                 <el-row type="flex" class="row-bg">
@@ -83,7 +83,7 @@
                     <el-col :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
                 </el-row>
                 <el-row>
-                   <el-col :span="16" :offset='1'>付款主体：{{detailForm.paymentCompanyName||'-'}}</el-col>
+                    <el-col :span="16" :offset='1'>付款主体：{{detailForm.paymentCompanyName||'-'}}</el-col>
                 </el-row>
                 <el-row type="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>上游供应商：{{detailForm.supplierCompanyName||'-'}}</el-col>
@@ -101,22 +101,29 @@
                     <el-col :span="10" :offset='1'>申请时间：{{moment(detailForm.applyTime).format('yyyy-MM-DD HH:mm:ss')||'-'}}</el-col>
                     <el-col :span="10" :offset='1'>申请人：{{detailForm.applyUser||'-'}}</el-col>
                 </el-row>
-
+                <el-row ype="flex" class="row-bg">
+                    <el-col :span="10" :offset='1'>分财审核人：{{detailForm.approvalUser||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>审核时间：{{detailForm.approvalTime?moment(detailForm.approvalTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
+                </el-row>
+                <el-row ype="flex" class="row-bg">
+                    <el-col :span="10" :offset='1'>审核结果：{{detailForm.approvalStatus==1?'通过':detailForm.approvalStatus==2?'不通过':'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>审核备注：{{detailForm.approvalRemark||'-'}}</el-col>
+                </el-row>
                 <el-row ype="flex" class="row-bg" v-if="detailForm.approvalUser">
-                    <el-col :span="10" :offset='1'>审核人：{{detailForm.approvalUser||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>项目运营审核人：{{detailForm.approvalUser||'-'}}</el-col>
                     <el-col :span="10" :offset='1'>审核时间：{{detailForm.approvalTime?moment(detailForm.approvalTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg" v-if="detailForm.approvalUser">
                     <el-col :span="10" :offset='1'>审核结果：{{detailForm.approvalStatus==1?'通过':detailForm.approvalStatus==2?'不通过':'-'}}</el-col>
                     <el-col :span="10" :offset='1'>审核备注：{{detailForm.approvalRemark||'-'}}</el-col>
                 </el-row>
-                    <el-row ype="flex" class="row-bg">
+                <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>核销人：{{detailForm.writeOffUser||'-'}}</el-col>
                     <el-col :span="10" :offset='1'>核销时间：{{detailForm.writeOffTime?moment(detailForm.writeOffTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
 
                 </el-row>
                 <el-row>
-                      <el-col :span="20" :offset='1'>核销原因：{{detailForm.writeOffRemark||'-'}}</el-col>
+                    <el-col :span="20" :offset='1'>核销原因：{{detailForm.writeOffRemark||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>应向上游支付(元)：{{detailForm.totalAmount|fundMoneyHasTail}}</el-col>
@@ -176,7 +183,7 @@
                     </el-row>
                 </div>
                 <div class="advance_examine-right">
-                    <h3>审核信息</h3>
+                    <h3>分财审核信息</h3>
                     <el-form :model="auditForm" :rules="auditRules" ref="auditForm" label-width="100px" class="demo-ruleForm">
                         <el-form-item label="审核结果：" prop="resource">
                             <el-radio-group v-model="auditForm.resource">
@@ -186,6 +193,18 @@
                         </el-form-item>
                         <el-form-item label="审核备注：" prop="remark" v-if="auditForm.resource=='不通过'">
                             <el-input type="textarea" v-model="auditForm.remark" maxlength="200"></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <h3>项目运营审核信息</h3>
+                    <el-form :model="operateForm" :rules="auditRules" ref="auditForm" label-width="100px" class="demo-ruleForm">
+                        <el-form-item label="审核结果：" prop="resource">
+                            <el-radio-group v-model="operateForm.resource">
+                                <el-radio label="通过"></el-radio>
+                                <el-radio label="不通过"></el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="审核备注：" prop="remark" v-if="operateForm.resource=='不通过'">
+                            <el-input type="textarea" v-model="operateForm.remark" maxlength="200"></el-input>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -273,7 +292,6 @@
 import moment from 'moment'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
-import { CreateElement } from 'vue'
 import { Action, Getter, State } from 'vuex-class'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
 import ImageAddToken from '@/components/imageAddToken/index.vue'
@@ -361,6 +379,10 @@ export default class Advancelist extends Vue {
     }
     detailForm:PrepaymentDetailResponse = {} as PrepaymentDetailResponse
     auditForm = {
+        resource: '',
+        remark: ''
+    }
+    operateForm = {
         resource: '',
         remark: ''
     }
