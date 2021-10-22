@@ -51,7 +51,7 @@
                 </div>
             </div>
 
-            <el-tag size="medium" class="eltagtop">已筛选 {{vipManagedata.total||0}}； VIP：{{vipPageLoan.vipCount||0}}； VIP目标总额（万元）：{{vipPageLoan.totalTarget||0 |money}} </el-tag>
+            <el-tag size="medium" class="eltagtop">已筛选 {{vipManagedata.total||0}}； VIP：{{vipPageLoan.vipCount||0}}； VIP目标总额（万元）：{{vipPageLoan.totalTarget||0 |moneyFormat(3, false)}} </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :isShowIndex='true'>
                 <template slot="companyName" slot-scope="scope">
                     <span v-if="hosAuthCheck(auths.VIPMANLIST_LINK_AUTHENLIST)" @click="onLinkCom(scope.data.row)" class="link-cell">{{scope.data.row.companyName}}</span>
