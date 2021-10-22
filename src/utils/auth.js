@@ -32,17 +32,17 @@ export const makeMenus = (Route, Data) => {
 }
 
 // 拍平后端返回的权限数据
-export const handleMenuResources = (data, resourceList) => {
+export const handleMenuResources = (data, resourceList, level = 1) => {
     data && data.forEach(item => {
         const url = item.authUri || item.resourceAddress
         if (url) {
-            resourceList.push({ url: url, authCode: item.authCode })
+            resourceList.push({ url: url, authCode: item.authCode, level: level })
         }
         if (item.childAuthList) {
-            handleMenuResources(item.childAuthList, resourceList)
+            handleMenuResources(item.childAuthList, resourceList, 2)
         }
         if (item.authResourceList) {
-            handleMenuResources(item.authResourceList, resourceList)
+            handleMenuResources(item.authResourceList, resourceList, 3)
         }
     })
 }

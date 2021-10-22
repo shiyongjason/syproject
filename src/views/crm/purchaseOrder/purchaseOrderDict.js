@@ -103,10 +103,10 @@ const PurchaseOrderDict = Object.freeze({
                 value: '分财审核未通过'
             }, {
                 key: 4,
-                value: '待风控审核'
+                value: '待运营审核'
             }, {
                 key: 5,
-                value: '风控审核未通过'
+                value: '运营审核未通过'
             }, {
                 key: 6,
                 value: '待法务审核'

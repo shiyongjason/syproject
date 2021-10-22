@@ -85,7 +85,8 @@
             <el-tag size="medium" class="eltagtop">已筛选 {{vipApply.total||0}} 项</el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=200 :isShowIndex='true'>
                 <template slot="companyName" slot-scope="scope">
-                    <span @click="onLinkCom(scope.data.row)" class="link-cell">{{scope.data.row.companyName}}</span>
+                    <span v-if="hosAuthCheck(auths.APPLICATIONLIST_LINK_AUTHENLIST)" @click="onLinkCom(scope.data.row)" class="link-cell">{{scope.data.row.companyName}}</span>
+                    <span v-else>{{scope.data.row.companyName}}</span>
                 </template>
                 <template slot="assignedUserId" slot-scope="scope">
                     {{scope.data.row.assignedUserId?'是':'否'}}

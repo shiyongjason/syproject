@@ -437,8 +437,8 @@ export default [
                 path: 'noTempApprove',
                 name: 'noTempApprove',
                 meta: {
-                    title: '分财(风控/法务)审核',
-                    tagName: '分财(风控/法务)审核',
+                    title: '分财(运营/法务)审核',
+                    tagName: '分财(运营/法务)审核',
                     parentName: '好橙工',
                     isMenu: false,
                     icon: ''
