@@ -112,7 +112,7 @@ export default {
             tableLabel: [
                 { label: '公司简称', prop: 'companyShortName', choosed: true, minWidth: 100 },
                 { label: '公司编码', prop: 'misCode', choosed: true, width: 100 },
-                { label: '地域', prop: 'subsectionName', choosed: true, width: 100 },
+                { label: '地域', prop: 'organizationNames', choosed: true, width: 120 },
                 { label: '所在城市', prop: 'cityName', choosed: true, width: 100 },
                 { label: '上线时间', prop: 'onlineTime', choosed: true, minWidth: 100 },
                 { label: '增量/存量', prop: 'incremental', choosed: true, width: 100 },

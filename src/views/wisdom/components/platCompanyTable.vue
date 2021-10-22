@@ -71,7 +71,7 @@ export default {
             tableLabel: [
                 { label: '编码', prop: 'misCode', width: 100 },
                 { label: '公司简称', prop: 'companyShortName', choosed: true, width: 100 },
-                { label: '地域', prop: 'subsectionName', choosed: true, width: 100 },
+                { label: '地域', prop: 'organizationNames', choosed: true, width: 130 },
                 { label: '省份', prop: 'provinceName', choosed: true, width: 100 },
                 { label: '城市', prop: 'cityName', choosed: true, width: 100 },
                 { label: '上线', prop: 'cityName', choosed: true, width: 100 },
