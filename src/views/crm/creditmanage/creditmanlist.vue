@@ -53,11 +53,6 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">信用到期时间：</div>
                     <div class="query-col__input">
-                        <!-- <el-date-picker v-model="queryParams.minEndTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxEndTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsMin">
-                        </el-date-picker> -->
                         <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
                         </HDatePicker>
                     </div>
@@ -166,8 +161,8 @@ export default {
                 { label: '状态', prop: 'status' },
                 { label: '资料状态', prop: 'documentStatus' },
                 { label: '资料更新时间', prop: 'documentUpdateTime', formatters: 'dateTimes' },
-                { label: '更新时间', prop: 'updateTime', formatters: 'dateTimes' }
-
+                { label: '更新时间', prop: 'updateTime', formatters: 'dateTimes' },
+                { label: '首次评级时间', prop: 'updateTime', formatters: 'dateTimes' }
             ],
             tableData: [],
             branchArr: [],
