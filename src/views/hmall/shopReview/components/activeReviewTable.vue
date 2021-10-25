@@ -58,7 +58,7 @@
                 align="center"
                 label="创建时间">
                 <template slot-scope="scope">
-                    {{scope.row.createTime | formatterTime}}
+                    {{scope.row.createTime | momentFormat}}
                 </template>
             </el-table-column>
             <el-table-column

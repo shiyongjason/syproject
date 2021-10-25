@@ -4,11 +4,11 @@
             <div class="tab-pane">
                 <p>
                     <span>应到货金额总计：</span>
-                    <span class="orange-main">{{ receiptDetail.totalAmount | fundMoneyHasTail }}元</span>
+                    <span class="orange-main">{{ receiptDetail.totalAmount | moneyFormat }}元</span>
                 </p>
                 <p>
                     <span>已到货金额总计：</span>
-                    <span class="orange-main">{{ receiptDetail.goodsAmount  | fundMoneyHasTail }}元</span>
+                    <span class="orange-main">{{ receiptDetail.goodsAmount  | moneyFormat }}元</span>
                 </p>
             </div>
             <ul>
@@ -16,9 +16,9 @@
                     <p>
                         <span class="icon">{{ index + 1 }}</span>
                         <span class="label">本次到货金额：</span>
-                        <span class="orange-main">{{ item.goodsAmount | fundMoneyHasTail }}元</span>
+                        <span class="orange-main">{{ item.goodsAmount | moneyFormat }}元</span>
                         <span class="info">{{
-                                item.createTime | formatDate('YYYY-MM-DD HH:mm:ss')
+                                item.createTime | momentFormat
                             }} {{ item.createBy }}（{{ item.createPhone }}）</span>
                     </p>
                     <div class="info-img-group">

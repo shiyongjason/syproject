@@ -76,7 +76,7 @@
                     <el-form-item label="认证状态：" :label-width="formLabelWidth">
                         {{bossDetail.isAuthentication==true?'已认证':'未认证'}}
                         <template v-if="bossDetail.authenticationTime">
-                            {{bossDetail.authenticationTime | formatterTime}}
+                            {{bossDetail.authenticationTime | momentFormat}}
                         </template>
                     </el-form-item>
                     <el-form-item label="商家角色：" prop="type" :label-width="formLabelWidth" v-if="type==='merchant'">
@@ -93,10 +93,10 @@
                         <p v-if="bossDetail.staff.length==0">-</p>
                     </el-form-item>
                     <el-form-item label="注册时间：" :label-width="formLabelWidth">
-                        {{bossDetail.registrationTime | formatterTime}}
+                        {{bossDetail.registrationTime | momentFormat}}
                     </el-form-item>
                     <el-form-item label="最近更新时间：" :label-width="formLabelWidth">
-                        {{bossDetail.updateTime | formatterTime}}
+                        {{bossDetail.updateTime | momentFormat}}
                     </el-form-item>
                     <el-form-item label="最近维护人：" :label-width="formLabelWidth">
                         {{bossDetail.updateBy?bossDetail.updateBy:'-'}} {{bossDetail.updatePhone}}

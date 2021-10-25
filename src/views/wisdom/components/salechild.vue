@@ -11,8 +11,8 @@
                 </div>
                 <div class="sale-wrap">
                     <span>整体</span>
-                    <span>{{sellData.overallReach|money}}</span>
-                    <span>{{sellData.overallTarget|money}}</span>
+                    <span>{{sellData.overallReach|moneyFormat(3, false)}}</span>
+                    <span>{{sellData.overallTarget|moneyFormat(3, false)}}</span>
                     <span>{{sellData.overallAchievingRate?parseFloat(sellData.overallAchievingRate).toFixed(1):0}}%<br>
                         <el-progress
                             :stroke-width="7"
@@ -21,14 +21,14 @@
                             :color='sellData.overallAchievingRateNew<50?"red":sellData.overallAchievingRateNew<80?"orange":"lightgreen"'
                         ></el-progress>
                     </span>
-                    <span :class="{redspan:sellData.overallGap>0}">{{(sellData.overallGap>0?sellData.overallGap:0)|money}}</span>
+                    <span :class="{redspan:sellData.overallGap>0}">{{(sellData.overallGap>0?sellData.overallGap:0)|moneyFormat(3, false)}}</span>
 
                 </div>
                 <div class="sale-wrap">
                     <span>存量</span>
-                     <span>{{(sellData.stockReach?sellData.stockReach:'-')|money}}</span>
-                    <!-- <span v-if="sellData.stockReach">{{sellData.stockReach|money}}</span> <span v-if="!sellData.stockReach">-</span> -->
-                    <span>{{(sellData.stockTarget?sellData.stockTarget:'-')|money}}</span>
+                     <span>{{(sellData.stockReach?sellData.stockReach:'-')|moneyFormat(3, false)}}</span>
+                    <!-- <span v-if="sellData.stockReach">{{sellData.stockReach|moneyFormat(3, false)}}</span> <span v-if="!sellData.stockReach">-</span> -->
+                    <span>{{(sellData.stockTarget?sellData.stockTarget:'-')|moneyFormat(3, false)}}</span>
                     <span>{{sellData.stockAchievingRate?parseFloat(sellData.stockAchievingRate).toFixed(1):0}}%<br>
                         <el-progress
                             :stroke-width="7"
@@ -37,13 +37,13 @@
                             :color='sellData.stockAchievingRateNew<50?"red":sellData.stockAchievingRateNew<80?"orange":"lightgreen"'
                         ></el-progress>
                     </span>
-                    <span :class="{redspan:sellData.stockGap>0}">{{(sellData.stockGap>0?sellData.stockGap:0)|money}}</span>
+                    <span :class="{redspan:sellData.stockGap>0}">{{(sellData.stockGap>0?sellData.stockGap:0)|moneyFormat(3, false)}}</span>
 
                 </div>
                 <div class="sale-wrap">
                     <span>增量</span>
-                    <span>{{sellData.incrementReach|money}}</span>
-                    <span>{{(sellData.incrementTarget?sellData.incrementTarget:'-')|money}}</span>
+                    <span>{{sellData.incrementReach|moneyFormat(3, false)}}</span>
+                    <span>{{(sellData.incrementTarget?sellData.incrementTarget:'-')|moneyFormat(3, false)}}</span>
                     <span>{{sellData.incrementAchievingRate?parseFloat(sellData.incrementAchievingRate).toFixed(1):0}}%<br>
                         <el-progress
                             :stroke-width="7"
@@ -52,7 +52,7 @@
                             :color='sellData.incrementAchievingRateNew<50?"red":sellData.incrementAchievingRateNew<80?"orange":"lightgreen"'
                         ></el-progress>
                     </span>
-                    <span :class="{redspan:sellData.incrementGap>0}">{{(sellData.incrementGap>0?sellData.incrementGap:0)|money}}</span>
+                    <span :class="{redspan:sellData.incrementGap>0}">{{(sellData.incrementGap>0?sellData.incrementGap:0)|moneyFormat(3, false)}}</span>
                 </div>
             </div>
             <div class="sale-l-bottom">

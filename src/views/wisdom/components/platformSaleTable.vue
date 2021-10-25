@@ -12,7 +12,7 @@
                 <!-- 颜色 -->
                 <template slot-scope="scope" slot="gap">
                     <span v-if="scope.data.row.gap === null || scope.data.row.gap === '-' || scope.data.row.gap === ''">-</span>
-                    <span v-else-if="scope.data.row.gap > 0" style="color: red">{{scope.data.row.gap | money}}</span>
+                    <span v-else-if="scope.data.row.gap > 0" style="color: red">{{scope.data.row.gap | moneyFormat(3, false)}}</span>
                     <span v-else>0</span>
                 </template>
                 <template slot-scope="scope" slot="linkRelativeRatio">
@@ -35,23 +35,23 @@
                 <!-- 金额 -->
                 <template slot-scope="scope" slot="totalOrderFee">
                     <span v-if="scope.data.row.totalOrderFee === null || scope.data.row.totalOrderFee === '-'">-</span>
-                    <span v-else>{{scope.data.row.totalOrderFee | money}}</span>
+                    <span v-else>{{scope.data.row.totalOrderFee | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="target">
                     <span v-if="scope.data.row.target === null || scope.data.row.target === '-'">-</span>
-                    <span v-else>{{scope.data.row.target | money}}</span>
+                    <span v-else>{{scope.data.row.target | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="lastMonthSale">
                     <span v-if="scope.data.row.lastMonthSale === null || scope.data.row.lastMonthSale === '-'">-</span>
-                    <span v-else>{{scope.data.row.lastMonthSale | money}}</span>
+                    <span v-else>{{scope.data.row.lastMonthSale | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="yearSaleReal">
                     <span v-if="scope.data.row.yearSaleReal === null || scope.data.row.yearSaleReal === '-'">-</span>
-                    <span v-else>{{scope.data.row.yearSaleReal | money}}</span>
+                    <span v-else>{{scope.data.row.yearSaleReal | moneyFormat(3, false)}}</span>
                 </template>
                 <template slot-scope="scope" slot="yearTarget">
                     <span v-if="scope.data.row.yearTarget === null || scope.data.row.yearTarget === '-'">-</span>
-                    <span v-else>{{scope.data.row.yearTarget | money}}</span>
+                    <span v-else>{{scope.data.row.yearTarget | moneyFormat(3, false)}}</span>
                 </template>
             </basicTable>
             <div class="page clearfix" style="text-align: right;margin-top: 20px">

@@ -131,7 +131,7 @@
                     {{scope.data.row.isEnabled==0?'禁用':'启用'}}
                 </template>
                 <template slot="authenticationTime" slot-scope="scope">
-                    {{scope.data.row.authenticationTime | formatDate}}
+                    {{scope.data.row.authenticationTime | momentFormat}}
                 </template>
                 <template slot="fundAuthorization" slot-scope="scope">
                     {{openingStatusMap.get(scope.data.row.fundAuthorization)}}

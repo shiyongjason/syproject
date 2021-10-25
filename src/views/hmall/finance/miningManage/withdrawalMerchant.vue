@@ -11,7 +11,7 @@
                     </el-form-item>
                     <el-form-item label="提现金额" prop="amount">
                         <el-input v-model="withdrawalForm.amount" placeholder="请填写"></el-input>
-                        <span style="margin-left: 20px">可提现金额{{agentBankAccountInfo.totalBalance | moneyShow}}元</span>
+                        <span style="margin-left: 20px">可提现金额{{agentBankAccountInfo.totalBalance | moneyFormat}}元</span>
                     </el-form-item>
                     <el-form-item label="验证码" prop="smsCode">
                         <el-input v-model="withdrawalForm.smsCode" placeholder="请填写" maxlength="6"></el-input>

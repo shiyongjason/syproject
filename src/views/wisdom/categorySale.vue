@@ -86,16 +86,16 @@
                         {{scope.data.row.grossProfitRate?scope.data.row.grossProfitRate+'%':'-'}}
                     </template>
                     <template slot-scope="scope" slot="saleGross">
-                        {{scope.data.row.saleGross|money}}
+                        {{scope.data.row.saleGross|moneyFormat(3, false)}}
                     </template>
                     <template slot-scope="scope" slot="yearOverYearSale">
-                        {{scope.data.row.yearOverYearSale|money}}
+                        {{scope.data.row.yearOverYearSale|moneyFormat(3, false)}}
                     </template>
                     <template slot-scope="scope" slot="orderCost">
-                        {{scope.data.row.orderCost|money}}
+                        {{scope.data.row.orderCost|moneyFormat(3, false)}}
                     </template>
                     <!-- <template slot-scope="scope" slot="grossProfit">
-                        {{scope.data.row.grossProfit|money}}
+                        {{scope.data.row.grossProfit|moneyFormat(3, false)}}
                     </template> -->
                 </basicTable>
             </div>
