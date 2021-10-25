@@ -36,7 +36,7 @@
                         <p><span class="star">*</span>执行费率（银行转账）：{{approveForm.transferBankRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                     </div>
                     <div class="approve_flex">
-                        <p><span class="star">*</span>最大采购总额：{{approveForm.maxPurchaseAmount | fundMoneyHasTail}}元 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                        <p><span class="star">*</span>最大采购总额：{{approveForm.maxPurchaseAmount | moneyFormat}}元 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                         <p><span class="star">*</span>经销商首付款比例：{{approveForm.advancePaymentRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                     </div>
                     <div class="approve_flex">

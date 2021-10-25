@@ -5,7 +5,7 @@
                 <div class="row">
                     <p>
                         <span>应向上游支付：</span>
-                        <span class="orange-main">{{ prevPaymentDetail.totalAmount | fundMoneyHasTail }}元</span>
+                        <span class="orange-main">{{ prevPaymentDetail.totalAmount | moneyFormat }}元</span>
                     </p>
                     <p>
                         <span>上游支付方式：</span>
@@ -15,7 +15,7 @@
                 <div class="row">
                     <p>
                         <span>已向上游支付：</span>
-                        <span class="orange-main">{{ prevPaymentDetail.paidAmount  | fundMoneyHasTail }}元</span>
+                        <span class="orange-main">{{ prevPaymentDetail.paidAmount  | moneyFormat }}元</span>
                     </p>
                     <p>
                         <span>上游货款方式：</span>
@@ -28,8 +28,8 @@
                     <p class="head">
                         <span class="icon">{{index + 1}}</span>
                         <span class="label">本次上游支付：</span>
-                        <span class="orange-main">{{ item.payAmount | fundMoneyHasTail }}元</span>
-                        <span class="info">{{ item.createTime | formatDate('YYYY-MM-DD HH:mm:ss') }} {{ item.createBy }}（{{ item.createPhone||'-' }}）</span>
+                        <span class="orange-main">{{ item.payAmount | moneyFormat }}元</span>
+                        <span class="info">{{ item.createTime | momentFormat }} {{ item.createBy }}（{{ item.createPhone||'-' }}）</span>
                     </p>
                     <!-- <p style="margin-top:10px">
                         <span class="label">

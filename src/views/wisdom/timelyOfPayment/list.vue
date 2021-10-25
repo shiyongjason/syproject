@@ -91,9 +91,6 @@ export default {
         })
     },
     methods: {
-        fundMoneys (val) {
-            return filters.money(val)
-        },
         onExport () {
             exportOverdueExcel(this.searchParams, this.queryParams.departmentType == 1 ? '平台公司' : '分部')
         },

@@ -162,7 +162,7 @@ export default {
             return res || '-'
         },
         formatMoney (val) {
-            return utils.money(val)
+            return utils.moneyFormat(val, 2, false)
         }
     },
     mounted () {

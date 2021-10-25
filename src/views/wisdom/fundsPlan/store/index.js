@@ -54,7 +54,7 @@ const getters = {
     platformPlanTotal: state => {
         for (const key in state.platformPlanTotal) {
             if (state.platformPlanTotal[key]) {
-                state.platformPlanTotal[key] = filterUtil.fundMoney(state.platformPlanTotal[key])
+                state.platformPlanTotal[key] = filterUtil.moneyFormat(state.platformPlanTotal[key], 2, false)
             }
             if (key === 'salePercentCurrent') state.platformPlanTotal[key] = (state.platformPlanTotal[key]) + '%'
             if (key === 'usedPercentCurrent') state.platformPlanTotal[key] = (state.platformPlanTotal[key]) + '%'
@@ -65,7 +65,7 @@ const getters = {
     platformPlanPagination: state => state.platformPlanPagination,
     planCreditList: state => {
         state.planCreditList.forEach(value => {
-            value.annualTotalEffectiveRate = value.annualTotalEffectiveRate !== null ? (filterUtil.fundMoneyHaveSpot(value.annualTotalEffectiveRate)) : '-'
+            value.annualTotalEffectiveRate = value.annualTotalEffectiveRate !== null ? (filterUtil.moneyFormat(value.annualTotalEffectiveRate, 2, false)) : '-'
             value.annualTotalProfitAchieveRate = value.annualTotalProfitAchieveRate !== null ? (precisionMethods.multipliedBy(value.annualTotalProfitAchieveRate, 100)) + '%' : ''
             value.annualTotalSaleAchieveRate = value.annualTotalSaleAchieveRate !== null ? (precisionMethods.multipliedBy(value.annualTotalSaleAchieveRate, 100)) + '%' : ''
         })
@@ -75,14 +75,14 @@ const getters = {
         for (const key in state.planCreditTotal) {
             switch (key) {
                 case 'annualTotalEffectiveRate':
-                    state.planCreditTotal[key] = state.planCreditTotal[key] !== null ? (filterUtil.fundMoneyHaveSpot(state.planCreditTotal[key])) : '-'
+                    state.planCreditTotal[key] = state.planCreditTotal[key] !== null ? (filterUtil.moneyFormat(state.planCreditTotal[key], 2, false)) : '-'
                     break
                 case 'annualTotalProfitAchieveRate':
                 case 'annualTotalSaleAchieveRate':
                     state.planCreditTotal[key] = state.planCreditTotal[key] !== null ? precisionMethods.multipliedBy(state.planCreditTotal[key], 100) + '%' : ''
                     break
                 default:
-                    state.planCreditTotal[key] = filterUtil.fundMoney(state.planCreditTotal[key])
+                    state.planCreditTotal[key] = filterUtil.moneyFormat(state.planCreditTotal[key], 2, false)
             }
         }
         return state.planCreditTotal

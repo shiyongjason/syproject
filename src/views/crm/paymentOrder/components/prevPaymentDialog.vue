@@ -11,7 +11,7 @@
                 {{ prevPaymentDetail.deptName }}
             </el-form-item>
             <el-form-item label="剩余应上游支付：">
-                {{ prevPaymentDetail.surplusAmount | fundMoneyHasTail }}元
+                {{ prevPaymentDetail.surplusAmount | moneyFormat }}元
             </el-form-item>
             <el-form-item label="上游供应商：">
                 {{ prevPaymentDetail.supplierCompanyName }}
