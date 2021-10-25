@@ -544,8 +544,8 @@ export default {
         },
         async onQueryOrder () {
             const { ...params } = this.queryParams
-            if (params.orderTimeEnd) params.orderTimeEnd = this.$root.$options.filters.formatDate(params.orderTimeEnd, 'YYYY-MM-DD HH:mm:ss')
-            if (params.orderTimeStart) params.orderTimeStart = this.$root.$options.filters.formatDate(params.orderTimeStart, 'YYYY-MM-DD HH:mm:ss')
+            if (params.orderTimeEnd) params.orderTimeEnd = this.$root.$options.filters.momentFormat(params.orderTimeEnd, 'YYYY-MM-DD HH:mm:ss')
+            if (params.orderTimeStart) params.orderTimeStart = this.$root.$options.filters.momentFormat(params.orderTimeStart, 'YYYY-MM-DD HH:mm:ss')
             if (params.orderStatus == 6) {
                 params.orderStatus = 3
                 params.orderType = 1
@@ -600,8 +600,8 @@ export default {
         },
         exportTabOrder () {
             const { ...params } = this.queryParams
-            if (params.orderTimeEnd) params.orderTimeEnd = this.$root.$options.filters.formatDate(params.orderTimeEnd, 'YYYY-MM-DD')
-            if (params.orderTimeStart) params.orderTimeStart = this.$root.$options.filters.formatDate(params.orderTimeStart, 'YYYY-MM-DD')
+            if (params.orderTimeEnd) params.orderTimeEnd = this.$root.$options.filters.momentFormat(params.orderTimeEnd, 'YYYY-MM-DD')
+            if (params.orderTimeStart) params.orderTimeStart = this.$root.$options.filters.momentFormat(params.orderTimeStart, 'YYYY-MM-DD')
             if (params.orderStatus == 6) {
                 params.orderStatus = 3
                 params.orderType = 1

@@ -193,7 +193,7 @@ export default {
                         noIgnore = String(this.backMoneyTotal[key]).indexOf('%') === -1
                         if (key === value.children[0].prop && this.backMoneyTotal[key] !== null) {
                             if (noIgnore) {
-                                value.children[0].label = String(filters.fundMoneyHaveSpot(this.backMoneyTotal[key]))
+                                value.children[0].label = String(filters.moneyFormat(this.backMoneyTotal[key], 2, false))
                             } else {
                                 value.children[0].label = String(this.backMoneyTotal[key])
                             }

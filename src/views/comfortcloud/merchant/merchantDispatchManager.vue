@@ -103,7 +103,7 @@
                         </div>
                         <div style="margin-left:20px">
                             <span>创建时间：</span>
-                            <span>{{materialForm.createTime | formatterTime}}</span>
+                            <span>{{materialForm.createTime | momentFormat}}</span>
                         </div>
                     </div>
                     <el-form-item label-width="0" class="address">

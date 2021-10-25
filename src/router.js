@@ -423,7 +423,8 @@ router.beforeEach(async (to, from, next) => {
     }
     // 获取数据权限
     const authPath = to && to.path.split('/')
-    const authhasCode = resourceList && resourceList.filter(val => val.url == authPath[authPath.length - 1])
+    // level区分按钮级别还是路由级别
+    const authhasCode = resourceList && resourceList.filter(val => val.url == authPath[authPath.length - 1] && val.level == 2)
     // const { data } = authhasCode.length>0 && await getAuthInfo(authhasCode[0].authCode)
     sessionStorage.setItem('authCode', authhasCode.length > 0 ? JSON.stringify(authhasCode[0].authCode) : '')
     // sessionStorage.setItem('authCodeArr',JSON.stringify(data))

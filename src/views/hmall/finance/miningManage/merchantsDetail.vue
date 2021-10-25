@@ -18,7 +18,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>当前额度<span>（元）</span></p>
-                            <p>{{merchantStatistInfo.creditLimit|| 0 | moneyShow}}</p>
+                            <p>{{merchantStatistInfo.creditLimit|| 0 | moneyFormat}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -27,7 +27,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总代采<span>（元）</span></p>
-                            <p>{{merchantStatistInfo.totalAmount || 0 | moneyShow}}</p>
+                            <p>{{merchantStatistInfo.totalAmount || 0 | moneyFormat}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -36,7 +36,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总预付<span>（元）</span></p>
-                            <p>{{merchantStatistInfo.totalPrepayAmount|| 0 | moneyShow}}</p>
+                            <p>{{merchantStatistInfo.totalPrepayAmount|| 0 | moneyFormat}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -45,7 +45,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总代付<span>（元）</span></p>
-                            <p>{{merchantStatistInfo.totalRetainageAmount || 0 | moneyShow}}</p>
+                            <p>{{merchantStatistInfo.totalRetainageAmount || 0 | moneyFormat}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -54,7 +54,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总回款<span>（元）</span></p>
-                            <p>{{merchantStatistInfo.totalRepayAmount|| 0| moneyShow}}</p>
+                            <p>{{merchantStatistInfo.totalRepayAmount|| 0| moneyFormat}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -63,7 +63,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>当前占用<span>（元）</span></p>
-                            <p>{{merchantStatistInfo.occupationAmount|| 0| moneyShow}}</p>
+                            <p>{{merchantStatistInfo.occupationAmount|| 0| moneyFormat}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -72,7 +72,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>当前逾期未还<span>（元）</span></p>
-                            <p>{{merchantStatistInfo.overdueAmount || 0| moneyShow}}</p>
+                            <p>{{merchantStatistInfo.overdueAmount || 0| moneyFormat}}</p>
                         </div>
                     </div>
                 </div>
@@ -121,25 +121,25 @@
                 <basicTable :tableData="tableDetailData" :tableLabel="tableDetailLabel" :pagination="paginationDetail" @onCurrentChange="onCurrentChange" @onSizeChange="handleSizeChange" :isShowSum="true" :getSum="getSum">
                     <!-- 当前额度 -->
                     <template slot="creditLimit" slot-scope="scope">
-                        <a class="isLink" @click="onInfo(scope.data.row,'creditLimit')">{{scope.data.row.creditLimit | moneyShow}}</a>
+                        <a class="isLink" @click="onInfo(scope.data.row,'creditLimit')">{{scope.data.row.creditLimit | moneyFormat}}</a>
                     </template>
                     <template slot="totalAmount" slot-scope="scope">
-                        <a class="isLink" @click="onInfo(scope.data.row,'totalAmount')">{{scope.data.row.totalAmount| moneyShow}}</a>
+                        <a class="isLink" @click="onInfo(scope.data.row,'totalAmount')">{{scope.data.row.totalAmount| moneyFormat}}</a>
                     </template>
                     <template slot="totalPrepayAmount" slot-scope="scope">
-                        <a class="isLink" @click="onInfo(scope.data.row,'totalPrepayAmount')">{{scope.data.row.totalPrepayAmount| moneyShow}}</a>
+                        <a class="isLink" @click="onInfo(scope.data.row,'totalPrepayAmount')">{{scope.data.row.totalPrepayAmount| moneyFormat}}</a>
                     </template>
                     <template slot="totalRetaingeAmount" slot-scope="scope">
-                        <a class="isLink" @click="onInfo(scope.data.row,'totalRetaingeAmount')">{{scope.data.row.totalRetaingeAmount| moneyShow}}</a>
+                        <a class="isLink" @click="onInfo(scope.data.row,'totalRetaingeAmount')">{{scope.data.row.totalRetaingeAmount| moneyFormat}}</a>
                     </template>
                     <template slot="totalRepayedAmount" slot-scope="scope">
-                        <a class="isLink" @click="onInfo(scope.data.row,'totalRepayedAmount')">{{scope.data.row.totalRepayedAmount| moneyShow}}</a>
+                        <a class="isLink" @click="onInfo(scope.data.row,'totalRepayedAmount')">{{scope.data.row.totalRepayedAmount| moneyFormat}}</a>
                     </template>
                     <template slot="occupationAmount" slot-scope="scope">
-                        <a class="isLink" @click="onInfo(scope.data.row,'occupationAmount')">{{scope.data.row.occupationAmount| moneyShow}}</a>
+                        <a class="isLink" @click="onInfo(scope.data.row,'occupationAmount')">{{scope.data.row.occupationAmount| moneyFormat}}</a>
                     </template>
                     <template slot="overdueAmount" slot-scope="scope">
-                        <a class="isLink" @click="onInfo(scope.data.row,'overdueAmount')">{{scope.data.row.overdueAmount| moneyShow}}</a>
+                        <a class="isLink" @click="onInfo(scope.data.row,'overdueAmount')">{{scope.data.row.overdueAmount| moneyFormat}}</a>
                     </template>
                     <template slot="overdue" slot-scope="scope">
                         <span>{{overdueMap.get(scope.data.row.overdue)}}</span>
@@ -160,7 +160,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>总回款<span>（元）</span></p>
-                            <p>{{repayStatistInfo.totalRepayAmount|| 0| moneyShow}}</p>
+                            <p>{{repayStatistInfo.totalRepayAmount|| 0| moneyFormat}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -169,7 +169,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>线下提前还款<span>（元）</span></p>
-                            <p>{{repayStatistInfo.offlineAdvanceRepayAmount|| 0| moneyShow}}</p>
+                            <p>{{repayStatistInfo.offlineAdvanceRepayAmount|| 0| moneyFormat}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -178,7 +178,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>单分享订单回款<span>（元）</span></p>
-                            <p>{{repayStatistInfo.saleRepayAmount|| 0| moneyShow}}</p>
+                            <p>{{repayStatistInfo.saleRepayAmount|| 0| moneyFormat}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -187,7 +187,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>已提现<span>（元）</span></p>
-                            <p>{{repayStatistInfo.withdrawAmount|| 0| moneyShow}}</p>
+                            <p>{{repayStatistInfo.withdrawAmount|| 0| moneyFormat}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -196,7 +196,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>可提现<span>（元）</span></p>
-                            <p>{{repayStatistInfo.availableWithdrawAmount|| 0| moneyShow}}</p>
+                            <p>{{repayStatistInfo.availableWithdrawAmount|| 0| moneyFormat}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -205,7 +205,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>线下转账预付款<span>（元）</span></p>
-                            <p>{{repayStatistInfo.offlinePrepayAmount|| 0| moneyShow}}</p>
+                            <p>{{repayStatistInfo.offlinePrepayAmount|| 0| moneyFormat}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -214,7 +214,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>网银支付预付款<span>（元）</span></p>
-                            <p>{{repayStatistInfo.onlineBankingPrepayAmount|| 0| moneyShow}}</p>
+                            <p>{{repayStatistInfo.onlineBankingPrepayAmount|| 0| moneyFormat}}</p>
                         </div>
                     </div>
                     <div class="balance-cont-col">
@@ -223,7 +223,7 @@
                         </div>
                         <div class="balance-col-money">
                             <p>网银支付提前还款<span>（元）</span></p>
-                            <p>{{repayStatistInfo.onlineBankingAdvanceRepayAmount|| 0| moneyShow}}</p>
+                            <p>{{repayStatistInfo.onlineBankingAdvanceRepayAmount|| 0| moneyFormat}}</p>
                         </div>
                     </div>
                 </div>

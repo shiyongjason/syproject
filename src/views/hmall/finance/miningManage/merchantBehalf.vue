@@ -140,8 +140,8 @@
                     <a class="isLink" @click="onInfo(scope.data.row)">{{scope.data.row.agentOrderNo}}</a>
                 </template>
                 <template slot="occupationAmount" slot-scope="scope">
-                    <span v-if="Number(scope.data.row.occupationAmount)<0" style="color:red">{{scope.data.row.occupationAmount | moneyShow}}</span>
-                    <span v-else>{{scope.data.row.occupationAmount| moneyShow}}</span>
+                    <span v-if="Number(scope.data.row.occupationAmount)<0" style="color:red">{{scope.data.row.occupationAmount | moneyFormat}}</span>
+                    <span v-else>{{scope.data.row.occupationAmount| moneyFormat}}</span>
                 </template>
                 <template slot="prepayPercentage" slot-scope="scope">
                     <span>{{scope.data.row.prepayPercentage|percenShow}}</span>

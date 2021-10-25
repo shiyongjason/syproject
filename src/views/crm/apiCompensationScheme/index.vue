@@ -46,7 +46,7 @@
                     <span>{{INTERFACE_TYPE.get(scope.data.row.interfaceType)}}</span>
                 </template>
                 <template slot="createTime" slot-scope="scope">
-                    <span>{{ scope.data.row.createTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                    <span>{{ scope.data.row.createTime | momentFormat }}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button v-if="!scope.data.row.resolved" table @click="reCall(scope.data.row)">问题处理</h-button>

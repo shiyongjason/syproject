@@ -40,7 +40,7 @@
             </div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="pagination" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :isShowIndex='true'>
                 <template slot="startTime" slot-scope="scope">
-                    <span>{{scope.data.row.startTime | formatterTime}}~{{scope.data.row.endTime | formatterTime}}</span>
+                    <span>{{scope.data.row.startTime | momentFormat}}~{{scope.data.row.endTime | momentFormat}}</span>
                 </template>
                 <template slot="status" slot-scope="scope">
                     {{arrayToMap(activityStatusOptions).get(scope.data.row.status)}}

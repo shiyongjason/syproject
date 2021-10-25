@@ -162,7 +162,7 @@ export default {
         },
         fundMoneys (val) {
             if (val) {
-                return filters.money(val)
+                return filters.moneyFormat(val, 2, false)
             }
         },
         drawBar (data) {

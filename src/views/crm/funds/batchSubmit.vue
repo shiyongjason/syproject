@@ -13,7 +13,7 @@
                     </div>
                 </div>
                 <div class="batch_bot">
-                    <span>待确认总金额(元)：{{payDetail.totalAmount|fundMoneyHasTail}}</span>
+                    <span>待确认总金额(元)：{{payDetail.totalAmount|moneyFormat}}</span>
                     <div>
                         <el-button type="primary" @click="onNoReceived">并未收到</el-button>
                         <el-button type="primary" @click="onReceived">确认收到</el-button>
@@ -29,7 +29,6 @@ import HosjoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import ImageAddToken from '@/components/imageAddToken/index.vue'
 import { ccpBaseUrl } from '@/api/config'
-import { fundMoneyHasTail } from '@/utils/filters'
 import { confirmPay, payReceived, payNoReceived } from './api/index'
 export default {
     name: 'batchpay',

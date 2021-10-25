@@ -80,7 +80,7 @@
                         <span v-else>-</span>
                     </template>
                     <template slot="updateTime" slot-scope="scope">
-                        {{scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
+                        {{scope.data.row.updateTime | momentFormat}}
                     </template>
                 </basicTable>
             </div>

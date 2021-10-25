@@ -13,7 +13,7 @@
                         <i class="icon iconfont hosjoy_money"></i>
                     </div>
                     <div class="balance-col-money">
-                        <p>{{bankAccountInfo.totalBalance | moneyShow}}</p>
+                        <p>{{bankAccountInfo.totalBalance | moneyFormat}}</p>
                         <p>平台服务费总资产<span>（元）</span></p>
                     </div>
                 </div>

@@ -91,7 +91,7 @@
                 </div>
             </div>
             <div class="query-cont__row">
-                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span v-if="totalAmount">累计金额：{{totalAmount|fundMoneyHasTail}}</span></el-tag>
+                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span v-if="totalAmount">累计金额：{{totalAmount|moneyFormat}}</span></el-tag>
             </div>
             <!-- end search bar -->
             <hosJoyTable localName="V3.5.1" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList"
@@ -134,7 +134,7 @@
                             {{ prevPaymentDetail.deptName }}
                         </el-form-item>
                         <el-form-item label="剩余应上游支付：">
-                            {{ prevPaymentDetail.surplusAmount | fundMoneyHasTail }}元
+                            {{ prevPaymentDetail.surplusAmount | moneyFormat }}元
                         </el-form-item>
                         <el-form-item label="上游供应商：">
                             {{ prevPaymentDetail.supplierCompanyName }}
@@ -446,7 +446,7 @@ export default class UpstreamPaymentManagement extends Vue {
         return (
             <div>
                 { scope.row.loanTransferStatus == 1 ? '待对接' : scope.row.loanTransferStatus == 2 ? '已对接' : '-' }
-                { scope.row.loanTransferStatus == 2 && <p>({ filters.formatterDate(scope.row.loanTransferDate) })</p> }
+                { scope.row.loanTransferStatus == 2 && <p>({ filters.momentFormat(scope.row.loanTransferDate, 'YYYY-MM-DD') })</p> }
             </div>
         )
     }
