@@ -22,7 +22,7 @@
                         </el-form-item>
                         <div class="info-title">采购单信息</div>
                         <el-form-item label="采购单金额：">
-                            {{ paymentDetail.payOrderPoDetail.poAmount | fundMoneyHasTail }}元
+                            {{ paymentDetail.payOrderPoDetail.poAmount | moneyFormat }}元
                         </el-form-item>
                         <div class="mb20"  style="max-height:250px; overflow-y: scroll;">
                             <basicTable :tableData="paymentDetail.payOrderPoDetail.paymentOrderInfos" :tableLabel="orderLabel" :isPagination='false'>
@@ -62,7 +62,7 @@
                     <div class="col-filed">
                         <div class="info-title">上游支付申请信息</div>
                         <el-form-item label="申请支付金额：">
-                            {{ paymentDetail.payOrderDetail.applyAmount | fundMoneyHasTail }}元
+                            {{ paymentDetail.payOrderDetail.applyAmount | moneyFormat }}元
                         </el-form-item>
 
                         <el-form-item label="上游供应商：">
@@ -168,18 +168,18 @@
                             </el-form-item>
                             <template v-if="formData.dealerCooperationMethod">
                                 <el-form-item label="经销商预付款：">
-                                    {{downPaymentAmount | fundMoneyHasTail}}元
+                                    {{downPaymentAmount | moneyFormat}}元
                                     <img src="../../../../assets/images/crm-edit.png" alt="" @click="openEdit" class="info-img-edit" v-if="formData.dealerCooperationMethod==1">
                                 </el-form-item>
 
                                 <el-form-item label="剩余货款：" v-show="formData.dealerCooperationMethod==1">
-                                    {{ serviceFee.arrearAmount | fundMoneyHasTail}}元
+                                    {{ serviceFee.arrearAmount | moneyFormat}}元
                                 </el-form-item>
                                 <el-form-item label="预计服务费总额：" v-show="formData.dealerCooperationMethod==1">
-                                    {{ serviceFee.feeAmount | fundMoneyHasTail}}元
+                                    {{ serviceFee.feeAmount | moneyFormat}}元
                                 </el-form-item>
                                 <el-form-item label="预计每期服务费：" v-show="formData.dealerCooperationMethod==1">
-                                    {{ serviceFee.feeAmountPer | fundMoneyHasTail}}元
+                                    {{ serviceFee.feeAmountPer | moneyFormat}}元
                                 </el-form-item>
                             </template>
                         </template>

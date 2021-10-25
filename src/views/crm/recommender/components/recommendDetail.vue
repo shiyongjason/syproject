@@ -14,7 +14,7 @@
                         </p>
                     </div>
                     <h2>基本信息</h2>
-                    <p class="info">激活时间：{{detail.createTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</p>
+                    <p class="info">激活时间：{{detail.createTime | momentFormat}}</p>
                     <p class="info">
                         推荐官来源：
                         <template v-if="detail.source === 1">客户经理分享</template>
@@ -41,7 +41,7 @@
                     <div>
                         <p class="row-info" v-for="(item,index) in detail.rewardList" :key="item.companyName + index">
                             {{item.companyName}}
-                            <span class="time">{{item.creditApprovedTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</span>
+                            <span class="time">{{item.creditApprovedTime | momentFormat}}</span>
                             获得信用评级，奖励{{item.rewardAmount}}元
                         </p>
                     </div>

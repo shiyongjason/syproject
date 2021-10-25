@@ -109,11 +109,11 @@ export default {
         async onSaveGood (firstTime) {
             if (this.isPending) return
             this.isPending = true
-            if (this.form.dueFinanceBasic.dateOfCustody) this.form.dueFinanceBasic.dateOfCustody = this.$options.filters.formatDate(this.form.dueFinanceBasic.dateOfCustody, 'YYYY-MM-DD')
-            if (this.form.dueFinanceBasic.startDateOfDelegation) this.form.dueFinanceBasic.startDateOfDelegation = this.$options.filters.formatDate(this.form.dueFinanceBasic.startDateOfDelegation, 'YYYY-MM-DD')
-            if (this.form.assetsLiabilities.recordTime) this.form.assetsLiabilities.recordTime = this.$options.filters.formatDate(this.form.assetsLiabilities.recordTime, 'YYYY-MM-DD')
-            if (this.form.dueFinanceProfit.recordTime) this.form.dueFinanceProfit.recordTime = this.$options.filters.formatDate(this.form.dueFinanceProfit.recordTime, 'YYYY-MM-DD')
-            if (this.form.caseFlow.recordTime) this.form.caseFlow.recordTime = this.$options.filters.formatDate(this.form.caseFlow.recordTime, 'YYYY-MM-DD')
+            if (this.form.dueFinanceBasic.dateOfCustody) this.form.dueFinanceBasic.dateOfCustody = this.$options.filters.momentFormat(this.form.dueFinanceBasic.dateOfCustody, 'YYYY-MM-DD')
+            if (this.form.dueFinanceBasic.startDateOfDelegation) this.form.dueFinanceBasic.startDateOfDelegation = this.$options.filters.momentFormat(this.form.dueFinanceBasic.startDateOfDelegation, 'YYYY-MM-DD')
+            if (this.form.assetsLiabilities.recordTime) this.form.assetsLiabilities.recordTime = this.$options.filters.momentFormat(this.form.assetsLiabilities.recordTime, 'YYYY-MM-DD')
+            if (this.form.dueFinanceProfit.recordTime) this.form.dueFinanceProfit.recordTime = this.$options.filters.momentFormat(this.form.dueFinanceProfit.recordTime, 'YYYY-MM-DD')
+            if (this.form.caseFlow.recordTime) this.form.caseFlow.recordTime = this.$options.filters.momentFormat(this.form.caseFlow.recordTime, 'YYYY-MM-DD')
             this.form.dueFinanceBasic.type = 0
             try {
                 await saveFinance({ ...this.form, type: 0 })

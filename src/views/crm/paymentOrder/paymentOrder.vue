@@ -97,20 +97,20 @@
                 </div>
             </div>
             <el-tag size="medium" class="eltagtop">已筛选 {{ paymentOrderPagination.total }}
-                项,支付单总金额：<b>{{ paymentOrderPagination.amount | fundMoneyHasTail }}</b>元;
+                项,支付单总金额：<b>{{ paymentOrderPagination.amount | moneyFormat }}</b>元;
             </el-tag>
             <basicTable :tableData="paymentOrderList" :tableLabel="tableLabel" :pagination="paymentOrderPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=480 :isShowIndex='true'>
                 <template slot="applyAmount" slot-scope="scope">
-                    <span>{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
+                    <span>{{ scope.data.row.applyAmount | moneyFormat }}</span>
                 </template>
                 <template slot="applyDate" slot-scope="scope">
-                    <span>{{ scope.data.row.applyDate | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                    <span>{{ scope.data.row.applyDate | momentFormat }}</span>
                 </template>
                 <template slot="updateTime" slot-scope="scope">
-                    <span>{{ scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                    <span>{{ scope.data.row.updateTime | momentFormat }}</span>
                 </template>
                 <template slot="approvalTime" slot-scope="scope">
-                    <span>{{ scope.data.row.approvalTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                    <span>{{ scope.data.row.approvalTime | momentFormat }}</span>
                 </template>
                 <template slot="paymentStatus" slot-scope="scope">
                     <p>{{ paymentStatusOptions.get(scope.data.row.paymentStatus) }}</p>
@@ -121,7 +121,7 @@
                 </template>
                 <template slot="loanTransferStatus" slot-scope="scope">
                     <p>{{ dealerCooperaiionStutas.get(scope.data.row.loanTransferStatus) }}</p>
-                    <p>({{scope.data.row.loanTransferDate | formatDate('YYYY-MM-DD')}})</p>
+                    <p v-if="scope.data.row.loanTransferStatus == 2">({{scope.data.row.loanTransferDate | formatDate('YYYY-MM-DD')}})</p>
                 </template>
 
                 <template slot="applyName" slot-scope="scope">

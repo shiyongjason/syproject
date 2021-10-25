@@ -54,14 +54,6 @@ Vue.component(
     'searchBarOpenAndClose', searchBarOpenAndClose
 )
 
-Vue.filter('formatDate', (time, param) => {
-    if (!time) return '-'
-    if (param) {
-        return moment(time).format(param)
-    }
-    return moment(time).format('YYYY-MM-DD HH:mm')
-})
-
 // 过滤器
 Object.keys(filters).forEach(key => {
     Vue.filter(key, filters[key])
