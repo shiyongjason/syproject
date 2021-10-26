@@ -2,10 +2,10 @@
     <div class="page-body amount">
         <div v-show="toggle" class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col" v-if="branch">
-                    <div class="query-cont-title">分部：</div>
+                <div class="query-cont-col">
+                    <div class="query-cont-title">所属地域：</div>
                     <div class="query-cont-input">
-                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                        <RegionCascader ref="cascader" @backEvent = 'findRegionCode'/>
                     </div>
                 </div>
                 <div class="query-cont-col amount">
@@ -80,7 +80,7 @@
                         <span v-else>-</span>
                     </template>
                     <template slot="updateTime" slot-scope="scope">
-                        {{scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
+                        {{scope.data.row.updateTime | momentFormat}}
                     </template>
                 </basicTable>
             </div>
@@ -90,6 +90,7 @@
 <script>
 import { findTableList, getCompany, getCityList, exportPlatTarget, findPlatformTargetPlat } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import RegionCascader from './components/regionCascader.vue'
 import { departmentAuth } from '@/mixins/userAuth'
 import { getOldTableTop } from '@/utils/getTableTop'
 import { interfaceUrl } from '@/api/config'
@@ -111,7 +112,7 @@ export default {
             tableLabel: [
                 { label: '公司简称', prop: 'companyShortName', choosed: true, minWidth: 100 },
                 { label: '公司编码', prop: 'misCode', choosed: true, width: 100 },
-                { label: '分部', prop: 'subsectionName', choosed: true, width: 100 },
+                { label: '地域', prop: 'organizationNames', choosed: true, width: 120 },
                 { label: '所在城市', prop: 'cityName', choosed: true, width: 100 },
                 { label: '上线时间', prop: 'onlineTime', choosed: true, minWidth: 100 },
                 { label: '增量/存量', prop: 'incremental', choosed: true, width: 100 },
@@ -123,12 +124,13 @@ export default {
             ],
             incrementalList: [{ key: '', value: '全部' }, { key: 1, value: '增量' }, { key: 0, value: '存量' }],
             searchParams: {
-                subsectionCode: '',
+                organizationCodes: '',
                 misCode: '',
                 onlineTime: '',
                 incremental: '',
                 targetDate: `${(new Date()).getFullYear()}`,
                 cityCode: '',
+                jobNumber: '',
                 pageNumber: 1,
                 pageSize: 10
             },
@@ -182,7 +184,8 @@ export default {
         }
     },
     components: {
-        HAutocomplete
+        HAutocomplete,
+        RegionCascader
     },
     computed: {
         ...mapState({
@@ -191,20 +194,26 @@ export default {
         })
     },
     async mounted () {
-        if (this.userInfo.oldDeptCode !== 'top') {
-            this.searchParams.subsectionCode = this.userInfo.oldDeptCode
-        }
+        let userInfo = sessionStorage.getItem('userInfo')
+        this.searchParams.jobNumber = JSON.parse(userInfo).jobNumber
+        this.searchParams.authCode = JSON.parse(sessionStorage.getItem('authCode'))
+        // if (this.userInfo.oldDeptCode !== 'top') {
+        //     this.searchParams.subsectionCode = this.userInfo.oldDeptCode
+        // }
         this.companyData.params.companyCode = this.userInfo.oldDeptCode
         this.cityData.params.companyCode = this.userInfo.oldDeptCode
         this.onFindTableList(this.searchParams)
         this.getCompanyList()
         this.getCityList()
         !this.userInfo.deptType && this.findPlatformTargetPlat()
-        await this.newBossAuth(['F'])
+        // await this.newBossAuth(['F'])
         this.searchParamsReset = { ...this.searchParams }
         this.countHeight()
     },
     methods: {
+        findRegionCode (val) {
+            this.searchParams.organizationCodes = val.toString()
+        },
         uploadProcess () {
             this.uploadLoading = true
         },
@@ -321,6 +330,7 @@ export default {
         },
         onReset () {
             this.searchParams = { ...this.searchParamsReset }
+            this.$refs.cascader.onBackRest()
             this.selectAuth = {
                 branchObj: {
                     selectCode: '',
@@ -336,7 +346,7 @@ export default {
                 }
             }
             this.onFindTableList(this.searchParams)
-            this.newBossAuth(['F'])
+            // this.newBossAuth(['F'])
         }
     }
 }

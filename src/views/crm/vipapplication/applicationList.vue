@@ -85,7 +85,8 @@
             <el-tag size="medium" class="eltagtop">已筛选 {{vipApply.total||0}} 项</el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=200 :isShowIndex='true'>
                 <template slot="companyName" slot-scope="scope">
-                    <span @click="onLinkCom(scope.data.row)" class="colblue">{{scope.data.row.companyName}}</span>
+                    <span v-if="hosAuthCheck(auths.APPLICATIONLIST_LINK_AUTHENLIST)" @click="onLinkCom(scope.data.row)" class="link-cell">{{scope.data.row.companyName}}</span>
+                    <span v-else>{{scope.data.row.companyName}}</span>
                 </template>
                 <template slot="assignedUserId" slot-scope="scope">
                     {{scope.data.row.assignedUserId?'是':'否'}}
@@ -130,6 +131,7 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { postVipsigner } from './api'
 import * as auths from '@/utils/auth_const'
+import { newCache } from '@/utils/index'
 export default {
     name: 'vipapplication',
     data () {
@@ -381,58 +383,15 @@ export default {
         onLinkCom (val) {
             this.$router.push({ path: '/goodwork/authenlist', query: { name: val.companyName } })
         }
+    },
+    beforeUpdate () {
+        newCache('vipapplication')
     }
 }
 </script>
 <style lang="scss" scoped>
-.colred {
-    color: #ff7a45;
-}
-.colgry {
-    color: #ccc;
-}
 .eltagtop {
     margin-bottom: 10px;
-}
-.colblue {
-    color: #50b7f7;
-    cursor: pointer;
-}
-.project-record {
-    padding: 10px 0;
-    height: 400px;
-    overflow-y: scroll;
-    /deep/ .el-card__body {
-        padding: 5px;
-        span {
-            color: grey;
-        }
-    }
-}
-.project-plant {
-    display: flex;
-    flex-wrap: wrap;
-    .plantimg {
-        margin: 5px;
-        width: 95px;
-        height: 95px;
-        overflow: hidden;
-        img {
-            width: 95px;
-            height: 100%;
-        }
-    }
-}
-.previewimg {
-    text-align: center;
-    img {
-        width: 500px;
-        padding: 10px;
-    }
-}
-.colblue {
-    color: #50b7f7;
-    cursor: pointer;
 }
 .autoflex {
     display: flex;

@@ -135,7 +135,7 @@
                     <p class="couponP" v-for="(item, index) in getCouponArr(scope.data.row.couponName)" :key="index">{{ item }}</p>
                 </template>
                 <template slot="couponAmount" slot-scope="scope">
-                    <p class="couponP" v-for="(item, index) in getCouponArr(scope.data.row.couponAmount)" :key="index">{{ parseFloat(item) | moneyShow}}</p>
+                    <p class="couponP" v-for="(item, index) in getCouponArr(scope.data.row.couponAmount)" :key="index">{{ parseFloat(item) | moneyFormat }}</p>
                 </template>
             </basicTable>
         </div>

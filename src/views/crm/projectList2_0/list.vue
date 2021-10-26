@@ -377,6 +377,7 @@ import { handleSubmit, validateForm } from '@/decorator'
 import { ReqProjectSupply, RespBossProjectSupply } from '@/interface/hbp-member'
 import { ReqBossProjectRefund } from './interface'
 import { CreateElement } from 'vue'
+import { newCache } from '@/utils/index'
 
 const validatorName = (rule, value, callback) => {
     if (!value) {
@@ -493,9 +494,11 @@ export default class ProjectList2 extends Vue {
             prop: 'companyName',
             width: '200',
             render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
-                return (
-                    <span onClick={() => this.onClickLink(scope)} style="color:skyBlue;cursor: pointer;">{scope.row.companyName}</span>
-                )
+                if (this.hosAuthCheck(Auths.PROJECTLIST2_LINK_AUTHENLIST)) {
+                    return (<span onClick={() => this.onClickLink(scope)} class='link-cell'>{scope.row.companyName}</span>)
+                } else {
+                    return (<span>{scope.row.companyName}</span>)
+                }
             }
         },
         { label: '管理员姓名', prop: 'adminUserName', width: '120' },
@@ -923,6 +926,10 @@ export default class ProjectList2 extends Vue {
         // this.findDictionaryList({
         //     item: 'project_intelligent_needs'
         // })
+    }
+
+    beforeUpdate () {
+        newCache('ProjectList2')
     }
 }
 </script>

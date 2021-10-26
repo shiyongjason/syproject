@@ -72,6 +72,7 @@
 import { mapActions, mapState } from 'vuex'
 import RecommendDetail from './components/recommendDetail'
 import filters from '@/utils/filters'
+import { newCache } from '@/utils/index'
 export default {
     name: 'recommender',
     components: {
@@ -175,7 +176,7 @@ export default {
         },
         fundMoneys (val) {
             if (val) {
-                return filters.money(val)
+                return filters.moneyFormat(val, 2, false)
             }
             return 0
         }
@@ -183,6 +184,9 @@ export default {
     mounted () {
         this.queryParamsTemp = { ...this.queryParams }
         this.onQuery()
+    },
+    beforeUpdate () {
+        newCache('recommender')
     }
 }
 </script>

@@ -18,7 +18,7 @@
                     <el-button size="medium" type="primary"><i class="el-icon-upload file-icon"></i>上 传 文 件</el-button>
                 </HosJoyUpload>
                 <div class="batch_bot">
-                    <span>应支付总额(元)：{{payTotal|fundMoneyHasTail}}</span>
+                    <span>应支付总额(元)：{{payTotal|moneyFormat}}</span>
                     <el-button type="primary" @click="onSubmit">确定并提交</el-button>
                 </div>
             </div>
@@ -30,8 +30,6 @@
 import HosjoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import { ccpBaseUrl } from '@/api/config'
-import { fundMoneyHasTail } from '@/utils/filters'
-
 import { getFundsPayBatch, payVoucherBatch } from './api/index'
 export default {
     name: 'batchpay',
@@ -65,7 +63,9 @@ export default {
 
             },
             batchDetail: {},
-            fundId: [],
+            // fundId: [],
+            // paymentAmount: [],
+            fundBatchList: [],
             payTotal: 0
         }
     },
@@ -86,7 +86,6 @@ export default {
             })
         },
         onSortChange (val) {
-            console.log(val)
             if (val) {
                 this.queryParams['sort.property'] = val.prop + ''
                 this.queryParams['sort.direction'] = val.order === 'ascending' ? 'ASC' : 'DESC'
@@ -97,10 +96,13 @@ export default {
             this.onGetList(this.queryParams)
         },
         handleSelectionChange (row) {
-            this.fundId = []
+            this.fundBatchList = []
             this.payTotal = 0
             row && row.map(item => {
-                this.fundId.push(item.id)
+                this.fundBatchList.push({
+                    fundId: item.id,
+                    paymentAmount: item.paymentAmount
+                })
                 this.payTotal = item.paymentAmount + this.payTotal
             })
             // 求和
@@ -114,11 +116,11 @@ export default {
         },
         async onSubmit () {
             const params = {
-                fundId: this.fundId,
+                fundBatchList: this.fundBatchList,
                 attachDocs: this.docPos,
                 companyId: this.$route.query.companyId
             }
-            if (this.fundId.length == 0) {
+            if (this.fundBatchList.length == 0) {
                 this.$message({
                     message: '请选择要支付的账单~',
                     type: 'warning'

@@ -81,7 +81,7 @@
                         </h-button>
                 </div>
             </div>
-            <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):0}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):0}} 元 </el-tag>
+            <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):'0.00'}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):'0.00'}} 元 </el-tag>
             <!-- <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="false" :isAction="true" :actionMinWidth=300 ::rowKey="rowKey"
                 :isShowIndex='true'>
                 <template slot="contractAmount" slot-scope="scope">
@@ -104,7 +104,7 @@
                 <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total"
                     @pagination="searchList" actionWidth='260' isAction :isActionFixed='tableData&&tableData.length>0'>
                     <template slot="contractAmount" slot-scope="scope">
-                        {{scope.data.row.contractAmount?fundMoneys(scope.data.row.contractAmount):0}}
+                        {{scope.data.row.contractAmount?fundMoneys(scope.data.row.contractAmount):'0.00'}}
                     </template>
                     <template slot="type" slot-scope="scope">
                         {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']||'-'}}
@@ -253,7 +253,7 @@ export default {
         },
         fundMoneys (val) {
             if (val) {
-                return filters.money(val)
+                return filters.moneyFormat(val)
             }
         },
         onFiterStates (val) {
@@ -320,10 +320,6 @@ export default {
 }
 .eltagtop {
     margin-bottom: 10px;
-}
-.colblue {
-    color: #50b7f7;
-    cursor: pointer;
 }
 .project-record {
     padding: 10px 0;

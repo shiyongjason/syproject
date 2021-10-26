@@ -84,6 +84,7 @@ import utils from '@/utils/filters'
 import { cancelRecommend, recommend } from './api'
 import { CRM_SHOPP_PRODUCTLABEL_RECOMMEND, CRM_SHOPP_PRODUCTLABEL_CANCELRECOMMEND, CRM_SHOPP_PRODUCTLABEL_BATCH_RECOMMEND, CRM_SHOPP_PRODUCTLABEL_BATCH_CANCEL } from '@/utils/auth_const'
 import { getCategoryList } from '../addProduct/api'
+import { newCache } from '@/utils/index'
 
 const _queryParams = {
     name: '',
@@ -152,7 +153,7 @@ export default class ProductLabel extends Vue {
                 return (
                     <div>
                         {scope.row.priceVisible === null ? '-' : scope.row.priceVisible == 0 ? '不展示'
-                            : scope.row.minSalePrice === null && scope.row.maxSalePrice === null ? '-' : <span>{utils.money(scope.row.minSalePrice)}-{utils.money(scope.row.maxSalePrice)}</span>
+                            : scope.row.minSalePrice === null && scope.row.maxSalePrice === null ? '-' : <span>{utils.moneyFormat(scope.row.minSalePrice, 2, false)}-{utils.moneyFormat(scope.row.maxSalePrice, 2, false)}</span>
                         }
                     </div>
                 )
@@ -290,6 +291,10 @@ export default class ProductLabel extends Vue {
         this.getList()
         const { data } = await getCategoryList({ searchContent: '' })
         this.categoryOptions = data
+    }
+
+    beforeUpdate () {
+        newCache('crmshopMallProductLabel')
     }
 }
 </script>

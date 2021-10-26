@@ -28,7 +28,7 @@ import { CreateElement } from 'vue'
 import Bannertabs from './components/banner_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import Categorytabs from './components/category_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import Floortabs from './components/floor_tabs.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-import { clearCache, newCache } from '@/utils/index'
+import { newCache } from '@/utils/index'
 import filters from '@/utils/filters'
 import moment from 'moment'
 import { getEnableNum } from './api/index'
@@ -74,18 +74,8 @@ export default class Advmanage extends Vue {
         }
     }
 
-    beforeRouteEnter (to, from, next) {
+    beforeUpdate () {
         newCache('Advmanage')
-        next()
-    }
-
-    beforeRouteLeave (to, from, next) {
-        if (to.name == 'flooredit' || to.name == 'floordetail') {
-            //
-        } else {
-            clearCache('Advmanage')
-        }
-        next()
     }
 }
 </script>

@@ -96,7 +96,7 @@
                 </div>
             </div>
 
-            <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):0}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):0}} 元 </el-tag>
+            <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):'0.00'}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):'0.00'}} 元 </el-tag>
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" @pagination="searchList"
                 actionWidth='375' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' prevLocalName="V4.*" localName="V3.*.18">
                 <!--
@@ -172,7 +172,7 @@
                                     <div class="follow-tag">跟进人</div>
                                     <div class="name">{{item.createBy||'-'}} {{item.createPhone}}</div>
                                 </div>
-                                <div class="time">{{item.createTime|formatDate('YYYY/MM/DD HH:mm:ss')}}</div>
+                                <div class="time">{{item.createTime|momentFormat('YYYY/MM/DD HH:mm:ss')}}</div>
                             </div>
                             <div class="content-container" v-if="item.flowUpDynamic&&item.flowUpDynamic.msgType === 'meeting_voice_call'">
                                 <div class='line' />
@@ -216,7 +216,7 @@
                                     <div class="title-tag" v-if="item.content">跟进内容</div>
                                     <div class="desc" v-if="item.content">{{item.content}}</div>
                                     <div class="title-tag" v-if="item.nextFlowTime">下次跟进时间</div>
-                                    <div class="desc" v-if="item.nextFlowTime">{{item.nextFlowTime | formatDate('YYYY/MM/DD HH:mm')}}</div>
+                                    <div class="desc" v-if="item.nextFlowTime">{{item.nextFlowTime | momentFormat('YYYY/MM/DD HH:mm')}}</div>
                                     <div class="title-tag" v-if="item.remark&&(item.type==1||item.type==2)">其他备注</div>
                                     <div class="desc" v-if="item.remark&&(item.type==1||item.type==2)">{{item.remark}}</div>
                                 </div>
@@ -228,9 +228,8 @@
             </div>
             <div class="project-plant" v-if="title=='工地打卡记录'">
                 <div class="plantimg" @click="onHandlePictureCardPreview(item)" v-for="(item,index) in plantList" :key="index">
-                    <img :src="item.punchImageUrl" alt="">
+                    <imageToken isResize :fileUrl="item.punchImageUrl"></imageToken>
                 </div>
-
             </div>
             <span slot="footer" class="dialog-footer">
                 <h-button @click="()=>onCloneRecordDialog()">取消</h-button>
@@ -238,7 +237,7 @@
         </el-dialog>
         <el-dialog title="预览" :visible.sync="imgVisible">
             <div class="previewimg">
-                <img :src="dialogImageUrl" alt="">
+                <imageToken :fileUrl="dialogImageUrl" alt=""></imageToken>
             </div>
         </el-dialog>
         <!-- 添加跟进记录 -->
@@ -313,6 +312,8 @@ import downloadFileAddToken from '@/components/downloadFileAddToken'
 import { USER_DEFAULT } from '@/views/crm/projectList2_0/const/index'
 import { getFlowUp, addFlowUp, getFlowUpCount } from '@/views/crm/projectList2_0/api/index'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
+import imageToken from './components/imageToken'
+import { newCache } from '@/utils/index'
 
 const _flowUpRequest = {
     assistantRemark: '', // 协助内容
@@ -506,7 +507,7 @@ export default {
         }
     },
     components: {
-        projectDrawer, hosJoyTable, downloadFileAddToken, OssFileHosjoyUpload
+        projectDrawer, hosJoyTable, downloadFileAddToken, OssFileHosjoyUpload, imageToken
     },
     watch: {
         'flowUpRequest.type' (val) {
@@ -817,7 +818,7 @@ export default {
         },
         fundMoneys (val) {
             if (val) {
-                return filters.money(val)
+                return filters.moneyFormat(val)
             }
         },
         onFiterStates (val) {
@@ -888,8 +889,10 @@ export default {
                 this.dialogRecord = this.projectRecord
             } else {
                 this.title = '工地打卡记录'
+                this.plantList = []
                 await this.findPunchlist({ projectId: val.id })
                 this.plantList = this.punchList
+                console.log(this.plantList)
             }
 
             this.dialogVisible = true
@@ -903,6 +906,18 @@ export default {
             await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
             this.branchArr = this.crmdepList
         }
+    },
+    beforeUpdate () {
+        newCache('projectlist')
+    },
+    beforeRouteEnter (to, from, next) {
+        if (from.name === 'informationDetail') {
+            next(vm => {
+                vm.searchList()
+            })
+        } else {
+            next()
+        }
     }
 }
 </script>
@@ -910,17 +925,17 @@ export default {
 /deep/::-webkit-scrollbar-thumb {
     background-color: #d6d1d1 !important;
 }
-.tips{
+.tips {
     margin-top:5px;
 }
-.flowup-count{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: #ff7a45;
-            box-sizing: border-box;
-            padding-right: 25px;
-        }
+.flowup-count {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #ff7a45;
+    box-sizing: border-box;
+    padding-right: 25px;
+}
 /deep/.a-line{
     span{
         display: flex;
@@ -928,144 +943,138 @@ export default {
     }
 }
 .file-icon {
+    font-size: 18px;
+    margin: 0 3px 0 0  !important;
+    line-height: 24px !important;
+    color: #fff;
+}
+.file_box {
+    margin: 10px 0 0 0;
+    display: flex;
+    i {
         font-size: 18px;
-        margin: 0 3px 0 0  !important;
-        line-height: 24px !important;
-        color: #fff;
+        margin: 0 !important;
+        color: #ff6600;
+        padding-right: 5px;
     }
-    .file_box {
-        margin: 10px 0 0 0;
-        display: flex;
-        i {
-            font-size: 18px;
-            margin: 0 !important;
-            color: #ff6600;
-            padding-right: 5px;
-        }
-        span {
-            width: 450px;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            color: #ff6600;
-
-        }
-        em {
-            display: block;
-            font-style: normal;
-            margin-left: 10px;
-            color: #169bd5;
-            cursor: pointer;
-
-        }
+    span {
+        width: 450px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: #ff6600;
     }
-.record-dialog-item{
-        margin-bottom: 20px;
-        .el-input:not(:first-child){
-            margin-left: 0;
-        }
-        .textarea{
-            .el-form-item__content{
-                display: flex;
-            }
+    em {
+        display: block;
+        font-style: normal;
+        margin-left: 10px;
+        color: #169bd5;
+        cursor: pointer;
+    }
+}
+.record-dialog-item {
+    margin-bottom: 20px;
+    .el-input:not(:first-child) {
+        margin-left: 0;
+    }
+    .textarea{
+        .el-form-item__content {
+            display: flex;
         }
     }
+}
 .follow-records{
-            margin-top: 10px;
+    margin-top: 10px;
+}
+.follow-cell {
+    .info {
+        display: flex;
+        flex-direction: row;
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            margin: 0px 10px 0 16px;
         }
-        .follow-cell {
 
-            .info {
-                display: flex;
-                flex-direction: row;
+        .name-container {
+            flex: 1;
+            .follow-tag {
+                height: 21px;
+                font-size: 16px;
+                font-weight: 400;
+                color: #000000;
+                line-height: 22px;
+            }
+            .name {
+                margin-top: 2px;
+                width: 120px;
+                height: 16px;
+                font-size: 12px;
+                font-weight: 400;
+                color: #666666;
+                line-height: 17px;
+            }
+        }
 
-                .avatar {
-                    width: 36px;
-                    height: 36px;
-                    margin: 0px 10px 0 16px;
+        .time {
+            align-self: flex-start;
+            height: 16px;
+            font-size: 12px;
+            font-weight: 400;
+            color: #666666;
+            line-height: 17px;
+            margin-right: 16px;
+        }
+    }
 
-                }
+    .content-container {
+        display: flex;
+        flex-direction: row;
+        margin: 11px 16px;
 
-                .name-container {
-                    flex: 1;
+        .line {
+            width: 1px;
+            background: #E1E1E3;
+            margin: 0 50px 0 18px;
+        }
 
-                    .follow-tag {
-                        height: 21px;
-                        font-size: 16px;
-                        font-weight: 400;
-                        color: #000000;
-                        line-height: 22px;
-                    }
-
-                    .name {
-                        margin-top: 2px;
-                        width: 120px;
-                        height: 16px;
-                        font-size: 12px;
-                        font-weight: 400;
-                        color: #666666;
-                        line-height: 17px;
-                    }
-                }
-
-                .time {
-                    align-self: flex-start;
-                    height: 16px;
-                    font-size: 12px;
-                    font-weight: 400;
-                    color: #666666;
-                    line-height: 17px;
-                    margin-right: 16px;
-                }
+        .content {
+            flex: 1;
+            padding-bottom: 18px;
+            .title-tag {
+                height: 21px;
+                font-size: 14px;
+                font-weight: 400;
+                color: #000000;
+                line-height: 20px;
+                margin-top: 10px;
             }
 
-            .content-container {
-                display: flex;
-                flex-direction: row;
-                margin: 11px 16px;
-
-                .line {
-                    width: 1px;
-                    background: #E1E1E3;
-                    margin: 0 50px 0 18px;
-                }
-
-                .content {
-                    flex: 1;
-                    padding-bottom: 18px;
-                    .title-tag {
-                        height: 21px;
-                        font-size: 14px;
-                        font-weight: 400;
-                        color: #000000;
-                        line-height: 20px;
-                        margin-top: 10px;
-                    }
-
-                    .audio-player-container {
-                        margin: 8px 0;
-                    }
-
-                    .watch-audio-text {
-                        margin: 8px 0;
-                        height: 16px;
-                        font-size: 13px;
-                        font-weight: 500;
-                        color: #FF7A45;
-                        line-height: 18px;
-                    }
-
-                    .desc {
-                        font-size: 13px;
-                        font-weight: 400;
-                        color: #666666;
-                        line-height: 18px;
-                        padding: 4px 0;
-                    }
-                }
+            .audio-player-container {
+                margin: 8px 0;
             }
 
+            .watch-audio-text {
+                margin: 8px 0;
+                height: 16px;
+                font-size: 13px;
+                font-weight: 500;
+                color: #FF7A45;
+                line-height: 18px;
+            }
+
+            .desc {
+                font-size: 13px;
+                font-weight: 400;
+                color: #666666;
+                line-height: 18px;
+                padding: 4px 0;
+            }
         }
+    }
+
+}
 .posrtv {
     position: relative;
     margin-right: 15px;
@@ -1089,18 +1098,8 @@ export default {
 .posrtv:hover .abs {
     display: block;
 }
-.colred {
-    color: #ff7a45;
-}
-.colgry {
-    color: #ccc;
-}
 .eltagtop {
     margin-bottom: 10px;
-}
-.colblue {
-    color: #50b7f7;
-    cursor: pointer;
 }
 .project-record {
     padding: 10px 0;
@@ -1117,10 +1116,13 @@ export default {
     display: flex;
     flex-wrap: wrap;
     .plantimg {
+        display: flex;
         margin: 5px;
         width: 95px;
         height: 95px;
         overflow: hidden;
+        align-items: center;
+        justify-content: center;
         img {
             width: 95px;
             height: 100%;
@@ -1128,11 +1130,9 @@ export default {
     }
 }
 .previewimg {
+    padding: 10px;
+    height: 500px;
     text-align: center;
-    img {
-        width: 500px;
-        padding: 10px;
-    }
 }
 /deep/.query-cont__col .query-col__input .el-input {
     width: 150px;

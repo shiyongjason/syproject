@@ -48,12 +48,18 @@
             </div>
         </div>
         <el-dialog id='el-dialog' :title="form.id?'项目编辑':'新建项目'" :visible.sync="addProject" :before-close="cancelDialog" width="920px" :close-on-click-modal="false">
-            <el-form ref="form" :model="form" :rules="rules" label-width="130px" label-position="left">
+            <el-form ref="form" :model="form" :rules="rules" label-width="130px" label-position="right">
                 <el-form-item label="项目名称：" prop="projectName">
                     <el-input v-model.trim="form.projectName" show-word-limit placeholder="请输入项目全称" maxlength='50' style="width:356px"></el-input>
                 </el-form-item>
                 <el-form-item label="项目简称：" prop="projectSimpleName">
                     <el-input v-model.trim="form.projectSimpleName" show-word-limit placeholder="请输入项目简称" maxlength='6' style="width:356px"></el-input>
+                </el-form-item>
+                <el-form-item label="公司LOGO：">
+                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="form.companyLogo" ref="uploadImg" @back-event="uploadSuccess" :imgW="60" :imgH="60" />
+                    <div class="upload-tips">
+                        建议尺寸：36*36，图片大小1M以内，支持jpeg,png和jpg格式
+                    </div>
                 </el-form-item>
                 <el-form-item label-width="0px">
                     <div class="city-select">
@@ -93,9 +99,14 @@
                 </el-form-item>
                 <el-form-item label="项目类型：" prop="projectType">
                     <el-checkbox-group v-model="form.projectType">
-                        <el-checkbox label="1">氟机空调集控系统</el-checkbox>
-                        <el-checkbox label="2">水机空调集控系统</el-checkbox>
-                        <el-checkbox label="3">计费系统</el-checkbox>
+                        <el-checkbox v-for="[key, value] of projectTypeOptions" :key="key" :label="key">
+                            {{value}}
+                            <el-form-item prop="feeType" v-if="showFeeType && key === projectTypeKey.BILLING_SYSTEM" class="inline-form-item">
+                                <el-radio-group v-model="form.feeType">
+                                    <el-radio v-for="[key, value] of feeTypeOptions" :key="key" :label="key" @click="onRadioClick">{{value}}</el-radio>
+                                </el-radio-group>
+                            </el-form-item>
+                        </el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item label="项目包含设备：" prop="deviceTypes">
@@ -136,10 +147,11 @@
 </template>
 
 <script>
-import { iotUrl } from '@/api/config'
+import { iotUrl, interfaceUrl } from '@/api/config'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { createControlProject, editControlProject } from '../api/index'
 import { getChiness } from '../../hmall/membership/api'
+import { PROJECT_TYPE_KEY, PROJECT_TYPE_OPTIONS, FEE_TYPE_OPTIONS } from './const.js'
 
 const _form = {
     projectName: '',
@@ -154,8 +166,10 @@ const _form = {
     companyName: '',
     adminName: '',
     username: '',
+    companyLogo: '',
     projectType: [],
-    deviceTypes: []
+    deviceTypes: [],
+    feeType: ''
 }
 
 const _queryParams = {
@@ -170,6 +184,13 @@ const _queryParams = {
 }
 export default {
     name: 'projectManager',
+    watch: {
+        'form.projectType' (val) {
+            if (!val.includes(PROJECT_TYPE_KEY.BILLING_SYSTEM)) {
+                this.form.feeType = ''
+            }
+        }
+    },
     data () {
         const checkDeviceTypeRule = (rule, value, callback) => {
             let isHas = false
@@ -252,12 +273,28 @@ export default {
                 ],
                 projectType: [
                     { required: true, message: '请选择项目类型', trigger: 'blur' }
+                ],
+                feeType: [
+                    { required: true, message: '请选择计费方式', trigger: 'change' }
                 ]
             },
-            loading: false
+            loading: false,
+            projectTypeOptions: PROJECT_TYPE_OPTIONS,
+            feeTypeOptions: FEE_TYPE_OPTIONS,
+            projectTypeKey: PROJECT_TYPE_KEY
         }
     },
     computed: {
+        uploadInfo () {
+            return {
+                action: interfaceUrl + 'tms/files/upload',
+                data: {
+                    updateUid: this.userInfo.employeeName
+                },
+                accept: 'image/jpeg, image/jpg, image/png',
+                name: 'multiFile'
+            }
+        },
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
@@ -298,6 +335,9 @@ export default {
             }
             return []
         },
+        showFeeType () {
+            return this.form.projectType.includes(PROJECT_TYPE_KEY.BILLING_SYSTEM)
+        },
         ...mapGetters({
             clouldControlProjectList: 'clouldControlProjectList',
             clouldControlProjectDetail: 'clouldControlProjectDetail',
@@ -313,6 +353,9 @@ export default {
             getClouldControlProjectDetail: 'getClouldControlProjectDetail',
             getDeviceTypes: 'getClouldControlProjectDevicesTypes'
         }),
+        uploadSuccess (val) {
+            this.form.companyLogo = val.imageUrl
+        },
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
             this.onQuery()
@@ -378,17 +421,24 @@ export default {
         async editProject (id) {
             await this.getClouldControlProjectDetail({ id: id })
             this.form = this.clouldControlProjectDetail
+            // 编辑页面拆分projectType为两个变量
+            let index = this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM) + 1 || this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_ELECTRICITY_METER) + 1 || this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_HEAT_METER) + 1
+            if (index > 0) {
+                this.$set(this.form, 'feeType', `${this.form.projectType[index - 1] - PROJECT_TYPE_KEY.BILLING_SYSTEM}`)
+                this.form.projectType[index - 1] = PROJECT_TYPE_KEY.BILLING_SYSTEM
+            } else {
+                this.$set(this.form, 'feeType', '')
+            }
             this.addProject = true
         },
         async saveProject () {
-            console.log(this.form)
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     if (this.form.id) {
                         console.log('编辑', this.form.id)
-                        await editControlProject({ ...this.form, updateBy: this.userInfo.employeeName })
+                        await editControlProject({ ...this._resolveForm(), updateBy: this.userInfo.employeeName })
                     } else {
-                        await createControlProject({ ...this.form, createBy: this.userInfo.employeeName })
+                        await createControlProject({ ...this._resolveForm(), createBy: this.userInfo.employeeName })
                     }
                     if (this.$refs.form) {
                         console.log('新增', this.form.id)
@@ -400,6 +450,25 @@ export default {
                     return false
                 }
             })
+        },
+        /**
+         * 处理form表单
+         * 后端是将计费系统设置成3个projectType类型，当时在页面上用一个独立字段更加合理一些
+         * 所以这里在提交之前，将feeType和projectType进行合并处理
+         * projectType包含计费系统的时候   projectType对应的值 = projectType的值 + feeType的值
+         *
+         * @returns 返回处理后的Form
+         */
+        _resolveForm () {
+            let resultForm = JSON.parse(JSON.stringify(this.form))
+            // 说明Form中的projectType包含计费系统
+            if (this.showFeeType) {
+                let index = resultForm.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM)
+                if (index >= 0 && resultForm.feeType) {
+                    resultForm.projectType[index] = `${resultForm.projectType[index] * 1 + resultForm.feeType * 1}`
+                }
+            }
+            return resultForm
         },
         cancelDialog () {
             this.currentDeviceType = null
@@ -438,13 +507,15 @@ export default {
         async getAreacode () {
             const { data } = await getChiness()
             this.provinceList = data
+        },
+        onRadioClick (e) {
+            e.stopPropagation()
         }
     },
     mounted () {
         this.onSearch()
         this.getAreacode()
         this.getDeviceTypes()
-        console.log(this.deviceTypes, 'xxxxx')
     }
 }
 </script>
@@ -453,6 +524,15 @@ export default {
 .spanflex {
     font-size: 16px;
     padding-bottom: 10px;
+}
+
+.upload-tips {
+    font-size: 12px;
+    color: #999;
+    display: flex;
+    align-items: center;
+    height: 60px;
+    padding-left: 10px;
 }
 .upload-fault {
     margin-top: 30px;
@@ -471,7 +551,14 @@ export default {
     // align-items: center;
     flex-direction: row;
 }
-
+.inline-form-item {
+    display: inline-block;
+    margin-left: 30px;
+}
+/deep/ .el-checkbox {
+    display: block;
+    width: 200px;
+}
 /deep/ .city-select .el-input {
     width: 164px !important;
 }
@@ -488,5 +575,9 @@ export default {
     padding-top: 10px;
     max-height: 650px; // 最大高度
     overflow: auto;
+}
+/deep/ .el-radio {
+    margin-right: 0;
+    padding-right: 30px;
 }
 </style>

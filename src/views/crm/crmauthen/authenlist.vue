@@ -68,7 +68,7 @@
                         </el-select>
                     </div>
                 </div>
-                  <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col__label">会员标签：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.memberTag">
@@ -86,7 +86,7 @@
                         </HDatePicker>
                     </div>
                 </div>
-                 <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col__label">橙工采会员：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.chengGongCaiLable">
@@ -116,20 +116,22 @@
                 </b>; 白名单 <b>{{crmauthLoan.whiteListNum||0}}</b>; 黑名单 <b>{{crmauthLoan.blackListNum||0}}</b>; 待审核 <b>{{crmauthLoan.waitToAuditNum||0}}</b></el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 ::rowKey="rowKey" :isShowIndex='true'>
                 <template slot="userAccount" slot-scope="scope">
-                    <span class="colblue" @click="onLinkship(scope.data.row.userAccount)"> {{scope.data.row.userAccount}}</span>
+                    <span v-if="hosAuthCheck(authen_phone_link)" class="link-cell" @click="onLinkship(scope.data.row.userAccount)"> {{scope.data.row.userAccount}}</span>
+                    <span v-else>{{scope.data.row.userAccount}}</span>
                 </template>
-                 <template slot="memberTag" slot-scope="scope">
-                     {{memberTagArr[scope.data.row.memberTag-1].value}}
+                <template slot="memberTag" slot-scope="scope">
+                    {{memberTagArr[scope.data.row.memberTag-1].value}}
                 </template>
-                 <template slot="chengGongCaiLable" slot-scope="scope">
-                     {{chengLabel[scope.data.row.chengGongCaiLable]}}
+                <template slot="chengGongCaiLable" slot-scope="scope">
+                    {{chengLabel[scope.data.row.chengGongCaiLable]}}
                 </template>
                 <template slot="customerManager" slot-scope="scope">
-                     <p>{{scope.data.row.customerManager||'-'}}</p>
-                     <p>{{scope.data.row.customerManagerPhone||'-'}}</p>
+                    <p>{{scope.data.row.customerManager||'-'}}</p>
+                    <p>{{scope.data.row.customerManagerPhone||'-'}}</p>
                 </template>
                 <template slot="userName" slot-scope="scope">
-                    <span class="colblue" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
+                    <span v-if="hosAuthCheck(authen_name_link)" class="link-cell" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
+                    <span v-else>{{scope.data.row.userName||'-'}}</span>
                 </template>
                 <template slot="areaname" slot-scope="scope">
                     {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName}}
@@ -148,7 +150,7 @@
                 </template>
             </basicTable>
         </div>
-        <businessDrawer  :drawer=drawer @backEvent='restDrawer' ref="drawercom"></businessDrawer>
+        <businessDrawer :drawer=drawer @backEvent='restDrawer' ref="drawercom"></businessDrawer>
     </div>
 </template>
 <script>
@@ -157,10 +159,13 @@ import { deepCopy } from '@/utils/utils'
 import businessDrawer from './components/businessDrawer'
 import { BUS_TYPE_LIST, RISK_TYPE_LIST, AUTEHEN_LIST } from '../const'
 import * as Auths from '@/utils/auth_const'
+import { newCache } from '@/utils/index'
 export default {
-    name: 'projectlist',
+    name: 'authenlist',
     data () {
         return {
+            authen_name_link: Auths.AUTHENLIST_LINK_ACCOUNTMANAGE_NAME,
+            authen_phone_link: Auths.AUTHENLIST_LINK_ACCOUNTMANAGE_PHONE,
             authen_detail: Auths.CRM_AUTHEN_DETAIL,
             chengLabel: {
                 0: '橙工采会员(未激活)',
@@ -216,7 +221,7 @@ export default {
             authenList: AUTEHEN_LIST,
             drawer: false,
             branchArr: [],
-            memberTagArr: [ { key: 1, value: '一般会员' }, { key: 2, value: '认证会员' }, { key: 3, value: '评级会员' }, { key: 4, value: '签约会员' }, { key: 5, value: '交易会员' } ]
+            memberTagArr: [{ key: 1, value: '一般会员' }, { key: 2, value: '认证会员' }, { key: 3, value: '评级会员' }, { key: 4, value: '签约会员' }, { key: 5, value: '交易会员' }]
         }
     },
     components: {
@@ -250,6 +255,13 @@ export default {
         this.getFindNest()
         this.getFindbranch()
         if (this.$route.query.name) {
+            this.searchList()
+        }
+    },
+    activated () {
+        // 解决VIP申请、VIP管理、信用管理keep-alive缓存问题
+        if (this.$route.query.name) {
+            this.queryParams.companyName = this.$route.query.name
             this.searchList()
         }
     },
@@ -354,19 +366,18 @@ export default {
         onLinkship (val) {
             this.$router.push({ path: '/b2b/account/accountManage', query: { account: val } })
         }
+    },
+    beforeUpdate () {
+        newCache('authenlist')
     }
 }
 </script>
 <style lang="scss" scoped>
 .colred {
-    color: #ff0000;
+    color: $redColor;
 }
 .colgry {
     color: #06c306;
-}
-.colblue {
-    color: #50b7f7;
-    cursor: pointer;
 }
 .eltagtop {
     margin-bottom: 10px;

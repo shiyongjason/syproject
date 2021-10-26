@@ -49,6 +49,10 @@ const initOssSTS = (function () {
                 client = null
             }
             timer = setTimeout(() => {
+                OSSConfig = {
+                    region: ossRegion,
+                    bucket: ossBucket
+                }
                 client = null
                 clearTimeout(timer)
             }, REFRESH_TOKEN_TIME)

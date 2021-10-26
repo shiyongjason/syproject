@@ -2,7 +2,7 @@
     <div class="business">
         <el-form-item label="工商登记时间：" prop="regTime" label-width='160px'>
             <el-date-picker v-if="isEdit" v-model="business.regTime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd" type="date" placeholder="请选择工商登记时间"></el-date-picker>
-            <span v-else>{{business.regTime?formatDate(business.regTime):'-'}}</span>
+            <span v-else>{{business.regTime|momentFormat('YYYY-MM-DD')}}</span>
         </el-form-item>
         <el-form-item label="工商状态：" prop="commercialStatus" label-width='150px'>
             <el-select v-if="isEdit" v-model="business.commercialStatus" clearable placeholder="请选择状态" style="margin:0 10px">
@@ -214,9 +214,6 @@ export default {
             this.business[key].map(item => {
                 this.$set(item, 'docType', str)
             })
-        },
-        formatDate (val) {
-            return moment(val).format('YYYY-MM-DD')
         }
     },
     mounted () {

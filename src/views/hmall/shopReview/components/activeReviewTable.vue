@@ -58,7 +58,7 @@
                 align="center"
                 label="创建时间">
                 <template slot-scope="scope">
-                    {{scope.row.createTime | formatterTime}}
+                    {{scope.row.createTime | momentFormat}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -165,7 +165,7 @@
             </el-form>
             <el-form ref="form" :rules="rules" :model="suggest" class="suggest">
                 <div v-if="dialogParams.type === 'review'">
-                    <h2>审核意见</h2>
+                    <h2 class="sub-title">审核意见</h2>
                     <div>
                         <el-form-item label="审核结果" prop="auditResult">
                             <el-radio v-model="suggest.auditResult" label="1">审核通过</el-radio>
@@ -298,31 +298,26 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
     .suggest-btn {
         padding-top: 20px;
         text-align: right;
     }
     .sub-title{
         font-size: 18px;
-        margin: 0;
+        margin-bottom: 10px;
         padding: 0;
     }
-</style>
-<style>
-    .el-dialog .el-form .el-form-item{
-        margin-bottom: 0;
-    }
-    .el-dialog--center .el-dialog__body{
-        padding: 12px 25px 15px;
-    }
-    .el-form--inline .el-form-item {
-        width: 45%;
-    }
-    .el-form-item {
+    /deep/ .el-dialog .el-form .el-form-item{
         margin-bottom: 5px;
     }
-    .el-form-item__label,.el-form-item__content{
+    /deep/ .el-dialog--center .el-dialog__body{
+        padding: 12px 25px 15px;
+    }
+    /deep/ .el-form--inline .el-form-item {
+        width: 45%;
+    }
+    /deep/ .el-form-item__label, /deep/ .el-form-item__content{
         line-height: 25px
     }
     .suggest .el-form-item {

@@ -7,7 +7,7 @@
                         <template v-if="this.status === FundsDict.repaymentTypeArrays.list[0].key">首付款</template>
                         <template v-if="this.status === FundsDict.repaymentTypeArrays.list[1].key">服务费</template>
                         <template v-if="this.status === FundsDict.repaymentTypeArrays.list[2].key">剩余货款</template>
-                        金额(元)：{{dialogDetail.paymentAmount | fundMoneyHasTail}}
+                        金额(元)：{{dialogDetail.paymentAmount | moneyFormat}}
                     </p>
                     <p v-if="!detail._seeing">
                         支付时间：{{moment(FundsDict.paidTime).format('YY-MM-DD HH:mm:ss')}}
@@ -71,10 +71,11 @@ export default {
     computed: {
         title () {
             let title = '支付确认'
-
-            // if (this.detail.companyName || this.detail.amount) {
             if (this.detail._seeing) {
                 title = '查看凭证'
+            }
+            if (this.detail._prev) {
+                title = '首付款到账确认'
             }
             return title
         },

@@ -3,10 +3,11 @@
         <div v-show="toggle" class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <div class="query-col-title">分部：</div>
-                    <div class="query-col-input">
+                    <div class="query-col-title">所属地域：</div>
+                    <!-- <div class="query-col-input">
                         <HAutocomplete :selectArr="branchList" @back-event="backPlat" placeholder="请输入分部名称" :selectObj="branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                    </div>
+                    </div> -->
+                    <RegionCascader ref="cascader" @backEvent='findRegionCode' />
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">目标年份：</div>
@@ -28,7 +29,8 @@
                 </div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="baseUrl + 'rms/api/subsection/target/import'" :data="{createUser: userInfo.employeeName}" :headers='headersData' :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
+                        <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="baseUrl + 'rms/api/subsection/target/import'" :data="{createUser: userInfo.employeeName}" :headers='headersData' :on-success="isSuccess" :on-error="isError" auto-upload
+                            :on-progress="uploadProcess">
                             <el-button v-if="hosAuthCheck(importAuth)" type="default" style="margin-left:0">
                                 批量导入
                             </el-button>
@@ -54,7 +56,9 @@ import { interfaceUrl } from '@/api/config'
 import branchTable from './components/branch.vue'
 import { departmentAuth } from '@/mixins/userAuth'
 import { getOldTableTop } from '@/utils/getTableTop'
-import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+// import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import RegionCascader from './components/regionCascader.vue'
+
 import { AUTH_WIXDOM_BRANCH_TARGET_EXPORT, AUTH_WIXDOM_BRANCH_TARGET_BULK_IMPORT, AUTH_WIXDOM_BRANCH_TARGET_DOWN_TEMPLATE } from '@/utils/auth_const'
 export default {
     name: 'branchTarget',
@@ -72,8 +76,10 @@ export default {
             queryParams: {
                 pageSize: 10,
                 pageNumber: 1,
-                subsectionCode: '',
-                date: new Date()
+                organizationCodes: '',
+                date: new Date(),
+                jobNumber: '',
+                authCode: ''
             },
             queryParamsTemp: {
             },
@@ -98,9 +104,12 @@ export default {
     },
     components: {
         branchTable,
-        HAutocomplete
+        RegionCascader
     },
     methods: {
+        findRegionCode (val) {
+            this.queryParams.organizationCodes = val.toString()
+        },
         exportHref () {
             exportBranchTarget(this.queryParamsTemp)
         },
@@ -134,12 +143,12 @@ export default {
         },
         onQuery (params) {
             this.queryParamsTemp = Object.assign({}, params)
-            this.queryParamsTemp.date = this.$root.$options.filters.formatDate(params.date, 'YYYY')
+            this.queryParamsTemp.date = this.$root.$options.filters.momentFormat(params.date, 'YYYY')
             this.findBrandTargetTable(params)
         },
         async findBrandTargetTable (parentParams) {
             const params = Object.assign({}, parentParams)
-            params.date = this.$root.$options.filters.formatDate(params.date, 'YYYY')
+            params.date = this.$root.$options.filters.momentFormat(params.date, 'YYYY')
             const { data } = await findBrandTargetTable(params)
             this.tableData = data.data.list
             this.paginationData = {
@@ -165,14 +174,16 @@ export default {
                 selectCode: '',
                 selectName: ''
             }
-            this.newBossAuth(['F'])
+            this.$refs.cascader.onBackRest()
             this.onQuery(this.queryParams)
         }
     },
     mounted () {
+        let userInfo = sessionStorage.getItem('userInfo')
+        this.queryParams.jobNumber = JSON.parse(userInfo).jobNumber
+        this.queryParams.authCode = JSON.parse(sessionStorage.getItem('authCode'))
         this.queryParamsReset = JSON.parse(JSON.stringify(this.queryParams))
         this.onQuery(this.queryParams)
-        this.newBossAuth(['F'])
         this.countHeight()
     }
 }

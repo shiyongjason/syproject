@@ -1,6 +1,19 @@
 ::-webkit-scrollbar-thumb {
     background-color: #d6d1d1 !important;
 }
+/deep/.el-form {
+    .el-input {
+        width: auto !important;
+    }
+}
+/deep/.el-dialog {
+    .el-input {
+        width: auto !important;
+    }
+}
+/deep/.el-select__tags{
+    padding-left: 10px;
+}
 .finalApproval {
     margin-top: 50px;
     padding: 0 10px 100px 0px;
@@ -130,6 +143,7 @@
         }
         .form-table {
             margin-top: 20px;
+            width: 1280px;
         }
         /deep/.hosjoy-table {
             th.form-table-header .cell span:before {
@@ -188,14 +202,14 @@
         font-style: normal;
         color: #ff7a45;
     }
-    span{
+    span {
         color: red;
     }
 }
-.dingBg{
+.dingBg {
     background: #e5e5e5;
     color: red;
-    padding:8px;
+    padding: 8px;
 }
 // /deep/.el-select-dropdown{
 //     color: #f00;

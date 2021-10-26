@@ -12,15 +12,15 @@
         </div>
         <div class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 85px">采购单金额：</font><span>
-                {{ data.poAmount|fundMoneyHasTail}} 元</span></div>
+                {{ data.poAmount|moneyFormat}} 元</span></div>
             <div class="info-layout-item"><font style="flex: 0 0 120px">上游预付款核销金额：</font><span>
-                {{ data.prepaymentWriteOffAmount|fundMoneyHasTail}} 元</span></div>
+                {{ data.prepaymentWriteOffAmount|moneyFormat}} 元</span></div>
         </div>
         <div class="info-layout">
              <div class="info-layout-item"><font style="flex: 0 0 100px">剩余货款金额：</font><span>
-                {{ data.noPayAmount|fundMoneyHasTail}} 元</span></div>
+                {{ data.noPayAmount|moneyFormat}} 元</span></div>
             <div class="info-layout-item"><font style="flex: 0 0 85px">支付单金额：</font><span>
-                {{ data.applyAmount|fundMoneyHasTail}} 元</span></div>
+                {{ data.applyAmount|moneyFormat}} 元</span></div>
         </div>
         <div class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 85px">首付款比例：</font>
@@ -58,7 +58,7 @@
             </div>
         </div>
         <!-- 货款申请信息 -->
-        <div class="tab-layout-title"><span></span>货款申请信息：<font>申请人：{{data.applyBy||'-'}}</font><font>申请时间：{{data.applyTime|formatterTime}}</font></div>
+        <div class="tab-layout-title"><span></span>货款申请信息：<font>申请人：{{data.applyBy||'-'}}</font><font>申请时间：{{data.applyTime|momentFormat}}</font></div>
         <div>
              <div class="info-layout-item"><font style="flex: 0 0 85px">上游供应商：</font><span>{{data.supplierCompanyName||'-'}}</span></div>
         </div>
@@ -85,11 +85,11 @@
              <div class="info-layout-item"><font style="flex: 0 0 130px">下游合作方式：</font><span>{{data.dealerCooperationMethod?dealerCooperationMethodArr.get(data.dealerCooperationMethod):'-'}}</span></div>
          </div>
           <!-- 放款交接内容 -->
-        <div class="tab-layout-title"><span></span>放款交接内容：<font>申请人：{{data.initiateBy||'-'}}</font><font>申请时间：{{data.initiateTime|formatterTime}}</font></div>
+        <div class="tab-layout-title"><span></span>放款交接内容：<font>申请人：{{data.initiateBy||'-'}}</font><font>申请时间：{{data.initiateTime|momentFormat}}</font></div>
         <div style="margin-left:10px">
         <div class="info_box">
              <div class="info_box-icon"><i class="el-icon-s-claim"></i>预付款到好享家账户</div>
-             <div class="info_box-txt"><font>预付款金额：{{data.advancePaymentAmount|fundMoneyHasTail}}元</font><font> 确认到账时间：{{data.confirmArrivalTime|formatterTime}}</font><font>确认人：{{data.confirmArrivalBy}}</font></div>
+             <div class="info_box-txt"><font>预付款金额：{{data.advancePaymentAmount|moneyFormat}}元</font><font> 确认到账时间：{{data.confirmArrivalTime|momentFormat}}</font><font>确认人：{{data.confirmArrivalBy}}</font></div>
             <div  class="info-layout">
             <div class="info-layout-item">
                 <div class="info-layout-img" v-for="(item,index) in data.advancePaymentVouchers" :key="index">
@@ -135,7 +135,7 @@
         </div>
         <div style="margin-top:20px" v-if="data.supplierPaymentType==2">
         <div class="info_box-stit"><h3>票面信息</h3></div>
-         <div class="info_box-txt"><font>更新人：{{data.billAmountResponse.billAmountCreateBy||'-'}}</font><font>更新时间：{{data.billAmountResponse.billAmountCreateTime|formatterTime}}</font></div>
+         <div class="info_box-txt"><font>更新人：{{data.billAmountResponse.billAmountCreateBy||'-'}}</font><font>更新时间：{{data.billAmountResponse.billAmountCreateTime|momentFormat}}</font></div>
         <div class="info_box-table">
             <div class="info_box-table--flex">
                 <div class="info_box-table--left">出票张数</div>
@@ -143,11 +143,11 @@
             </div>
              <div class="info_box-table--flex" v-for="(item,index) in data.billAmountResponse.billAmountDetail" :key="index">
                 <div class="info_box-table--left">第{{item.number}}张票</div>
-                <div class="info_box-table--left">{{item.amount|fundMoneyHasTail}}</div>
+                <div class="info_box-table--left">{{item.amount|moneyFormat}}</div>
             </div>
              <div class="info_box-table--flex">
                 <div class="info_box-table--left">合计</div>
-                <div class="info_box-table--left">{{data.billAmountResponse.totalAmount|fundMoneyHasTail}}</div>
+                <div class="info_box-table--left">{{data.billAmountResponse.totalAmount|moneyFormat}}</div>
             </div>
         </div>
         <transition name="fade" mode="out-in">
@@ -156,7 +156,7 @@
         <transition name="slide-fade">
         <div v-if="isMoreBill">
             <div v-for="(item,index) in billData" :key="index">
-                <p class="info_box-txt"><font>{{index!=0?'更新人':'创建人'}}：{{item.billAmountCreateBy}}</font><font> {{index!=0?'更新时间':'提交时间'}}：{{item.billAmountCreateTime|formatterTime}}</font></p>
+                <p class="info_box-txt"><font>{{index!=0?'更新人':'创建人'}}：{{item.billAmountCreateBy}}</font><font> {{index!=0?'更新时间':'提交时间'}}：{{item.billAmountCreateTime|momentFormat}}</font></p>
                 <div class="info_box-table">
                     <div class="info_box-table--flex">
                         <div class="info_box-table--left">出票张数</div>
@@ -164,11 +164,11 @@
                     </div>
                     <div class="info_box-table--flex" v-for="(jtem,jndex) in item.billAmountDetail" :key="jndex">
                         <div class="info_box-table--left">第{{jtem.number}}张票</div>
-                        <div class="info_box-table--left">{{jtem.amount|fundMoneyHasTail}}</div>
+                        <div class="info_box-table--left">{{jtem.amount|moneyFormat}}</div>
                     </div>
                     <div class="info_box-table--flex">
                         <div class="info_box-table--left">合计</div>
-                        <div class="info_box-table--left">{{item.totalAmount|fundMoneyHasTail}}</div>
+                        <div class="info_box-table--left">{{item.totalAmount|moneyFormat}}</div>
                     </div>
                 </div>
             </div>
@@ -180,8 +180,9 @@
         </div>
         <div class="info_btnbot">
               <div>
+
                 <el-button type="primary" @click="onArchiveDown" v-if="hosAuthCheck(upstreamDownPurchase)">下载采购合同</el-button>
-                <el-button type="primary" @click="onLoanDown" v-if="hosAuthCheck(upstreamPayDown)">下载放款交接单</el-button>
+                <el-button type="primary" :disabled="status==2||status==1" @click="onLoanDown" v-if="hosAuthCheck(upstreamPayDown)">下载放款交接单</el-button>
                 <el-button type="primary" @click="onExport" v-if="hosAuthCheck(upstreamDownBills)&&data.supplierPaymentType==2">下载出票明细</el-button>
               </div>
               <div style="margin-top:10px">
@@ -232,6 +233,7 @@ export default class LoanHandoverInformation extends Vue {
     // @Prop({ default: '' }) readonly userInfo!:any  // fix Property 'userInfo' is used before its initialization 假数据开发的时候加了一个非空定义
     @Prop({ type: Object, required: true, default: '' }) userInfo:any
     @Prop({ default: '' }) readonly paymentOrderId!:any
+    @Prop({ default: '' }) readonly status:number
 
     $refs!: {
         form: HTMLFormElement
@@ -330,6 +332,11 @@ export default class LoanHandoverInformation extends Vue {
     }
 
     onConfirm () {
+        // 首付款待确认给提示
+        if (this.status == 2) {
+            this.$message.warning('请确认首付款是否到账~')
+            return
+        }
         this.infoDialog = true
         this.title = '交接'
     }
@@ -376,6 +383,7 @@ export default class LoanHandoverInformation extends Vue {
     }
 
     mounted () {
+        console.log(this.status)
         this.dialogFormData.updateBy = this.userInfo.employeeName
     }
 }
