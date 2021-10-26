@@ -62,7 +62,7 @@
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <h-button table @click="onApproval(slotProps.data.row)" v-if="hosAuthCheck(advanceapprove)&&slotProps.data.row.status==1">审核</h-button>
+                    <h-button table @click="onApproval(slotProps.data.row)" v-if="hosAuthCheck(advanceapprove)&&(slotProps.data.row.status==1||slotProps.data.row.status==-1)">审核</h-button>
                     <h-button table @click="onWriteOff(slotProps.data.row)">核销</h-button>
                     <h-button table @click="onLook(slotProps.data.row)" v-if="hosAuthCheck(advancelook)"> 查看详情</h-button>
                     <h-button table @click="onApprovalRecord(slotProps.data.row)" v-if="hosAuthCheck(advancerecords)">审批记录</h-button>
@@ -101,13 +101,13 @@
                     <el-col :span="10" :offset='1'>申请时间：{{moment(detailForm.applyTime).format('yyyy-MM-DD HH:mm:ss')||'-'}}</el-col>
                     <el-col :span="10" :offset='1'>申请人：{{detailForm.applyUser||'-'}}</el-col>
                 </el-row>
-                <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>分财审核人：{{detailForm.approvalUser||'-'}}</el-col>
-                    <el-col :span="10" :offset='1'>审核时间：{{detailForm.approvalTime?moment(detailForm.approvalTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
+                <el-row ype="flex" class="row-bg" v-if="detailForm.status>-1">
+                    <el-col :span="10" :offset='1'>分财审核人：{{detailForm.financeApprovalUser||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>审核时间：{{detailForm.financeApprovalTime?moment(detailForm.financeApprovalTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
                 </el-row>
-                <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>审核结果：{{detailForm.approvalStatus==1?'通过':detailForm.approvalStatus==2?'不通过':'-'}}</el-col>
-                    <el-col :span="10" :offset='1'>审核备注：{{detailForm.approvalRemark||'-'}}</el-col>
+                <el-row ype="flex" class="row-bg" v-if="detailForm.status>-1">
+                    <el-col :span="10" :offset='1'>审核结果：{{detailForm.financeApprovalStatus==1?'通过':detailForm.financeApprovalStatus==2?'不通过':'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>审核备注：{{detailForm.financeApprovalRemark||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg" v-if="detailForm.approvalUser">
                     <el-col :span="10" :offset='1'>项目运营审核人：{{detailForm.approvalUser||'-'}}</el-col>
@@ -184,7 +184,11 @@
                 </div>
                 <div class="advance_examine-right">
                     <h3>分财审核信息</h3>
-                    <el-form :model="auditForm" :rules="auditRules" ref="auditForm" label-width="100px" class="demo-ruleForm">
+                     <el-row v-if="detailForm.status==1">
+                           <el-col class="col-padding" :span="23" :offset='1'>审核结果：{{detailForm.financeApprovalStatus==1?'通过':detailForm.financeApprovalStatus==2?'不通过':'-'}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>审核备注：{{detailForm.financeApprovalRemark||'-'}}</el-col>
+                     </el-row>
+                    <el-form v-if="detailForm.status==-1" :model="auditForm" :rules="auditRules" ref="auditForm" label-width="100px" class="demo-ruleForm">
                         <el-form-item label="审核结果：" prop="resource">
                             <el-radio-group v-model="auditForm.resource">
                                 <el-radio label="通过"></el-radio>
@@ -195,8 +199,8 @@
                             <el-input type="textarea" v-model="auditForm.remark" maxlength="200"></el-input>
                         </el-form-item>
                     </el-form>
-                    <h3>项目运营审核信息</h3>
-                    <el-form :model="operateForm" :rules="auditRules" ref="auditForm" label-width="100px" class="demo-ruleForm">
+                    <h3  v-if="detailForm.status==1">项目运营审核信息</h3>
+                    <el-form  v-if="detailForm.status==1" :model="operateForm" :rules="auditRules" ref="auditForm" label-width="100px" class="demo-ruleForm">
                         <el-form-item label="审核结果：" prop="resource">
                             <el-radio-group v-model="operateForm.resource">
                                 <el-radio label="通过"></el-radio>
@@ -212,7 +216,7 @@
             <p style="color: #999;">审核通过后，将会发送钉钉上游预付款支付审批流程</p>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="examineVisble = false">取 消</el-button>
-                <el-button type="primary" @click="onSubmitAudit">确认审核</el-button>
+                <el-button type="primary" @click="onSubmitAudit(detailForm.status)">确认审核</el-button>
             </span>
         </el-dialog>
 
@@ -291,17 +295,17 @@
 <script lang="tsx">
 import moment from 'moment'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { Action, Getter, State } from 'vuex-class'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
 import ImageAddToken from '@/components/imageAddToken/index.vue'
+import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import downloadFileAddToken from '@/components/downloadFileAddToken/index.vue'
 import { deepCopy } from '@/utils/utils'
-import './css/css.scss'
-import { getPrePayList, getPrePayDetail, submitPrePay, getPreTotal, passPre, passFailPre, getApprovalHistory, saveWriteOff } from './api/index'
+import * as Api from './api/index'
 import { PrepaymentDetailResponse, PrepaymentSupplierSubmitResponse, RespContractSignHistory } from '@/interface/hbp-project'
 import { CRM_ADVACE_UPSTREAMPAY, CRM_ADVACE_APPROVE, CRM_ADVACE_LOOK, CRM_ADVACE_RECORDS } from '@/utils/auth_const'
 import { newCache } from '@/utils/index'
+import './css/css.scss'
 
 // 定义类型
 interface Query{
@@ -309,6 +313,17 @@ interface Query{
 }
 
 const preStatus = [{ value: 1, label: '待项目运营审核' }, { value: 2, label: '流程审批中' }, { value: 3, label: '待支付' }, { value: 4, label: '支付单完成' }, { value: 5, label: '待核销' }, { value: 6, label: '已核销' }, { value: 7, label: '支付单关闭' }]
+
+enum SubmitApi {
+    /** 分财审核通过 */
+    updateFinancePass = 'updateFinancePass',
+    /** 分财审核不通过通过 */
+    updateFinanceFail = 'updateFinanceFail',
+        /** 运营审核通过 */
+    passPre = 'passPre',
+    /** 运营审核不通过通过 */
+    passFailPre = 'passFailPre'
+}
 
 @Component({
     name: 'Advancelist',
@@ -392,10 +407,10 @@ export default class Advancelist extends Vue {
         payAmount: '',
         payDate: ''
     }
-
     page = {
         total: 0
     }
+
     private tableLabel:tableLabelProps = [
         { label: '上游预付款支付单编号', prop: 'prepaymentNo', width: '160px' },
         { label: '所属分部', prop: 'subsectionName' },
@@ -469,7 +484,7 @@ export default class Advancelist extends Vue {
 
     public async getList () {
         this.queryParams.jobNumber = this.userInfo.jobNumber as string
-        const res:any = await Promise.all([getPreTotal(this.queryParams), getPrePayList(this.queryParams)])
+        const res:any = await Promise.all([Api.getPreTotal(this.queryParams), Api.getPrePayList(this.queryParams)])
         this.tableData = res[1].data.records
         this.page.total = res[1].data.total as number
         this.totalMoney = res[0].data
@@ -478,7 +493,7 @@ export default class Advancelist extends Vue {
     // 审核
     public async onApproval (v) {
         this.id = v.id
-        const { data } = await getPrePayDetail(v.id)
+        const { data } = await Api.getPrePayDetail(v.id)
         this.detailForm = { ...this.detailForm, ...data }
         this.examineVisble = true
         this.auditForm = {
@@ -487,13 +502,21 @@ export default class Advancelist extends Vue {
         }
     }
 
-    public onSubmitAudit ():void {
+    public onSubmitAudit (type):void {
         this.$refs['auditForm'].validate(async value => {
             if (value) {
                 if (this.auditForm.resource == '通过') {
-                    await passPre(this.id)
+                    if (type == 1) {
+                        await Api[SubmitApi['passPre']](this.id)
+                    } else {
+                        await Api[SubmitApi['updateFinancePass']](this.id)
+                    }
                 } else {
-                    await passFailPre(this.id, { remark: this.auditForm.remark.trim() })
+                    if (type == 1) {
+                        await Api[SubmitApi['passFailPre']](this.id, { remark: this.auditForm.remark.trim() })
+                    } else {
+                        await Api[SubmitApi['updateFinanceFail']](this.id, { remark: this.auditForm.remark.trim() })
+                    }
                 }
                 this.$message.success('提交成功')
                 this.getList()
@@ -507,7 +530,7 @@ export default class Advancelist extends Vue {
         this.payForm.prepaymentOrderId = this.detailForm.id
         this.$refs['payForm'].validate(async value => {
             if (value) {
-                await submitPrePay(this.payForm)
+                await Api.submitPrePay(this.payForm)
                 this.$message.success('提交成功')
                 this.getList()
                 this.dialogVisible = false
@@ -518,13 +541,13 @@ export default class Advancelist extends Vue {
 
     public async onLook (v) {
         this.dialogVisible = true
-        const { data } = await getPrePayDetail(v.id)
+        const { data } = await Api.getPrePayDetail(v.id)
         this.detailForm = { ...this.detailForm, ...data }
     }
 
     public async onApprovalRecord (v) {
         this.recordVisible = true
-        const { data } = await getApprovalHistory(v.id)
+        const { data } = await Api.getApprovalHistory(v.id)
         this.recordInfo = {
             distributor: v.distributor,
             applyAmount: v.applyAmount
@@ -550,7 +573,7 @@ export default class Advancelist extends Vue {
     public onSaveWriteOff () {
         this.$refs['writeOffForm'].validate(async value => {
             if (value) {
-                await saveWriteOff(this.id, { writeOffRemark: this.writeOffForm.writeOffRemark })
+                await Api.saveWriteOff(this.id, { writeOffRemark: this.writeOffForm.writeOffRemark })
                 this.$message.success('核销成功')
                 this.writeOffVisible = false
                 this.getList()
@@ -586,7 +609,3 @@ export default class Advancelist extends Vue {
     }
 }
 </script>
-
-function jobNumber(queryParams: Query, jobNumber: any, jobNumber: any): Query {
-    throw new Error('Function not implemented.')
-}

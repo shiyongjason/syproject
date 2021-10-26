@@ -410,6 +410,8 @@ export default {
                 maxEstimatedLoanTime: '', // 最小预估借款时间
                 minEstimateSignTime: '',
                 maxEstimateSignTime: '',
+                finalReviewPassStartTime: '',
+                finalReviewPassEndTime: '',
                 statusList: '',
                 projectName: '',
                 projectNo: '',
@@ -491,7 +493,7 @@ export default {
                     showOverflowTooltip: true
                 },
                 { label: '项目提交时间', prop: 'submitTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', showOverflowTooltip: true },
-                { label: '终审通过时间', prop: 'submitTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', showOverflowTooltip: true },
+                { label: '终审通过时间', prop: 'finalReviewPassTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm', showOverflowTooltip: true },
                 { label: '更新时间', prop: 'updateTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', showOverflowTooltip: true },
                 {
                     label: '项目资料',
@@ -571,11 +573,11 @@ export default {
         },
         approvalTimes () {
             return {
-                valueFormat: 'yyyy-MM-dd',
-                format: 'yyyy-MM-dd',
-                type: 'date',
-                startTime: this.queryParams.minEstimateSignTime,
-                endTime: this.queryParams.maxEstimateSignTime
+                valueFormat: 'yyyy-MM-ddTHH:mm',
+                format: 'yyyy-MM-dd HH:mm',
+                type: 'datetime',
+                startTime: this.queryParams.finalReviewPassStartTime,
+                endTime: this.queryParams.finalReviewPassEndTime
             }
         },
         ...mapState({
@@ -762,6 +764,12 @@ export default {
         },
         onEndSign (val) {
             this.queryParams.maxEstimateSignTime = val
+        },
+        onApprovalStart (val) {
+            this.queryParams.finalReviewPassStartTime = val
+        },
+        onApprovalEnd (val) {
+            this.queryParams.finalReviewPassEndTime = val
         },
         onEditproject (row) {
             this.$router.push({ path: '/goodwork/informationDetail', query: { projectId: row.id, status: row.status, docAfterStatus: row.docAfterStatus } })
