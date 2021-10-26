@@ -75,6 +75,8 @@ export const dynamicMatchPermission = (params) => axios.get(`/uaa/employee/posit
 
 // 重置权限
 export const resetPermission = (params) => axios.patch(`/uaa/employee/${params.jobNumber}/reset`)
+// 新的组织树
+export const findNewOrganizationTree = (type) => axios.get(`/uaa/api/organization/tree/${type}`)
 
 // 管理员岗位
 export const adminPost = () => axios.get('/uaa/position/admin-position', {})
