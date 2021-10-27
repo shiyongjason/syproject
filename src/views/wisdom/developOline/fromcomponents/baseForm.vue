@@ -134,7 +134,7 @@
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex'
 import { interfaceUrl } from '@/api/config'
-import { PHONE, checkIdCard } from '@/utils/rules'
+import { Phone, checkIdCard } from '@/utils/rules'
 import { FORMAT_LIST } from '../../store/const'
 import { departmentAuth } from '@/mixins/userAuth'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
@@ -171,7 +171,7 @@ export default {
                 ],
                 originalLegalPersonPhone: [
                     { required: true, message: '输入原公司法人手机号', trigger: 'blur' },
-                    { validator: PHONE, trigger: 'blur' }
+                    { validator: Phone, trigger: 'blur' }
                 ],
                 companyName: [
                     { required: true, message: '输入新公司名称', trigger: 'blur' }

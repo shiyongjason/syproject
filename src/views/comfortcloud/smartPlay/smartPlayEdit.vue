@@ -200,7 +200,7 @@ export default {
         },
         async getActivityDetail (id) {
             await this.findCloudSmartPlayPostDetail(id)
-            this.cloudSmartPlayPostDetail.effectiveTime = this.$root.$options.filters.formatDate(this.cloudSmartPlayPostDetail.effectiveTime, 'YYYY-MM-DD HH:mm:ss')
+            this.cloudSmartPlayPostDetail.effectiveTime = this.$root.$options.filters.momentFormat(this.cloudSmartPlayPostDetail.effectiveTime, 'YYYY-MM-DD HH:mm:ss')
             this.smartPlayForm = { ...this.cloudSmartPlayPostDetail }
         },
         onSaveSmartPlay () {

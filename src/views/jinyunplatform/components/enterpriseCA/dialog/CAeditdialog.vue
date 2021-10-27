@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import { PHONE, checkIdCard } from '@/utils/rules'
+import { Phone, checkIdCard } from '@/utils/rules'
 import { editSign } from '../../../api/index'
 export default {
     name: 'CAeditdialog',
@@ -109,7 +109,7 @@ export default {
                 ],
                 legalPhone: [
                     { required: true, message: '请输入法人手机号', trigger: 'blur' },
-                    { validator: PHONE, trigger: 'blur' }
+                    { validator: Phone, trigger: 'blur' }
                 ]
             }
         }
