@@ -569,6 +569,7 @@ export default class Advancelist extends Vue {
         this.prePayVisble = true
 
         this.$nextTick(() => {
+            this.prePayForm.payVouchers = []
             this.$refs['prePayForm'].clearValidate()
         })
     }

@@ -1,5 +1,4 @@
-
-export interface JsonNode {
+export interface JsonNode{
 
 }
 /**
@@ -275,6 +274,13 @@ export interface ReqLoanTransferUpdate {
      * @memberof ReqLoanTransferUpdate
      */
     updateBy: string
+
+    /**
+     * 银行转账方式 1：司库线上转账 2：线下网银转账 注：银行转账必填
+     * @type {number | string}
+     * @memberof ReqLoanTransferUpdate
+     */
+    bankTransferMethod?: number | string
 
 }
 
@@ -1490,6 +1496,29 @@ export interface PrepaymentMemberResponse {
      * @memberof PrepaymentMemberResponse
      */
     payVouchers: Array<PayVoucher>
+
+}
+
+/**
+*
+* @export
+* @interface SupplierOnlineBankTransferConfirmRequest
+*/
+export interface SupplierOnlineBankTransferConfirmRequest {
+
+    /**
+     * 支付单id
+     * @type {number | string}
+     * @memberof SupplierOnlineBankTransferConfirmRequest
+     */
+    paymentOrderId: number | string
+
+    /**
+     * 网银支付时间
+     * @type {string}
+     * @memberof SupplierOnlineBankTransferConfirmRequest
+     */
+    paymentTime: string
 
 }
 
@@ -5859,14 +5888,14 @@ export interface IPageRespUpStreamPayment {
      * @type {number | string}
      * @memberof IPageRespUpStreamPayment
      */
-    current: number | string
+    size: number | string
 
     /**
      *
      * @type {number | string}
      * @memberof IPageRespUpStreamPayment
      */
-    size: number | string
+    current: number | string
 
 }
 
@@ -6031,6 +6060,20 @@ export interface RespUpStreamPayment {
      */
     status?: number | string
 
+    /**
+     * 银行转账网银支付id
+     * @type {number | string}
+     * @memberof RespUpStreamPayment
+     */
+    supplierOnlineBankTransferId?: number | string
+
+    /**
+     * 网银支付按钮展示
+     * @type {boolean}
+     * @memberof RespUpStreamPayment
+     */
+    showOnlineBank?: boolean
+
 }
 
 /**
@@ -6124,14 +6167,14 @@ export interface IPageSupplierAccountResponse {
      * @type {number | string}
      * @memberof IPageSupplierAccountResponse
      */
-    current: number | string
+    size: number | string
 
     /**
      *
      * @type {number | string}
      * @memberof IPageSupplierAccountResponse
      */
-    size: number | string
+    current: number | string
 
 }
 
@@ -7806,14 +7849,14 @@ export interface IPageRespPurchaseOrderCrmPage {
      * @type {number | string}
      * @memberof IPageRespPurchaseOrderCrmPage
      */
-    current: number | string
+    size: number | string
 
     /**
      *
      * @type {number | string}
      * @memberof IPageRespPurchaseOrderCrmPage
      */
-    size: number | string
+    current: number | string
 
 }
 
@@ -9019,14 +9062,14 @@ export interface IPageRespPurchaseOrder {
      * @type {number | string}
      * @memberof IPageRespPurchaseOrder
      */
-    current: number | string
+    size: number | string
 
     /**
      *
      * @type {number | string}
      * @memberof IPageRespPurchaseOrder
      */
-    size: number | string
+    current: number | string
 
 }
 
@@ -9519,14 +9562,14 @@ export interface IPagePrepaymentResponse {
      * @type {number | string}
      * @memberof IPagePrepaymentResponse
      */
-    current: number | string
+    size: number | string
 
     /**
      *
      * @type {number | string}
      * @memberof IPagePrepaymentResponse
      */
-    size: number | string
+    current: number | string
 
 }
 
@@ -10382,14 +10425,14 @@ export interface IPageRespPaymentOrders {
      * @type {number | string}
      * @memberof IPageRespPaymentOrders
      */
-    current: number | string
+    size: number | string
 
     /**
      *
      * @type {number | string}
      * @memberof IPageRespPaymentOrders
      */
-    size: number | string
+    current: number | string
 
 }
 
@@ -12419,14 +12462,14 @@ export interface IPageRespFundResult {
      * @type {number | string}
      * @memberof IPageRespFundResult
      */
-    current: number | string
+    size: number | string
 
     /**
      *
      * @type {number | string}
      * @memberof IPageRespFundResult
      */
-    size: number | string
+    current: number | string
 
 }
 
@@ -12754,14 +12797,14 @@ export interface IPageLoanTransferAttachDocResponse {
      * @type {number | string}
      * @memberof IPageLoanTransferAttachDocResponse
      */
-    current: number | string
+    size: number | string
 
     /**
      *
      * @type {number | string}
      * @memberof IPageLoanTransferAttachDocResponse
      */
-    size: number | string
+    current: number | string
 
 }
 
@@ -13168,6 +13211,13 @@ export interface LoanTransferInfoResponse {
      */
     prepaymentWriteOffAmount: number | string
 
+    /**
+     * 银行转账方式 1：司库线上转账 2：线下网银转账
+     * @type {number | string}
+     * @memberof LoanTransferInfoResponse
+     */
+    bankTransferMethod: number | string
+
 }
 
 /**
@@ -13507,14 +13557,14 @@ export interface IPageInterfaceCompensationMechanismResponse {
      * @type {number | string}
      * @memberof IPageInterfaceCompensationMechanismResponse
      */
-    current: number | string
+    size: number | string
 
     /**
      *
      * @type {number | string}
      * @memberof IPageInterfaceCompensationMechanismResponse
      */
-    size: number | string
+    current: number | string
 
 }
 
@@ -13551,14 +13601,14 @@ export interface IPageRespYear {
      * @type {number | string}
      * @memberof IPageRespYear
      */
-    current: number | string
+    size: number | string
 
     /**
      *
      * @type {number | string}
      * @memberof IPageRespYear
      */
-    size: number | string
+    current: number | string
 
 }
 
@@ -13683,14 +13733,14 @@ export interface IPageHolidayRecord {
      * @type {number | string}
      * @memberof IPageHolidayRecord
      */
-    current: number | string
+    size: number | string
 
     /**
      *
      * @type {number | string}
      * @memberof IPageHolidayRecord
      */
-    size: number | string
+    current: number | string
 
 }
 
@@ -14654,14 +14704,14 @@ export interface IPageRespContract {
      * @type {number | string}
      * @memberof IPageRespContract
      */
-    current: number | string
+    size: number | string
 
     /**
      *
      * @type {number | string}
      * @memberof IPageRespContract
      */
-    size: number | string
+    current: number | string
 
 }
 
@@ -15002,14 +15052,14 @@ export interface IPageAppletContractResponse {
      * @type {number | string}
      * @memberof IPageAppletContractResponse
      */
-    current: number | string
+    size: number | string
 
     /**
      *
      * @type {number | string}
      * @memberof IPageAppletContractResponse
      */
-    size: number | string
+    current: number | string
 
 }
 
@@ -15097,14 +15147,14 @@ export interface IPageRespContractTemplate {
      * @type {number | string}
      * @memberof IPageRespContractTemplate
      */
-    current: number | string
+    size: number | string
 
     /**
      *
      * @type {number | string}
      * @memberof IPageRespContractTemplate
      */
-    size: number | string
+    current: number | string
 
 }
 
@@ -15683,14 +15733,14 @@ export interface IPageRespContractTemplateVersion {
      * @type {number | string}
      * @memberof IPageRespContractTemplateVersion
      */
-    current: number | string
+    size: number | string
 
     /**
      *
      * @type {number | string}
      * @memberof IPageRespContractTemplateVersion
      */
-    size: number | string
+    current: number | string
 
 }
 
@@ -17038,14 +17088,14 @@ export interface IPageRespCAOrg {
      * @type {number | string}
      * @memberof IPageRespCAOrg
      */
-    current: number | string
+    size: number | string
 
     /**
      *
      * @type {number | string}
      * @memberof IPageRespCAOrg
      */
-    size: number | string
+    current: number | string
 
 }
 
@@ -17254,14 +17304,14 @@ export interface IPageRespCAAccount {
      * @type {number | string}
      * @memberof IPageRespCAAccount
      */
-    current: number | string
+    size: number | string
 
     /**
      *
      * @type {number | string}
      * @memberof IPageRespCAAccount
      */
-    size: number | string
+    current: number | string
 
 }
 

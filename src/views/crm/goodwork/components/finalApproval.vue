@@ -294,7 +294,7 @@
 
         <el-dialog title="终审" :close-on-click-modal='false' :visible.sync="lastDialog" width="25%" :before-close="handleCloseLast" :modal='false'>
             <el-form :model="lastForm" :rules="lastFormRules" ref="lastForm" label-width="100px" class="demo-ruleForm">
-                <el-form-item label="备注信息：" prop="remark">
+                <el-form-item label="评审要求：" prop="remark">
                     <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 10}" v-model="lastForm.remark" maxlength="500"></el-input>
                 </el-form-item>
             </el-form>
@@ -514,14 +514,14 @@ export default class FinalApproval extends Vue {
         { label: '设备品牌', prop: 'deviceBrand', width: '120' },
         { label: '上游供应商类型', prop: 'upstreamSupplierType', width: '150', dicData: [{ value: 1, label: '厂商' }, { value: 2, label: '代理商' }, { value: 3, label: '经销商' }] },
         { label: '上游支付方式',
-            prop: 'streamPayTypeName',
+            prop: 'upstreamPayTypeName',
             render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
                 return (
                     <div>
                         {
-                            scope.row.streamPayTypeName ? scope.row.streamPayTypeName.map((item, index) => {
+                            scope.row.upstreamPayTypeName ? scope.row.upstreamPayTypeName.map((item, index) => {
                                 return (
-                                    <i style={{ 'fontStyle': 'normal' }}>{item + (index < scope.row.streamPayTypeName.length - 1 ? '；' : '')}</i>
+                                    <i style={{ 'fontStyle': 'normal' }}>{item + (index < scope.row.upstreamPayTypeName.length - 1 ? '；' : '')}</i>
                                 )
                             })
                                 : '-'
