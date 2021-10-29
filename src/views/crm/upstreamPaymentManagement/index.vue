@@ -100,7 +100,7 @@
                     <h-button table v-if="hosAuthCheck(upstreamPayDetail)" @click="viewDetail(slotProps.data.row.paymentOrderId,slotProps.data.row.status)">查看详情</h-button>
                     <h-button table v-if="slotProps.data.row.showChangeButton" @click="onShowChangeLoanTransferStatus(slotProps.data.row.loanTransferId)">变更交接状态</h-button>
                     <h-button table v-if="hosAuthCheck(prevproof)&&slotProps.data.row.status==2" @click="handleShowProof(slotProps.data.row)">确认首付款到账</h-button>
-                    <h-button table v-if="slotProps.data.row.showOnlineBank" @click="handleIsPay(slotProps.data.row)">确认已网银支付</h-button>
+                    <h-button table v-if="hosAuthCheck(banklink)&&slotProps.data.row.showOnlineBank" @click="handleIsPay(slotProps.data.row)">确认已网银支付</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -229,7 +229,7 @@ import { measure, handleSubmit, validateForm } from '@/decorator/index'
 import * as Api from './api/index'
 import { ReqSupplierSubmit, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, RespUpStreamPayment, ReqLoanTransferChange, LoanTransferInfoResponse, SupplierOnlineBankTransferConfirmRequest } from '@/interface/hbp-project'
 import filters from '@/utils/filters'
-import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT, CHANGE_LOAN_TRANSFER_STATUS, UPSTREAM_PAY_EXPORT, PREV_PROOF } from '@/utils/auth_const'
+import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT, CHANGE_LOAN_TRANSFER_STATUS, UPSTREAM_PAY_EXPORT, PREV_PROOF, UPSTREAM_PAY_BANKLINK } from '@/utils/auth_const'
 import { LOAN_TRANSFER_STATUS_DONE, UPSTREAM_PAYMENT_STATUS_WAITING } from './const'
 import FundsDialog from '../funds/components/fundsDialog.vue'
 import { newCache } from '@/utils/index'
@@ -272,6 +272,7 @@ export default class UpstreamPaymentManagement extends Vue {
     upstreamPayment = UPSTREAM_PAY_MENT
     upstreamExport = UPSTREAM_PAY_EXPORT
     prevproof = PREV_PROOF
+    banklink = UPSTREAM_PAY_BANKLINK
     $refs!: {
         form: HTMLFormElement
     }
