@@ -116,7 +116,7 @@
                     </div>
                     <div class="info-layout">
                         <div class="info-layout-item">
-                            <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>备注信息：</font>
+                            <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>评审要求：</font>
                         </div>
                     </div>
                     <div class="tab-textarea" style="margin:15px 0 0 15px;word-break: break-all">
@@ -269,6 +269,7 @@
                 <div class="flex-cont">
                     <div class="flex-operate" v-if="item.recordType==2||item.recordType==5">
                         <p>钉钉审批流程ID：{{item.dingId}}</p>
+                        <p v-if="item.recordType==2&&item.remark">评审要求：{{item.remark}}</p>
                     </div>
                     <!-- 采购单 -->
                     <div v-if="item.projectPurchaseList" class="mt10">

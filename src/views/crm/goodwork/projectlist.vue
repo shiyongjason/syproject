@@ -488,7 +488,7 @@ export default {
                     prop: 'status',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.status ? this.getStatusList(scope.row.status, scope.row.docProgress).value : '-'}</span>
+                        return <span>{scope.row.status ? this.getStatusList(scope.row.status, scope.row.docProgress, scope.row).value : '-'}</span>
                     },
                     showOverflowTooltip: true
                 },
@@ -822,13 +822,15 @@ export default {
                 window.location = interfaceUrl + 'memeber/openapi/project/export?' + url
             }
         },
-        getStatusList (key, docProgress) {
+        getStatusList (key, docProgress, val) {
             // 重新返回合作进度 状态
             const map = STATUS_LIST.reduce((res, item) => {
                 res[item.key] = item
                 return res
             }, {})
-            if (key == 3) {
+            if (key == 15) {
+                return { value: `${map[key].value}，当前节点：${val.dingApprover}` }
+            } else if (key == 3) {
                 let label = docProgress == null ? map[key].value : `${map[key].value}进度：${this.$multipliedBy(docProgress, 100)}%`
                 return { value: label }
             } else {
