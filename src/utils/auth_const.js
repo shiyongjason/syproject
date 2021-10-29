@@ -324,6 +324,8 @@ export const UPSTREAM_CONFIRM = 800206
 export const UPSTREAM_PAY_EXPORT = 800207
 // 支付单管理放款交接
 export const LENDER_HANDOVER = 800208
+// 网银支付
+export const UPSTREAM_PAY_BANKLINK = 800210
 
 // 首付款待确认
 export const PREV_PROOF = 800209
