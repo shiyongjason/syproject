@@ -198,7 +198,7 @@ export default {
         },
         async getActivityDetail (id) {
             await this.findComfortEncyclopediaDetail(id)
-            this.cloudComfortEncyclopediaDetail.effectiveTime = this.$root.$options.filters.formatDate(this.cloudComfortEncyclopediaDetail.effectiveTime, 'YYYY-MM-DD HH:mm:ss')
+            this.cloudComfortEncyclopediaDetail.effectiveTime = this.$root.$options.filters.momentFormat(this.cloudComfortEncyclopediaDetail.effectiveTime, 'YYYY-MM-DD HH:mm:ss')
             this.smartPlayForm = { ...this.cloudComfortEncyclopediaDetail }
         },
         onSaveSmartPlay () {

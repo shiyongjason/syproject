@@ -151,7 +151,7 @@
                         {{couponInfo.couponType === 1 ? '满减' : '无门槛'}}
                     </el-form-item>
                     <el-form-item label="创建时间：">
-                        {{couponInfo.createTime | formatterTime}}
+                        {{couponInfo.createTime | momentFormat}}
                     </el-form-item>
                     <el-form-item label="优惠券状态：">
                         <!--2.进行中 3.未审核 4.已结束 5.未通过-->
@@ -161,7 +161,7 @@
                         <span v-if="couponInfo.status === 5">未通过</span>
                     </el-form-item>
                     <el-form-item label="有效时间：">
-                        {{couponInfo.effectiveStartDate | formatterTime}} - {{ couponInfo.effectiveEndDate | formatterTime}}
+                        {{couponInfo.effectiveStartDate | momentFormat}} - {{ couponInfo.effectiveEndDate | momentFormat}}
                     </el-form-item>
                     <el-form-item label="是否可叠加：">
                         <span v-text="couponInfo.stackable ? '是' : '否'"></span>

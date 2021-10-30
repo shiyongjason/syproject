@@ -12,8 +12,8 @@
         <div class="container page-body-cont">
             <div class="wrapper-chart">
                 <div class="time">
-                    {{cloudSendMessageDetailChart.pushTime | formatDate('YYYY-MM-DD')}} - {{ Date.now() |
-                    formatDate('YYYY-MM-DD')}}
+                    {{cloudSendMessageDetailChart.pushTime | momentFormat('YYYY-MM-DD')}} - {{ Date.now() |
+                    momentFormat('YYYY-MM-DD')}}
                 </div>
                 <div class="chart" ref="barChart" style="width: 580px;height: 400px"></div>
             </div>
@@ -37,7 +37,7 @@
                         点击后打开：{{cloudSendMessageDetailChart.clickRedirect}}
                     </p>
                     <p>
-                        推送时间：{{cloudSendMessageDetailChart.pushTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
+                        推送时间：{{cloudSendMessageDetailChart.pushTime | momentFormat}}
                     </p>
                 </div>
             </div>

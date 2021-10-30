@@ -5,7 +5,7 @@
             <div><strong >{{addData.companyCount?addData.companyCount:0}}</strong>
                 <span>新上线平台(家)</span>
             </div>
-            <div><strong >{{(addData.onlineScale?parseFloat(addData.onlineScale).toFixed(0):0)|money}}</strong>
+            <div><strong >{{(addData.onlineScale?parseFloat(addData.onlineScale).toFixed(0):0)|moneyFormat(3, false)}}</strong>
                 <span>新增上线规模(万)</span>
             </div>
             <!-- <div><strong >{{addData.shopNum?addData.shopNum:0}}</strong>

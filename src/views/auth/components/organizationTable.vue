@@ -10,7 +10,7 @@
             <el-table-column prop="mobile" align="left" label="登录名">
             </el-table-column>
             <el-table-column label="更新时间" align="center" width="200">
-                <template slot-scope="scope">{{ scope.row.ts| formatterTime }}</template>
+                <template slot-scope="scope">{{ scope.row.ts| momentFormat }}</template>
             </el-table-column>
             <el-table-column prop="address" align="center" label="操作" width="140">
                 <template slot-scope="scope">
