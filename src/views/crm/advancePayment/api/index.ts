@@ -45,3 +45,7 @@ export const saveWriteOff: (id, params) => AxiosPromise = (id, params) => {
 export const updatePrePay: (params) => AxiosPromise = (params) => {
     return axios.post(`/project/api/supplier-payments/prepayment-member`, params)
 }
+
+export const updateOnlineBank :(params)=>AxiosPromise = (params) => {
+    return axios.post(`/project/api/supplier-payments/prepayment/online-bank-payment-confirm`, params)
+}
