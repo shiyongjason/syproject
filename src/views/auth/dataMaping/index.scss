@@ -30,20 +30,26 @@
         align-items: center;
     }
 }
+.page-left-tree {
+    width: 300px;
+    overflow: hidden;
+    word-break: break-all;
+    text-overflow: ellipsis;
+}
 .page-right-tree {
-    width: 700px;
+    width: 600px;
     overflow-x: scroll;
     .el-tag {
         margin-right: 10px;
     }
 }
-.page-title{
-    margin-bottom:10px;
+.page-title {
+    margin-bottom: 10px;
     position: relative;
     padding-left: 10px;
-    &::before{
+    &::before {
         content: '';
-        border-left: 2px solid #FF7A45;
+        border-left: 2px solid #ff7a45;
         height: 90%;
         position: absolute;
         top: 0px;
