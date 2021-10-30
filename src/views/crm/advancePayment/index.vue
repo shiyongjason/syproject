@@ -67,7 +67,7 @@
                     <h-button table @click="onLook(slotProps.data.row)" v-if="hosAuthCheck(advancelook)">查看详情</h-button>
                     <h-button table @click="onApprovalRecord(slotProps.data.row)" v-if="hosAuthCheck(advancerecords)">审批记录</h-button>
                     <h-button table @click="onUploadPrePay(slotProps.data.row)" v-if="hosAuthCheck(uploadprepay)&&slotProps.data.row.status==0">上传预付凭证</h-button>
-
+                    <h-button table v-if="slotProps.data.row.showOnlineBank&&hosAuthCheck(banklink)" @click="handleIsPay(slotProps.data.row)">确认已网银支付</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -329,6 +329,18 @@
                 <el-button @click="()=>{writeOffVisible = false,this.$refs['writeOffForm'].clearValidate()}">取 消</el-button>
             </span>
         </el-dialog>
+        <!-- 网银支付 -->
+        <el-dialog :close-on-click-modal='false' title="确认网银支付" :visible.sync="isShowLinkBank" width="500px" class="prev-payment-dialog">
+            <el-form :model="bankForm" :rules="bankRules" ref="bankForm" label-width="140px" class="demo-ruleForm">
+                <el-form-item label="网银支付时间：" prop="paymentTime">
+                    <el-date-picker type="date" placeholder="选择日期" v-model="bankForm.paymentTime" ></el-date-picker>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <h-button @click="isShowLinkBank = false">取消</h-button>
+                <h-button type="primary" @click="handleSubBank">确定</h-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -342,8 +354,8 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import downloadFileAddToken from '@/components/downloadFileAddToken/index.vue'
 import { deepCopy } from '@/utils/utils'
 import * as Api from './api/index'
-import { PrepaymentDetailResponse, PrepaymentSupplierSubmitResponse, RespContractSignHistory } from '@/interface/hbp-project'
-import { CRM_ADVACE_UPSTREAMPAY, CRM_ADVACE_APPROVE, CRM_ADVACE_LOOK, CRM_ADVACE_RECORDS, CRM_UPLOAD_PREPAY } from '@/utils/auth_const'
+import { PrepaymentDetailResponse, PrepaymentSupplierOnlineBankTransferConfirmRequest, PrepaymentSupplierSubmitResponse, RespContractSignHistory, SupplierOnlineBankTransferConfirmRequest } from '@/interface/hbp-project'
+import { CRM_ADVACE_UPSTREAMPAY, CRM_ADVACE_APPROVE, CRM_ADVACE_LOOK, CRM_ADVACE_RECORDS, CRM_UPSTREAM_BANK, CRM_UPLOAD_PREPAY } from '@/utils/auth_const'
 import { newCache } from '@/utils/index'
 import './css/css.scss'
 
@@ -394,6 +406,7 @@ export default class Advancelist extends Vue {
     advancelook = CRM_ADVACE_LOOK
     advancerecords = CRM_ADVACE_RECORDS
     uploadprepay = CRM_UPLOAD_PREPAY
+    banklink = CRM_UPSTREAM_BANK
     private writeOffVisible:boolean = false
     private dialogVisible:boolean = false
     private comfirmVisble:boolean = false
@@ -403,6 +416,7 @@ export default class Advancelist extends Vue {
     private totalMoney:number = 0
     private id:number|string = null
     private prePayVisble:boolean = false
+    private isShowLinkBank:boolean = false
     private records:Array<RespContractSignHistory> = null
     private recordInfo = {
         distributor: '',
@@ -455,6 +469,10 @@ export default class Advancelist extends Vue {
         operatorPhone: '',
         payVouchers: []
     }
+      bankForm:PrepaymentSupplierOnlineBankTransferConfirmRequest={
+          prepaymentOrderId: '',
+          paymentTime: ''
+      }
     page = {
         total: 0
     }
@@ -503,6 +521,12 @@ export default class Advancelist extends Vue {
         payVouchers: [
             { required: true, message: '上游支付凭证不能为空', trigger: 'blur' }
         ]
+    }
+
+    get bankRules () {
+        return {
+            paymentTime: [{ required: true, message: '请选择网银支付时间', trigger: 'change' }]
+        }
     }
 
     detailRules = {
@@ -555,6 +579,23 @@ export default class Advancelist extends Vue {
             resource: '',
             remark: ''
         }
+    }
+    handleIsPay (val) {
+        this.isShowLinkBank = true
+        this.bankForm.prepaymentOrderId = val.id
+        this.$nextTick(() => {
+            this.$refs['bankForm'].clearValidate()
+        })
+    }
+
+    handleSubBank () {
+        (this.$refs as any).bankForm.validate(async (validate) => {
+            if (validate) {
+                await Api.updateOnlineBank(this.bankForm)
+                this.isShowLinkBank = false
+                this.getList()
+            }
+        })
     }
 
     public onUploadPrePay (val) {
