@@ -114,7 +114,7 @@
                 </template>
                 <template slot="paymentStatus" slot-scope="scope">
                     <p>{{ paymentStatusOptions.get(scope.data.row.paymentStatus) }}</p>
-                    <p><span>{{scope.data.row.paidAmount}}</span>/<span>{{scope.data.row.totalAmount}}</span></p>
+                    <p v-if="scope.data.row.paymentStatus!=4"><span>{{scope.data.row.paidAmount}}</span>/<span>{{scope.data.row.totalAmount}}</span></p>
                 </template>
                 <template slot="status" slot-scope="scope">
                     <span>{{ paymentOrderStatusOptions.get(scope.data.row.status) }}</span>
@@ -246,7 +246,7 @@ export default {
             Auths,
             dealerCooperationMethod: [{ key: 1, value: '垫资代采' }, { key: 2, value: '代收代付' }],
             loanTransferStatus: [{ key: 2, value: '已对接' }, { key: 1, value: '待对接' }],
-            paymentStatus: [{ key: 1, value: '待支付' }, { key: 3, value: '已支付' }, { key: 2, value: '部分支付' }],
+            paymentStatus: [{ key: 1, value: '待支付' }, { key: 3, value: '已支付' }, { key: 2, value: '部分支付' }, { key: 4, value: '已取消' }],
             queryParams: {
                 paymentOrderNo: '',
                 deptName: '',

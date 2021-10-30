@@ -324,6 +324,8 @@ export const UPSTREAM_CONFIRM = 800206
 export const UPSTREAM_PAY_EXPORT = 800207
 // 支付单管理放款交接
 export const LENDER_HANDOVER = 800208
+// 网银支付
+export const UPSTREAM_PAY_BANKLINK = 800210
 
 // 首付款待确认
 export const PREV_PROOF = 800209
@@ -419,6 +421,7 @@ export const CRM_ADVACE_UPSTREAMPAY = 118501
 export const CRM_ADVACE_APPROVE = 118502
 export const CRM_ADVACE_LOOK = 118503
 export const CRM_ADVACE_RECORDS = 118504
+export const CRM_UPLOAD_PREPAY = 118505
 
 // 舒适云智能化 -- 设备升级详情
 export const COMFORT_SMART_DEVICE_UPGRADE_DETAIL = 118505
