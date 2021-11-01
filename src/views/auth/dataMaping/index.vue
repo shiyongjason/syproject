@@ -259,12 +259,14 @@ export default class Datamaping extends Vue {
     // 编辑节点
     edit (data) {
         this.dialogVisible = true
+        this.form.name = ''
         this.type = 'edit'
         this.pNode = data
     }
     // 新增节点
     append (data) {
         this.dialogVisible = true
+        this.form.name = ''
         this.pNode = data
         this.type = 'add'
     }
