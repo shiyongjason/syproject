@@ -86,7 +86,9 @@ export default class Datamaping extends Vue {
     filterEhr:string = ''
     filterBoss:string = ''
     dialogVisible:boolean = false
-    form:any = {}
+    form:any = {
+        name: ''
+    }
     pNode:any = {}
     type:string = ''
     ehrList: Array<any> = []
@@ -258,6 +260,7 @@ export default class Datamaping extends Vue {
     }
     // 编辑节点
     edit (data) {
+        console.log(data)
         this.dialogVisible = true
         this.form.name = ''
         this.type = 'edit'
