@@ -35,7 +35,6 @@ switch (env) {
         ossOldBucket = 'hosjoy-oss-test'
         ossRegion = 'oss-cn-hangzhou'
         ossAliyun = 'https://oss-aliyun-test.hosjoy.com/'
-
         break
     case 'dev':
         interfaceUrl = 'http://192.168.20.248:30000/'
