@@ -110,7 +110,7 @@
                     <font style="flex: 0 0 70px">
                         {{LoanTransferContent.billAmountNumber?'更新时间：':'提交时间：'}}
                     </font>
-                    <span>{{LoanTransferContent.billAmountResponse.billAmountCreateTime|formatterTime}}</span>
+                    <span>{{LoanTransferContent.billAmountResponse.billAmountCreateTime|momentFormat}}</span>
                 </div>
             </div>
             <div class='bill-table' v-if="LoanTransferContent.billAmountResponse&&LoanTransferContent.supplierPaymentType!=upstreamPaymentMethod.bankTransfer">
@@ -120,11 +120,11 @@
                 </div>
                 <div class='bill-table_flex' v-for="(item,index) in LoanTransferContent.billAmountResponse.billAmountDetail" :key="index+'billAmountDetail'">
                     <div class='bill-table_flex--left'>第 {{index+1}} 张票</div>
-                    <div class='bill-table_flex--right'>{{item.amount|fundMoneyHasTail}}</div>
+                    <div class='bill-table_flex--right'>{{item.amount|moneyFormat}}</div>
                 </div>
                 <div class='bill-table_flex'>
                     <div class='bill-table_flex--left'>合计</div>
-                    <div class='bill-table_flex--right'>{{LoanTransferContent.billAmountResponse.totalAmount|fundMoneyHasTail}}</div>
+                    <div class='bill-table_flex--right'>{{LoanTransferContent.billAmountResponse.totalAmount|moneyFormat}}</div>
                 </div>
             </div>
             <div class="historyRecords" v-if="LoanTransferContent.billAmountNumber&&LoanTransferContent.supplierPaymentType!=upstreamPaymentMethod.bankTransfer">
@@ -136,7 +136,7 @@
                                     <font style="flex: 0 0 85px;">{{objIndex==moreBillAmount.length-1?'提交人：':'更新人：'}}</font><span>{{obj.billAmountCreateBy}}</span>
                                 </div>
                                 <div class="info-layout-item">
-                                    <font style="flex: 0 0 70px;">{{objIndex==moreBillAmount.length-1?'提交时间：':'更新时间：'}}</font><span>{{obj.billAmountCreateTime|formatterTime}}</span>
+                                    <font style="flex: 0 0 70px;">{{objIndex==moreBillAmount.length-1?'提交时间：':'更新时间：'}}</font><span>{{obj.billAmountCreateTime|momentFormat}}</span>
                                 </div>
                             </div>
                             <div class='bill-table' v-if="moreBillAmount">
@@ -146,11 +146,11 @@
                                 </div>
                                 <div class='bill-table_flex' v-for="(item,index) in obj.billAmountDetail" :key="index + 'moreBillAmount'">
                                     <div class='bill-table_flex--left'>第 {{item.number}} 张票</div>
-                                    <div class='bill-table_flex--right'>{{item.amount|fundMoneyHasTail}}</div>
+                                    <div class='bill-table_flex--right'>{{item.amount|moneyFormat}}</div>
                                 </div>
                                 <div class='bill-table_flex'>
                                     <div class='bill-table_flex--left'>合计</div>
-                                    <div class='bill-table_flex--right'>{{obj.totalAmount|fundMoneyHasTail}}</div>
+                                    <div class='bill-table_flex--right'>{{obj.totalAmount|moneyFormat}}</div>
                                 </div>
                             </div>
                         </div>
@@ -303,7 +303,7 @@
         <!-- 票面金额信息 dialog -->
         <el-dialog v-if="openDialogVoter" title="票面金额信息" :close-on-click-modal='false' :visible.sync="openDialogVoter" width="750px" :before-close="()=>onCancel('formVoter')" :modal='false'>
             <div class="dialog-ctx billAmountFormbox">
-                <p style="margin:10px 0">注：合计票面金额应等于货款申请金额 ({{LoanTransferContent.applyAmount|fundMoneyHasTail}}元)</p>
+                <p style="margin:10px 0">注：合计票面金额应等于货款申请金额 ({{LoanTransferContent.applyAmount|moneyFormat}}元)</p>
                 <el-form id='elform' :model="billAmountForm" ref="formVoter" label-position="left" label-width="120px">
                     <el-form-item :label="`第 ${index+1} 张票：`" :prop="'billAmount.' + index + '.amount'" v-for="(item,index) in billAmountForm.billAmount" :key="index+'Voter'" :rules="rules">
                         <el-input placeholder="请输入票面金额" @input="(val)=>inputChage(val,item)" :value="money(item.amount)">
@@ -313,7 +313,7 @@
                     </el-form-item>
                 </el-form>
                 <div class="add-item" @click="addItem">+ 再添加一张银票</div>
-                <p style="margin:10px 0 5px">合计票面金额：{{totalAmount|fundMoneyHasTail}} 元</p>
+                <p style="margin:10px 0 5px">合计票面金额：{{totalAmount|moneyFormat}} 元</p>
             </div>
             <div slot="footer" class="dialog-footer">
                 <h-button @click="()=>onCancel('formVoter')">取消</h-button>

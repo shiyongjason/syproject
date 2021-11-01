@@ -75,7 +75,7 @@ import { mapState, mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { createBrand, updateBrand } from './api/index'
 import { BRAND_STATUS } from './const'
-import { IsChinese } from '@/rules'
+import { IsChinese } from '@/utils/rules'
 export default {
     name: 'brand',
     components: {

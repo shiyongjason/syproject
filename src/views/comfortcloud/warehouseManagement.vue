@@ -21,22 +21,22 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col-title">经销商：</div>
+                <div class="query-col-title">客户姓名：</div>
                 <div class="query-col-input">
-                    <el-input type="text" v-model="queryParams.dealer" maxlength="20" placeholder="输入经销商名称"></el-input>
+                    <el-input type="text" v-model="queryParams.dealer" maxlength="20" placeholder="输入客户姓名"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col-title">经销商电话：</div>
+                <div class="query-col-title">客户电话：</div>
                 <div class="query-col-input">
-                    <el-input type="text" v-model="queryParams.dealerPhone" maxlength="20" placeholder="输入经销商电话"></el-input>
+                    <el-input type="text" v-model="queryParams.dealerPhone" maxlength="20" placeholder="输入客户电话"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title search-title">出库类型：</div>
-                <el-select v-model="queryParams.outboundType" clearable>
-                    <el-option label="样品" value="样品"></el-option>
-                    <el-option label="合同履约提货" value="合同履约提货"></el-option>
+                <el-select v-model="queryParams.outboundType">
+                    <el-option label="全部" value=""></el-option>
+                    <el-option v-for="item in outboundTypeOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
                 </el-select>
             </div>
             <div class="query-cont-col">
@@ -102,7 +102,7 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="8" :offset="2">
+                    <el-col :span="8" :offset="3">
                         <el-form-item label="商品型号：" prop="deviceType">
                             <el-select v-model="addRecord.deviceType" @change="deviceTypeSelectChanged" :disabled="isEditRecord">
                                 <el-option label="选择" value=""></el-option>
@@ -112,26 +112,25 @@
                     </el-col>
                 </el-form-item>
                 <el-form-item label="设备数量：" prop="amount">
-                    <el-input style="width: 200px" placeholder="请输入设备数量" v-model="addRecord.amount" :disabled="!canInputDeviceAmount || isEditRecord"></el-input>
+                    <el-input v-isNum:0 style="width: 200px" placeholder="请输入设备数量" v-model="addRecord.amount" :disabled="!canInputDeviceAmount || isEditRecord"></el-input>
                 </el-form-item>
                 <el-form-item label="设备ID：" prop="iotId">
                     <el-input v-model.trim="addRecord.iotId" show-word-limit placeholder="请输入设备ID" :disabled="canInputDeviceAmount || isEditRecord"></el-input>
                 </el-form-item>
                 <el-form-item label="出库类型：" prop="outboundType">
                     <el-select v-model="addRecord.outboundType">
-                        <el-option label="样品" value="样品"></el-option>
-                        <el-option label="合同履约提货" value="合同履约提货"></el-option>
+                        <el-option v-for="item in outboundTypeOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label-width="0">
                     <el-col :span="8">
-                        <el-form-item label="经销商名称：" prop="dealer">
-                            <el-autocomplete class="inline-input" v-model="addRecord.dealer" :fetch-suggestions="dealerRequest" placeholder="请输入经销商名称" :trigger-on-focus="false" @select="dealerChanged" :disabled="isEditRecord"></el-autocomplete>
+                        <el-form-item label="客户姓名：" prop="dealer">
+                            <el-autocomplete class="inline-input" v-model="addRecord.dealer" :fetch-suggestions="dealerRequest" placeholder="请输入客户姓名" :trigger-on-focus="false" @select="dealerChanged" :disabled="isEditRecord" :maxlength="20"></el-autocomplete>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="8" :offset="2">
-                        <el-form-item label="经销商电话：" prop="dealerPhone">
-                            <el-input v-model.trim="addRecord.dealerPhone" show-word-limit placeholder="输入经销商电话" :disabled="isEditRecord"></el-input>
+                    <el-col :span="8" :offset="3">
+                        <el-form-item label="客户电话：" prop="dealerPhone">
+                            <el-input v-model.trim="addRecord.dealerPhone" show-word-limit placeholder="输入客户电话" :disabled="isEditRecord" :maxlength="11"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-form-item>
@@ -152,6 +151,11 @@ export default {
     name: 'equipmentError',
     data () {
         return {
+            outboundTypeOptions: [
+                { label: '样品', value: '样品' },
+                { label: '合同履约提货', value: '合同履约提货' },
+                { label: '工程端', value: '工程端' }
+            ],
             queryParams: {
                 iotId: '',
                 startOutboundTime: '',
@@ -174,8 +178,8 @@ export default {
                 { label: '设备ID', prop: 'iotId' },
                 { label: '数量', prop: 'amount' },
                 { label: '出库类型', prop: 'outboundType' },
-                { label: '经销商', prop: 'dealer' },
-                { label: '经销商电话', prop: 'dealerPhone' },
+                { label: '客户姓名', prop: 'dealer' },
+                { label: '客户电话', prop: 'dealerPhone' },
                 { label: '设备状态', prop: 'deviceStatus' }
             ],
             errTableLabel: [
@@ -185,8 +189,8 @@ export default {
                 { label: '设备ID', prop: 'iotId' },
                 { label: '数量', prop: 'amount' },
                 { label: '出库类型', prop: 'outboundType' },
-                { label: '经销商', prop: 'dealer' },
-                { label: '经销商电话', prop: 'dealerPhone' },
+                { label: '客户姓名', prop: 'dealer' },
+                { label: '客户电话', prop: 'dealerPhone' },
                 { label: '失败原因', prop: 'reason' }
             ],
             uploadShow: false,
@@ -228,10 +232,10 @@ export default {
                     { required: true, message: '请选择出库类型', trigger: 'change' }
                 ],
                 dealer: [
-                    { required: true, message: '请填写经销商名称', trigger: 'blur' }
+                    { required: true, message: '请填写客户姓名', trigger: 'blur' }
                 ],
                 dealerPhone: [
-                    { required: true, message: '请填写经销商电话', trigger: 'blur' }
+                    { required: true, message: '请填写客户电话', trigger: 'blur' }
                 ],
                 deviceCategory: [{
                     validator: (rule, value, callback) => {

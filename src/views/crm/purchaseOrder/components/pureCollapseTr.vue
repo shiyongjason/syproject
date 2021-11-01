@@ -6,13 +6,13 @@
                 <div class="td">{{ item.contractName }}</div>
                 <div class="td"><span class="info-status" v-if="item.effectiveState === 1">{{ item.effectiveState | attributeComputed(PurchaseOrderDict.contractIsRunning.list) }}</span></div>
                 <div class="td">{{ item.contractStatus | attributeComputed(PurchaseOrderDict.contractStatus.list) }}</div>
-                <div class="td">{{ item.signedTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</div>
+                <div class="td">{{ item.signedTime | momentFormat }}</div>
                 <div class="td">{{ item.createBy }}</div>
                 <div class="td">
                     <h-button table v-if="hosAuthCheck(CRM_PURCHASE_ORDER_CONTRACT_SEE)" @click="goContractDetail(item.contractId)">查看合同</h-button>
 <!--                    todo 当合同状态为“合同已签署”时，操作列常驻展示“去归档”。点击去归档，进入合同详情页面。-->
 <!--                    合同签署类型 1：线上 2：线下-->
-<!--                    合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待风控审核 5：风控审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止-->
+<!--                    合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待运营审核 5：运营审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止-->
                     <h-button table v-if="item.contractSignType ==2 && item.contractStatus == 12 && hosAuthCheck(CRM_PURCHASE_DETAIL_FILE)" @click="goContractDetail(item.contractId)">去归档</h-button>
                 </div>
             </div>

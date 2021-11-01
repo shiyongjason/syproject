@@ -11,7 +11,7 @@
                 {{ enterReceiptDetail.supplierCompanyName }}
             </el-form-item>
             <el-form-item label="剩余应到货金额：">
-                {{ enterReceiptDetail.surplusAmount | fundMoneyHasTail }}元
+                {{ enterReceiptDetail.surplusAmount | moneyFormat }}元
             </el-form-item>
             <el-form-item label="采购明细表：">
                 <div class="info-img-group">
