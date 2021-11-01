@@ -423,8 +423,8 @@ export default [
                 ]
             },
             {
-                path: 'member',
-                name: 'member',
+                path: 'memberInterests',
+                name: 'memberInterests',
                 meta: {
                     title: '会员权益管理',
                     tagName: '会员权益管理',
