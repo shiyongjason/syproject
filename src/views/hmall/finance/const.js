@@ -6,14 +6,22 @@ export const ORDER_STATUS_OPTIONS = [
     { label: '待收货', value: '30' },
     { label: '已完成', value: '40' },
     { label: '退款中', value: '60' },
-    { label: '已退款', value: '70' }
+    { label: '已退款', value: '70' },
+    { label: '退货中', value: '80' },
+    { label: '已退货', value: '90' },
+    { label: '换货中', value: '100' },
+    { label: '已换货', value: '110' }
 ]
 export const ORDER_STATUS_MAP = new Map([
     [20, '待发货'],
     [30, '待收货'],
     [40, '已完成'],
     [60, '退款中'],
-    [70, '已退款']
+    [70, '已退款'],
+    [80, '退货中'],
+    [90, '已退货'],
+    [100, '换货中'],
+    [110, '已换货']
 ])
 // 商品状态
 export const PRODUCT_STATUS_OPTIONS = [
@@ -21,14 +29,22 @@ export const PRODUCT_STATUS_OPTIONS = [
     { label: '待收货', value: '30' },
     { label: '已完成', value: '40' },
     { label: '退款中', value: '60' },
-    { label: '已退款', value: '70' }
+    { label: '已退款', value: '70' },
+    { label: '退货中', value: '80' },
+    { label: '已退货', value: '90' },
+    { label: '换货中', value: '100' },
+    { label: '已换货', value: '110' }
 ]
 export const PRODUCT_STATUS_MAP = new Map([
     [20, '待发货'],
     [30, '待收货'],
     [40, '已完成'],
     [60, '退款中'],
-    [70, '已退款']
+    [70, '已退款'],
+    [80, '退货中'],
+    [90, '已退货'],
+    [100, '换货中'],
+    [110, '已换货']
 ])
 // 订单渠道
 export const ORDER_CHANNERL_OPTIONS = [

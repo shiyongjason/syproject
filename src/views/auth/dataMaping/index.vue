@@ -25,7 +25,7 @@
                     <el-tree ref="rightTree" :data="bossList" node-key="id" show-checkbox :expand-on-click-node="false" default-expand-all :check-strictly='true' @check-change="handleChangeBoss" draggable :props="{label:'organizationName',children:'childOrganizations'}"
                         @node-drag-end="handleDragEnd" :allow-drop="allowDrop" :filter-node-method="filterBossNode">
                         <span class="custom-tree-node" slot-scope="{ node, data }">
-                            <span>{{ node.label }} </span>
+                            <span  class="page-left-tree">{{ node.label }} </span>
                             <span class="page-right-tree">
                                 <template v-for="(item,index) in data.ehrDeptResponseList">
                                     <el-tag closable @close='handleCloseTag(data.ehrDeptResponseList,item,index,node)' size="mini" type="info" :key=item.id>{{item.ehrDeptName}}</el-tag>
@@ -52,7 +52,7 @@
         <el-dialog title="节点信息" :visible.sync="dialogVisible" :close-on-click-modal=false width="30%" :before-close="handleClose">
             <el-form ref="form" :rules="rules" :model="form" label-width="80px">
                 <el-form-item label="节点名称" prop="name">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="form.name" maxlength="50"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -259,12 +259,14 @@ export default class Datamaping extends Vue {
     // 编辑节点
     edit (data) {
         this.dialogVisible = true
+        this.form.name = ''
         this.type = 'edit'
         this.pNode = data
     }
     // 新增节点
     append (data) {
         this.dialogVisible = true
+        this.form.name = ''
         this.pNode = data
         this.type = 'add'
     }
@@ -307,7 +309,7 @@ export default class Datamaping extends Vue {
             organizationName: this.form.name,
             type: 1
         }
-        this.$refs['form'].validate(valid => {
+        this.$refs['form'].validate(async valid => {
             if (valid) {
                 if (this.type == 'add') {
                     const newChild = { id: this.id++, organizationName: this.form.name, childOrganizations: [] }
@@ -320,12 +322,12 @@ export default class Datamaping extends Vue {
                     this.pNode.childOrganizations.push(newChild)
                     params.createBy = this.userInfo.employeeName
                     params.parentOrganizationCode = this.pNode.organizationCode
-                    // await updateOrganizationNode(params)
+                    await updateOrganizationNode(params)
                 } else {
                     params.updateBy = this.userInfo.employeeName
                     params.organizationCode = this.pNode.organizationCode
                     this.$set(this.pNode, 'organizationName', this.form.name)
-                    // await editOrganizationNode(params)
+                    await editOrganizationNode(params)
                 }
                 this.dialogVisible = false
             }
