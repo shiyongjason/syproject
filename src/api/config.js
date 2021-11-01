@@ -23,6 +23,7 @@ var env = process.env.NODE_ENV === 'development'
 
 switch (env) {
     case 'development':
+        //合并冲突
         interfaceUrl = 'http://192.168.20.248:30000/'
         ossUrl = 'http://192.168.20.248:8089/'
         iframeUrl = 'http://devcrm.hosjoy.com/'
