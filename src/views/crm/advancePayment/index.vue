@@ -59,7 +59,7 @@
                 <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span>上游预付款支付单总金额：{{totalMoney|moneyFormat}}</span></el-tag>
             </div>
             <!-- end search bar -->
-            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction
+            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='300' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
                     <h-button table @click="onApproval(slotProps.data.row)" v-if="hosAuthCheck(advanceapprove)&&(slotProps.data.row.status==1||slotProps.data.row.status==-1)">审核</h-button>
