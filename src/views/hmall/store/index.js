@@ -12,6 +12,7 @@ import marketManage from '@/views/hmall/marketManage/store/index'
 import fundAudit from '@/views/hmall/fundAudit/store/index'
 import productManage from '@/views/hmall/productManage/store/index'
 import warehouseManage from '@/views/hmall/warehouseManage/store/index'
+import membershipInterests from '@/views/hmall/membershipInterests/store/index'
 
 const state = {
     userInfo: {},
@@ -36,6 +37,7 @@ export default {
         spumanage,
         dataBoard,
         searchProject,
-        fundAudit
+        fundAudit,
+        membershipInterests
     }
 }
