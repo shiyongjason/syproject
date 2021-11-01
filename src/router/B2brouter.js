@@ -112,7 +112,7 @@ export default [
                             icon: '',
                             showMenuAs: '/b2b/product/productAuditList'
                         },
-                        component: () => import('@/views/hmall/productManage/productAuditList/editSpuAudit.vue')
+                        component: () => import('@/views/hmall/productManage/productAuditList/lookSpuAudit.vue')
                     },
                     {
                         path: 'editSkuAudit',
@@ -419,6 +419,41 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/hmall/membership/bussinessManage')
+                    }
+                ]
+            },
+            {
+                path: 'member',
+                name: 'member',
+                meta: {
+                    title: '会员权益管理',
+                    tagName: '会员权益管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'memberBalance',
+                        name: 'memberBalance',
+                        meta: {
+                            title: '会员满返余额',
+                            tagName: '会员满返余额',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/membershipInterests/memberBalance')
+                    },
+                    {
+                        path: 'fullReturnDetails',
+                        name: 'fullReturnDetails',
+                        meta: {
+                            title: '满返明细',
+                            tagName: '满返明细',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/membershipInterests/fullReturnDetails')
                     }
                 ]
             },

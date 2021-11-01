@@ -1,73 +1,114 @@
 <template>
     <div class="page-body B2b">
         <div class="page-body-cont">
-            <el-form ref="form" :model="form" :rules="rules">
+            <el-form ref="form" :model="form" :rules="rules" label-width="150px">
+                <p class="mb20" v-if='form.auditStatus == 2'>审核不通过原因: <span class="red-word">{{form.auditOpinion}}</span></p>
                 <div class="title-cont">
-                    <span class="title-cont__label">基本信息</span>
+                    <span class="title-cont__label">商品基本信息</span>
                 </div>
                 <el-form-item label="商品品牌：" prop="brandName">
-                    {{form.brandName}}
+                    <el-autocomplete class="form-input_big" v-model="form.brandName" :fetch-suggestions="querySearchAsyncBrand" @select="handleSelectBrand" @blur="handleBlurBrand" :debounce="500" :maxlength="30" placeholder="请输入商品品牌"></el-autocomplete>
+                    <span class="ml10 isGrayColor">如果没有对应的品牌，请联系运营人员添加!</span>
                 </el-form-item>
                 <el-form-item label="商品系列：" prop="model">
-                    {{form.model}}
+                    <el-autocomplete class="form-input_big autocomplete" v-model="form.model" :fetch-suggestions="querySearchAsyncModel" @select="handleSelectModel" :debounce="500" :maxlength="50" placeholder="请输入商品系列">
+                        <template slot-scope="{item}">
+                            <el-tooltip effect="dark" :content="item.value" placement="top">
+                                <span class="autocomplete-select_item">{{item.value}}</span>
+                            </el-tooltip>
+                            <el-tooltip effect="dark" :content="item.brandName" placement="top">
+                                <span class="autocomplete-select_item">{{item.brandName}}</span>
+                            </el-tooltip>
+                            <el-tooltip effect="dark" :content="item.category" placement="top">
+                                <span class="autocomplete-select_item">{{item.category}}</span>
+                            </el-tooltip>
+                            <el-tooltip effect="dark" :content="item.name" placement="top">
+                                <span class="autocomplete-select_item">{{item.name}}</span>
+                            </el-tooltip>
+                        </template>
+                    </el-autocomplete>
                 </el-form-item>
                 <el-form-item label="商品类目：" prop="categoryId">
-                    {{form.categoryPath}}
+                    <el-cascader class="form-input_medium" v-model="form.categoryId" :options="categoryOption" :props="props" clearable @expand-change="onExpandChangeCategory" placeholder="请选择商品类目"></el-cascader>
+                    <h-button type='primary' class="ml10" @click="onFindProduct">确定</h-button>
                 </el-form-item>
-                <el-form-item label="商品名称：" prop="name">
-                    {{form.name}}
-                </el-form-item>
-                <el-form-item label="商品销售名称：" prop="showName">
-                    {{form.showName}}
-                    <!-- <el-input class="form-input_big" v-model="form.showName" maxlength="100" placeholder="请输入商品销售名称"></el-input> -->
-                </el-form-item>
-                <div class="title-cont">
-                    <span class="title-cont__label">销售信息</span>
-                </div>
-                <el-form-item label="商品图片：" prop="imageUrls" ref="imageUrls">
-                    <el-upload :action="uploadInfo.action" :data="uploadInfo.data" :name="uploadAttr.name" :list-type="uploadAttr.listType" :show-file-list="uploadAttr.showFileList" :on-success="handleSuccess" :accept="uploadAttr.accept" :before-upload="beforeUpload"
-                        v-if="imageUrls.length !==5 && seeTask == false">
-                        <i class="el-icon-plus"></i>
-                    </el-upload>
-                    <div class="picture-content">
-                        <ul>
-                            <li v-for="(item, index) in imageUrls" :key="index">
-                                <div class="mask-btn" v-show="seeTask == false">
-                                    <span :class="index==0?'isDisabled':''" @click="onSettingTop(index)">设为主图</span>
-                                    <span @click="onRemove(index)">删除图片</span>
-                                    <a target="_blank" :href="item">查看原图</a>
-                                </div>
-                                <img :src="item">
-                                <!-- <span v-if="index == 0" class="isDefault">主图</span> -->
-                            </li>
-                        </ul>
+                <div v-if="showMore">
+                    <el-form-item label="商品名称：" prop="name">
+                        <el-input class="form-input_big" v-model="form.name" maxlength="100" placeholder="请输入商品名称"></el-input>
+                    </el-form-item>
+                    <el-form-item label="">
+                        <span class="isGrayColor">商品名称用于识别操作上下架编辑，字数最多100字</span>
+                    </el-form-item>
+                    <el-form-item label="商品销售名称：" prop="showName">
+                        <el-input class="form-input_big" v-model="form.showName" maxlength="100" placeholder="请输入商品销售名称"></el-input>
+                    </el-form-item>
+                    <div class="title-cont">
+                        <span class="title-cont__label">销售信息</span>
                     </div>
-                    <div class="picture-prompt" v-show="seeTask == false">
-                        <p>最多支持上传5张750*750，大小不超过2M，仅支持jpeg，jpg，png格式</p>
+                    <el-form-item label="商品图片：" prop="imageUrls" ref="imageUrls">
+                        <el-upload :action="uploadInfo.action" :data="uploadInfo.data" :name="uploadAttr.name" :list-type="uploadAttr.listType" :show-file-list="uploadAttr.showFileList" :on-success="handleSuccess" :accept="uploadAttr.accept" :before-upload="beforeUpload"
+                            v-if="imageUrls.length !==5">
+                            <i class="el-icon-plus"></i>
+                        </el-upload>
+                        <input type="hidden" v-model="form.imageUrls">
+                        <div class="picture-content">
+                            <ul>
+                                <li v-for="(item, index) in imageUrls" :key="index">
+                                    <div class="mask-btn">
+                                        <span :class="index==0?'isDisabled':''" @click="onSettingTop(index)">设为主图</span>
+                                        <span @click="onRemove(index)">删除图片</span>
+                                        <a target="_blank" :href="item">查看原图</a>
+                                    </div>
+                                    <img :src="item">
+                                    <span v-if="index == 0" class="isDefault">主图</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="picture-prompt">
+                            <p>最多支持上传5张750*750，大小不超过2M，仅支持jpeg，jpg，png格式</p>
+                        </div>
+                    </el-form-item>
+                    <div class="sku-cont">
+                        <div class="sku-cont_group mb20" v-for="(item,index) in form.optionTypeList" :key="index">
+                            <div class="group-spec_label">
+                                <el-form-item label="规格名：" :prop="`optionTypeList[${index}].name`" :rules="rules.option">
+                                    <el-input v-model="item.name" @change="onAddOption(item.id,item.name,index)" maxlength="10" placeholder="请输入规格名"></el-input>
+                                </el-form-item>
+                            </div>
+                            <div class="group-spec_tags mt20">
+                                <el-form-item label="规格值：" :prop="`optionTypeList[${index}].optionValues`" :rules="rules.optionValues">
+                                    <el-tag class="mr10" v-for="(sItem,sIndex) in item.optionValues" :key="sIndex" @close="onDelOptionValue(index,sIndex)" :closable="!sItem.disabled">{{sItem.name}}</el-tag>
+                                    <el-input v-model="addValues[index]" @change="onAddOptionVlaue(index)" suffix-icon="el-icon-plus" maxlength="50" placeholder="多个属性值以空格隔开" :disabled="item.name == ''"></el-input>
+                                </el-form-item>
+                            </div>
+                            <span class="group-spec_close" @click="onDelOptionTemplate(index)" v-if="!(form.auditStatus == 1 && item.disabled)"><i class="el-icon-close"></i></span>
+                        </div>
+                        <h-button type="create" class="mb20" @click="onAddOptionTemplate" :disabled="disabled">添加规格</h-button>
+                        <span class="ml10 isGrayColor">建议规格名为：型号，规格，颜色</span>
                     </div>
-                </el-form-item>
-                <skuTable ref="skuTable" :formData.sync="form" :seeTask.sync="seeTask" :edite.sync="edite"></skuTable>
-                <div class="title-cont" v-if="specData.length != 0">
-                    <span class="title-cont__label">参数信息</span>
-                </div>
-                <div class="form-cont-row parameter">
-                    <div class="form-cont-col mb20" v-for="(item,index) in specifications" :key="index">
-                        <el-form-item :label="item.k + '：'" :prop="`specifications[${index}].v`" :rules="seeTask == false ?{required:item.isRequired == 1 ? true : false, message: item.isCombobox == 1 ? '请选择' + item.k : '请输入' + item.k }: {}">
-                            <el-input v-model="form.specifications[index].v" v-if="item.isCombobox == 0" maxlength="20" :disabled="seeTask == true">
-                                <template slot="suffix">{{item.unit}}</template>
-                            </el-input>
-                            <el-select v-model="form.specifications[index].v" v-if="item.isCombobox == 1" clearable :disabled="seeTask == true">
-                                <el-option v-for="i in item.options" :key="i" :value="i" :label="i"></el-option>
-                            </el-select>
-                        </el-form-item>
+                    <skuTable ref="skuTable" :formData.sync="form"></skuTable>
+                    <h-button type="create" class="mb20" v-if="form.optionTypeList.length>0" @click="onAddSKU">+</h-button>
+                    <div class="title-cont" v-if="specData.length != 0">
+                        <span class="title-cont__label">参数信息</span>
                     </div>
-                </div>
-                <div class="title-cont mt10">
-                    <span class="title-cont__label">商品详情信息</span>
-                </div>
-                <RichEditor style="position:relative;z-index:1" v-model="form.detail" :width="richTextAttr.width" :height="richTextAttr.height" :menus="richTextAttr.menus" :uploadImgServer="richTextAttr.uploadImgServer" :uploadImgParams="richTextAttr.uploadImgParams" :disabled="disabled">
-                </RichEditor>
-                <div class="title-cont pt30 seeTask" v-if="seeTask == false">
+                    <div class="form-cont-row parameter">
+                        <div class="form-cont-col mb20" v-for="(item,index) in specifications" :key="index">
+                            <el-form-item :label="item.k + '：'" :prop="`specifications[${index}].v`" :rules="{required:item.isRequired == 1 ? true : false, message: item.isCombobox == 1 ? '请选择' + item.k : '请输入' + item.k }">
+                                <el-input v-model="form.specifications[index].v" v-if="item.isCombobox == 0" maxlength="20">
+                                    <template slot="suffix">{{item.unit}}</template>
+                                </el-input>
+                                <el-select v-model="form.specifications[index].v" v-if="item.isCombobox == 1" clearable>
+                                    <el-option v-for="i in item.options" :key="i" :value="i" :label="i"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </div>
+                    </div>
+                    <div class="title-cont mt10">
+                        <span class="title-cont__label">商品详情信息</span>
+                    </div>
+                    <RichEditor style="position:relative;z-index:1" v-model="form.detail" :width="richTextAttr.width" :height="richTextAttr.height" :menus="richTextAttr.menus" :uploadImgServer="richTextAttr.uploadImgServer" :uploadImgParams="richTextAttr.uploadImgParams">
+                    </RichEditor>
+                    <div class="title-cont pt30 seeTask">
                     <el-form-item label="审核结果：" prop="auditStatus">
                         <el-radio-group v-model="form.auditStatus" @change="onChange">
                             <el-radio label="1">审核通过</el-radio>
@@ -80,37 +121,44 @@
                     </el-form-item>
                 </div>
                 <el-form-item style="text-align: right" class="pt30">
-                    <h-button type='primary' :loading="btnLoading" @click="onSave" v-if="seeTask == false">确定</h-button>
+                    <h-button type='primary' :loading="btnLoading" @click="onSave">确定</h-button>
                     <h-button @click="onCancel">返回</h-button>
                 </el-form-item>
+                </div>
+                <!-- <div class="agreement mt10">
+                    <span>温馨提示：为规范舒适e购商品发布管理，商家在上架商品时，需遵守<a class="isLink" @click="onPutawayRules">《舒适e购商品上架规则》</a></span>
+                </div> -->
             </el-form>
         </div>
-        <div class="page-body-cont btn-cont" v-if="showMore">
-        </div>
+        <!-- <div class="page-body-cont btn-cont" v-if="showMore">
+            <h-button @click="onCancel">取消</h-button>
+            <h-button type='primary' :loading="btnLoading" @click="onSave">提交</h-button>
+            <h-button @click="onReset">重置</h-button>
+        </div> -->
     </div>
 </template>
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
-import skuTable from './skuTable'
+import skuTable from '../productList/skuTable.vue'
 import { interfaceUrl } from '@/api/config'
 import { RICH_EDITOR_MENUS, PUTAWAY_RULES } from '../const/common'
 import { flatten } from '@/views/hmall/utils/sku'
 import { deepCopy } from '@/utils/utils'
-import { clearCache } from '@/utils/index'
+import { clearCache, newCache } from '@/utils/index'
 export default {
-    name: 'editSpuAudit',
+    name: 'createProduct',
+    inject: ['reload'],
     components: {
         skuTable
     },
     data () {
         return {
-            seeTask: false,
-            edite: true,
             showMore: false,
             btnLoading: false,
             specifications: [],
             addValues: [],
             imageUrls: [],
+            auditStatus: '',
             form: {
                 brandId: '',
                 brandName: '',
@@ -118,9 +166,11 @@ export default {
                 categoryId: '',
                 name: '',
                 showName: '',
-                imageUrls: '',
+                imageUrls: [],
                 specifications: [],
                 optionTypeIds: [],
+                auditStatus: '',
+                auditOpinion: '',
                 mainSkus: [
                     {
                         name: '',
@@ -131,35 +181,44 @@ export default {
                         height: '',
                         grossWeight: '',
                         volume: '',
-                        netWeight: ''
+                        netWeight: '',
+                        optionValues: []
                     }
                 ],
                 detail: '',
                 operator: '',
-                optionTypeList: [],
-                auditStatus: '',
-                auditOpinion: ''
+                optionTypeList: []
             },
             rules: {
-                imgUrls: [
-                    { required: true, message: '请上传商品图片', trigger: 'change' }
+                brandName: [
+                    { required: true, message: '请选择商品品牌', trigger: 'change' }
                 ],
-                k: [
+                model: [
+                    { required: true, message: '请选择商品系列', trigger: 'change' }
+                ],
+                categoryId: [
+                    { required: true, message: '请选择商品型类目', trigger: 'change' }
+                ],
+                name: [
+                    { required: true, message: '请输入商品名称', trigger: 'blur' }
+                ],
+                showName: [
+                    { required: true, message: '请输入商品销售名称', trigger: 'blur' }
+                ],
+                // imageUrls: [
+                //     {
+                //         required: true,
+                //         validator: (rule, value, callback) => {
+                //             if (this.imageUrls.length == 0) {
+                //                 return callback(new Error('请上传商品图片'))
+                //             }
+                //             return callback()
+                //         },
+                //         trigger: 'change'
+                //     }
+                // ],
+                option: [
                     { required: true, message: '请输入规格名', trigger: 'blur' }
-                ],
-                v: [
-                    {
-                        required: true,
-                        validator: (rule, value, callback) => {
-                            this.form.optionTypeList.map(item => {
-                                if (!item.v || item.v.length == 0) {
-                                    return callback(new Error('请输入规格值'))
-                                }
-                            })
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
                 ],
                 auditStatus: [
                     { required: true, message: '请选择审核结果', trigger: 'change' }
@@ -177,75 +236,17 @@ export default {
                         trigger: 'blur'
                     }
                 ],
-                serialNumber: [
+                optionValues: [
                     {
-                        required: false,
+                        required: true,
                         validator: (rule, value, callback) => {
-                            const reg = /^[A-Za-z0-9]+$/
-                            if (this.form.mainSkus[0].serialNumber && !reg.test(this.form.mainSkus[0].serialNumber)) {
-                                return callback(new Error('条头码仅支持字母和数字'))
-                            }
+                            this.form.optionTypeList.map(item => {
+                                if (!item.optionValues || item.optionValues.length == 0) {
+                                    return callback(new Error('请输入规格值'))
+                                }
+                            })
                             return callback()
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                length: [
-                    {
-                        required: false,
-                        validator: (rule, value, callback) => {
-                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
-                            if (this.form.mainSkus[0].length && !reg.test(this.form.mainSkus[0].length)) {
-                                return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
-                            }
-                            if (this.form.mainSkus[0].width && !reg.test(this.form.mainSkus[0].width)) {
-                                return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
-                            }
-                            if (this.form.mainSkus[0].height && !reg.test(this.form.mainSkus[0].height)) {
-                                return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                grossWeight: [
-                    {
-                        required: false,
-                        validator: (rule, value, callback) => {
-                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
-                            if (this.form.mainSkus[0].grossWeight && !reg.test(this.form.mainSkus[0].grossWeight)) {
-                                return callback(new Error('毛重格式为小数点前十位，小数点后两位'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                volume: [
-                    {
-                        required: false,
-                        validator: (rule, value, callback) => {
-                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
-                            if (this.form.mainSkus[0].volume && !reg.test(this.form.mainSkus[0].volume)) {
-                                return callback(new Error('体积格式为小数点前十位，小数点后两位'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'blur'
-                    }
-                ],
-                netWeight: [
-                    {
-                        required: false,
-                        validator: (rule, value, callback) => {
-                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
-                            if (this.form.mainSkus[0].netWeight && !reg.test(this.form.mainSkus[0].netWeight)) {
-                                return callback(new Error('净重格式为小数点前十位，小数点后两位'))
-                            }
-                            return callback()
-                        },
-                        trigger: 'blur'
+                        }
                     }
                 ]
             },
@@ -271,7 +272,7 @@ export default {
                 uploadImgServer: interfaceUrl + 'tms/files/upload-list',
                 uploadImgParams: { updateUid: 'Hosjoy' }
             },
-            auditStatus: ''
+            agreement: PUTAWAY_RULES
         }
     },
     computed: {
@@ -298,62 +299,149 @@ export default {
             }
         },
         disabled () {
-            return !!this.$route.query.seeTask
+            return this.form.optionTypeList.some(item => !item.name || item.optionValues.length == 0)
+        },
+        mainSkus () {
+            return deepCopy(this.form.mainSkus)
+        },
+        nowShow () {
+            return !this.$route.query.show
         }
     },
     watch: {
-        '$route' (to, from) {
-            if (to.name == 'editSpuAudit') {
-                this.init()
+        imageUrls (value) {
+            if (this.$refs.imageUrls) {
+                if (value.length) {
+                    this.$refs.imageUrls.clearValidate()
+                }
             }
         },
-        'form.brandName' (value) {
-            if (value == '') {
-                this.form.brandId = ''
-            }
-        },
-        'form.imgUrls' (value) {
-            if (value > 0) {
-                this.$refs.imgUrls.clearValidate()
-            }
-        },
-        'form.optionTypeList' (value) {
-            const optionTypeList = flatten(value.filter(item => item.name && item.optionValues.length))
-            // console.log(this.form.mainSkus)
-            this.form.mainSkus.map(item => {
-                let optionValues = []
-                this.productSpuInfo.optionTypeList.forEach(i => {
-                    let arr = item.optionValues.filter(j => j.optionTypeId == i.id)
-                    if (arr.length > 0) {
-                        optionValues = optionValues.concat(arr)
-                    } else {
-                        optionValues.push({
-                            id: '',
-                            name: '',
-                            optionTypeId: i.id,
-                            optionTypeName: i.name
+        'form.optionTypeList' (value, preValue) {
+            // 当sku被编辑或者是编辑页面的时候，我们不做笛卡尔积
+            if (this.isEdit || this.isEditSku) {
+                /**
+                 * 当编辑页面时候，页面渲染会触发form.optionTypeList的变更，这个时候我们不需要处理mainSkus
+                 * 所以这里判断preValue.length > 0的时候，真正在调整form.optionTypeList才触发mainSkus的处理
+                 */
+                if (preValue.length > 0) {
+                    // 当增加规格的时候
+                    if (this.form.mainSkus[0].optionValues.length < value.length) {
+                        // 增加一列，且只赋予第一个规格值
+                        if (value[value.length - 1].optionValues.length > 0) {
+                            this.form.mainSkus = this.form.mainSkus.map(item => {
+                                item.optionValues.push({
+                                    id: '',
+                                    name: '',
+                                    optionTypeId: deepCopy(value[value.length - 1].optionValues[0]).optionTypeId,
+                                    optionTypeName: deepCopy(value[value.length - 1].optionValues[0]).optionTypeName
+                                })
+                                return item
+                            })
+                        }
+                    } else if (this.form.mainSkus[0].optionValues.length > value.length) {
+                        // 当删除规格的时候
+                        this.form.mainSkus = this.form.mainSkus.map(item => {
+                            item.optionValues = value.map(v => {
+                                return item.optionValues.filter(o => o.optionTypeId == v.id)[0]
+                            })
+                            return item
                         })
                     }
-                })
-                item.optionValues = optionValues
-                return item
+                }
+                return
+            }
+            let changeSku = true
+            value.forEach(item => {
+                if (item.optionValues.length <= 0) {
+                    changeSku = false
+                }
             })
+            if (!changeSku) {
+                return
+            }
+            // 下面是笛卡尔积逻辑
+            const optionTypeList = flatten(value.filter(item => item.name && item.optionValues.length))
+            if (this.$route.query.id) {
+                this.form.mainSkus.map(item => {
+                    let optionValues = []
+                    this.productSpuInfo.optionTypeList.forEach(i => {
+                        let arr = item.optionValues.filter(j => j.optionTypeId == i.id)
+                        if (arr.length > 0) {
+                            optionValues = optionValues.concat(arr)
+                        } else {
+                            optionValues.push({ id: '', name: '', optionTypeId: i.id, optionTypeName: i.name })
+                        }
+                    })
+                    item.optionValues = optionValues
+                    return item
+                })
+            } else {
+                const mainSkus = optionTypeList.map(item => {
+                    return item
+                })
+                if (!mainSkus.length) {
+                    this.form.mainSkus = this.form.mainSkus
+                    return
+                }
+                if (this.form.mainSkus.length == mainSkus.length) {
+                    this.form.mainSkus = mainSkus.map((item, index) => ({
+                        ...this.form.mainSkus[index],
+                        ...item
+                    }))
+                } else {
+                    this.form.mainSkus = mainSkus
+                }
+            }
+        },
+        mainSkus: {
+            handler (value, preValue) {
+                const valueNew = value.map(item => {
+                    item.disabled = ''
+                    return item
+                })
+                const preValueNew = preValue.map(item => {
+                    item.disabled = ''
+                    return item
+                })
+                const valueStr = JSON.stringify(valueNew)
+                const preValueStr = JSON.stringify(preValueNew)
+                /**
+                 * 判断SKU是否变化的核心判断规则：是否只是optionTypeList引起的变更
+                 * optionTypeList引起的变更有两种情况
+                 * 1. 笛卡尔积造成的mainSkus的长度增加
+                 * 2. 增加了规格名且规格值只有一个，mainSkus的长度不增加，但是mainSkus.optionValues的长度增加了
+                 * 通过上述分析可以判断当两个数据长度都没有变化的时候就说明是SKU值发生变化了：
+                 * value.length === preValue.length && value[0].optionValues.length === preValue[0].optionValues.length
+                 * 》》》》》》》》》》》》》》》》》》》》》》》》》》》》
+                 * 实际遇到一个意外情况：
+                 * 1. mainSkus在进入skuTable进行编辑的时候，增加了一个disabled属性，会触发mainSkus变更，导致判断失效
+                 * 这里将disabled属性置空之后对比两个value的值，如果值没有变化，我们也认为没有SKU变更
+                 */
+                if (valueStr != preValueStr && value.length === preValue.length && value[0].optionValues.length === preValue[0].optionValues.length) {
+                    this.isEditSku = true
+                }
+            },
+            deep: true
+        },
+        '$route' (to, from) {
+            if (to.query.id) {
+                this.reload('createProduct')
+            }
         }
     },
     methods: {
-        async init () {
+        init () {
             this.getBrandOptions()
             this.getCategoryOptions()
             this.getModelOptions()
             if (this.$route.query.id) {
+                this.isEdit = true
                 this.showMore = true
                 this.getProductInfo(this.$route.query.id)
             }
-            if (this.$route.query.seeTask) {
-                this.seeTask = true
-            } else {
-                this.seeTask = false
-            }
+        },
+        onChange (val) {
+            this.$refs.form.clearValidate()
         },
         async querySearchAsyncBrand (queryString, cb) {
             const results = queryString ? await this.brandOption.filter(this.createStateFilter(queryString)) : this.brandOption
@@ -381,6 +469,7 @@ export default {
         },
         async handleSelectModel (item) {
             await this.getProductInfo(item.mainSpuId)
+            this.$router.push({ path: '/b2b/product/createProduct', query: { id: item.mainSpuId } })
             this.showMore = true
         },
         createStateFilter (queryString) {
@@ -392,6 +481,18 @@ export default {
             if (value.length == 2) {
                 this.getSpecByCategory(value[1])
             }
+        },
+        onFindProduct () {
+            this.$refs.form.validate(async (valid) => {
+                if (valid) {
+                    await this.getProductUnique()
+                    if (this.productUnique) {
+                        this.$router.push({ path: '/b2b/product/createProduct', query: { id: this.productUnique } })
+                    } else {
+                        this.showMore = true
+                    }
+                }
+            })
         },
         handleSuccess (file) {
             this.imageUrls.push(file.data.accessUrl)
@@ -409,8 +510,84 @@ export default {
             }
             return fileSize
         },
-        backPicUrl (file) {
-            this.form.mainSkus[0].imageUrls = file.imageUrl
+        onAddOptionTemplate () {
+            this.form.optionTypeList.push({ id: '', name: '', optionValues: [] })
+        },
+        onDelOptionTemplate (index) {
+            this.form.optionTypeList.splice(index, 1)
+            if (this.form.optionTypeList.length == 0) {
+                this.form.mainSkus = [{
+                    name: '',
+                    imageUrls: '',
+                    serialNumber: '',
+                    length: '',
+                    width: '',
+                    height: '',
+                    grossWeight: '',
+                    volume: '',
+                    netWeight: '',
+                    optionValues: []
+                }]
+            }
+        },
+        async onAddOption (id, name, index) {
+            if (id) {
+                await this.editOption({ id: id, name: name })
+            } else {
+                await this.addOption({ name: name })
+            }
+            this.form.optionTypeList[index].id = this.optionId
+        },
+        async onAddOptionVlaue (index) {
+            let str = this.addValues[index] || ''
+            str = str.trim()
+            if (!str) return
+            const oldArr = this.form.optionTypeList[index].optionValues
+            const arr = str.split(/\s+/)
+                .filter(item => !oldArr.some(value => value.name == item))
+                .map(item => (item))
+            if (arr.length > 0) {
+                await this.addOptionValue({ id: this.form.optionTypeList[index].id, name: this.addValues.join('') })
+                this.form.optionTypeList = this.form.optionTypeList.map((item, i) => {
+                    if (index === i) {
+                        item.optionValues = this.form.optionTypeList[i].optionValues.concat(this.optionValueData)
+                    }
+                    item.optionValues.map(sItem => {
+                        sItem.disabled = item.optionValues.length == 1 || this.$route.id || this.productSpuInfo.auditStatus == 1
+                        return sItem
+                    })
+                    return item
+                })
+            }
+            this.$set(this.addValues, index, '')
+        },
+        onDelOptionValue (index, sIndex) {
+            let id = ''
+            this.form.optionTypeList = this.form.optionTypeList.map((item, i) => {
+                if (index === i) {
+                    id = item.optionValues[sIndex].id
+                    item.optionValues.splice(sIndex, 1)
+                }
+                item.optionValues.map(sItem => {
+                    sItem.disabled = item.optionValues.length == 1 || this.$route.id || this.productSpuInfo.auditStatus == 1
+                    return sItem
+                })
+                return item
+            })
+            this.form.mainSkus = this.form.mainSkus.map((item, i) => {
+                item.optionValues = item.optionValues.map(obj => {
+                    if (obj.id === id) {
+                        obj.id = ''
+                        obj.name = ''
+                    }
+                    return obj
+                })
+                return item
+            })
+            this.addValues.splice(sIndex, 1)
+            this.$nextTick(() => {
+                this.$refs.form.clearValidate()
+            })
         },
         onSettingTop (index) {
             this.imageUrls.unshift((this.imageUrls.splice(index, 1))[0])
@@ -418,30 +595,88 @@ export default {
         onRemove (index) {
             this.imageUrls.splice(index, 1)
         },
-        onChange (val) {
-            this.$refs.form.clearValidate()
+        onAddSKU () {
+            console.log(this.form.optionTypeList)
+            let optionValues = []
+            this.form.optionTypeList.forEach(item => {
+                optionValues.push({
+                    id: '',
+                    name: '',
+                    optionTypeId: item.id,
+                    optionTypeName: item.name
+                })
+            })
+            console.log(this.form.mainSkus)
+            this.form.mainSkus = this.form.mainSkus.concat({ imageUrls: '', optionValues: optionValues })
         },
         onSave () {
-            let form = {}
-            form = {
-                ...this.form,
-                mainSpuId: this.$route.query.id,
-                modifiableInfo: {
-                    imgUrls: this.imageUrls,
-                    detail: this.form.detail,
-                    specifications: this.form.specifications.filter(item => item.v)
-                },
-                mainSkuWarehouseRequest: deepCopy(this.form.mainSkus).map(item => {
-                    item.imageUrls = item.imageUrls.split(',')
-                    return item
-                }),
-                operator: this.userInfo.employeeName,
-                auditStatus: this.form.auditStatus,
-                auditOpinion: this.form.auditOpinion
-            }
+            // let form = {}
+            // form = {
+            //     ...this.form,
+            //     mainSpuId: this.$route.query.id,
+            //     modifiableInfo: {
+            //         imgUrls: this.imageUrls,
+            //         detail: this.form.detail,
+            //         specifications: this.form.specifications.filter(item => item.v)
+            //     },
+            //     mainSkuWarehouseRequest: deepCopy(this.form.mainSkus).map(item => {
+            //         item.imageUrls = item.imageUrls.split(',')
+            //         return item
+            //     }),
+            //     operator: this.userInfo.employeeName,
+            //     auditStatus: this.form.auditStatus,
+            //     auditOpinion: this.form.auditOpinion
+            // }
+            // console.log(form)
+            this.form.imageUrls = this.imageUrls
             this.btnLoading = true
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
+                    let form = {}
+                    if (this.form.optionTypeList.length > 0) {
+                        form = {
+                            ...this.form,
+                            mainSpuId: this.$route.query.id,
+                            modifiableInfo: {
+                                imgUrls: this.imageUrls,
+                                detail: this.form.detail,
+                                specifications: this.form.specifications.filter(item => item.v)
+                            },
+                            optionTypeIds: this.form.optionTypeList.map(item => item.id),
+                            mainSkus: deepCopy(this.form.mainSkus).map(item => {
+                                item.id = item.mainSkuId ? item.mainSkuId : ''
+                                item.name = this.form.name + item.optionValues.map(sItem => sItem.name).join('')
+                                item.imageUrls = item.imageUrls ? item.imageUrls.split(',') : []
+                                item.optionValueIds = item.optionValues.map(sItem => sItem.id).filter(sItem => sItem)
+                                return item
+                            }),
+                            specifications: this.form.specifications.filter(item => item.v),
+                            operator: this.userInfo.employeeName
+                        }
+                    } else {
+                        form = {
+                            ...this.form,
+                            mainSpuId: this.$route.query.id,
+                            modifiableInfo: {
+                                imgUrls: this.imageUrls,
+                                detail: this.form.detail,
+                                specifications: this.form.specifications.filter(item => item.v)
+                            },
+                            mainSkus: deepCopy(this.form.mainSkus).map(item => {
+                                item.id = item.mainSkuId ? item.mainSkuId : ''
+                                item.name = this.form.name
+                                item.imageUrls = item.imageUrls ? item.imageUrls.split(',') : []
+                                return item
+                            }),
+                            specifications: this.form.specifications.filter(item => item.v),
+                            operator: this.userInfo.employeeName
+                        }
+                    }
+                    if (form.mainSkus.length <= 0) {
+                        this.$message.warning('请添加商品！')
+                        this.btnLoading = false
+                        return false
+                    }
                     if (this.form.auditStatus != '') {
                         try {
                             await this.aduitSpu(form)
@@ -461,9 +696,81 @@ export default {
                 }
             })
         },
+        // onSave () {
+        //     this.form.imageUrls = this.imageUrls
+        //     this.btnLoading = true
+        //     this.$refs.form.validate(async (valid) => {
+        //         if (valid) {
+        //             let form = {}
+        //             if (this.form.optionTypeList.length > 0) {
+        //                 form = {
+        //                     ...this.form,
+        //                     optionTypeIds: this.form.optionTypeList.map(item => item.id),
+        //                     mainSkus: deepCopy(this.form.mainSkus).map(item => {
+        //                         item.id = item.mainSkuId ? item.mainSkuId : ''
+        //                         item.name = this.form.name + item.optionValues.map(sItem => sItem.name).join('')
+        //                         item.imageUrls = item.imageUrls ? item.imageUrls.split(',') : []
+        //                         item.optionValueIds = item.optionValues.map(sItem => sItem.id).filter(sItem => sItem)
+        //                         return item
+        //                     }),
+        //                     specifications: this.form.specifications.filter(item => item.v),
+        //                     operator: this.userInfo.employeeName
+        //                 }
+        //             } else {
+        //                 form = {
+        //                     ...this.form,
+        //                     mainSkus: deepCopy(this.form.mainSkus).map(item => {
+        //                         item.id = item.mainSkuId ? item.mainSkuId : ''
+        //                         item.name = this.form.name
+        //                         item.imageUrls = item.imageUrls ? item.imageUrls.split(',') : []
+        //                         return item
+        //                     }),
+        //                     specifications: this.form.specifications.filter(item => item.v),
+        //                     operator: this.userInfo.employeeName
+        //                 }
+        //             }
+        //             if (form.mainSkus.length <= 0) {
+        //                 this.$message.warning('请添加商品！')
+        //                 this.btnLoading = false
+        //                 return false
+        //             } else {
+        //                 try {
+        //                     if (this.$route.query.id) {
+        //                         await this.editProduct(form)
+        //                         this.$router.push('/b2b/product/productList')
+        //                         this.setNewTags((this.$route.fullPath).split('?')[0])
+        //                     } else {
+        //                         form.id = ''
+        //                         await this.createProduct(form)
+        //                         this.$router.push('/b2b/product/productList')
+        //                         this.setNewTags((this.$route.fullPath).split('?')[0])
+        //                     }
+        //                     this.btnLoading = false
+        //                 } catch (error) {
+        //                     this.btnLoading = false
+        //                 }
+        //             }
+        //         } else {
+        //             this.btnLoading = false
+        //         }
+        //     })
+        // },
+        // onCancel () {
+        //     this.$router.push('/b2b/product/productList')
+        //     this.setNewTags((this.$route.fullPath).split('?')[0])
+        // },
         onCancel () {
             this.$router.push('/b2b/product/productAuditList')
             this.setNewTags((this.$route.fullPath).split('?')[0])
+        },
+        onReset () {
+            this.reload('createProduct')
+        },
+        onPutawayRules () {
+            this.$alert(this.agreement, '舒适e购商品上架规则', {
+                confirmButtonText: '关闭',
+                dangerouslyUseHTMLString: true
+            })
         },
         ...mapActions({
             setNewTags: 'setNewTags',
@@ -474,6 +781,7 @@ export default {
             checkProductUnique: 'productManage/checkProductUnique',
             findProductSpuInfo: 'productManage/findProductSpuInfo',
             addOption: 'productManage/addOption',
+            editOption: 'productManage/editOption',
             addOptionValue: 'productManage/addOptionValue',
             createProduct: 'productManage/createProduct',
             editProduct: 'productManage/editProduct',
@@ -501,14 +809,42 @@ export default {
         async getProductInfo (id) {
             await this.findProductSpuInfo({ id: id })
             await this.getSpecByCategory(this.productSpuInfo.twoCategoryId)
-            // console.log(this.productSpuInfo)
             this.form = {
                 ...this.productSpuInfo,
-                mainSkus: this.productSpuInfo.mainSkus.map(item => {
-                    item.imageUrls = item.imageUrls.join(',')
+                mainSkus: this.productSpuInfo.mainSkus.length > 0 ? this.productSpuInfo.mainSkus.map((item, index) => {
+                    item.imageUrls = item.imageUrls ? item.imageUrls.join(',') : []
+                    // 编辑页面的调整，如果当前属性值没有选择的时候，后端就不会返回数据，我们需要补足数据
+                    const optionTypeList = this.productSpuInfo.optionTypeList.map(obj => ({
+                        id: '',
+                        name: '',
+                        optionTypeId: obj.id,
+                        optionTypeName: obj.name
+                    }))
+                    item.optionValues = optionTypeList.map((obj, index) => {
+                        const options = item.optionValues.filter(i => i.optionTypeId == obj.optionTypeId)
+                        return options.length > 0 ? options[0] : obj
+                    })
                     return item
-                }),
-                optionTypeList: this.productSpuInfo.optionTypeList ? this.productSpuInfo.optionTypeList : []
+                }) : [{
+                    name: '',
+                    imageUrls: '',
+                    serialNumber: '',
+                    length: '',
+                    width: '',
+                    height: '',
+                    grossWeight: '',
+                    volume: '',
+                    netWeight: '',
+                    optionValues: []
+                }],
+                optionTypeList: this.productSpuInfo.optionTypeList.length ? this.productSpuInfo.optionTypeList.map(item => {
+                    item.disabled = !!(this.$route.query.id)
+                    item.optionValues.map(sItem => {
+                        sItem.disabled = item.optionValues.length == 1 || this.$route.id || this.productSpuInfo.auditStatus == 1
+                        return sItem
+                    })
+                    return item
+                }) : []
             }
             // TODO: 处理老数据
             const specifications = this.productSpuInfo.specifications || []
@@ -526,8 +862,9 @@ export default {
         this.init()
     },
     beforeRouteLeave (to, from, next) {
-        if (to.name != 'productAuditList') {
-            clearCache('productAuditList')
+        if (to.name != 'productList') {
+            clearCache('productList')
+            // clearCache('productList')
         }
         next()
     }
@@ -598,14 +935,26 @@ export default {
     }
 }
 
+.picture-content {
+    line-height: 20px;
+}
+
 .isDefault {
-    display: inline-flex;
+    display: inline-block;
     width: 104px;
     height: 20px;
     line-height: 20px;
     color: $grayColor;
     text-align: center;
-    // margin-top: 104px;
+    margin-top: 104px;
+}
+
+.seeTask {
+    display: flex;
+    justify-content: flex-start;
+    .el-form-item {
+        margin-right: 20px;
+    }
 }
 
 .isDisabled {
@@ -618,14 +967,6 @@ export default {
         position: relative;
         padding: 20px 24px;
         border: 1px solid #e5e5ea;
-    }
-}
-
-.seeTask {
-    display: flex;
-    justify-content: flex-start;
-    .el-form-item {
-        margin-right: 20px;
     }
 }
 
@@ -644,43 +985,6 @@ export default {
 
 /deep/ .editor-wrap {
     width: 100% !important;
-}
-
-.stepPrcieBox {
-    box-sizing: border-box;
-    padding: 20px 0;
-    margin-bottom: 20px;
-    display: flex;
-    border: 1px solid #e5e5ea;
-    .stepLabel {
-        text-align: right;
-        width: 108px;
-        padding-right: 12px;
-        color: #ff7a45;
-    }
-    .stepItem {
-        width: 180px;
-        .stepTitle {
-            color: #ff7a45;
-            margin-bottom: 10px;
-        }
-        .stepPrice,
-        .stepRange {
-            color: #333333;
-        }
-    }
-}
-.area-cascader {
-    /deep/ .el-cascader__tags {
-        max-height: 100px;
-        overflow-y: auto;
-    }
-    /deep/ .el-cascader {
-        max-height: 100px;
-    }
-    /deep/ .el-input {
-        width: 600px;
-    }
 }
 
 .el-tag {
