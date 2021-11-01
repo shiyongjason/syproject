@@ -361,7 +361,7 @@ export default {
                     label: '最新签约规模/万',
                     width: '150',
                     render: (h, scope) => {
-                        return <span class='color-safe' onClick={() => { this.handleDialog(scope.row, '签约规模变更记录') }}>{filters.fundMoney(scope.row.developSignInfoVo_signScale)}</span>
+                        return <span class='color-safe' onClick={() => { this.handleDialog(scope.row, '签约规模变更记录') }}>{filters.moneyFormat(scope.row.developSignInfoVo_signScale, 2, false)}</span>
                     }
                 },
                 { prop: 'regCapital', label: '注册资本/万', width: '100', displayAs: 'money' },
@@ -370,7 +370,7 @@ export default {
                     label: '我方注册资金/万',
                     width: '130',
                     render: (h, scope) => {
-                        return <span class='color-safe' onClick={() => { this.handleDialog(scope.row, '我方注册资金变更记录') }}>{filters.fundMoney(scope.row.developSignInfoVo_ourRegisteredFund)}</span>
+                        return <span class='color-safe' onClick={() => { this.handleDialog(scope.row, '我方注册资金变更记录') }}>{filters.moneyFormat(scope.row.developSignInfoVo_ourRegisteredFund, 2, false)}</span>
                     }
                 },
                 { prop: 'developSignInfoVo_onlineTime', label: '上线时间', minWidth: '100', displayAs: 'YYYY-MM-DD' },

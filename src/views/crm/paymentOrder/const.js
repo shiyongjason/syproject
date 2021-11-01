@@ -6,11 +6,16 @@ const PAYMENT_ORDER_STATUS_OPTIONS = new Map([
     [2, '首付款待确认'],
     [8, '待收货'],
     [9, '剩余货款待支付'],
-    [10, '剩余货款待确认'],
+    // [10, '剩余货款待确认'],
     [11, '支付单完成'],
     [12, '支付单关闭']
 ])
+const PAYMENT_STATUS_OPTIONS = new Map([
+    [1, '待支付'],
+    [2, '部分支付'],
+    [3, '已支付']
 
+])
 const PAYMENT_ORDER_STATUS_ALL = new Map([
     [0, '待项目运营审核'],
     [1, '首付款待支付'],
@@ -46,7 +51,7 @@ const PAYMENT_ORDER_STATUS_KEY = {
     // 剩余货款待支付
     'REMAINING_PAYMENT_WAITING_PAY': 9,
     // 剩余货款待确认
-    'REMAINING_PAYMENT_CONFIRM': 10,
+    // 'REMAINING_PAYMENT_CONFIRM': 10,
     // 支付单完成
     'FINISH': 11,
     // 支付单关闭
@@ -83,6 +88,19 @@ const APPROVAL_STATUS_KEY_NO_PASS = 2
 const DEALER_COOPERATION_METHOD = new Map([
     [1, '垫资代采'],
     [2, '代收代付']
+])
+
+// 放款交接状态
+const DEALER_COOPERATION_STUTAS = new Map([
+    [1, '待对接'],
+    [2, '已对接']
+])
+
+// 上游支付进度
+const DEALER_SCHEDULE = new Map([
+    [1, '待支付'],
+    [2, '已支付'],
+    [3, '部分支付']
 ])
 // 应收账款质押
 const ACCOUNT_RECEIVABLE_PLEDGE_TYPE = new Map([
@@ -130,5 +148,8 @@ export default {
     ACCOUNT_RECEIVABLE_PLEDGE_TYPE,
     ORDER_LETTER_STATUS,
     PAYMENT_FLAG,
-    PAYMENT_FLAG_KEY
+    PAYMENT_FLAG_KEY,
+    DEALER_SCHEDULE,
+    DEALER_COOPERATION_STUTAS,
+    PAYMENT_STATUS_OPTIONS
 }

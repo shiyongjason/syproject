@@ -1,13 +1,15 @@
 <template>
-    <div class="page-body">
+    <div class="page-body B2b">
         <div class="query-cont">
-            <p>设备明细</p>
+            <div class="title-cont">
+                <span class="title-cont__label">设备明细</span>
+            </div>
             <div class="query-flex">
-                <div>设备ID：{{ this.$route.query.subIotId | isNotBlank}}</div>
-                <div>入网时间：{{parseInt(this.$route.query.createTime) | formatterTime}}</div>
-                <div>设备状态：{{ deviceInfo.status}}</div>
-                <div>经销商：{{deviceInfo.dealer | isNotBlank}}</div>
-                <div>经销商电话：{{deviceInfo.dealerPhone | isNotBlank}}</div>
+                <div>设备ID：{{ this.$route.query.subIotId | isNotBlank }}</div>
+                <div>入网时间：{{ this.$route.query.createTime * 1 | momentFormat }}</div>
+                <div>设备状态：{{ deviceInfo.status }}</div>
+                <div>经销商：{{ deviceInfo.dealer | isNotBlank}}</div>
+                <div>经销商电话：{{ deviceInfo.dealerPhone | isNotBlank }}</div>
                 <div></div>
             </div>
         </div>
@@ -105,33 +107,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .query-cont {
-    p {
-        font-size: 16px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #e5e5e5;
-    }
-
+.query-cont {
     .query-flex {
         display: flex;
-        justify-content: space-around;
         flex-wrap: wrap;
+        div {
+            flex: 1;
+            flex-basis: 25%;
+            padding: 10px;
+        }
+    }
+}
 
-    div {
-        flex: 1;
-        flex-basis: 25%;
-        padding: 10px;
-    }
-    }
-    }
+.colred {
+    color: #ff7a45;
+}
 
-    .colred {
-        color: #ff7a45;
-    }
-
-    .overflowhidden {
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
+.overflowhidden {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 </style>

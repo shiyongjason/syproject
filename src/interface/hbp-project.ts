@@ -385,7 +385,7 @@ export interface ReqContract {
     contractTemplateVersionId?: number | string
 
     /**
-     * 合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待风控审核 5：风控审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
+     * 合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待运营审核 5：运营审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
      * @type {number | string}
      * @memberof ReqContract
      */
@@ -543,7 +543,7 @@ export interface Contract {
     contractTemplateVersionId: number | string
 
     /**
-     * 合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待风控审核 5：风控审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
+     * 合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待运营审核 5：运营审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
      * @type {number | string}
      * @memberof Contract
      */
@@ -671,7 +671,7 @@ export interface ReqVipContract {
     contractFieldsList: string
 
     /**
-     * 合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待风控审核 5：风控审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
+     * 合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待运营审核 5：运营审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
      * @type {number | string}
      * @memberof ReqVipContract
      */
@@ -890,7 +890,7 @@ export interface RespContract {
     contractFieldsList: string
 
     /**
-     * 合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待风控审核 5：风控审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
+     * 合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待运营审核 5：运营审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
      * @type {number | string}
      * @memberof RespContract
      */
@@ -3652,7 +3652,7 @@ export interface ReqContractSubmitApprove {
     approver?: string
 
     /**
-     * 合同审批角色 0：客户经理 1：分财 2：风控 3：法务
+     * 合同审批角色 0：客户经理 1：分财 2：运营 3：法务
      * @type {number | string}
      * @memberof ReqContractSubmitApprove
      */
@@ -4211,7 +4211,7 @@ export interface ReqContractEditRecord {
     approvalId?: number | string
 
     /**
-     * 合同审批角色 0：客户经理 1：分财 2：风控 3：法务
+     * 合同审批角色 0：客户经理 1：分财 2：运营 3：法务
      * @type {number | string}
      * @memberof ReqContractEditRecord
      */
@@ -4290,7 +4290,7 @@ export interface ReqContractReject {
     approver?: string
 
     /**
-     * 合同审批角色 0：客户经理 1：分财 2：风控 3：法务
+     * 合同审批角色 0：客户经理 1：分财 2：运营 3：法务
      * @type {number | string}
      * @memberof ReqContractReject
      */
@@ -4341,7 +4341,7 @@ export interface ReqContractApproval {
     approver?: string
 
     /**
-     * 合同审批角色 0：客户经理 1：分财 2：风控 3：法务
+     * 合同审批角色 0：客户经理 1：分财 2：运营 3：法务
      * @type {number | string}
      * @memberof ReqContractApproval
      */
@@ -5154,7 +5154,7 @@ export interface RespUpPaymentLoanHandover {
     paymentOrderId?: number | string
 
     /**
-     * 岗位 1：业财风控岗 2：资金部放款审核岗 3：资金部放款操作岗
+     * 岗位 1：业财运营岗 2：资金部放款审核岗 3：资金部放款操作岗
      * @type {number | string}
      * @memberof RespUpPaymentLoanHandover
      */
@@ -5233,7 +5233,7 @@ export interface RespUpPaymentLoanHandoverParam {
     paramDescription?: string
 
     /**
-     * 属性所属组 1：业财风控确认 2：资金部放款审核岗确认 3：资金部放款操作岗确认
+     * 属性所属组 1：业财运营确认 2：资金部放款审核岗确认 3：资金部放款操作岗确认
      * @type {number | string}
      * @memberof RespUpPaymentLoanHandoverParam
      */
@@ -6425,7 +6425,7 @@ export interface RespCrmPurchaseOrderDetail$Contract {
     updateTime?: string
 
     /**
-     * 合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待风控审核 5：风控审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
+     * 合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待运营审核 5：运营审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
      * @type {number | string}
      * @memberof RespCrmPurchaseOrderDetail$Contract
      */
@@ -6669,7 +6669,7 @@ export interface RespPurchaseOrderSubmit$Contract {
     updateTime?: string
 
     /**
-     * 合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待风控审核 5：风控审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
+     * 合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待运营审核 5：运营审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
      * @type {number | string}
      * @memberof RespPurchaseOrderSubmit$Contract
      */
@@ -7162,7 +7162,7 @@ export interface RespPurchaseOrderContract {
     contractTemplateVersionId?: number | string
 
     /**
-     * 合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待风控审核 5：风控审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
+     * 合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待运营审核 5：运营审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
      * @type {number | string}
      * @memberof RespPurchaseOrderContract
      */
@@ -13527,7 +13527,7 @@ export interface RespContractStatusStatic {
     financeManagerWaitingNum: number | string
 
     /**
-     * 待风控审核数量
+     * 待运营审核数量
      * @type {number | string}
      * @memberof RespContractStatusStatic
      */
@@ -13613,7 +13613,7 @@ export interface ReqContractPageQuery {
     contractTypeIdArrays?: string
 
     /**
-     * 合同状态列表，逗号分隔：1：草稿 2：待分财审核 3：分财审核未通过 4：待风控审核 5：风控审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
+     * 合同状态列表，逗号分隔：1：草稿 2：待分财审核 3：分财审核未通过 4：待运营审核 5：运营审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
      * @type {string}
      * @memberof ReqContractPageQuery
      */
@@ -13799,7 +13799,7 @@ export interface ReqContractListQuery {
     purchaseOrderId?: number | string
 
     /**
-     * 合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待风控审核 5：风控审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
+     * 合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待运营审核 5：运营审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
      * @type {Array<number | string>}
      * @memberof ReqContractListQuery
      */
@@ -13822,7 +13822,7 @@ export interface RespContractEditNumber {
     subFinanceEditNumber: number | string
 
     /**
-     * 风控修订数量
+     * 运营修订数量
      * @type {number | string}
      * @memberof RespContractEditNumber
      */
@@ -13873,7 +13873,7 @@ export interface ReqCrmContractPageQuery {
     contractTypeIdArrays?: string
 
     /**
-     * 合同状态列表，逗号分隔：1：草稿 2：待分财审核 3：分财审核未通过 4：待风控审核 5：风控审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
+     * 合同状态列表，逗号分隔：1：草稿 2：待分财审核 3：分财审核未通过 4：待运营审核 5：运营审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
      * @type {string}
      * @memberof ReqCrmContractPageQuery
      */
@@ -15225,7 +15225,7 @@ export interface RespContractCrmSignHistory {
     approvalStatus?: number | string
 
     /**
-     * 审核角色 1：分财 2：风控 3：法务
+     * 审核角色 1：分财 2：运营 3：法务
      * @type {number | string}
      * @memberof RespContractCrmSignHistory
      */
@@ -15485,7 +15485,7 @@ export interface RespContractRecord {
     contractFieldsList: string
 
     /**
-     * 合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待风控审核 5：风控审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
+     * 合同状态：1：草稿 2：待分财审核 3：分财审核未通过 4：待运营审核 5：运营审核未通过 6：待法务审核 7：法务审核未通过 8：待客户签署 9：客户拒签 10：待平台签署 11：平台签署未通过 12：合同已签署 13：异常关闭 14：超时关闭 15：用印发起失败 16：发起线上待客户签署 17：合同废止
      * @type {number | string}
      * @memberof RespContractRecord
      */

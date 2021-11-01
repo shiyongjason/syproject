@@ -73,7 +73,7 @@ export default {
                 updateUid: '',
                 reservedName: true
             },
-            roles: ['分财', '风控', '法务'],
+            roles: ['分财', '运营', '法务'],
             contractList: [],
             approval_Remark: '',
             form: {
