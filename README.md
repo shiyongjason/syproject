@@ -72,3 +72,7 @@ moment().subtract(1, "years").format("YYYY-MM-DD"); //当前时间的前1年时�
 moment().subtract(3, "months").format("YYYY-MM-DD"); //当前时间的前3个月时间
 
 moment().subtract(1, "weeks").format("YYYY-MM-DD"); //当前时间的前一个星期时间
+
+//
+//格式化时间 封装统一方法
+momentFormat
