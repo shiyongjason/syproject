@@ -198,13 +198,15 @@ export default {
             this.drawaddPlat()
         },
         async hexoList () {
+            let userInfo = sessionStorage.getItem('userInfo')
             const params = {
                 companyCode: this.params.companyCode,
                 regionCode: this.params.regionCode,
                 subsectionCode: this.params.subsectionCode,
                 startDate: this.params.startDate,
-                endDate: this.params.endDate
-
+                endDate: this.params.endDate,
+                authCode: JSON.parse(sessionStorage.getItem('authCode')),
+                jobNumber: JSON.parse(userInfo).jobNumber
             }
             const { data } = await hexoList(params)
             this.companySaleBOList = data.data.companySaleBOList
