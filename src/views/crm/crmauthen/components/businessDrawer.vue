@@ -176,19 +176,19 @@
 
                                 </el-form-item>
                                 <el-form-item label="创建时间：" :label-width="formLabelWidth">
-                                    {{businessDetail.createTime | formatterTime}}
+                                    {{businessDetail.createTime | momentFormat}}
                                 </el-form-item>
                                 <el-form-item label="创建人：" :label-width="formLabelWidth">
                                     {{businessDetail.createBy}} {{businessDetail.createPhone}}
                                 </el-form-item>
                                 <!-- <el-form-item label="关联/认证时间：" :label-width="formLabelWidth">
-                                {{businessDetail.authenticationTime | formatterTime}}
+                                {{businessDetail.authenticationTime | momentFormat}}
                             </el-form-item>
                             <el-form-item label="关联/认证人：" :label-width="formLabelWidth">
                                 {{businessDetail.authenticationBy||'-'}} {{businessDetail.authenticationPhone}}
                             </el-form-item> -->
                                 <el-form-item label="最近维护时间：" :label-width="formLabelWidth">
-                                    {{businessDetail.updateTime| formatterTime}}
+                                    {{businessDetail.updateTime| momentFormat}}
                                 </el-form-item>
                                 <el-form-item label="最近维护人：" :label-width="formLabelWidth">
                                     {{businessDetail.updateBy?businessDetail.updateBy:'-'}} ({{businessDetail.updatePhone}})
@@ -239,7 +239,7 @@
                                     <p v-else>-</p>
                                 </el-form-item>
                                 <el-form-item label="关联/认证时间：">
-                                    <p v-if="authenticationDetail.authenticationTime"> {{authenticationDetail.authenticationTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</p>
+                                    <p v-if="authenticationDetail.authenticationTime"> {{authenticationDetail.authenticationTime | momentFormat}}</p>
                                     <p v-else>-</p>
                                 </el-form-item>
                                 <el-form-item label="关联/认证人：">
@@ -334,9 +334,9 @@
                 <p class="page-title">记录</p>
                 <div class="page-wrap">
                     <div v-for="(i) in whiteRecordsList" :key=i.id>
-                        <i class="el-icon-edit"></i><b>{{i.operator}} {{i.operatorPhone}}</b> 在 <b>{{i.operateTime| formatterTime}}</b> 将 客户分类 设置为了
+                        <i class="el-icon-edit"></i><b>{{i.operator}} {{i.operatorPhone}}</b> 在 <b>{{i.operateTime| momentFormat}}</b> 将 客户分类 设置为了
                         <b> {{i.customerType==1?'黑名单':i.customerType==2?'白名单':i.customerType==3?'待审核':'-'}}</b> 说明：<b>{{i.note}}</b>；
-                        <!-- <p v-if="i.customerType==2">白名单失效时间为：<b>{{i.failureTime| formatterTime}}</b></p> -->
+                        <!-- <p v-if="i.customerType==2">白名单失效时间为：<b>{{i.failureTime| momentFormat}}</b></p> -->
                     </div>
                 </div>
             </el-form>

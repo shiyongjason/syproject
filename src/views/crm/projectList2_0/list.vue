@@ -494,9 +494,11 @@ export default class ProjectList2 extends Vue {
             prop: 'companyName',
             width: '200',
             render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
-                return (
-                    <span onClick={() => this.onClickLink(scope)} class="link-cell">{scope.row.companyName}</span>
-                )
+                if (this.hosAuthCheck(Auths.PROJECTLIST2_LINK_AUTHENLIST)) {
+                    return (<span onClick={() => this.onClickLink(scope)} class='link-cell'>{scope.row.companyName}</span>)
+                } else {
+                    return (<span>{scope.row.companyName}</span>)
+                }
             }
         },
         { label: '管理员姓名', prop: 'adminUserName', width: '120' },

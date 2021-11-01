@@ -8,7 +8,7 @@
                 <el-form-item label="商品品牌：" prop="brandName">
                     {{form.brandName}}
                 </el-form-item>
-                <el-form-item label="商品型号：" prop="model">
+                <el-form-item label="商品系列：" prop="model">
                     {{form.model}}
                 </el-form-item>
                 <el-form-item label="商品类目：" prop="categoryId">
@@ -358,7 +358,7 @@ export default {
                     detail: this.form.detail,
                     specifications: this.form.specifications.filter(item => item.v)
                 },
-                warehouseRequest: {
+                mainSkuRequest: {
                     ...this.form.mainSkus[0],
                     imageUrls: this.form.mainSkus[0].imageUrls.split(',')
                 },
@@ -512,7 +512,8 @@ export default {
     z-index: -1;
     background: rgba($color: #000000, $alpha: 0.65);
 
-    span, a {
+    span,
+    a {
         float: left;
         margin-left: 14px;
         padding: 0px 12px;

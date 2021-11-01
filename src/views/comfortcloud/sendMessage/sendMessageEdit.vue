@@ -192,7 +192,7 @@ export default {
         },
         async getActivityDetail (id) {
             await this.findCloudSendMessagePostDetail(id)
-            this.cloudSendMessagePostDetail.pushTime = this.$root.$options.filters.formatDate(this.cloudSendMessagePostDetail.pushTime, 'YYYY-MM-DD HH:mm:ss')
+            this.cloudSendMessagePostDetail.pushTime = this.$root.$options.filters.momentFormat(this.cloudSendMessagePostDetail.pushTime, 'YYYY-MM-DD HH:mm:ss')
             this.sendMessage = { ...this.cloudSendMessagePostDetail }
         },
         onSaveApplication () {
