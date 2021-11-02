@@ -329,9 +329,11 @@ export default class Datamaping extends Vue {
                 } else {
                     params.updateBy = this.userInfo.employeeName
                     params.organizationCode = this.pNode.organizationCode
+                    params.id = this.pNode.id
                     this.$set(this.pNode, 'organizationName', this.form.name)
                     await editOrganizationNode(params)
                 }
+                this.findBossTree()
                 this.dialogVisible = false
             }
         })
