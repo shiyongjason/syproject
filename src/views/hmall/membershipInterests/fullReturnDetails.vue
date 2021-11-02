@@ -86,6 +86,7 @@ export default {
                 { label: '可用余额（元）', prop: 'availableBalance', formatters: 'moneyShow' },
                 { label: '会员账号', prop: 'memberAccount' },
                 { label: '会员名称', prop: 'memberName' },
+                { label: '商家账号', prop: 'merchantAccount' },
                 { label: '商家名称', prop: 'merchantName' },
                 { label: '来源单号', prop: 'sourceNo' }
             ]

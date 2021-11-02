@@ -469,7 +469,7 @@ export default {
         },
         async handleSelectModel (item) {
             await this.getProductInfo(item.mainSpuId)
-            this.$router.push({ path: '/b2b/product/createProduct', query: { id: item.mainSpuId } })
+            this.$router.push({ path: '/b2b/product/editSpuAudit', query: { id: item.mainSpuId } })
             this.showMore = true
         },
         createStateFilter (queryString) {
@@ -487,7 +487,7 @@ export default {
                 if (valid) {
                     await this.getProductUnique()
                     if (this.productUnique) {
-                        this.$router.push({ path: '/b2b/product/createProduct', query: { id: this.productUnique } })
+                        this.$router.push({ path: '/b2b/product/editSpuAudit', query: { id: this.productUnique } })
                     } else {
                         this.showMore = true
                     }
