@@ -62,7 +62,8 @@
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='300' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <h-button table @click="onApproval(slotProps.data.row)" v-if="hosAuthCheck(advanceapprove)&&(slotProps.data.row.status==1||slotProps.data.row.status==-1)">审核</h-button>
+                    <h-button table @click="onApproval(slotProps.data.row)" v-if="hosAuthCheck(advanceapprove)&&(slotProps.data.row.status==-1)">审核</h-button>
+                     <h-button table @click="onApproval(slotProps.data.row)" v-if="hosAuthCheck(operateapprove)&&(slotProps.data.row.status==1)">审核</h-button>
                     <h-button table @click="onWriteOff(slotProps.data.row)">核销</h-button>
                     <h-button table @click="onLook(slotProps.data.row)" v-if="hosAuthCheck(advancelook)">查看详情</h-button>
                     <h-button table @click="onApprovalRecord(slotProps.data.row)" v-if="hosAuthCheck(advancerecords)">审批记录</h-button>
@@ -357,7 +358,7 @@ import downloadFileAddToken from '@/components/downloadFileAddToken/index.vue'
 import { deepCopy } from '@/utils/utils'
 import * as Api from './api/index'
 import { PrepaymentDetailResponse, PrepaymentSupplierOnlineBankTransferConfirmRequest, PrepaymentSupplierSubmitResponse, RespContractSignHistory, SupplierOnlineBankTransferConfirmRequest } from '@/interface/hbp-project'
-import { CRM_ADVACE_UPSTREAMPAY, CRM_ADVACE_APPROVE, CRM_ADVACE_LOOK, CRM_ADVACE_RECORDS, CRM_UPSTREAM_BANK, CRM_UPLOAD_PREPAY } from '@/utils/auth_const'
+import { CRM_ADVACE_UPSTREAMPAY, CRM_ADVACE_APPROVE, CRM_ADVACE_LOOK, CRM_OPREATE_APPROVE, CRM_ADVACE_RECORDS, CRM_UPSTREAM_BANK, CRM_UPLOAD_PREPAY } from '@/utils/auth_const'
 import { newCache } from '@/utils/index'
 import './css/css.scss'
 
@@ -404,7 +405,8 @@ export default class Advancelist extends Vue {
          [2, '银行承兑']
      ])
     advancepay = CRM_ADVACE_UPSTREAMPAY
-    advanceapprove = CRM_ADVACE_APPROVE
+    advanceapprove = CRM_ADVACE_APPROVE // 分财
+    operateapprove = CRM_OPREATE_APPROVE // 运营
     advancelook = CRM_ADVACE_LOOK
     advancerecords = CRM_ADVACE_RECORDS
     uploadprepay = CRM_UPLOAD_PREPAY
