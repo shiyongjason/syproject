@@ -19,7 +19,7 @@
                 </el-form-item>
                 <el-form-item label="商品销售名称：" prop="showName">
                     {{form.showName}}
-                    <!-- <el-input class="form-input_big" v-model="form.showName" maxlength="100" placeholder="请输入商品销售名称" :disabled="disabled"></el-input> -->
+                    <!-- <el-input class="form-input_big" v-model="form.showName" maxlength="100" placeholder="请输入商品销售名称"></el-input> -->
                 </el-form-item>
                 <div class="title-cont">
                     <span class="title-cont__label">销售信息</span>
@@ -52,7 +52,7 @@
                 </div>
                 <div class="form-cont-row parameter">
                     <div class="form-cont-col mb20" v-for="(item,index) in specifications" :key="index">
-                        <el-form-item :label="item.k + '：'" :prop="`specifications[${index}].v`" :rules="disabled ? {}:{required:item.isRequired == 1 ? true : false, message: item.isCombobox == 1 ? '请选择' + item.k : '请输入' + item.k }">
+                        <el-form-item :label="item.k + '：'" :prop="`specifications[${index}].v`" :rules="seeTask == false ?{required:item.isRequired == 1 ? true : false, message: item.isCombobox == 1 ? '请选择' + item.k : '请输入' + item.k }: {}">
                             <el-input v-model="form.specifications[index].v" v-if="item.isCombobox == 0" maxlength="20" :disabled="seeTask == true">
                                 <template slot="suffix">{{item.unit}}</template>
                             </el-input>
@@ -67,23 +67,13 @@
                 </div>
                 <RichEditor style="position:relative;z-index:1" v-model="form.detail" :width="richTextAttr.width" :height="richTextAttr.height" :menus="richTextAttr.menus" :uploadImgServer="richTextAttr.uploadImgServer" :uploadImgParams="richTextAttr.uploadImgParams" :disabled="disabled">
                 </RichEditor>
-                <div class="title-cont pt30 seeTask" v-if="seeTask == false">
-                    <el-form-item label="审核结果：" prop="auditStatus">
-                        <el-radio-group v-model="auditStatus" @change="onChange">
-                            <el-radio label="1">审核通过</el-radio>
-                            <el-radio label="2">审核不通过</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                    <el-form-item style="width: 460px;" v-if="auditStatus==2" prop="auditOpinion" class="pt50">
-                        <el-input type="textarea" maxlength="200" :rows="3" placeholder="理由说明" v-model="form.auditOpinion">
-                        </el-input>
-                    </el-form-item>
-                </div>
                 <el-form-item style="text-align: right" class="pt30">
                     <h-button type='primary' :loading="btnLoading" @click="onSave" v-if="seeTask == false">确定</h-button>
                     <h-button @click="onCancel">返回</h-button>
                 </el-form-item>
             </el-form>
+        </div>
+        <div class="page-body-cont btn-cont" v-if="showMore">
         </div>
     </div>
 </template>
@@ -96,7 +86,7 @@ import { flatten } from '@/views/hmall/utils/sku'
 import { deepCopy } from '@/utils/utils'
 import { clearCache } from '@/utils/index'
 export default {
-    name: 'editSkuAudit',
+    name: 'editSpuAudit',
     components: {
         skuTable
     },
@@ -109,7 +99,6 @@ export default {
             specifications: [],
             addValues: [],
             imageUrls: [],
-            newId: '',
             form: {
                 brandId: '',
                 brandName: '',
@@ -120,9 +109,6 @@ export default {
                 imageUrls: '',
                 specifications: [],
                 optionTypeIds: [],
-                detail: '',
-                operator: '',
-                optionTypeList: [],
                 mainSkus: [
                     {
                         name: '',
@@ -136,6 +122,9 @@ export default {
                         netWeight: ''
                     }
                 ],
+                detail: '',
+                operator: '',
+                optionTypeList: [],
                 auditStatus: '',
                 auditOpinion: ''
             },
@@ -175,6 +164,77 @@ export default {
                         },
                         trigger: 'blur'
                     }
+                ],
+                serialNumber: [
+                    {
+                        required: false,
+                        validator: (rule, value, callback) => {
+                            const reg = /^[A-Za-z0-9]+$/
+                            if (this.form.mainSkus[0].serialNumber && !reg.test(this.form.mainSkus[0].serialNumber)) {
+                                return callback(new Error('条头码仅支持字母和数字'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                length: [
+                    {
+                        required: false,
+                        validator: (rule, value, callback) => {
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
+                            if (this.form.mainSkus[0].length && !reg.test(this.form.mainSkus[0].length)) {
+                                return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
+                            }
+                            if (this.form.mainSkus[0].width && !reg.test(this.form.mainSkus[0].width)) {
+                                return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
+                            }
+                            if (this.form.mainSkus[0].height && !reg.test(this.form.mainSkus[0].height)) {
+                                return callback(new Error('长宽高格式为小数点前十位，小数点后两位'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                grossWeight: [
+                    {
+                        required: false,
+                        validator: (rule, value, callback) => {
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
+                            if (this.form.mainSkus[0].grossWeight && !reg.test(this.form.mainSkus[0].grossWeight)) {
+                                return callback(new Error('毛重格式为小数点前十位，小数点后两位'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                volume: [
+                    {
+                        required: false,
+                        validator: (rule, value, callback) => {
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
+                            if (this.form.mainSkus[0].volume && !reg.test(this.form.mainSkus[0].volume)) {
+                                return callback(new Error('体积格式为小数点前十位，小数点后两位'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                netWeight: [
+                    {
+                        required: false,
+                        validator: (rule, value, callback) => {
+                            const reg = /(^[1-9]([0-9]{1,9})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
+                            if (this.form.mainSkus[0].netWeight && !reg.test(this.form.mainSkus[0].netWeight)) {
+                                return callback(new Error('净重格式为小数点前十位，小数点后两位'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
                 ]
             },
             timer: null,
@@ -199,7 +259,6 @@ export default {
                 uploadImgServer: interfaceUrl + 'tms/files/upload-list',
                 uploadImgParams: { updateUid: 'Hosjoy' }
             },
-            agreement: PUTAWAY_RULES,
             auditStatus: ''
         }
     },
@@ -208,7 +267,6 @@ export default {
             userInfo: state => state.userInfo,
             productUnique: state => state.hmall.productManage.productUnique,
             productSpuInfo: state => state.hmall.productManage.productSpuInfo,
-            productSkuInfo: state => state.hmall.productManage.productSkuInfo,
             optionId: state => state.hmall.productManage.optionId,
             optionValueData: state => state.hmall.productManage.optionValueData
         }),
@@ -233,7 +291,7 @@ export default {
     },
     watch: {
         '$route' (to, from) {
-            if (to.name == 'editSkuAudit') {
+            if (to.name == 'editSpuAudit') {
                 this.init()
             }
         },
@@ -248,7 +306,8 @@ export default {
             }
         },
         'form.optionTypeList' (value) {
-            // const optionTypeList = flatten(value.filter(item => item.name && item.optionValues.length))
+            const optionTypeList = flatten(value.filter(item => item.name && item.optionValues.length))
+            // console.log(this.form.mainSkus)
             this.form.mainSkus.map(item => {
                 let optionValues = []
                 this.productSpuInfo.optionTypeList.forEach(i => {
@@ -276,8 +335,7 @@ export default {
             this.getModelOptions()
             if (this.$route.query.id) {
                 this.showMore = true
-                this.newId = this.$route.query.id
-                this.getProductskuInfo(this.newId)
+                this.getProductInfo(this.$route.query.id)
             }
             if (this.$route.query.seeTask) {
                 this.seeTask = true
@@ -339,6 +397,9 @@ export default {
             }
             return fileSize
         },
+        backPicUrl (file) {
+            this.form.mainSkus[0].imageUrls = file.imageUrl
+        },
         onSettingTop (index) {
             this.imageUrls.unshift((this.imageUrls.splice(index, 1))[0])
         },
@@ -352,28 +413,26 @@ export default {
             let form = {}
             form = {
                 ...this.form,
-                mainSpuId: this.newId,
+                mainSpuId: this.$route.query.id,
                 modifiableInfo: {
                     imgUrls: this.imageUrls,
                     detail: this.form.detail,
                     specifications: this.form.specifications.filter(item => item.v)
                 },
-                mainSkuRequest: {
-                    ...this.form.mainSkus[0],
-                    imageUrls: this.form.mainSkus[0].imageUrls.split(',')
-                },
+                mainSkuWarehouseRequest: deepCopy(this.form.mainSkus).map(item => {
+                    item.imageUrls = item.imageUrls.split(',')
+                    return item
+                }),
                 operator: this.userInfo.employeeName,
-                auditStatus: this.auditStatus,
+                auditStatus: this.form.auditStatus,
                 auditOpinion: this.form.auditOpinion
-
             }
             this.btnLoading = true
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
-                    if (this.auditStatus != '') {
+                    if (this.form.auditStatus != '') {
                         try {
-                            // console.log(form)
-                            await this.aduitSku(form)
+                            await this.aduitSpu(form)
                             this.btnLoading = false
                             this.$message.success('操作成功！')
                             this.$router.push('/b2b/product/productAuditList')
@@ -402,12 +461,11 @@ export default {
             findSpecByCategory: 'productManage/findSpecByCategory',
             checkProductUnique: 'productManage/checkProductUnique',
             findProductSpuInfo: 'productManage/findProductSpuInfo',
-            findProductSkuInfo: 'productManage/findProductSkuInfo',
             addOption: 'productManage/addOption',
             addOptionValue: 'productManage/addOptionValue',
             createProduct: 'productManage/createProduct',
             editProduct: 'productManage/editProduct',
-            aduitSku: 'productManage/aduitSku'
+            aduitSpu: 'productManage/aduitSpu'
         }),
         async getBrandOptions () {
             await this.findBrandOptions()
@@ -425,22 +483,21 @@ export default {
                 return { k: item.k, v: '' }
             })
         },
+        async getProductUnique () {
+            await this.checkProductUnique({ brandId: this.form.brandId, categoryId: this.form.categoryId, model: this.form.model })
+        },
         async getProductInfo (id) {
             await this.findProductSpuInfo({ id: id })
             await this.getSpecByCategory(this.productSpuInfo.twoCategoryId)
+            // console.log(this.productSpuInfo)
             this.form = {
                 ...this.productSpuInfo,
-                mainSkus: [{ ...this.productSkuInfo }].map(item => {
+                mainSkus: this.productSpuInfo.mainSkus.map(item => {
                     item.imageUrls = item.imageUrls.join(',')
                     return item
                 }),
                 optionTypeList: this.productSpuInfo.optionTypeList ? this.productSpuInfo.optionTypeList : []
             }
-            this.form.auditOpinion = ''
-            // this.form.mainSkus = [{ ...this.productSkuInfo }].map(item => {
-            //     item.imageUrls = item.imageUrls.join(',')
-            //     return item
-            // }),
             // TODO: 处理老数据
             const specifications = this.productSpuInfo.specifications || []
             this.form.specifications = deepCopy(this.specifications).map((item, index) => {
@@ -451,12 +508,6 @@ export default {
                 return item
             })
             this.imageUrls = this.productSpuInfo.imageUrls
-        },
-        async getProductskuInfo (id) {
-            await this.findProductSkuInfo({ id: id })
-            if (this.productSkuInfo.mainSpuId) {
-                this.getProductInfo(this.productSkuInfo.mainSpuId)
-            }
         }
     },
     mounted () {
@@ -535,14 +586,6 @@ export default {
     }
 }
 
-.seeTask {
-    display: flex;
-    justify-content: flex-start;
-    .el-form-item {
-        margin-right: 20px;
-    }
-}
-
 .isDefault {
     display: inline-flex;
     width: 104px;
@@ -563,6 +606,14 @@ export default {
         position: relative;
         padding: 20px 24px;
         border: 1px solid #e5e5ea;
+    }
+}
+
+.seeTask {
+    display: flex;
+    justify-content: flex-start;
+    .el-form-item {
+        margin-right: 20px;
     }
 }
 
