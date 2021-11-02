@@ -520,8 +520,6 @@ export default class UpstreamPaymentManagement extends Vue {
     handleIsPay (val) {
         this.isShowLinkBank = true
         this.maxTime = val.loanTransferDate
-        console.log(this.maxTime)
-
         this.bankForm.paymentOrderId = val.paymentOrderId
         this.bankForm.paymentTime = moment(new Date()).format('YYYY-MM-DD')
         this.$nextTick(() => {

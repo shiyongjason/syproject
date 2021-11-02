@@ -246,11 +246,12 @@
             </div>
         </div>
         <el-dialog :title='title' :visible.sync="infoDialog" width="40%" :modal=false :close-on-click-modal="false" :before-close="onCancelDialog">
-            <el-form :model="dialogFormData" :rules="formRules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
+            <el-form :model="dialogFormData" :rules="formRules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
                 <el-form-item label="驳回原因:" prop="remark" v-if="title=='驳回'">
                     <el-input type="textarea" v-model.trim="dialogFormData.remark" :autosize="{ minRows: 4, maxRows: 6}" maxlength="500" show-word-limit></el-input>
                 </el-form-item>
-                <el-form-item v-if="title=='交接'&&data.supplierPaymentType==1" label="银行转账方式" prop="bankTransferMethod">
+                <!-- v-if="title=='交接'&&data.supplierPaymentType==1"  -->
+                <el-form-item v-if="title=='交接'&&data.supplierPaymentType==1"  label="银行转账方式：" prop="bankTransferMethod" >
                     <el-radio-group v-model="dialogFormData.bankTransferMethod">
                         <el-radio label="1">司库线上转账</el-radio>
                         <el-radio label="2">线下网银转账</el-radio>
@@ -345,6 +346,10 @@ export default class LoanHandoverInformation extends Vue {
 
     get formRules () {
         let rules = {
+            bankTransferMethod: [{
+                required: true, message: '银行转账方式必选', trigger: 'change'
+
+            }],
             remark: [
                 {
                     required: true,
@@ -357,15 +362,13 @@ export default class LoanHandoverInformation extends Vue {
                                 return callback(new Error('请输入交接备注'))
                             }
                         } else {
-                            callback()
+                            callback(new Error('123'))
                         }
                     },
                     trigger: 'blur'
                 }
-            ],
-            bankTransferMethod: [{
-                required: true, message: '银行转账方式必选', trigger: 'change'
-            }]
+            ]
+
         }
         return rules
     }
@@ -455,6 +458,7 @@ export default class LoanHandoverInformation extends Vue {
     onHandleSubmit () {
         this.dialogFormData.loanTransferId = this.data.loanTransferId
         this.$refs['ruleForm'].validate(async (valid) => {
+            console.log(valid)
             if (valid) {
                 if (this.title == '驳回') {
                     await onSubmitReject(this.dialogFormData)

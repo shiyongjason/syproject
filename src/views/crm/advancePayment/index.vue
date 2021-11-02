@@ -124,8 +124,8 @@
                         <el-col :span="10" :offset='1'>预付款支付凭证提交人：{{item.createBy}}({{item.createPhone||'-'}})</el-col>
                         <el-col :span="10" :offset='1'>上传时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</el-col>
                         <el-col class="mt10" :span="20" :offset='1'>预付款支付凭证：
-                            <div>
-                                <div class="advance_wrap-pic1" v-for="(v,index) in item.payVouchers" :key="index">
+                            <div class="advance_wrap-flex">
+                                <div v-for="(v) in item.payVouchers" :key="v.id">
                                     <downloadFileAddToken isPreview isType='preview' :file-url="v.fileUrl" :a-link-words="v.fileName" />
                                 </div>
                             </div>
@@ -154,7 +154,7 @@
                     <el-col :span="10" :offset='1'>操作时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</el-col>
                     <el-col :span="20" :offset='1'>上游支付凭证：
                         <div>
-                            <div class="advance_wrap-pic1" v-for="(v,index) in item.payVouchers" :key="index">
+                            <div class="advance_wrap-pic1" v-for="(v) in item.payVouchers" :key="v.id">
                                 <!-- <ImageAddToken :fileUrl="v.fileUrl" alt="" /> -->
                                 <downloadFileAddToken isPreview :file-name="v.fileName" :file-url="v.fileUrl" :a-link-words="v.fileName" is-type="main" />
                             </div>
@@ -289,7 +289,7 @@
                                 <h-button>上传文件</h-button>
                             </div>
                         </OssFileHosjoyUpload>
-                        <p class="tips">请上传JPG/PNG/JPEG等主流图片格式，最多上传9张，单张大小不得超过20M</p>
+                        <p class="tips">请上传JPG/PNG/JPEG/PDF等主流格式，最多上传9张，单张大小不得超过20M</p>
                     </el-form-item>
                 </el-form>
             </div>
@@ -333,7 +333,9 @@
         <el-dialog :close-on-click-modal='false' title="确认网银支付" :visible.sync="isShowLinkBank" width="500px" class="prev-payment-dialog">
             <el-form :model="bankForm" :rules="bankRules" ref="bankForm" label-width="140px" class="demo-ruleForm">
                 <el-form-item label="网银支付时间：" prop="paymentTime">
-                    <el-date-picker type="date" placeholder="选择日期" v-model="bankForm.paymentTime" ></el-date-picker>
+                    <!-- <el-date-picker type="date" placeholder="选择日期" v-model="bankForm.paymentTime" ></el-date-picker>
+                     -->
+                      <el-date-picker v-model="bankForm.paymentTime" value-format='yyyy-MM-dd' type="date" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -582,6 +584,7 @@ export default class Advancelist extends Vue {
     }
     handleIsPay (val) {
         this.isShowLinkBank = true
+        this.bankForm.paymentTime = moment(new Date()).format('YYYY-MM-DD')
         this.bankForm.prepaymentOrderId = val.id
         this.$nextTick(() => {
             this.$refs['bankForm'].clearValidate()
