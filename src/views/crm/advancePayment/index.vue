@@ -85,7 +85,7 @@
                     <el-col :span="10" :offset='1'>申请金额(元)：{{detailForm.applyAmount | moneyFormat}}</el-col>
                     <el-col :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
                 </el-row>
-                <el-row>
+                <el-row type="flex" class="row-bg">
                     <el-col :span="16" :offset='1'>付款主体：{{detailForm.paymentCompanyName||'-'}}</el-col>
                 </el-row>
                 <el-row type="flex" class="row-bg">
@@ -125,8 +125,8 @@
                         <el-col :span="10" :offset='1'>预付款支付凭证提交人：{{item.createBy}}({{item.createPhone||'-'}})</el-col>
                         <el-col :span="10" :offset='1'>上传时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</el-col>
                         <el-col class="mt10" :span="20" :offset='1'>预付款支付凭证：
-                            <div class="advance_wrap-flex">
-                                <div v-for="(v) in item.payVouchers" :key="v.id">
+                            <div class="advance_wrap-flex" v-if="item.payVouchers.length>0">
+                                <div v-for="(v,index) in item.payVouchers" :key="index+v.id">
                                     <downloadFileAddToken isPreview isType='preview' :file-url="v.fileUrl" :a-link-words="v.fileName" />
                                 </div>
                             </div>
@@ -148,15 +148,14 @@
                     <el-col :span="10" :offset='1'>应向上游支付(元)：{{detailForm.totalAmount|moneyFormat}}</el-col>
                     <el-col :span="10" :offset='1'>已向上游支付(元)：{{detailForm.paidAmount|moneyFormat}}</el-col>
                 </el-row>
-                <el-row ype="flex" class="row-bg" v-for="(item,index) in detailForm.supplierDetails" :key="index">
+                <el-row ype="flex" class="row-bg" v-for="(item,index) in detailForm.supplierDetails" :key="item.id">
                     <el-col :span="10" :offset='1'>{{index+1}}、本次上游支付(元)：{{item.payAmount|moneyFormat}}</el-col>
                     <el-col :span="10" :offset='1'>支付日期：{{item.payDate}}</el-col>
                     <el-col :span="10" :offset='1'>操作人：{{item.createBy}}</el-col>
                     <el-col :span="10" :offset='1'>操作时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</el-col>
                     <el-col :span="20" :offset='1'>上游支付凭证：
                         <div>
-                            <div class="advance_wrap-pic1" v-for="(v) in item.payVouchers" :key="v.id">
-                                <!-- <ImageAddToken :fileUrl="v.fileUrl" alt="" /> -->
+                            <div class="advance_wrap-pic1" v-for="(v) in item.payVouchers" :key="'n'+v.id">
                                 <downloadFileAddToken isPreview :file-name="v.fileName" :file-url="v.fileUrl" :a-link-words="v.fileName" is-type="main" />
                             </div>
                         </div>
@@ -175,8 +174,8 @@
                 <el-button @click="dialogVisible = false">确 定</el-button>
             </span>
         </el-dialog>
-        <!-- 审核 -->
-        <el-dialog title="上游预付款支付单审核" :visible.sync="examineVisble" width="700px" :close-on-click-modal=false :before-close="()=>{examineVisble = false}">
+     <!-- 审核 -->
+        <el-dialog title="上游预付款支付单审核" :visible.sync="examineVisble" width="800px" :close-on-click-modal=false :before-close="()=>{examineVisble = false}">
             <div class="advance_examine">
                 <div class="advance_examine-left">
                     <h3>项目信息</h3>
