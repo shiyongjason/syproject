@@ -205,6 +205,7 @@ export default {
                 subsectionCode: this.params.subsectionCode,
                 startDate: this.params.startDate,
                 endDate: this.params.endDate,
+                organizationCodes: this.params.organizationCodes,
                 authCode: JSON.parse(sessionStorage.getItem('authCode')),
                 jobNumber: JSON.parse(userInfo).jobNumber
             }
