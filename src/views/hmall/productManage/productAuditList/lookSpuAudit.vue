@@ -307,7 +307,6 @@
             },
             'form.optionTypeList' (value) {
                 const optionTypeList = flatten(value.filter(item => item.name && item.optionValues.length))
-                // console.log(this.form.mainSkus)
                 this.form.mainSkus.map(item => {
                     let optionValues = []
                     this.productSpuInfo.optionTypeList.forEach(i => {
