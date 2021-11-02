@@ -91,6 +91,12 @@
                         </div>
                     </div>
                     <div class="info-layout">
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>专项额度(元)：</font>
+                            <span>{{resolutionDetail.projectQuatoAmount | moneyFormat}}</span>
+                        </div>
+                    </div>
+                    <div class="info-layout">
                         <div class="info-layout-item" style="margin-left:10px">
                             <font style="flex:0 0 135px">执行费率(%)：</font>
                         </div>
@@ -223,6 +229,13 @@
                             </el-select>
                         </el-form-item>
                     </div>
+                    <div class="form-item">
+                        <el-form-item label="专项额度：" prop='projectQuatoAmount'>
+                            <el-input v-isNum:2 v-inputMAX='100000000' placeholder="请输入" v-model="purForm.projectQuatoAmount" maxlength="50">
+                                <template slot="append">元</template>
+                            </el-input>
+                        </el-form-item>
+                    </div>
                     <div class="reviewResolutionForm-title" style="marginTop:0px">
                         执行费率(%)：
                     </div>
@@ -245,6 +258,28 @@
                     </div>
                     <div class="form-table">
                         <hosJoyTable ref="hosjoyTable" align="center" border stripe :showPagination='false' :column="formTableLabel" :data="tableForm" actionWidth='30' prevLocalName="V3.*" localName="V3.*.26" isAction>
+                            <template #upstreamPayType="slotProps">
+                                <el-checkbox-group v-model="slotProps.data.row.upstreamPayType" class="upstream-pay-type">
+                                    <el-checkbox :label="1">银行转账</el-checkbox>
+                                    <el-radio-group>
+                                        <el-radio label={1}>执行费率</el-radio>
+                                        <el-radio label={2}>自定义费率
+                                            <el-input v-isNum:2 v-inputMAX='100' placeholder="请输入" v-model="purForm.transferBankRate">
+                                                <template slot="append">%</template>
+                                            </el-input>
+                                        </el-radio>
+                                    </el-radio-group>
+                                    <el-checkbox :label="2">银行承兑</el-checkbox>
+                                    <el-radio-group>
+                                        <el-radio label={1}>执行费率</el-radio>
+                                        <el-radio label={2}>自定义费率
+                                            <el-input v-isNum:2 v-inputMAX='100' placeholder="请输入" v-model="purForm.transferBankRate">
+                                                <template slot="append">%</template>
+                                            </el-input>
+                                        </el-radio>
+                                    </el-radio-group>
+                                </el-checkbox-group>
+                            </template>
                             <template #action="slotProps">
                                 <h-button table @click="del(slotProps.data)" v-if="tableForm.length>1">删除</h-button>
                             </template>
@@ -347,6 +382,7 @@ export default class FinalApproval extends Vue {
         'advancePaymentRate': '',
         'deviceAmount': '',
         'predictLoanAmount': '',
+        'projectQuatoAmount': 0,
         'projectId': '',
         'projectPurchaseList': [
             {
@@ -498,6 +534,19 @@ export default class FinalApproval extends Vue {
                 //     },
                 //     trigger: 'blur'
                 // }
+            ],
+            projectQuatoAmount: [
+                { required: true, message: '专项额度(元)必填', trigger: 'blur' },
+                {
+                    validator: (rule, value, callback) => {
+                        if (value < 0 || value >= 100000000) {
+                            return callback(new Error('专项额度(元)区间为[0，100000000)'))
+                        } else {
+                            callback()
+                        }
+                    },
+                    trigger: 'blur'
+                }
             ]
         }
         return rules
@@ -528,7 +577,8 @@ export default class FinalApproval extends Vue {
                     </div>
                 )
             } },
-        { label: '设备品类', prop: 'deviceCategory' }
+        { label: '设备品类', prop: 'deviceCategory' },
+        { label: '上游货款方式', prop: 'upstreamLoanType' }
     ];
 
     formTableLabel: tableLabelProps = [
@@ -613,26 +663,7 @@ export default class FinalApproval extends Vue {
             width: '250',
             className: '',
             showOverflowTooltip: false,
-            render: (h: CreateElement, scope: TableRenderParam) => {
-                return (
-                    <div>
-                        <el-select
-                            class=""
-                            placeholder="请选择"
-                            value={scope.row[scope.column.property]}
-                            onInput={(val) => {
-                                scope.row[scope.column.property] = val
-                            }}
-                            multiple
-                            style={{ 'width': '210px' }}
-                            size='mini'
-                        >
-                            <el-option key="1" value={1} label="银行转账">银行转账</el-option>
-                            <el-option key="2" value={2} label="银行承兑">银行承兑</el-option>
-                        </el-select>
-                    </div>
-                )
-            }
+            slot: 'upstreamPayType'
         },
         {
             label: '设备品类',
@@ -800,7 +831,7 @@ export default class FinalApproval extends Vue {
             'deviceCategory': '',
             'deviceCategoryType': '',
             'otherDeviceCategory': '',
-            'upstreamPayType': '',
+            'upstreamPayType': [],
             'upstreamSupplierName': '',
             'upstreamSupplierType': '' }
         this.tableForm.push(_temp)
