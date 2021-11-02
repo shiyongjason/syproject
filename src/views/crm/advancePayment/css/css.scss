@@ -28,6 +28,11 @@
             height: auto;
         }
     }
+    &-flex{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
 }
 .advance_examine {
     h3{

@@ -829,7 +829,7 @@ export default {
                 return res
             }, {})
             if (key == 15) {
-                return { value: `${map[key].value}，当前节点：${val.dingApprover}` }
+                return { value: `${map[key].value}，当前节点：${val.dingApprover || '-'}` }
             } else if (key == 3) {
                 let label = docProgress == null ? map[key].value : `${map[key].value}进度：${this.$multipliedBy(docProgress, 100)}%`
                 return { value: label }
