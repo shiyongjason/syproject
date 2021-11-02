@@ -72,7 +72,7 @@
                         <div class="sku-cont_group mb20" v-for="(item,index) in form.optionTypeList" :key="index">
                             <div class="group-spec_label">
                                 <el-form-item label="规格名：" :prop="`optionTypeList[${index}].name`" :rules="rules.option">
-                                    <el-input v-model="item.name" @change="onAddOption(item.id,item.name,index)" maxlength="10" placeholder="请输入规格名"></el-input>
+                                    <el-input v-model.trim="item.name" @change="onAddOption(item.id,item.name,index)" maxlength="10" placeholder="请输入规格名"></el-input>
                                 </el-form-item>
                             </div>
                             <div class="group-spec_tags mt20">
@@ -531,7 +531,7 @@ export default {
             }
         },
         async onAddOption (id, name, index) {
-            if (id) {
+            if (id && !name) {
                 await this.editOption({ id: id, name: name })
             } else {
                 await this.addOption({ name: name })
@@ -596,7 +596,6 @@ export default {
             this.imageUrls.splice(index, 1)
         },
         onAddSKU () {
-            console.log(this.form.optionTypeList)
             let optionValues = []
             this.form.optionTypeList.forEach(item => {
                 optionValues.push({
@@ -606,7 +605,6 @@ export default {
                     optionTypeName: item.name
                 })
             })
-            console.log(this.form.mainSkus)
             this.form.mainSkus = this.form.mainSkus.concat({ imageUrls: '', optionValues: optionValues })
         },
         onSave () {
