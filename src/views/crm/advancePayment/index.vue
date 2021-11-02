@@ -281,7 +281,7 @@
         <el-dialog title="上传预付款支付凭证" :visible.sync="prePayVisble" width="600px" :close-on-click-modal=false :before-close="()=>{prePayVisble = false}">
             <div>
                 <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>应支付金额(元)：{{prePayForm.payAmount|moneyFormat}}</el-col>
+                    <el-col :span="20" :offset='1'>应支付金额(元)：{{prePayForm.payAmount|moneyFormat}}</el-col>
                 </el-row>
                 <el-form :model="prePayForm" :rules="prePayRules" ref="prePayForm" label-width="150px" class="demo-ruleForm">
                     <el-form-item label="预付凭证：" prop="payVouchers" style="margin:20px 0">
