@@ -32,9 +32,6 @@
                     <td>
                         <span class="tr-label">净重/KG</span>
                     </td>
-                    <td>
-                        <span class="tr-label">单位</span>
-                    </td>
                     <td v-if="$route.query.id">
                         <span class="tr-label">SKU编码</span>
                     </td>
@@ -99,11 +96,6 @@
                             <el-input v-model="item.netWeight" maxlength="15" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
-                    <td>
-                        <el-form-item label-width='0' :prop="`mainSkus[${index}].unit`">
-                            <el-input v-model="item.unit" maxlength="15" :disabled="item.disabled"></el-input>
-                        </el-form-item>
-                    </td>
                     <td v-if="$route.query.id">
                         <el-form-item label-width='0'>
                             <span>{{item.mainSkuCode}}</span>
@@ -160,8 +152,7 @@ export default {
                         height: '',
                         grossWeight: '',
                         volume: '',
-                        netWeight: '',
-                        unit: ''
+                        netWeight: ''
                     }
                 ]
             },
@@ -477,7 +468,7 @@ export default {
 .tr-label {
     display: inline-block;
     width: 60px;
-    text-align: center;
+    text-align: right;
 }
 
 .sku-cont_table {
