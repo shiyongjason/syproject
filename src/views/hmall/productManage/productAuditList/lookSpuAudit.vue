@@ -291,7 +291,7 @@ export default {
     },
     watch: {
         '$route' (to, from) {
-            if (to.name == 'spuAudit') {
+            if (to.name == 'lookSpuAudit') {
                 this.init()
             }
         },
