@@ -105,7 +105,7 @@
                     <el-col :span="10" :offset='1'>申请人：{{detailForm.applyUser||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg" v-if="detailForm.status>-1">
-                    <el-col :span="10" :offset='1'>分财审核人：{{detailForm.financeApprovalUser||'-'}} {{detailForm.financeApprovalPhone}}</el-col>
+                    <el-col :span="10" :offset='1'>分财审核人：{{detailForm.financeApprovalUser||'-'}}{{detailForm.financeApprovalPhone?'('+detailForm.financeApprovalPhone+')':''}}</el-col>
                     <el-col :span="10" :offset='1'>审核时间：{{detailForm.financeApprovalTime?moment(detailForm.financeApprovalTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg" v-if="detailForm.status>-1">
@@ -113,7 +113,7 @@
                     <el-col :span="10" :offset='1'>审核备注：{{detailForm.financeApprovalRemark||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg" v-if="detailForm.approvalUser">
-                    <el-col :span="10" :offset='1'>项目运营审核人：{{detailForm.approvalUser||'-'}} {{detailForm.applyUserPhone}}</el-col>
+                    <el-col :span="10" :offset='1'>项目运营审核人：{{detailForm.approvalUser||'-'}} {{detailForm.applyUserPhone?'('+detailForm.applyUserPhone+')':''}}</el-col>
                     <el-col :span="10" :offset='1'>审核时间：{{detailForm.approvalTime?moment(detailForm.approvalTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg" v-if="detailForm.approvalUser">
