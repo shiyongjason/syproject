@@ -281,6 +281,9 @@ export default {
     },
     methods: {
         skuModel (optionTypeId, id) {
+            if (!id) {
+                return false
+            }
             const options = this.optionValuesFilter(optionTypeId)
             const result = options.filter(item => item.id === id)[0]
             return result.name
