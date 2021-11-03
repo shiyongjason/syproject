@@ -81,7 +81,7 @@
                                     <el-input v-model="addValues[index]" @change="onAddOptionVlaue(index)" suffix-icon="el-icon-plus" maxlength="50" placeholder="多个属性值以空格隔开" :disabled="item.name == ''"></el-input>
                                 </el-form-item>
                             </div>
-                            <span class="group-spec_close" @click="onDelOptionTemplate(index)" v-if="!(form.auditStatus == 1 && item.disabled)"><i class="el-icon-close"></i></span>
+                            <span class="group-spec_close" @click="onDelOptionTemplate(index)"><i class="el-icon-close"></i></span>
                         </div>
                         <h-button type="create" class="mb20" @click="onAddOptionTemplate" :disabled="disabled">添加规格</h-button>
                         <span class="ml10 isGrayColor">建议规格名为：型号，规格，颜色</span>
@@ -139,7 +139,7 @@
 </template>
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
-import skuTable from '../productList/skuTable.vue'
+import skuTable from './auditSkuTable.vue'
 import { interfaceUrl } from '@/api/config'
 import { RICH_EDITOR_MENUS, PUTAWAY_RULES } from '../const/common'
 import { flatten } from '@/views/hmall/utils/sku'
@@ -526,16 +526,18 @@ export default {
                     grossWeight: '',
                     volume: '',
                     netWeight: '',
-                    optionValues: []
+                    optionValues: [],
+                    auditStatus: 0
                 }]
             }
         },
         async onAddOption (id, name, index) {
-            if (id && !name) {
+            if (id) {
                 await this.editOption({ id: id, name: name })
             } else {
                 await this.addOption({ name: name })
             }
+
             this.form.optionTypeList[index].id = this.optionId
         },
         async onAddOptionVlaue (index) {
@@ -605,7 +607,7 @@ export default {
                     optionTypeName: item.name
                 })
             })
-            this.form.mainSkus = this.form.mainSkus.concat({ imageUrls: '', optionValues: optionValues })
+            this.form.mainSkus = this.form.mainSkus.concat({ imageUrls: '', optionValues: optionValues, auditStatus: 0 })
         },
         onSave () {
             // let form = {}
