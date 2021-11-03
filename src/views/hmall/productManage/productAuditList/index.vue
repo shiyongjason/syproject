@@ -256,7 +256,7 @@ export default {
         },
         onseeTask (row) {
             if (this.productType == 'SPU') {
-                this.$router.push({ path: '/b2b/product/spuAudit', query: { id: row.id, seeTask: 'seeTask' } })
+                this.$router.push({ path: '/b2b/product/lookSpuAudit', query: { id: row.id, seeTask: 'seeTask' } })
             } else if (this.productType == 'SKU') {
                 this.$router.push({ path: '/b2b/product/editSkuAudit', query: { id: row.id, seeTask: 'seeTask' } })
             }
