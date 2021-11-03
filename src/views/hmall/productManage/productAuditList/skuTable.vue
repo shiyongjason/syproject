@@ -32,6 +32,9 @@
                         <span class="tr-label">体积/m³</span>
                     </td>
                     <td>
+                        <span class="tr-label">单位</span>
+                    </td>
+                    <td>
                         <span class="tr-label" v-if="edite">SKU编码</span>
                     </td>
                     <td>
@@ -88,6 +91,11 @@
                     <td>
                         <el-form-item label-width='0' :prop="`mainSkus[${index}].netWeight`" :rules="rules.netWeight">
                             <el-input v-model="item.netWeight" maxlength="15" :disabled="seeTask == true"></el-input>
+                        </el-form-item>
+                    </td>
+                    <td>
+                        <el-form-item label-width='0' :prop="`mainSkus[${index}].unit`">
+                            <el-input v-model="item.unit" maxlength="15" :disabled="seeTask == true"></el-input>
                         </el-form-item>
                     </td>
                     <td>
@@ -161,7 +169,8 @@ export default {
                         height: '',
                         grossWeight: '',
                         volume: '',
-                        netWeight: ''
+                        netWeight: '',
+                        unit: ''
                     }
                 ]
             },
@@ -455,7 +464,7 @@ export default {
 .tr-label {
     display: inline-block;
     width: 60px;
-    text-align: right;
+    text-align: center;
 }
 
 .sku-cont_table {
