@@ -131,6 +131,7 @@ export default {
         // this.newBossAuth(['F', 'P'])
         this.searchParamsReset = { ...this.searchParams }
         this.countHeight()
+        this.findNewPlatCompany()
     },
     watch: {
         async 'searchParams.provinceCode' (newV, oldV) {
@@ -144,10 +145,9 @@ export default {
         }
     },
     methods: {
-        async  findRegionCode (val) {
+        async  findNewPlatCompany () {
             let userInfo = sessionStorage.getItem('userInfo')
 
-            this.searchParams.organizationCodes = val.toString()
             const { data } = await findOrganizationCompany({
                 organizationCodes: this.searchParams.organizationCodes,
                 jobNumber: JSON.parse(userInfo).jobNumber,
@@ -159,6 +159,10 @@ export default {
                 i.selectCode = i.companyCode
             })
             this.platformData = data.data.pageContent
+        },
+        findRegionCode (val) {
+            this.searchParams.organizationCodes = val.toString()
+            this.findNewPlatCompany()
         },
         onReset () {
             this.searchParams = { ...this.searchParamsReset }
