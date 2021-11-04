@@ -3,12 +3,13 @@
         <div class="page-body-cont">
             <div class="balance-cont-row">
                 <div class="balance-cont-col">
+
                     <div class="balance-col-icon">
                         <i class="icon iconfont hosjoy_money"></i>
                     </div>
                     <div class="balance-col-money">
-                        <p>{{ totalBalances| moneyShow}}</p>
-                        <p>平台服务费总资产<span>（元）</span></p>
+                        <p>{{totalBalances | moneyShow}}</p>
+                        <p>满返总余额<span>（元）</span></p>
                     </div>
                 </div>
             </div>
@@ -43,6 +44,13 @@
                         </el-date-picker>
                     </div>
                 </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">金额：</div>
+                    <div class="query-col-input">
+                        <el-input v-model.trim="queryParams.minAmount" v-number="queryParams.minAmount" maxlength="30" placeholder="请输入" class="smallBtn"></el-input> -
+                        <el-input v-model.trim="queryParams.maxAmount" v-number="queryParams.maxAmount" maxlength="30" placeholder="请输入" class="smallBtn"></el-input>
+                    </div>
+                </div>
                 <div class="query-cont__col">
                     <h-button type="primary" @click="searchList()">查询</h-button>
                     <h-button class="ml20" @click="onRest()">重置</h-button>
@@ -70,7 +78,7 @@ export default {
             queryParams: {
                 memberAccount: '',
                 merchantAccount: '',
-                flowType: '',
+                flowType: 0,
                 startTime: '',
                 endTime: '',
                 minAmount: '',
