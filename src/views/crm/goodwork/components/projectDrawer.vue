@@ -405,7 +405,9 @@ export default {
             this.resolutionStatus = res || ''
         },
         onFinalApprove (val) {
-            this.$refs.finalApproval._finalApprove(val)
+            setTimeout(() => {
+                this.$refs.finalApproval._finalApprove(val)
+            }, 1000)
         },
         onHideFoot (val) {
             console.log(123)
