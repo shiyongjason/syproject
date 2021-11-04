@@ -51,6 +51,12 @@
                         <el-input v-model.trim="queryParams.maxAmount" v-number="queryParams.maxAmount" maxlength="30" placeholder="请输入" class="smallBtn"></el-input>
                     </div>
                 </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">来源单号：</div>
+                    <div class="query-col-input">
+                        <el-input v-model.trim="queryParams.sourceNo" maxlength="30" placeholder="请输入"></el-input>
+                    </div>
+                </div>
                 <div class="query-cont__col">
                     <h-button type="primary" @click="searchList()">查询</h-button>
                     <h-button class="ml20" @click="onRest()">重置</h-button>
