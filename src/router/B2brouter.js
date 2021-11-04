@@ -103,8 +103,8 @@ export default [
                         component: () => import('@/views/hmall/productManage/productAuditList/editSpuAudit.vue')
                     },
                     {
-                        path: 'lookSpuAudit',
-                        name: 'lookSpuAudit',
+                        path: 'spuAudit',
+                        name: 'spuAudit',
                         meta: {
                             title: 'SPU商品查看',
                             tagName: 'SPU商品查看',
