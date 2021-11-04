@@ -129,6 +129,7 @@
 import { deepCopy } from '@/utils/utils'
 import { mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
+// 审核商品的单独SKU页面
 export default {
     name: 'skuTable',
     props: {
