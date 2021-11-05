@@ -47,8 +47,8 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">金额：</div>
                     <div class="query-col-input">
-                        <el-input v-model.trim="queryParams.minAmount" v-number maxlength="30" placeholder="请输入" class="smallBtn" oninput="value=value.replace(/[^0-9.]/g,'')"></el-input> -
-                        <el-input v-model.trim="queryParams.maxAmount" v-number maxlength="30" placeholder="请输入" class="smallBtn" oninput="value=value.replace(/[^0-9.]/g,'')"></el-input>
+                        <el-input v-model.trim="queryParams.minAmount" v-number maxlength="30" placeholder="请输入" class="smallBtn" oninput="if(isNaN(value)) { value = null } if(value.indexOf('.')>0){value=value.slice(0,value.indexOf('.')+3)}"></el-input> -
+                        <el-input v-model.trim="queryParams.maxAmount" v-number maxlength="30" placeholder="请输入" class="smallBtn" oninput="if(isNaN(value)) { value = null } if(value.indexOf('.')>0){value=value.slice(0,value.indexOf('.')+3)}"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
