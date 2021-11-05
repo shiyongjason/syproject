@@ -29,9 +29,7 @@
     ::-webkit-scrollbar-thumb {
         background-color: #d6d1d1 !important;
     }
-    /deep/.el-dialog .el-form .el-form-item{
-        margin-bottom: 0px;
-    }
+ 
     .dialog-flex-layout{
         display: flex;
         flex-flow: wrap;
@@ -58,4 +56,5 @@
             margin: 10px;
         }
     }
+
 }
