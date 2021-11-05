@@ -25,14 +25,15 @@
                     <el-tree ref="rightTree" :data="bossList" node-key="id" show-checkbox :expand-on-click-node="false" default-expand-all :check-strictly='true' @check-change="handleChangeBoss" draggable :props="{label:'organizationName',children:'childOrganizations'}"
                         @node-drag-end="handleDragEnd" :allow-drop="allowDrop" :filter-node-method="filterBossNode">
                         <span class="custom-tree-node" slot-scope="{ node, data }">
-                            <span  class="page-left-tree">{{ node.label }} </span>
+                            <div class="node-flex-left">
+                            <span  class="page-left-tree">{{ node.label }}</span>
                             <span class="page-right-tree">
                                 <template v-for="(item,index) in data.ehrDeptResponseList">
                                     <el-tag closable @close='handleCloseTag(data.ehrDeptResponseList,item,index,node)' size="mini" type="info" :key=item.id>{{item.ehrDeptName}}</el-tag>
                                 </template>
-
                             </span>
-                            <span>
+                            </div>
+                            <span  class="node-flex-right">
                                  <el-button type="text" size="mini" @click="() => edit(data,'edit')">
                                     编辑
                                 </el-button>

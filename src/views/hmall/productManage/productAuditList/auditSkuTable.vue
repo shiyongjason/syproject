@@ -6,8 +6,8 @@
                     <td v-for="(item,index) in optionTypeListFilter" :key="index" style="min-width:100px;">{{item.name}}</td>
                     <td class="fixed-width">
                         <span class="tr-label">图片</span>
-                        <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="params.skuImgurl" v-if="seeTask==false" @back-event="backPicUrl" />
-                        <el-dropdown placement="bottom-end" @command="handleCommand" v-if="seeTask==false">
+                        <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="params.skuImgurl" @back-event="backPicUrl" />
+                        <el-dropdown placement="bottom-end" @command="handleCommand">
                             <span class="el-dropdown-link">
                                 <i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
@@ -15,6 +15,7 @@
                                 <el-dropdown-item command="imageUrls">应用全部</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
+                        <!-- <div class="image-wrap" v-if="$route.query.id"></div> -->
                     </td>
                     <td>
                         <span class="tr-label">条头码</span>
@@ -26,21 +27,21 @@
                         <span class="tr-label">毛重/KG</span>
                     </td>
                     <td>
-                        <span class="tr-label">净重/KG</span>
+                        <span class="tr-label">体积/m³</span>
                     </td>
                     <td>
-                        <span class="tr-label">体积/m³</span>
+                        <span class="tr-label">净重/KG</span>
                     </td>
                     <td>
                         <span class="tr-label">单位</span>
                     </td>
-                    <td>
-                        <span class="tr-label" v-if="edite">SKU编码</span>
+                    <td v-if="$route.query.id">
+                        <span class="tr-label">SKU编码</span>
                     </td>
                     <td>
                         <span class="tr-label">状态</span>
                     </td>
-                    <td v-if="!edite">
+                    <td>
                         <span class="tr-label">操作</span>
                     </td>
                 </tr>
@@ -48,81 +49,76 @@
             <tbody>
                 <tr v-for="(item,index) in form.mainSkus" :key="index">
                     <template v-for="(sItem,sIndex) in item.optionValues">
-                        <td :key="sIndex" v-if="item.optionValues.length">
+                        <td :key="sIndex" v-if="optionTypeListFilter.length>0">
                             <el-form-item label-width='0' :prop="`mainSkus[${index}].optionValues`" :rules="rules.optionValues">
-                                <el-tooltip :content="skuModel(sItem.optionTypeId, sItem.id)" placement="top">
-                                    <div class="cell">{{skuModel(sItem.optionTypeId, sItem.id)}}</div>
+                                <el-tooltip :content="skuModel(sItem.optionTypeId, item.optionValues[sIndex].id)" placement="top" v-if="item.disabled">
+                                    <div class="cell">{{skuModel(sItem.optionTypeId, item.optionValues[sIndex].id)}}</div>
                                 </el-tooltip>
+                                <el-select v-model="item.optionValues[sIndex].id" @change="onChangeValue(index,sIndex)" clearable v-else>
+                                    <el-option v-for="(i,ssIndex) in optionValuesFilter(sItem.optionTypeId).optionValues" :key="ssIndex" :label="i.name" :value="i.id"></el-option>
+                                </el-select>
                             </el-form-item>
                         </td>
                     </template>
                     <td class="fixed-width">
-                        <el-form-item label-width='0'>
-                            <template v-if="!seeTask">
-                                <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)"  />
-                                <template v-if="item.imageUrls">
-                                    <a :href="item.imageUrls" target="_blank" class="ml10" title="查看图片">
-                                        <i class="el-icon-search"></i>
-                                    </a>
-                                </template>
+                        <el-form-item label-width='0' :prop="`mainSkus[${index}].imageUrls`" :rules="rules.imageUrls">
+                            <SingleUpload :upload="uploadInfo" :imgW="44" :imgH="44" :imageUrl="item.imageUrls" @back-event="backPicUrlSku($event, index)" />
+                            <template v-if="item.imageUrls">
+                                <a :href="item.imageUrls" target="_blank" class="ml10" title="查看图片">
+                                    <i class="el-icon-search"></i>
+                                </a>
                             </template>
-                            <a :href="item.imageUrls" target="_blank" v-else>
-                                <img :src="item.imageUrls" style="width:44px;height:44px" />
-                            </a>
+                            <input type="hidden" v-model="item.imageUrls">
                         </el-form-item>
+                        <!-- <div class="image-wrap" v-if="item.disabled"></div> -->
                     </td>
                     <td>
                         <el-form-item label-width='0' :prop="`mainSkus[${index}].serialNumber`" :rules="rules.serialNumber">
-                            <el-input v-model="item.serialNumber" maxlength="20" :disabled="seeTask == true"></el-input>
+                            <el-input v-model="item.serialNumber" maxlength="20" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
                     <td class="log-width">
                         <el-form-item label-width='0' :prop="`mainSkus[${index}].length`" :rules="rules.length">
-                            <el-input v-model="item.length" maxlength="15" :disabled="seeTask == true"></el-input>
-                            <el-input v-model="item.width" maxlength="15" :disabled="seeTask == true"></el-input>
-                            <el-input v-model="item.height" maxlength="15" :disabled="seeTask == true"></el-input>
+                            <el-input v-model="item.length" maxlength="15" :disabled="item.disabled"></el-input>
+                            <el-input v-model="item.width" maxlength="15" :disabled="item.disabled"></el-input>
+                            <el-input v-model="item.height" maxlength="15" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
                     <td>
                         <el-form-item label-width='0' :prop="`mainSkus[${index}].grossWeight`" :rules="rules.grossWeight">
-                            <el-input v-model="item.grossWeight" maxlength="15" :disabled="seeTask == true"></el-input>
-                        </el-form-item>
-                    </td>
-                    <td>
-                        <el-form-item label-width='0' :prop="`mainSkus[${index}].netWeight`" :rules="rules.netWeight">
-                            <el-input v-model="item.netWeight" maxlength="15" :disabled="seeTask == true"></el-input>
-                        </el-form-item>
-                    </td>
-                    <td>
-                        <el-form-item label-width='0' :prop="`mainSkus[${index}].unit`">
-                            <el-input v-model="item.unit" maxlength="15" :disabled="seeTask == true"></el-input>
+                            <el-input v-model="item.grossWeight" maxlength="15" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
                     <td>
                         <el-form-item label-width='0' :prop="`mainSkus[${index}].volume`" :rules="rules.volume">
-                            <el-input v-model="item.volume" maxlength="15" :disabled="seeTask == true"></el-input>
+                            <el-input v-model="item.volume" maxlength="15" :disabled="item.disabled"></el-input>
                         </el-form-item>
                     </td>
-                    <td v-if="edite">
+                    <td>
+                        <el-form-item label-width='0' :prop="`mainSkus[${index}].netWeight`" :rules="rules.netWeight">
+                            <el-input v-model="item.netWeight" maxlength="15" :disabled="item.disabled"></el-input>
+                        </el-form-item>
+                    </td>
+                    <td>
+                        <el-form-item label-width='0' :prop="`mainSkus[${index}].unit`">
+                            <el-input v-model="item.unit" maxlength="15" :disabled="item.disabled"></el-input>
+                        </el-form-item>
+                    </td>
+                    <td v-if="$route.query.id">
                         <el-form-item label-width='0'>
                             <span>{{item.mainSkuCode}}</span>
                         </el-form-item>
                     </td>
                     <td>
-                        <span>{{checkStatus(item.enabled,item.auditStatus)}}</span>
-                    </td>
-                    <td v-if="!edite">
                         <el-form-item label-width='0'>
-                            <template v-if="item.auditStatus == 1">
-                                <h-button table @click="onEfficacySku(item)" v-if="item.enabled">失效</h-button>
-                                <h-button table @click="onEffectiveSku(item)" v-if="!item.enabled">生效</h-button>
-                                <h-button table @click="onEditSku(index)" v-if="!item.enabled">编辑</h-button>
-                            </template>
-                            <template v-else>
-                                <h-button table @click="onEditSku(index)">编辑</h-button>
-                                <h-button table @click="onDelSku(index)">删除</h-button>
-                            </template>
+                            <span>{{checkStatus(item.enabled,item.auditStatus)}}</span>
                         </el-form-item>
+                    </td>
+                    <td>
+                        <template>
+                            <h-button table @click="onEditSku(index)" :disabled="!item.auditStatus && item.auditStatus != 0">编辑</h-button>
+                            <h-button table @click="onDelSku(index)">删除</h-button>
+                        </template>
                     </td>
                 </tr>
             </tbody>
@@ -130,8 +126,10 @@
     </div>
 </template>
 <script>
-import { interfaceUrl } from '@/api/config'
+import { deepCopy } from '@/utils/utils'
 import { mapActions } from 'vuex'
+import { interfaceUrl } from '@/api/config'
+// 审核商品的单独SKU页面
 export default {
     name: 'skuTable',
     props: {
@@ -140,23 +138,12 @@ export default {
             default: () => {
                 return {}
             }
-        },
-        seeTask: {
-            type: Boolean
-        },
-        edite: {
-            type: Boolean
         }
     },
     data () {
         return {
             params: {
-                skuImgurl: '',
-                sellPrice: '',
-                retailPrice: '',
-                saleableStock: '',
-                commission: '',
-                costPrice: ''
+                skuImgurl: ''
             },
             form: {
                 mainSkus: [
@@ -175,18 +162,30 @@ export default {
                 ]
             },
             rules: {
-                imageUrls: [
+                optionValues: [
                     {
                         required: true,
                         validator: (rule, value, callback) => {
-                            if (!value || value == '') {
-                                return callback(new Error('请上传图片'))
+                            if (value.every(item => item.id == '')) {
+                                return callback(new Error('请选择属性值'))
                             }
                             return callback()
                         },
                         trigger: 'change'
                     }
                 ],
+                // imageUrls: [
+                //     {
+                //         required: true,
+                //         validator: (rule, value, callback) => {
+                //             if (!value || value == '') {
+                //                 return callback(new Error('请上传图片'))
+                //             }
+                //             return callback()
+                //         },
+                //         trigger: 'change'
+                //     }
+                // ],
                 serialNumber: [
                     {
                         validator: (rule, value, callback) => {
@@ -272,7 +271,7 @@ export default {
             immediate: true,
             handler (val) {
                 this.form = val
-                this.form.mainSkus.map(item => {
+                this.form.mainSkus = deepCopy(this.form.mainSkus).map(item => {
                     item.disabled = !!(item.auditStatus == 0 || item.auditStatus == 1 || item.auditStatus == 2)
                     return item
                 })
@@ -281,29 +280,21 @@ export default {
     },
     methods: {
         skuModel (optionTypeId, id) {
-            if (!id) {
-                return false
-            }
-            const options = this.optionValuesFilter(optionTypeId)
+            const options = this.optionValuesFilter(optionTypeId).optionValues
             const result = options.filter(item => item.id === id)[0]
-            return result.name
+            return result && result.name
         },
         optionValuesFilter (id) {
-            const result = this.optionTypeListFilter.filter(item => item.id == id)
-            if (result.length > 0) {
-                return result[0].optionValues
-            } else {
-                return []
-            }
+            return this.form.optionTypeList.find(item => item.id == id)
         },
         backPicUrl (file) {
             this.params.skuImgurl = file.imageUrl
         },
         backPicUrlSku (file, index) {
-            this.form.mainSkus[index].imageUrls = file.imageUrl
+            this.$set(this.form.mainSkus[index], 'imageUrls', file.imageUrl)
         },
         handleCommand (command) {
-            this.form.mainSkus.map((item, index) => {
+            deepCopy(this.form.mainSkus).map((item, index) => {
                 if (command == 'imageUrls') {
                     this.$set(this.form.mainSkus[index], 'imageUrls', this.params.skuImgurl)
                 }
@@ -321,17 +312,20 @@ export default {
             }
         },
         // 生效sku
-        async onEffectiveSku (row) {
+        async onEffectiveSku (row, index) {
             await this.effectiveSKU({ id: row.mainSkuId })
-            this.$message.success('商品设置生效成功！')
+            this.$set(this.form.mainSkus[index], 'enabled', !this.form.mainSkus[index].enabled)
+            this.$set(this.form.mainSkus[index], 'disabled', true)
+            this.$message.success('生效成功！')
         },
         // 失效sku
-        async onEfficacySku (row) {
+        async onEfficacySku (row, index) {
             await this.efficacySKU({ id: row.mainSkuId })
-            this.$message.success('商品设置失效成功！')
+            this.$set(this.form.mainSkus[index], 'enabled', !this.form.mainSkus[index].enabled)
+            this.$message.success('失效成功！')
         },
         onEditSku (index) {
-            this.form.mainSkus[index].disabled = !this.form.mainSkus[index].disabled
+            this.$set(this.form.mainSkus[index], 'disabled', !this.form.mainSkus[index].disabled)
         },
         onDelSku (index) {
             this.$confirm('是否确认删除该SKU?', '提示', {
@@ -343,16 +337,18 @@ export default {
         },
         onChangeValue (index, sIndex) {
             this.form.mainSkus[index].optionValues[sIndex].name = this.changeValue(this.form.mainSkus[index].optionValues[sIndex].optionTypeId, this.form.mainSkus[index].optionValues[sIndex].id)
+            this.$nextTick(() => {
+                this.$parent.clearValidate()
+            })
         },
         changeValue (optionTypeId, id) {
             const result = this.form.optionTypeList.filter(item => item.id == optionTypeId)[0].optionValues.filter(item => item.id == id)
-            return result.length > 0 ? result[0].name : {}
+            return result && result.length > 0 ? result[0].name : ''
         },
         ...mapActions({
             effectiveSKU: 'productManage/effectiveSKU',
             efficacySKU: 'productManage/efficacySKU'
         })
-
     },
     mounted () {
         this.$emit('update:formData', this.form)
@@ -389,7 +385,8 @@ export default {
                 white-space: nowrap;
 
                 &.fixed-width {
-                    padding: 2px 5px;
+                    position: relative;
+                    padding: 10px 12px;
                     min-width: 150px;
                 }
 
@@ -421,7 +418,8 @@ export default {
                 box-sizing: border-box;
 
                 &.fixed-width {
-                    padding: 2px 5px;
+                    position: relative;
+                    padding: 10px 12px;
                     min-width: 150px;
                 }
                 .el-select {
@@ -462,6 +460,14 @@ export default {
             text-overflow: ellipsis;
         }
     }
+}
+
+.image-wrap {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 .tr-label {
