@@ -40,7 +40,7 @@
                         <el-date-picker v-model="queryParams.startTime" type="datetime" placeholder="开始日期" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker v-model="queryParams.endTime" type="datetime" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.endTime" type="datetime" placeholder="结束日期" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
@@ -123,20 +123,24 @@ export default {
         },
         pickerOptionsStart () {
             return {
-                disabledDate: (time) => {
-                    let endDateVal = this.queryParams.endTime
-                    if (endDateVal) {
-                        return time.getTime() >= new Date(endDateVal).getTime()
+                disabledDate: time => {
+                    let beginDateVal = this.queryParams.endTime
+                    if (beginDateVal) {
+                        return (
+                            time.getTime() > new Date(beginDateVal).getTime()
+                        )
                     }
                 }
             }
         },
         pickerOptionsEnd () {
             return {
-                disabledDate: (time) => {
-                    const beginDateVal = this.queryParams.startTime
+                disabledDate: time => {
+                    let beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
+                        return (
+                            time.getTime() < new Date(beginDateVal).getTime()
+                        )
                     }
                 }
             }
