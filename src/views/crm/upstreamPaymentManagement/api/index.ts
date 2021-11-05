@@ -89,3 +89,7 @@ export const onSubmitConfirm: (params: ReqLoanTransferUpdate) => AxiosPromise<vo
 export const getMoreBill: (paymentOrderId) => AxiosPromise<BillAmountResponse[]> = (paymentOrderId) => {
     return axios.get(`/project/api/bill-amount/boss/${paymentOrderId}`)
 }
+// 确认网银支付
+export const updateOnlineBank: (params) => AxiosPromise<void> = (params) => {
+    return axios.post('/project/api/supplier-payments/online-bank-payment-confirm', params)
+}

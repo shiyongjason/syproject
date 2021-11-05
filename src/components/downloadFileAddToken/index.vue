@@ -124,8 +124,11 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 .pdfimg img {
-    width: 76%;
+    width: 120px;
+    height: 120px;
+    /* object-fit: cover; */
 }
 </style>

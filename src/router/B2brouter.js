@@ -112,7 +112,7 @@ export default [
                             icon: '',
                             showMenuAs: '/b2b/product/productAuditList'
                         },
-                        component: () => import('@/views/hmall/productManage/productAuditList/editSpuAudit.vue')
+                        component: () => import('@/views/hmall/productManage/productAuditList/lookSpuAudit.vue')
                     },
                     {
                         path: 'editSkuAudit',
