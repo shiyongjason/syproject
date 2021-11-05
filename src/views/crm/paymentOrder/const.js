@@ -13,8 +13,8 @@ const PAYMENT_ORDER_STATUS_OPTIONS = new Map([
 const PAYMENT_STATUS_OPTIONS = new Map([
     [1, '待支付'],
     [2, '部分支付'],
-    [3, '已支付']
-
+    [3, '已支付'],
+    [4, '已取消']
 ])
 const PAYMENT_ORDER_STATUS_ALL = new Map([
     [0, '待项目运营审核'],
