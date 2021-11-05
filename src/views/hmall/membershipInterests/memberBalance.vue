@@ -5,36 +5,36 @@
             <div class="query-cont-col">
                 <div class="query-col-title">会员账号：</div>
                 <div class="query-col-input">
-                    <el-input v-model.trim="queryParams.memberAccount" maxlength="30" placeholder="请输入"></el-input>
+                    <el-input v-model.trim="searchParams.memberAccount" maxlength="30" placeholder="请输入"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">商家账号：</div>
                 <div class="query-col-input">
-                    <el-input v-model.trim="queryParams.merchantAccount" maxlength="30" placeholder="请输入"></el-input>
+                    <el-input v-model.trim="searchParams.merchantAccount" maxlength="30" placeholder="请输入"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">满返余额：</div>
                 <div class="query-col-input">
-                    <el-input v-model.trim="queryParams.minBalance" maxlength="30" placeholder="请输入" class="smallBtn"></el-input> -
-                    <el-input v-model.trim="queryParams.maxBalance" maxlength="30" placeholder="请输入" class="smallBtn"></el-input>
+                    <el-input v-model.trim="searchParams.minBalance" maxlength="30" placeholder="请输入" class="smallBtn" oninput="value=value.replace(/[^0-9.]/g,'')"></el-input> -
+                    <el-input v-model.trim="searchParams.maxBalance" maxlength="30" placeholder="请输入" class="smallBtn" oninput="value=value.replace(/[^0-9.]/g,'')"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">经营区域：</div>
                 <div class="query-col-input">
-                    <el-select v-model="queryParams.provinceId" placeholder="请选择省" @change="onchange">
+                    <el-select v-model="searchParams.provinceId" placeholder="请选择省" @change="onchange">
                         <el-option v-for="item in nestDdata" :key="item.provinceId" :value="item.provinceId" :label="item.name"></el-option>
                     </el-select>
                 </div>
                 <div class="query-col-input ml10">
-                    <el-select v-model="queryParams.cityId" placeholder="请选择市">
+                    <el-select v-model="searchParams.cityId" placeholder="请选择市">
                         <el-option v-for="item in cityOptions" :key="item.cityId" :value="item.cityId" :label="item.name"></el-option>
                     </el-select>
                 </div>
                 <div class="query-col-input ml10">
-                    <el-select v-model="queryParams.countryId" placeholder="请选择区">
+                    <el-select v-model="searchParams.countryId" placeholder="请选择区">
                         <el-option v-for="item in areaOptions" :key="item.countryId" :value="item.countryId" :label="item.name"></el-option>
                     </el-select>
                 </div>
@@ -159,7 +159,6 @@ export default {
         onReset () {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
-            this.getFindNest()
         }
     }
 }

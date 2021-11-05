@@ -8,8 +8,8 @@
                         <i class="icon iconfont hosjoy_money"></i>
                     </div>
                     <div class="balance-col-money">
-                        <p>{{totalBalances | moneyShow}}</p>
                         <p>满返总余额<span>（元）</span></p>
+                        <p>{{totalBalances | moneyShow}}</p>
                     </div>
                 </div>
             </div>
@@ -47,8 +47,8 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">金额：</div>
                     <div class="query-col-input">
-                        <el-input v-model.trim="queryParams.minAmount" v-number="queryParams.minAmount" maxlength="30" placeholder="请输入" class="smallBtn"></el-input> -
-                        <el-input v-model.trim="queryParams.maxAmount" v-number="queryParams.maxAmount" maxlength="30" placeholder="请输入" class="smallBtn"></el-input>
+                        <el-input v-model.trim="queryParams.minAmount" v-number maxlength="30" placeholder="请输入" class="smallBtn" oninput="value=value.replace(/[^0-9.]/g,'')"></el-input> -
+                        <el-input v-model.trim="queryParams.maxAmount" v-number maxlength="30" placeholder="请输入" class="smallBtn" oninput="value=value.replace(/[^0-9.]/g,'')"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -134,9 +134,9 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startTime
+                    const beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                        return time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -282,14 +282,14 @@ export default {
         display: inline-block;
 
         p:first-child {
-            line-height: 45px;
-            font-size: 32px;
-        }
-        p:last-child {
             line-height: 20px;
             span {
                 color: #666;
             }
+        }
+        p:last-child {
+            line-height: 45px;
+            font-size: 32px;
         }
     }
 }
