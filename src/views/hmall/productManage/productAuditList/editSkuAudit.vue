@@ -359,7 +359,7 @@ export default {
                     specifications: this.form.specifications.filter(item => item.v)
                 },
                 mainSkuRequest: {
-                    id:mainSkuId||'',
+                    id: mainSkuId || '',
                     ...this.form.mainSkus[0],
                     imageUrls: this.form.mainSkus[0].imageUrls.split(',')
                 },
