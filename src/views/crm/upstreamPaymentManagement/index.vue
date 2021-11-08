@@ -423,13 +423,10 @@ export default class UpstreamPaymentManagement extends Vue {
         }
     }
     get pickerOptions () {
-        let that = this
         return {
             disabledDate (time) {
-                if (that.maxTime) {
-                    // @ts-ignore
-                    return Date.now() < time.getTime() < new Date(that.maxTime).getTime()// 如果当天可选，就不用减8.64e7
-                }
+                // @ts-ignore
+                return Date.now() < time.getTime()// 如果当天可选，就不用减8.64e7
             }
         }
     }
