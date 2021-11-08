@@ -181,7 +181,7 @@ export default {
 
         onExport () {
             if (this.tableData.length <= 0) {
-                this.$message.warning('无商品可导出！')
+                this.$message.warning('无商品可导出!')
             } else {
                 let url = ''
                 for (let key in this.queryParams) {
