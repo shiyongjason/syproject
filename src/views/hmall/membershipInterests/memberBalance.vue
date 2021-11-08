@@ -75,7 +75,17 @@ export default {
                 cityId: '',
                 countryId: ''
             },
-            searchParams: {},
+            searchParams: {
+                pageNumber: 1,
+                pageSize: 10,
+                memberAccount: '',
+                merchantAccount: '',
+                minBalance: '',
+                maxBalance: '',
+                provinceId: '',
+                cityId: '',
+                countryId: ''
+            },
             tableData: [],
             pagination: {
                 pageNumber: 1,
@@ -144,7 +154,6 @@ export default {
             await this.findNest()
         },
         onSearch () {
-            this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
         onCurrentChange (val) {
