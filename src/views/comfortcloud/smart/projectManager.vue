@@ -422,7 +422,11 @@ export default {
             await this.getClouldControlProjectDetail({ id: id })
             this.form = this.clouldControlProjectDetail
             // 编辑页面拆分projectType为两个变量
-            let index = this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM) + 1 || this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_ELECTRICITY_METER) + 1 || this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_HEAT_METER) + 1
+            let index = this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM) + 1 ||
+                this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_ELECTRICITY_METER) + 1 ||
+                this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_HEAT_METER) + 1 ||
+                this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_FT_AIR) + 1 ||
+                this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_TIME) + 1
             if (index > 0) {
                 this.$set(this.form, 'feeType', `${this.form.projectType[index - 1] - PROJECT_TYPE_KEY.BILLING_SYSTEM}`)
                 this.form.projectType[index - 1] = PROJECT_TYPE_KEY.BILLING_SYSTEM
@@ -435,7 +439,6 @@ export default {
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     if (this.form.id) {
-                        console.log('编辑', this.form.id)
                         await editControlProject({ ...this._resolveForm(), updateBy: this.userInfo.employeeName })
                     } else {
                         await createControlProject({ ...this._resolveForm(), createBy: this.userInfo.employeeName })

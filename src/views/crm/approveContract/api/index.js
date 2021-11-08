@@ -22,3 +22,5 @@ export const getCaList = (params) => axios.get(`/project/api/ca/org/list`, { par
 export const findDefaultAccountByCompany = (params) => axios.get('project/api/contract-platform-accounts/list', { params })
 // 获取评审决议下拉的供应商数据
 export const findSupplies = (params) => axios.get(`memeber/openapi/project/purchase/${params}`)
+// 二要素校验接口
+export const signAuthPerson = (params) => axios.post(`/project/api/contract-signs/person/authentication`, params)
