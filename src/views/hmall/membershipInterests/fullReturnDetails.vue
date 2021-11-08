@@ -167,7 +167,7 @@ export default {
             this.queryParams = {
                 memberAccount: '',
                 merchantAccount: '',
-                flowType: '',
+                flowType: 0,
                 startTime: '',
                 endTime: '',
                 minAmount: '',
