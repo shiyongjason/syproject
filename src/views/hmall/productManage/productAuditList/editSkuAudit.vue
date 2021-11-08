@@ -349,6 +349,7 @@ export default {
         },
         onSave () {
             let form = {}
+            const { mainSkuId } = this.form.mainSkus[0]
             form = {
                 ...this.form,
                 mainSpuId: this.newId,
@@ -357,7 +358,8 @@ export default {
                     detail: this.form.detail,
                     specifications: this.form.specifications.filter(item => item.v)
                 },
-                warehouseRequest: {
+                mainSkuRequest: {
+                    id: mainSkuId || '',
                     ...this.form.mainSkus[0],
                     imageUrls: this.form.mainSkus[0].imageUrls.split(',')
                 },
