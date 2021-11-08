@@ -415,7 +415,7 @@ export default {
     data () {
         return {
             Auths,
-            memberTagArr: [{ key: 1, value: '一般会员' }, { key: 2, value: '认证会员' }, { key: 3, value: '评级会员' }, { key: 4, value: '签约会员' }, { key: 5, value: '交易会员' }],
+            memberTagArr: [{ key: 1, value: '一般会员' }, { key: 2, value: '认证会员' }, { key: 3, value: '评级会员' }, { key: 5, value: '交易会员' }],
             chengLabel: {
                 0: '橙工采会员(未激活)',
                 1: '橙工采初级会员',

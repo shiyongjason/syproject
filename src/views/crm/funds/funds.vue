@@ -398,7 +398,19 @@ export default {
             }
         },
         onUploadPay (val) {
-            this.$refs.uploaddialog.onDialogClick(val)
+            // 先进去校验
+            this.$confirm('此操作将永久删除该文件, 是否继续?', '收货提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$refs.uploaddialog.onDialogClick(val)
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                })
+            })
         },
         onBatchSumbit (val) {
             this.$router.push({ path: '/goodwork/batchpsubmit', query: { fundId: val.id } })
@@ -409,7 +421,7 @@ export default {
         })
     },
     mounted () {
-        // 剩余贷款去除支付失败状态处理
+    // 剩余贷款去除支付失败状态处理
         this.statusOption = this.FundsDict.paymentFlagArrays.list
         this.queryParamsTemp = { ...this.queryParams }
         const temp = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
@@ -426,9 +438,9 @@ export default {
         newCache('funds')
     },
     activated () {
-        // 解决HAM-37384bug 批量确认跳转过来因为keep-alive缓存没有执行mounted
+    // 解决HAM-37384bug 批量确认跳转过来因为keep-alive缓存没有执行mounted
         this.statusOption = this.FundsDict.paymentFlagArrays.list
-        this.queryParamsTemp = { ...this.queryParams }
+        // this.queryParamsTemp = { ...this.queryParams }
         const temp = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
         this.findFundsList(this.queryParamsUseQuery)
         this.findCrmdeplist({

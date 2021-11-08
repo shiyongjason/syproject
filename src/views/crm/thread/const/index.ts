@@ -55,19 +55,17 @@ export const FOLLOW_UP_PHASE: { label: string; value: number; }[] = [
     { label: '初步建立联系', value: 1 },
     { label: '初步达成意向', value: 2 },
     { label: '方案已推介', value: 3 },
-    { label: '客户已评级', value: 4 },
-    { label: '项目推进中', value: 5 },
-    { label: '首次交易成功', value: 6 },
-    { label: '合作关闭', value: 7 }
+    { label: '项目推进中', value: 5 }
 ]
 
 /** 客户标签 */
 export const CUSTOMER_TAG: { label: string; value: number; }[] = [
     { label: '可发展为集采会员', value: 1 },
-    { label: '有集采PLUS机会', value: 2 },
-    { label: '有严选供应链机会', value: 3 },
-    { label: '可助力品牌合作', value: 4 },
-    { label: '可发展为区域KOL', value: 5 }
+    // { label: '有集采PLUS机会', value: 2 },
+    // { label: '有严选供应链机会', value: 3 },
+    // { label: '可助力品牌合作', value: 4 },
+    { label: '可发展为区域KOL', value: 5 },
+    { label: '非暖通老板', value: 6 }
 ]
 
 /** 常做项目类型 */

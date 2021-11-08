@@ -29,6 +29,14 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
+                    <div class="query-col__label">所属分部：</div>
+                    <div class="query-col__input">
+                       <el-select v-model="queryParams.subsectionCode" placeholder="请选择" clearable>
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont__col">
                     <div class="query-col__label">经营区域：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.provinceId" @change="onProvince" placeholder="省" clearable>
@@ -145,8 +153,13 @@
             <el-dialog title="新增客户线索" :close-on-click-modal='false' :visible.sync="threadVisible" width="50%" :before-close="clearthreadFormData">
                 <el-form :model="threadForm" :rules="rules" ref="threadForm" label-width="136px">
                     <div class="add-cont__row">
-                        <el-form-item prop='userMobile' label="客户手机号：">
+                        <el-form-item  label="客户手机号：">
                             <el-input placeholder="请输入客户手机号" @blur='phoneBlur' maxlength="11" v-model='threadForm.userMobile'></el-input>
+                        </el-form-item>
+                    </div>
+                     <div class="add-cont__row">
+                        <el-form-item label="客户座机号：">
+                            <el-input placeholder="请输入客户座机号" @blur='phoneBlur' maxlength="11" v-model='threadForm.userMobile'></el-input>
                         </el-form-item>
                     </div>
                     <div class="add-cont__row">
@@ -155,7 +168,7 @@
                         </el-form-item>
                     </div>
                     <div class="add-cont__row">
-                        <el-form-item label="婚姻状况：" prop="maritalStatus">
+                        <el-form-item label="婚姻状况：">
                             <el-select v-model="threadForm.maritalStatus" placeholder="请选择">
                                 <el-option v-for="item in maritalStatusOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
@@ -200,7 +213,7 @@
                         </el-form-item>
                     </div>
                     <div class="add-cont__row">
-                        <el-form-item label="主营品牌：" prop="deviceBrand">
+                        <el-form-item label="主营品牌：" >
                             <el-input placeholder="请输入主营品牌" v-model='threadForm.deviceBrand'></el-input>
                         </el-form-item>
                     </div>
@@ -250,6 +263,11 @@
                         </el-form-item>
                     </div> -->
                     <div class="add-cont__row">
+                        <el-form-item label="中标项目信息：">
+                            <el-input type="textarea" :rows="2" v-model="threadForm.usualRegionBrand" maxlength="300" placeholder="请输入项目名称、产品/服务分类、中标时间" ></el-input>
+                        </el-form-item>
+                    </div>
+                    <div class="add-cont__row">
                         <div class="query-cont__col">
                             <el-form-item label="客户经理：">
                                 <el-autocomplete v-model="stateN" :fetch-suggestions="querySearchAsync" placeholder="请选择客户经理" @blur="onBlurItem" :trigger-on-focus="false" @select="handleThreadSelect">
@@ -261,7 +279,6 @@
                                 </el-autocomplete>
                             </el-form-item>
                         </div>
-
                         <div class="query-cont__col">
                             <el-form-item label="客户经理手机号：">
                                 <el-input placeholder="请输入客户经理手机号" disabled v-model='threadForm.customerMobile'></el-input>
@@ -305,6 +322,7 @@ import { newCache } from '@/utils/index'
 })
 export default class Thread extends Vue {
     @State('userInfo') userInfo: any
+    @Getter('crmmanage/crmdepList') crmdepList: Array<HCGCommonInterface.Branch>
     @Action('crmmanage/findCrmdeplist') findCrmdeplist: Function
     @Action('vipApply/findContract') findContract: Function
     @Getter('vipApply/contracts') contracts: any
@@ -597,9 +615,9 @@ export default class Thread extends Vue {
         })
     }
 
-    // async onGetbranch () {
-    //     await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
-    // }
+    async onGetbranch () {
+        await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
+    }
 
     async querySearchAsync (queryString, cb) {
         if (queryString) {
@@ -815,7 +833,7 @@ export default class Thread extends Vue {
 
     async mounted () {
         this.getAreacode()
-        // this.onGetbranch()
+        this.onGetbranch()
         this.findThreadList()
     }
 
