@@ -587,11 +587,10 @@ export default class ThreadDetail extends Vue {
 
     get opportunityRules () {
         let rules = {
-            currentBusinessOpportunities: { required: true, message: '必填项不能为空' },
+            currentBusinessOpportunities: { required: true, message: '当前商机不能为空' },
             currentVisitValue: {
                 required: true,
-                message: '必填项不能为空',
-                trigger: 'blur'
+                message: '本次拜访价值不能为空'
             }
         }
         return rules
