@@ -144,6 +144,7 @@
             <FundsDialog :is-open="fundsDialogVisible" :detail="fundsDialogDetail" :status="queryParams.repaymentTypeArrays" @onClose="fundsDialogClose"></FundsDialog>
             <UploadDialog ref="uploaddialog" @onBackSearch="findFundsList(queryParams)"></UploadDialog>
             <ReduleDialog :is-open="reduleDialogVisible" ref="reduleDialog" @onClose="fundsDialogClose"></ReduleDialog>
+             <ConfirmReceiptDialog :params="paymentParams" :is-open="confirmReceiptVisible" @onClose="confirmReceiptVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery"></ConfirmReceiptDialog>
         </div>
     </div>
 </template>
@@ -155,12 +156,13 @@ import FundsDict from '@/views/crm/funds/fundsDict'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import UploadDialog from './components/uploadPayDialog.vue'
 import ReduleDialog from './components/redulePayDialog.vue'
+import ConfirmReceiptDialog from '../paymentOrder/components/confirmReceiptDialog.vue'
 import * as Auths from '@/utils/auth_const'
 import { newCache } from '@/utils/index'
 export default {
     name: 'funds',
     components: {
-        FundsDialog, UploadDialog, ReduleDialog
+        FundsDialog, UploadDialog, ReduleDialog, ConfirmReceiptDialog
     },
     data () {
         return {
@@ -198,7 +200,9 @@ export default {
             labelName: '',
             totalLabelName: '',
             // 状态
-            statusOption: []
+            statusOption: [],
+            confirmReceiptVisible: false,
+            paymentParams: {}
         }
     },
     computed: {
@@ -399,18 +403,17 @@ export default {
         },
         onUploadPay (val) {
             // 先进去校验
-            this.$confirm('此操作将永久删除该文件, 是否继续?', '收货提示', {
+            this.$confirm('支付单全部收货后，才可支付尾款哦～', '收货提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.$refs.uploaddialog.onDialogClick(val)
+                this.paymentParams = { paymentOrderId: val.orderId }
+                this.confirmReceiptVisible = true
             }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                })
+
             })
+            this.$refs.uploaddialog.onDialogClick(val)
         },
         onBatchSumbit (val) {
             this.$router.push({ path: '/goodwork/batchpsubmit', query: { fundId: val.id } })
@@ -418,7 +421,11 @@ export default {
         ...mapActions({
             findFundsList: 'crmFunds/findPurchaseList',
             findCrmdeplist: 'crmmanage/findCrmdeplist'
-        })
+        }),
+        onCloseDialogAndQuery () {
+            this.confirmReceiptVisible = false
+            this.findFundsList(this.queryParamsUseQuery)
+        }
     },
     mounted () {
     // 剩余贷款去除支付失败状态处理
