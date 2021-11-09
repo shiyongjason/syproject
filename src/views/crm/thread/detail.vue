@@ -69,18 +69,18 @@
                                     </div>
                                     <div class="title-tag" v-if="item.nextFlowTime">下次跟进时间</div>
                                     <div class="desc" v-if="item.nextFlowTime">{{item.nextFlowTime | momentFormat('YYYY年MM月DD日 HH:mm')}}</div>
-                                    <div class="title-tag" v-if="item.nextFlowTime">下一步计划</div>
-                                    <div class="desc" v-if="item.nextFlowTime">1</div>
-                                    <div class="title-tag" v-if="item.nextFlowTime">随访人员</div>
-                                    <div class="desc" v-if="item.nextFlowTime">222</div>
+                                    <div class="title-tag" >下一步计划</div>
+                                    <div class="desc">{{item.nextStepPlanName||'-'}}</div>
+                                    <div class="title-tag" v-if="item.visitPartnerJobNumber">随访人员</div>
+                                    <div class="desc" v-if="item.visitPartnerJobNumber">{{item.visitPartnerJobNumber}}</div>
                                     <template v-if="item.customerBackLogWorks&&item.customerBackLogWorks.length">
                                         <div class="title-tag">邀请同事协助</div>
                                         <div class="desc" v-for="w in item.customerBackLogWorks" :key="w.id">{{w.assignedUserName}} {{w.assignedUserMobile}}</div>
                                         <div class="title-tag" v-if="item.customerBackLogWorks[0].remark">需协助内容</div>
                                         <div class="desc" v-if="item.customerBackLogWorks[0].remark">{{item.customerBackLogWorks[0].remark}}</div>
                                     </template>
-                                    <div class="title-tag" v-if="item.content">拜访目标</div>
-                                    <div class="desc" v-if="item.content">333333</div>
+                                    <div class="title-tag">拜访目标</div>
+                                    <div class="desc">{{item.visitTarget}}</div>
                                     <div class="title-tag" v-if="item.content">跟进内容</div>
                                     <div class="desc" v-if="item.content">{{item.content}}</div>
                                     <div class="title-tag" v-if="item.flowUpProcess">当前阶段</div>
@@ -111,7 +111,7 @@
                         </div>
                         <div class="project-detail-item">
                             <el-form-item label="客户座机号：">
-                                <el-input placeholder="请输入客户座机号" @blur='phoneBlur' v-model='threadDetail.userMobile'></el-input>
+                                <el-input placeholder="请输入客户座机号" @blur='phoneBlur' v-model='threadDetail.telephone'></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
@@ -215,7 +215,7 @@
                         </div> -->
                         <div class="add-cont__row">
                             <el-form-item label="中标项目信息">
-                                <el-input type="textarea" :rows="2" v-model="threadDetail.usualRegionBrand" maxlength="300" placeholder="请输入项目名称、产品/服务分类、中标时间"></el-input>
+                                <el-input type="textarea" :rows="2" v-model="threadDetail.bidInfo" maxlength="300" placeholder="请输入项目名称、产品/服务分类、中标时间"></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
@@ -280,8 +280,8 @@
                                 </div>
                             </div>
                             <div class="record-dialog-item">
-                                <el-form-item prop='userTag' label="拜访目标：" class="textarea">
-                                    <el-input v-model="flowUpRequest.content" placeholder="请输入此次拜访目标"></el-input>
+                                <el-form-item prop='visitTarget' label="拜访目标：" class="textarea">
+                                    <el-input v-model="flowUpRequest.visitTarget" maxlength="100"  placeholder="请输入此次拜访目标"></el-input>
                                 </el-form-item>
                             </div>
                             <div class="record-dialog-item" style="margin-top:10px">
@@ -302,14 +302,14 @@
                             <div class="record-dialog-item">
                                 <el-form-item prop='flowUpProcess' label="当前阶段：" class="textarea">
                                     <el-select v-model="flowUpRequest.flowUpProcess" placeholder="请选择跟进阶段" filterable clearable>
-                                        <el-option v-for="item in followUpPhaseOption" :key="item.label" :label="item.label" :value="item.value"></el-option>
+                                        <el-option v-for="item in followUpPhaseOption.filter(val=>val.isShow)" :key="item.label" :label="item.label" :value="item.value"></el-option>
                                     </el-select>
                                 </el-form-item>
                             </div>
                             <div class="record-dialog-item">
                                 <el-form-item prop='userTag' label="客户标签：" class="textarea">
                                     <el-select v-model="flowUpRequest.userTag" multiple placeholder="请选择客户标签" filterable clearable>
-                                        <el-option v-for="item in customerTagOption" :key="item.label" :label="item.label" :value="item.value"></el-option>
+                                        <el-option v-for="item in customerTagOption.filter(val=>val.isShow)" :key="item.label" :label="item.label" :value="item.value"></el-option>
                                     </el-select>
                                 </el-form-item>
                             </div>
@@ -320,8 +320,8 @@
                             </div>
                             <div class="record-dialog-item">
                                 <el-form-item prop='remark' label="下一步计划：" class="textarea">
-                                    <el-select v-model="flowUpRequest.userTag" multiple placeholder="请选择" filterable clearable>
-                                        <el-option v-for="item in customerTagOption" :key="item.label" :label="item.label" :value="item.value"></el-option>
+                                    <el-select v-model="flowUpRequest.nextStepPlan"  placeholder="请选择" filterable clearable>
+                                        <el-option v-for="item in nextplan" :key="item.label" :label="item.label" :value="item.value"></el-option>
                                     </el-select>
                                 </el-form-item>
                             </div>
@@ -340,20 +340,14 @@
             </el-dialog>
             <el-dialog title="5秒记住关键商机" class="record-dialog" :visible.sync="opportunityVisiable" :modal='false' width="800px" :before-close="()=>handleCloseOpp()" :close-on-click-modal='false'>
                 <el-form ref="opportunityForm" :model="opportunityForm" :rules="opportunityRules" label-width="150px">
-                    <el-form-item label="当前商机" prop="type">
-                        <el-checkbox-group v-model="opportunityForm.type">
-                            <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
-                            <el-checkbox label="地推活动" name="type"></el-checkbox>
-                            <el-checkbox label="线下主题活动" name="type"></el-checkbox>
-                            <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
+                    <el-form-item label="当前商机" prop="currentBusinessOpportunities">
+                        <el-checkbox-group v-model="opportunityForm.currentBusinessOpportunities">
+                          <el-checkbox :label="item.value" v-for="item in currentOpporunity" :key="item.label">{{item.label}}</el-checkbox>
                         </el-checkbox-group>
                     </el-form-item>
-                    <el-form-item label="本次拜访价值">
-                        <el-checkbox-group v-model="opportunityForm.type">
-                            <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
-                            <el-checkbox label="地推活动" name="type"></el-checkbox>
-                            <el-checkbox label="线下主题活动" name="type"></el-checkbox>
-                            <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
+                    <el-form-item label="本次拜访价值" prop="currentVisitValue">
+                        <el-checkbox-group v-model="opportunityForm.currentVisitValue">
+                            <el-checkbox :label="item.value" v-for="item in currentVisities" :key="item.label">{{item.label}}</el-checkbox>
                         </el-checkbox-group>
                     </el-form-item>
                 </el-form>
@@ -392,7 +386,10 @@ import {
     MARITAL_STATUS,
     FOLLOW_UP_PHASE,
     CUSTOMER_TAG,
-    PROJECT_TYPE
+    PROJECT_TYPE,
+    NEXT_PLAN,
+    CURRENT_OPPORTUNITY,
+    CURRENT_VISITIES
 } from './const/index'
 import { Phone } from '@/utils/rules'
 const _flowUpRequest = {
@@ -506,6 +503,9 @@ export default class ThreadDetail extends Vue {
     maritalStatusOption = MARITAL_STATUS
     workingYearsOption = EMPLOYED_AGE
     userSourceOption = CUSTOM_SOURCE
+    nextplan = NEXT_PLAN
+    currentOpporunity = CURRENT_OPPORTUNITY
+    currentVisities = CURRENT_VISITIES
     oldCompanyNameOption: any[] = []
     manufacturerOption: any = []
     categorys = DEVICE_CATEGORY
@@ -536,7 +536,8 @@ export default class ThreadDetail extends Vue {
     recordsPagination = '';
     flowUpRequest: FlowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
     opportunityForm:Record<string, any>={
-        type: []
+        currentVisitValue: [],
+        currentBusinessOpportunities: []
     }
 
     userTagWatch (value) {
@@ -555,6 +556,11 @@ export default class ThreadDetail extends Vue {
     get addFlowUpRules () {
         let rules = {
             picUrls: { required: true, message: '必填项不能为空' },
+            visitTarget: {
+                required: true,
+                message: '必填项不能为空',
+                trigger: 'blur'
+            },
             content: {
                 required: true,
                 message: '必填项不能为空',
@@ -569,14 +575,8 @@ export default class ThreadDetail extends Vue {
                 required: true,
                 message: '必填项不能为空',
                 trigger: 'change'
-            }
-        }
-        return rules
-    }
-    get opportunityRules () {
-        let rules = {
-            type: { required: true, message: '必填项不能为空' },
-            content: {
+            },
+            nextStepPlan: {
                 required: true,
                 message: '必填项不能为空',
                 trigger: 'blur'
@@ -584,6 +584,19 @@ export default class ThreadDetail extends Vue {
         }
         return rules
     }
+
+    get opportunityRules () {
+        let rules = {
+            currentBusinessOpportunities: { required: true, message: '必填项不能为空' },
+            currentVisitValue: {
+                required: true,
+                message: '必填项不能为空',
+                trigger: 'blur'
+            }
+        }
+        return rules
+    }
+
     get origin () {
         switch (this.threadDetail.origin) {
             case 1:
@@ -751,6 +764,10 @@ export default class ThreadDetail extends Vue {
     //     await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
     //     console.log(this.branchArr)
     // }
+    //
+    handleCheckBox () {
+        console.log(this.flowUpCount)
+    }
 
     // 跟进记录
     async getRecords () {
@@ -819,21 +836,6 @@ export default class ThreadDetail extends Vue {
     @validateForm('addFlowUp')
     @handleSubmit()
     async onSubmitAddRecord () {
-        this.flowUpRequest.createBy = this.userInfo.employeeName
-        this.flowUpRequest.createPhone = this.userInfo.phoneNumber
-        this.flowUpRequest.userTag = this.flowUpRequest.userTag.toString()
-        let query = JSON.parse(JSON.stringify(this.flowUpRequest))
-        if (this.flowUpRequest.picUrls) {
-            let picUrls = []
-            this.flowUpRequest.picUrls.map((item: any) => {
-                picUrls.push(item.fileUrl)
-            })
-            query.picUrls = picUrls
-        }
-        console.log(this.flowUpRequest.picUrls, 'this.flowUpRequest.picUrls')
-        console.log(query.picUrls, 'query.picUrls')
-        query.bizId = this.threadDetail.id.toString()
-        console.log(query, 'query')
         this.opportunityVisiable = true
         // await addFlowUp(query)
         // this.$message.success('新增成功')
@@ -850,17 +852,34 @@ export default class ThreadDetail extends Vue {
     // 提交新增跟进记录
     @validateForm('opportunityForm')
     @handleSubmit()
-    public handleSubOpp () {
-        // await addFlowUp(query)
-        // this.$message.success('新增成功')
-        // this.recordsQuery = {
-        //     bizId: this.threadDetail.id.toString(),
-        //     pageNumber: 1,
-        //     pageSize: 5
-        // }
-        // this.recordsData = []
-        // await this.onInitGetDate()
-        // this.closeAddRecord()
+    public async handleSubOpp () {
+        this.flowUpRequest.createBy = this.userInfo.employeeName
+        this.flowUpRequest.createPhone = this.userInfo.phoneNumber
+        this.flowUpRequest.userTag = this.flowUpRequest.userTag.toString()
+        let query = JSON.parse(JSON.stringify(this.flowUpRequest))
+        if (this.flowUpRequest.picUrls) {
+            let picUrls = []
+            this.flowUpRequest.picUrls.map((item: any) => {
+                picUrls.push(item.fileUrl)
+            })
+            query.picUrls = picUrls
+        }
+
+        query.bizId = this.threadDetail.id.toString()
+        query.currentBusinessOpportunities = this.opportunityForm.currentBusinessOpportunities.toString()
+        query.currentVisitValue = this.opportunityForm.currentVisitValue.toString()
+        console.log(query, 'query')
+        await addFlowUp(query)
+        this.$message.success('新增成功')
+        this.recordsQuery = {
+            bizId: this.threadDetail.id.toString(),
+            pageNumber: 1,
+            pageSize: 5
+        }
+        this.recordsData = []
+        await this.onInitGetDate()
+        this.closeAddRecord()
+        this.opportunityVisiable = false
     }
 
     public handleCloseOpp () {
