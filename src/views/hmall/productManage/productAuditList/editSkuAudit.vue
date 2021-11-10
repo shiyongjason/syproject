@@ -248,7 +248,6 @@ export default {
             }
         },
         'form.optionTypeList' (value) {
-            // const optionTypeList = flatten(value.filter(item => item.name && item.optionValues.length))
             this.form.mainSkus.map(item => {
                 let optionValues = []
                 this.productSpuInfo.optionTypeList.forEach(i => {
@@ -350,6 +349,7 @@ export default {
         },
         onSave () {
             let form = {}
+            const { mainSkuId } = this.form.mainSkus[0]
             form = {
                 ...this.form,
                 mainSpuId: this.newId,
@@ -359,6 +359,7 @@ export default {
                     specifications: this.form.specifications.filter(item => item.v)
                 },
                 mainSkuRequest: {
+                    id: mainSkuId || '',
                     ...this.form.mainSkus[0],
                     imageUrls: this.form.mainSkus[0].imageUrls.split(',')
                 },

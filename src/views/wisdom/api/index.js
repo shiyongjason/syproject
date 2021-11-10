@@ -439,3 +439,6 @@ export const findPlatformTargetPlat = (params) => {
 }
 // 新的组织树
 export const findNewOrganizationTree = (type, jobNumber, authCode) => axios.get(`/uaa/api/organization/tree/${type}/${jobNumber}/${authCode}`)
+
+// 新的平台公司
+export const findOrganizationCompany = (params) => axios.get(`develop/developbasicinfo/queryNewOrganizationCompany`, { params })

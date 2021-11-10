@@ -204,7 +204,9 @@
         <el-dialog :close-on-click-modal='false' title="确认网银支付" :visible.sync="isShowLinkBank" width="500px" class="prev-payment-dialog">
             <el-form :model="bankForm" :rules="bankRules" ref="bankForm" label-width="140px" class="demo-ruleForm">
                 <el-form-item label="网银支付时间：" prop="paymentTime">
-                    <el-date-picker type="date" placeholder="选择日期" v-model="bankForm.paymentTime" ></el-date-picker>
+                    <!-- <el-date-picker type="date" placeholder="选择日期" v-model="bankForm.paymentTime" ></el-date-picker> -->
+                    <el-date-picker v-model="bankForm.paymentTime" value-format='yyyy-MM-dd' type="date" placeholder="选择日期" :picker-options="pickerOptions">
+                        </el-date-picker>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -295,6 +297,7 @@ export default class UpstreamPaymentManagement extends Vue {
     paymentOrderId:string = ''
     private _queryParams = {}
     isProofDialog:boolean = false
+    maxTime:string = ''
     queryParams: Query = {
         pageNumber: 1,
         pageSize: 10,
@@ -419,6 +422,14 @@ export default class UpstreamPaymentManagement extends Vue {
             endTime: this.queryParams.endInitiateTime
         }
     }
+    get pickerOptions () {
+        return {
+            disabledDate (time) {
+                // @ts-ignore
+                return Date.now() < time.getTime()// 如果当天可选，就不用减8.64e7
+            }
+        }
+    }
 
     isShowTabs () {
         let temp:boolean | undefined = false
@@ -505,7 +516,9 @@ export default class UpstreamPaymentManagement extends Vue {
 
     handleIsPay (val) {
         this.isShowLinkBank = true
+        this.maxTime = val.loanTransferDate
         this.bankForm.paymentOrderId = val.paymentOrderId
+        this.bankForm.paymentTime = moment(new Date()).format('YYYY-MM-DD')
         this.$nextTick(() => {
             this.$refs['bankForm'].clearValidate()
         })

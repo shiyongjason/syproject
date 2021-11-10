@@ -59,10 +59,11 @@
                 <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span>上游预付款支付单总金额：{{totalMoney|moneyFormat}}</span></el-tag>
             </div>
             <!-- end search bar -->
-            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction
+            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='300' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <h-button table @click="onApproval(slotProps.data.row)" v-if="hosAuthCheck(advanceapprove)&&(slotProps.data.row.status==1||slotProps.data.row.status==-1)">审核</h-button>
+                    <h-button table @click="onApproval(slotProps.data.row)" v-if="hosAuthCheck(advanceapprove)&&(slotProps.data.row.status==-1)">审核</h-button>
+                     <h-button table @click="onApproval(slotProps.data.row)" v-if="hosAuthCheck(operateapprove)&&(slotProps.data.row.status==1)">审核</h-button>
                     <h-button table @click="onWriteOff(slotProps.data.row)">核销</h-button>
                     <h-button table @click="onLook(slotProps.data.row)" v-if="hosAuthCheck(advancelook)">查看详情</h-button>
                     <h-button table @click="onApprovalRecord(slotProps.data.row)" v-if="hosAuthCheck(advancerecords)">审批记录</h-button>
@@ -84,7 +85,7 @@
                     <el-col :span="10" :offset='1'>申请金额(元)：{{detailForm.applyAmount | moneyFormat}}</el-col>
                     <el-col :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
                 </el-row>
-                <el-row>
+                <el-row type="flex" class="row-bg">
                     <el-col :span="16" :offset='1'>付款主体：{{detailForm.paymentCompanyName||'-'}}</el-col>
                 </el-row>
                 <el-row type="flex" class="row-bg">
@@ -104,7 +105,7 @@
                     <el-col :span="10" :offset='1'>申请人：{{detailForm.applyUser||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg" v-if="detailForm.status>-1">
-                    <el-col :span="10" :offset='1'>分财审核人：{{detailForm.financeApprovalUser||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>分财审核人：{{detailForm.financeApprovalUser||'-'}}{{detailForm.financeApprovalPhone?'('+detailForm.financeApprovalPhone+')':''}}</el-col>
                     <el-col :span="10" :offset='1'>审核时间：{{detailForm.financeApprovalTime?moment(detailForm.financeApprovalTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg" v-if="detailForm.status>-1">
@@ -112,7 +113,7 @@
                     <el-col :span="10" :offset='1'>审核备注：{{detailForm.financeApprovalRemark||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg" v-if="detailForm.approvalUser">
-                    <el-col :span="10" :offset='1'>项目运营审核人：{{detailForm.approvalUser||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>项目运营审核人：{{detailForm.approvalUser||'-'}} {{detailForm.applyUserPhone?'('+detailForm.applyUserPhone+')':''}}</el-col>
                     <el-col :span="10" :offset='1'>审核时间：{{detailForm.approvalTime?moment(detailForm.approvalTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg" v-if="detailForm.approvalUser">
@@ -124,8 +125,8 @@
                         <el-col :span="10" :offset='1'>预付款支付凭证提交人：{{item.createBy}}({{item.createPhone||'-'}})</el-col>
                         <el-col :span="10" :offset='1'>上传时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</el-col>
                         <el-col class="mt10" :span="20" :offset='1'>预付款支付凭证：
-                            <div>
-                                <div class="advance_wrap-pic1" v-for="(v,index) in item.payVouchers" :key="index">
+                            <div class="advance_wrap-flex" v-if="item.payVouchers.length>0">
+                                <div v-for="(v,index) in item.payVouchers" :key="index+v.id">
                                     <downloadFileAddToken isPreview isType='preview' :file-url="v.fileUrl" :a-link-words="v.fileName" />
                                 </div>
                             </div>
@@ -147,15 +148,14 @@
                     <el-col :span="10" :offset='1'>应向上游支付(元)：{{detailForm.totalAmount|moneyFormat}}</el-col>
                     <el-col :span="10" :offset='1'>已向上游支付(元)：{{detailForm.paidAmount|moneyFormat}}</el-col>
                 </el-row>
-                <el-row ype="flex" class="row-bg" v-for="(item,index) in detailForm.supplierDetails" :key="index">
+                <el-row ype="flex" class="row-bg" v-for="(item,index) in detailForm.supplierDetails" :key="item.id">
                     <el-col :span="10" :offset='1'>{{index+1}}、本次上游支付(元)：{{item.payAmount|moneyFormat}}</el-col>
                     <el-col :span="10" :offset='1'>支付日期：{{item.payDate}}</el-col>
                     <el-col :span="10" :offset='1'>操作人：{{item.createBy}}</el-col>
                     <el-col :span="10" :offset='1'>操作时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</el-col>
                     <el-col :span="20" :offset='1'>上游支付凭证：
                         <div>
-                            <div class="advance_wrap-pic1" v-for="(v,index) in item.payVouchers" :key="index">
-                                <!-- <ImageAddToken :fileUrl="v.fileUrl" alt="" /> -->
+                            <div class="advance_wrap-pic1" v-for="(v) in item.payVouchers" :key="'n'+v.id">
                                 <downloadFileAddToken isPreview :file-name="v.fileName" :file-url="v.fileUrl" :a-link-words="v.fileName" is-type="main" />
                             </div>
                         </div>
@@ -174,8 +174,8 @@
                 <el-button @click="dialogVisible = false">确 定</el-button>
             </span>
         </el-dialog>
-        <!-- 审核 -->
-        <el-dialog title="上游预付款支付单审核" :visible.sync="examineVisble" width="700px" :close-on-click-modal=false :before-close="()=>{examineVisble = false}">
+     <!-- 审核 -->
+        <el-dialog title="上游预付款支付单审核" :visible.sync="examineVisble" width="800px" :close-on-click-modal=false :before-close="()=>{examineVisble = false}">
             <div class="advance_examine">
                 <div class="advance_examine-left">
                     <h3>项目信息</h3>
@@ -280,7 +280,7 @@
         <el-dialog title="上传预付款支付凭证" :visible.sync="prePayVisble" width="600px" :close-on-click-modal=false :before-close="()=>{prePayVisble = false}">
             <div>
                 <el-row ype="flex" class="row-bg">
-                    <el-col :span="10" :offset='1'>应支付金额(元)：{{prePayForm.payAmount|moneyFormat}}</el-col>
+                    <el-col :span="20" :offset='1'>应支付金额(元)：{{prePayForm.payAmount|moneyFormat}}</el-col>
                 </el-row>
                 <el-form :model="prePayForm" :rules="prePayRules" ref="prePayForm" label-width="150px" class="demo-ruleForm">
                     <el-form-item label="预付凭证：" prop="payVouchers" style="margin:20px 0">
@@ -289,7 +289,7 @@
                                 <h-button>上传文件</h-button>
                             </div>
                         </OssFileHosjoyUpload>
-                        <p class="tips">请上传JPG/PNG/JPEG等主流图片格式，最多上传9张，单张大小不得超过20M</p>
+                        <p class="tips">请上传JPG/PNG/JPEG/PDF等主流格式，最多上传9张，单张大小不得超过20M</p>
                     </el-form-item>
                 </el-form>
             </div>
@@ -333,7 +333,9 @@
         <el-dialog :close-on-click-modal='false' title="确认网银支付" :visible.sync="isShowLinkBank" width="500px" class="prev-payment-dialog">
             <el-form :model="bankForm" :rules="bankRules" ref="bankForm" label-width="140px" class="demo-ruleForm">
                 <el-form-item label="网银支付时间：" prop="paymentTime">
-                    <el-date-picker type="date" placeholder="选择日期" v-model="bankForm.paymentTime" ></el-date-picker>
+                    <!-- <el-date-picker type="date" placeholder="选择日期" v-model="bankForm.paymentTime" ></el-date-picker>
+                     -->
+                      <el-date-picker v-model="bankForm.paymentTime" value-format='yyyy-MM-dd' type="date" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -355,7 +357,7 @@ import downloadFileAddToken from '@/components/downloadFileAddToken/index.vue'
 import { deepCopy } from '@/utils/utils'
 import * as Api from './api/index'
 import { PrepaymentDetailResponse, PrepaymentSupplierOnlineBankTransferConfirmRequest, PrepaymentSupplierSubmitResponse, RespContractSignHistory, SupplierOnlineBankTransferConfirmRequest } from '@/interface/hbp-project'
-import { CRM_ADVACE_UPSTREAMPAY, CRM_ADVACE_APPROVE, CRM_ADVACE_LOOK, CRM_ADVACE_RECORDS, CRM_UPSTREAM_BANK, CRM_UPLOAD_PREPAY } from '@/utils/auth_const'
+import { CRM_ADVACE_UPSTREAMPAY, CRM_ADVACE_APPROVE, CRM_ADVACE_LOOK, CRM_OPREATE_APPROVE, CRM_ADVACE_RECORDS, CRM_UPSTREAM_BANK, CRM_UPLOAD_PREPAY } from '@/utils/auth_const'
 import { newCache } from '@/utils/index'
 import './css/css.scss'
 
@@ -402,7 +404,8 @@ export default class Advancelist extends Vue {
          [2, '银行承兑']
      ])
     advancepay = CRM_ADVACE_UPSTREAMPAY
-    advanceapprove = CRM_ADVACE_APPROVE
+    advanceapprove = CRM_ADVACE_APPROVE // 分财
+    operateapprove = CRM_OPREATE_APPROVE // 运营
     advancelook = CRM_ADVACE_LOOK
     advancerecords = CRM_ADVACE_RECORDS
     uploadprepay = CRM_UPLOAD_PREPAY
@@ -582,6 +585,7 @@ export default class Advancelist extends Vue {
     }
     handleIsPay (val) {
         this.isShowLinkBank = true
+        this.bankForm.paymentTime = moment(new Date()).format('YYYY-MM-DD')
         this.bankForm.prepaymentOrderId = val.id
         this.$nextTick(() => {
             this.$refs['bankForm'].clearValidate()

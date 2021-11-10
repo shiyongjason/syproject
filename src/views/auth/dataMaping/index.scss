@@ -31,17 +31,28 @@
     }
 }
 .page-left-tree {
-    width: 300px;
+    width: 200px;
     overflow: hidden;
+    display: flex;
+    flex: 1;
     word-break: break-all;
     text-overflow: ellipsis;
 }
 .page-right-tree {
-    width: 600px;
+    width: 450px;
+    display: flex;
     overflow-x: scroll;
     .el-tag {
         margin-right: 10px;
     }
+}
+.node-flex-left{
+    width: 680px;
+    display: flex;
+    justify-content: flex-start;
+}
+.node-flex-right{
+
 }
 .page-title {
     margin-bottom: 10px;

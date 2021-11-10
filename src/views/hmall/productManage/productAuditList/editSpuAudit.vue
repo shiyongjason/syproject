@@ -72,7 +72,7 @@
                         <div class="sku-cont_group mb20" v-for="(item,index) in form.optionTypeList" :key="index">
                             <div class="group-spec_label">
                                 <el-form-item label="规格名：" :prop="`optionTypeList[${index}].name`" :rules="rules.option">
-                                    <el-input v-model="item.name" @change="onAddOption(item.id,item.name,index)" maxlength="10" placeholder="请输入规格名"></el-input>
+                                    <el-input v-model.trim="item.name" @change="onAddOption(item.id,item.name,index)" maxlength="10" placeholder="请输入规格名"></el-input>
                                 </el-form-item>
                             </div>
                             <div class="group-spec_tags mt20">
@@ -81,7 +81,7 @@
                                     <el-input v-model="addValues[index]" @change="onAddOptionVlaue(index)" suffix-icon="el-icon-plus" maxlength="50" placeholder="多个属性值以空格隔开" :disabled="item.name == ''"></el-input>
                                 </el-form-item>
                             </div>
-                            <span class="group-spec_close" @click="onDelOptionTemplate(index)" v-if="!(form.auditStatus == 1 && item.disabled)"><i class="el-icon-close"></i></span>
+                            <span class="group-spec_close" @click="onDelOptionTemplate(index)"><i class="el-icon-close"></i></span>
                         </div>
                         <h-button type="create" class="mb20" @click="onAddOptionTemplate" :disabled="disabled">添加规格</h-button>
                         <span class="ml10 isGrayColor">建议规格名为：型号，规格，颜色</span>
@@ -109,21 +109,21 @@
                     <RichEditor style="position:relative;z-index:1" v-model="form.detail" :width="richTextAttr.width" :height="richTextAttr.height" :menus="richTextAttr.menus" :uploadImgServer="richTextAttr.uploadImgServer" :uploadImgParams="richTextAttr.uploadImgParams">
                     </RichEditor>
                     <div class="title-cont pt30 seeTask">
-                    <el-form-item label="审核结果：" prop="auditStatus">
-                        <el-radio-group v-model="form.auditStatus" @change="onChange">
-                            <el-radio label="1">审核通过</el-radio>
-                            <el-radio label="2">审核不通过</el-radio>
-                        </el-radio-group>
+                        <el-form-item label="审核结果：" prop="auditStatus">
+                            <el-radio-group v-model="form.auditStatus" @change="onChange">
+                                <el-radio label="1">审核通过</el-radio>
+                                <el-radio label="2">审核不通过</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item style="width: 460px;" v-if="form.auditStatus==2" prop="auditOpinion" class="pt50">
+                            <el-input type="textarea" maxlength="200" :rows="3" placeholder="理由说明" v-model="form.auditOpinion">
+                            </el-input>
+                        </el-form-item>
+                    </div>
+                    <el-form-item style="text-align: right" class="pt30">
+                        <h-button type='primary' :loading="btnLoading" @click="onSave">确定</h-button>
+                        <h-button @click="onCancel">返回</h-button>
                     </el-form-item>
-                    <el-form-item style="width: 460px;" v-if="form.auditStatus==2" prop="auditOpinion" class="pt50">
-                        <el-input type="textarea" maxlength="200" :rows="3" placeholder="理由说明" v-model="form.auditOpinion">
-                        </el-input>
-                    </el-form-item>
-                </div>
-                <el-form-item style="text-align: right" class="pt30">
-                    <h-button type='primary' :loading="btnLoading" @click="onSave">确定</h-button>
-                    <h-button @click="onCancel">返回</h-button>
-                </el-form-item>
                 </div>
                 <!-- <div class="agreement mt10">
                     <span>温馨提示：为规范舒适e购商品发布管理，商家在上架商品时，需遵守<a class="isLink" @click="onPutawayRules">《舒适e购商品上架规则》</a></span>
@@ -139,7 +139,7 @@
 </template>
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
-import skuTable from '../productList/skuTable.vue'
+import skuTable from './auditSkuTable.vue'
 import { interfaceUrl } from '@/api/config'
 import { RICH_EDITOR_MENUS, PUTAWAY_RULES } from '../const/common'
 import { flatten } from '@/views/hmall/utils/sku'
@@ -320,9 +320,9 @@ export default {
             // 当sku被编辑或者是编辑页面的时候，我们不做笛卡尔积
             if (this.isEdit || this.isEditSku) {
                 /**
-                 * 当编辑页面时候，页面渲染会触发form.optionTypeList的变更，这个时候我们不需要处理mainSkus
-                 * 所以这里判断preValue.length > 0的时候，真正在调整form.optionTypeList才触发mainSkus的处理
-                 */
+                     * 当编辑页面时候，页面渲染会触发form.optionTypeList的变更，这个时候我们不需要处理mainSkus
+                     * 所以这里判断preValue.length > 0的时候，真正在调整form.optionTypeList才触发mainSkus的处理
+                     */
                 if (preValue.length > 0) {
                     // 当增加规格的时候
                     if (this.form.mainSkus[0].optionValues.length < value.length) {
@@ -406,17 +406,17 @@ export default {
                 const valueStr = JSON.stringify(valueNew)
                 const preValueStr = JSON.stringify(preValueNew)
                 /**
-                 * 判断SKU是否变化的核心判断规则：是否只是optionTypeList引起的变更
-                 * optionTypeList引起的变更有两种情况
-                 * 1. 笛卡尔积造成的mainSkus的长度增加
-                 * 2. 增加了规格名且规格值只有一个，mainSkus的长度不增加，但是mainSkus.optionValues的长度增加了
-                 * 通过上述分析可以判断当两个数据长度都没有变化的时候就说明是SKU值发生变化了：
-                 * value.length === preValue.length && value[0].optionValues.length === preValue[0].optionValues.length
-                 * 》》》》》》》》》》》》》》》》》》》》》》》》》》》》
-                 * 实际遇到一个意外情况：
-                 * 1. mainSkus在进入skuTable进行编辑的时候，增加了一个disabled属性，会触发mainSkus变更，导致判断失效
-                 * 这里将disabled属性置空之后对比两个value的值，如果值没有变化，我们也认为没有SKU变更
-                 */
+                     * 判断SKU是否变化的核心判断规则：是否只是optionTypeList引起的变更
+                     * optionTypeList引起的变更有两种情况
+                     * 1. 笛卡尔积造成的mainSkus的长度增加
+                     * 2. 增加了规格名且规格值只有一个，mainSkus的长度不增加，但是mainSkus.optionValues的长度增加了
+                     * 通过上述分析可以判断当两个数据长度都没有变化的时候就说明是SKU值发生变化了：
+                     * value.length === preValue.length && value[0].optionValues.length === preValue[0].optionValues.length
+                     * 》》》》》》》》》》》》》》》》》》》》》》》》》》》》
+                     * 实际遇到一个意外情况：
+                     * 1. mainSkus在进入skuTable进行编辑的时候，增加了一个disabled属性，会触发mainSkus变更，导致判断失效
+                     * 这里将disabled属性置空之后对比两个value的值，如果值没有变化，我们也认为没有SKU变更
+                     */
                 if (valueStr != preValueStr && value.length === preValue.length && value[0].optionValues.length === preValue[0].optionValues.length) {
                     this.isEditSku = true
                 }
@@ -469,7 +469,7 @@ export default {
         },
         async handleSelectModel (item) {
             await this.getProductInfo(item.mainSpuId)
-            this.$router.push({ path: '/b2b/product/createProduct', query: { id: item.mainSpuId } })
+            this.$router.push({ path: '/b2b/product/editSpuAudit', query: { id: item.mainSpuId } })
             this.showMore = true
         },
         createStateFilter (queryString) {
@@ -487,7 +487,7 @@ export default {
                 if (valid) {
                     await this.getProductUnique()
                     if (this.productUnique) {
-                        this.$router.push({ path: '/b2b/product/createProduct', query: { id: this.productUnique } })
+                        this.$router.push({ path: '/b2b/product/editSpuAudit', query: { id: this.productUnique } })
                     } else {
                         this.showMore = true
                     }
@@ -526,7 +526,8 @@ export default {
                     grossWeight: '',
                     volume: '',
                     netWeight: '',
-                    optionValues: []
+                    optionValues: [],
+                    auditStatus: 0
                 }]
             }
         },
@@ -536,6 +537,7 @@ export default {
             } else {
                 await this.addOption({ name: name })
             }
+
             this.form.optionTypeList[index].id = this.optionId
         },
         async onAddOptionVlaue (index) {
@@ -596,7 +598,6 @@ export default {
             this.imageUrls.splice(index, 1)
         },
         onAddSKU () {
-            console.log(this.form.optionTypeList)
             let optionValues = []
             this.form.optionTypeList.forEach(item => {
                 optionValues.push({
@@ -606,8 +607,7 @@ export default {
                     optionTypeName: item.name
                 })
             })
-            console.log(this.form.mainSkus)
-            this.form.mainSkus = this.form.mainSkus.concat({ imageUrls: '', optionValues: optionValues })
+            this.form.mainSkus = this.form.mainSkus.concat({ imageUrls: '', optionValues: optionValues, auditStatus: 0 })
         },
         onSave () {
             // let form = {}
