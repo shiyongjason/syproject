@@ -57,7 +57,6 @@
     </div>
 </template>
 <script>
-// import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     name: 'memberBalance',
