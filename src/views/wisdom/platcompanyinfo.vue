@@ -2,15 +2,16 @@
     <div class="page-body amount">
         <div v-show="toggle" class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col" v-if="branch">
-                    <div class="query-col-title">分部：</div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">所属地域：</div>
                     <div class="query-col-input">
-                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                        <!-- <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete> -->
+                        <RegionCascader ref="cascader" @backEvent='findRegionCode'/>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司：</div>
-                    <HAutocomplete @back-event="backPlat($event,'P')" :selectArr="platformData" :placeholder="'选择平台公司'" :selectObj="selectAuth.platformObj"></HAutocomplete>
+                    <HAutocomplete @back-event="backPlat($event,'P')" v-if="platformData" :selectArr="platformData" :placeholder="'选择平台公司'" :selectObj="selectAuth.platformObj"></HAutocomplete>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">城市：</div>
@@ -19,7 +20,7 @@
                             <el-option v-for="item in provinceDataList" :key="item.cityId" :label="item.cityName" :value="item.cityId">
                             </el-option>
                         </el-select>
-                        <div class="line ml5 mr5">-</div>
+                        <div class="mt10 ml5 mr5">-</div>
                         <el-select v-model="searchParams.cityCode" placeholder="市" :clearable=true>
                             <el-option v-for="item in cityList" :key="item.cityId" :label="item.cityName" :value="item.cityId">
                             </el-option>
@@ -53,9 +54,10 @@
     </div>
 </template>
 <script>
-import { findCompanyList, findPaltList, findProvinceAndCity } from './api/index.js'
+import { findCompanyList, findPaltList, findProvinceAndCity, findOrganizationCompany } from './api/index.js'
 import platCompanyTable from './components/platCompanyTable'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import RegionCascader from './components/regionCascader.vue'
 import { departmentAuth } from '@/mixins/userAuth'
 import { getOldTableTop } from '@/utils/getTableTop'
 import { mapState } from 'vuex'
@@ -79,8 +81,9 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 provinceCode: '',
-                subsectionCode: ''
-                // sortInfos: [{ 'field': 'updateTime', 'sort': 'desc' }]
+                organizationCodes: '',
+                authCode: '',
+                jobNumber: ''
             },
             selectAuth: {
                 branchObj: {
@@ -103,26 +106,32 @@ export default {
                 }
             },
             exportAuth: AUTH_WIXDOM_BASIC_INFO_EXPORT,
-            toggle: true
+            toggle: true,
+            platformData: []
         }
     },
     components: {
         HAutocomplete,
-        platCompanyTable
+        platCompanyTable,
+        RegionCascader
     },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
-            branchList: state => state.branchList,
-            platformData: state => state.platformData
+            branchList: state => state.branchList
+            // platformData: state => state.platformData
         })
     },
     async  mounted () {
+        let userInfo = sessionStorage.getItem('userInfo')
+        this.searchParams.jobNumber = JSON.parse(userInfo).jobNumber
+        this.searchParams.authCode = JSON.parse(sessionStorage.getItem('authCode'))
         this.provinceDataList = await this.findProvinceAndCity(0)
         this.findCompanyList(this.searchParams)
-        this.newBossAuth(['F', 'P'])
+        // this.newBossAuth(['F', 'P'])
         this.searchParamsReset = { ...this.searchParams }
         this.countHeight()
+        this.findNewPlatCompany()
     },
     watch: {
         async 'searchParams.provinceCode' (newV, oldV) {
@@ -136,8 +145,28 @@ export default {
         }
     },
     methods: {
+        async  findNewPlatCompany () {
+            let userInfo = sessionStorage.getItem('userInfo')
+
+            const { data } = await findOrganizationCompany({
+                organizationCodes: this.searchParams.organizationCodes,
+                jobNumber: JSON.parse(userInfo).jobNumber,
+                authCode: JSON.parse(sessionStorage.getItem('authCode'))
+            })
+            console.log(data)
+            data.data.pageContent.map(i => {
+                i.value = i.companyShortName
+                i.selectCode = i.companyCode
+            })
+            this.platformData = data.data.pageContent
+        },
+        findRegionCode (val) {
+            this.searchParams.organizationCodes = val.toString()
+            this.findNewPlatCompany()
+        },
         onReset () {
             this.searchParams = { ...this.searchParamsReset }
+            this.$refs.cascader.onBackRest()
             this.selectAuth = {
                 branchObj: {
                     selectCode: '',

@@ -86,7 +86,7 @@ export default {
             tableLabel: [
                 { label: '平台公司', prop: 'companyShortName' },
                 { label: 'mis编码', prop: 'misCode', choosed: false },
-                { label: '所属分部', prop: 'subsectionName', choosed: false },
+                { label: '地域', prop: 'organizationNames', choosed: false },
                 { label: '城市', prop: 'cityName', choosed: false },
                 { label: '上线时间', prop: 'onlineTime', choosed: false },
                 { label: '签约规模', prop: 'signScale', choosed: false },
