@@ -90,7 +90,9 @@ export default {
                 subsectionCode: '', // 分部编码
                 startDate: `${(new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 9 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1))) + '-01'}`, // 时间
                 endDate: new Date().toJSON().split('T')[0],
-                targetStatus: '3'
+                targetStatus: '3',
+                authCode: '',
+                jobNumber: ''
             },
             searchParams: {},
             paginationData: {
@@ -188,6 +190,9 @@ export default {
         }
     },
     async mounted () {
+        let userInfo = sessionStorage.getItem('userInfo')
+        this.queryParams.jobNumber = JSON.parse(userInfo).jobNumber
+        this.queryParams.authCode = JSON.parse(sessionStorage.getItem('authCode'))
         await this.onSearch()
         await this.newBossAuth(['D', 'F'])
         this.queryParamsReset = { ...this.queryParams }
