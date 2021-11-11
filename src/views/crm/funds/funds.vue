@@ -402,18 +402,21 @@ export default {
             }
         },
         onUploadPay (val) {
-            // 先进去校验
-            this.$confirm('支付单全部收货后，才可支付尾款哦～', '收货提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                this.paymentParams = { paymentOrderId: val.orderId }
-                this.confirmReceiptVisible = true
-            }).catch(() => {
+            if (val.paymentOrderStatus == 8 && this.queryParams.repaymentTypeArrays == 2) {
+                // 货款先进去校验
+                this.$confirm('支付单全部收货后，才可支付尾款哦～', '收货提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.paymentParams = { paymentOrderId: val.orderId }
+                    this.confirmReceiptVisible = true
+                }).catch(() => {
 
-            })
-            this.$refs.uploaddialog.onDialogClick(val)
+                })
+            } else {
+                this.$refs.uploaddialog.onDialogClick(val)
+            }
         },
         onBatchSumbit (val) {
             this.$router.push({ path: '/goodwork/batchpsubmit', query: { fundId: val.id } })

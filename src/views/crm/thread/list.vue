@@ -373,7 +373,9 @@ export default class Thread extends Vue {
         pageSize: 10,
         userMobile: '',
         userName: '',
-        removeDuplicate: true
+        removeDuplicate: true,
+        jobNumber: '',
+        authCode: ''
     }
     tableLabel: tableLabelProps = [
         { label: '客户手机号', prop: 'userMobile', width: '120' },
@@ -667,6 +669,8 @@ export default class Thread extends Vue {
     }
 
     async findThreadList () {
+        this.queryParams.jobNumber = this.userInfo.jobNumber
+        this.queryParams.authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
         const { data } = await getThreadList(this.queryParams)
         this.tableData = data.records
         this.page.total = data.total

@@ -263,8 +263,8 @@
             <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px" :before-close="()=>handleCloseOpp()" :close-on-click-modal='false'>
                 <div class="record-layout">
                     <div class="header-title">
-                        <el-radio v-model="flowUpRequest.type" :label="1">当面拜访</el-radio>
-                        <el-radio v-model="flowUpRequest.type" :label="2">电话/微信沟通/邮件等</el-radio>
+                        <el-radio v-model="flowUpRequest.type" :label="1" @change="handleChangeRadio">当面拜访</el-radio>
+                        <el-radio v-model="flowUpRequest.type" :label="2" @change="handleChangeRadio">电话/微信沟通/邮件等</el-radio>
                         <p v-show="flowUpRequest.type === 2" class="tips">温馨提示：推荐使用企业微信与客户聊天，自动更新记录，更方便。</p>
                     </div>
                     <div style="margin-top:-10px">
@@ -319,7 +319,7 @@
                                 </el-form-item>
                             </div>
                             <div class="record-dialog-item">
-                                <el-form-item prop='remark' label="下一步计划：" class="textarea">
+                                <el-form-item prop='nextStepPlan' label="下一步计划：" class="textarea">
                                     <el-select v-model="flowUpRequest.nextStepPlan"  placeholder="请选择" filterable clearable>
                                         <el-option v-for="item in nextplan" :key="item.label" :label="item.label" :value="item.value"></el-option>
                                     </el-select>
@@ -576,6 +576,11 @@ export default class ThreadDetail extends Vue {
                 message: '必填项不能为空',
                 trigger: 'change'
             },
+            nextFlowTime: {
+                required: true,
+                message: '必填项不能为空',
+                trigger: 'change'
+            },
             nextStepPlan: {
                 required: true,
                 message: '必填项不能为空',
@@ -766,6 +771,12 @@ export default class ThreadDetail extends Vue {
     //
     handleCheckBox () {
         console.log(this.flowUpCount)
+    }
+    handleChangeRadio (val) {
+        this.$nextTick(() => {
+            // @ts-ignore
+            this.$refs['addFlowUp'].clearValidate()
+        })
     }
 
     // 跟进记录
