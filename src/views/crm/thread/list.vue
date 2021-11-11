@@ -123,7 +123,7 @@
                     {{getCityString(slotProps.data.row)}}
                 </template>
                 <template #action="slotProps">
-                    <h-button table @click="distributor(slotProps.data.row)">分配客户经理</h-button>
+                    <h-button table v-if="hosAuthCheck(threadDistributor)" @click="distributor(slotProps.data.row)">分配客户经理</h-button>
                     <h-button table @click="viewDetail(slotProps.data.row)">查看详情</h-button>
                 </template>
             </hosJoyTable>
@@ -311,6 +311,7 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { ThreadQeuryModel } from './const/model'
 import { THREAD_ORIGIN, DEVICE_CATEGORY, MARITAL_STATUS, EMPLOYED_AGE, CUSTOM_SOURCE, PROJECT_TYPE } from './const/index'
 import { Clue, RespBossCluePage } from '@/interface/hbp-member'
+import { THREAD_DISTRIBUTOR } from '@/utils/auth_const'
 import { Phone } from '@/utils/rules'
 import { newCache } from '@/utils/index'
 
@@ -451,6 +452,7 @@ export default class Thread extends Vue {
     maritalStatusOption = MARITAL_STATUS
     workingYearsOption = EMPLOYED_AGE
     userSourceOption = CUSTOM_SOURCE
+    threadDistributor = THREAD_DISTRIBUTOR
     // projectTypeOption = PROJECT_TYPE
     oldCompanyNameOption: any[] = []
     manufacturerOption: any = []
@@ -665,7 +667,6 @@ export default class Thread extends Vue {
         for (const key in this.numberSelectThread) {
             this.selectThread = this.selectThread.concat(this.numberSelectThread[key])
         }
-        console.log(this.selectThread, '????')
     }
 
     async findThreadList () {

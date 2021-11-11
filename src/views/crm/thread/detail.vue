@@ -257,7 +257,7 @@
             </div>
             <div class="bottom-line" v-if="radio=='客户信息'"></div>
             <div class="fixed-btn" v-if="radio=='客户信息'">
-                <h-button type="primary" @click="onUpDateThreadDetail">保存</h-button>
+                <h-button type="primary" v-if="hosAuthCheck(threadSave)" @click="onUpDateThreadDetail">保存</h-button>
             </div>
             <!-- 添加跟进记录 -->
             <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px" :before-close="()=>handleCloseOpp()" :close-on-click-modal='false'>
@@ -392,6 +392,7 @@ import {
     CURRENT_VISITIES
 } from './const/index'
 import { Phone } from '@/utils/rules'
+import { THREAD_SAVE } from '@/utils/auth_const'
 const _flowUpRequest = {
     assistantRemark: '', // 协助内容
     assistants: [], // (2.0项目)协助人员列表
@@ -440,7 +441,7 @@ export default class ThreadDetail extends Vue {
         updateUid: '',
         reservedName: false
     }
-
+    threadSave = THREAD_SAVE
     formRules = {
         userMobile: [
             { required: true, message: '请输入客户手机', trigger: 'blur' },
