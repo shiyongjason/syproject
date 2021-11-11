@@ -112,7 +112,7 @@ export const CURRENT_OPPORTUNITY = [
         isShow: true
     },
     {
-        label: '有未中标项目',
+        label: '有尚未中标项目',
         value: 2,
         isShow: true
     },
