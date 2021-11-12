@@ -354,7 +354,6 @@ export default class LoanHandoverInformation extends Vue {
                 {
                     required: true,
                     validator: (rule, value, callback) => {
-                        console.log('22', this.title)
                         if (value === '') {
                             if (this.title == '驳回') {
                                 return callback(new Error('请输入驳回原因'))
@@ -362,7 +361,7 @@ export default class LoanHandoverInformation extends Vue {
                                 return callback(new Error('请输入交接备注'))
                             }
                         } else {
-                            callback(new Error('123'))
+                            callback()
                         }
                     },
                     trigger: 'blur'
