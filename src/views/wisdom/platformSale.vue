@@ -299,7 +299,9 @@ export default {
                 regionCode: this.queryParams.regionCode,
                 subsectionCode: this.queryParams.subsectionCode,
                 companyCode: this.queryParams.companyCode,
-                tagetType: this.queryParams.tagetType
+                tagetType: this.queryParams.tagetType,
+                authCode: this.queryParams.authCode,
+                jobNumber: this.queryParams.jobNumber
             }
             if (params.saleTimeStart === null || params.saleTimeEnd === null) {
                 this.$message({
