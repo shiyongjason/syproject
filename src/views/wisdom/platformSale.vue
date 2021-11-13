@@ -2,16 +2,10 @@
     <div class="page-body amount">
         <div v-show="toggle" class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col" v-if="region">
-                    <div class="query-col-title">大区：</div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">所属地域：</div>
                     <div class="query-col-input">
-                        <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                    </div>
-                </div>
-                <div class="query-cont-col" v-if="branch">
-                    <div class="query-col-title">分部：</div>
-                    <div class="query-col-input">
-                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                        <RegionCascader ref="cascader" @backEvent="findRegionCode"/>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -92,6 +86,7 @@ import { getPlatformSale, queryCompanyByParams, getPlatformSaleSum } from './api
 import platformSaleTable from './components/platformSaleTable.vue'
 import { departmentAuth } from '@/mixins/userAuth'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import RegionCascader from './components/regionCascader.vue'
 import { DEPT_TYPE } from './store/const'
 import { AUTH_WIXDOM_PLATFORM_SALE_EXPORT } from '@/utils/auth_const'
 export default {
@@ -153,8 +148,9 @@ export default {
                 onlineTimeStart: '', // 上线时间
                 onlineTimeEnd: '',
                 incremental: '', // 增量
-                regionCode: '', // 大区编码
-                subsectionCode: '', // 分部编码
+                organizationCodes: '',
+                authCode: '',
+                jobNumber: '',
                 companyCode: '', // 公司编码
                 tagetType: '0' // 目标类型
             },
@@ -221,9 +217,13 @@ export default {
     },
     components: {
         platformSaleTable,
-        HAutocomplete
+        HAutocomplete,
+        RegionCascader
     },
     methods: {
+        findRegionCode (val) {
+            this.queryParams.organizationCodes = val.toString()
+        },
         downloading () {
             const temp = { ...this.queryParamsTemp }
             temp.onLineStatus = this.checkedList.filter((item) => item.checked).map((item) => item.key).join(',')
@@ -299,7 +299,9 @@ export default {
                 regionCode: this.queryParams.regionCode,
                 subsectionCode: this.queryParams.subsectionCode,
                 companyCode: this.queryParams.companyCode,
-                tagetType: this.queryParams.tagetType
+                tagetType: this.queryParams.tagetType,
+                authCode: this.queryParams.authCode,
+                jobNumber: this.queryParams.jobNumber
             }
             if (params.saleTimeStart === null || params.saleTimeEnd === null) {
                 this.$message({
@@ -416,6 +418,7 @@ export default {
         },
         async onReset () {
             this.queryParams = { ...this.queryParamsRest }
+            this.$refs.cascader.onBackRest()
             this.selectAuth = {
                 regionObj: {
                     selectCode: '',
@@ -434,11 +437,14 @@ export default {
                 value.checked = index === 0
             })
             this.onQuery(this.queryParams)
-            await this.newBossAuth(['D', 'F', 'P'])
+            await this.newBossAuth(['P'])
         }
     },
     async mounted () {
-        this.newBossAuth(['D', 'F', 'P'])
+        let userInfo = sessionStorage.getItem('userInfo')
+        this.queryParams.jobNumber = JSON.parse(userInfo).jobNumber
+        this.queryParams.authCode = JSON.parse(sessionStorage.getItem('authCode'))
+        this.newBossAuth(['P'])
         await this.onQuery(this.queryParams)
         this.getPlatformSaleSum()
         this.queryParamsRest = { ...this.queryParams }

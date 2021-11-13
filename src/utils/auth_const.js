@@ -453,3 +453,7 @@ export const CREDITMANLIST_LINK_AUTHENLIST = 1000007
 export const VIPMANLIST_LINK_AUTHENLIST = 1000008
 // 好橙工VIP申请列表 - 点击企业名称 查看企业管理列表 authenlist
 export const APPLICATIONLIST_LINK_AUTHENLIST = 1000009
+
+/* 线索 */
+export const THREAD_DISTRIBUTOR = 1600001
+export const THREAD_SAVE = 1600002

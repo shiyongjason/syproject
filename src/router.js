@@ -136,6 +136,18 @@ const routerMapping = [
                     }
                 },
                 component: () => import('./views/auth/role')
+            },
+            {
+                path: 'datamaping',
+                name: 'datamaping',
+                meta: {
+                    title: '数据映射',
+                    tagName: '数据映射',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/auth/datamaping'
+                },
+                component: () => import('./views/auth/dataMaping')
             }, 
             {
                 path: 'postUpdate',
