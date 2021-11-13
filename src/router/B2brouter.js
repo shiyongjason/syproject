@@ -423,6 +423,41 @@ export default [
                 ]
             },
             {
+                path: 'memberInterests',
+                name: 'memberInterests',
+                meta: {
+                    title: '会员权益管理',
+                    tagName: '会员权益管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'memberBalance',
+                        name: 'memberBalance',
+                        meta: {
+                            title: '会员满返余额',
+                            tagName: '会员满返余额',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/membershipInterests/memberBalance')
+                    },
+                    {
+                        path: 'fullReturnDetails',
+                        name: 'fullReturnDetails',
+                        meta: {
+                            title: '满返明细',
+                            tagName: '满返明细',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/membershipInterests/fullReturnDetails')
+                    }
+                ]
+            },
+            {
                 path: 'dataBoard',
                 name: 'dataBoard',
                 meta: {
