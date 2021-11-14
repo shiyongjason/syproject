@@ -280,6 +280,12 @@
                                     </el-radio-group>
                                 </el-checkbox-group>
                             </template>
+                            <template #upstreamLoanType="slotProps">
+                                <el-select v-model="slotProps.data.row.upstreamPayType">
+                                    <el-option value="1" label="先货后款"></el-option>
+                                    <el-option value="2" label="先款后货"></el-option>
+                                </el-select>
+                            </template>
                             <template #action="slotProps">
                                 <h-button table @click="del(slotProps.data)" v-if="tableForm.length>1">删除</h-button>
                             </template>
@@ -660,8 +666,8 @@ export default class FinalApproval extends Vue {
         {
             label: '上游支付方式',
             prop: 'upstreamPayType',
-            width: '250',
-            className: '',
+            width: '450',
+            className: 'form-table-header',
             showOverflowTooltip: false,
             slot: 'upstreamPayType'
         },
@@ -718,6 +724,13 @@ export default class FinalApproval extends Vue {
                     </div>
                 )
             }
+        },
+        {
+            label: '上游货款方式',
+            prop: 'upstreamLoanType',
+            width: '360',
+            className: 'form-table-header',
+            slot: 'upstreamLoanType'
         }
         // {
         //     label: '设备品类',
