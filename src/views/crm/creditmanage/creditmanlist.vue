@@ -166,7 +166,8 @@ export default {
                 { label: '状态', prop: 'status' },
                 { label: '资料状态', prop: 'documentStatus' },
                 { label: '资料更新时间', prop: 'documentUpdateTime', formatters: 'dateTimes' },
-                { label: '更新时间', prop: 'updateTime', formatters: 'dateTimes' }
+                { label: '更新时间', prop: 'updateTime', formatters: 'dateTimes' },
+                { label: '首次评级时间', prop: 'firstLevelTime', formatters: 'dateTimes' }
 
             ],
             tableData: [],
