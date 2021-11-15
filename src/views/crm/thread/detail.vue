@@ -587,7 +587,7 @@ export default class ThreadDetail extends Vue {
             nextStepPlan: {
                 required: true,
                 message: '必填项不能为空',
-                trigger: 'blur'
+                trigger: 'change'
             }
         }
         return rules
