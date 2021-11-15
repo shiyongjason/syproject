@@ -697,6 +697,7 @@ export default class Thread extends Vue {
 
     addThread () {
         this.threadVisible = true
+        this.stateN = ''
     }
 
     distributor (val: RespBossCluePage) {
