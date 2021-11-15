@@ -274,7 +274,7 @@
                             <div class="record-dialog-item" v-if="flowUpRequest.type == 1">
                                 <el-form-item prop='picUrls' label="上传现场图片："></el-form-item>
                                 <div>
-                                    <OssFileHosjoyUpload :showPreView='true' delTips='是否确认删除打卡图片，删除后无法恢复' v-model="flowUpRequest.picUrls" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png">
+                                    <OssFileHosjoyUpload :showPreView='true' delTips='是否确认删除打卡图片，删除后无法恢复' v-model="flowUpRequest.picUrls" :fileSize=20 :action='action' :uploadParameters='uploadParameters'  @successCb="$refs.addFlowUp.clearValidate('picUrls')" style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png">
                                         <div class="a-line">
                                             <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                                         </div>
