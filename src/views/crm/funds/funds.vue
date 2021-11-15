@@ -405,7 +405,7 @@ export default {
             if (val.paymentOrderStatus == 8 && this.queryParams.repaymentTypeArrays == 2) {
                 // 货款先进去校验
                 this.$confirm('支付单全部收货后，才可支付尾款哦～', '收货提示', {
-                    confirmButtonText: '确定',
+                    confirmButtonText: '去收货',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
