@@ -108,12 +108,12 @@
                         </div>
                         <div class="project-detail-item">
                             <el-form-item label="客户手机号：">
-                                <el-input placeholder="请输入客户手机号" @blur='phoneBlur' v-model='threadDetail.userMobile'></el-input>
+                                <el-input placeholder="请输入客户手机号" @blur='phoneBlur' maxlength="11" v-model='threadDetail.userMobile'></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
                             <el-form-item label="客户座机号：">
-                                <el-input placeholder="请输入客户座机号" @blur='phoneBlur' v-model='threadDetail.telephone'></el-input>
+                                <el-input placeholder="请输入客户座机号" @blur='phoneBlur' maxlength="11" v-model='threadDetail.telephone'></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
