@@ -262,7 +262,7 @@
                 <h-button type="primary" v-if="hosAuthCheck(threadSave)" @click="onUpDateThreadDetail">保存</h-button>
             </div>
             <!-- 添加跟进记录 -->
-            <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px" :before-close="()=>handleCloseOpp()" :close-on-click-modal='false'>
+            <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px" :before-close="()=>closeAddRecord()" :close-on-click-modal='false'>
                 <div class="record-layout">
                     <div class="header-title">
                         <el-radio v-model="flowUpRequest.type" :label="1" @change="handleChangeRadio">当面拜访</el-radio>
