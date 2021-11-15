@@ -692,6 +692,10 @@ export default class ThreadDetail extends Vue {
     }
     add () {
         this.addRecord = true
+        this.$nextTick(() => {
+            // @ts-ignore
+            this.$refs['addFlowUp'].clearValidate()
+        })
     }
 
     @validateForm('threadDetailForm')
