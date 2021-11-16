@@ -32,3 +32,12 @@ export const getCreditdocumentType = (params) => axios.get(`/memeber/api/credit-
 // 根据ID 查询信用
 export const getComcredit = (params) => axios.get(`/memeber/company/credit/companys/${params}`)
 export const downLoadZip = (params) => axios.get(`memeber/api/credit-document/download/${params.companyId}/${params.activeName}/detail`)
+
+// 临时额度列表
+export const temporaryQuotaList = (params) => axios.get('/memeber/api/quota/temporary-quota/page', { params })
+// 临时额度新增
+export const temporaryQuotaAdd = (params) => axios.post('/memeber/api/quota/temporary-quota', { request: params })
+// 临时额度修改
+export const temporaryQuotaUpdate = (params) => axios.put('/memeber/api/quota/temporary-quota', params)
+// 手动失效
+export const manualLose = (params) => axios.post('/memeber/api/quota/temporary-quota/status', params)

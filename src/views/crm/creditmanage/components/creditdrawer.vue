@@ -20,7 +20,7 @@
                     <div class="drawer-wrap_btn">
                         <div class="drawer-wrap_btn-flex">信用详情</div>
                         <el-button type="primary" size="mini" @click="onEditVip(tableData[0].id)">通用额度设置</el-button>
-                        <el-button type="primary" size="mini" @click="handleOpenSet(2)">临时额度设置</el-button>
+                        <el-button type="primary" size="mini" @click="handleOpenSet()">临时额度设置</el-button>
                     </div>
                     <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :actionMinWidth=100 :isShowIndex='true' :maxHeight=500>
                         <template slot="endTime" slot-scope="scope">
@@ -34,7 +34,6 @@
                         </template> -->
                     </basicTable>
                     <div class="drawer-wrap_switch">
-
                         <el-switch v-model="riskValue" @change="handleChangeSwitch" style="display: block" active-color="#13ce66" inactive-color="#ff4949" inactive-text="是否开启风控冻结？">
                         </el-switch>
                         <span>2012012驱蚊器翁</span>
@@ -149,8 +148,8 @@
                     <!-- <el-input v-model="ruleForm.serviceFee" v-isNum:1="ruleForm.serviceFee" maxlength='2'></el-input> -->
                     <el-input-number v-model="ruleForm.serviceFee" controls-position="right" :min="0" :max="100" :precision=1></el-input-number>
                 </el-form-item>
-                <el-form-item label="可代采购额度：" prop="purchaseQuota">
-                    <el-input v-model="ruleForm.purchaseQuota" v-isNum:6="ruleForm.purchaseQuota" maxlength='15'><template slot="append">万元</template></el-input>
+                <el-form-item label="通用额度：" prop="purchaseQuota">
+                    <el-input v-model="ruleForm.purchaseQuota" v-isNum:6="ruleForm.purchaseQuota" v-inputMAX='10000' maxlength='15'><template slot="append">万元</template></el-input>
                 </el-form-item>
                 <el-form-item label="信用授予日期：" prop="startTime">
                     <el-date-picker v-model="ruleForm.startTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="信用授予日期" :picker-options="pickerOptionsStart" type="date" @change="datePickerChange"></el-date-picker>
@@ -725,8 +724,8 @@ export default {
                 }
             })
         },
-        handleOpenSet (type) {
-            this.$refs.setInfoDialog.onOpenDialog(type)
+        handleOpenSet () {
+            this.$refs.setInfoDialog.onOpenDialog()
         }
     }
 }

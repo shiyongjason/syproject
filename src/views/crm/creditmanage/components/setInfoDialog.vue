@@ -3,31 +3,34 @@
         <el-dialog title="临时提额设置" :visible.sync="isVisible" :close-on-click-modal=false width="800px" :before-close="handleCancel">
             <div class="set-wrap">
                 <div class="set-wrap-head">
-                    江苏舒适云信息技术有限公司
-                    <el-button size="mini" type="primary" @click="handleAdd">新增临时额度</el-button>
+                    {{ $parent.companyName }}
+                    <el-button size="mini" type="primary" @click="isAddVisible=true">新增临时额度</el-button>
                 </div>
-                <hosJoyTable  ref="hosjoyTable" align="center"  border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='100'
-                    isAction :isActionFixed='tableData&&tableData.length>0' >
-                    <h-button table>确认已网银支付</h-button>
+                <hosJoyTable ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='100' isAction :isActionFixed='tableData&&tableData.length>0'>
+                    <template #status="slotProps">
+                        <el-tag :type="slotProps.data.row.status == 0 ? 'success':'info'">{{ slotProps.data.row.status == 0 ? '生效中' : '已失效' }}</el-tag>
+                    </template>
+                    <template #action="slotProps">
+                        <h-button table v-if="slotProps.data.row.status == 0" @click="handleLose(slotProps.data.row)">手动失效</h-button>
+                    </template>
                 </hosJoyTable>
 
             </div>
             <span slot="footer" class="dialog-footer">
                 <h-button type="assist" @click="handleCancel">取 消</h-button>
-                <h-button type="primary" @click="handleSumbit">确 定</h-button>
             </span>
         </el-dialog>
         <el-dialog title="新增临时额度" :visible.sync="isAddVisible" :close-on-click-modal=false width="650px" :before-close="handleAddBack">
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
-                <el-form-item label="临时额度：" prop="name">
-                    <el-input v-model="ruleForm.name" v-isNum:6 v-inputMAX='100000000'></el-input>
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px">
+                <el-form-item label="临时额度：" prop="quotaAmount">
+                    <el-input v-model="ruleForm.quotaAmount" v-isNum:6 v-inputMAX='10000'><template slot="append">万元</template></el-input>
                 </el-form-item>
-                <el-form-item label="额度到期时间：" prop="date2">
-                    <el-date-picker v-model="ruleForm.date" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" :picker-options="grantOptions" placeholder="选择日期">
+                <el-form-item label="额度到期时间：" prop="expireTime">
+                    <el-date-picker v-model="ruleForm.expireTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" :picker-options="grantOptions" placeholder="选择日期">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="说明：">
-                    <el-input type="textarea" v-model="ruleForm.desc" maxlength="200"></el-input>
+                    <el-input type="textarea" v-model="ruleForm.remark" maxlength="200"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -39,10 +42,10 @@
 
 </template>
 <script lang="tsx">
-import moment from 'moment'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { State } from 'vuex-class'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-
+import * as Api from '../api/index'
 @Component({
     name: 'SetInfoDialog',
     components: {
@@ -50,17 +53,19 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导
     }
 })
 export default class SetInfoDialog extends Vue {
-    $refs!: {
-        form: HTMLFormElement
-    }
+    $refs!: { form: HTMLFormElement }
+    @State('userInfo') userInfo: any
     // 定义变量
     private isVisible:boolean = false
     private isAddVisible:boolean = false
     ruleForm:Record<string, any>={
-        date: moment().format('YYYY-MM-DD')
+        expireTime: '',
+        quotaAmount: '',
+        remark: ''
     }
     queryParams:Record<string, any>={
-        pageNumber: 1
+        pageNumber: 1,
+        pageSize: 10
     }
     page = {
         sizes: [10, 20, 50, 100],
@@ -68,16 +73,20 @@ export default class SetInfoDialog extends Vue {
     }
     tableData = []
     tableLabel:tableLabelProps = [
-        { label: '临时额度（万元）', prop: 'paymentOrderNo', width: '120' },
-        { label: '状态', prop: 'deptName', width: '130' },
-        { label: '额度到期时间', prop: 'companyName', width: '150' },
-        { label: '修改时间', prop: 'supplierCompanyName', width: '180' }
+        { label: '临时额度（万元）', prop: 'quotaAmount', width: '120' },
+        { label: '状态', prop: 'status', width: '130', slot: 'status' },
+        { label: '额度到期时间', prop: 'expireTime', width: '150' },
+        { label: '修改人', prop: 'updateBy', width: '150' },
+        { label: '修改时间', prop: 'updateTime', width: '180' }
     ]
-    // form rules
+
     get rules () {
         return {
-            name: [
-                { required: true, message: '请输入活动名称', trigger: 'blur' }
+            quotaAmount: [
+                { required: true, message: '请输入临时额度', trigger: 'blur' }
+            ],
+            expireTime: [
+                { required: true, message: '请选择额度到期时间', trigger: 'change' }
             ]
         }
     }
@@ -85,44 +94,92 @@ export default class SetInfoDialog extends Vue {
     get grantOptions () {
         return {
             disabledDate (time) {
-                return Date.now() > time.getTime() + 8.64e7// 如果当天可选，就不用减8.64e7
+                return Date.now() > time.getTime()
             }
         }
     }
 
     // methods
-    onOpenDialog (val) {
+    onOpenDialog () {
         this.isVisible = true
+        this.getList()
     }
 
-    getList () {
-
+    async getList () {
+        const dataJson = {
+            ...this.queryParams,
+            companyId: (this as any).$parent?.companyId
+        }
+        const { data } = await Api.temporaryQuotaList(dataJson)
+        this.tableData = data.records
+        this.page.total = data.total
     }
-
-    handleAdd () {
-        this.isAddVisible = true
+    // 手动失效
+    handleLose (value) {
+        const h = this.$createElement
+        this.$msgbox({
+            message: h('div', null, [
+                h('p', null, '是否确认手动失效该额度？'),
+                h('p', [
+                    h('span', { style: 'color: red' }, '失效后额度将不可用，'),
+                    h('span', null, '你还要继续吗？')
+                ])
+            ]),
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            beforeClose: async (action, instance, done) => {
+                if (action === 'confirm') {
+                    instance.confirmButtonLoading = true
+                    instance.confirmButtonText = '执行中...'
+                    try {
+                        await Api.manualLose({ id: value.id })
+                        this.getList()
+                        this.$message.success('设置成功，已失效')
+                    } catch (error) {
+                        this.$message.error('设置失败，请重试')
+                    }
+                    done()
+                    instance.confirmButtonLoading = false
+                } else {
+                    done()
+                }
+            }
+        })
     }
-
+    // 新增临时额度提交
     handleSumbit () {
-
+        this.$refs['ruleForm'].validate(async (valid) => {
+            if (valid) {
+                const dataJson = {
+                    ...this.ruleForm,
+                    createBy: this.userInfo.employeeName,
+                    companyId: (this as any).$parent?.companyId
+                }
+                await Api.temporaryQuotaAdd(dataJson)
+                this.isAddVisible = false
+                this.getList()
+            }
+        })
     }
-
-    handleCancel () {
-        this.isVisible = false
-    }
-
+    // 新增临时额度关闭
     handleAddBack () {
         this.isAddVisible = false
+    }
+    // 临时提额设置关闭
+    handleCancel () {
+        this.isVisible = false
     }
 }
 
 </script>
 <style lang="scss" scoped>
-/deep/.el-dialog .el-input{
+/deep/.el-dialog .el-input {
     width: auto !important;
 }
-.set-wrap{
-    &-head{
+.set-wrap {
+    &-head {
         margin-bottom: 10px;
         display: flex;
         justify-content: space-between;
