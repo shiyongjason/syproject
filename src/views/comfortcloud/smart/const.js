@@ -19,7 +19,7 @@ export const PROJECT_TYPE_KEY = {
     // 分体空调集控系统
     FT_AIR: '12'
 }
-
+/** 集控系统 */
 export const PROJECT_TYPE_OPTIONS = new Map([
     ['1', '氟机空调集控系统'],
     ['2', '水机空调集控系统'],
