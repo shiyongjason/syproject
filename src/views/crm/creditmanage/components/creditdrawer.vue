@@ -42,10 +42,11 @@
                     <div class="drawer-wrap_box">
                         <span class="drawer-wrap_left">请选择额度共享企业：</span>
                         <div class="drawer-wrap_right">
-                            <HAutocomplete :placeholder="'请选择'" :maxlength=60 @back-event="backFindparam" :selectObj="targetObj" :selectArr="restaurants" v-if="restaurants" :remove-value=true :isSettimeout=false>
+                            <HAutocomplete placeholder="请选择" :maxlength=60 @back-event="backFindparam" :selectObj="targetObj" :selectArr="restaurants" :popper-append-to-body="false" v-if="restaurants" :remove-value=true :canDoBlurMethos="false" :isSettimeout=false>
                                 <template slot-scope="scope">
-                                    <span style="float: left">{{ scope.data.paramName }}</span>
-                                    <span style="float: right; color: #8492a6; font-size: 13px">{{ scope.data.select?'必选':'' }}</span>
+                                    <span style="float: left;paddingRight:10px;">{{ scope.data.companyName }}</span>
+                                    <el-button v-if="scope.data.companyLabel == 0" style="float: right;" type="primary" @click="handleRelevance(scope.data)" size="mini">关联</el-button>
+                                    <el-tag v-else>{{ scope.data.companyLabel | companyLabelFilter }}</el-tag>
                                 </template>
                             </HAutocomplete>
                         </div>
@@ -53,14 +54,15 @@
                     <div class="drawer-wrap_box">
                         <span class="drawer-wrap_left">额度共享企业：</span>
                         <div class="drawer-wrap_right shareScroll">
-                            <div class="link-name">
-                                <span>永科 <i>12312321</i></span>
-                                <el-button type="primary" size="mini" @click="handleUnlink">取消关联</el-button>
-                            </div>
-                            <div class="link-name">
-                                <span>永科 <i>12312321</i></span>
-                                <el-button type="primary" size="mini">取消关联</el-button>
-                            </div>
+                            <template v-if="shareCompaniesList.length > 0">
+                                <div class="link-name" v-for="item in shareCompaniesList" :key="item.companyId">
+                                    <span>{{ item.companyName }} <i>{{ item.shareTime }}</i></span>
+                                    <el-button type="primary" size="mini" @click="handleUnlink(item.companyId)">取消关联</el-button>
+                                </div>
+                            </template>
+                            <template v-else>
+                                <div class="not-empty">暂无</div>
+                            </template>
                         </div>
                     </div>
                     <div class="drawer-wrap_header">修改记录</div>
@@ -238,7 +240,7 @@ import setInfoDialog from '../components/setInfoDialog.vue'
 import { ccpBaseUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip } from '../api'
+import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip, shareCompanyList, creditShareAdd, shareCompanies, creditShareCancel } from '../api'
 import { CREDITLEVEL } from '../../const'
 import * as auths from '@/utils/auth_const'
 export default {
@@ -333,7 +335,11 @@ export default {
                 date1: ''
             },
             restaurants: [],
-            targetObj: {}
+            targetObj: {
+                selectName: '',
+                selectCode: ''
+            },
+            shareCompaniesList: []
         }
     },
     components: {
@@ -411,18 +417,23 @@ export default {
         handleClick (tab) {
             if (tab.index == 1) this.onShowCreditdocument()
         },
-        handleUnlink () {
+        handleUnlink (id) {
             let tips = `<span style="color:red">取消关联后，1企业将不再可以共用当前企业的信用评级</span>，你还要继续吗？`
             this.$confirm(tips, '是否确认取消关联？', {
                 dangerouslyUseHTMLString: true,
                 confirmButtonText: '确认取消关联',
                 cancelButtonText: '返回'
-            }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                })
-            }).catch(() => {
+            }).then(async () => {
+                const dataJson = {
+                    childCompanyId: id,
+                    mainCompanyId: this.companyId
+                }
+                try {
+                    await creditShareCancel(dataJson)
+                    this.$message.success('已取消关联')
+                } catch (err) {
+                    this.$message.error('取消关联失败，请重试')
+                }
             })
         },
         async onShowDrawerinfn (val) {
@@ -433,6 +444,8 @@ export default {
             this.documentStatus = val.documentStatus
             await this.findCreditPage({ companyId: this.companyId })
             this.tableData = this.creditPage.companyCreditList
+            this.getShareLimitList()
+            this.getShareCompaniesList()
             this.drawer = true
         },
         async onShowCreditdocument () {
@@ -708,7 +721,8 @@ export default {
             window.location.href = data
         },
         backFindparam (val) {
-
+            console.log(val)
+            return false
         },
         // 风控冻结
         handleChangeSwitch () {
@@ -726,6 +740,49 @@ export default {
         },
         handleOpenSet () {
             this.$refs.setInfoDialog.onOpenDialog()
+        },
+        // 获取共享额度企业列表
+        async getShareLimitList () {
+            const { data } = await shareCompanyList({ companyId: this.companyId })
+            data.forEach(item => {
+                item.value = item.companyName
+            })
+            this.restaurants = data
+        },
+        // 共享企业列表
+        async getShareCompaniesList () {
+            const { data } = await shareCompanies({ companyId: this.companyId })
+            this.shareCompaniesList = data
+        },
+        // 关联企业
+        async handleRelevance (value) {
+            const dataJson = {
+                childCompanyId: value.id,
+                mainCompanyId: this.companyId
+            }
+            await creditShareAdd(dataJson)
+            this.getShareCompaniesList()
+        }
+    },
+    filters: {
+        companyLabelFilter (val) {
+            let result = ''
+            switch (parseInt(val)) {
+                case 1:
+                    result = '已关联其他主企业'
+                    break
+                case 2:
+                    result = '已被其他企业关联'
+                    break
+                case 3:
+                    result = '当前企业'
+                    break
+                case 4:
+                    result = '已关联当前企业'
+                    break
+                default: break
+            }
+            return result
         }
     }
 }
@@ -862,6 +919,9 @@ export default {
         .el-autocomplete{
             width: 500px;
         }
+    }
+    .not-empty {
+        color: #999;
     }
     .shareScroll{
         max-height: 300px;

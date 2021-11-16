@@ -38,6 +38,18 @@ export const temporaryQuotaList = (params) => axios.get('/memeber/api/quota/temp
 // 临时额度新增
 export const temporaryQuotaAdd = (params) => axios.post('/memeber/api/quota/temporary-quota', { request: params })
 // 临时额度修改
-export const temporaryQuotaUpdate = (params) => axios.put('/memeber/api/quota/temporary-quota', params)
+// export const temporaryQuotaUpdate = (params) => axios.put('/memeber/api/quota/temporary-quota', params)
 // 手动失效
 export const manualLose = (params) => axios.post('/memeber/api/quota/temporary-quota/status', params)
+// 支付单申请 额度冻结
+// export const quotaFreeze = (params) => axios.post('/memeber/api/quota/quota-freeze', params)
+// 查询公司列表（共享企业标签）
+export const shareCompanyList = (params) => axios.get('/memeber/openapi/company/label/list', { params })
+// 公司企业额度共享关联企业
+export const creditShareAdd = (params) => axios.post('/memeber/company/credit/credit-share/add', params)
+// 公司企业额度共享关联企业
+export const creditShareCancel = (params) => axios.post('/memeber/company/credit/credit-share/cancel', params)
+// 查询共享企业列表
+export const shareCompanies = (params) => axios.get(`/memeber/company/credit/${params.companyId}/share-companies`, params)
+// 查询公司信用修改列表
+export const creditUpdateList = (params) => axios.get(`/memeber/company-credit-change-records/${params.companyId}/list`, params)
