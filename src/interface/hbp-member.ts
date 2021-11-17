@@ -3079,7 +3079,7 @@ export interface Project {
     estimateSignTime?: string
 
     /**
-     * 预估借款时间,格式为:yyyy-MM-dd
+     * 预估赊销时间,格式为:yyyy-MM-dd
      * @type {string}
      * @memberof Project
      */
@@ -5923,7 +5923,7 @@ export interface ReqProject {
     estimateSignTime?: string
 
     /**
-     * 预估借款时间,格式为:yyyy-MM-dd
+     * 预估赊销时间,格式为:yyyy-MM-dd
      * @type {string}
      * @memberof ReqProject
      */
@@ -11925,7 +11925,7 @@ export interface RespProject {
     estimateSignTime?: string
 
     /**
-     * 预估借款时间,格式为:yyyy-MM-dd
+     * 预估赊销时间,格式为:yyyy-MM-dd
      * @type {string}
      * @memberof RespProject
      */

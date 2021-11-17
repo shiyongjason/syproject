@@ -7269,7 +7269,7 @@ export interface RespPurchaseOrderCrm {
     salePoDetailUrl: JsonNode
 
     /**
-     * 预估借款时间
+     * 预估赊销时间
      * @type {string}
      * @memberof RespPurchaseOrderCrm
      */
