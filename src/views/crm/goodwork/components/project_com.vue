@@ -84,7 +84,7 @@
                 <el-input-number v-model="projectForm.upstreamPromiseMonth" controls-position="right" @change="handleChange" :min="1" :max="6"></el-input-number>
                 个月
             </el-form-item>
-            <el-form-item label="预估借款时间：" prop="estimatedLoanTime">
+            <el-form-item label="预估赊销时间：" prop="estimatedLoanTime">
                 <el-date-picker v-model="projectForm.estimatedLoanTime" value-format="yyyy-MM-dd" type="date" placeholder="选择日期">
                 </el-date-picker>
             </el-form-item>
@@ -240,7 +240,7 @@ export default {
                     { required: true, message: '请输入预估赊销周期', trigger: 'blur' }
                 ],
                 estimatedLoanTime: [
-                    { required: true, message: '请选择预估借款时间', trigger: 'change' }
+                    { required: true, message: '请选择预估赊销时间', trigger: 'change' }
                 ],
                 estimateSignTime: [
                     { required: true, message: '请选择预计可签约的时间', trigger: 'change' }
