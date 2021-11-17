@@ -16,60 +16,72 @@
                     </div>
                 </div>
                 <div class="drawer-wrap" v-if="activeName=='1'">
-                    <div class="drawer-wrap_title">{{companyName}}</div>
+                    <div class="drawer-wrap_title">{{companyName}}
+                        <!-- companyType 1 主企业 2 子企业 3无标签企业 -->
+                        <el-tag :type="creditDetailObj.companyType == 1 ? 'success': ''" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 2">{{ creditDetailObj.companyType == 1 ? '主企业' : '子企业' }}</el-tag>
+                    </div>
                     <div class="drawer-wrap_btn">
                         <div class="drawer-wrap_btn-flex">信用详情</div>
-                        <el-button type="primary" size="mini" @click="onEditVip(tableData[0].id)">通用额度设置</el-button>
-                        <el-button type="primary" size="mini" @click="handleOpenSet()">临时额度设置</el-button>
+                        <!-- v-if="hosAuthCheck(auths.CRM_CREDIT_SET)" -->
+                        <el-button type="primary" size="mini" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 3" @click="onEditVip(creditDetailObj.id)">通用额度设置</el-button>
+                        <el-button type="primary" size="mini" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 3" @click="handleOpenSet()">临时额度设置</el-button>
                     </div>
-                    <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :actionMinWidth=100 :isShowIndex='true' :maxHeight=500>
+                    <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :actionMinWidth=100 :maxHeight=500>
                         <template slot="endTime" slot-scope="scope">
                             <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime?moment(scope.data.row.endTime).format('YYYY-MM-DD'):'-'}}</span>
                         </template>
                         <template slot="status" slot-scope="scope">
                             <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status==true?'正常':scope.data.row.status==false?'过期':'-'}}</span>
                         </template>
-                        <!-- <template slot="action" slot-scope="scope">
-                            <h-button table @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_CREDIT_SET)">设置信用评级</h-button>
-                        </template> -->
                     </basicTable>
-                    <div class="drawer-wrap_switch">
-                        <el-switch v-model="riskValue" @change="handleChangeSwitch" style="display: block" active-color="#13ce66" inactive-color="#ff4949" inactive-text="是否开启风控冻结？">
-                        </el-switch>
-                        <span>2012012驱蚊器翁</span>
-                    </div>
-                    <div class="drawer-wrap_header">额度共享</div>
-                    <div class="drawer-wrap_box">
-                        <span class="drawer-wrap_left">请选择额度共享企业：</span>
-                        <div class="drawer-wrap_right">
-                            <CustomAutocomplete placeholder="请选择" :suggestions="restaurants" v-if="restaurants">
-                                <template slot-scope="scope">
-                                    <span style="float: left;paddingRight:10px;">{{ scope.data.companyName }}</span>
-                                    <el-button v-if="scope.data.companyLabel == 0" style="float: right;" type="primary" @click="handleRelevance(scope.data)" size="mini">关联</el-button>
-                                    <el-tag v-else>{{ scope.data.companyLabel | companyLabelFilter }}</el-tag>
+                    <!-- 主企业展示内容 -->
+                    <template v-if="creditDetailObj.companyType == 1">
+                        <div class="drawer-wrap_switch">
+                            <el-switch v-model="riskValue" @change="handleChangeSwitch" style="display: block" active-color="#13ce66" inactive-color="#ff4949" inactive-text="是否开启风控冻结？">
+                            </el-switch>
+                            <span>2012012驱蚊器翁</span>
+                        </div>
+                        <div class="drawer-wrap_header">额度共享</div>
+                        <div class="drawer-wrap_box">
+                            <span class="drawer-wrap_left">请选择额度共享企业：</span>
+                            <div class="drawer-wrap_right">
+                                <CustomAutocomplete placeholder="请选择" :suggestions="restaurants" v-if="restaurants">
+                                    <template slot-scope="scope">
+                                        <span style="float: left;paddingRight:10px;">{{ scope.data.companyName }}</span>
+                                        <el-button v-if="scope.data.companyLabel == 0" style="float: right;" type="primary" @click="handleRelevance(scope.data)" size="mini">关联</el-button>
+                                        <el-tag v-else>{{ scope.data.companyLabel | companyLabelFilter }}</el-tag>
+                                    </template>
+                                </CustomAutocomplete>
+                            </div>
+                        </div>
+                        <div class="drawer-wrap_box">
+                            <span class="drawer-wrap_left">额度共享企业：</span>
+                            <div class="drawer-wrap_right shareScroll">
+                                <template v-if="shareCompaniesList.length > 0">
+                                    <div class="link-name" v-for="item in shareCompaniesList" :key="item.companyId">
+                                        <span>{{ item.companyName }} <i>{{ item.shareTime }}</i></span>
+                                        <el-button type="primary" size="mini" @click="handleUnlink(item.companyId)">取消关联</el-button>
+                                    </div>
                                 </template>
-                            </CustomAutocomplete>
+                                <template v-else>
+                                    <div class="not-empty">暂无</div>
+                                </template>
+                            </div>
                         </div>
-                    </div>
-                    <div class="drawer-wrap_box">
-                        <span class="drawer-wrap_left">额度共享企业：</span>
-                        <div class="drawer-wrap_right shareScroll">
-                            <template v-if="shareCompaniesList.length > 0">
-                                <div class="link-name" v-for="item in shareCompaniesList" :key="item.companyId">
-                                    <span>{{ item.companyName }} <i>{{ item.shareTime }}</i></span>
-                                    <el-button type="primary" size="mini" @click="handleUnlink(item.companyId)">取消关联</el-button>
-                                </div>
-                            </template>
-                            <template v-else>
-                                <div class="not-empty">暂无</div>
-                            </template>
+                    </template>
+                    <!-- 子企业展示内容 -->
+                    <template v-else-if="creditDetailObj.companyType == 2">
+                        <div class="drawer-wrap_box">
+                            <span>以上信用为共享<font color="#ff7a45">好享家舒适智能家居股份有限公司</font>的信用评级。</span>
+                            <el-button type="primary" size="mini">查看主企业评级</el-button>
+                            <el-button type="primary" size="mini" @click="handleUnlink(creditDetailObj.companyId)">取消关联</el-button>
                         </div>
-                    </div>
+                    </template>
                     <div class="drawer-wrap_header">修改记录</div>
                     <div class="drawer-wrap_box">
                         <template v-if="updateRecord.length > 0">
                             <div v-for="item in updateRecord" :key="item.id">
-                                <p><span class="deep">{{ item.createBy || '-' }}{{ item.createPhone || '-' }}</span> 在 <span class="deep">{{ item.createTime || '-' }}</span> 将 <span class="deep">{{ this.companyName }}</span> {{ item.type | updateRecordFilter }}</p>
+                                <p><span class="deep">{{ item.createBy || '-' }}{{ item.createPhone || '-' }}</span> 在 <span class="deep">{{ item.createTime || '-' }}</span> 将 <span class="deep">{{ creditDetailObj.companyName }}</span> {{ item.type | updateRecordFilter }}</p>
                             </div>
                         </template>
                         <div v-else>暂无记录</div>
@@ -240,7 +252,7 @@ import setInfoDialog from '../components/setInfoDialog.vue'
 import { ccpBaseUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
 import CustomAutocomplete from './customAutocomplete.vue'
-import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip, shareCompanyList, creditShareAdd, shareCompanies, creditShareCancel, creditUpdatRecord } from '../api'
+import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip, shareCompanyList, creditShareAdd, shareCompanies, creditShareCancel, creditUpdatRecord, companyDetail } from '../api'
 import { CREDITLEVEL } from '../../const'
 import * as auths from '@/utils/auth_const'
 export default {
@@ -262,8 +274,12 @@ export default {
             tableLabel: [
                 { label: '信用评级', prop: 'creditLevel', width: '' },
                 { label: '服务费', prop: 'serviceFee', width: '150' },
-                { label: '可代采购额度(万元)', prop: 'purchaseQuota', width: '150', formatters: 'money' },
-                { label: '剩余代采购额度(万元)', prop: 'remainPurchaseQuota', width: '150', formatters: 'money' },
+                { label: '可代采购额度(万元)', prop: 'purchaseAmount', width: '150', formatters: 'money' },
+                { label: '通用额度(万元)', prop: 'purchaseQuota', width: '150', formatters: 'money' },
+                { label: '临时额度(万元)', prop: 'temporaryQuotaAmount', width: '150', formatters: 'money' },
+                { label: '冻结中额度(万元)', prop: 'purchaseQuota', width: '150', formatters: 'money' },
+                { label: '占用中额度(万元)', prop: 'purchaseQuota', width: '150', formatters: 'money' },
+                { label: '剩余代采购额度(万元)', prop: 'purchaseUsableAmount', width: '150', formatters: 'money' },
                 { label: '信用到期日', prop: 'endTime', width: '180', formatters: 'date' },
                 { label: '状态', prop: 'status' }
             ],
@@ -336,14 +352,14 @@ export default {
             },
             restaurants: [],
             shareCompaniesList: [],
-            updateRecord: []
+            updateRecord: [],
+            creditDetailObj: {}
         }
     },
     components: {
         OssFileHosjoyUpload,
         downloadFileAddToken,
         setInfoDialog,
-        // HAutocomplete,
         CustomAutocomplete
     },
     watch: {
@@ -407,7 +423,7 @@ export default {
     },
     methods: {
         ...mapActions({
-            findCreditPage: 'creditManage/findCreditPage',
+            // findCreditPage: 'creditManage/findCreditPage',
             findCreditDetail: 'creditManage/findCreditDetail',
             findCreditDocument: 'creditManage/findCreditDocument',
             findCreditRecords: 'creditManage/findCreditRecords'
@@ -421,8 +437,9 @@ export default {
             this.companyId = val.companyId
             this.companyName = val.companyName
             this.documentStatus = val.documentStatus
-            await this.findCreditPage({ companyId: this.companyId })
-            this.tableData = this.creditPage.companyCreditList
+            // await this.findCreditPage({ companyId: this.companyId })
+            // this.tableData = this.creditPage.companyCreditList
+            this.getCompanyDeatil()
             this.getShareLimitList()
             this.getShareCompaniesList()
             this.creditUpdateRecord()
@@ -717,6 +734,12 @@ export default {
         handleOpenSet () {
             this.$refs.setInfoDialog.onOpenDialog()
         },
+        // 获取企业信用详情
+        async getCompanyDeatil () {
+            const { data } = await companyDetail({ companyId: this.companyId })
+            this.tableData = [data]
+            this.creditDetailObj = data
+        },
         // 获取共享额度企业列表
         async getShareLimitList () {
             const { data } = await shareCompanyList({ companyId: this.companyId })
@@ -742,7 +765,7 @@ export default {
         },
         // 取消关联企业
         handleUnlink (id) {
-            let tips = `<span style="color:red">取消关联后，1企业将不再可以共用当前企业的信用评级</span>，你还要继续吗？`
+            let tips = `<span style="color:red">取消关联后，${this.companyName}将不再可以共用当前企业的信用评级</span>，你还要继续吗？`
             this.$confirm(tips, '是否确认取消关联？', {
                 dangerouslyUseHTMLString: true,
                 confirmButtonText: '确认取消关联',
@@ -762,7 +785,7 @@ export default {
                 }
             })
         },
-        // 修改企记录
+        // 修改记录
         async creditUpdateRecord () {
             const { data } = await creditUpdatRecord({ companyId: this.companyId })
             this.updateRecord = data
