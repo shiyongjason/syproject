@@ -108,12 +108,12 @@
                         </div>
                         <div class="project-detail-item">
                             <el-form-item label="客户手机号：">
-                                <el-input placeholder="请输入客户手机号" @blur='phoneBlur' v-model='threadDetail.userMobile'></el-input>
+                                <el-input placeholder="请输入客户手机号" @blur='phoneBlur' maxlength="11" v-model='threadDetail.userMobile'></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
                             <el-form-item label="客户座机号：">
-                                <el-input placeholder="请输入客户座机号" @blur='phoneBlur' v-model='threadDetail.telephone'></el-input>
+                                <el-input placeholder="请输入客户座机号" @blur='phoneBlur' maxlength="11" v-model='threadDetail.telephone'></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
@@ -217,7 +217,7 @@
                         </div> -->
                         <div class="add-cont__row">
                             <el-form-item label="中标项目信息">
-                                <el-input type="textarea" :rows="2" v-model="threadDetail.bidInfo" maxlength="300" placeholder="请输入项目名称、产品/服务分类、中标时间"></el-input>
+                                <el-input type="textarea" :rows="2" v-model="threadDetail.bidInfo" maxlength="300" placeholder="请输入中标项目信息"></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
@@ -262,24 +262,25 @@
                 <h-button type="primary" v-if="hosAuthCheck(threadSave)" @click="onUpDateThreadDetail">保存</h-button>
             </div>
             <!-- 添加跟进记录 -->
-            <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px" :before-close="()=>handleCloseOpp()" :close-on-click-modal='false'>
+            <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px" :before-close="()=>closeAddRecord()" :close-on-click-modal='false'>
                 <div class="record-layout">
                     <div class="header-title">
                         <el-radio v-model="flowUpRequest.type" :label="1" @change="handleChangeRadio">当面拜访</el-radio>
                         <el-radio v-model="flowUpRequest.type" :label="2" @change="handleChangeRadio">电话/微信沟通/邮件等</el-radio>
                         <p v-show="flowUpRequest.type === 2" class="tips">温馨提示：推荐使用企业微信与客户聊天，自动更新记录，更方便。</p>
                     </div>
-                    <div style="margin-top:-10px">
+                    <div >
                         <el-form :rules="addFlowUpRules" :model="flowUpRequest" ref="addFlowUp" :validate-on-rule-change='false' label-width="150px">
                             <div class="record-dialog-item" v-if="flowUpRequest.type == 1">
-                                <el-form-item prop='picUrls' label="上传现场图片："></el-form-item>
+                                <el-form-item prop='picUrls' label="上传现场图片：">
                                 <div>
-                                    <OssFileHosjoyUpload :showPreView='true' delTips='是否确认删除打卡图片，删除后无法恢复' v-model="flowUpRequest.picUrls" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png">
+                                    <OssFileHosjoyUpload :showPreView='true' delTips='是否确认删除打卡图片，删除后无法恢复' v-model="flowUpRequest.picUrls" :fileSize=20 :action='action' :uploadParameters='uploadParameters'  @successCb="$refs.addFlowUp.clearValidate('picUrls')" style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png">
                                         <div class="a-line">
                                             <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                                         </div>
                                     </OssFileHosjoyUpload>
                                 </div>
+                                </el-form-item>
                             </div>
                             <div class="record-dialog-item">
                                 <el-form-item prop='visitTarget' label="拜访目标：" class="textarea">
@@ -292,7 +293,7 @@
                                 </el-form-item>
                             </div>
                             <div class="record-dialog-item" v-if="flowUpRequest.type != 1">
-                                <el-form-item label="附件（不超过9个）："></el-form-item>
+                                <el-form-item label="附件（不超过9个）：">
                                 <div>
                                     <OssFileHosjoyUpload :showPreView='true' v-model="flowUpRequest.picUrls" :fileNum=9 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px">
                                         <div class="a-line">
@@ -300,6 +301,7 @@
                                         </div>
                                     </OssFileHosjoyUpload>
                                 </div>
+                                </el-form-item>
                             </div>
                             <div class="record-dialog-item">
                                 <el-form-item prop='flowUpProcess' label="当前阶段：" class="textarea">
@@ -587,7 +589,7 @@ export default class ThreadDetail extends Vue {
             nextStepPlan: {
                 required: true,
                 message: '必填项不能为空',
-                trigger: 'blur'
+                trigger: 'change'
             }
         }
         return rules
@@ -692,6 +694,10 @@ export default class ThreadDetail extends Vue {
     }
     add () {
         this.addRecord = true
+        this.$nextTick(() => {
+            // @ts-ignore
+            this.$refs['addFlowUp'].clearValidate()
+        })
     }
 
     @validateForm('threadDetailForm')

@@ -264,7 +264,7 @@
                     </div> -->
                     <div class="add-cont__row">
                         <el-form-item label="中标项目信息：">
-                            <el-input type="textarea" :rows="2" v-model="threadForm.bidInfo" maxlength="300" placeholder="请输入项目名称、产品/服务分类、中标时间" ></el-input>
+                            <el-input type="textarea" :rows="2" v-model="threadForm.bidInfo" maxlength="300" placeholder="请输入中标项目信息" ></el-input>
                         </el-form-item>
                     </div>
                     <div class="add-cont__row">
@@ -697,6 +697,7 @@ export default class Thread extends Vue {
 
     addThread () {
         this.threadVisible = true
+        this.stateN = ''
     }
 
     distributor (val: RespBossCluePage) {
