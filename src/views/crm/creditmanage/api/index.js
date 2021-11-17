@@ -48,7 +48,7 @@ export const shareCompanyList = (params) => axios.get('/memeber/openapi/company/
 // 公司企业额度共享关联企业
 export const creditShareAdd = (params) => axios.post('/memeber/company/credit/credit-share/add', params)
 // 公司企业额度共享关联企业
-export const creditShareCancel = (params) => axios.post('/memeber/company/credit/credit-share/cancel', params)
+export const creditShareCancel = (params) => axios.put('/memeber/company/credit/credit-share/cancel', params)
 // 查询共享企业列表
 export const shareCompanies = (params) => axios.get(`/memeber/company/credit/${params.companyId}/share-companies`, params)
 // 查询公司信用修改列表

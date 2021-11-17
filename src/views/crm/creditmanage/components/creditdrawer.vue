@@ -42,13 +42,13 @@
                     <div class="drawer-wrap_box">
                         <span class="drawer-wrap_left">请选择额度共享企业：</span>
                         <div class="drawer-wrap_right">
-                            <HAutocomplete placeholder="请选择" :maxlength=60 @back-event="backFindparam" :selectObj="targetObj" :selectArr="restaurants" :popper-append-to-body="false" v-if="restaurants" :remove-value=true :canDoBlurMethos="false" :isSettimeout=false>
+                            <CustomAutocomplete placeholder="请选择" :suggestions="restaurants" v-if="restaurants">
                                 <template slot-scope="scope">
                                     <span style="float: left;paddingRight:10px;">{{ scope.data.companyName }}</span>
                                     <el-button v-if="scope.data.companyLabel == 0" style="float: right;" type="primary" @click="handleRelevance(scope.data)" size="mini">关联</el-button>
                                     <el-tag v-else>{{ scope.data.companyLabel | companyLabelFilter }}</el-tag>
                                 </template>
-                            </HAutocomplete>
+                            </CustomAutocomplete>
                         </div>
                     </div>
                     <div class="drawer-wrap_box">
@@ -118,8 +118,7 @@
                                             <downloadFileAddToken :file-name="jtem.fileName" :file-url="jtem.fileUrl" a-link-words="下载" is-type="btn" />
                                         </p>
                                     </div>
-                                    <OssFileHosjoyUpload v-model="obj.creditDocuments" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}"
-                                        style="margin:10px 0 0 5px">
+                                    <OssFileHosjoyUpload v-model="obj.creditDocuments" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}" style="margin:10px 0 0 5px">
                                         <el-button type="primary">上 传</el-button>
                                     </OssFileHosjoyUpload>
                                 </el-form-item>
@@ -239,7 +238,7 @@ import downloadFileAddToken from '@/components/downloadFileAddToken'
 import setInfoDialog from '../components/setInfoDialog.vue'
 import { ccpBaseUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
-import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import CustomAutocomplete from './customAutocomplete.vue'
 import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip, shareCompanyList, creditShareAdd, shareCompanies, creditShareCancel } from '../api'
 import { CREDITLEVEL } from '../../const'
 import * as auths from '@/utils/auth_const'
@@ -335,18 +334,16 @@ export default {
                 date1: ''
             },
             restaurants: [],
-            targetObj: {
-                selectName: '',
-                selectCode: ''
-            },
-            shareCompaniesList: []
+            shareCompaniesList: [],
+            autoContent: ''
         }
     },
     components: {
         OssFileHosjoyUpload,
         downloadFileAddToken,
         setInfoDialog,
-        HAutocomplete
+        // HAutocomplete,
+        CustomAutocomplete
     },
     watch: {
         'form.projectUpload' (val) {
@@ -416,25 +413,6 @@ export default {
         }),
         handleClick (tab) {
             if (tab.index == 1) this.onShowCreditdocument()
-        },
-        handleUnlink (id) {
-            let tips = `<span style="color:red">取消关联后，1企业将不再可以共用当前企业的信用评级</span>，你还要继续吗？`
-            this.$confirm(tips, '是否确认取消关联？', {
-                dangerouslyUseHTMLString: true,
-                confirmButtonText: '确认取消关联',
-                cancelButtonText: '返回'
-            }).then(async () => {
-                const dataJson = {
-                    childCompanyId: id,
-                    mainCompanyId: this.companyId
-                }
-                try {
-                    await creditShareCancel(dataJson)
-                    this.$message.success('已取消关联')
-                } catch (err) {
-                    this.$message.error('取消关联失败，请重试')
-                }
-            })
         },
         async onShowDrawerinfn (val) {
             console.log(val)
@@ -720,10 +698,6 @@ export default {
             this.showPacking = false
             window.location.href = data
         },
-        backFindparam (val) {
-            console.log(val)
-            return false
-        },
         // 风控冻结
         handleChangeSwitch () {
             this.riskVisible = true
@@ -762,6 +736,29 @@ export default {
             }
             await creditShareAdd(dataJson)
             this.getShareCompaniesList()
+            this.getShareLimitList()
+        },
+        // 取消关联企业
+        handleUnlink (id) {
+            let tips = `<span style="color:red">取消关联后，1企业将不再可以共用当前企业的信用评级</span>，你还要继续吗？`
+            this.$confirm(tips, '是否确认取消关联？', {
+                dangerouslyUseHTMLString: true,
+                confirmButtonText: '确认取消关联',
+                cancelButtonText: '返回'
+            }).then(async () => {
+                const dataJson = {
+                    childCompanyId: id,
+                    mainCompanyId: this.companyId
+                }
+                try {
+                    await creditShareCancel(dataJson)
+                    this.getShareCompaniesList()
+                    this.getShareLimitList()
+                    this.$message.success('已取消关联')
+                } catch (err) {
+                    this.$message.error('取消关联失败，请重试')
+                }
+            })
         }
     },
     filters: {
@@ -858,7 +855,7 @@ export default {
         position: relative;
         padding-left: 10px;
         &::before {
-            content: "";
+            content: '';
             position: absolute;
             bottom: 0px;
             left: 0px;
@@ -901,29 +898,29 @@ export default {
     .link-name {
         display: flex;
         justify-content: space-between;
-        width:500px;
+        width: 500px;
         align-items: center;
         margin-bottom: 10px;
         span {
             i {
                 font-style: normal;
-                color:gray;
+                color: gray;
             }
         }
     }
-    &_left{
+    &_left {
         width: 150px;
     }
-    &_right{
+    &_right {
         width: 500px;
-        .el-autocomplete{
+        .el-autocomplete {
             width: 500px;
         }
     }
     .not-empty {
         color: #999;
     }
-    .shareScroll{
+    .shareScroll {
         max-height: 300px;
         overflow-y: scroll;
     }
