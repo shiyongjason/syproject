@@ -52,4 +52,4 @@ export const creditShareCancel = (params) => axios.put('/memeber/company/credit/
 // 查询共享企业列表
 export const shareCompanies = (params) => axios.get(`/memeber/company/credit/${params.companyId}/share-companies`, params)
 // 查询公司信用修改列表
-export const creditUpdateList = (params) => axios.get(`/memeber/company-credit-change-records/${params.companyId}/list`, params)
+export const creditUpdatRecord = (params) => axios.get(`/memeber/company-credit-change-records/${params.companyId}/list`, params)

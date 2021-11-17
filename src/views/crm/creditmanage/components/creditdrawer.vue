@@ -66,13 +66,14 @@
                         </div>
                     </div>
                     <div class="drawer-wrap_header">修改记录</div>
-
-                    <!-- <p>
-                        最近维护时间：{{creditPage.updateTime?moment(creditPage.updateTime).format('YYYY-MM-DD HH:mm:ss'):'-'}}
-                    </p>
-                    <p>
-                        最近维护人：{{creditPage.updateBy||'-'}}（{{creditPage.updateByMobile||'-'}}）
-                    </p> -->
+                    <div class="drawer-wrap_box">
+                        <template v-if="updateRecord.length > 0">
+                            <div v-for="item in updateRecord" :key="item.id">
+                                <p><span class="deep">{{ item.createBy || '-' }}{{ item.createPhone || '-' }}</span> 在 <span class="deep">{{ item.createTime || '-' }}</span> 将 <span class="deep">{{ this.companyName }}</span> {{ item.type | updateRecordFilter }}</p>
+                            </div>
+                        </template>
+                        <div v-else>暂无记录</div>
+                    </div>
                 </div>
                 <div class="collect-wrapbox" v-if="activeName=='2'">
                     <el-form ref="approveForm" class="demo-ruleForm">
@@ -239,7 +240,7 @@ import setInfoDialog from '../components/setInfoDialog.vue'
 import { ccpBaseUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
 import CustomAutocomplete from './customAutocomplete.vue'
-import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip, shareCompanyList, creditShareAdd, shareCompanies, creditShareCancel } from '../api'
+import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip, shareCompanyList, creditShareAdd, shareCompanies, creditShareCancel, creditUpdatRecord } from '../api'
 import { CREDITLEVEL } from '../../const'
 import * as auths from '@/utils/auth_const'
 export default {
@@ -335,7 +336,7 @@ export default {
             },
             restaurants: [],
             shareCompaniesList: [],
-            autoContent: ''
+            updateRecord: []
         }
     },
     components: {
@@ -424,6 +425,7 @@ export default {
             this.tableData = this.creditPage.companyCreditList
             this.getShareLimitList()
             this.getShareCompaniesList()
+            this.creditUpdateRecord()
             this.drawer = true
         },
         async onShowCreditdocument () {
@@ -759,6 +761,11 @@ export default {
                     this.$message.error('取消关联失败，请重试')
                 }
             })
+        },
+        // 修改企记录
+        async creditUpdateRecord () {
+            const { data } = await creditUpdatRecord({ companyId: this.companyId })
+            this.updateRecord = data
         }
     },
     filters: {
@@ -776,6 +783,46 @@ export default {
                     break
                 case 4:
                     result = '已关联当前企业'
+                    break
+                default: break
+            }
+            return result
+        },
+        updateRecordFilter (val) {
+            let result = ''
+            switch (parseInt(val)) {
+                case 1:
+                    result = '关联了当前企业'
+                    break
+                case 2:
+                    result = '和当前企业取消了关联'
+                    break
+                case 3:
+                    result = '当前企业和A进行关联'
+                    break
+                case 4:
+                    result = '当前企业和A取消了关联'
+                    break
+                case 5:
+                    result = '通用额度设置'
+                    break
+                case 6:
+                    result = '新增临时额度'
+                    break
+                case 7:
+                    result = '临时额度手动设置'
+                    break
+                case 8:
+                    result = '临时额度自动失效'
+                    break
+                case 9:
+                    result = '开启风控冻结'
+                    break
+                case 10:
+                    result = '解除风控冻结'
+                    break
+                case 11:
+                    result = '风控冻结自动解除'
                     break
                 default: break
             }
@@ -893,6 +940,9 @@ export default {
         margin-top: 10px;
         span {
             padding-right: 10px;
+        }
+        .deep {
+            color: #ff7a45;
         }
     }
     .link-name {
