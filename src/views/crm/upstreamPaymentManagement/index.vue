@@ -208,7 +208,7 @@
                     <el-date-picker v-model="bankForm.paymentTime" value-format='yyyy-MM-dd' type="date" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="上传上游支付凭证：" prop="attachDocRequestList" style="margin-bottom:20px">
-                    <OssFileHosjoyUpload v-model="bankForm.attachDocRequestList" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.form.clearValidate()" accept=".jpg,.png,.pdf">
+                    <OssFileHosjoyUpload v-model="bankForm.attachDocRequestList" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.bankForm.clearValidate()" accept=".jpg,.png,.pdf">
                         <div class="a-line">
                             <h-button>上传文件</h-button>
                         </div>
