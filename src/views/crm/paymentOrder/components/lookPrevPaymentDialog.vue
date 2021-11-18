@@ -42,7 +42,14 @@
                             支付凭证：
                         </span>
                         <p class="content">
-                            <downloadFileAddToken v-for="subItem in item.payVouchers" :key="subItem.fileUrl" :file-name="subItem.fileName" :file-url="subItem.fileUrl" :a-link-words="subItem.fileName" isType='main' isPreview></downloadFileAddToken>
+                            <!-- showSaasButton true 司库返回 false 网银支付返回 -->
+                            <template v-if="prevPaymentDetail.showSaasButton">
+                                <downloadFileAddToken v-for="subItem in item.payVouchers" :key="subItem.fileUrl" :file-name="subItem.fileName" :file-url="subItem.fileUrl" :a-link-words="subItem.fileName" isType='main' isPreview></downloadFileAddToken>
+                            </template>
+                            <template v-else>
+                                <a v-if="item.payVouchers && item.payVouchers.length > 0" class="orange-main" :key="item.payVouchers[0].fileUrl" :href="item.payVouchers[0].fileUrl" target="_blank">查看好享家专用付款凭证</a>
+                                <i v-else> - </i>
+                            </template>
                         </p>
                         <p v-if="item.payVouchers&&item.payVouchers.length==0">
                             -
