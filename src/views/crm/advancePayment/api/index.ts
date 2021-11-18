@@ -1,7 +1,7 @@
 
 import { IPagePrepaymentResponse, PrepaymentDetailResponse, PrepaymentSupplierSubmitResponse, RespContractSignHistory } from '@/interface/hbp-project'
 import axios, { AxiosPromise } from 'axios'
-const url = 'http://192.168.20.173:30100'
+
 export const getPrePayList: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
     return axios.get('/project/api/prepayments/boss', { params })
 }
@@ -47,5 +47,5 @@ export const updatePrePay: (params) => AxiosPromise = (params) => {
 }
 
 export const updateOnlineBank :(params)=>AxiosPromise = (params) => {
-    return axios.post(`${url}/api/supplier-payments/prepayment/online-bank-payment-confirm`, params)
+    return axios.post(`/project/api/supplier-payments/prepayment/online-bank-payment-confirm`, params)
 }
