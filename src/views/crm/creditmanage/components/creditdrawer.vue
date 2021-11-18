@@ -17,14 +17,14 @@
                 </div>
                 <div class="drawer-wrap" v-if="activeName=='1'">
                     <div class="drawer-wrap_title">{{companyName}}
-                        <!-- companyType 1 主企业 2 子企业 3无标签企业 -->
+                        <!-- companyType 0无标签企业 1 主企业 2 子企业 -->
                         <el-tag :type="creditDetailObj.companyType == 1 ? 'success': ''" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 2">{{ creditDetailObj.companyType == 1 ? '主企业' : '子企业' }}</el-tag>
                     </div>
                     <div class="drawer-wrap_btn">
                         <div class="drawer-wrap_btn-flex">信用详情</div>
                         <!-- v-if="hosAuthCheck(auths.CRM_CREDIT_SET)" -->
-                        <el-button type="primary" size="mini" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 3" @click="onEditVip(creditDetailObj.id)">通用额度设置</el-button>
-                        <el-button type="primary" size="mini" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 3" @click="handleOpenSet()">临时额度设置</el-button>
+                        <el-button type="primary" size="mini" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 0" @click="onEditVip(creditDetailObj.id)">通用额度设置</el-button>
+                        <el-button type="primary" size="mini" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 0" @click="handleOpenSet()">临时额度设置</el-button>
                     </div>
                     <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :actionMinWidth=100 :maxHeight=500>
                         <template slot="endTime" slot-scope="scope">
@@ -34,8 +34,18 @@
                             <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status==true?'正常':scope.data.row.status==false?'过期':'-'}}</span>
                         </template>
                     </basicTable>
-                    <!-- 主企业展示内容 -->
-                    <template v-if="creditDetailObj.companyType == 1">
+                     <!-- 子企业展示内容 -->
+                    <template v-if="creditDetailObj.companyType == 2">
+                        <div class="drawer-wrap_box">
+                            <span>以上信用为共享<font color="#ff7a45">好享家舒适智能家居股份有限公司</font>的信用评级。</span>
+                            <el-button type="primary" size="mini">查看主企业评级</el-button>
+                             <!-- { creditDetailObj.companyId } -->
+                             <!-- 这里关联传参有问题 还没调通 后台字段有问题 -->
+                            <el-button type="primary" size="mini" @click="handleUnlink({ childCompanyId: this.companyId, mainCompanyId: creditDetailObj.companyId })">取消关联</el-button>
+                        </div>
+                    </template>
+                    <!-- 主企业|无标签企业展示内容 -->
+                    <template v-else>
                         <div class="drawer-wrap_switch">
                             <el-switch v-model="riskValue" @change="handleChangeSwitch" style="display: block" active-color="#13ce66" inactive-color="#ff4949" inactive-text="是否开启风控冻结？">
                             </el-switch>
@@ -60,21 +70,13 @@
                                 <template v-if="shareCompaniesList.length > 0">
                                     <div class="link-name" v-for="item in shareCompaniesList" :key="item.companyId">
                                         <span>{{ item.companyName }} <i>{{ item.shareTime }}</i></span>
-                                        <el-button type="primary" size="mini" @click="handleUnlink(item.companyId)">取消关联</el-button>
+                                        <el-button type="primary" size="mini" @click="handleUnlink({ childCompanyId: item.id, mainCompanyId: this.companyId, companyName: item.companyName })">取消关联</el-button>
                                     </div>
                                 </template>
                                 <template v-else>
                                     <div class="not-empty">暂无</div>
                                 </template>
                             </div>
-                        </div>
-                    </template>
-                    <!-- 子企业展示内容 -->
-                    <template v-else-if="creditDetailObj.companyType == 2">
-                        <div class="drawer-wrap_box">
-                            <span>以上信用为共享<font color="#ff7a45">好享家舒适智能家居股份有限公司</font>的信用评级。</span>
-                            <el-button type="primary" size="mini">查看主企业评级</el-button>
-                            <el-button type="primary" size="mini" @click="handleUnlink(creditDetailObj.companyId)">取消关联</el-button>
                         </div>
                     </template>
                     <div class="drawer-wrap_header">修改记录</div>
@@ -764,19 +766,20 @@ export default {
             this.getShareLimitList()
         },
         // 取消关联企业
-        handleUnlink (id) {
-            let tips = `<span style="color:red">取消关联后，${this.companyName}将不再可以共用当前企业的信用评级</span>，你还要继续吗？`
+        handleUnlink (value) {
+            let tips = ''
+            if (value.companyName) {
+                tips = `<span style="color:red">取消关联后，${value.companyName}将不再可以共用当前企业的信用评级</span>，你还要继续吗？`
+            } else {
+                tips = `<span style="color:red">取消关联后，当前企业将不再可以共用${creditDetailObj.companyName}企业的信用评级</span>，你还要继续吗？`
+            }
             this.$confirm(tips, '是否确认取消关联？', {
                 dangerouslyUseHTMLString: true,
                 confirmButtonText: '确认取消关联',
                 cancelButtonText: '返回'
             }).then(async () => {
-                const dataJson = {
-                    childCompanyId: id,
-                    mainCompanyId: this.companyId
-                }
                 try {
-                    await creditShareCancel(dataJson)
+                    await creditShareCancel(value)
                     this.getShareCompaniesList()
                     this.getShareLimitList()
                     this.$message.success('已取消关联')
