@@ -155,7 +155,7 @@
                     <el-col :span="10" :offset='1'>操作时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</el-col>
                     <el-col :span="20" :offset='1'>上游支付凭证：
                         <div>
-                            <div class="advance_wrap-pic1" v-for="(v) in item.payVouchers" :key="'n'+v.id">
+                            <div class="advance_wrap-pic1" v-for="(v) in item.payVouchers" :key="v.id">
                                 <downloadFileAddToken isPreview :file-name="v.fileName" :file-url="v.fileUrl" :a-link-words="v.fileName" is-type="main" />
                             </div>
                         </div>
@@ -336,7 +336,7 @@
                     <el-date-picker v-model="bankForm.paymentTime" value-format='yyyy-MM-dd' type="date" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="上传上游支付凭证：" prop="attachDocRequestList" style="margin:20px 0">
-                        <OssFileHosjoyUpload v-model="bankForm.attachDocRequestList" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.prePayForm.clearValidate('payVouchers')" accept=".jpg,.png,.pdf">
+                        <OssFileHosjoyUpload v-model="bankForm.attachDocRequestList" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.bankForm.clearValidate('attachDocRequestList')" accept=".jpg,.png,.pdf">
                             <div class="a-line">
                                 <h-button>上传文件</h-button>
                             </div>
