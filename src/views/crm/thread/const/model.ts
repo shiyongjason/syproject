@@ -14,5 +14,7 @@ export interface ThreadQeuryModel {
     pageSize: number;
     userMobile: string;
     userName: string;
-    removeDuplicate: boolean
+    removeDuplicate: boolean,
+    jobNumber:string,
+    authCode:string
 }

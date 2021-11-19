@@ -1,5 +1,5 @@
 <template>
-    <img :src="fileUrlAddToken" alt="img" @click="handle">
+    <img :src="fileUrlAddToken" alt="img"   @click="handle">
 </template>
 
 <script>

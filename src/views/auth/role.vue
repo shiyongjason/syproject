@@ -68,8 +68,8 @@
                                                             {{ itemAuthType.authType == 0 ? '敏感字段' : itemAuthType.authType == 1?  '敏感操作' : '敏感数据' }}
                                                         </el-checkbox>
                                                         <div class="el-radio-group">
-                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''" @click="onShowFieldConfig(0, itemAuthType)" :disabled="itemAuthType.status != 0 || !itemAuthType.have">全部</button>
-                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''" @click="onShowFieldConfig(1, itemAuthType)" :disabled="itemAuthType.status != 1 || !itemAuthType.have">配置</button>
+                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''" @click="onShowFieldConfig(0, itemAuthType,item)" :disabled="!itemAuthType.have">全部</button>
+                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''" @click="onShowFieldConfig(1, itemAuthType,item)" :disabled="!itemAuthType.have">配置</button>
                                                         </div>
                                                     </div>
                                                     <div v-else></div>
