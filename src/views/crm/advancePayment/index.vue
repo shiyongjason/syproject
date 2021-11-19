@@ -123,14 +123,19 @@
                 <template v-if="detailForm.prepaymentDetails&&detailForm.prepaymentDetails.length>0">
                     <el-row ype="flex" class="row-bg" v-for="(item,index) in detailForm.prepaymentDetails" :key="index">
                         <el-col :span="10" :offset='1'>预付款支付凭证提交人：{{item.createBy}}({{item.createPhone||'-'}})</el-col>
-                        <el-col :span="10" :offset='1'>上传时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</el-col>
-                        <el-col class="mt10" :span="20" :offset='1'>预付款支付凭证：
-                            <div class="advance_wrap-flex" v-if="item.payVouchers.length>0">
-                                <div v-for="(v,index) in item.payVouchers" :key="index+v.id">
-                                    <downloadFileAddToken isPreview isType='preview' :file-url="v.fileUrl" :a-link-words="v.fileName" />
-                                </div>
+                        <el-col :span="10" :offset='1'>上传时间：{{ item.createTime | momentFormat }}</el-col>
+                        <el-col class="mt10 pay_vouchers" :span="20" :offset='1'>预付款支付凭证：
+                            <div class="advance_wrap-flex" v-if="item.payVouchers && item.payVouchers.length > 0">
+                                <!-- 司库返回凭证 showSaasButton区分-->
+                                <template v-if="detailForm.showSaasButton">
+                                    <a class="color" :href="item.payVouchers[0].fileUrl" target="_blank">查看好享家专用付款凭证</a>
+                                </template>
+                                <!-- 网银支付返回凭证 -->
+                                <template v-else>
+                                    <downloadFileAddToken v-for="(v,index) in item.payVouchers" :key="index+v.id" isPreview isType='main' :file-url="v.fileUrl" :a-link-words="v.fileName" />
+                                </template>
                             </div>
-                            <span v-if="item.payVouchers&&item.payVouchers.length==0">
+                            <span v-else>
                                 -
                             </span>
                         </el-col>
@@ -152,7 +157,7 @@
                     <el-col :span="10" :offset='1'>{{index+1}}、本次上游支付(元)：{{item.payAmount|moneyFormat}}</el-col>
                     <el-col :span="10" :offset='1'>支付日期：{{item.payDate}}</el-col>
                     <el-col :span="10" :offset='1'>操作人：{{item.createBy}}</el-col>
-                    <el-col :span="10" :offset='1'>操作时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</el-col>
+                    <el-col :span="10" :offset='1'>操作时间：{{ item.createTime | momentFormat }}</el-col>
                     <el-col :span="20" :offset='1'>上游支付凭证：
                         <div>
                             <div class="advance_wrap-pic1" v-for="(v) in item.payVouchers" :key="v.id">
