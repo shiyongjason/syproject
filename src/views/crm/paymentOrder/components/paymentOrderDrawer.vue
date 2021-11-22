@@ -120,7 +120,7 @@
                         <div class="row-filed">
                             <p class="col-filed col-33">
                                 <span class="label">上游支付方式：</span>
-                                {{ paymentOrderConst.SUPPLIER_PAYMENT_TYPE.get(paymentOrderDetail.payOrderDetail.supplierPaymentType) }}
+                                {{ paymentOrderConst.SUPPLIER_PAYMENT_TYPE.get(paymentOrderDetail.payOrderDetail.supplierPaymentType) }}:{{paymentOrderDetail.payOrderDetail.serviceFeeRate}}%
                             </p>
                             <p class="col-filed col-33">
                                 <span class="label">期望上游支付日期：</span>

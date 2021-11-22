@@ -83,7 +83,7 @@
                             {{paymentDetail.payOrderDetail.expectSupplierPaymentDate | momentFormat('YYYY-MM-DD')}}
                         </el-form-item>
                         <el-form-item label="上游支付方式：">
-                            {{paymentDetail.payOrderDetail.supplierPaymentType==1?'银行转账':'银行承兑'}}
+                            {{paymentDetail.payOrderDetail.supplierPaymentType==1?'银行转账':'银行承兑'}}：{{paymentDetail.payOrderDetail.serviceFeeRate}}%
                         </el-form-item>
                         <el-form-item label="票面金额：" v-if="paymentDetail.payOrderDetail.supplierPaymentType != 1">
                             {{paymentDetail.payOrderDetail.billClaim == 1 ? '有要求' : '无要求'}}
@@ -149,7 +149,7 @@
                                     <el-radio :label="false">否</el-radio>
                                 </el-radio-group>
                             </el-form-item>
-                            <el-form-item label="审核备注：" prop="approvalRemark" label-width="165px">
+                            <el-form-item label="审核备注："  label-width="165px">
                                 <el-input type="textarea" v-model="formData.approvalRemark" maxlength="200"></el-input>
                             </el-form-item>
                         </template>
@@ -171,7 +171,7 @@
                                     <el-radio label="noPass">不通过</el-radio>
                                 </el-radio-group>
                             </el-form-item>
-                            <el-form-item label="审核备注：" prop="approvalRemark">
+                            <el-form-item label="审核备注：" :required="formData.checkPass=='noPass'" prop="approvalRemark">
                                 <el-input type="textarea" v-model="formData.approvalRemark" maxlength="200"></el-input>
                             </el-form-item>
                         </template>
