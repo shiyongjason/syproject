@@ -125,7 +125,7 @@
                     <!-- <el-input v-model="ruleForm.serviceFee" v-isNum:1="ruleForm.serviceFee" maxlength='2'></el-input> -->
                     <el-input-number v-model="ruleForm.serviceFee" controls-position="right" :min="0" :max="100" :precision=1></el-input-number>
                 </el-form-item>
-                <el-form-item label="可代采购额度：" prop="purchaseQuota">
+                <el-form-item label="通用额度：" prop="purchaseQuota">
                     <el-input v-model="ruleForm.purchaseQuota" v-isNum:6="ruleForm.purchaseQuota" maxlength='15'><template slot="append">万元</template></el-input>
                 </el-form-item>
                 <el-form-item label="信用授予日期：" prop="startTime">
