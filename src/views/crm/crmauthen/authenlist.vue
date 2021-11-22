@@ -74,7 +74,7 @@
                         <el-select v-model="queryParams.memberTag">
                             <el-option label="全部" value="">
                             </el-option>
-                            <el-option v-for="item in memberTagArr" :key="item.key" :label="item.value" :value="item.key">
+                            <el-option v-for="item in memberTagArr.filter(val=>val.isShow)" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
@@ -221,7 +221,7 @@ export default {
             authenList: AUTEHEN_LIST,
             drawer: false,
             branchArr: [],
-            memberTagArr: [{ key: 1, value: '一般会员' }, { key: 2, value: '认证会员' }, { key: 3, value: '评级会员' }, { key: 4, value: '签约会员' }, { key: 5, value: '交易会员' }]
+            memberTagArr: [{ key: 1, value: '一般会员', isShow: true }, { key: 2, value: '认证会员', isShow: true }, { key: 3, value: '评级会员', isShow: true }, { key: 4, value: '签约会员', isShow: false }, { key: 5, value: '交易会员', isShow: true }]
         }
     },
     components: {

@@ -123,14 +123,19 @@
                 <template v-if="detailForm.prepaymentDetails&&detailForm.prepaymentDetails.length>0">
                     <el-row ype="flex" class="row-bg" v-for="(item,index) in detailForm.prepaymentDetails" :key="index">
                         <el-col :span="10" :offset='1'>预付款支付凭证提交人：{{item.createBy}}({{item.createPhone||'-'}})</el-col>
-                        <el-col :span="10" :offset='1'>上传时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</el-col>
-                        <el-col class="mt10" :span="20" :offset='1'>预付款支付凭证：
-                            <div class="advance_wrap-flex" v-if="item.payVouchers.length>0">
-                                <div v-for="(v,index) in item.payVouchers" :key="index+v.id">
-                                    <downloadFileAddToken isPreview isType='preview' :file-url="v.fileUrl" :a-link-words="v.fileName" />
-                                </div>
+                        <el-col :span="10" :offset='1'>上传时间：{{ item.createTime | momentFormat }}</el-col>
+                        <el-col class="mt10 pay_vouchers" :span="20" :offset='1'>预付款支付凭证：
+                            <div class="advance_wrap-flex" v-if="item.payVouchers && item.payVouchers.length > 0">
+                                <!-- 司库返回凭证 showSaasButton区分-->
+                                <template v-if="detailForm.showSaasButton">
+                                    <a class="color" :href="item.payVouchers[0].fileUrl" target="_blank">查看好享家专用付款凭证</a>
+                                </template>
+                                <!-- 网银支付返回凭证 -->
+                                <template v-else>
+                                    <downloadFileAddToken v-for="(v,index) in item.payVouchers" :key="index+v.id" isPreview isType='main' :file-url="v.fileUrl" :a-link-words="v.fileName" />
+                                </template>
                             </div>
-                            <span v-if="item.payVouchers&&item.payVouchers.length==0">
+                            <span v-else>
                                 -
                             </span>
                         </el-col>
@@ -152,10 +157,10 @@
                     <el-col :span="10" :offset='1'>{{index+1}}、本次上游支付(元)：{{item.payAmount|moneyFormat}}</el-col>
                     <el-col :span="10" :offset='1'>支付日期：{{item.payDate}}</el-col>
                     <el-col :span="10" :offset='1'>操作人：{{item.createBy}}</el-col>
-                    <el-col :span="10" :offset='1'>操作时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</el-col>
+                    <el-col :span="10" :offset='1'>操作时间：{{ item.createTime | momentFormat }}</el-col>
                     <el-col :span="20" :offset='1'>上游支付凭证：
                         <div>
-                            <div class="advance_wrap-pic1" v-for="(v) in item.payVouchers" :key="'n'+v.id">
+                            <div class="advance_wrap-pic1" v-for="(v) in item.payVouchers" :key="v.id">
                                 <downloadFileAddToken isPreview :file-name="v.fileName" :file-url="v.fileUrl" :a-link-words="v.fileName" is-type="main" />
                             </div>
                         </div>
@@ -333,10 +338,16 @@
         <el-dialog :close-on-click-modal='false' title="确认网银支付" :visible.sync="isShowLinkBank" width="500px" class="prev-payment-dialog">
             <el-form :model="bankForm" :rules="bankRules" ref="bankForm" label-width="140px" class="demo-ruleForm">
                 <el-form-item label="网银支付时间：" prop="paymentTime">
-                    <!-- <el-date-picker type="date" placeholder="选择日期" v-model="bankForm.paymentTime" ></el-date-picker>
-                     -->
-                      <el-date-picker v-model="bankForm.paymentTime" value-format='yyyy-MM-dd' type="date" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
+                    <el-date-picker v-model="bankForm.paymentTime" value-format='yyyy-MM-dd' type="date" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
                 </el-form-item>
+                <el-form-item label="上传上游支付凭证：" prop="attachDocRequestList" style="margin:20px 0">
+                        <OssFileHosjoyUpload v-model="bankForm.attachDocRequestList" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.bankForm.clearValidate('attachDocRequestList')" accept=".jpg,.png,.pdf">
+                            <div class="a-line">
+                                <h-button>上传文件</h-button>
+                            </div>
+                        </OssFileHosjoyUpload>
+                        <p class="tips">请上传JPG/PNG/JPEG/PDF等主流格式，最多上传9张，单张大小不得超过20M</p>
+                    </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <h-button @click="isShowLinkBank = false">取消</h-button>
@@ -474,7 +485,8 @@ export default class Advancelist extends Vue {
     }
       bankForm:PrepaymentSupplierOnlineBankTransferConfirmRequest={
           prepaymentOrderId: '',
-          paymentTime: ''
+          paymentTime: '',
+          attachDocRequestList: []
       }
     page = {
         total: 0
@@ -528,7 +540,8 @@ export default class Advancelist extends Vue {
 
     get bankRules () {
         return {
-            paymentTime: [{ required: true, message: '请选择网银支付时间', trigger: 'change' }]
+            paymentTime: [{ required: true, message: '请选择网银支付时间', trigger: 'change' }],
+            attachDocRequestList: [{ required: true, message: '上游支付凭证不能为空', trigger: 'blur' }]
         }
     }
 

@@ -1432,6 +1432,12 @@ export interface PrepaymentSupplierOnlineBankTransferConfirmRequest {
      */
     paymentTime: string
 
+    /**
+     * 上传上游支付凭证
+     * @type {Array}}
+     * @memberof PrepaymentSupplierOnlineBankTransferConfirmRequest
+     */
+     attachDocRequestList: any[]
 }
 
 /**
@@ -1543,6 +1549,12 @@ export interface SupplierOnlineBankTransferConfirmRequest {
      */
     paymentTime: string
 
+    /**
+     * 上传上游支付凭证
+     * @type {Array}
+     * @memberof SupplierOnlineBankTransferConfirmRequest
+     */
+     attachDocRequestList: any[]
 }
 
 /**
@@ -9330,7 +9342,7 @@ export interface ApplyPaymentOrderResponse {
     respProjectPurchases: Array<RespProjectPurchase>
 
     /**
-     * 预估借款时间(期望上游支付日期)
+     * 预估赊销时间(期望上游支付日期)
      * @type {string}
      * @memberof ApplyPaymentOrderResponse
      */
@@ -9753,7 +9765,7 @@ export interface ProjectInfoResponse {
     respProjectPurchases: Array<RespProjectPurchase>
 
     /**
-     * 预估借款时间(期望上游支付日期)
+     * 预估赊销时间(期望上游支付日期)
      * @type {string}
      * @memberof ProjectInfoResponse
      */

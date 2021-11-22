@@ -28,11 +28,17 @@
             height: auto;
         }
     }
-    &-flex{
+    .pay_vouchers {
         display: flex;
         flex-direction: row;
-        flex-wrap: wrap;
-        margin-top:10px;
+        padding-top:10px;
+    }
+    &-flex{
+        display: flex;
+        flex-direction: column;
+        .color {
+            color: #FF7A45;
+        }
     }
 }
 .advance_examine {
