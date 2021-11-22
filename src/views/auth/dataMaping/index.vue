@@ -316,17 +316,21 @@ export default class Datamaping extends Vue {
         this.$refs['form'].validate(async valid => {
             if (valid) {
                 if (this.type == 'add') {
-                    const newChild = { id: this.id++, organizationName: this.form.name, childOrganizations: [] }
-                    // 展示的数据
-                    // 入库的数据
-                    if (!this.pNode.childOrganizations) {
-                        this.$set(this.pNode, 'childOrganizations', [])
+                    try {
+                        params.createBy = this.userInfo.employeeName
+                        params.parentOrganizationCode = this.pNode.organizationCode
+                        await updateOrganizationNode(params)
+                        const newChild = { id: this.id++, organizationName: this.form.name, childOrganizations: [] }
+                        // 展示的数据
+                        // 入库的数据
+                        if (!this.pNode.childOrganizations) {
+                            this.$set(this.pNode, 'childOrganizations', [])
+                        }
+                        this.pNode.disabled = true
+                        this.pNode.childOrganizations.push(newChild)
+                    } catch (error) {
+
                     }
-                    this.pNode.disabled = true
-                    this.pNode.childOrganizations.push(newChild)
-                    params.createBy = this.userInfo.employeeName
-                    params.parentOrganizationCode = this.pNode.organizationCode
-                    await updateOrganizationNode(params)
                 } else {
                     params.updateBy = this.userInfo.employeeName
                     params.organizationCode = this.pNode.organizationCode
