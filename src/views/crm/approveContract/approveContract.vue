@@ -1043,7 +1043,7 @@ export default {
             await saveContent({
                 'contractId': this.$route.query.id,
                 // 合同审批角色 1：分财 2：运营 3：法务
-                'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
+                'approverRole': this.$route.query.role,
                 'type': 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
                 'fieldName': this.currentKey.paramKey, // 编辑字段
                 'fieldOriginalContent': old, // 编辑前内容

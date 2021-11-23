@@ -147,6 +147,7 @@
 </template>
 
 <script>
+
 import { iotUrl, interfaceUrl } from '@/api/config'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { createControlProject, editControlProject } from '../api/index'
