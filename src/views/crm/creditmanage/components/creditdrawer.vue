@@ -47,9 +47,9 @@
                     <!-- 主企业|无标签企业展示内容 -->
                     <template v-else>
                         <div class="drawer-wrap_switch">
-                            <el-switch v-model="riskValue" @change="handleChangeSwitch" style="display: block" active-color="#13ce66" inactive-color="#ff4949" inactive-text="是否开启风控冻结？">
+                            <el-switch v-model="creditDetailObj.creditFreeze" disabled @click.native="handleChangeSwitch(creditDetailObj.creditFreeze)" style="display: block" active-color="#13ce66" inactive-color="#ff4949" inactive-text="是否开启风控冻结？">
                             </el-switch>
-                            <span>2012012驱蚊器翁</span>
+                            <span v-if="creditDetailObj.creditFreeze">冻结周期{{moment(creditDetailObj.freezeStartTime).format('YYYY-MM-DD HH:mm:ss')}}～{{moment(creditDetailObj.freezeEndTime).format('YYYY-MM-DD HH:mm:ss')}}</span>
                         </div>
                         <div class="drawer-wrap_header">额度共享</div>
                         <div class="drawer-wrap_box">
@@ -80,10 +80,10 @@
                         </div>
                     </template>
                     <div class="drawer-wrap_header">修改记录</div>
-                    <div class="drawer-wrap_box">
+                    <div class="drawer-wrap_records">
                         <template v-if="updateRecord.length > 0">
                             <div v-for="item in updateRecord" :key="item.id">
-                                <p><span class="deep">{{ item.createBy || '-' }}{{ item.createPhone || '-' }}</span> 在 <span class="deep">{{ item.createTime || '-' }}</span> 将 <span class="deep">{{ creditDetailObj.companyName }}</span> {{ item.type | updateRecordFilter }}</p>
+                                <p><span class="deep">{{ item.createBy || '-' }}{{ item.createPhone || '-' }}</span> 在 <span class="deep">{{ moment(item.createTime).format('YYYY-MM-DD HH:mm:ss') || '-' }}</span> 将 <span class="deep">{{ creditDetailObj.companyName }}</span> {{ item.type | updateRecordFilter }}</p>
                             </div>
                         </template>
                         <div v-else>暂无记录</div>
@@ -227,14 +227,14 @@
         <!-- 开启风控冻结 -->
         <el-dialog title="是否开启风控冻结" :visible.sync="riskVisible" width="30%" :before-close="handleCloseFrozen" :close-on-click-modal=false>
             <el-form ref="riskForm" :model="riskForm" :rules="riskFormRules" label-width="150px" style="margin-top:20px">
-                <el-form-item prop="date" label="冻结开始时间：">
-                    <el-date-picker type="date" placeholder="冻结开始时间：" v-model="riskForm.date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" :picker-options="startOptions" style="width: 100%;"></el-date-picker>
+                <el-form-item prop="freezeStartTime" label="冻结开始时间：">
+                    <el-date-picker type="datetime" placeholder="冻结开始时间：" v-model="riskForm.freezeStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" :picker-options="startOptions" style="width: 100%;"></el-date-picker>
                 </el-form-item>
-                <el-form-item prop="date" label="冻结结束时间：">
-                    <el-date-picker type="date" placeholder="冻结结束时间：" v-model="riskForm.date1" value-format="yyyy-MM-dd" format="yyyy-MM-dd" :picker-options="endOptions" style="width: 100%;"></el-date-picker>
+                <el-form-item prop="freezeEndTime" label="冻结结束时间：">
+                    <el-date-picker type="datetime" placeholder="冻结结束时间：" v-model="riskForm.freezeEndTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" :picker-options="endOptions" style="width: 100%;"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="说明：">
-                    <el-input type="textarea" v-model.trim="riskForm.remark" maxlength="500" :rows="5" show-word-limit></el-input>
+                    <el-input type="textarea" v-model.trim="riskForm.freezeRemark" maxlength="500" :rows="5" show-word-limit></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -254,7 +254,7 @@ import setInfoDialog from '../components/setInfoDialog.vue'
 import { ccpBaseUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
 import CustomAutocomplete from './customAutocomplete.vue'
-import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip, shareCompanyList, creditShareAdd, shareCompanies, creditShareCancel, creditUpdatRecord, companyDetail } from '../api'
+import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip, shareCompanyList, creditShareAdd, shareCompanies, creditShareCancel, creditUpdatRecord, companyDetail, updateCreditUnFreeze, updateCreditFreeze } from '../api'
 import { CREDITLEVEL } from '../../const'
 import * as auths from '@/utils/auth_const'
 export default {
@@ -340,8 +340,11 @@ export default {
                 ]
             },
             riskFormRules: {
-                date: [
-                    { required: true, message: '请输入打回原因', trigger: 'blur' }
+                freezeStartTime: [
+                    { required: true, message: '请选择信用冻结开始时间', trigger: 'blur' }
+                ],
+                freezeEndTime: [
+                    { required: true, message: '请选择信用冻结结束时间', trigger: 'blur' }
                 ]
             },
             onlyType: 1,
@@ -349,8 +352,10 @@ export default {
             riskValue: '',
             riskVisible: false,
             riskForm: {
-                date: '',
-                date1: ''
+                companyId: '',
+                freezeEndTime: '',
+                freezeRemark: '',
+                freezeStartTime: ''
             },
             restaurants: [],
             shareCompaniesList: [],
@@ -401,7 +406,7 @@ export default {
         startOptions () {
             return {
                 disabledDate: (time) => {
-                    let endDateVal = this.riskForm.date1
+                    let endDateVal = this.riskForm.freezeEndTime
                     if (endDateVal) {
                         return time.getTime() > new Date(endDateVal).getTime()
                     }
@@ -412,9 +417,9 @@ export default {
         endOptions () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.riskForm.date
+                    let beginDateVal = this.riskForm.freezeStartTime
                     if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime() - 8.64e7
+                        return time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -720,16 +725,25 @@ export default {
             window.location.href = data
         },
         // 风控冻结
-        handleChangeSwitch () {
-            this.riskVisible = true
+        async handleChangeSwitch (val) {
+            console.log(val)
+            if (!val) {
+                this.riskVisible = true
+            } else {
+                await updateCreditUnFreeze(this.companyId)
+                this.getCompanyDeatil()
+            }
         },
         handleCloseFrozen () {
             this.riskVisible = false
         },
         handleSubmitFrozen () {
-            this.$refs.riskForm.validate(valid => {
-                if (vaild) {
-
+            this.riskForm.companyId = this.companyId
+            this.$refs.riskForm.validate(async valid => {
+                if (valid) {
+                    await updateCreditFreeze(this.riskForm)
+                    this.getCompanyDeatil()
+                    this.riskVisible = false
                 }
             })
         },
@@ -964,7 +978,23 @@ export default {
         display: flex;
         align-items: center;
         margin-top: 10px;
+        margin-left: 20px;
         span {
+            padding-right: 10px;
+        }
+        .deep {
+            color: #ff7a45;
+        }
+    }
+    &_records{
+        display: flex;
+        flex-direction: column;
+        max-height: 400px;
+        overflow-y: scroll;
+        div{
+            margin-top: 10px;
+        }
+         span {
             padding-right: 10px;
         }
         .deep {

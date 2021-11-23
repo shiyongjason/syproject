@@ -4,7 +4,7 @@
             <div class="set-wrap">
                 <div class="set-wrap-head">
                     {{ $parent.companyName }}
-                    <el-button size="mini" type="primary" @click="isAddVisible=true">新增临时额度</el-button>
+                    <el-button size="mini" type="primary" @click="handleAdd">新增临时额度</el-button>
                 </div>
                 <hosJoyTable ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='100' isAction :isActionFixed='tableData&&tableData.length>0'>
                     <template #status="slotProps">
@@ -46,6 +46,7 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { State } from 'vuex-class'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import * as Api from '../api/index'
+import { deepCopy } from '@/utils/utils'
 @Component({
     name: 'SetInfoDialog',
     components: {
@@ -59,6 +60,11 @@ export default class SetInfoDialog extends Vue {
     private isVisible:boolean = false
     private isAddVisible:boolean = false
     ruleForm:Record<string, any>={
+        expireTime: '',
+        quotaAmount: '',
+        remark: ''
+    }
+    _ruleForm:Record<string, any>={
         expireTime: '',
         quotaAmount: '',
         remark: ''
@@ -113,6 +119,10 @@ export default class SetInfoDialog extends Vue {
         const { data } = await Api.temporaryQuotaList(dataJson)
         this.tableData = data.records
         this.page.total = data.total
+    }
+    handleAdd () {
+        this.isAddVisible = true
+        this.ruleForm = deepCopy(this._ruleForm)
     }
     // 手动失效
     handleLose (value) {
