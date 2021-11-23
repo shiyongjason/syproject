@@ -51,23 +51,114 @@ export const CUSTOM_SOURCE: { label: string; value: number; }[] = [
 ]
 
 /** 跟进阶段 */
-export const FOLLOW_UP_PHASE: { label: string; value: number; }[] = [
-    { label: '初步建立联系', value: 1 },
-    { label: '初步达成意向', value: 2 },
-    { label: '方案已推介', value: 3 },
-    { label: '客户已评级', value: 4 },
-    { label: '项目推进中', value: 5 },
-    { label: '首次交易成功', value: 6 },
-    { label: '合作关闭', value: 7 }
+export const FOLLOW_UP_PHASE: { label: string; value: number;isShow:boolean }[] = [
+    { label: '初步建立联系', value: 1, isShow: true },
+    { label: '初步达成意向', value: 2, isShow: true },
+    { label: '方案已推介', value: 3, isShow: true },
+    { label: '客户已评级', value: 4, isShow: false },
+    { label: '项目推进中', value: 5, isShow: true },
+    { label: '首次交易成功', value: 6, isShow: false },
+    { label: '合作关闭', value: 7, isShow: false }
 ]
 
 /** 客户标签 */
-export const CUSTOMER_TAG: { label: string; value: number; }[] = [
-    { label: '可发展为集采会员', value: 1 },
-    { label: '有集采PLUS机会', value: 2 },
-    { label: '有严选供应链机会', value: 3 },
-    { label: '可助力品牌合作', value: 4 },
-    { label: '可发展为区域KOL', value: 5 }
+export const CUSTOMER_TAG: { label: string; value: number;isShow:boolean }[] = [
+    { label: '可发展为会员', value: 1, isShow: true },
+    { label: '有集采PLUS机会', value: 2, isShow: false },
+    { label: '有严选供应链机会', value: 3, isShow: false },
+    { label: '可助力品牌合作', value: 4, isShow: false },
+    { label: '可发展为区域KOL', value: 5, isShow: true },
+    { label: '非暖通老板', value: 6, isShow: true }
+]
+
+export const NEXT_PLAN : { label: string; value: number;isShow:boolean }[] = [
+    {
+        label: '见到关键人',
+        value: 1,
+        isShow: true
+    },
+    {
+        label: '初步达成意向',
+        value: 2,
+        isShow: true
+    },
+    {
+        label: '推进评级',
+        value: 3,
+        isShow: true
+    },
+    {
+        label: '等过会',
+        value: 4,
+        isShow: true
+    },
+    {
+        label: '给报价',
+        value: 5,
+        isShow: true
+    },
+    {
+        label: '给客户的需求清单（严选业务）',
+        value: 6,
+        isShow: true
+    }
+]
+
+// 当前商机
+export const CURRENT_OPPORTUNITY = [
+    {
+        label: '有已中标项目',
+        value: 1,
+        isShow: true
+    },
+    {
+        label: '有尚未中标项目',
+        value: 2,
+        isShow: true
+    },
+    {
+        label: '已从别处用过资',
+        value: 3,
+        isShow: true
+    },
+    {
+        label: '从区域供货拿货',
+        value: 4,
+        isShow: true
+    },
+    {
+        label: '从厂家拿货',
+        value: 5,
+        isShow: true
+    }
+]
+
+export const CURRENT_VISITIES = [
+    {
+        label: '有集采线索项目',
+        value: 1,
+        isShow: true
+    },
+    {
+        label: '有合作（严选）线索项目',
+        value: 2,
+        isShow: true
+    },
+    {
+        label: '有合作（分润）线索项目',
+        value: 3,
+        isShow: true
+    },
+    {
+        label: '线索商户，暂无项目',
+        value: 4,
+        isShow: true
+    },
+    {
+        label: '此为KOL关键人',
+        value: 5,
+        isShow: true
+    }
 ]
 
 /** 常做项目类型 */

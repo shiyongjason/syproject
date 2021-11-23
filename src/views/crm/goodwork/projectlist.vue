@@ -71,7 +71,7 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col__label">预估借款时间：</div>
+                    <div class="query-col__label">预估赊销时间：</div>
                     <div class="query-col__input">
                         <HDatePicker :start-change="onStartBorrow" :end-change="onEndBorrow" :options="borrowOptions">
                         </HDatePicker>
@@ -406,8 +406,8 @@ export default {
                 minUpdateTime: '',
                 upstreamSupplierType: '', // 供应商类型
                 deviceCategory: '', // 设备品类
-                minEstimatedLoanTime: '', // 最小预估借款时间
-                maxEstimatedLoanTime: '', // 最小预估借款时间
+                minEstimatedLoanTime: '', // 最小预估赊销时间
+                maxEstimatedLoanTime: '', // 最小预估赊销时间
                 minEstimateSignTime: '',
                 maxEstimateSignTime: '',
                 finalReviewPassStartTime: '',
@@ -423,7 +423,7 @@ export default {
                 'sort.direction': null,
                 'sort.property': null,
                 projectSubmitName: ''
-                // field: '', // 排序字段 赊销总额：predict_loan_amount 项目合同总额：contract_amount 设备总额：device_amount 预估借款时间：estimated_loan_time 提交时间：submit_time 更新时间：update_time
+                // field: '', // 排序字段 赊销总额：predict_loan_amount 项目合同总额：contract_amount 设备总额：device_amount 预估赊销时间：estimated_loan_time 提交时间：submit_time 更新时间：update_time
                 // isAsc: ''// 排序方式 是否升序 true：是 false：否
             },
             status: [],
@@ -468,7 +468,7 @@ export default {
                     },
                     showOverflowTooltip: true
                 },
-                { label: '预估借款时间', prop: 'estimatedLoanTime', width: '150', displayAs: 'YYYY-MM-DD', sortable: 'custom', showOverflowTooltip: true },
+                { label: '预估赊销时间', prop: 'estimatedLoanTime', width: '150', displayAs: 'YYYY-MM-DD', sortable: 'custom', showOverflowTooltip: true },
                 { label: '预估赊销周期', prop: 'loanMonth', width: '150', unit: '个月' },
                 {
                     label: '工程项目回款方式',
