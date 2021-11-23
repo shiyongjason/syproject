@@ -94,14 +94,12 @@
                 <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span v-if="totalAmount">累计金额：{{totalAmount|moneyFormat}}</span></el-tag>
             </div>
             <!-- end search bar -->
-            <hosJoyTable localName="V3.5.1" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList"
-                actionWidth='330' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+            <hosJoyTable localName="V3.5.1" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='330' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template #action="slotProps">
                     <h-button table v-if="hosAuthCheck(upstreamPayDetail)" @click="viewDetail(slotProps.data.row.paymentOrderId,slotProps.data.row.status)">查看详情</h-button>
                     <h-button table v-if="slotProps.data.row.showChangeButton" @click="onShowChangeLoanTransferStatus(slotProps.data.row.loanTransferId)">变更交接状态</h-button>
                     <h-button table v-if="hosAuthCheck(prevproof)&&slotProps.data.row.status==2" @click="handleShowProof(slotProps.data.row)">确认首付款到账</h-button>
-                    <!-- v-if="hosAuthCheck(banklink)&&slotProps.data.row.showOnlineBank" -->
-                    <h-button table @click="handleIsPay(slotProps.data.row)">确认已网银支付</h-button>
+                    <h-button table v-if="hosAuthCheck(banklink)&&slotProps.data.row.showOnlineBank" @click="handleIsPay(slotProps.data.row)">确认已网银支付</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -202,7 +200,7 @@
         <!-- 首付款确认 -->
         <FundsDialog :is-open="isProofDialog" :detail="fundsDialogDetail" :status="'1'" @onClose="getList"></FundsDialog>
         <!-- 确认网银支付 -->
-        <el-dialog :close-on-click-modal='false' title="确认网银支付" :visible.sync="isShowLinkBank" width="600px" class="prev-payment-dialog">
+        <el-dialog :close-on-click-modal='false' title="确认网银支付" :visible.sync="isShowLinkBank" width="600px" class="prev-payment-dialog" :before-close="()=> onBankCancel()">
             <el-form :model="bankForm" :rules="bankRules" ref="bankForm" label-width="150px" class="demo-ruleForm">
                 <el-form-item label="网银支付时间：" prop="paymentTime">
                     <el-date-picker v-model="bankForm.paymentTime" value-format='yyyy-MM-dd' type="date" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
@@ -217,7 +215,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <h-button @click="isShowLinkBank = false">取消</h-button>
+                <h-button @click="onBankCancel()">取消</h-button>
                 <h-button type="primary" @click="handleSubBank">确定</h-button>
             </div>
         </el-dialog>
@@ -528,6 +526,11 @@ export default class UpstreamPaymentManagement extends Vue {
         this.maxTime = val.loanTransferDate
         this.bankForm.paymentOrderId = val.paymentOrderId
         this.bankForm.paymentTime = moment(new Date()).format('YYYY-MM-DD')
+    }
+
+    onBankCancel () {
+        this.isShowLinkBank = false
+        this.bankForm.attachDocRequestList = []
         this.$nextTick(() => {
             this.$refs['bankForm'].clearValidate()
         })
@@ -706,5 +709,5 @@ export default class UpstreamPaymentManagement extends Vue {
 </script>
 
 <style lang='scss' scoped>
-@import "./css.scss";
+@import './css.scss';
 </style>
