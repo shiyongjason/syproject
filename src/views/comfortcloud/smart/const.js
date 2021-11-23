@@ -14,6 +14,8 @@ export const PROJECT_TYPE_KEY = {
     BILLING_SYSTEM_TIME: '6',
     // 计费系统 -- 分体空调
     BILLING_SYSTEM_FT_AIR: '7',
+    // 计费系统 -- 计量插座
+    BILLING_SYSTEM_SOCKET: '8',
     // 节能系统
     ENERGY_SAVING_SYSTEM: '11',
     // 分体空调集控系统
@@ -28,10 +30,10 @@ export const PROJECT_TYPE_OPTIONS = new Map([
     ['14', '调光面板照明集控系统'],
     ['15', '窗帘集控系统'],
     ['16', '插座集控系统'],
-    ['3', '计费系统'],
-    ['11', '节能系统'],
     ['17', '环境检测系统'],
-    ['18', '门禁系统']
+    ['18', '门禁系统'],
+    ['3', '计费系统'],
+    ['11', '节能系统']
 ])
 
 export const FEE_TYPE_OPTIONS = new Map([
@@ -40,7 +42,7 @@ export const FEE_TYPE_OPTIONS = new Map([
     ['2', '热量表'],
     ['1', '智能电表'],
     ['0', '智能空开'],
-    ['8', '计量插座']
+    ['5', '计量插座']
 ])
 
 // 是否是通用升级
