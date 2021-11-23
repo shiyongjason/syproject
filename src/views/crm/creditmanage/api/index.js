@@ -55,3 +55,7 @@ export const shareCompanies = (params) => axios.get(`/memeber/company/credit/${p
 export const creditUpdatRecord = (params) => axios.get(`/memeber/company-credit-change-records/${params.companyId}/list`, params)
 // 查询企业信用详情
 export const companyDetail = (params) => axios.get(`/memeber/company/credit/boss/${params.companyId}/detail`, params)
+// 企业解冻
+export const updateCreditUnFreeze = (companyId) => axios.post(`/memeber/company/credit/credit-unfreeze/${companyId}`, {})
+// 企业冻结
+export const updateCreditFreeze = (params) => axios.post(`/memeber/company/credit/credit-freeze`, params)
