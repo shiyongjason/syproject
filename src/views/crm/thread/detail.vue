@@ -523,7 +523,7 @@ export default class ThreadDetail extends Vue {
 
     queryParams = {
         keyWord: ''
-    };
+    }
 
     flowUpCount: any = {
         directCount: '',
