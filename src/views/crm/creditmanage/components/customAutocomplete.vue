@@ -91,6 +91,7 @@ export default {
             }
         },
         bodyClose () {
+            this.input = ''
             this.showPopper = false
         }
     },
