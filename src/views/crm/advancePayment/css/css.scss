@@ -36,8 +36,16 @@
     &-flex{
         display: flex;
         flex-direction: column;
+    }
+    .credentials {
+        display: flex;
         .color {
             color: #FF7A45;
+        }
+    }
+    .grid-content {
+        .el-col {
+            margin-bottom: 8px;
         }
     }
 }
