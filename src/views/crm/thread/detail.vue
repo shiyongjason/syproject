@@ -86,7 +86,7 @@
                                     <div class="title-tag" v-if="item.content">跟进内容</div>
                                     <div class="desc" v-if="item.content">{{item.content}}</div>
                                     <div class="title-tag" v-if="item.flowUpProcess">当前阶段</div>
-                                    <div class="desc" v-if="item.flowUpProcess">{{ followUpPhaseOption[item.flowUpProcess] && followUpPhaseOption[item.flowUpProcess].label }}</div>
+                                    <div class="desc" v-if="item.flowUpProcess">{{ followUpPhaseOption.filter(val=>val.isShow)[item.flowUpProcess-1] && followUpPhaseOption.filter(val=>val.isShow)[item.flowUpProcess-1].label }}</div>
                                     <div class="title-tag" v-if="item.userTag">客户标签</div>
                                     <div class="desc" v-if="item.userTag">
                                         {{ userTagWatch(item.userTag) }}
@@ -523,7 +523,7 @@ export default class ThreadDetail extends Vue {
 
     queryParams = {
         keyWord: ''
-    };
+    }
 
     flowUpCount: any = {
         directCount: '',

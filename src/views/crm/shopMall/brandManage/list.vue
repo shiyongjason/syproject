@@ -56,14 +56,16 @@
                     <span v-else style="line-height: 22px;display: inline-block;">{{ruleForm.brandCode||'-'}}</span>
                 </el-form-item>
                 <el-form-item label="品牌logo：" prop="brandLogoUrl">
-                    <HosJoyUpload class="crmshopMall-logo" :showUpload='!isShowDetail' v-model="ruleForm.brandLogoUrl" showCrop :multiple='false' :showPreView='true' :fileSize=2 :action='action' :fileNum='1' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' autoCropWidth='220' autoCropHeight='220' autoCrop fixedBox :original='false' :enlarge="1" :outputSize="0.8" outputType="jpeg"/>
+                    <HosJoyUpload class="crmshopMall-logo" :showUpload='!isShowDetail' v-model="ruleForm.brandLogoUrl" showCrop :multiple='false' :showPreView='true' :fileSize=2 :action='action' :fileNum='1' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' autoCropWidth='220'
+                        autoCropHeight='220' autoCrop fixedBox :original='false' :enlarge="1" :outputSize="0.8" outputType="jpeg" />
                     <p>图片尺寸为220*220，不超过2M，仅支持jpeg、jpg、png格式</p>
                 </el-form-item>
                 <el-form-item label="品牌banner：" prop="brandBannerUrl">
-                    <HosJoyUpload class="crmshopMall-banner" :showUpload='!isShowDetail' v-model="ruleForm.brandBannerUrl" showCrop :multiple='false' :showPreView='true' :fileSize=2 :action='action' :fileNum='1' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' autoCropWidth='750' autoCropHeight='350' autoCrop fixedBox :original='false'  :enlarge="1" :outputSize="0.8" outputType="jpeg"/>
+                    <HosJoyUpload class="crmshopMall-banner" :showUpload='!isShowDetail' v-model="ruleForm.brandBannerUrl" showCrop :multiple='false' :showPreView='true' :fileSize=2 :action='action' :fileNum='1' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' autoCropWidth='750'
+                        autoCropHeight='350' autoCrop fixedBox :original='false' :enlarge="1" :outputSize="0.8" outputType="jpeg" />
                     <p>图片尺寸为750*350，不超过2M，仅支持jpeg、jpg、png格式</p>
                 </el-form-item>
-                <el-form-item label="品牌描述：" prop="brandRemark" >
+                <el-form-item label="品牌描述：" prop="brandRemark">
                     <el-input type="textarea" rows="4" show-word-limit class="remark" maxlength="200" v-model="ruleForm.brandRemark" v-if="!isShowDetail">
                     </el-input>
                     <span v-else style="line-height: 22px;display: inline-block;">{{ruleForm.brandRemark||'-'}}</span>
@@ -99,19 +101,19 @@ const _queryParams = {
     components: { hosJoyTable, HosJoyUpload }
 })
 export default class brandManage extends Vue {
-    @Ref('ruleForm') $refRuleForm: ElForm;
+    @Ref('ruleForm') $refRuleForm: ElForm
     authView = CRM_SHOPP_PRODUCTLABEL_VIEW
     authEdit = CRM_SHOPP_PRODUCTLABEL_EDIT
     // action = ccpBaseUrl + 'common/files/upload-old'
     action = ccpBaseUrl + 'common/files/upload-base64'
-    isShowDetail:boolean = false
-    dialogVisible:boolean = false
+    isShowDetail: boolean = false
+    dialogVisible: boolean = false
     uploadParameters = {
         updateUid: '',
         reservedName: false
     };
     queryParams: any = JSON.parse(JSON.stringify(_queryParams))
-    page:any = {
+    page: any = {
         sizes: [10, 20, 50, 100],
         total: 0
     }
@@ -124,7 +126,7 @@ export default class brandManage extends Vue {
         id: '',
         brandBannerUrl: ''
     }
-    tableData: BrandShopExtendResponse[]= []
+    tableData: BrandShopExtendResponse[] = []
     onSureDialog: boolean = false
     onCancelDialog: boolean = false
 
