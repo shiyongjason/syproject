@@ -610,6 +610,7 @@ export default {
             this.onlyType = 1
             if (val) {
                 await this.findCreditDetail(val)
+                console.log(this.creditDetail)
                 this.ruleForm = { ...this.creditDetail }
                 this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
                 this.ruleForm.newendTime = this.ruleForm.endTime
