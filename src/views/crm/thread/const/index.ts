@@ -68,7 +68,8 @@ export const CUSTOMER_TAG: { label: string; value: number;isShow:boolean }[] = [
     { label: '有严选供应链机会', value: 3, isShow: false },
     { label: '可助力品牌合作', value: 4, isShow: false },
     { label: '可发展为区域KOL', value: 5, isShow: true },
-    { label: '非暖通老板', value: 6, isShow: true }
+    { label: '非暖通老板', value: 6, isShow: true },
+    { label: '以上均不满足', value: 7, isShow: true }
 ]
 
 export const NEXT_PLAN : { label: string; value: number;isShow:boolean }[] = [
