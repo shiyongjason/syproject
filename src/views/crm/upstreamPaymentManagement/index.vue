@@ -95,11 +95,12 @@
             </div>
             <!-- end search bar -->
             <hosJoyTable localName="V3.5.1" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList"
-                actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+                actionWidth='330' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template #action="slotProps">
                     <h-button table v-if="hosAuthCheck(upstreamPayDetail)" @click="viewDetail(slotProps.data.row.paymentOrderId,slotProps.data.row.status)">查看详情</h-button>
                     <h-button table v-if="slotProps.data.row.showChangeButton" @click="onShowChangeLoanTransferStatus(slotProps.data.row.loanTransferId)">变更交接状态</h-button>
                     <h-button table v-if="hosAuthCheck(prevproof)&&slotProps.data.row.status==2" @click="handleShowProof(slotProps.data.row)">确认首付款到账</h-button>
+                    <h-button table v-if="hosAuthCheck(banklink)&&slotProps.data.row.showOnlineBank" @click="handleIsPay(slotProps.data.row)">确认已网银支付</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -179,7 +180,7 @@
                 <h-button type="primary" @click="onEnterPay">确认支付</h-button>
             </div>
         </el-dialog>
-         <el-dialog :close-on-click-modal='false' title="变更交接状态" :visible.sync="isOpenChangeStatus" width="850px" class="prev-payment-dialog" >
+        <el-dialog :close-on-click-modal='false' title="变更交接状态" :visible.sync="isOpenChangeStatus" width="850px" class="prev-payment-dialog">
             <el-form ref="statusForm" :model="loanTransferStatusForm" :rules="changeRules" label-width="150px">
                 <el-form-item label="变更交接状态到：" prop="changeType" style="margin-bottom:20px">
                     <el-radio-group v-model="loanTransferStatusForm.changeType">
@@ -199,14 +200,28 @@
         </el-dialog>
         <!-- 首付款确认 -->
         <FundsDialog :is-open="isProofDialog" :detail="fundsDialogDetail" :status="'1'" @onClose="getList"></FundsDialog>
+        <!-- 确认网银支付 -->
+        <el-dialog :close-on-click-modal='false' title="确认网银支付" :visible.sync="isShowLinkBank" width="500px" class="prev-payment-dialog">
+            <el-form :model="bankForm" :rules="bankRules" ref="bankForm" label-width="140px" class="demo-ruleForm">
+                <el-form-item label="网银支付时间：" prop="paymentTime">
+                    <!-- <el-date-picker type="date" placeholder="选择日期" v-model="bankForm.paymentTime" ></el-date-picker> -->
+                    <el-date-picker v-model="bankForm.paymentTime" value-format='yyyy-MM-dd' type="date" placeholder="选择日期" :picker-options="pickerOptions">
+                        </el-date-picker>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <h-button @click="isShowLinkBank = false">取消</h-button>
+                <h-button type="primary" @click="handleSubBank">确定</h-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script lang='tsx'>
 import moment from 'moment'
 import { CreateElement } from 'vue'
-import { Vue, Component, Prop } from 'vue-property-decorator'
-import { State, namespace, Getter, Action } from 'vuex-class'
+import { Vue, Component } from 'vue-property-decorator'
+import { State, Getter, Action } from 'vuex-class'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import elImageAddToken from '@/components/elImageAddToken/index.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
@@ -214,9 +229,9 @@ import loanHandoverInformation from './drawerTabs/loanHandoverInformation.vue' /
 import upstreamPaymentInformation from './drawerTabs/upstreamPaymentInformation.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import { measure, handleSubmit, validateForm } from '@/decorator/index'
 import * as Api from './api/index'
-import { ReqSupplierSubmit, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, RespUpStreamPayment, ReqLoanTransferChange, LoanTransferInfoResponse } from '@/interface/hbp-project'
+import { ReqSupplierSubmit, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, RespUpStreamPayment, ReqLoanTransferChange, LoanTransferInfoResponse, SupplierOnlineBankTransferConfirmRequest } from '@/interface/hbp-project'
 import filters from '@/utils/filters'
-import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT, CHANGE_LOAN_TRANSFER_STATUS, UPSTREAM_PAY_EXPORT, PREV_PROOF } from '@/utils/auth_const'
+import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT, CHANGE_LOAN_TRANSFER_STATUS, UPSTREAM_PAY_EXPORT, PREV_PROOF, UPSTREAM_PAY_BANKLINK } from '@/utils/auth_const'
 import { LOAN_TRANSFER_STATUS_DONE, UPSTREAM_PAYMENT_STATUS_WAITING } from './const'
 import FundsDialog from '../funds/components/fundsDialog.vue'
 import { newCache } from '@/utils/index'
@@ -259,6 +274,7 @@ export default class UpstreamPaymentManagement extends Vue {
     upstreamPayment = UPSTREAM_PAY_MENT
     upstreamExport = UPSTREAM_PAY_EXPORT
     prevproof = PREV_PROOF
+    banklink = UPSTREAM_PAY_BANKLINK
     $refs!: {
         form: HTMLFormElement
     }
@@ -277,9 +293,11 @@ export default class UpstreamPaymentManagement extends Vue {
     isOpen:boolean = false
     isOpenChangeStatus: boolean = false
     isTabs:boolean = false
+    isShowLinkBank:boolean = false
     paymentOrderId:string = ''
     private _queryParams = {}
     isProofDialog:boolean = false
+    maxTime:string = ''
     queryParams: Query = {
         pageNumber: 1,
         pageSize: 10,
@@ -317,6 +335,10 @@ export default class UpstreamPaymentManagement extends Vue {
         changeType: '',
         remark: '',
         updateBy: ''
+    }
+    bankForm:SupplierOnlineBankTransferConfirmRequest={
+        paymentOrderId: '',
+        paymentTime: ''
     }
 
     totalAmount:number = 0
@@ -363,6 +385,12 @@ export default class UpstreamPaymentManagement extends Vue {
         return rules
     }
 
+    get bankRules () {
+        return {
+            paymentTime: [{ required: true, message: '请选择网银支付时间', trigger: 'change' }]
+        }
+    }
+
     get changeRules () {
         let rules = {
             changeType: [
@@ -392,6 +420,14 @@ export default class UpstreamPaymentManagement extends Vue {
             format: 'yyyy-MM-dd',
             startTime: this.queryParams.startInitiateTime,
             endTime: this.queryParams.endInitiateTime
+        }
+    }
+    get pickerOptions () {
+        return {
+            disabledDate (time) {
+                // @ts-ignore
+                return Date.now() < time.getTime()// 如果当天可选，就不用减8.64e7
+            }
         }
     }
 
@@ -478,8 +514,24 @@ export default class UpstreamPaymentManagement extends Vue {
         }
     }
 
-    handleClickProof (val) {
+    handleIsPay (val) {
+        this.isShowLinkBank = true
+        this.maxTime = val.loanTransferDate
+        this.bankForm.paymentOrderId = val.paymentOrderId
+        this.bankForm.paymentTime = moment(new Date()).format('YYYY-MM-DD')
+        this.$nextTick(() => {
+            this.$refs['bankForm'].clearValidate()
+        })
+    }
 
+    handleSubBank () {
+        (this.$refs as any).bankForm.validate(async (validate) => {
+            if (validate) {
+                await Api.updateOnlineBank(this.bankForm)
+                this.isShowLinkBank = false
+                this.getList()
+            }
+        })
     }
 
     onStartChange (val): void {

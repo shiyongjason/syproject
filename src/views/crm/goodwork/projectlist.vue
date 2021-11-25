@@ -28,6 +28,13 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
+                    <div class="query-col__label">终审通过时间：</div>
+                    <div class="query-col__input">
+                        <HDatePicker :start-change="onApprovalStart" :end-change="onApprovalEnd" :options="approvalTimes">
+                        </HDatePicker>
+                    </div>
+                </div>
+                <div class="query-cont__col">
                     <div class="query-col__label">合作进度：</div>
                     <div class="query-col__input">
                         <el-select v-model="status" multiple collapse-tags placeholder="请选择">
@@ -64,7 +71,7 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col__label">预估借款时间：</div>
+                    <div class="query-col__label">预估赊销时间：</div>
                     <div class="query-col__input">
                         <HDatePicker :start-change="onStartBorrow" :end-change="onEndBorrow" :options="borrowOptions">
                         </HDatePicker>
@@ -132,7 +139,7 @@
         </div>
         <projectDrawer :drawer=drawer :status=projectstatus @backEvent='restDrawer' ref="drawercom"></projectDrawer>
         <el-dialog :title="title" ref='recordDialog' :visible.sync="dialogVisible" width="30%" :before-close="()=>onCloneRecordDialog()" v-if="dialogVisible">
-            <div class="project-record" v-if="title=='项目审批记录'"  @scroll="recordsScroll">
+            <div class="project-record" v-if="title=='项目审批记录'" @scroll="recordsScroll">
                 <div class="radio-group" style="margin-bottom:20px">
                     <el-radio-group v-model="radio" @change="()=>onTabRadio()">
                         <el-radio-button label="审批记录"></el-radio-button>
@@ -164,7 +171,9 @@
                     <div style="margin-top:20px">
                         <b>跟进动态</b>
                     </div>
-                    <div v-if="!recordsData.length" style="width: 600px;margin: 10px auto;"><el-divider>暂无跟进记录</el-divider></div>
+                    <div v-if="!recordsData.length" style="width: 600px;margin: 10px auto;">
+                        <el-divider>暂无跟进记录</el-divider>
+                    </div>
                     <div v-else class="follow-records" ref='records'>
                         <div class="follow-cell" v-for="(item,index) in recordsData" :key="index">
                             <div class="info"><img :src="item.createAvatar||userDefault" class="avatar">
@@ -179,7 +188,7 @@
                                 <div class='content'>
                                     <div class='title-tag'>语音通话</div>
                                     <div class='audio-player-container' v-if="item.flowUpDynamic.msgContent&&item.flowUpDynamic.msgContent.osspath">
-                                        <div class="crm-audio-player" >
+                                        <div class="crm-audio-player">
                                             <audio controls>
                                                 <source :src="item.flowUpDynamic.msgContent.osspath" type="audio/mpeg">
                                                 您的浏览器不支持 音频 插件，请使用谷歌浏览器。
@@ -192,7 +201,7 @@
                                 <div class='line' />
                                 <div class='content'>
                                     <div class='title-tag'>发送链接</div>
-                                    <div class='desc-link' >《{{item.flowUpDynamic.msgContent.title ? item.flowUpDynamic.msgContent.title : '查看链接'}}》</div>
+                                    <div class='desc-link'>《{{item.flowUpDynamic.msgContent.title ? item.flowUpDynamic.msgContent.title : '查看链接'}}》</div>
                                 </div>
                             </div>
                             <div class='content-container' v-if="item.flowUpDynamic&&item.flowUpDynamic.msgType === 'weapp'">
@@ -208,9 +217,9 @@
                                 <div class="content">
                                     <div class="title-tag" style="margin-top:20px">{{flowUpTypes[item.type]}}</div>
                                     <div class="audio-player-container">
-                                       <template v-if="item.picUrls&&item.picUrls.length">{{item.type ==1?'现场图片：':'附件：'}}</template>
+                                        <template v-if="item.picUrls&&item.picUrls.length">{{item.type ==1?'现场图片：':'附件：'}}</template>
                                         <div class="crm-audio-player" style="margin-top:-15px">
-                                            <OssFileHosjoyUpload :showUpload='false' :showPreView='true'  v-model="item.picUrls" :fileNum=8 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px"/>
+                                            <OssFileHosjoyUpload :showUpload='false' :showPreView='true' v-model="item.picUrls" :fileNum=8 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" />
                                         </div>
                                     </div>
                                     <div class="title-tag" v-if="item.content">跟进内容</div>
@@ -222,7 +231,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div v-if="isNoMore" style="width: 80%;margin: 10px auto;"><el-divider>没有更多</el-divider></div>
+                        <div v-if="isNoMore" style="width: 80%;margin: 10px auto;">
+                            <el-divider>没有更多</el-divider>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -241,60 +252,60 @@
             </div>
         </el-dialog>
         <!-- 添加跟进记录 -->
-            <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px" :before-close="()=>closeAddRecord()" :close-on-click-modal='false' >
-                <div class="record-layout" style="height:444px;overflow-y: scroll;">
-                    <div class="header-title">
-                        <el-radio v-model="flowUpRequest.type" :label="1">当面拜访</el-radio>
-                        <el-radio v-model="flowUpRequest.type" :label="2">电话/微信沟通/邮件等</el-radio>
-                        <p class="tips" v-if="flowUpRequest.type==2">温馨提示：推荐使用企业微信与客户聊天，自动更新记录，更方便。</p>
-                    </div>
-                    <div style="margin-top:-10px">
-                        <el-form :rules="addFlowUpRules" :model="flowUpRequest" ref="addFlowUp" :validate-on-rule-change='false' v-if="reCreate">
-                            <div class="record-dialog-item" v-if="flowUpRequest.type == 1">
-                                <el-form-item  prop='picUrls' label="上传现场图片："></el-form-item>
-                                <div>
-                                    <OssFileHosjoyUpload :showPreView='true'  v-model="flowUpRequest.picUrls" :fileNum=20 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png" @successCb='onSuccessCb' delTips='是否确认删除现场照片，删除后无法恢复'>
+        <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px" :before-close="()=>closeAddRecord()" :close-on-click-modal='false'>
+            <div class="record-layout" style="height:444px;overflow-y: scroll;">
+                <div class="header-title">
+                    <el-radio v-model="flowUpRequest.type" :label="1">当面拜访</el-radio>
+                    <el-radio v-model="flowUpRequest.type" :label="2">电话/微信沟通/邮件等</el-radio>
+                    <p class="tips" v-if="flowUpRequest.type==2">温馨提示：推荐使用企业微信与客户聊天，自动更新记录，更方便。</p>
+                </div>
+                <div style="margin-top:-10px">
+                    <el-form :rules="addFlowUpRules" :model="flowUpRequest" ref="addFlowUp" :validate-on-rule-change='false' v-if="reCreate">
+                        <div class="record-dialog-item" v-if="flowUpRequest.type == 1">
+                            <el-form-item prop='picUrls' label="上传现场图片："></el-form-item>
+                            <div>
+                                <OssFileHosjoyUpload :showPreView='true' v-model="flowUpRequest.picUrls" :fileNum=20 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png" @successCb='onSuccessCb' delTips='是否确认删除现场照片，删除后无法恢复'>
                                     <div class="a-line">
                                         <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                                     </div>
-                                    </OssFileHosjoyUpload>
-                                </div>
+                                </OssFileHosjoyUpload>
                             </div>
+                        </div>
 
-                            <div class="record-dialog-item" style="margin-top:10px">
-                                <el-form-item  prop='content' label="跟进内容："  class="textarea">
-                                    <el-input v-model="flowUpRequest.content" placeholder="请输入此次跟进结果/下次跟进事项" style="width:380px;" type="textarea" maxlength="200" show-word-limit rows='2'></el-input>
-                                </el-form-item>
-                            </div>
-                            <div class="record-dialog-item">
-                                <el-form-item prop="nextFlowTime"  label="下次跟进时间："  class="textarea">
-                                    <el-date-picker v-model="flowUpRequest.nextFlowTime" type="datetime" value-format='yyyy-MM-ddTHH:mm' format='yyyy-MM-dd HH:mm'  placeholder="选择日期"></el-date-picker>
-                                </el-form-item>
-                            </div>
+                        <div class="record-dialog-item" style="margin-top:10px">
+                            <el-form-item prop='content' label="跟进内容：" class="textarea">
+                                <el-input v-model="flowUpRequest.content" placeholder="请输入此次跟进结果/下次跟进事项" style="width:380px;" type="textarea" maxlength="200" show-word-limit rows='2'></el-input>
+                            </el-form-item>
+                        </div>
+                        <div class="record-dialog-item">
+                            <el-form-item prop="nextFlowTime" label="下次跟进时间：" class="textarea">
+                                <el-date-picker v-model="flowUpRequest.nextFlowTime" type="datetime" value-format='yyyy-MM-ddTHH:mm' format='yyyy-MM-dd HH:mm' placeholder="选择日期"></el-date-picker>
+                            </el-form-item>
+                        </div>
 
-                            <div class="record-dialog-item" v-if="flowUpRequest.type != 1">
-                                <el-form-item label="附件（不超过8个）："></el-form-item>
-                                <div>
-                                    <OssFileHosjoyUpload :showPreView='true'  v-model="flowUpRequest.picUrls" :fileNum=8 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px">
+                        <div class="record-dialog-item" v-if="flowUpRequest.type != 1">
+                            <el-form-item label="附件（不超过8个）："></el-form-item>
+                            <div>
+                                <OssFileHosjoyUpload :showPreView='true' v-model="flowUpRequest.picUrls" :fileNum=8 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px">
                                     <div class="a-line">
                                         <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                                     </div>
-                                    </OssFileHosjoyUpload>
-                                </div>
+                                </OssFileHosjoyUpload>
                             </div>
-                            <div class="record-dialog-item">
-                                <el-form-item prop='remark' label="其他备注：" class="textarea">
-                                    <el-input v-model="flowUpRequest.remark" placeholder="其他需特殊说明事项可添加" type="textarea" maxlength="200" show-word-limit rows='2'></el-input>
-                                </el-form-item>
-                            </div>
-                        </el-form>
-                    </div>
+                        </div>
+                        <div class="record-dialog-item">
+                            <el-form-item prop='remark' label="其他备注：" class="textarea">
+                                <el-input v-model="flowUpRequest.remark" placeholder="其他需特殊说明事项可添加" type="textarea" maxlength="200" show-word-limit rows='2'></el-input>
+                            </el-form-item>
+                        </div>
+                    </el-form>
                 </div>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="closeAddRecord">取 消</el-button>
-                    <el-button type="primary" @click="onSubmitAddRecord">确定</el-button>
-                </div>
-            </el-dialog>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="closeAddRecord">取 消</el-button>
+                <el-button type="primary" @click="onSubmitAddRecord">确定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -395,10 +406,12 @@ export default {
                 minUpdateTime: '',
                 upstreamSupplierType: '', // 供应商类型
                 deviceCategory: '', // 设备品类
-                minEstimatedLoanTime: '', // 最小预估借款时间
-                maxEstimatedLoanTime: '', // 最小预估借款时间
+                minEstimatedLoanTime: '', // 最小预估赊销时间
+                maxEstimatedLoanTime: '', // 最小预估赊销时间
                 minEstimateSignTime: '',
                 maxEstimateSignTime: '',
+                finalReviewPassStartTime: '',
+                finalReviewPassEndTime: '',
                 statusList: '',
                 projectName: '',
                 projectNo: '',
@@ -410,7 +423,7 @@ export default {
                 'sort.direction': null,
                 'sort.property': null,
                 projectSubmitName: ''
-                // field: '', // 排序字段 赊销总额：predict_loan_amount 项目合同总额：contract_amount 设备总额：device_amount 预估借款时间：estimated_loan_time 提交时间：submit_time 更新时间：update_time
+                // field: '', // 排序字段 赊销总额：predict_loan_amount 项目合同总额：contract_amount 设备总额：device_amount 预估赊销时间：estimated_loan_time 提交时间：submit_time 更新时间：update_time
                 // isAsc: ''// 排序方式 是否升序 true：是 false：否
             },
             status: [],
@@ -424,12 +437,14 @@ export default {
                 { label: '项目地址', prop: 'address', width: '150', showOverflowTooltip: true },
                 { label: '项目编号', prop: 'projectNo', width: '150', showOverflowTooltip: true },
                 { label: '所属分部', prop: 'deptName', width: '150', showOverflowTooltip: true },
-                { label: '项目提交人',
+                {
+                    label: '项目提交人',
                     prop: 'projectSubmitName',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.projectSubmitName || '-'}<br/>{scope.row.projectSubmitPhone}</span>
-                    } },
+                        return <span>{scope.row.projectSubmitName || '-'}<br />{scope.row.projectSubmitPhone}</span>
+                    }
+                },
                 { label: '经销商', prop: 'companyName', width: '180', showOverflowTooltip: true },
                 { label: '甲方名称', prop: 'firstPartName', width: '180', showOverflowTooltip: true },
                 { label: '预估签约时间', prop: 'estimateSignTime', width: '150', displayAs: 'YYYY-MM-DD', showOverflowTooltip: true },
@@ -453,7 +468,7 @@ export default {
                     },
                     showOverflowTooltip: true
                 },
-                { label: '预估借款时间', prop: 'estimatedLoanTime', width: '150', displayAs: 'YYYY-MM-DD', sortable: 'custom', showOverflowTooltip: true },
+                { label: '预估赊销时间', prop: 'estimatedLoanTime', width: '150', displayAs: 'YYYY-MM-DD', sortable: 'custom', showOverflowTooltip: true },
                 { label: '预估赊销周期', prop: 'loanMonth', width: '150', unit: '个月' },
                 {
                     label: '工程项目回款方式',
@@ -473,11 +488,12 @@ export default {
                     prop: 'status',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.status ? this.getStatusList(scope.row.status, scope.row.docProgress).value : '-'}</span>
+                        return <span>{scope.row.status ? this.getStatusList(scope.row.status, scope.row.docProgress, scope.row).value : '-'}</span>
                     },
                     showOverflowTooltip: true
                 },
                 { label: '项目提交时间', prop: 'submitTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', showOverflowTooltip: true },
+                { label: '终审通过时间', prop: 'finalReviewPassTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm', showOverflowTooltip: true },
                 { label: '更新时间', prop: 'updateTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', showOverflowTooltip: true },
                 {
                     label: '项目资料',
@@ -553,6 +569,15 @@ export default {
                 type: 'date',
                 startTime: this.queryParams.minEstimateSignTime,
                 endTime: this.queryParams.maxEstimateSignTime
+            }
+        },
+        approvalTimes () {
+            return {
+                valueFormat: 'yyyy-MM-ddTHH:mm',
+                format: 'yyyy-MM-dd HH:mm',
+                type: 'datetime',
+                startTime: this.queryParams.finalReviewPassStartTime,
+                endTime: this.queryParams.finalReviewPassEndTime
             }
         },
         ...mapState({
@@ -740,6 +765,12 @@ export default {
         onEndSign (val) {
             this.queryParams.maxEstimateSignTime = val
         },
+        onApprovalStart (val) {
+            this.queryParams.finalReviewPassStartTime = val
+        },
+        onApprovalEnd (val) {
+            this.queryParams.finalReviewPassEndTime = val
+        },
         onEditproject (row) {
             this.$router.push({ path: '/goodwork/informationDetail', query: { projectId: row.id, status: row.status, docAfterStatus: row.docAfterStatus } })
         },
@@ -791,12 +822,15 @@ export default {
                 window.location = interfaceUrl + 'memeber/openapi/project/export?' + url
             }
         },
-        getStatusList (key, docProgress) {
+        getStatusList (key, docProgress, val) {
+            // 重新返回合作进度 状态
             const map = STATUS_LIST.reduce((res, item) => {
                 res[item.key] = item
                 return res
             }, {})
-            if (key == 3) {
+            if (key == 15) {
+                return { value: `${map[key].value}，当前节点：${val.dingApprover || '-'}` }
+            } else if (key == 3) {
                 let label = docProgress == null ? map[key].value : `${map[key].value}进度：${this.$multipliedBy(docProgress, 100)}%`
                 return { value: label }
             } else {
@@ -926,7 +960,7 @@ export default {
     background-color: #d6d1d1 !important;
 }
 .tips {
-    margin-top:5px;
+    margin-top: 5px;
 }
 .flowup-count {
     display: flex;
@@ -936,15 +970,15 @@ export default {
     box-sizing: border-box;
     padding-right: 25px;
 }
-/deep/.a-line{
-    span{
+/deep/.a-line {
+    span {
         display: flex;
         align-items: center;
     }
 }
 .file-icon {
     font-size: 18px;
-    margin: 0 3px 0 0  !important;
+    margin: 0 3px 0 0 !important;
     line-height: 24px !important;
     color: #fff;
 }
@@ -977,13 +1011,13 @@ export default {
     .el-input:not(:first-child) {
         margin-left: 0;
     }
-    .textarea{
+    .textarea {
         .el-form-item__content {
             display: flex;
         }
     }
 }
-.follow-records{
+.follow-records {
     margin-top: 10px;
 }
 .follow-cell {
@@ -1035,7 +1069,7 @@ export default {
 
         .line {
             width: 1px;
-            background: #E1E1E3;
+            background: #e1e1e3;
             margin: 0 50px 0 18px;
         }
 
@@ -1060,7 +1094,7 @@ export default {
                 height: 16px;
                 font-size: 13px;
                 font-weight: 500;
-                color: #FF7A45;
+                color: #ff7a45;
                 line-height: 18px;
             }
 
@@ -1073,7 +1107,6 @@ export default {
             }
         }
     }
-
 }
 .posrtv {
     position: relative;

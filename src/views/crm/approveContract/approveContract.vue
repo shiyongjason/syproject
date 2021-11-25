@@ -188,7 +188,7 @@ import serviceFeeToTable from './components/serviceFeeToTable'
 import inputAutocomplete from './components/inputAutocomplete'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { mapState, mapActions } from 'vuex'
-import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi, getPurchaseOrderList, getTYCList, getCaList, findDefaultAccountByCompany, findSupplies } from './api/index'
+import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi, getPurchaseOrderList, getTYCList, getCaList, findDefaultAccountByCompany, findSupplies, signAuthPerson } from './api/index'
 import { ccpBaseUrl } from '@/api/config'
 import Editor from '@tinymce/tinymce-vue'
 import comRender from './comRender'
@@ -846,7 +846,39 @@ export default {
             this.dialog.dialogVisible = false
             this.dialog.remark = ''
         },
-        onSure () {
+        // 二要素校验
+        onCheckAuth (val) {
+            console.log(val)
+            let _obj1 = {}
+            let _obj2 = {}
+            let authResult = []
+            val.map(item => {
+                if (item.paramKey == 'dealer_controller_name') {
+                    _obj1.name = item.paramValue
+                }
+                if (item.paramKey == 'dealer_controller_ID_code') {
+                    _obj1.idNo = item.paramValue
+                }
+                if (item.paramKey == 'dealer_controller_name_spouse' && item.required) {
+                    _obj2.name = item.paramValue
+                }
+                if (item.paramKey == 'dealer_controller_ID_code_spouse' && item.required) {
+                    _obj2.idNo = item.paramValue
+                }
+                if (Object.keys(_obj1).length > 0) {
+                    authResult = [_obj1]
+                } else {
+                    authResult = []
+                }
+                if (Object.keys(_obj2).length > 0) {
+                    authResult = [_obj1, _obj2]
+                } else {
+                    authResult = [_obj1]
+                }
+            })
+            return authResult
+        },
+        async onSure () {
             if (!this.dialog.remark) {
                 this.$message({
                     message: `原因不能为空`,
@@ -902,6 +934,11 @@ export default {
                     caOrgName: caOrgName.length > 0 ? caOrgName[0].paramValue : ''
                 }
                 try {
+                    // 提交审核  担保合同进行二要素校验
+                    console.log(this.$route.query.contractTypeId)
+                    if (this.$route.query.contractTypeId == 10001) {
+                        await signAuthPerson({ individualList: this.onCheckAuth(this.contractFieldsList) })
+                    }
                     await approvalContent(query)
                     this.$message({
                         message: `提交成功`,
@@ -1006,7 +1043,7 @@ export default {
             await saveContent({
                 'contractId': this.$route.query.id,
                 // 合同审批角色 1：分财 2：运营 3：法务
-                'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
+                'approverRole': this.$route.query.role,
                 'type': 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
                 'fieldName': this.currentKey.paramKey, // 编辑字段
                 'fieldOriginalContent': old, // 编辑前内容

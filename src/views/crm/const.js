@@ -16,6 +16,7 @@ export const STATUS_LIST =
         { key: 12, value: '资料待审核' },
         { key: 4, value: '待立项' },
         { key: 11, value: '待终审' },
+        { key: 15, value: '钉钉审批中' },
         { key: 13, value: '终审通过' },
         { key: 14, value: '终审未通过' },
         { key: 5, value: '审核未通过' }
