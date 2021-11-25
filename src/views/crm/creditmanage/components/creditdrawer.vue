@@ -22,9 +22,8 @@
                     </div>
                     <div class="drawer-wrap_btn">
                         <div class="drawer-wrap_btn-flex">信用详情</div>
-                        <!-- v-if="hosAuthCheck(auths.CRM_CREDIT_SET)" -->
-                        <el-button type="primary" size="mini" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 0" @click="onEditVip(creditDetailObj.id)">通用额度设置</el-button>
-                        <el-button type="primary" size="mini" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 0" @click="handleOpenSet()">临时额度设置</el-button>
+                        <el-button type="primary" size="mini" v-if="(creditDetailObj.companyType == 1 || creditDetailObj.companyType == 0) && hosAuthCheck(auths.CRM_CREDIT_SET)" @click="onEditVip(creditDetailObj.id)">通用额度设置</el-button>
+                        <el-button type="primary" size="mini" v-if="(creditDetailObj.companyType == 1 || creditDetailObj.companyType == 0) && hosAuthCheck(auths.CRM_TEMPORARY_SET)" @click="handleOpenSet()">临时额度设置</el-button>
                     </div>
                     <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :actionMinWidth=100 :maxHeight=500>
                         <template slot="endTime" slot-scope="scope">
@@ -89,7 +88,6 @@
                                 <h-button table @click="onClickRecord">打回记录</h-button>
                             </p>
                             <p v-if="hosAuthCheck(auths.CRM_XY_DOWN)">
-                                <!-- <p> -->
                                 <h-button table @click="onDownzip" v-if="showPacking==null">一键下载</h-button>
                                 <!-- <span v-if="isDownLoad">正在下载中，请稍后</span> -->
                                 <span v-if="showPacking!=null&&showPacking">文件打包中，请稍等</span>
@@ -138,7 +136,6 @@
             <template #btn>
                 <h-button type="assist" @click="onCallback" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)">打回补充</h-button>
                 <h-button type="primary" @click="onOnlyCredit" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)">审核通过</h-button>
-                <!-- <h-button type="primary" @click="onOnlyCredit">审核通过</h-button> -->
                 <h-button @click="handleClose">取消</h-button>
             </template>
         </h-drawer>
@@ -154,7 +151,6 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="服务费：" prop="serviceFee">
-                    <!-- <el-input v-model="ruleForm.serviceFee" v-isNum:1="ruleForm.serviceFee" maxlength='2'></el-input> -->
                     <el-input-number v-model="ruleForm.serviceFee" controls-position="right" :min="0" :max="100" :precision=1></el-input-number>
                 </el-form-item>
                 <el-form-item label="通用额度：" prop="purchaseQuota">
@@ -169,11 +165,6 @@
                 <el-form-item label="说明" remark>
                     <el-input type="textarea" v-model="ruleForm.remark" maxlength="200" show-word-limit :rows="6"></el-input>
                 </el-form-item>
-                <!-- <el-form-item label="附件：" prop="projectUpload" ref="projectUpload">
-                    <OssFileHosjoyUpload v-model="ruleForm.projectUpload" accept='.jpeg,.jpg,.png,.xls,.xlsx,.pdf,.docx,.doc,.ppt' :fileSize='2' :fileNum='9' :action='action' :uploadParameters='uploadParameters'>
-                    </OssFileHosjoyUpload>
-                    2M以内，支持png、jpg，jpeg，pdf，excel、word、ppt等格式
-                </el-form-item> -->
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <template v-if="onlyType==1">
@@ -425,7 +416,6 @@ export default {
     },
     methods: {
         ...mapActions({
-            // findCreditPage: 'creditManage/findCreditPage',
             findCreditDetail: 'creditManage/findCreditDetail',
             findCreditDocument: 'creditManage/findCreditDocument',
             findCreditRecords: 'creditManage/findCreditRecords'
@@ -438,8 +428,6 @@ export default {
             this.activeName = '1'
             this.companyId = val.companyId
             this.documentStatus = val.documentStatus
-            // await this.findCreditPage({ companyId: this.companyId })
-            // this.tableData = this.creditPage.companyCreditList
             this.getCompanyDeatil()
             this.getShareLimitList()
             this.getShareCompaniesList()
@@ -542,7 +530,7 @@ export default {
                 this.onlyType = 2
                 const { data } = await getComcredit(this.companyId)
                 this.ruleForm = { ...data }
-                // this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
+                this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
                 this.ruleForm.newendTime = this.ruleForm.endTime
                 this.newRuleForm = { ...this.ruleForm }
                 this.dialogVisible = true
@@ -553,7 +541,7 @@ export default {
         },
         async onSubmitDoc (val) {
             this.isloading = true
-            // this.ruleForm.attachments = JSON.stringify(this.ruleForm.projectUpload)
+            this.ruleForm.attachments = JSON.stringify(this.ruleForm.projectUpload)
             if (val == 2) {
                 try {
                     await saveCreditDocument({ companyId: this.companyId, reqCompanyCreditDetail: { ...this.ruleForm }, submitStatus: val })
@@ -564,8 +552,6 @@ export default {
                     this.drawer = false
                     this.$emit('backEvent')
                     this.dialogVisible = false
-                    // await this.findCreditPage({ companyId: this.companyId })
-                    // this.tableData = this.creditPage.companyCreditList
                     this.getCompanyDeatil()
                     this.$emit('backEvent')
                 } catch (error) {
@@ -584,8 +570,6 @@ export default {
                             this.drawer = false
                             this.$emit('backEvent')
                             this.dialogVisible = false
-                            // await this.findCreditPage({ companyId: this.companyId })
-                            // this.tableData = this.creditPage.companyCreditList
                             this.getCompanyDeatil()
                             this.$emit('backEvent')
                         } catch (error) {
@@ -600,7 +584,6 @@ export default {
         handleClose () {
             this.drawer = false
             this.showPacking = null
-            // 解决子企业查看主企业评级关闭后，子企业继续弹出
             setTimeout(() => {
                 if (this.toViewMainCompany) {
                     const { companyId } = this.creditDetailObj
@@ -619,7 +602,7 @@ export default {
                 await this.findCreditDetail(val)
                 console.log(this.creditDetail)
                 this.ruleForm = { ...this.creditDetail }
-                // this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
+                this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
                 this.ruleForm.newendTime = this.ruleForm.endTime
                 this.newRuleForm = { ...this.ruleForm }
             }
@@ -630,7 +613,7 @@ export default {
         },
         submitForm () {
             this.isloading = true
-            // this.ruleForm.attachments = JSON.stringify(this.ruleForm.projectUpload)
+            this.ruleForm.attachments = JSON.stringify(this.ruleForm.projectUpload)
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
                     try {
