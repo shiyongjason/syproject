@@ -7,9 +7,10 @@ export function errImportResults (params) {
         try {
             const reader = new FileReader()
             reader.readAsDataURL(response.data)
+            console.log(reader)
             reader.onload = function (e) {
                 const a = document.createElement('a')
-                a.download = '失败明细.xlsx'
+                a.download = '失败明细'
                 a.href = e.target.result
                 document.querySelector('body').appendChild(a)
                 a.click()
