@@ -36,7 +36,7 @@ export const downLoadZip = (params) => axios.get(`memeber/api/credit-document/do
 // 临时额度列表
 export const temporaryQuotaList = (params) => axios.get('/memeber/api/quota/temporary-quota/page', { params })
 // 临时额度新增
-export const temporaryQuotaAdd = (params) => axios.post('/memeber/api/quota/temporary-quota', { request: params })
+export const temporaryQuotaAdd = (params) => axios.post('/memeber/api/quota/temporary-quota', params)
 // 临时额度修改
 // export const temporaryQuotaUpdate = (params) => axios.put('/memeber/api/quota/temporary-quota', params)
 // 手动失效

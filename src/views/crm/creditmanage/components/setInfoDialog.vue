@@ -54,7 +54,7 @@ import { deepCopy } from '@/utils/utils'
     }
 })
 export default class SetInfoDialog extends Vue {
-    $refs!: { form: HTMLFormElement }
+    $refs!: { form: HTMLFormElement, ruleForm: HTMLFormElement }
     @State('userInfo') userInfo: any
     // 定义变量
     private isVisible:boolean = false
@@ -176,6 +176,7 @@ export default class SetInfoDialog extends Vue {
     // 新增临时额度关闭
     handleAddBack () {
         this.isAddVisible = false
+        this.$refs.ruleForm.resetFields()
     }
     // 临时提额设置关闭
     handleCancel () {

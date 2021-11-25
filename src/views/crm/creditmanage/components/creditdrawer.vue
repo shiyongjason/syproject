@@ -16,14 +16,14 @@
                     </div>
                 </div>
                 <div class="drawer-wrap" v-if="activeName=='1'">
-                    <div class="drawer-wrap_title">{{companyName}}
+                    <div class="drawer-wrap_title">{{creditDetailObj.companyName}}
                         <!-- companyType 0无标签企业 1 主企业 2 子企业 -->
                         <el-tag :type="creditDetailObj.companyType == 1 ? 'success': ''" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 2">{{ creditDetailObj.companyType == 1 ? '主企业' : '子企业' }}</el-tag>
                     </div>
                     <div class="drawer-wrap_btn">
                         <div class="drawer-wrap_btn-flex">信用详情</div>
                         <!-- v-if="hosAuthCheck(auths.CRM_CREDIT_SET)" -->
-                        <el-button type="primary" size="mini" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 0" @click="onEditVip(creditDetailObj.companyId)">通用额度设置</el-button>
+                        <el-button type="primary" size="mini" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 0" @click="onEditVip(creditDetailObj.id)">通用额度设置</el-button>
                         <el-button type="primary" size="mini" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 0" @click="handleOpenSet()">临时额度设置</el-button>
                     </div>
                     <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :actionMinWidth=100 :maxHeight=500>
@@ -31,14 +31,14 @@
                             <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime | momentFormat('YYYY-MM-DD')}}</span>
                         </template>
                         <template slot="status" slot-scope="scope">
-                            <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status==true?'正常':scope.data.row.status==false?'过期':'-'}}</span>
+                            <span :class="scope.data.row.creditStatus?'colgry':'colred'">{{scope.data.row.creditStatus==true?'正常':scope.data.row.creditStatus==false?'过期':'-'}}</span>
                         </template>
                     </basicTable>
                     <!-- 子企业展示内容 -->
                     <template v-if="creditDetailObj.companyType == 2">
                         <div class="drawer-wrap_box">
                             <span>以上信用为共享<font color="#ff7a45">{{ creditDetailObj.mainCompanyName }}</font>的信用评级。</span>
-                            <el-button type="primary" size="mini">查看主企业评级</el-button>
+                            <el-button type="primary" size="mini" @click="toViewMainBusiness">查看主企业评级</el-button>
                             <el-button type="primary" size="mini" @click="handleUnlink({ childCompanyId: companyId, mainCompanyId: creditDetailObj.mainCompanyId })">取消关联</el-button>
                         </div>
                     </template>
@@ -263,7 +263,6 @@ export default {
             activeName: '1',
             drawer: false,
             companyId: '',
-            companyName: '',
             documentStatus: '',
             droplist: CREDITLEVEL,
             tableData: [],
@@ -354,7 +353,8 @@ export default {
             restaurants: [],
             shareCompaniesList: [],
             updateRecordList: [],
-            creditDetailObj: {}
+            creditDetailObj: {},
+            toViewMainCompany: ''
         }
     },
     components: {
@@ -437,7 +437,6 @@ export default {
             console.log(val)
             this.activeName = '1'
             this.companyId = val.companyId
-            this.companyName = val.companyName
             this.documentStatus = val.documentStatus
             // await this.findCreditPage({ companyId: this.companyId })
             // this.tableData = this.creditPage.companyCreditList
@@ -543,7 +542,7 @@ export default {
                 this.onlyType = 2
                 const { data } = await getComcredit(this.companyId)
                 this.ruleForm = { ...data }
-                this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
+                // this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
                 this.ruleForm.newendTime = this.ruleForm.endTime
                 this.newRuleForm = { ...this.ruleForm }
                 this.dialogVisible = true
@@ -554,7 +553,7 @@ export default {
         },
         async onSubmitDoc (val) {
             this.isloading = true
-            this.ruleForm.attachments = JSON.stringify(this.ruleForm.projectUpload)
+            // this.ruleForm.attachments = JSON.stringify(this.ruleForm.projectUpload)
             if (val == 2) {
                 try {
                     await saveCreditDocument({ companyId: this.companyId, reqCompanyCreditDetail: { ...this.ruleForm }, submitStatus: val })
@@ -601,6 +600,14 @@ export default {
         handleClose () {
             this.drawer = false
             this.showPacking = null
+            // 解决子企业查看主企业评级关闭后，子企业继续弹出
+            setTimeout(() => {
+                if (this.toViewMainCompany) {
+                    const { companyId } = this.creditDetailObj
+                    this.onShowDrawerinfn({ companyId: this.toViewMainCompany, documentStatus: this.documentStatus })
+                    this.toViewMainCompany = undefined
+                }
+            }, 500)
         },
         datePickerChange (val) {
             this.newendTime = moment(val).add(6, 'M').format('YYYY-MM-DD')
@@ -611,7 +618,7 @@ export default {
             if (val) {
                 await this.findCreditDetail(val)
                 this.ruleForm = { ...this.creditDetail }
-                this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
+                // this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
                 this.ruleForm.newendTime = this.ruleForm.endTime
                 this.newRuleForm = { ...this.ruleForm }
             }
@@ -622,7 +629,7 @@ export default {
         },
         submitForm () {
             this.isloading = true
-            this.ruleForm.attachments = JSON.stringify(this.ruleForm.projectUpload)
+            // this.ruleForm.attachments = JSON.stringify(this.ruleForm.projectUpload)
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
                     try {
@@ -630,10 +637,11 @@ export default {
                         this.dialogVisible = false
                         this.isloading = false
                         this.$message({
-                            message: `信用设置成功`,
+                            message: `设置成功`,
                             type: 'success'
                         })
                         this.getCompanyDeatil()
+                        this.creditUpdateRecord()
                         this.$emit('backEvent')
                     } catch (error) {
                         this.isloading = false
@@ -802,6 +810,12 @@ export default {
                     this.$message.error('取消关联失败，请重试')
                 }
             })
+        },
+        // 查看主企业评级
+        toViewMainBusiness () {
+            this.toViewMainCompany = this.companyId
+            const { mainCompanyId } = this.creditDetailObj
+            this.onShowDrawerinfn({ companyId: mainCompanyId, documentStatus: this.documentStatus })
         }
     },
     filters: {
