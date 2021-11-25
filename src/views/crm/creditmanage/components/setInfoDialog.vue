@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-dialog title="临时提额设置" :visible.sync="isVisible" :close-on-click-modal=false width="800px" :before-close="handleCancel">
+        <el-dialog title="临时提额设置" :visible.sync="isVisible" :append-to-body="true" :close-on-click-modal=false width="800px" :before-close="handleCancel">
             <div class="set-wrap">
                 <div class="set-wrap-head">
                     {{ $parent.companyName }}
@@ -20,7 +20,7 @@
                 <h-button type="assist" @click="handleCancel">取 消</h-button>
             </span>
         </el-dialog>
-        <el-dialog title="新增临时额度" :visible.sync="isAddVisible" :close-on-click-modal=false width="650px" :before-close="handleAddBack">
+        <el-dialog title="新增临时额度" :visible.sync="isAddVisible" :append-to-body="true" :close-on-click-modal=false width="650px" :before-close="handleAddBack">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px">
                 <el-form-item label="临时额度：" prop="quotaAmount">
                     <el-input v-model="ruleForm.quotaAmount" v-isNum:6 v-inputMAX='10000'><template slot="append">万元</template></el-input>

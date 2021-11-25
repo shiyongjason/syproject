@@ -139,7 +139,7 @@
                 <h-button @click="handleClose">取消</h-button>
             </template>
         </h-drawer>
-        <el-dialog title="通用额度设置" :visible.sync="dialogVisible" width="42%" :before-close="onCloseDrawer" :close-on-click-modal=false>
+        <el-dialog title="通用额度设置" :visible.sync="dialogVisible" width="42%" :before-close="onCloseDrawer" :append-to-body="true" :close-on-click-modal=false>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm el-dialog__form">
                 <el-form-item label="企业名称：">
                     <el-input v-model="ruleForm.companyName" disabled></el-input>
@@ -177,7 +177,7 @@
                 </template>
             </span>
         </el-dialog>
-        <el-dialog title="打回记录" :visible.sync="recordsVisible" width="30%" :before-close="()=>recordsVisible = false" :modal=false>
+        <el-dialog title="打回记录" :visible.sync="recordsVisible" width="30%" :before-close="()=>recordsVisible = false" :append-to-body="true" :modal=false>
             <div class="project-record">
                 <template v-if="refuseRecord.length>0">
                     <el-timeline>
@@ -209,7 +209,7 @@
             </span>
         </el-dialog>
         <!-- 开启风控冻结 -->
-        <el-dialog title="是否开启风控冻结" :visible.sync="riskVisible" width="30%" :before-close="handleCloseFrozen" :close-on-click-modal=false>
+        <el-dialog title="是否开启风控冻结" :visible.sync="riskVisible" width="30%" :before-close="handleCloseFrozen" :append-to-body="true" :close-on-click-modal=false>
             <el-form ref="riskForm" :model="riskForm" :rules="riskFormRules" label-width="150px" style="margin-top:20px">
                 <el-form-item prop="freezeStartTime" label="冻结开始时间：">
                     <el-date-picker type="datetime" placeholder="冻结开始时间：" v-model="riskForm.freezeStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" :picker-options="startOptions" style="width: 100%;"></el-date-picker>
