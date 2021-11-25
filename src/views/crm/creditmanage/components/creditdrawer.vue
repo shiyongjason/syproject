@@ -23,25 +23,23 @@
                     <div class="drawer-wrap_btn">
                         <div class="drawer-wrap_btn-flex">信用详情</div>
                         <!-- v-if="hosAuthCheck(auths.CRM_CREDIT_SET)" -->
-                        <el-button type="primary" size="mini" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 0" @click="onEditVip(creditDetailObj.id)">通用额度设置</el-button>
+                        <el-button type="primary" size="mini" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 0" @click="onEditVip(creditDetailObj.companyId)">通用额度设置</el-button>
                         <el-button type="primary" size="mini" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 0" @click="handleOpenSet()">临时额度设置</el-button>
                     </div>
                     <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :actionMinWidth=100 :maxHeight=500>
                         <template slot="endTime" slot-scope="scope">
-                            <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime?moment(scope.data.row.endTime).format('YYYY-MM-DD'):'-'}}</span>
+                            <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime | momentFormat('YYYY-MM-DD')}}</span>
                         </template>
                         <template slot="status" slot-scope="scope">
                             <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status==true?'正常':scope.data.row.status==false?'过期':'-'}}</span>
                         </template>
                     </basicTable>
-                     <!-- 子企业展示内容 -->
+                    <!-- 子企业展示内容 -->
                     <template v-if="creditDetailObj.companyType == 2">
                         <div class="drawer-wrap_box">
-                            <span>以上信用为共享<font color="#ff7a45">好享家舒适智能家居股份有限公司</font>的信用评级。</span>
+                            <span>以上信用为共享<font color="#ff7a45">{{ creditDetailObj.mainCompanyName }}</font>的信用评级。</span>
                             <el-button type="primary" size="mini">查看主企业评级</el-button>
-                             <!-- { creditDetailObj.companyId } -->
-                             <!-- 这里关联传参有问题 还没调通 后台字段有问题 -->
-                            <el-button type="primary" size="mini" @click="handleUnlink({ childCompanyId: this.companyId, mainCompanyId: creditDetailObj.companyId })">取消关联</el-button>
+                            <el-button type="primary" size="mini" @click="handleUnlink({ childCompanyId: companyId, mainCompanyId: creditDetailObj.mainCompanyId })">取消关联</el-button>
                         </div>
                     </template>
                     <!-- 主企业|无标签企业展示内容 -->
@@ -49,7 +47,7 @@
                         <div class="drawer-wrap_switch">
                             <el-switch v-model="creditDetailObj.creditFreeze" disabled @click.native="handleChangeSwitch(creditDetailObj.creditFreeze)" style="display: block" active-color="#13ce66" inactive-color="#ff4949" inactive-text="是否开启风控冻结？">
                             </el-switch>
-                            <span v-if="creditDetailObj.creditFreeze">冻结周期{{moment(creditDetailObj.freezeStartTime).format('YYYY-MM-DD HH:mm:ss')}}～{{moment(creditDetailObj.freezeEndTime).format('YYYY-MM-DD HH:mm:ss')}}</span>
+                            <span v-if="creditDetailObj.creditFreeze">冻结周期{{creditDetailObj.freezeStartTime | momentFormat}}～{{creditDetailObj.freezeEndTime | momentFormat}}</span>
                         </div>
                         <div class="drawer-wrap_header">额度共享</div>
                         <div class="drawer-wrap_box">
@@ -70,7 +68,7 @@
                                 <template v-if="shareCompaniesList.length > 0">
                                     <div class="link-name" v-for="item in shareCompaniesList" :key="item.companyId">
                                         <span>{{ item.companyName }} <i>{{ item.shareTime }}</i></span>
-                                        <el-button type="primary" size="mini" @click="handleUnlink({ childCompanyId: item.id, mainCompanyId: this.companyId, companyName: item.companyName })">取消关联</el-button>
+                                        <el-button type="primary" size="mini" @click="handleUnlink({ childCompanyId: item.companyId, mainCompanyId: companyId, companyName: item.companyName })">取消关联</el-button>
                                     </div>
                                 </template>
                                 <template v-else>
@@ -81,12 +79,7 @@
                     </template>
                     <div class="drawer-wrap_header">修改记录</div>
                     <div class="drawer-wrap_records">
-                        <template v-if="updateRecord.length > 0">
-                            <div v-for="item in updateRecord" :key="item.id">
-                                <p><span class="deep">{{ item.createBy || '-' }}{{ item.createPhone || '-' }}</span> 在 <span class="deep">{{ moment(item.createTime).format('YYYY-MM-DD HH:mm:ss') || '-' }}</span> 将 <span class="deep">{{ creditDetailObj.companyName }}</span> {{ item.type | updateRecordFilter }}</p>
-                            </div>
-                        </template>
-                        <div v-else>暂无记录</div>
+                        <updateRecord :list="updateRecordList"></updateRecord>
                     </div>
                 </div>
                 <div class="collect-wrapbox" v-if="activeName=='2'">
@@ -127,7 +120,7 @@
                                                 </template>
                                             </span>
                                         </p>
-                                        <p>{{moment(jtem.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
+                                        <p>{{ jtem.createTime | momentFormat }}</p>
                                         <p>
                                             <font class="fileItemDownLoad" @click="()=>{onDelete(obj,index)}" v-if="(documentStatus!=3)">删除</font>
                                             <downloadFileAddToken :file-name="jtem.fileName" :file-url="jtem.fileUrl" a-link-words="下载" is-type="btn" />
@@ -251,6 +244,7 @@ import moment from 'moment'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
 import downloadFileAddToken from '@/components/downloadFileAddToken'
 import setInfoDialog from '../components/setInfoDialog.vue'
+import updateRecord from './updateRecord.vue'
 import { ccpBaseUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
 import CustomAutocomplete from './customAutocomplete.vue'
@@ -276,11 +270,11 @@ export default {
             tableLabel: [
                 { label: '信用评级', prop: 'creditLevel', width: '' },
                 { label: '服务费', prop: 'serviceFee', width: '150' },
-                { label: '可代采购额度(万元)', prop: 'purchaseAmount', width: '150', formatters: 'money' },
                 { label: '通用额度(万元)', prop: 'purchaseQuota', width: '150', formatters: 'money' },
                 { label: '临时额度(万元)', prop: 'temporaryQuotaAmount', width: '150', formatters: 'money' },
-                { label: '冻结中额度(万元)', prop: 'purchaseQuota', width: '150', formatters: 'money' },
-                { label: '占用中额度(万元)', prop: 'purchaseQuota', width: '150', formatters: 'money' },
+                { label: '可代采购额度(万元)', prop: 'purchaseAmount', width: '150' },
+                { label: '冻结中额度(万元)', prop: 'purchaseFreezeAmount', width: '150' },
+                { label: '占用中额度(万元)', prop: 'occupyAmount', width: '150', formatters: 'money' },
                 { label: '剩余代采购额度(万元)', prop: 'purchaseUsableAmount', width: '150', formatters: 'money' },
                 { label: '信用到期日', prop: 'endTime', width: '180', formatters: 'date' },
                 { label: '状态', prop: 'status' }
@@ -359,7 +353,7 @@ export default {
             },
             restaurants: [],
             shareCompaniesList: [],
-            updateRecord: [],
+            updateRecordList: [],
             creditDetailObj: {}
         }
     },
@@ -367,7 +361,8 @@ export default {
         OssFileHosjoyUpload,
         downloadFileAddToken,
         setInfoDialog,
-        CustomAutocomplete
+        CustomAutocomplete,
+        updateRecord
     },
     watch: {
         'form.projectUpload' (val) {
@@ -511,7 +506,6 @@ export default {
             })
         },
         checkForm (cb) {
-            console.log('creditDocumentList', this.creditDocumentList)
             let res = ''
             for (let i = 0; i < this.mondatoryFlagRes.length; i++) {
                 const arr = this.creditDocumentList.filter(jtem => {
@@ -571,8 +565,9 @@ export default {
                     this.drawer = false
                     this.$emit('backEvent')
                     this.dialogVisible = false
-                    await this.findCreditPage({ companyId: this.companyId })
-                    this.tableData = this.creditPage.companyCreditList
+                    // await this.findCreditPage({ companyId: this.companyId })
+                    // this.tableData = this.creditPage.companyCreditList
+                    this.getCompanyDeatil()
                     this.$emit('backEvent')
                 } catch (error) {
                     this.isloading = false
@@ -590,8 +585,9 @@ export default {
                             this.drawer = false
                             this.$emit('backEvent')
                             this.dialogVisible = false
-                            await this.findCreditPage({ companyId: this.companyId })
-                            this.tableData = this.creditPage.companyCreditList
+                            // await this.findCreditPage({ companyId: this.companyId })
+                            // this.tableData = this.creditPage.companyCreditList
+                            this.getCompanyDeatil()
                             this.$emit('backEvent')
                         } catch (error) {
                             this.isloading = false
@@ -601,8 +597,6 @@ export default {
                     }
                 })
             }
-
-            // this.saveCreditDocument()
         },
         handleClose () {
             this.drawer = false
@@ -640,8 +634,7 @@ export default {
                             message: `信用设置成功`,
                             type: 'success'
                         })
-                        await this.findCreditPage({ companyId: this.companyId })
-                        this.tableData = this.creditPage.companyCreditList
+                        this.getCompanyDeatil()
                         this.$emit('backEvent')
                     } catch (error) {
                         this.isloading = false
@@ -719,21 +712,9 @@ export default {
         async onDownzip () {
             this.isDownLoad = true
             this.showPacking = true
-            // console.log(interfaceUrl + `memeber/api/credit-document/download/${this.companyId}/${this.activeName}/detail`)
             const { data } = await downLoadZip({ companyId: this.companyId, activeName: 1 })
-            console.log(data)
             this.showPacking = false
             window.location.href = data
-        },
-        // 风控冻结
-        async handleChangeSwitch (val) {
-            console.log(val)
-            if (!val) {
-                this.riskVisible = true
-            } else {
-                await updateCreditUnFreeze(this.companyId)
-                this.getCompanyDeatil()
-            }
         },
         handleCloseFrozen () {
             this.riskVisible = false
@@ -770,6 +751,20 @@ export default {
             const { data } = await shareCompanies({ companyId: this.companyId })
             this.shareCompaniesList = data
         },
+        // 修改记录
+        async creditUpdateRecord () {
+            const { data } = await creditUpdatRecord({ companyId: this.companyId })
+            this.updateRecordList = data
+        },
+        // 风控冻结
+        async handleChangeSwitch (val) {
+            if (!val) {
+                this.riskVisible = true
+            } else {
+                await updateCreditUnFreeze(this.companyId)
+                this.getCompanyDeatil()
+            }
+        },
         // 关联企业
         async handleRelevance (value) {
             const dataJson = {
@@ -777,16 +772,20 @@ export default {
                 mainCompanyId: this.companyId
             }
             await creditShareAdd(dataJson)
+            this.getCompanyDeatil()
             this.getShareCompaniesList()
             this.getShareLimitList()
+            this.creditUpdateRecord()
         },
         // 取消关联企业
         handleUnlink (value) {
             let tips = ''
             if (value.companyName) {
+                // 主企业取消关联
                 tips = `<span style="color:red">取消关联后，${value.companyName}将不再可以共用当前企业的信用评级</span>，你还要继续吗？`
             } else {
-                tips = `<span style="color:red">取消关联后，当前企业将不再可以共用${creditDetailObj.companyName}企业的信用评级</span>，你还要继续吗？`
+                // 子企业取消关联
+                tips = `<span style="color:red">取消关联后，当前企业将不再可以共用${this.creditDetailObj.mainCompanyName}企业的信用评级</span>，你还要继续吗？`
             }
             this.$confirm(tips, '是否确认取消关联？', {
                 dangerouslyUseHTMLString: true,
@@ -795,18 +794,15 @@ export default {
             }).then(async () => {
                 try {
                     await creditShareCancel(value)
+                    this.getCompanyDeatil()
                     this.getShareCompaniesList()
                     this.getShareLimitList()
+                    this.creditUpdateRecord()
                     this.$message.success('已取消关联')
                 } catch (err) {
                     this.$message.error('取消关联失败，请重试')
                 }
             })
-        },
-        // 修改记录
-        async creditUpdateRecord () {
-            const { data } = await creditUpdatRecord({ companyId: this.companyId })
-            this.updateRecord = data
         }
     },
     filters: {
@@ -824,46 +820,6 @@ export default {
                     break
                 case 4:
                     result = '已关联当前企业'
-                    break
-                default: break
-            }
-            return result
-        },
-        updateRecordFilter (val) {
-            let result = ''
-            switch (parseInt(val)) {
-                case 1:
-                    result = '关联了当前企业'
-                    break
-                case 2:
-                    result = '和当前企业取消了关联'
-                    break
-                case 3:
-                    result = '当前企业和A进行关联'
-                    break
-                case 4:
-                    result = '当前企业和A取消了关联'
-                    break
-                case 5:
-                    result = '通用额度设置'
-                    break
-                case 6:
-                    result = '新增临时额度'
-                    break
-                case 7:
-                    result = '临时额度手动设置'
-                    break
-                case 8:
-                    result = '临时额度自动失效'
-                    break
-                case 9:
-                    result = '开启风控冻结'
-                    break
-                case 10:
-                    result = '解除风控冻结'
-                    break
-                case 11:
-                    result = '风控冻结自动解除'
                     break
                 default: break
             }
@@ -983,19 +939,14 @@ export default {
         span {
             padding-right: 10px;
         }
-        .deep {
-            color: #ff7a45;
-        }
     }
-    &_records{
+    &_records {
         display: flex;
         flex-direction: column;
-        max-height: 400px;
-        overflow-y: scroll;
-        div{
+        div {
             margin-top: 10px;
         }
-         span {
+        span {
             padding-right: 10px;
         }
         .deep {
