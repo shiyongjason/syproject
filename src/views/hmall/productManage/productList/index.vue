@@ -389,7 +389,7 @@ export default {
                 uInt8Array[i] = raw.charCodeAt(i)
             }
             const blob = new Blob([uInt8Array], {
-                type: 'application/vnd.ms-excel'
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
             })
 
             const reader = new FileReader()
