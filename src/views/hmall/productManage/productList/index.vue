@@ -104,7 +104,6 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 import { clearCache, newCache } from '@/utils/index'
 import { PRODUCT_STATUS } from '../const/index'
 import { batchOperator } from '../../utils/index'
-import { errImportResults } from '../api'
 export default {
     name: 'productList',
     data () {
@@ -149,7 +148,8 @@ export default {
                 }
 
             },
-            judge: false
+            judge: false,
+            errExcel: ''
 
         }
     },
@@ -322,6 +322,7 @@ export default {
                 this.$message.error(response.message)
                 this.uid = response.uid
                 this.judge = true
+                this.errExcel = response.fileBytes
                 this.importResults()
             }
         },
@@ -380,9 +381,26 @@ export default {
             downloadQuestionTemp()
         },
         importResults () {
-            errImportResults({
-                uid: this.uid
+            let result = this.errExcel
+            let raw = window.atob(result)
+            let uInt8Array = new Uint8Array(result.length)
+            for (var i = 0; i < raw.length; i++) {
+                uInt8Array[i] = raw.charCodeAt(i)
+            }
+            const blob = new Blob([uInt8Array], {
+                type: 'application/vnd.ms-excel'
             })
+
+            const reader = new FileReader()
+            reader.readAsDataURL(blob)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '失败明细'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
         },
         // 批量生效
         async onBatchEffective () {
