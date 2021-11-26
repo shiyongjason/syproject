@@ -913,16 +913,12 @@ export default class FinalApproval extends Vue {
                 delete element.acceptanceRate
             }
             // 银行转账 选中自定义费率
-            if (element.transferRateType === 2) {
-                if (element.transferRate == 0 || element.transferRate == 100) {
-                    rateFlag = false
-                }
+            if (element.transferRateType === 2 && element.transferRate == 100) {
+                rateFlag = false
             }
             // 银行承兑 选中自定义费率
-            if (element.acceptanceRateType === 2) {
-                if (element.acceptanceRate == 0 || element.acceptanceRate == 100) {
-                    rateFlag = false
-                }
+            if (element.acceptanceRateType === 2 && element.acceptanceRate == 100) {
+                rateFlag = false
             }
             if (!element.upstreamPayType) {
                 flag = false
@@ -954,7 +950,7 @@ export default class FinalApproval extends Vue {
             }
         })
         if (!rateFlag) {
-            this.$message.warning('自定义费率需大于0小于100!')
+            this.$message.warning('自定义费率需小于100!')
         }
         if (!flag) {
             this.$message.warning('请完善表格的必填项数据!')
