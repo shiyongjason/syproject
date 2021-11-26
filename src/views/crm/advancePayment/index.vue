@@ -617,7 +617,6 @@ export default class Advancelist extends Vue {
     }
 
     public onUploadPrePay (val) {
-        console.log(val)
         this.prePayForm = {
             ...this.prePayForm,
             payAmount: val.applyAmount,
