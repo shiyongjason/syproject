@@ -898,18 +898,31 @@ export default class FinalApproval extends Vue {
         }
 
         let flag = true
+        let rateFlag = true
         tables.forEach(element => {
             console.log('element', element)
             delete element.deviceCategory
             delete element.upstreamPayTypeName
 
-            // 选中执行费率 则不校验Input
+            // 银行转账 选中执行费率 则不校验Input
             if (element.transferRateType === 1) {
                 delete element.transferRate
             }
-            // 选中执行费率 则不校验Input
+            // 银行承兑 选中执行费率 则不校验Input
             if (element.acceptanceRateType === 1) {
                 delete element.acceptanceRate
+            }
+            // 银行转账 选中自定义费率
+            if (element.transferRateType === 2) {
+                if (element.transferRate == 0 || element.transferRate == 100) {
+                    rateFlag = false
+                }
+            }
+            // 银行承兑 选中自定义费率
+            if (element.acceptanceRateType === 2) {
+                if (element.acceptanceRate == 0 || element.acceptanceRate == 100) {
+                    rateFlag = false
+                }
             }
             if (!element.upstreamPayType) {
                 flag = false
@@ -940,10 +953,13 @@ export default class FinalApproval extends Vue {
                 }
             }
         })
+        if (!rateFlag) {
+            this.$message.warning('自定义费率需大于0小于100!')
+        }
         if (!flag) {
             this.$message.warning('请完善表格的必填项数据!')
         }
-        return flag
+        return flag && rateFlag
     }
     // 保存采购结论
     submit () {
