@@ -182,6 +182,7 @@ export default class SetInfoDialog extends Vue {
     }
     // 临时提额设置关闭
     handleCancel () {
+        (this.$parent as any).creditUpdateRecord()
         this.isVisible = false
     }
 }
