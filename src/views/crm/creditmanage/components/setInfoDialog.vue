@@ -14,7 +14,6 @@
                         <h-button table v-if="slotProps.data.row.status == 0" @click="handleLose(slotProps.data.row)">手动失效</h-button>
                     </template>
                 </hosJoyTable>
-
             </div>
             <span slot="footer" class="dialog-footer">
                 <h-button type="assist" @click="handleCancel">取 消</h-button>
@@ -82,8 +81,8 @@ export default class SetInfoDialog extends Vue {
         { label: '临时额度（万元）', prop: 'quotaAmount', width: '120' },
         { label: '状态', prop: 'status', width: '130', slot: 'status' },
         { label: '额度到期时间', prop: 'expireTime', width: '150' },
-        { label: '修改人', prop: 'updateBy', width: '150' },
-        { label: '修改时间', prop: 'updateTime', width: '180' }
+        { label: '修改人', prop: 'createBy', width: '150' },
+        { label: '修改时间', prop: 'createTime', width: '150' }
     ]
 
     get rules () {
@@ -117,6 +116,9 @@ export default class SetInfoDialog extends Vue {
             companyId: (this as any).$parent?.companyId
         }
         const { data } = await Api.temporaryQuotaList(dataJson)
+        data.records.forEach(item => {
+            item.createTime = item.createTime?.replace('T', ' ')
+        })
         this.tableData = data.records
         this.page.total = data.total
     }

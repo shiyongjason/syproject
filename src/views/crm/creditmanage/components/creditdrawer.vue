@@ -30,7 +30,7 @@
                             <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime | momentFormat('YYYY-MM-DD')}}</span>
                         </template>
                         <template slot="status" slot-scope="scope">
-                            <span :class="scope.data.row.creditStatus?'colgry':'colred'">{{scope.data.row.creditStatus==true?'正常':scope.data.row.creditStatus==false?'过期':'-'}}</span>
+                            <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status==true?'正常':scope.data.row.status==false?'过期':'-'}}</span>
                         </template>
                     </basicTable>
                     <!-- 子企业展示内容 -->
@@ -139,7 +139,7 @@
                 <h-button @click="handleClose">取消</h-button>
             </template>
         </h-drawer>
-        <el-dialog title="通用额度设置" :visible.sync="dialogVisible" width="42%" :before-close="onCloseDrawer" :append-to-body="true" :close-on-click-modal=false>
+        <el-dialog title="通用额度设置" :visible.sync="dialogVisible" width="42%" :before-close="onCloseDrawer" append-to-body :close-on-click-modal=false>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm el-dialog__form">
                 <el-form-item label="企业名称：">
                     <el-input v-model="ruleForm.companyName" disabled></el-input>
@@ -707,15 +707,18 @@ export default {
             this.showPacking = false
             window.location.href = data
         },
+        // 开启风控冻结--取消
         handleCloseFrozen () {
             this.riskVisible = false
         },
+        // 开启风控冻结--确定
         handleSubmitFrozen () {
             this.riskForm.companyId = this.companyId
             this.$refs.riskForm.validate(async valid => {
                 if (valid) {
                     await updateCreditFreeze(this.riskForm)
                     this.getCompanyDeatil()
+                    this.creditUpdateRecord()
                     this.riskVisible = false
                 }
             })
