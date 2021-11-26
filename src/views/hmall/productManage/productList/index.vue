@@ -338,20 +338,13 @@ export default {
         },
         beforeAvatarUpload (file) {
             const isLt10M = file.size / (1024 * 1024 * 10) < 1
-            // const isCsv = file.type === 'application/vnd.ms-excel'
-            const isCsv = file.name.lastIndexOf('.') > 0 ? ['.xlsx', '.xls'].indexOf(file.name.slice(file.name.lastIndexOf('.'), file.name.length)) > -1 : false
-            if (!isCsv) {
-                // this.$message.error('上传文件只能是 excel 格式!')
-                this.loading = true
-                this.$message({
-                    type: 'error',
-                    message: '上传文件只能是 excel 格式!',
-                    duration: 800,
-                    onClose: () => {
-                        this.loading = false
-                    }
-                })
+            if (this.uploadData.accept.indexOf(file.type) > -1) {
+
+            } else {
+                this.$message.error('上传文件只能是 excel 格式!')
+                return false
             }
+
             if (!isLt10M) {
                 // this.$message.error('上传文件大小不能超过 10MB!')
                 this.loading = true
@@ -364,7 +357,7 @@ export default {
                     }
                 })
             }
-            return isCsv && isLt10M
+            return isLt10M
         },
         async onImport () {
             if (this.loading) return
