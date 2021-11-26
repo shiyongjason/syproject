@@ -324,6 +324,7 @@ export default {
                 this.judge = true
                 this.errExcel = response.fileBytes
                 this.importResults()
+                // 调用下载方法
             }
         },
         frontDownload () {
