@@ -1432,6 +1432,12 @@ export interface PrepaymentSupplierOnlineBankTransferConfirmRequest {
      */
     paymentTime: string
 
+    /**
+     * 上传上游支付凭证
+     * @type {Array}}
+     * @memberof PrepaymentSupplierOnlineBankTransferConfirmRequest
+     */
+     attachDocRequestList: any[]
 }
 
 /**
@@ -1543,6 +1549,12 @@ export interface SupplierOnlineBankTransferConfirmRequest {
      */
     paymentTime: string
 
+    /**
+     * 上传上游支付凭证
+     * @type {Array}
+     * @memberof SupplierOnlineBankTransferConfirmRequest
+     */
+     attachDocRequestList: any[]
 }
 
 /**
