@@ -134,8 +134,8 @@
                 </div>
             </template>
             <template #btn>
-                <h-button type="assist" @click="onCallback" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)&&creditDetailObj.companyType != 2">打回补充</h-button>
-                <h-button type="primary" @click="onOnlyCredit" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)&&creditDetailObj.companyType != 2">审核通过</h-button>
+                <h-button type="assist" @click="onCallback" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)">打回补充</h-button>
+                <h-button type="primary" @click="onOnlyCredit" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)">审核通过</h-button>
                 <h-button @click="handleClose">取消</h-button>
             </template>
         </h-drawer>
@@ -533,7 +533,10 @@ export default {
                 this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
                 this.ruleForm.newendTime = this.ruleForm.endTime
                 this.newRuleForm = { ...this.ruleForm }
-                this.dialogVisible = true
+                // 如果是子企业，则直接审核通过，无需填写信用评级，如果是主企业和无标签企业，则打开评级弹窗
+                if (this.creditDetailObj.companyType != 2) {
+                    this.dialogVisible = true
+                }
                 this.$nextTick(() => {
                     this.$refs.ruleForm.clearValidate()
                 })
