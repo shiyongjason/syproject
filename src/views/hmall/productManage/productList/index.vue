@@ -56,7 +56,7 @@
             <div class="button-cont">
                 <template v-if="productType == 'SPU'">
                     <h-button type='create' @click="onCreateProduct">新建商品</h-button>
-                    <h-button @click="onExports">批量导入</h-button>
+                    <!-- <h-button @click="onExports">批量导入</h-button> -->
                     <h-button @click="onBatchEffective()" v-if="tabName == 'EFFICACY'">批量生效</h-button>
                     <h-button @click="onBatchEfficacy()" v-if="tabName == 'EFFECTIVE'">批量失效</h-button>
                     <h-button @click="onBatchDelete()" v-if="tabName == 'AUDIT' || tabName == 'REJECT'">批量删除</h-button>
