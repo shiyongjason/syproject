@@ -29,7 +29,7 @@
                         <span class="icon">{{index + 1}}</span>
                         <span class="label">本次上游支付：</span>
                         <span class="orange-main">{{ item.payAmount | moneyFormat }}元</span>
-                        <span class="info">{{ item.createTime | momentFormat }} {{ item.createBy }}（{{ item.createPhone||'-' }}）</span>
+                        <span v-if="!prevPaymentDetail.showSaasButton" class="info">{{ item.createTime | momentFormat }} {{ item.createBy }}（{{ item.createPhone||'-' }}）</span>
                     </p>
                     <!-- <p style="margin-top:10px">
                         <span class="label">
@@ -41,10 +41,17 @@
                         <span class="label">
                             支付凭证：
                         </span>
-                        <p class="content">
-                            <downloadFileAddToken v-for="subItem in item.payVouchers" :key="subItem.fileUrl" :file-name="subItem.fileName" :file-url="subItem.fileUrl" :a-link-words="subItem.fileName" isType='main' isPreview></downloadFileAddToken>
+                        <p class="content" v-if="item.payVouchers && item.payVouchers.length > 0">
+                            <!-- 司库返回 showSaasButton  -->
+                            <template v-if="prevPaymentDetail.showSaasButton">
+                                <a class="orange-main" :href="item.payVouchers[0].fileUrl" target="_blank">查看好享家专用付款凭证</a>
+                            </template>
+                            <!-- 网银支付返回 -->
+                            <template v-else>
+                                <downloadFileAddToken v-for="subItem in item.payVouchers" :key="subItem.fileUrl" :file-name="subItem.fileName" :file-url="subItem.fileUrl" :a-link-words="subItem.fileName" isType='main' isPreview></downloadFileAddToken>
+                            </template>
                         </p>
-                        <p v-if="item.payVouchers&&item.payVouchers.length==0">
+                        <p v-else>
                             -
                         </p>
                     </div>
