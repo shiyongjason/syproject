@@ -1,6 +1,6 @@
 <template>
     <div class="projectRecord">
-        <h-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" :wrapperClosable=false size="50%">
+        <h-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" modal-append-to-body :wrapperClosable=false size="50%">
             <template #connect>
                 <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
                     <el-tab-pane label="信用详情" name="1"></el-tab-pane>
@@ -533,7 +533,10 @@ export default {
                 this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
                 this.ruleForm.newendTime = this.ruleForm.endTime
                 this.newRuleForm = { ...this.ruleForm }
-                this.dialogVisible = true
+                // 如果是子企业，则直接审核通过，无需填写信用评级，如果是主企业和无标签企业，则打开评级弹窗
+                if (this.creditDetailObj.companyType != 2) {
+                    this.dialogVisible = true
+                }
                 this.$nextTick(() => {
                     this.$refs.ruleForm.clearValidate()
                 })
