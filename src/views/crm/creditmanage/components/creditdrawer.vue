@@ -227,7 +227,7 @@
             </span>
         </el-dialog>
         <!-- 风控设置 -->
-        <setInfoDialog ref="setInfoDialog" />
+        <setInfoDialog ref="setInfoDialog" @backEvent = 'getCompanyDeatil'/>
     </div>
 </template>
 <script>
