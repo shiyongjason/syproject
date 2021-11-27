@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-dialog title="临时提额设置" :visible.sync="isVisible" :close-on-click-modal=false width="800px" :before-close="handleCancel">
+        <el-dialog title="临时提额设置" :visible.sync="isVisible" :append-to-body="true" :close-on-click-modal=false width="800px" :before-close="handleCancel">
             <div class="set-wrap">
                 <div class="set-wrap-head">
                     {{ $parent.companyName }}
@@ -14,13 +14,12 @@
                         <h-button table v-if="slotProps.data.row.status == 0" @click="handleLose(slotProps.data.row)">手动失效</h-button>
                     </template>
                 </hosJoyTable>
-
             </div>
             <span slot="footer" class="dialog-footer">
                 <h-button type="assist" @click="handleCancel">取 消</h-button>
             </span>
         </el-dialog>
-        <el-dialog title="新增临时额度" :visible.sync="isAddVisible" :close-on-click-modal=false width="650px" :before-close="handleAddBack">
+        <el-dialog title="新增临时额度" :visible.sync="isAddVisible" :append-to-body="true" :close-on-click-modal=false width="650px" :before-close="handleAddBack">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px">
                 <el-form-item label="临时额度：" prop="quotaAmount">
                     <el-input v-model="ruleForm.quotaAmount" v-isNum:6 v-inputMAX='10000'><template slot="append">万元</template></el-input>
@@ -54,7 +53,7 @@ import { deepCopy } from '@/utils/utils'
     }
 })
 export default class SetInfoDialog extends Vue {
-    $refs!: { form: HTMLFormElement }
+    $refs!: { form: HTMLFormElement, ruleForm: HTMLFormElement }
     @State('userInfo') userInfo: any
     // 定义变量
     private isVisible:boolean = false
@@ -82,8 +81,8 @@ export default class SetInfoDialog extends Vue {
         { label: '临时额度（万元）', prop: 'quotaAmount', width: '120' },
         { label: '状态', prop: 'status', width: '130', slot: 'status' },
         { label: '额度到期时间', prop: 'expireTime', width: '150' },
-        { label: '修改人', prop: 'updateBy', width: '150' },
-        { label: '修改时间', prop: 'updateTime', width: '180' }
+        { label: '修改人', prop: 'createBy', width: '150' },
+        { label: '修改时间', prop: 'createTime', width: '150' }
     ]
 
     get rules () {
@@ -117,6 +116,9 @@ export default class SetInfoDialog extends Vue {
             companyId: (this as any).$parent?.companyId
         }
         const { data } = await Api.temporaryQuotaList(dataJson)
+        data.records.forEach(item => {
+            item.createTime = item.createTime?.replace('T', ' ')
+        })
         this.tableData = data.records
         this.page.total = data.total
     }
@@ -176,9 +178,11 @@ export default class SetInfoDialog extends Vue {
     // 新增临时额度关闭
     handleAddBack () {
         this.isAddVisible = false
+        this.$refs.ruleForm.resetFields()
     }
     // 临时提额设置关闭
     handleCancel () {
+        (this.$parent as any).creditUpdateRecord()
         this.isVisible = false
     }
 }

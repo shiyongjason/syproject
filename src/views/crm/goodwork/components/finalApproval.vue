@@ -330,14 +330,14 @@
                     <div v-if="item.projectPurchaseList" class="mt10">
                         <hosJoyTable ref="hosjoyTable" align="center" border stripe :column="tableLabel" :data="item.projectPurchaseList" actionWidth='375' prevLocalName="V3.*" localName="V3.*.18">
                             <template #upstreamPayTypeName="slotProps">
-                                <template v-for="(value, index) in slotProps.data.row.upstreamPayTypeName">
-                                    <div :key="index" v-if="value == '银行转账'">{{ value }}
+                                <template v-for="(value, index) in slotProps.data.row.upstreamPayTypeResponseList">
+                                    <div :key="index" v-if="value.upstreamPayType == 1">{{ value.upstreamPayTypeName }}
                                         <span v-if="slotProps.data.row.transferRateType == 2">：{{ slotProps.data.row.transferRate }}%</span>
-                                        <span v-else>：执行费率</span>
+                                        <span v-else>：{{ value.rate }}%</span>
                                     </div>
-                                    <div :key="index" v-if="value == '银行承兑'">{{ value }}
+                                    <div :key="index" v-if="value.upstreamPayType == 2">{{ value.upstreamPayTypeName }}
                                         <span v-if="slotProps.data.row.acceptanceRateType == 2">：{{ slotProps.data.row.acceptanceRate }}%</span>
-                                        <span v-else>：执行费率</span>
+                                        <span v-else>：{{ value.rate }}%</span>
                                     </div>
                                 </template>
                             </template>
@@ -793,7 +793,6 @@ export default class FinalApproval extends Vue {
                                     placeholder="请输入"
                                     value={this.otherCategory.value}
                                     onInput={(val) => {
-                                        console.log(' 🚗 🚕 🚙 🚌 🚎其它 ', val)
                                         this.otherCategory.value = val
                                     }}
                                     maxlength={15}
@@ -903,11 +902,11 @@ export default class FinalApproval extends Vue {
             delete element.deviceCategory
             delete element.upstreamPayTypeName
 
-            // 选中执行费率 则不校验Input
+            // 银行转账 选中执行费率 则不校验Input
             if (element.transferRateType === 1) {
                 delete element.transferRate
             }
-            // 选中执行费率 则不校验Input
+            // 银行承兑 选中执行费率 则不校验Input
             if (element.acceptanceRateType === 1) {
                 delete element.acceptanceRate
             }

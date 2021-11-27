@@ -16,15 +16,14 @@
                     </div>
                 </div>
                 <div class="drawer-wrap" v-if="activeName=='1'">
-                    <div class="drawer-wrap_title">{{companyName}}
+                    <div class="drawer-wrap_title">{{creditDetailObj.companyName}}
                         <!-- companyType 0无标签企业 1 主企业 2 子企业 -->
                         <el-tag :type="creditDetailObj.companyType == 1 ? 'success': ''" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 2">{{ creditDetailObj.companyType == 1 ? '主企业' : '子企业' }}</el-tag>
                     </div>
                     <div class="drawer-wrap_btn">
                         <div class="drawer-wrap_btn-flex">信用详情</div>
-                        <!-- v-if="hosAuthCheck(auths.CRM_CREDIT_SET)" -->
-                        <el-button type="primary" size="mini" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 0" @click="onEditVip(creditDetailObj.companyId)">通用额度设置</el-button>
-                        <el-button type="primary" size="mini" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 0" @click="handleOpenSet()">临时额度设置</el-button>
+                        <el-button type="primary" size="mini" v-if="(creditDetailObj.companyType == 1 || creditDetailObj.companyType == 0) && hosAuthCheck(auths.CRM_CREDIT_SET)" @click="onEditVip(creditDetailObj.id)">通用额度设置</el-button>
+                        <el-button type="primary" size="mini" v-if="(creditDetailObj.companyType == 1 || creditDetailObj.companyType == 0) && hosAuthCheck(auths.CRM_TEMPORARY_SET)" @click="handleOpenSet()">临时额度设置</el-button>
                     </div>
                     <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :actionMinWidth=100 :maxHeight=500>
                         <template slot="endTime" slot-scope="scope">
@@ -38,7 +37,7 @@
                     <template v-if="creditDetailObj.companyType == 2">
                         <div class="drawer-wrap_box">
                             <span>以上信用为共享<font color="#ff7a45">{{ creditDetailObj.mainCompanyName }}</font>的信用评级。</span>
-                            <el-button type="primary" size="mini">查看主企业评级</el-button>
+                            <el-button type="primary" size="mini" @click="toViewMainBusiness">查看主企业评级</el-button>
                             <el-button type="primary" size="mini" @click="handleUnlink({ childCompanyId: companyId, mainCompanyId: creditDetailObj.mainCompanyId })">取消关联</el-button>
                         </div>
                     </template>
@@ -89,7 +88,6 @@
                                 <h-button table @click="onClickRecord">打回记录</h-button>
                             </p>
                             <p v-if="hosAuthCheck(auths.CRM_XY_DOWN)">
-                                <!-- <p> -->
                                 <h-button table @click="onDownzip" v-if="showPacking==null">一键下载</h-button>
                                 <!-- <span v-if="isDownLoad">正在下载中，请稍后</span> -->
                                 <span v-if="showPacking!=null&&showPacking">文件打包中，请稍等</span>
@@ -138,11 +136,10 @@
             <template #btn>
                 <h-button type="assist" @click="onCallback" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)">打回补充</h-button>
                 <h-button type="primary" @click="onOnlyCredit" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)">审核通过</h-button>
-                <!-- <h-button type="primary" @click="onOnlyCredit">审核通过</h-button> -->
                 <h-button @click="handleClose">取消</h-button>
             </template>
         </h-drawer>
-        <el-dialog title="通用额度设置" :visible.sync="dialogVisible" width="42%" :before-close="onCloseDrawer" :close-on-click-modal=false>
+        <el-dialog title="通用额度设置" :visible.sync="dialogVisible" width="42%" :before-close="onCloseDrawer" append-to-body :close-on-click-modal=false>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm el-dialog__form">
                 <el-form-item label="企业名称：">
                     <el-input v-model="ruleForm.companyName" disabled></el-input>
@@ -154,7 +151,6 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="服务费：" prop="serviceFee">
-                    <!-- <el-input v-model="ruleForm.serviceFee" v-isNum:1="ruleForm.serviceFee" maxlength='2'></el-input> -->
                     <el-input-number v-model="ruleForm.serviceFee" controls-position="right" :min="0" :max="100" :precision=1></el-input-number>
                 </el-form-item>
                 <el-form-item label="通用额度：" prop="purchaseQuota">
@@ -169,11 +165,6 @@
                 <el-form-item label="说明" remark>
                     <el-input type="textarea" v-model="ruleForm.remark" maxlength="200" show-word-limit :rows="6"></el-input>
                 </el-form-item>
-                <!-- <el-form-item label="附件：" prop="projectUpload" ref="projectUpload">
-                    <OssFileHosjoyUpload v-model="ruleForm.projectUpload" accept='.jpeg,.jpg,.png,.xls,.xlsx,.pdf,.docx,.doc,.ppt' :fileSize='2' :fileNum='9' :action='action' :uploadParameters='uploadParameters'>
-                    </OssFileHosjoyUpload>
-                    2M以内，支持png、jpg，jpeg，pdf，excel、word、ppt等格式
-                </el-form-item> -->
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <template v-if="onlyType==1">
@@ -186,7 +177,7 @@
                 </template>
             </span>
         </el-dialog>
-        <el-dialog title="打回记录" :visible.sync="recordsVisible" width="30%" :before-close="()=>recordsVisible = false" :modal=false>
+        <el-dialog title="打回记录" :visible.sync="recordsVisible" width="30%" :before-close="()=>recordsVisible = false" :append-to-body="true" :modal=false>
             <div class="project-record">
                 <template v-if="refuseRecord.length>0">
                     <el-timeline>
@@ -218,7 +209,7 @@
             </span>
         </el-dialog>
         <!-- 开启风控冻结 -->
-        <el-dialog title="是否开启风控冻结" :visible.sync="riskVisible" width="30%" :before-close="handleCloseFrozen" :close-on-click-modal=false>
+        <el-dialog title="是否开启风控冻结" :visible.sync="riskVisible" width="30%" :before-close="handleCloseFrozen" :append-to-body="true" :close-on-click-modal=false>
             <el-form ref="riskForm" :model="riskForm" :rules="riskFormRules" label-width="150px" style="margin-top:20px">
                 <el-form-item prop="freezeStartTime" label="冻结开始时间：">
                     <el-date-picker type="datetime" placeholder="冻结开始时间：" v-model="riskForm.freezeStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" :picker-options="startOptions" style="width: 100%;"></el-date-picker>
@@ -263,7 +254,6 @@ export default {
             activeName: '1',
             drawer: false,
             companyId: '',
-            companyName: '',
             documentStatus: '',
             droplist: CREDITLEVEL,
             tableData: [],
@@ -354,7 +344,8 @@ export default {
             restaurants: [],
             shareCompaniesList: [],
             updateRecordList: [],
-            creditDetailObj: {}
+            creditDetailObj: {},
+            toViewMainCompany: ''
         }
     },
     components: {
@@ -425,7 +416,6 @@ export default {
     },
     methods: {
         ...mapActions({
-            // findCreditPage: 'creditManage/findCreditPage',
             findCreditDetail: 'creditManage/findCreditDetail',
             findCreditDocument: 'creditManage/findCreditDocument',
             findCreditRecords: 'creditManage/findCreditRecords'
@@ -437,10 +427,7 @@ export default {
             console.log(val)
             this.activeName = '1'
             this.companyId = val.companyId
-            this.companyName = val.companyName
             this.documentStatus = val.documentStatus
-            // await this.findCreditPage({ companyId: this.companyId })
-            // this.tableData = this.creditPage.companyCreditList
             this.getCompanyDeatil()
             this.getShareLimitList()
             this.getShareCompaniesList()
@@ -565,8 +552,6 @@ export default {
                     this.drawer = false
                     this.$emit('backEvent')
                     this.dialogVisible = false
-                    // await this.findCreditPage({ companyId: this.companyId })
-                    // this.tableData = this.creditPage.companyCreditList
                     this.getCompanyDeatil()
                     this.$emit('backEvent')
                 } catch (error) {
@@ -585,8 +570,6 @@ export default {
                             this.drawer = false
                             this.$emit('backEvent')
                             this.dialogVisible = false
-                            // await this.findCreditPage({ companyId: this.companyId })
-                            // this.tableData = this.creditPage.companyCreditList
                             this.getCompanyDeatil()
                             this.$emit('backEvent')
                         } catch (error) {
@@ -601,6 +584,13 @@ export default {
         handleClose () {
             this.drawer = false
             this.showPacking = null
+            setTimeout(() => {
+                if (this.toViewMainCompany) {
+                    const { companyId } = this.creditDetailObj
+                    this.onShowDrawerinfn({ companyId: this.toViewMainCompany, documentStatus: this.documentStatus })
+                    this.toViewMainCompany = undefined
+                }
+            }, 500)
         },
         datePickerChange (val) {
             this.newendTime = moment(val).add(6, 'M').format('YYYY-MM-DD')
@@ -610,7 +600,6 @@ export default {
             this.onlyType = 1
             if (val) {
                 await this.findCreditDetail(val)
-                console.log(this.creditDetail)
                 this.ruleForm = { ...this.creditDetail }
                 this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
                 this.ruleForm.newendTime = this.ruleForm.endTime
@@ -631,10 +620,11 @@ export default {
                         this.dialogVisible = false
                         this.isloading = false
                         this.$message({
-                            message: `信用设置成功`,
+                            message: `设置成功`,
                             type: 'success'
                         })
                         this.getCompanyDeatil()
+                        this.creditUpdateRecord()
                         this.$emit('backEvent')
                     } catch (error) {
                         this.isloading = false
@@ -716,15 +706,18 @@ export default {
             this.showPacking = false
             window.location.href = data
         },
+        // 开启风控冻结--取消
         handleCloseFrozen () {
             this.riskVisible = false
         },
+        // 开启风控冻结--确定
         handleSubmitFrozen () {
             this.riskForm.companyId = this.companyId
             this.$refs.riskForm.validate(async valid => {
                 if (valid) {
                     await updateCreditFreeze(this.riskForm)
                     this.getCompanyDeatil()
+                    this.creditUpdateRecord()
                     this.riskVisible = false
                 }
             })
@@ -803,6 +796,12 @@ export default {
                     this.$message.error('取消关联失败，请重试')
                 }
             })
+        },
+        // 查看主企业评级
+        toViewMainBusiness () {
+            this.toViewMainCompany = this.companyId
+            const { mainCompanyId } = this.creditDetailObj
+            this.onShowDrawerinfn({ companyId: mainCompanyId, documentStatus: this.documentStatus })
         }
     },
     filters: {
