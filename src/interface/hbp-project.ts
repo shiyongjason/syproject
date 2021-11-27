@@ -7768,6 +7768,55 @@ export interface RespPurchaseOrderCrm {
      */
     salePoDetailUrl: JsonNode
 
+    /**
+     * 预估赊销时间
+     * @type {string}
+     * @memberof RespPurchaseOrderCrm
+     */
+    estimatedLoanTime: string
+
+    /**
+     * 银行联行号
+     * @type {string}
+     * @memberof RespPurchaseOrderCrm
+     */
+    supplierBankNo: string
+
+    /**
+     * 供应商开户行名称
+     * @type {string}
+     * @memberof RespPurchaseOrderCrm
+     */
+    supplierAccountName: string
+
+    /**
+     * 供应商银行账号
+     * @type {string}
+     * @memberof RespPurchaseOrderCrm
+     */
+    supplierAccountNo: string
+
+    /**
+     * 上游供应商名称
+     * @type {string}
+     * @memberof RespPurchaseOrderCrm
+     */
+    supplierCompanyName: string
+
+    /**
+     * 上游支付方式1：转账 2：承兑
+     * @type {number | string}
+     * @memberof RespPurchaseOrderCrm
+     */
+    supplierPaymentType: number | string
+
+    /**
+     * 供应商是否跳转 true 跳转天眼查  false 跳转选择供应商
+     * @type {boolean}
+     * @memberof RespPurchaseOrderCrm
+     */
+    suppliers: boolean
+
 }
 
 /**

@@ -1,8 +1,7 @@
 <template>
     <div class="projectRecord">
-        <h-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" size="50%">
+        <h-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" :wrapperClosable=false size="50%">
             <template #connect>
-
                 <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
                     <el-tab-pane label="信用详情" name="1"></el-tab-pane>
                     <el-tab-pane label="授信资料清单" name="2"></el-tab-pane>
@@ -17,27 +16,70 @@
                     </div>
                 </div>
                 <div class="drawer-wrap" v-if="activeName=='1'">
-                    <div class="drawer-wrap_title">{{companyName}}</div>
+                    <div class="drawer-wrap_title">{{creditDetailObj.companyName}}
+                        <!-- companyType 0无标签企业 1 主企业 2 子企业 -->
+                        <el-tag :type="creditDetailObj.companyType == 1 ? 'success': ''" v-if="creditDetailObj.companyType == 1 || creditDetailObj.companyType == 2">{{ creditDetailObj.companyType == 1 ? '主企业' : '子企业' }}</el-tag>
+                    </div>
                     <div class="drawer-wrap_btn">
                         <div class="drawer-wrap_btn-flex">信用详情</div>
+                        <el-button type="primary" size="mini" v-if="(creditDetailObj.companyType == 1 || creditDetailObj.companyType == 0) && hosAuthCheck(auths.CRM_CREDIT_SET)" @click="onEditVip(creditDetailObj.id)">通用额度设置</el-button>
+                        <el-button type="primary" size="mini" v-if="(creditDetailObj.companyType == 1 || creditDetailObj.companyType == 0) && hosAuthCheck(auths.CRM_TEMPORARY_SET)" @click="handleOpenSet()">临时额度设置</el-button>
                     </div>
-                    <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true" :actionMinWidth=100 :isShowIndex='true' :maxHeight=500>
+                    <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :actionMinWidth=100 :maxHeight=500>
                         <template slot="endTime" slot-scope="scope">
-                            <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime?moment(scope.data.row.endTime).format('YYYY-MM-DD'):'-'}}</span>
+                            <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime | momentFormat('YYYY-MM-DD')}}</span>
                         </template>
                         <template slot="status" slot-scope="scope">
                             <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status==true?'正常':scope.data.row.status==false?'过期':'-'}}</span>
                         </template>
-                        <template slot="action" slot-scope="scope">
-                            <h-button table @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_CREDIT_SET)">设置信用评级</h-button>
-                        </template>
                     </basicTable>
-                    <p>
-                        最近维护时间：{{creditPage.updateTime?moment(creditPage.updateTime).format('YYYY-MM-DD HH:mm:ss'):'-'}}
-                    </p>
-                    <p>
-                        最近维护人：{{creditPage.updateBy||'-'}}（{{creditPage.updateByMobile||'-'}}）
-                    </p>
+                    <!-- 子企业展示内容 -->
+                    <template v-if="creditDetailObj.companyType == 2">
+                        <div class="drawer-wrap_box">
+                            <span>以上信用为共享<font color="#ff7a45">{{ creditDetailObj.mainCompanyName }}</font>的信用评级。</span>
+                            <el-button type="primary" size="mini" @click="toViewMainBusiness">查看主企业评级</el-button>
+                            <el-button type="primary" size="mini" @click="handleUnlink({ childCompanyId: companyId, mainCompanyId: creditDetailObj.mainCompanyId })">取消关联</el-button>
+                        </div>
+                    </template>
+                    <!-- 主企业|无标签企业展示内容 -->
+                    <template v-else>
+                        <div class="drawer-wrap_switch">
+                            <el-switch v-model="creditDetailObj.creditFreeze" disabled @click.native="handleChangeSwitch(creditDetailObj.creditFreeze)" style="display: block" active-color="#13ce66" inactive-color="#ff4949" inactive-text="是否开启风控冻结？">
+                            </el-switch>
+                            <span v-if="creditDetailObj.creditFreeze">冻结周期{{creditDetailObj.freezeStartTime | momentFormat}}～{{creditDetailObj.freezeEndTime | momentFormat}}</span>
+                        </div>
+                        <div class="drawer-wrap_header">额度共享</div>
+                        <div class="drawer-wrap_box">
+                            <span class="drawer-wrap_left">请选择额度共享企业：</span>
+                            <div class="drawer-wrap_right">
+                                <CustomAutocomplete placeholder="请选择" :suggestions="restaurants" v-if="restaurants">
+                                    <template slot-scope="scope">
+                                        <span style="float: left;paddingRight:10px;">{{ scope.data.companyName }}</span>
+                                        <el-button v-if="scope.data.companyLabel == 0" style="float: right;" type="primary" @click="handleRelevance(scope.data)" size="mini">关联</el-button>
+                                        <el-tag v-else>{{ scope.data.companyLabel | companyLabelFilter }}</el-tag>
+                                    </template>
+                                </CustomAutocomplete>
+                            </div>
+                        </div>
+                        <div class="drawer-wrap_box">
+                            <span class="drawer-wrap_left">额度共享企业：</span>
+                            <div class="drawer-wrap_right shareScroll">
+                                <template v-if="shareCompaniesList.length > 0">
+                                    <div class="link-name" v-for="item in shareCompaniesList" :key="item.companyId">
+                                        <span>{{ item.companyName }} <i>{{ item.shareTime }}</i></span>
+                                        <el-button type="primary" size="mini" @click="handleUnlink({ childCompanyId: item.companyId, mainCompanyId: companyId, companyName: item.companyName })">取消关联</el-button>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <div class="not-empty">暂无</div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                    <div class="drawer-wrap_header">修改记录</div>
+                    <div class="drawer-wrap_records">
+                        <updateRecord :list="updateRecordList"></updateRecord>
+                    </div>
                 </div>
                 <div class="collect-wrapbox" v-if="activeName=='2'">
                     <el-form ref="approveForm" class="demo-ruleForm">
@@ -46,7 +88,6 @@
                                 <h-button table @click="onClickRecord">打回记录</h-button>
                             </p>
                             <p v-if="hosAuthCheck(auths.CRM_XY_DOWN)">
-                                <!-- <p> -->
                                 <h-button table @click="onDownzip" v-if="showPacking==null">一键下载</h-button>
                                 <!-- <span v-if="isDownLoad">正在下载中，请稍后</span> -->
                                 <span v-if="showPacking!=null&&showPacking">文件打包中，请稍等</span>
@@ -73,28 +114,17 @@
                                             <span class="posrtv">
                                                 <template v-if="jtem&&jtem.fileUrl">
                                                     <i class="el-icon-document"></i>
-                                                    <!--                                                <a :href="jtem.fileUrl" target="_blank">-->
-                                                    <!--                                                    <font>{{jtem.fileName}}</font>-->
-                                                    <!--                                                </a>-->
                                                     <downloadFileAddToken isPreview :file-name="jtem.fileName" :file-url="jtem.fileUrl" :a-link-words="jtem.fileName" is-type="main" />
                                                 </template>
                                             </span>
                                         </p>
-                                        <p>{{moment(jtem.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
+                                        <p>{{ jtem.createTime | momentFormat }}</p>
                                         <p>
                                             <font class="fileItemDownLoad" @click="()=>{onDelete(obj,index)}" v-if="(documentStatus!=3)">删除</font>
-                                            <!-- <font class="fileItemDownLoad" v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(jtem.fileUrl, jtem.fileName)">下载</font> -->
-                                            <!--                                        <a class="fileItemDownLoad" :href="jtem.fileUrl+'?response-content-type=application/octet-stream'" :download="jtem.fileName"-->
-                                            <!--                                            v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1">-->
-                                            <!--                                            下载-->
-                                            <!--                                        </a>-->
-                                            <!--                                       -->
-                                            <!--                                        <font v-else><a class='fileItemDownLoad' :href="jtem.fileUrl" target='_blank'>下载</a></font>-->
                                             <downloadFileAddToken :file-name="jtem.fileName" :file-url="jtem.fileUrl" a-link-words="下载" is-type="btn" />
                                         </p>
                                     </div>
-                                    <OssFileHosjoyUpload v-model="obj.creditDocuments" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}"
-                                        style="margin:10px 0 0 5px">
+                                    <OssFileHosjoyUpload v-model="obj.creditDocuments" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}" style="margin:10px 0 0 5px">
                                         <el-button type="primary">上 传</el-button>
                                     </OssFileHosjoyUpload>
                                 </el-form-item>
@@ -106,11 +136,10 @@
             <template #btn>
                 <h-button type="assist" @click="onCallback" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)">打回补充</h-button>
                 <h-button type="primary" @click="onOnlyCredit" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)">审核通过</h-button>
-                <!-- <h-button type="primary" @click="onOnlyCredit">审核通过</h-button> -->
                 <h-button @click="handleClose">取消</h-button>
             </template>
         </h-drawer>
-        <el-dialog title="设置" :visible.sync="dialogVisible" width="40%" :before-close="onCloseDrawer" :close-on-click-modal=false>
+        <el-dialog title="通用额度设置" :visible.sync="dialogVisible" width="42%" :before-close="onCloseDrawer" append-to-body :close-on-click-modal=false>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm el-dialog__form">
                 <el-form-item label="企业名称：">
                     <el-input v-model="ruleForm.companyName" disabled></el-input>
@@ -122,11 +151,10 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="服务费：" prop="serviceFee">
-                    <!-- <el-input v-model="ruleForm.serviceFee" v-isNum:1="ruleForm.serviceFee" maxlength='2'></el-input> -->
                     <el-input-number v-model="ruleForm.serviceFee" controls-position="right" :min="0" :max="100" :precision=1></el-input-number>
                 </el-form-item>
                 <el-form-item label="通用额度：" prop="purchaseQuota">
-                    <el-input v-model="ruleForm.purchaseQuota" v-isNum:6="ruleForm.purchaseQuota" maxlength='15'><template slot="append">万元</template></el-input>
+                    <el-input v-model="ruleForm.purchaseQuota" v-isNum:6="ruleForm.purchaseQuota" v-inputMAX='10000' maxlength='15'><template slot="append">万元</template></el-input>
                 </el-form-item>
                 <el-form-item label="信用授予日期：" prop="startTime">
                     <el-date-picker v-model="ruleForm.startTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="信用授予日期" :picker-options="pickerOptionsStart" type="date" @change="datePickerChange"></el-date-picker>
@@ -136,11 +164,6 @@
                 </el-form-item>
                 <el-form-item label="说明" remark>
                     <el-input type="textarea" v-model="ruleForm.remark" maxlength="200" show-word-limit :rows="6"></el-input>
-                </el-form-item>
-                <el-form-item label="附件：" prop="projectUpload" ref="projectUpload">
-                    <OssFileHosjoyUpload v-model="ruleForm.projectUpload" accept='.jpeg,.jpg,.png,.xls,.xlsx,.pdf,.docx,.doc,.ppt' :fileSize='2' :fileNum='9' :action='action' :uploadParameters='uploadParameters'>
-                    </OssFileHosjoyUpload>
-                    2M以内，支持png、jpg，jpeg，pdf，excel、word、ppt等格式
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -154,7 +177,7 @@
                 </template>
             </span>
         </el-dialog>
-        <el-dialog title="打回记录" :visible.sync="recordsVisible" width="30%" :before-close="()=>recordsVisible = false" :modal=false>
+        <el-dialog title="打回记录" :visible.sync="recordsVisible" width="30%" :before-close="()=>recordsVisible = false" :append-to-body="true" :modal=false>
             <div class="project-record">
                 <template v-if="refuseRecord.length>0">
                     <el-timeline>
@@ -185,15 +208,38 @@
                 <h-button type="primary" @click="onRefuse" :loading=resloading>{{resloading?'确定':'保存'}}</h-button>
             </span>
         </el-dialog>
+        <!-- 开启风控冻结 -->
+        <el-dialog title="是否开启风控冻结" :visible.sync="riskVisible" width="30%" :before-close="handleCloseFrozen" :append-to-body="true" :close-on-click-modal=false>
+            <el-form ref="riskForm" :model="riskForm" :rules="riskFormRules" label-width="150px" style="margin-top:20px">
+                <el-form-item prop="freezeStartTime" label="冻结开始时间：">
+                    <el-date-picker type="datetime" placeholder="冻结开始时间：" v-model="riskForm.freezeStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" :picker-options="startOptions" style="width: 100%;"></el-date-picker>
+                </el-form-item>
+                <el-form-item prop="freezeEndTime" label="冻结结束时间：">
+                    <el-date-picker type="datetime" placeholder="冻结结束时间：" v-model="riskForm.freezeEndTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" :picker-options="endOptions" style="width: 100%;"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="说明：">
+                    <el-input type="textarea" v-model.trim="riskForm.freezeRemark" maxlength="500" :rows="5" show-word-limit></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <h-button @click="handleCloseFrozen">取 消</h-button>
+                <h-button type="primary" @click="handleSubmitFrozen">确 定</h-button>
+            </span>
+        </el-dialog>
+        <!-- 风控设置 -->
+        <setInfoDialog ref="setInfoDialog" />
     </div>
 </template>
 <script>
 import moment from 'moment'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
 import downloadFileAddToken from '@/components/downloadFileAddToken'
+import setInfoDialog from '../components/setInfoDialog.vue'
+import updateRecord from './updateRecord.vue'
 import { ccpBaseUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
-import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip } from '../api'
+import CustomAutocomplete from './customAutocomplete.vue'
+import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip, shareCompanyList, creditShareAdd, shareCompanies, creditShareCancel, creditUpdatRecord, companyDetail, updateCreditUnFreeze, updateCreditFreeze } from '../api'
 import { CREDITLEVEL } from '../../const'
 import * as auths from '@/utils/auth_const'
 export default {
@@ -208,15 +254,18 @@ export default {
             activeName: '1',
             drawer: false,
             companyId: '',
-            companyName: '',
             documentStatus: '',
             droplist: CREDITLEVEL,
             tableData: [],
             tableLabel: [
                 { label: '信用评级', prop: 'creditLevel', width: '' },
                 { label: '服务费', prop: 'serviceFee', width: '150' },
-                { label: '可代采购额度(万元)', prop: 'purchaseQuota', width: '150', formatters: 'money' },
-                { label: '剩余代采购额度(万元)', prop: 'remainPurchaseQuota', width: '150', formatters: 'money' },
+                { label: '通用额度(万元)', prop: 'purchaseQuota', width: '150', formatters: 'money' },
+                { label: '临时额度(万元)', prop: 'temporaryQuotaAmount', width: '150', formatters: 'money' },
+                { label: '可代采购额度(万元)', prop: 'purchaseAmount', width: '150' },
+                { label: '冻结中额度(万元)', prop: 'purchaseFreezeAmount', width: '150' },
+                { label: '占用中额度(万元)', prop: 'occupyAmount', width: '150', formatters: 'money' },
+                { label: '剩余代采购额度(万元)', prop: 'purchaseUsableAmount', width: '150', formatters: 'money' },
                 { label: '信用到期日', prop: 'endTime', width: '180', formatters: 'date' },
                 { label: '状态', prop: 'status' }
             ],
@@ -274,13 +323,37 @@ export default {
                     { required: true, message: '请输入打回原因', trigger: 'blur' }
                 ]
             },
+            riskFormRules: {
+                freezeStartTime: [
+                    { required: true, message: '请选择信用冻结开始时间', trigger: 'blur' }
+                ],
+                freezeEndTime: [
+                    { required: true, message: '请选择信用冻结结束时间', trigger: 'blur' }
+                ]
+            },
             onlyType: 1,
-            isDownLoad: false
+            isDownLoad: false,
+            riskValue: '',
+            riskVisible: false,
+            riskForm: {
+                companyId: '',
+                freezeEndTime: '',
+                freezeRemark: '',
+                freezeStartTime: ''
+            },
+            restaurants: [],
+            shareCompaniesList: [],
+            updateRecordList: [],
+            creditDetailObj: {},
+            toViewMainCompany: ''
         }
     },
     components: {
         OssFileHosjoyUpload,
-        downloadFileAddToken
+        downloadFileAddToken,
+        setInfoDialog,
+        CustomAutocomplete,
+        updateRecord
     },
     watch: {
         'form.projectUpload' (val) {
@@ -315,6 +388,27 @@ export default {
                     }
                 }
             }
+        },
+        startOptions () {
+            return {
+                disabledDate: (time) => {
+                    let endDateVal = this.riskForm.freezeEndTime
+                    if (endDateVal) {
+                        return time.getTime() > new Date(endDateVal).getTime()
+                    }
+                    return time.getTime() < new Date().getTime() - 8.64e7
+                }
+            }
+        },
+        endOptions () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.riskForm.freezeStartTime
+                    if (beginDateVal) {
+                        return time.getTime() < new Date(beginDateVal).getTime()
+                    }
+                }
+            }
         }
     },
     mounted () {
@@ -322,7 +416,6 @@ export default {
     },
     methods: {
         ...mapActions({
-            findCreditPage: 'creditManage/findCreditPage',
             findCreditDetail: 'creditManage/findCreditDetail',
             findCreditDocument: 'creditManage/findCreditDocument',
             findCreditRecords: 'creditManage/findCreditRecords'
@@ -334,10 +427,11 @@ export default {
             console.log(val)
             this.activeName = '1'
             this.companyId = val.companyId
-            this.companyName = val.companyName
             this.documentStatus = val.documentStatus
-            await this.findCreditPage({ companyId: this.companyId })
-            this.tableData = this.creditPage.companyCreditList
+            this.getCompanyDeatil()
+            this.getShareLimitList()
+            this.getShareCompaniesList()
+            this.creditUpdateRecord()
             this.drawer = true
         },
         async onShowCreditdocument () {
@@ -364,9 +458,6 @@ export default {
                 item.templateId = row.templateId
                 item.createTime = item.createTime || moment().format('YYYY-MM-DD HH:mm:ss')
             })
-            // const newDocuments = row.creditDocuments.filter(item => !item.creditDocumentId)
-            // await uploadCredit(newDocuments)
-            // this.$message.success('资料上传成功!')
         },
         async handleSuccessArg (val) {
             // const newDocuments = row.creditDocuments.filter(item => !item.creditDocumentId)
@@ -402,7 +493,6 @@ export default {
             })
         },
         checkForm (cb) {
-            console.log('creditDocumentList', this.creditDocumentList)
             let res = ''
             for (let i = 0; i < this.mondatoryFlagRes.length; i++) {
                 const arr = this.creditDocumentList.filter(jtem => {
@@ -462,8 +552,7 @@ export default {
                     this.drawer = false
                     this.$emit('backEvent')
                     this.dialogVisible = false
-                    await this.findCreditPage({ companyId: this.companyId })
-                    this.tableData = this.creditPage.companyCreditList
+                    this.getCompanyDeatil()
                     this.$emit('backEvent')
                 } catch (error) {
                     this.isloading = false
@@ -481,8 +570,7 @@ export default {
                             this.drawer = false
                             this.$emit('backEvent')
                             this.dialogVisible = false
-                            await this.findCreditPage({ companyId: this.companyId })
-                            this.tableData = this.creditPage.companyCreditList
+                            this.getCompanyDeatil()
                             this.$emit('backEvent')
                         } catch (error) {
                             this.isloading = false
@@ -492,12 +580,17 @@ export default {
                     }
                 })
             }
-
-            // this.saveCreditDocument()
         },
         handleClose () {
             this.drawer = false
             this.showPacking = null
+            setTimeout(() => {
+                if (this.toViewMainCompany) {
+                    const { companyId } = this.creditDetailObj
+                    this.onShowDrawerinfn({ companyId: this.toViewMainCompany, documentStatus: this.documentStatus })
+                    this.toViewMainCompany = undefined
+                }
+            }, 500)
         },
         datePickerChange (val) {
             this.newendTime = moment(val).add(6, 'M').format('YYYY-MM-DD')
@@ -527,11 +620,11 @@ export default {
                         this.dialogVisible = false
                         this.isloading = false
                         this.$message({
-                            message: `信用设置成功`,
+                            message: `设置成功`,
                             type: 'success'
                         })
-                        await this.findCreditPage({ companyId: this.companyId })
-                        this.tableData = this.creditPage.companyCreditList
+                        this.getCompanyDeatil()
+                        this.creditUpdateRecord()
                         this.$emit('backEvent')
                     } catch (error) {
                         this.isloading = false
@@ -609,11 +702,127 @@ export default {
         async onDownzip () {
             this.isDownLoad = true
             this.showPacking = true
-            // console.log(interfaceUrl + `memeber/api/credit-document/download/${this.companyId}/${this.activeName}/detail`)
             const { data } = await downLoadZip({ companyId: this.companyId, activeName: 1 })
-            console.log(data)
             this.showPacking = false
             window.location.href = data
+        },
+        // 开启风控冻结--取消
+        handleCloseFrozen () {
+            this.riskVisible = false
+        },
+        // 开启风控冻结--确定
+        handleSubmitFrozen () {
+            this.riskForm.companyId = this.companyId
+            this.$refs.riskForm.validate(async valid => {
+                if (valid) {
+                    await updateCreditFreeze(this.riskForm)
+                    this.getCompanyDeatil()
+                    this.creditUpdateRecord()
+                    this.riskVisible = false
+                }
+            })
+        },
+        handleOpenSet () {
+            this.$refs.setInfoDialog.onOpenDialog()
+        },
+        // 获取企业信用详情
+        async getCompanyDeatil () {
+            const { data } = await companyDetail({ companyId: this.companyId })
+            this.tableData = [data]
+            this.creditDetailObj = data
+        },
+        // 获取共享额度企业列表
+        async getShareLimitList () {
+            const { data } = await shareCompanyList({ companyId: this.companyId })
+            data.forEach(item => {
+                item.value = item.companyName
+            })
+            this.restaurants = data
+        },
+        // 共享企业列表
+        async getShareCompaniesList () {
+            const { data } = await shareCompanies({ companyId: this.companyId })
+            this.shareCompaniesList = data
+        },
+        // 修改记录
+        async creditUpdateRecord () {
+            const { data } = await creditUpdatRecord({ companyId: this.companyId })
+            this.updateRecordList = data
+        },
+        // 风控冻结
+        async handleChangeSwitch (val) {
+            if (!val) {
+                this.riskVisible = true
+            } else {
+                await updateCreditUnFreeze(this.companyId)
+                this.getCompanyDeatil()
+            }
+        },
+        // 关联企业
+        async handleRelevance (value) {
+            const dataJson = {
+                childCompanyId: value.id,
+                mainCompanyId: this.companyId
+            }
+            await creditShareAdd(dataJson)
+            this.getCompanyDeatil()
+            this.getShareCompaniesList()
+            this.getShareLimitList()
+            this.creditUpdateRecord()
+        },
+        // 取消关联企业
+        handleUnlink (value) {
+            let tips = ''
+            if (value.companyName) {
+                // 主企业取消关联
+                tips = `<span style="color:red">取消关联后，${value.companyName}将不再可以共用当前企业的信用评级</span>，你还要继续吗？`
+            } else {
+                // 子企业取消关联
+                tips = `<span style="color:red">取消关联后，当前企业将不再可以共用${this.creditDetailObj.mainCompanyName}企业的信用评级</span>，你还要继续吗？`
+            }
+            this.$confirm(tips, '是否确认取消关联？', {
+                dangerouslyUseHTMLString: true,
+                confirmButtonText: '确认取消关联',
+                cancelButtonText: '返回'
+            }).then(async () => {
+                try {
+                    await creditShareCancel(value)
+                    this.getCompanyDeatil()
+                    this.getShareCompaniesList()
+                    this.getShareLimitList()
+                    this.creditUpdateRecord()
+                    this.$message.success('已取消关联')
+                } catch (err) {
+                    this.$message.error('取消关联失败，请重试')
+                }
+            })
+        },
+        // 查看主企业评级
+        toViewMainBusiness () {
+            this.toViewMainCompany = this.companyId
+            const { mainCompanyId } = this.creditDetailObj
+            this.onShowDrawerinfn({ companyId: mainCompanyId, documentStatus: this.documentStatus })
+        }
+    },
+    filters: {
+        companyLabelFilter (val) {
+            let result = ''
+            switch (parseInt(val)) {
+                case 1:
+                    result = '已关联其他主企业'
+                    break
+                case 2:
+                    result = '已被其他企业关联'
+                    break
+                case 3:
+                    result = '当前企业'
+                    break
+                case 4:
+                    result = '已关联当前企业'
+                    break
+                default: break
+            }
+            return result
         }
     }
 }
@@ -683,6 +892,21 @@ export default {
         margin-bottom: 10px;
         padding-left: 10px;
     }
+    &_header {
+        font-size: 15px;
+        margin: 30px 0 20px 0;
+        position: relative;
+        padding-left: 10px;
+        &::before {
+            content: '';
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            height: 100%;
+            width: 4px;
+            background: #ff7a45;
+        }
+    }
     &_btn {
         display: flex;
         justify-content: space-around;
@@ -698,8 +922,64 @@ export default {
             }
         }
     }
-    p {
-        margin-top: 25px;
+    &_switch {
+        display: flex;
+        margin-top: 10px;
+        span {
+            padding-left: 15px;
+            color: gray;
+        }
+    }
+    &_box {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        margin-left: 20px;
+        span {
+            padding-right: 10px;
+        }
+    }
+    &_records {
+        display: flex;
+        flex-direction: column;
+        div {
+            margin-top: 10px;
+        }
+        span {
+            padding-right: 10px;
+        }
+        .deep {
+            color: #ff7a45;
+        }
+    }
+    .link-name {
+        display: flex;
+        justify-content: space-between;
+        width: 500px;
+        align-items: center;
+        margin-bottom: 10px;
+        span {
+            i {
+                font-style: normal;
+                color: gray;
+            }
+        }
+    }
+    &_left {
+        width: 150px;
+    }
+    &_right {
+        width: 500px;
+        .el-autocomplete {
+            width: 500px;
+        }
+    }
+    .not-empty {
+        color: #999;
+    }
+    .shareScroll {
+        max-height: 300px;
+        overflow-y: scroll;
     }
 }
 .drawer-footer {

@@ -182,6 +182,11 @@
                     width: 120px;
                 }
             }
+            .upstream-pay-type {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     }
 }
