@@ -368,6 +368,7 @@ export default {
                 })
                 return false
             }
+            return isCsv && isLt10M
         },
         async onImport () {
             if (this.loading) return
@@ -392,14 +393,14 @@ export default {
                 uInt8Array[i] = raw.charCodeAt(i)
             }
             const blob = new Blob([uInt8Array], {
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
+                type: 'application/vnd.ms-excel'
             })
 
             const reader = new FileReader()
             reader.readAsDataURL(blob)
             reader.onload = function (e) {
                 const a = document.createElement('a')
-                a.download = '失败明细'
+                a.download = '失败明细.xls'
                 a.href = e.target.result
                 document.querySelector('body').appendChild(a)
                 a.click()
