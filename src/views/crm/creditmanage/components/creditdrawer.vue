@@ -1,6 +1,6 @@
 <template>
     <div class="projectRecord">
-        <h-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" modal-append-to-body :wrapperClosable=false size="50%">
+        <h-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" :modal-append-to-body="true" :wrapperClosable=false size="50%">
             <template #connect>
                 <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
                     <el-tab-pane label="信用详情" name="1"></el-tab-pane>
