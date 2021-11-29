@@ -735,7 +735,6 @@ export default class FinalApproval extends Vue {
                                     placeholder="请输入"
                                     value={this.otherCategory.value}
                                     onInput={(val) => {
-                                        console.log(' 🚗 🚕 🚙 🚌 🚎其它 ', val)
                                         this.otherCategory.value = val
                                     }}
                                     maxlength={15}
