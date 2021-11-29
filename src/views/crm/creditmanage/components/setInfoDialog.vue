@@ -172,6 +172,7 @@ export default class SetInfoDialog extends Vue {
                 await Api.temporaryQuotaAdd(dataJson)
                 this.isAddVisible = false
                 this.getList()
+                this.$emit('backEvent')
             }
         })
     }
