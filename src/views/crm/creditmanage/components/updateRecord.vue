@@ -133,13 +133,7 @@ export default class UpdateRecord extends Vue {
         background-color: #eeeeee;
         margin-bottom: 10px;
         .p {
-            padding: 10px;
-        }
-    }
-    &_detail {
-        .p-1 {
-            padding: 5px 0;
-            padding-left: 20px;
+            padding: 5px 10px;
         }
     }
 }

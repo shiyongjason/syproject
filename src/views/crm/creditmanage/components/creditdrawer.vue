@@ -536,10 +536,10 @@ export default {
                 // 如果是子企业，则直接审核通过，无需填写信用评级，如果是主企业和无标签企业，则打开评级弹窗
                 if (this.creditDetailObj.companyType != 2) {
                     this.dialogVisible = true
+                    this.$nextTick(() => {
+                        this.$refs.ruleForm.clearValidate()
+                    })
                 }
-                this.$nextTick(() => {
-                    this.$refs.ruleForm.clearValidate()
-                })
             }
         },
         async onSubmitDoc (val) {
