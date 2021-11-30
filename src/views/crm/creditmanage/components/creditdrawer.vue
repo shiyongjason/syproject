@@ -384,7 +384,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.newendTime
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
+                        return time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -589,6 +589,7 @@ export default {
         handleClose () {
             this.drawer = false
             this.showPacking = null
+            this.$emit('backEvent')
             setTimeout(() => {
                 if (this.toViewMainCompany) {
                     const { companyId } = this.creditDetailObj
@@ -598,7 +599,8 @@ export default {
             }, 500)
         },
         datePickerChange (val) {
-            this.newendTime = moment(val).add(6, 'M').format('YYYY-MM-DD')
+            // this.newendTime = moment(val).add(6, 'M').format('YYYY-MM-DD')
+            this.newendTime = this.ruleForm.startTime
             this.ruleForm.endTime = moment(val).add(6, 'M').format('YYYY-MM-DD')
         },
         async onEditVip (val) {
@@ -606,16 +608,6 @@ export default {
             if (val) {
                 await this.findCreditDetail(val)
                 this.ruleForm = { ...this.creditDetail }
-                // 默认信用授予日期
-                // if (!this.creditDetail.startTime) {
-                //     this.ruleForm.startTime = new Date()
-                // }
-                // // 默认信用到期时间
-                // if (!this.creditDetail.endTime) {
-                //     this.ruleForm.endTime = moment(this.ruleForm.startTime).add(6, 'M').format('YYYY-MM-DD')
-                //     // this.newendTime = this.ruleForm.startTime
-                //     // this.pickerOptionsEnd.disabledDate(new Date(this.ruleForm.endTime))
-                // }
                 this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
                 this.ruleForm.newendTime = this.ruleForm.endTime
                 this.newRuleForm = { ...this.ruleForm }
