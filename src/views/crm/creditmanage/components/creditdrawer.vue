@@ -1,6 +1,6 @@
 <template>
     <div class="projectRecord">
-        <h-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" :modal-append-to-body="true" :wrapperClosable=false size="50%">
+        <h-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" :wrapperClosable=false size="50%">
             <template #connect>
                 <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
                     <el-tab-pane label="信用详情" name="1"></el-tab-pane>
@@ -139,7 +139,7 @@
                 <h-button @click="handleClose">取消</h-button>
             </template>
         </h-drawer>
-        <el-dialog title="通用额度设置" :visible.sync="dialogVisible" width="42%" :before-close="onCloseDrawer" append-to-body :close-on-click-modal=false>
+        <el-dialog title="通用额度设置" :visible.sync="dialogVisible" width="42%" :before-close="onCloseDrawer" :append-to-body="true" :close-on-click-modal=false>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm el-dialog__form">
                 <el-form-item label="企业名称：">
                     <el-input v-model="ruleForm.companyName" disabled></el-input>
@@ -227,7 +227,7 @@
             </span>
         </el-dialog>
         <!-- 风控设置 -->
-        <setInfoDialog ref="setInfoDialog" @backEvent = 'getCompanyDeatil'/>
+        <setInfoDialog ref="setInfoDialog" @backEvent = 'getCompanyDetail'/>
     </div>
 </template>
 <script>
@@ -384,7 +384,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.newendTime
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
+                        return time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -428,7 +428,7 @@ export default {
             this.activeName = '1'
             this.companyId = val.companyId
             this.documentStatus = val.documentStatus
-            this.getCompanyDeatil()
+            this.getCompanyDetail()
             this.getShareLimitList()
             this.getShareCompaniesList()
             this.creditUpdateRecord()
@@ -539,6 +539,8 @@ export default {
                     this.$nextTick(() => {
                         this.$refs.ruleForm.clearValidate()
                     })
+                } else {
+                    this.dialogVisible = false
                 }
             }
         },
@@ -555,7 +557,7 @@ export default {
                     this.drawer = false
                     this.$emit('backEvent')
                     this.dialogVisible = false
-                    this.getCompanyDeatil()
+                    this.getCompanyDetail()
                     this.$emit('backEvent')
                 } catch (error) {
                     this.isloading = false
@@ -573,7 +575,7 @@ export default {
                             this.drawer = false
                             this.$emit('backEvent')
                             this.dialogVisible = false
-                            this.getCompanyDeatil()
+                            this.getCompanyDetail()
                             this.$emit('backEvent')
                         } catch (error) {
                             this.isloading = false
@@ -587,6 +589,7 @@ export default {
         handleClose () {
             this.drawer = false
             this.showPacking = null
+            this.$emit('backEvent')
             setTimeout(() => {
                 if (this.toViewMainCompany) {
                     const { companyId } = this.creditDetailObj
@@ -596,7 +599,8 @@ export default {
             }, 500)
         },
         datePickerChange (val) {
-            this.newendTime = moment(val).add(6, 'M').format('YYYY-MM-DD')
+            // this.newendTime = moment(val).add(6, 'M').format('YYYY-MM-DD')
+            this.newendTime = this.ruleForm.startTime
             this.ruleForm.endTime = moment(val).add(6, 'M').format('YYYY-MM-DD')
         },
         async onEditVip (val) {
@@ -626,7 +630,7 @@ export default {
                             message: `设置成功`,
                             type: 'success'
                         })
-                        this.getCompanyDeatil()
+                        this.getCompanyDetail()
                         this.creditUpdateRecord()
                         this.$emit('backEvent')
                     } catch (error) {
@@ -719,7 +723,7 @@ export default {
             this.$refs.riskForm.validate(async valid => {
                 if (valid) {
                     await updateCreditFreeze(this.riskForm)
-                    this.getCompanyDeatil()
+                    this.getCompanyDetail()
                     this.creditUpdateRecord()
                     this.riskVisible = false
                 }
@@ -729,7 +733,7 @@ export default {
             this.$refs.setInfoDialog.onOpenDialog()
         },
         // 获取企业信用详情
-        async getCompanyDeatil () {
+        async getCompanyDetail () {
             const { data } = await companyDetail({ companyId: this.companyId })
             this.tableData = [data]
             this.creditDetailObj = data
@@ -758,7 +762,7 @@ export default {
                 this.riskVisible = true
             } else {
                 await updateCreditUnFreeze(this.companyId)
-                this.getCompanyDeatil()
+                this.getCompanyDetail()
             }
         },
         // 关联企业
@@ -768,7 +772,7 @@ export default {
                 mainCompanyId: this.companyId
             }
             await creditShareAdd(dataJson)
-            this.getCompanyDeatil()
+            this.getCompanyDetail()
             this.getShareCompaniesList()
             this.getShareLimitList()
             this.creditUpdateRecord()
@@ -790,7 +794,7 @@ export default {
             }).then(async () => {
                 try {
                     await creditShareCancel(value)
-                    this.getCompanyDeatil()
+                    this.getCompanyDetail()
                     this.getShareCompaniesList()
                     this.getShareLimitList()
                     this.creditUpdateRecord()
