@@ -4,69 +4,69 @@
             <div class="update-record_item" v-for="item in list" :key="item.id">
                 <template v-if="item.type == 1">
                     <p class="p">
-                        <font color="#ff7a45">{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font color="#ff7a45">{{ item.createTime | momentFormat }}</font> 将 <font color="#ff7a45">{{ item.labelField }}</font>关联了当前企业
+                        <font>{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font>{{ item.createTime | momentFormat }}</font> 将 <font>{{ item.labelField }}</font>关联了当前企业
                     </p>
                 </template>
                 <template v-else-if="item.type == 2">
                     <p class="p">
-                        <font color="#ff7a45">{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font color="#ff7a45">{{ item.createTime | momentFormat }}</font> 将 <font color="#ff7a45">{{ item.labelField }}</font>和当前企业取消了关联
+                        <font>{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font>{{ item.createTime | momentFormat }}</font> 将 <font>{{ item.labelField }}</font>和当前企业取消了关联
                     </p>
                 </template>
                 <template v-else-if="item.type == 3">
                     <p class="p">
-                        <font color="#ff7a45">{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font color="#ff7a45">{{ item.createTime | momentFormat }}</font> 将当前企业和<font color="#ff7a45">{{ item.labelField }}</font>进行关联
+                        <font>{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font>{{ item.createTime | momentFormat }}</font> 将当前企业和<font>{{ item.labelField }}</font>进行关联
                     </p>
                 </template>
                 <template v-else-if="item.type == 4">
                     <p class="p">
-                        <font color="#ff7a45">{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font color="#ff7a45">{{ item.createTime | momentFormat }}</font> 将当前企业和<font color="#ff7a45">{{ item.labelField }}</font>取消了关联
+                        <font>{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font>{{ item.createTime | momentFormat }}</font> 将当前企业和<font>{{ item.labelField }}</font>取消了关联
                     </p>
                 </template>
                 <template v-else-if="item.type == 5">
                     <p class="p">
-                        <font color="#ff7a45">{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font color="#ff7a45">{{ item.createTime | momentFormat }}</font> 将通用额度设置为：
+                        <font>{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font>{{ item.createTime | momentFormat }}</font> 将通用额度设置为：
                     </p>
                 </template>
                 <template v-else-if="item.type == 6">
                     <p class="p">
-                        <font color="#ff7a45">{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font color="#ff7a45">{{ item.createTime | momentFormat }}</font> 将 <font color="#ff7a45">新增</font>临时额度
+                        <font>{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font>{{ item.createTime | momentFormat }}</font> 将 <font>新增</font>临时额度
                     </p>
                 </template>
                 <template v-else-if="item.type == 7">
                     <p class="p">
-                        <font color="#ff7a45">{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font color="#ff7a45">{{ item.createTime | momentFormat }}</font> 将临时额度手动设置为<font color="#ff7a45">失效</font>
+                        <font>{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font>{{ item.createTime | momentFormat }}</font> 将临时额度手动设置为<font>失效</font>
                     </p>
                 </template>
                 <template v-else-if="item.type == 8">
                     <p class="p">
-                        <font color="#ff7a45">{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font color="#ff7a45">{{ item.createTime | momentFormat }}</font> 将临时额度<font color="#ff7a45">自动失效</font>
+                        <font>{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font>{{ item.createTime | momentFormat }}</font> 将临时额度<font>自动失效</font>
                     </p>
                 </template>
                 <template v-else-if="item.type == 9">
                     <p class="p">
-                        <font color="#ff7a45">{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font color="#ff7a45">{{ item.createTime | momentFormat }}</font> 将<font color="#ff7a45">开启</font>风控冻结
+                        <font>{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font>{{ item.createTime | momentFormat }}</font> 将<font>开启</font>风控冻结
                     </p>
                 </template>
                 <template v-else-if="item.type == 10">
                     <p class="p">
-                        <font color="#ff7a45">{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font color="#ff7a45">{{ item.createTime | momentFormat }}</font> 将<font color="#ff7a45">解除</font>风控冻结
+                        <font>{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font>{{ item.createTime | momentFormat }}</font> 将<font>解除</font>风控冻结
                     </p>
                 </template>
                 <template v-else-if="item.type == 11">
                     <p class="p">
-                        <font color="#ff7a45">{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font color="#ff7a45">{{ item.createTime | momentFormat }}</font> 将风控冻结<font color="#ff7a45">自动解除</font>
+                        <font>{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font>{{ item.createTime | momentFormat }}</font> 将风控冻结<font>自动解除</font>
                     </p>
                 </template>
                 <ul class="update-record_item--detail" v-if="item.companyCreditChangeRecordDetailList && item.companyCreditChangeRecordDetailList.length > 0">
                     <li v-for="value in item.companyCreditChangeRecordDetailList" :key="value.id">
                         <!-- 变更 -->
                         <template v-if="value.type == 1">
-                            <p class="p">{{ value.fieldName }}: <font color="#ff7a45">{{ value.contentBeforeChange }}</font> 修改为 <font color="#ff7a45">{{ value.contentAfterChange }}</font>
+                            <p class="p">{{ value.fieldName }}: <font>{{ value.contentBeforeChange }}</font> 修改为 <font>{{ value.contentAfterChange }}</font>
                             </p>
                         </template>
                         <!-- 保存 -->
                         <template v-if="value.type == 2">
-                            <p class="p">{{ value.fieldName }}: <font color="#ff7a45">{{ value.saveValue }}</font>
+                            <p class="p">{{ value.fieldName }}: <font>{{ value.saveValue }}</font>
                             </p>
                         </template>
                     </li>
@@ -87,7 +87,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
     //                 result = `将关联了当前企业`
     //                 break
     //             case 2:
-    //                 result = `将<font color="#ff7a45">{{ name }}</font>和当前企业取消了关联`
+    //                 result = `将${ name }和当前企业取消了关联`
     //                 break
     //             case 3:
     //                 result = `将当前企业和${name}进行关联`
@@ -133,13 +133,10 @@ export default class UpdateRecord extends Vue {
         background-color: #eeeeee;
         margin-bottom: 10px;
         .p {
-            padding: 10px;
-        }
-    }
-    &_detail {
-        .p-1 {
-            padding: 5px 0;
-            padding-left: 20px;
+            padding: 5px 10px;
+            font {
+                color: #ff7a45;
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 <template>
     <div class="projectRecord">
-        <h-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" modal-append-to-body :wrapperClosable=false size="50%">
+        <h-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" :modal-append-to-body="true" :wrapperClosable=false size="50%">
             <template #connect>
                 <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
                     <el-tab-pane label="信用详情" name="1"></el-tab-pane>
@@ -227,7 +227,7 @@
             </span>
         </el-dialog>
         <!-- 风控设置 -->
-        <setInfoDialog ref="setInfoDialog" />
+        <setInfoDialog ref="setInfoDialog" @backEvent = 'getCompanyDeatil'/>
     </div>
 </template>
 <script>
@@ -536,10 +536,10 @@ export default {
                 // 如果是子企业，则直接审核通过，无需填写信用评级，如果是主企业和无标签企业，则打开评级弹窗
                 if (this.creditDetailObj.companyType != 2) {
                     this.dialogVisible = true
+                    this.$nextTick(() => {
+                        this.$refs.ruleForm.clearValidate()
+                    })
                 }
-                this.$nextTick(() => {
-                    this.$refs.ruleForm.clearValidate()
-                })
             }
         },
         async onSubmitDoc (val) {
@@ -932,6 +932,13 @@ export default {
             padding-left: 15px;
             color: gray;
         }
+    }
+    /deep/.el-switch.is-disabled{
+        opacity:1;
+
+    }
+    /deep/.el-switch.is-disabled .el-switch__label{
+        cursor: pointer;
     }
     &_box {
         display: flex;
