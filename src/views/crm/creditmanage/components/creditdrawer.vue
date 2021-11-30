@@ -227,7 +227,7 @@
             </span>
         </el-dialog>
         <!-- 风控设置 -->
-        <setInfoDialog ref="setInfoDialog" @backEvent = 'getCompanyDetail'/>
+        <setInfoDialog ref="setInfoDialog" @backEvent='getCompanyDetail' />
     </div>
 </template>
 <script>
@@ -937,12 +937,11 @@ export default {
             color: gray;
         }
     }
-    /deep/.el-switch.is-disabled{
-        opacity:1;
-
-    }
-    /deep/.el-switch.is-disabled .el-switch__label{
+    /deep/.el-switch.is-disabled .el-switch__core, /deep/.el-switch.is-disabled .el-switch__label {
         cursor: pointer;
+    }
+    /deep/.el-switch.is-disabled {
+        opacity: 1;
     }
     &_box {
         display: flex;

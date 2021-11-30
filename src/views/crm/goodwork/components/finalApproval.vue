@@ -131,7 +131,7 @@
                                 </template>
                             </template>
                             <template #upstreamLoanType="slotProps">
-                                <span>{{ slotProps.data.row.upstreamLoanType == 1 ? '先货后款' : '先款后货' }}</span>
+                                <span>{{ slotProps.data.row.upstreamLoanType == 1 ? '先货后款' : slotProps.data.row.upstreamLoanType == 2 ? '先款后货' : '-' }}</span>
                             </template>
                         </hosJoyTable>
                     </div>
