@@ -227,7 +227,7 @@
             </span>
         </el-dialog>
         <!-- 风控设置 -->
-        <setInfoDialog ref="setInfoDialog" @backEvent = 'getCompanyDeatil'/>
+        <setInfoDialog ref="setInfoDialog" @backEvent = 'getCompanyDetail'/>
     </div>
 </template>
 <script>
@@ -428,7 +428,7 @@ export default {
             this.activeName = '1'
             this.companyId = val.companyId
             this.documentStatus = val.documentStatus
-            this.getCompanyDeatil()
+            this.getCompanyDetail()
             this.getShareLimitList()
             this.getShareCompaniesList()
             this.creditUpdateRecord()
@@ -557,7 +557,7 @@ export default {
                     this.drawer = false
                     this.$emit('backEvent')
                     this.dialogVisible = false
-                    this.getCompanyDeatil()
+                    this.getCompanyDetail()
                     this.$emit('backEvent')
                 } catch (error) {
                     this.isloading = false
@@ -575,7 +575,7 @@ export default {
                             this.drawer = false
                             this.$emit('backEvent')
                             this.dialogVisible = false
-                            this.getCompanyDeatil()
+                            this.getCompanyDetail()
                             this.$emit('backEvent')
                         } catch (error) {
                             this.isloading = false
@@ -638,7 +638,7 @@ export default {
                             message: `设置成功`,
                             type: 'success'
                         })
-                        this.getCompanyDeatil()
+                        this.getCompanyDetail()
                         this.creditUpdateRecord()
                         this.$emit('backEvent')
                     } catch (error) {
@@ -731,7 +731,7 @@ export default {
             this.$refs.riskForm.validate(async valid => {
                 if (valid) {
                     await updateCreditFreeze(this.riskForm)
-                    this.getCompanyDeatil()
+                    this.getCompanyDetail()
                     this.creditUpdateRecord()
                     this.riskVisible = false
                 }
@@ -741,7 +741,7 @@ export default {
             this.$refs.setInfoDialog.onOpenDialog()
         },
         // 获取企业信用详情
-        async getCompanyDeatil () {
+        async getCompanyDetail () {
             const { data } = await companyDetail({ companyId: this.companyId })
             this.tableData = [data]
             this.creditDetailObj = data
@@ -770,7 +770,7 @@ export default {
                 this.riskVisible = true
             } else {
                 await updateCreditUnFreeze(this.companyId)
-                this.getCompanyDeatil()
+                this.getCompanyDetail()
             }
         },
         // 关联企业
@@ -780,7 +780,7 @@ export default {
                 mainCompanyId: this.companyId
             }
             await creditShareAdd(dataJson)
-            this.getCompanyDeatil()
+            this.getCompanyDetail()
             this.getShareCompaniesList()
             this.getShareLimitList()
             this.creditUpdateRecord()
@@ -802,7 +802,7 @@ export default {
             }).then(async () => {
                 try {
                     await creditShareCancel(value)
-                    this.getCompanyDeatil()
+                    this.getCompanyDetail()
                     this.getShareCompaniesList()
                     this.getShareLimitList()
                     this.creditUpdateRecord()
