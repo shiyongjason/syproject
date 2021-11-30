@@ -19,7 +19,7 @@
                 <el-scrollbar tag="ul" wrap-class="el-autocomplete-suggestion__wrap" view-class="el-autocomplete-suggestion__list">
                     <li style="text-align:center;" v-if="loading"><i class="el-icon-loading"></i></li>
                     <template v-else>
-                        <li v-for="(item, index) in filterOption" :key="index">
+                        <li v-for="(item, index) in filterOption" :key="item.id+index">
                             <slot :data="item"></slot>
                         </li>
                     </template>

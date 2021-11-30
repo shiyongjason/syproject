@@ -1,6 +1,6 @@
 <template>
     <div class="projectRecord">
-        <h-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" :modal-append-to-body="true" :wrapperClosable=false size="50%">
+        <h-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" :wrapperClosable=false size="50%">
             <template #connect>
                 <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
                     <el-tab-pane label="信用详情" name="1"></el-tab-pane>
@@ -139,7 +139,7 @@
                 <h-button @click="handleClose">取消</h-button>
             </template>
         </h-drawer>
-        <el-dialog title="通用额度设置" :visible.sync="dialogVisible" width="42%" :before-close="onCloseDrawer" append-to-body :close-on-click-modal=false>
+        <el-dialog title="通用额度设置" :visible.sync="dialogVisible" width="42%" :before-close="onCloseDrawer" :append-to-body="true" :close-on-click-modal=false>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm el-dialog__form">
                 <el-form-item label="企业名称：">
                     <el-input v-model="ruleForm.companyName" disabled></el-input>
@@ -539,6 +539,8 @@ export default {
                     this.$nextTick(() => {
                         this.$refs.ruleForm.clearValidate()
                     })
+                } else {
+                    this.dialogVisible = false
                 }
             }
         },
@@ -604,6 +606,16 @@ export default {
             if (val) {
                 await this.findCreditDetail(val)
                 this.ruleForm = { ...this.creditDetail }
+                // 默认信用授予日期
+                // if (!this.creditDetail.startTime) {
+                //     this.ruleForm.startTime = new Date()
+                // }
+                // // 默认信用到期时间
+                // if (!this.creditDetail.endTime) {
+                //     this.ruleForm.endTime = moment(this.ruleForm.startTime).add(6, 'M').format('YYYY-MM-DD')
+                //     // this.newendTime = this.ruleForm.startTime
+                //     // this.pickerOptionsEnd.disabledDate(new Date(this.ruleForm.endTime))
+                // }
                 this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
                 this.ruleForm.newendTime = this.ruleForm.endTime
                 this.newRuleForm = { ...this.ruleForm }
