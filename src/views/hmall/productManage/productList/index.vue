@@ -56,7 +56,7 @@
             <div class="button-cont">
                 <template v-if="productType == 'SPU'">
                     <h-button type='create' @click="onCreateProduct">新建商品</h-button>
-                    <h-button @click="onExports">批量导入</h-button>
+                    <!-- <h-button @click="onExports">批量导入</h-button> -->
                     <h-button @click="onBatchEffective()" v-if="tabName == 'EFFICACY'">批量生效</h-button>
                     <h-button @click="onBatchEfficacy()" v-if="tabName == 'EFFECTIVE'">批量失效</h-button>
                     <h-button @click="onBatchDelete()" v-if="tabName == 'AUDIT' || tabName == 'REJECT'">批量删除</h-button>
@@ -368,6 +368,7 @@ export default {
                 })
                 return false
             }
+            return isCsv && isLt10M
         },
         async onImport () {
             if (this.loading) return
@@ -392,14 +393,14 @@ export default {
                 uInt8Array[i] = raw.charCodeAt(i)
             }
             const blob = new Blob([uInt8Array], {
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
+                type: 'application/vnd.ms-excel'
             })
 
             const reader = new FileReader()
             reader.readAsDataURL(blob)
             reader.onload = function (e) {
                 const a = document.createElement('a')
-                a.download = '失败明细'
+                a.download = '失败明细.xls'
                 a.href = e.target.result
                 document.querySelector('body').appendChild(a)
                 a.click()
