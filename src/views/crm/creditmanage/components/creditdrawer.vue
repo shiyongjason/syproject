@@ -44,7 +44,7 @@
                     <!-- 主企业|无标签企业展示内容 -->
                     <template v-else>
                         <div class="drawer-wrap_switch">
-                            <el-switch v-model="creditDetailObj.creditFreeze" disabled @click.native="handleChangeSwitch(creditDetailObj.creditFreeze)" style="display: block" active-color="#13ce66" inactive-color="#ff4949" inactive-text="是否开启风控冻结？">
+                            <el-switch v-model="creditDetailObj.creditFreeze" disabled @click.native="handleChangeSwitch(creditDetailObj.creditFreeze)" style="display: block" active-color="#13ce66" inactive-text="是否开启风控冻结？">
                             </el-switch>
                             <span v-if="creditDetailObj.creditFreeze">冻结周期{{creditDetailObj.freezeStartTime | momentFormat}}～{{creditDetailObj.freezeEndTime | momentFormat}}</span>
                         </div>
