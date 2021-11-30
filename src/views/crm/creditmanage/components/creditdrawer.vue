@@ -1,6 +1,6 @@
 <template>
     <div class="projectRecord">
-        <h-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" :wrapperClosable=false size="50%">
+        <h-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" :zIndex="999" :wrapperClosable=false size="50%">
             <template #connect>
                 <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
                     <el-tab-pane label="信用详情" name="1"></el-tab-pane>
@@ -44,7 +44,7 @@
                     <!-- 主企业|无标签企业展示内容 -->
                     <template v-else>
                         <div class="drawer-wrap_switch">
-                            <el-switch v-model="creditDetailObj.creditFreeze" disabled @click.native="handleChangeSwitch(creditDetailObj.creditFreeze)" style="display: block" active-color="#13ce66" inactive-color="#ff4949" inactive-text="是否开启风控冻结？">
+                            <el-switch v-model="creditDetailObj.creditFreeze" disabled @click.native="handleChangeSwitch(creditDetailObj.creditFreeze)" style="display: block" active-color="#13ce66" inactive-text="是否开启风控冻结？">
                             </el-switch>
                             <span v-if="creditDetailObj.creditFreeze">冻结周期{{creditDetailObj.freezeStartTime | momentFormat}}～{{creditDetailObj.freezeEndTime | momentFormat}}</span>
                         </div>
@@ -983,6 +983,7 @@ export default {
         width: 150px;
     }
     &_right {
+        position: relative;
         width: 500px;
         .el-autocomplete {
             width: 500px;

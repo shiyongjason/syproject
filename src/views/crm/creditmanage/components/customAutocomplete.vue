@@ -119,6 +119,7 @@ export default {
 
 <style lang="scss" scoped>
 .el-autocomplete-suggestion {
-    position: fixed;
+    position: absolute;
+    z-index: 999;
 }
 </style>
