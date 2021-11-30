@@ -983,6 +983,7 @@ export default {
         width: 150px;
     }
     &_right {
+        position: relative;
         width: 500px;
         .el-autocomplete {
             width: 500px;
