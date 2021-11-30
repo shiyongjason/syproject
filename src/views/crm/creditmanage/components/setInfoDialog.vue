@@ -147,7 +147,8 @@ export default class SetInfoDialog extends Vue {
                     instance.confirmButtonText = '执行中...'
                     try {
                         await Api.manualLose({ id: value.id })
-                        this.getList()
+                        this.getList();
+                        (this.$parent as any).getCompanyDetail()
                         this.$message.success('设置成功，已失效')
                     } catch (error) {
                         this.$message.error('设置失败，请重试')
