@@ -945,6 +945,13 @@ export default {
             color: gray;
         }
     }
+    /deep/.el-switch.is-disabled{
+        opacity:1;
+
+    }
+    /deep/.el-switch.is-disabled .el-switch__label{
+        cursor: pointer;
+    }
     &_box {
         display: flex;
         align-items: center;
