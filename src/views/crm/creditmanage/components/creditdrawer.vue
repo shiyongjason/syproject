@@ -599,7 +599,6 @@ export default {
             }, 500)
         },
         datePickerChange (val) {
-            // this.newendTime = moment(val).add(6, 'M').format('YYYY-MM-DD')
             this.newendTime = this.ruleForm.startTime
             this.ruleForm.endTime = moment(val).add(6, 'M').format('YYYY-MM-DD')
         },
@@ -611,6 +610,16 @@ export default {
                 this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
                 this.ruleForm.newendTime = this.ruleForm.endTime
                 this.newRuleForm = { ...this.ruleForm }
+            }
+            // 默认信用授予日期
+            if (!this.creditDetail.startTime) {
+                this.ruleForm.startTime = new Date()
+            }
+            // 默认信用到期时间
+            if (!this.creditDetail.endTime) {
+                this.ruleForm.endTime = moment(this.ruleForm.startTime).add(6, 'M').format('YYYY-MM-DD')
+                this.newendTime = this.ruleForm.startTime
+                this.pickerOptionsEnd.disabledDate(new Date(this.ruleForm.endTime))
             }
             this.dialogVisible = true
             this.$nextTick(() => {
