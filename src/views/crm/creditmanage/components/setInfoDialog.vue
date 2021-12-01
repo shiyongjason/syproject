@@ -46,6 +46,7 @@ import { State } from 'vuex-class'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import * as Api from '../api/index'
 import { deepCopy } from '@/utils/utils'
+import moment from 'moment'
 @Component({
     name: 'SetInfoDialog',
     components: {
@@ -123,8 +124,10 @@ export default class SetInfoDialog extends Vue {
         this.page.total = data.total
     }
     handleAdd () {
+        console.log(moment().format('yyyy-MM-DD'))
         this.isAddVisible = true
         this.ruleForm = deepCopy(this._ruleForm)
+        this.ruleForm.expireTime = moment().format('YYYY-MM-DD')
     }
     // 手动失效
     handleLose (value) {
