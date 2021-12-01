@@ -134,6 +134,7 @@ export default class UpdateRecord extends Vue {
         margin-bottom: 10px;
         .p {
             padding: 5px 10px;
+            word-break: break-all;
             font {
                 color: #ff7a45;
             }
