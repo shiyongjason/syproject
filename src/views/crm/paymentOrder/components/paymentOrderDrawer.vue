@@ -6,7 +6,7 @@
                 <div class="drawer-content">
                     <div class="info-content">
                         <div class="row-filed">
-                            <p class="col-filed"><span class="info-title">项目信息</span></p>
+                            <p class="col-filed"><span class="info-title">项目信息111</span></p>
                         </div>
                         <div class="row-filed project">
                             <p class="col-filed">
@@ -250,11 +250,11 @@
                                 </div>
                                 <div class="row-filed">
                                     <p class="col-filed col-50">
-                                        <span class="label">经销商预付款：</span>
+                                        <span class="label">首付款金额：</span>
                                         {{ paymentOrderDetail.payOrderDetail.downPaymentAmount | moneyFormat }}元
                                     </p>
                                     <p class="col-filed col-50" v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod == 1">
-                                        <span class="label">剩余货款：</span> {{ paymentOrderDetail.payOrderDetail.arrearAmount | moneyFormat }}元
+                                        <span class="label">尾款金额：</span> {{ paymentOrderDetail.payOrderDetail.arrearAmount | moneyFormat }}元
                                     </p>
                                 </div>
                                 <!-- 剩余支付方式 -->
