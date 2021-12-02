@@ -480,7 +480,7 @@ export default class UpstreamPaymentManagement extends Vue {
         { label: '剩余应支付金额（元）', prop: 'noPayAmount', width: '150', displayAs: 'money' },
         { label: '运营确认时间', prop: 'initiateTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '期望上游支付日期', prop: 'expectSupplierPaymentDate', width: '160', displayAs: 'YYYY-MM-DD' },
-        { label: '付款主体', prop: 'paymentMain', width: '300', displayAs: 'YYYY-MM-DD' },
+        { label: '付款主体', prop: 'paymentMain', width: '160' },
         { label: '上游支付方式', prop: 'supplierPaymentType', width: '150', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] }
 
     ]
