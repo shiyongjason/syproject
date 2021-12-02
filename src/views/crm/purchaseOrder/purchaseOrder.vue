@@ -125,7 +125,7 @@
 <!--                    当共管户信息为已确认或采购单状态为“采购单关闭”时，不展示此按钮 权限按钮-->
                     <h-button table @click="openCoManagerDialog(scope.data.row)" v-if="(!scope.data.row.coManager && scope.data.row.status != PurchaseOrderDict.status.list[5].key) && hosAuthCheck(Auths.CRM_PURCHASE_CO_MANAGER)">上传共管户信息
                     </h-button>
-                    <h-button table @click="openMortgageDialog(scope.data.row)" v-if="(scope.data.row.status != PurchaseOrderDict.status.list[5].key && hosAuthCheck(Auths.CRM_PAYMENT_CO_ZYINFO))">上传质押信息
+                    <h-button table @click="openMortgageDialog(scope.data.row)" v-if="(scope.data.row.status != PurchaseOrderDict.status.list[5].key && hosAuthCheck(Auths.CRM_PAYMENT_CO_ZYINFO) && !scope.data.row.pledgeNo)">上传质押信息
                     </h-button>
                 </template>
             </basicTable>
