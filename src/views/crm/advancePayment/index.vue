@@ -51,6 +51,16 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
+                    <div class="query-col__label">支付类型：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.paymentType" placeholder="请选择">
+                            <el-option label="全部" value=""></el-option>
+                            <el-option :label=item.label :value=item.value v-for="(item) in paymentTypes" :key=item.label></el-option>
+                            <!-- <el-option label="部分支付" :value="2"></el-option> -->
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont__col">
                     <h-button type="primary" @click="getList">查询</h-button>
                     <h-button @click="onReset">重置</h-button>
                 </div>
@@ -378,6 +388,8 @@ interface Query{
     [key:string]:any
 }
 
+const paymentTypes = [{ value: 1, label: '货款' }, { value: 2, label: '费用' }]
+
 const preStatus = [{ value: -1, label: '待分财审核' }, { value: 0, label: '预付款待支付' }, { value: 1, label: '待项目运营审核' }, { value: 2, label: '流程审批中' }, { value: 3, label: '待支付' }, { value: 4, label: '支付单完成' }, { value: 5, label: '待核销' }, { value: 6, label: '已核销' }, { value: 7, label: '支付单关闭' }]
 
 enum SubmitApi {
@@ -415,6 +427,7 @@ export default class Advancelist extends Vue {
          [1, '银行转账'],
          [2, '银行承兑']
      ])
+
     advancepay = CRM_ADVACE_UPSTREAMPAY
     advanceapprove = CRM_ADVACE_APPROVE // 分财
     operateapprove = CRM_OPREATE_APPROVE // 运营
@@ -433,6 +446,7 @@ export default class Advancelist extends Vue {
     private prePayVisble:boolean = false
     private isShowLinkBank:boolean = false
     private records:Array<RespContractSignHistory> = null
+    paymentTypes=paymentTypes
     private recordInfo = {
         distributor: '',
         applyAmount: ''
@@ -499,6 +513,7 @@ export default class Advancelist extends Vue {
         { label: '经销商', prop: 'distributor' },
         { label: '项目名称', prop: 'projectName', width: '120' },
         { label: '金额', prop: 'applyAmount', displayAs: 'money' },
+        { label: '支付类型', prop: 'paymentType', dicData: paymentTypes },
         { label: '状态', prop: 'status', dicData: preStatus },
         { label: '核销采购单编号', prop: 'purchaseOrderNo' },
         { label: '申请人', prop: 'applyUser' },
