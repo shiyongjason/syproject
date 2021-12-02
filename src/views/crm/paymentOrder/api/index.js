@@ -38,6 +38,9 @@ export const getLoanTransferContent = (paymentOrderId) => axios.get(`/project/ap
 // 放款交接内容-质押与终审决议信息 - 编辑保存
 export const postPledgeResolution = (params) => axios.post(`/project/api/loan-transfers/boss/pledge-resolution`, params)
 
+// 保存质押信息接口
+export const postPledgeSave = (params) => axios.post(`/project/api/loan-transfers/boss/pledge-save`, params)
+
 // 支付单-票面金额保存
 export const postBillAmount = (params) => axios.post(`/project/api/bill-amount/boss`, params)
 

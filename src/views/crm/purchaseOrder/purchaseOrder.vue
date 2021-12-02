@@ -125,10 +125,13 @@
 <!--                    当共管户信息为已确认或采购单状态为“采购单关闭”时，不展示此按钮 权限按钮-->
                     <h-button table @click="openCoManagerDialog(scope.data.row)" v-if="(!scope.data.row.coManager && scope.data.row.status != PurchaseOrderDict.status.list[5].key) && hosAuthCheck(Auths.CRM_PURCHASE_CO_MANAGER)">上传共管户信息
                     </h-button>
+                    <h-button table @click="openMortgageDialog(scope.data.row)" v-if="(scope.data.row.status != PurchaseOrderDict.status.list[5].key && hosAuthCheck(Auths.CRM_PAYMENT_CO_ZYINFO))">上传质押信息
+                    </h-button>
                 </template>
             </basicTable>
         </div>
         <uploadCoManagerPhotos :isOpen.sync=coManagerIsOpen :id="coManagerId" @backEvent='drawerBackEvent'/>
+        <uploadMortgageInfo :isOpen.sync=coMortgageIsOpen :id="purchaseOrderId" @backEvent='drawerBackEvent'/>
         <purchaseOrderDrawer :drawer=drawer @backEvent='drawerBackEvent' @openDialog="openDialog" ref="drawerDetail" :row="purchaseOrderRow"></purchaseOrderDrawer>
         <purchaseOrderDialog :isOpen=isOpen :openStatus="openStatus" @backEvent='dialogBackEvent' @closeDrawer="drawer = false" :dialogParams="purchaseOrderDialogParams" ref="dialog"></purchaseOrderDialog>
         <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='500px' :wrapperClosable="false" :beforeClose="handleClose">
@@ -156,6 +159,7 @@ import { mapActions, mapGetters, mapState } from 'vuex'
 import moment from 'moment'
 import purchaseOrderDrawer from '@/views/crm/purchaseOrder/components/purchaseOrderDrawer'
 import purchaseOrderDialog from '@/views/crm/purchaseOrder/components/purchaseOrderDialog'
+import uploadMortgageInfo from '@/views/crm/purchaseOrder/components/uploadMortgageInfo'
 import uploadCoManagerPhotos from '@/views/crm/purchaseOrder/components/uploadCoManagerPhotos'
 import PurchaseOrderDialogStatus from './dialogStatus'
 import PurchaseOrderDict from './purchaseOrderDict'
@@ -212,13 +216,16 @@ export default {
             editHistory: [],
             purchaseName: '',
             coManagerIsOpen: false,
-            coManagerId: ''
+            coMortgageIsOpen: false,
+            coManagerId: '',
+            purchaseOrderId: ''
         }
     },
     components: {
         purchaseOrderDrawer,
         purchaseOrderDialog,
-        uploadCoManagerPhotos
+        uploadCoManagerPhotos,
+        uploadMortgageInfo
     },
     computed: {
         options () {
@@ -311,6 +318,12 @@ export default {
             this.coManagerIsOpen = true
             this.coManagerId = row.id
         },
+
+        openMortgageDialog (row) {
+            this.coMortgageIsOpen = true
+            this.purchaseOrderId = row.id
+        },
+
         dialogBackEvent () {
             this.isOpen = false
             this.findPurchaseList(this.queryParamsUseQuery)

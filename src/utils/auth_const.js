@@ -252,6 +252,8 @@ export const CRM_PURCHASE_CO_MANAGER = 109525
 export const CRM_PURCHASE_DETAIL_FILE = 109526
 // 分财审核
 export const CRM_PAYMENT_FINANCE_AUDIT = 109527
+// 上传质押信息
+export const CRM_PAYMENT_CO_ZYINFO = 109529
 
 // 资金逾期
 export const BRANCH_OVERDUE_SUM_EXPORT = 110003
