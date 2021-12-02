@@ -85,6 +85,12 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
+                    <div class="query-col__label">付款主体：</div>
+                    <div class="query-col__input">
+                        <el-input type="text" v-model="queryParams.projectName" maxlength="20" placeholder="请输入"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
                     <h-button type="primary" @click="getList">查询</h-button>
                     <h-button @click="onReset">重置</h-button>
                     <h-button @click="onExport" v-if="hosAuthCheck(upstreamExport)">导出列表数据</h-button>
@@ -473,6 +479,7 @@ export default class UpstreamPaymentManagement extends Vue {
         { label: '剩余应支付金额（元）', prop: 'noPayAmount', width: '150', displayAs: 'money' },
         { label: '运营确认时间', prop: 'initiateTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '期望上游支付日期', prop: 'expectSupplierPaymentDate', width: '160', displayAs: 'YYYY-MM-DD' },
+        { label: '付款主体', prop: 'expectSupplierPaymentDate', width: '300', displayAs: 'YYYY-MM-DD' },
         { label: '上游支付方式', prop: 'supplierPaymentType', width: '150', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] }
 
     ]
@@ -709,5 +716,5 @@ export default class UpstreamPaymentManagement extends Vue {
 </script>
 
 <style lang='scss' scoped>
-@import './css.scss';
+@import "./css.scss";
 </style>

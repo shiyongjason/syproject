@@ -58,6 +58,9 @@
                         <el-form-item label="免息方式：">
                             {{paymentDetail.payOrderPoDetail.freeInterestType | attributeComputed(PurchaseOrderDict.freeInterestType.list)}}
                         </el-form-item>
+                        <el-form-item label="付款主体：">
+                            好享家舒适智能家居股份有限公司
+                        </el-form-item>
                     </div>
                     <div class="col-filed">
                         <div class="info-title">上游支付申请信息</div>
@@ -84,6 +87,18 @@
                         </el-form-item>
                         <el-form-item label="上游支付方式：">
                             {{paymentDetail.payOrderDetail.supplierPaymentType==1?'银行转账':'银行承兑'}}：{{paymentDetail.payOrderDetail.serviceFeeRate}}%
+                        </el-form-item>
+                        <el-form-item label="采购折让：">
+                            2%
+                        </el-form-item>
+                        <el-form-item label="采购金额(折让后)：">
+                            490,000.00元
+                        </el-form-item>
+                        <el-form-item label="销售毛利率：">
+                            20%
+                        </el-form-item>
+                        <el-form-item label="销售金额：">
+                            600,000.00元
                         </el-form-item>
                         <el-form-item label="票面金额：" v-if="paymentDetail.payOrderDetail.supplierPaymentType != 1">
                             {{paymentDetail.payOrderDetail.billClaim == 1 ? '有要求' : '无要求'}}
@@ -149,6 +164,40 @@
                                     <el-radio :label="false">否</el-radio>
                                 </el-radio-group>
                             </el-form-item>
+                            <el-form-item label="上游货款方式：">
+                                先货后款
+                            </el-form-item>
+                            <el-form-item label="首付款：">
+                                200,000元
+                            </el-form-item>
+                            <el-form-item label="预计服务费总额：">
+                                10,000元
+                            </el-form-item>
+                            <el-form-item label="预计每期服务费：">
+                                5,000元
+                            </el-form-item>
+                            <el-form-item label="剩余货款：">
+                                5,000元
+                            </el-form-item>
+                            <el-form-item label="毛利总额：">
+                                5,000元
+                            </el-form-item>
+                            <template v-if="formData.dealerCooperationMethod">
+                                <el-form-item label="经销商预付款：">
+                                    {{downPaymentAmount | moneyFormat}}元
+                                    <img src="../../../../assets/images/crm-edit.png" alt="" @click="openEdit" class="info-img-edit" v-if="formData.dealerCooperationMethod==1">
+                                </el-form-item>
+
+                                <el-form-item label="剩余货款：" v-show="formData.dealerCooperationMethod==1">
+                                    {{ serviceFee.arrearAmount | moneyFormat}}元
+                                </el-form-item>
+                                <el-form-item label="预计服务费总额：" v-show="formData.dealerCooperationMethod==1">
+                                    {{ serviceFee.feeAmount | moneyFormat}}元
+                                </el-form-item>
+                                <el-form-item label="预计每期服务费：" v-show="formData.dealerCooperationMethod==1">
+                                    {{ serviceFee.feeAmountPer | moneyFormat}}元
+                                </el-form-item>
+                            </template>
                             <el-form-item label="审核备注："  label-width="165px">
                                 <el-input type="textarea" v-model="formData.approvalRemark" maxlength="200"></el-input>
                             </el-form-item>

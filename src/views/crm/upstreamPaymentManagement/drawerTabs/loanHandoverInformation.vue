@@ -48,6 +48,12 @@
             </div>
             <div class="info-layout">
                 <div class="info-layout-item">
+                    <font style="flex: 0 0 100px">付款主体：</font>
+                    <span>好享家舒适智能家居股份有限公司</span>
+                </div>
+            </div>
+            <div class="info-layout">
+                <div class="info-layout-item">
                     <font style="flex: 0 0 100px">监管账户账号：</font>
                     <span>{{data.regulatorAccountNo?data.regulatorAccountNo:'-'}}</span>
                 </div>
