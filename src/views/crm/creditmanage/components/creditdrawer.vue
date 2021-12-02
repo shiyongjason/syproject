@@ -218,7 +218,7 @@
                     <el-date-picker type="datetime" placeholder="冻结结束时间：" v-model="riskForm.freezeEndTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" :picker-options="endOptions" style="width: 100%;"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="说明：">
-                    <el-input type="textarea" v-model.trim="riskForm.freezeRemark" maxlength="500" :rows="5" show-word-limit></el-input>
+                    <el-input type="textarea" v-model.trim="riskForm.freezeRemark" maxlength="200" :rows="5" show-word-limit></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -728,6 +728,10 @@ export default {
         },
         // 开启风控冻结--确定
         handleSubmitFrozen () {
+            if (new Date(this.riskForm.freezeStartTime).getTime() > new Date(this.riskForm.freezeEndTime).getTime()) {
+                this.$message.warning('开始时间不能大于结束时间')
+                return false
+            }
             this.riskForm.companyId = this.companyId
             this.$refs.riskForm.validate(async valid => {
                 if (valid) {
@@ -767,6 +771,8 @@ export default {
         },
         // 风控冻结
         async handleChangeSwitch (val) {
+            this.riskForm.freezeEndTime = ''
+            this.riskForm.freezeStartTime = ''
             if (!val) {
                 this.riskVisible = true
             } else {
