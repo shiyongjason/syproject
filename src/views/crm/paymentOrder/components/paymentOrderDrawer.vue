@@ -6,7 +6,7 @@
                 <div class="drawer-content">
                     <div class="info-content">
                         <div class="row-filed">
-                            <p class="col-filed"><span class="info-title">项目信息111</span></p>
+                            <p class="col-filed"><span class="info-title">项目信息</span></p>
                         </div>
                         <div class="row-filed project">
                             <p class="col-filed">
