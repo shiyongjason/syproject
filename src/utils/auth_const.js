@@ -425,6 +425,7 @@ export const CRM_ADVACE_RECORDS = 118504
 export const CRM_UPLOAD_PREPAY = 118506
 export const CRM_UPSTREAM_BANK = 118507
 export const CRM_OPREATE_APPROVE = 118508
+export const CRM_ADVACE_WRITEOFF = 118509
 
 // 舒适云智能化 -- 设备升级详情
 export const COMFORT_SMART_DEVICE_UPGRADE_DETAIL = 118505
