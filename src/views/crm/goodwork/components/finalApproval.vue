@@ -244,7 +244,7 @@
                         </el-form-item>
                     </div>
                     <div class="form-item">
-                        <el-form-item label="专项额度：" prop='projectQuatoAmount'>
+                        <el-form-item label="专项额度：" prop='projectQuatoAmountd'>
                             <el-input v-isNum:2 v-inputMAX='100000000' placeholder="请输入" v-model="purForm.projectQuotaAmount" maxlength="50">
                                 <template slot="append">元</template>
                             </el-input>
@@ -571,7 +571,7 @@ export default class FinalApproval extends Vue {
                 //     trigger: 'blur'
                 // }
             ],
-            projectQuatoAmount: [
+            projectQuatoAmountd: [
                 { required: true, message: '专项额度(元)必填', trigger: 'blur' },
                 {
                     validator: (rule, value, callback) => {
