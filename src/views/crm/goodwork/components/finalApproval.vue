@@ -101,6 +101,12 @@
                         </div>
                     </div>
                     <div class="info-layout">
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>专项额度(元)：</font>
+                            <span>{{resolutionDetail.projectQuotaAmount | moneyFormat}}</span>
+                        </div>
+                    </div>
+                    <div class="info-layout">
                         <div class="info-layout-item" style="margin-left:10px">
                             <font style="flex:0 0 135px">执行费率(%)：</font>
                         </div>
@@ -122,6 +128,21 @@
                     </div>
                     <div class="table">
                         <hosJoyTable ref="hosjoyTable" align="center" border stripe :column="tableLabel" :data="tableData" actionWidth='375' prevLocalName="V3.*" localName="V3.*.18">
+                            <template #upstreamPayTypeName="slotProps">
+                                <template v-for="(value, index) in slotProps.data.row.upstreamPayTypeName">
+                                    <div :key="index" v-if="value == '银行转账'">{{ value }}
+                                        <span v-if="slotProps.data.row.transferRateType == 2">：{{ slotProps.data.row.transferRate }}%</span>
+                                        <span v-else>：{{ resolutionDetail.transferBankRate||'-' }}%</span>
+                                    </div>
+                                    <div :key="index" v-if="value == '银行承兑'">{{ value }}
+                                        <span v-if="slotProps.data.row.acceptanceRateType == 2">：{{ slotProps.data.row.acceptanceRate }}%</span>
+                                        <span v-else>：{{ resolutionDetail.acceptBankRate || '-' }}%</span>
+                                    </div>
+                                </template>
+                            </template>
+                            <template #upstreamLoanType="slotProps">
+                                <span>{{ slotProps.data.row.upstreamLoanType == 1 ? '先货后款' : slotProps.data.row.upstreamLoanType == 2 ? '先款后货' : '-' }}</span>
+                            </template>
                         </hosJoyTable>
                     </div>
                     <div class="info-layout">
@@ -232,7 +253,6 @@
                         <!--  -->
                         <el-form-item label="剩余货款支付周期：" prop='remainPaymentCycle' style="marginLeft:-9px;">
                             <el-select v-model="purForm.remainPaymentCycle" placeholder="请选择">
-
                                 <el-option label="1个月" :value="1"></el-option>
                                 <el-option label="2个月" :value="2"></el-option>
                                 <el-option label="3个月" :value="3"></el-option>
@@ -246,6 +266,13 @@
                                 <el-option label="11个月" :value="11"></el-option>
                                 <el-option label="12个月" :value="12"></el-option>
                             </el-select>
+                        </el-form-item>
+                    </div>
+                    <div class="form-item">
+                        <el-form-item label="专项额度：" prop='projectQuatoAmount'>
+                            <el-input v-isNum:2 v-inputMAX='100000000' placeholder="请输入" v-model="purForm.projectQuotaAmount" maxlength="50">
+                                <template slot="append">元</template>
+                            </el-input>
                         </el-form-item>
                     </div>
                     <div class="reviewResolutionForm-title" style="marginTop:0px">
@@ -270,6 +297,34 @@
                     </div>
                     <div class="form-table">
                         <hosJoyTable ref="hosjoyTable" align="center" border stripe :showPagination='false' :column="formTableLabel" :data="tableForm" actionWidth='100' prevLocalName="V3.*" localName="V3.*.26" isAction>
+                            <template #upstreamPayType="slotProps">
+                                <el-checkbox-group v-model="slotProps.data.row.upstreamPayType" @change="handleCheckbox($event, slotProps.data.$index)" class="upstream-pay-type">
+                                    <el-checkbox :label="1">银行转账</el-checkbox>
+                                    <el-radio-group :disabled="slotProps.data.row.upstreamPayType.indexOf(1) === -1" v-model="slotProps.data.row.transferRateType" @change="handleRadio($event, slotProps.data.$index, 1)">
+                                        <el-radio :label='1'>执行费率</el-radio>
+                                        <el-radio :label='2'>自定义费率
+                                            <el-input style="width:120px !important;" :disabled="slotProps.data.row.transferRateType != 2" v-isNum:2 v-inputMAX='100' placeholder="请输入" v-model="slotProps.data.row.transferRate">
+                                                <template slot="append">%</template>
+                                            </el-input>
+                                        </el-radio>
+                                    </el-radio-group>
+                                    <el-checkbox :label="2">银行承兑</el-checkbox>
+                                    <el-radio-group :disabled="slotProps.data.row.upstreamPayType.indexOf(2) === -1" v-model="slotProps.data.row.acceptanceRateType" @change="handleRadio($event, slotProps.data.$index, 2)">
+                                        <el-radio :label='1'>执行费率</el-radio>
+                                        <el-radio :label='2'>自定义费率
+                                            <el-input style="width:120px !important;" :disabled="slotProps.data.row.acceptanceRateType != 2" v-isNum:2 v-inputMAX='100' placeholder="请输入" v-model="slotProps.data.row.acceptanceRate">
+                                                <template slot="append">%</template>
+                                            </el-input>
+                                        </el-radio>
+                                    </el-radio-group>
+                                </el-checkbox-group>
+                            </template>
+                            <template #upstreamLoanType="slotProps">
+                                <el-select v-model="slotProps.data.row.upstreamLoanType" clearable>
+                                    <el-option :value="1" label="先货后款"></el-option>
+                                    <el-option :value="2" label="先款后货"></el-option>
+                                </el-select>
+                            </template>
                             <template #action="slotProps">
                                 <h-button table @click="del(slotProps.data)" v-if="tableForm.length>1">删除</h-button>
                             </template>
@@ -299,6 +354,21 @@
                     <!-- 采购单 -->
                     <div v-if="item.projectPurchaseList" class="mt10">
                         <hosJoyTable ref="hosjoyTable" align="center" border stripe :column="tableLabel" :data="item.projectPurchaseList" actionWidth='375' prevLocalName="V3.*" localName="V3.*.18">
+                            <template #upstreamPayTypeName="slotProps">
+                                <template v-for="(value, index) in slotProps.data.row.upstreamPayTypeResponseList">
+                                    <div :key="index" v-if="value.upstreamPayType == 1">{{ value.upstreamPayTypeName }}
+                                        <span v-if="slotProps.data.row.transferRateType == 2">：{{ slotProps.data.row.transferRate }}%</span>
+                                        <span v-else>：{{ value.rate }}%</span>
+                                    </div>
+                                    <div :key="index" v-if="value.upstreamPayType == 2">{{ value.upstreamPayTypeName }}
+                                        <span v-if="slotProps.data.row.acceptanceRateType == 2">：{{ slotProps.data.row.acceptanceRate }}%</span>
+                                        <span v-else>：{{ value.rate }}%</span>
+                                    </div>
+                                </template>
+                            </template>
+                            <template #upstreamLoanType="slotProps">
+                                <span>{{ slotProps.data.row.upstreamLoanType == 1 ? '先货后款' : slotProps.data.row.upstreamLoanType == 2 ?'先款后货':'-' }}</span>
+                            </template>
                         </hosJoyTable>
                     </div>
                     <!-- 操作 -->
@@ -375,6 +445,7 @@ export default class FinalApproval extends Vue {
         'predictLoanAmount': '',
         'salesGrossMargin': '', // 销售毛利率
         'salesTotalAmount': '', // 销售总额
+        'projectQuatoAmount': 0,
         'projectId': '',
         'projectPurchaseList': [
             {
@@ -540,6 +611,19 @@ export default class FinalApproval extends Vue {
                 //     },
                 //     trigger: 'blur'
                 // }
+            ],
+            projectQuatoAmount: [
+                { required: true, message: '专项额度(元)必填', trigger: 'blur' },
+                {
+                    validator: (rule, value, callback) => {
+                        if (value < 0 || value >= 100000000) {
+                            return callback(new Error('专项额度(元)区间为[0，100000000)'))
+                        } else {
+                            callback()
+                        }
+                    },
+                    trigger: 'blur'
+                }
             ]
         }
         return rules
@@ -554,23 +638,9 @@ export default class FinalApproval extends Vue {
         { label: '上游供应商', prop: 'upstreamSupplierName', width: '120' },
         { label: '设备品牌', prop: 'deviceBrand', width: '120' },
         { label: '上游供应商类型', prop: 'upstreamSupplierType', width: '150', dicData: [{ value: 1, label: '厂商' }, { value: 2, label: '代理商' }, { value: 3, label: '经销商' }] },
-        { label: '上游支付方式',
-            prop: 'upstreamPayTypeName',
-            render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
-                return (
-                    <div>
-                        {
-                            scope.row.upstreamPayTypeName ? scope.row.upstreamPayTypeName.map((item, index) => {
-                                return (
-                                    <i style={{ 'fontStyle': 'normal' }}>{item + (index < scope.row.upstreamPayTypeName.length - 1 ? '；' : '')}</i>
-                                )
-                            })
-                                : '-'
-                        }
-                    </div>
-                )
-            } },
+        { label: '上游支付方式', prop: 'upstreamPayTypeName', slot: 'upstreamPayTypeName', width: '140' },
         { label: '设备品类', prop: 'deviceCategory' },
+        { label: '上游货款方式', prop: 'upstreamLoanType', slot: 'upstreamLoanType' },
         { label: '采购折让(%)', prop: 'purchaseDiscountRate', width: '90' }
     ];
 
@@ -653,29 +723,10 @@ export default class FinalApproval extends Vue {
         {
             label: '上游支付方式',
             prop: 'upstreamPayType',
-            width: '250',
-            className: '',
+            width: '400',
+            className: 'form-table-header',
             showOverflowTooltip: false,
-            render: (h: CreateElement, scope: TableRenderParam) => {
-                return (
-                    <div>
-                        <el-select
-                            class=""
-                            placeholder="请选择"
-                            value={scope.row[scope.column.property]}
-                            onInput={(val) => {
-                                scope.row[scope.column.property] = val
-                            }}
-                            multiple
-                            style={{ 'width': '210px' }}
-                            size='mini'
-                        >
-                            <el-option key="1" value={1} label="银行转账">银行转账</el-option>
-                            <el-option key="2" value={2} label="银行承兑">银行承兑</el-option>
-                        </el-select>
-                    </div>
-                )
-            }
+            slot: 'upstreamPayType'
         },
         {
             label: '设备品类',
@@ -753,6 +804,13 @@ export default class FinalApproval extends Vue {
                     </div>
                 )
             }
+        },
+        {
+            label: '上游货款方式',
+            prop: 'upstreamLoanType',
+            width: '300',
+            className: 'form-table-header',
+            slot: 'upstreamLoanType'
         }
         // {
         //     label: '设备品类',
@@ -865,10 +923,15 @@ export default class FinalApproval extends Vue {
             'deviceCategory': '',
             'deviceCategoryType': '',
             'otherDeviceCategory': '',
-            'upstreamPayType': '',
+            'upstreamPayType': [],
             'upstreamSupplierName': '',
             'upstreamSupplierType': '',
-            'purchaseDiscountRate': '' }
+            'purchaseDiscountRate': '',
+            'transferRateType': '',
+            'transferRate': '',
+            'acceptanceRateType': '',
+            'acceptanceRate': ''
+        }
         this.tableForm.push(_temp)
     }
 
@@ -904,7 +967,26 @@ export default class FinalApproval extends Vue {
             console.log('element', element)
             delete element.deviceCategory
             delete element.upstreamPayTypeName
-            delete element.transferRate
+
+            // 银行转账 选中执行费率 则不校验Input
+            if (element.transferRateType === 1) {
+                delete element.transferRate
+            }
+            // 银行承兑 选中执行费率 则不校验Input
+            if (element.acceptanceRateType === 1) {
+                delete element.acceptanceRate
+            }
+            if (!element.upstreamPayType) {
+                flag = false
+            }
+            if (element.upstreamPayType && element.upstreamPayType.indexOf(1) === -1) {
+                delete element.transferRateType
+                delete element.transferRate
+            }
+            if (element.upstreamPayType && element.upstreamPayType.indexOf(2) === -1) {
+                delete element.acceptanceRateType
+                delete element.acceptanceRate
+            }
             if (element['deviceCategoryType'].includes(8)) {
                 for (var key in element) {
                     if (element[key] != '0' && !element[key]) {
@@ -933,8 +1015,6 @@ export default class FinalApproval extends Vue {
         let tableFormList = deepCopy(this.tableForm)
         tableFormList = tableFormList?.map((item:any) => {
             return Object.assign(item, {
-                deviceCategoryType: item.deviceCategoryType.join(','),
-                upstreamPayType: item.upstreamPayType.join(','),
                 purchaseDiscountRate: parseFloat(item.purchaseDiscountRate)
             })
         })
@@ -1068,6 +1148,26 @@ export default class FinalApproval extends Vue {
     handleCloseLast () {
         this.lastDialog = false
         this.lastForm.remark = ''
+    }
+
+    handleCheckbox (value, index) {
+        if (value?.indexOf(1) === -1) {
+            this.tableForm[index].transferRateType = ''
+            this.tableForm[index].transferRate = ''
+        }
+        if (value?.indexOf(2) === -1) {
+            this.tableForm[index].acceptanceRateType = ''
+            this.tableForm[index].acceptanceRate = ''
+        }
+    }
+
+    handleRadio (value, index, type) {
+        // type 1 银行转账 2 银行承兑
+        if (type === 1) {
+            this.tableForm[index].transferRate = ''
+        } else {
+            this.tableForm[index].acceptanceRate = ''
+        }
     }
     mounted () {
         this.onFindRes()

@@ -86,7 +86,7 @@
                             {{paymentDetail.payOrderDetail.expectSupplierPaymentDate | momentFormat('YYYY-MM-DD')}}
                         </el-form-item>
                         <el-form-item label="上游支付方式：">
-                            {{paymentDetail.payOrderDetail.supplierPaymentType==1?'银行转账':'银行承兑'}}
+                            {{paymentDetail.payOrderDetail.supplierPaymentType==1?'银行转账':'银行承兑'}}：{{paymentDetail.payOrderDetail.serviceFeeRate}}%
                         </el-form-item>
                         <el-form-item label="采购折让：">
                             2%
@@ -129,56 +129,39 @@
                             {{paymentDetail.payOrderDetail.specialRemark}}
                         </el-form-item>
                     </div>
-                    <div class="col-filed" v-if="paymentDetail.payOrderDetail.status === paymentOrderStatusKey.FINANCE_AUDIT">
-                        <div class="info-title">分财审核信息</div>
-                        <el-form-item prop="supplierAccountConfirm" label="账户信息是否已确认：" label-width="165px">
-                            <el-radio-group v-model="formData.supplierAccountConfirm" @change="onRdioChange">
-                                <el-radio :label="true">是</el-radio>
-                                <el-radio :label="false">否</el-radio>
-                            </el-radio-group>
+                    <div class="col-filed">
+                        <el-form-item label="合作方式：" label-width="165px">
+                            {{ paymentOrderConst.DEALER_COOPERATION_METHOD.get(paymentDetail.payOrderDetail.dealerCooperationMethod) || '-' }}
                         </el-form-item>
-                        <el-form-item prop="coManagerSupervision" label="共管户是否已监管：" label-width="165px">
-                            <el-radio-group v-model="formData.coManagerSupervision" @change="onRdioChange">
-                                <el-radio :label="true">是</el-radio>
-                                <el-radio :label="false">否</el-radio>
-                            </el-radio-group>
+                         <el-form-item label="上游货款方式：" label-width="165px">
+                             {{ paymentOrderConst.SUPPLIER_PAYMENT_METHOD.get(paymentDetail.payOrderDetail.supplierPaymentMethod) || '-'}}
                         </el-form-item>
-                        <el-form-item label="审核备注：" prop="approvalRemark" label-width="165px">
-                            <el-input type="textarea" v-model="formData.approvalRemark" maxlength="200"></el-input>
+                        <el-form-item label="首付款金额：" label-width="165px">
+                            {{ paymentDetail.payOrderDetail.downPaymentAmount | moneyFormat }}元
                         </el-form-item>
-                    </div>
-                    <div class="col-filed" v-else>
-                        <div class="info-title">分财审核信息</div>
-                        <el-form-item label="账户信息是否已确认：" label-width="165px">
-                            {{paymentDetail.paymentOrderSegmentFinanceApprovalResponse && paymentDetail.paymentOrderSegmentFinanceApprovalResponse.supplierAccountConfirm ? '是' : '否'}}
-                        </el-form-item>
-                        <el-form-item label="共管户是否已监管：" label-width="165px">
-                            {{paymentDetail.paymentOrderSegmentFinanceApprovalResponse && paymentDetail.paymentOrderSegmentFinanceApprovalResponse.coManagerSupervision ? '是' : '否'}}
-                        </el-form-item>
-                        <el-form-item label="审核备注：" label-width="165px">
-                            {{paymentDetail.paymentOrderSegmentFinanceApprovalResponse.approvalRemark || '-'}}
-                        </el-form-item>
-                        <div class="info-title">项目运营审核信息</div>
-                        <el-form-item prop="checkPass" label="审核结果：">
-                            <el-radio-group v-model="formData.checkPass" @change="onRdioChange">
-                                <el-radio label="pass">通过</el-radio>
-                                <el-radio label="noPass">不通过</el-radio>
-                            </el-radio-group>
-                        </el-form-item>
-
-                        <template v-if="formData.checkPass === 'pass'">
-                            <el-form-item label="上游货款方式：" prop="supplierPaymentMethod">
-                                <el-radio-group v-model="formData.supplierPaymentMethod">
-                                    <el-radio :key="key" :label="key" v-for="[key, value] of paymentOrderConst.SUPPLIER_PAYMENT_METHOD">
-                                        {{value}}
-                                    </el-radio>
+                        <template v-if="paymentDetail.payOrderDetail.dealerCooperationMethod == 1">
+                            <el-form-item label="预计服务费总额：" label-width="165px">
+                                {{ paymentDetail.payOrderDetail.feeAmount | moneyFormat }}元
+                            </el-form-item>
+                            <el-form-item label="预计每期服务费：" label-width="165px">
+                                {{ paymentDetail.payOrderDetail.feeAmountPer | moneyFormat }}元
+                            </el-form-item>
+                            <el-form-item label="尾款金额：" label-width="165px">
+                                {{ paymentDetail.payOrderDetail.arrearAmount | moneyFormat }}元
+                            </el-form-item>
+                        </template>
+                        <template v-if="paymentDetail.payOrderDetail.status === paymentOrderStatusKey.FINANCE_AUDIT">
+                            <div class="info-title">分财审核信息</div>
+                            <el-form-item prop="supplierAccountConfirm" label="账户信息是否已确认：" label-width="165px">
+                                <el-radio-group v-model="formData.supplierAccountConfirm" @change="onRdioChange">
+                                    <el-radio :label="true">是</el-radio>
+                                    <el-radio :label="false">否</el-radio>
                                 </el-radio-group>
                             </el-form-item>
-                            <el-form-item label="下游合作方式：" prop="dealerCooperationMethod">
-                                <el-radio-group v-model="formData.dealerCooperationMethod" @change="onChangeDealer">
-                                    <el-radio :key="item.key" :label="item.key" v-for="item in dealerList">
-                                        {{item.value}}
-                                    </el-radio>
+                            <el-form-item prop="coManagerSupervision" label="共管户是否已监管：" label-width="165px">
+                                <el-radio-group v-model="formData.coManagerSupervision" @change="onRdioChange">
+                                    <el-radio :label="true">是</el-radio>
+                                    <el-radio :label="false">否</el-radio>
                                 </el-radio-group>
                             </el-form-item>
                             <el-form-item label="上游货款方式：">
@@ -215,9 +198,29 @@
                                     {{ serviceFee.feeAmountPer | moneyFormat}}元
                                 </el-form-item>
                             </template>
+                            <el-form-item label="审核备注："  label-width="165px">
+                                <el-input type="textarea" v-model="formData.approvalRemark" maxlength="200"></el-input>
+                            </el-form-item>
                         </template>
-                        <template v-if="formData.checkPass === 'noPass'">
-                            <el-form-item label="审核备注：" prop="approvalRemark">
+                        <template v-else>
+                            <div class="info-title">分财审核信息</div>
+                            <el-form-item label="账户信息是否已确认：" label-width="165px">
+                                {{paymentDetail.paymentOrderSegmentFinanceApprovalResponse && paymentDetail.paymentOrderSegmentFinanceApprovalResponse.supplierAccountConfirm ? '是' : '否'}}
+                            </el-form-item>
+                            <el-form-item label="共管户是否已监管：" label-width="165px">
+                                {{paymentDetail.paymentOrderSegmentFinanceApprovalResponse && paymentDetail.paymentOrderSegmentFinanceApprovalResponse.coManagerSupervision ? '是' : '否'}}
+                            </el-form-item>
+                            <el-form-item label="审核备注：" label-width="165px">
+                                {{paymentDetail.paymentOrderSegmentFinanceApprovalResponse.approvalRemark || '-'}}
+                            </el-form-item>
+                            <div class="info-title">项目运营审核信息</div>
+                            <el-form-item prop="checkPass" label="审核结果：">
+                                <el-radio-group v-model="formData.checkPass" @change="onRdioChange">
+                                    <el-radio label="pass">通过</el-radio>
+                                    <el-radio label="noPass">不通过</el-radio>
+                                </el-radio-group>
+                            </el-form-item>
+                            <el-form-item label="审核备注：" :required="formData.checkPass=='noPass'" prop="approvalRemark">
                                 <el-input type="textarea" v-model="formData.approvalRemark" maxlength="200"></el-input>
                             </el-form-item>
                         </template>
@@ -231,19 +234,10 @@
                 </div>
             </div>
         </el-dialog>
-        <el-dialog title="编辑经销商预付款" width="400px" :visible.sync="editAmountVisible" :before-close="()=> editAmountVisible= false" :close-on-click-modal=false class="edit-amount-dialog">
-            <div class="edit-amount">
-                经销商预付款:<el-input v-model="formData.downPaymentAmount" v-isNegative:2="formData.downPaymentAmount" maxlength="20"></el-input>
-            </div>
-            <div slot="footer">
-                <h-button type="cancel" @click="onCancelAmount">取消</h-button>
-                <h-button type="primary" @click="onSaveAmount">确认</h-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 <script>
-import { updatePaymentOrderStatusNoPass, updatePaymentOrderStatusPass, getComputedValue, updatePaymentOrderStatusFinance } from '@/views/crm/paymentOrder/api'
+import { updatePaymentOrderStatusNoPass, updatePaymentOrderStatusPass, updatePaymentOrderStatusFinance } from '@/views/crm/paymentOrder/api'
 import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import imageAddToken from '@/components/imageAddToken'
 import paymentOrderConst from '@/views/crm/paymentOrder/const'
@@ -272,21 +266,9 @@ export default {
             formData: {
                 checkPass: '',
                 approvalRemark: '',
-                downPaymentAmount: '',
-                supplierPaymentMethod: '',
                 supplierAccountConfirm: '',
                 coManagerSupervision: ''
             },
-            editAmountVisible: false,
-            serviceFee: {},
-            serviceParams: {
-                totalAmount: '',
-                downpaymentAmount: '',
-                serviceFeeRate: '',
-                freeInterestType: '',
-                terms: ''
-            },
-            dealerList: [{ key: 1, value: '垫资代采' }, { key: 2, value: '代收代付' }],
             rules: {
                 checkPass: [
                     { required: true, message: '请选择审核结果' }
@@ -306,12 +288,6 @@ export default {
                         trigger: 'blur'
                     }
                 ],
-                supplierPaymentMethod: [
-                    { required: true, message: '请选择上游货款方式' }
-                ],
-                dealerCooperationMethod: [
-                    { required: true, message: '请选择下游合作方式' }
-                ],
                 supplierAccountConfirm: [
                     { required: true, message: '请选择账户信息是否已确认' }
                 ],
@@ -319,7 +295,6 @@ export default {
                     { required: true, message: '请选择共管户是否已监管' }
                 ]
             },
-            downPaymentAmount: '-',
             tableLabel: [
                 { label: '出票张数', prop: 'number' },
                 { label: '出票金额（元）', prop: 'amount', formatters: 'moneyShow' }
@@ -337,76 +312,23 @@ export default {
         isOpen (val) {
             if (val) {
                 const { payOrderDetail, payOrderPoDetail, projectInfo } = this.paymentDetail
-                this.serviceParams = {
-                    ...this.serviceParams,
-                    // 当上游支付方式选择为银行转账时，取执行费率
-                    serviceFeeRate: payOrderDetail.supplierPaymentType == 1 ? projectInfo.transferBankRate : projectInfo.acceptBankRate,
-                    downpaymentAmount: payOrderDetail.downPaymentAmount,
-                    totalAmount: payOrderDetail.applyAmount,
-                    freeInterestType: payOrderPoDetail.freeInterestType,
-                    terms: payOrderPoDetail.restPaymentPeriod
-                }
-                this.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
-                this.formData.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
                 this.$nextTick(() => {
                     this.$refs.form.clearValidate()
                 })
-            }
-        },
-        'formData.dealerCooperationMethod' (val) {
-            if (val == 1) {
-                this.getComputedValue()
             }
         }
     },
     methods: {
         onRdioChange (val) {
-            if (val === 'noPass') {
-                this.formData.approvalRemark = ''
-                this.formData.supplierPaymentMethod = ''
-            }
+            this.formData.approvalRemark = ''
             this.$refs.form.clearValidate()
-        },
-        openEdit () {
-            this.formData.downPaymentAmount = this.downPaymentAmount
-            this.editAmountVisible = true
-        },
-        onChangeDealer (val) {
-            if (val == 2) {
-                this.downPaymentAmount = this.paymentDetail.payOrderDetail.applyAmount
-            } else {
-                this.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
-            }
-        },
-        async onCancelAmount () {
-            this.editAmountVisible = false
-        },
-        async onSaveAmount () {
-            if (this.formData.downPaymentAmount === '') {
-                this.$message.error('经销商预付款不能为空')
-                return
-            }
-            if (this.formData.downPaymentAmount == this.paymentDetail.payOrderDetail.applyAmount) {
-                this.$message.error('首付款金额最大不可超过申请支付金额')
-                return
-            }
-            if (this.formData.downPaymentAmount > this.paymentDetail.payOrderDetail.applyAmount) {
-                this.$message.error('经销商预付款不能大于申请支付金额')
-                return
-            }
-            try {
-                this.serviceParams.downpaymentAmount = this.formData.downPaymentAmount
-                await this.getComputedValue()
-                this.downPaymentAmount = this.formData.downPaymentAmount
-                this.editAmountVisible = false
-            } catch (e) { }
         },
         clearForm () {
             this.formData = {
                 checkPass: '',
                 approvalRemark: '',
-                downPaymentAmount: '',
-                supplierPaymentMethod: ''
+                supplierAccountConfirm: '',
+                coManagerSupervision: ''
             }
         },
         onCancel () {
@@ -416,7 +338,6 @@ export default {
         onReceived () {
             this.$refs.form.validate((value, rules) => {
                 if (value) {
-                    this.formData.downPaymentAmount = this.downPaymentAmount
                     this.formData.updateTime = this.paymentDetail.payOrderPoDetail.updateTime
                     // 分财审核逻辑
                     if (this.paymentDetail.payOrderDetail.status === this.paymentOrderStatusKey.FINANCE_AUDIT) {
@@ -466,16 +387,6 @@ export default {
                     })
                 }
             })
-        },
-        goDetail (url) {
-            window.open(url)
-        },
-        async getComputedValue () {
-            const { data } = await getComputedValue(this.serviceParams)
-            this.serviceFee = data
-        },
-        handleSuccessCb (row) {
-            console.log(row)
         }
     }
 }

@@ -142,7 +142,7 @@
                         <div class="row-filed">
                             <p class="col-filed col-33">
                                 <span class="label">上游支付方式：</span>
-                                {{ paymentOrderConst.SUPPLIER_PAYMENT_TYPE.get(paymentOrderDetail.payOrderDetail.supplierPaymentType) }}
+                                {{ paymentOrderConst.SUPPLIER_PAYMENT_TYPE.get(paymentOrderDetail.payOrderDetail.supplierPaymentType) }}:{{paymentOrderDetail.payOrderDetail.serviceFeeRate}}%
                             </p>
                             <p class="col-filed col-33">
                                 <span class="label">期望上游支付日期：</span>
@@ -272,11 +272,11 @@
                                 </div>
                                 <div class="row-filed">
                                     <p class="col-filed col-50">
-                                        <span class="label">经销商预付款：</span>
+                                        <span class="label">首付款金额：</span>
                                         {{ paymentOrderDetail.payOrderDetail.downPaymentAmount | moneyFormat }}元
                                     </p>
                                     <p class="col-filed col-50" v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod == 1">
-                                        <span class="label">剩余货款：</span> {{ paymentOrderDetail.payOrderDetail.arrearAmount | moneyFormat }}元
+                                        <span class="label">尾款金额：</span> {{ paymentOrderDetail.payOrderDetail.arrearAmount | moneyFormat }}元
                                     </p>
                                 </div>
                                 <!-- 剩余支付方式 -->
