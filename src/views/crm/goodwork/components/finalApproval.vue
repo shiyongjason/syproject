@@ -82,8 +82,18 @@
                     </div>
                     <div class="info-layout">
                         <div class="info-layout-item">
-                            <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>设备总额(元)：</font>
+                            <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>采购总额(元)：</font>
                             <span>{{resolutionDetail.deviceAmount|moneyFormat}}</span>
+                        </div>
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>销售毛利率(%)：</font>
+                            <span>{{resolutionDetail.salesGrossMargin >=0?resolutionDetail.salesGrossMargin :'0'}}%</span>
+                        </div>
+                    </div>
+                    <div class="info-layout">
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>销售总额(元)：</font>
+                            <span>{{(resolutionDetail.salesTotalAmount ? resolutionDetail.salesTotalAmount : resolutionDetail.deviceAmount)|moneyFormat}}</span>
                         </div>
                         <div class="info-layout-item">
                             <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>剩余货款支付周期：</font>
@@ -199,8 +209,23 @@
                     <div class="form-item">
                         <!-- 仅可输入数字，区间为（0，100000000），最多保留2位小数。 -->
                         <!-- @input="(val)=>inputChage(val,baseInfoForm.name)" :value="money(baseInfoForm.name)" -->
-                        <el-form-item label="设备总额：" prop='deviceAmount'>
-                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='100000000' v-model="purForm.deviceAmount" :value="money(baseInfoForm.name)">
+                        <el-form-item label="采购总额：" prop='deviceAmount'>
+                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='100000000' @change="onAmount" v-model="purForm.deviceAmount" maxlength="50">
+                                <template slot="append">元</template>
+                            </el-input>
+                        </el-form-item>
+                        <!-- 0-100,最多保留2位小数 -->
+                        <el-form-item label="销售毛利率" prop='salesGrossMargin'>
+                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='1000' @change="onAmount" v-model="purForm.salesGrossMargin" maxlength="50">
+                                <template slot="append">%</template>
+                            </el-input>
+                        </el-form-item>
+                    </div>
+                    <div class="form-item">
+                        <!-- 仅可输入数字，区间为（0，100000000），最多保留2位小数。 -->
+                        <!-- @input="(val)=>inputChage(val,baseInfoForm.name)" :value="money(baseInfoForm.name)" -->
+                        <el-form-item label="销售总额：" prop='salesTotalAmount'>
+                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='100000000' v-model="purForm.salesTotalAmount" disabled>
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -244,7 +269,7 @@
                         采购信息：
                     </div>
                     <div class="form-table">
-                        <hosJoyTable ref="hosjoyTable" align="center" border stripe :showPagination='false' :column="formTableLabel" :data="tableForm" actionWidth='30' prevLocalName="V3.*" localName="V3.*.26" isAction>
+                        <hosJoyTable ref="hosjoyTable" align="center" border stripe :showPagination='false' :column="formTableLabel" :data="tableForm" actionWidth='100' prevLocalName="V3.*" localName="V3.*.26" isAction>
                             <template #action="slotProps">
                                 <h-button table @click="del(slotProps.data)" v-if="tableForm.length>1">删除</h-button>
                             </template>
@@ -346,8 +371,10 @@ export default class FinalApproval extends Vue {
     purForm:any = {
         'acceptBankRate': '',
         'advancePaymentRate': '',
-        'deviceAmount': '',
+        'deviceAmount': '', // 采购总额
         'predictLoanAmount': '',
+        'salesGrossMargin': '', // 销售毛利率
+        'salesTotalAmount': '', // 销售总额
         'projectId': '',
         'projectPurchaseList': [
             {
@@ -357,7 +384,8 @@ export default class FinalApproval extends Vue {
                 'id': '',
                 'upstreamPayType': '',
                 'upstreamSupplierName': '',
-                'upstreamSupplierType': ''
+                'upstreamSupplierType': '',
+                'purchaseDiscountRate': '' // 采购折让
             }
         ],
         'remainPaymentCycle': '',
@@ -463,11 +491,11 @@ export default class FinalApproval extends Vue {
                     trigger: 'blur'
                 }
             ],
-            deviceAmount: [{ required: true, message: '设备款总额必填', trigger: 'blur' },
+            deviceAmount: [{ required: true, message: '采购总额必填', trigger: 'blur' },
                 {
                     validator: (rule, value, callback) => {
                         if (value <= 0 || value >= 100000000) {
-                            return callback(new Error('设备款总额区间为（0，100000000）'))
+                            return callback(new Error('采购总额区间为（0，100000000）'))
                         } else {
                             callback()
                         }
@@ -475,6 +503,19 @@ export default class FinalApproval extends Vue {
                     trigger: 'blur'
                 }
             ],
+            salesGrossMargin: [{ required: true, message: '销售毛利率必填', trigger: 'blur' },
+                {
+                    validator: (rule, value, callback) => {
+                        if (value < 0 || value > 1000) {
+                            return callback(new Error('销售毛利率比例区间为 [0，1000]'))
+                        } else {
+                            callback()
+                        }
+                    },
+                    trigger: 'blur'
+                }
+            ],
+            salesTotalAmount: [{ required: true, message: '销售总额必填', trigger: 'blur' }],
             remainPaymentCycle: [{ required: true, message: '剩余货款支付周期', trigger: 'blur' }],
             acceptBankRate: [{ required: true, message: '银行承兑执行费率必填', trigger: 'blur' }
                 // {
@@ -529,7 +570,8 @@ export default class FinalApproval extends Vue {
                     </div>
                 )
             } },
-        { label: '设备品类', prop: 'deviceCategory' }
+        { label: '设备品类', prop: 'deviceCategory' },
+        { label: '采购折让(%)', prop: 'purchaseDiscountRate', width: '90' }
     ];
 
     formTableLabel: tableLabelProps = [
@@ -688,6 +730,29 @@ export default class FinalApproval extends Vue {
                     </div>
                 )
             }
+        },
+        {
+            label: '采购折让(%)',
+            prop: 'purchaseDiscountRate',
+            className: 'form-table-header',
+            showOverflowTooltip: false,
+            width: '200',
+            render: (h: CreateElement, scope: TableRenderParam) => {
+                return (
+                    <div>
+                        <el-input
+                            class="mini"
+                            size="mini"
+                            placeholder="请输入"
+                            value={scope.row[scope.column.property]}
+                            onInput={(val) => {
+                                scope.row[scope.column.property] = isNum(val, 2)
+                            }}
+                            maxlength={100}
+                        ></el-input>
+                    </div>
+                )
+            }
         }
         // {
         //     label: '设备品类',
@@ -802,7 +867,8 @@ export default class FinalApproval extends Vue {
             'otherDeviceCategory': '',
             'upstreamPayType': '',
             'upstreamSupplierName': '',
-            'upstreamSupplierType': '' }
+            'upstreamSupplierType': '',
+            'purchaseDiscountRate': '' }
         this.tableForm.push(_temp)
     }
 
@@ -838,6 +904,7 @@ export default class FinalApproval extends Vue {
             console.log('element', element)
             delete element.deviceCategory
             delete element.upstreamPayTypeName
+            delete element.transferRate
             if (element['deviceCategoryType'].includes(8)) {
                 for (var key in element) {
                     if (element[key] != '0' && !element[key]) {
@@ -867,20 +934,28 @@ export default class FinalApproval extends Vue {
         tableFormList = tableFormList?.map((item:any) => {
             return Object.assign(item, {
                 deviceCategoryType: item.deviceCategoryType.join(','),
-                upstreamPayType: item.upstreamPayType.join(',')
+                upstreamPayType: item.upstreamPayType.join(','),
+                purchaseDiscountRate: parseFloat(item.purchaseDiscountRate)
             })
         })
         this.purForm.updateBy = JSON.parse(sessionStorage.getItem('userInfo') || '').employeeName
+        this.purForm.salesGrossMargin = parseFloat(this.purForm.salesGrossMargin)
         this.$refs['purchaseConclusionForm'].validate(async (valid) => {
             if (valid) {
                 if (this.onValidTable(tableFormList)) {
                     this.purForm.projectPurchaseList = tableFormList
+                    console.log(this.purForm)
                     await resPurchase(this.purForm)
                     this.onFindRes()
                     this.purchaseConclusionVisible = false
                 }
             }
         })
+    }
+
+    // 计算销售总额
+    onAmount () {
+        this.purForm.salesTotalAmount = this.purForm.deviceAmount * (1 + parseInt(this.purForm.salesGrossMargin) / 100)
     }
 
     //
@@ -911,6 +986,7 @@ export default class FinalApproval extends Vue {
     // 查询详情
     async onFindRes () {
         const { data } = await getResolutions(this.finalFormID)
+        data.salesGrossMargin = data.salesGrossMargin ? data.salesGrossMargin : 0
         this.resolutionDetail = data
         this.tableData = data.resolutionPurchaseList
         this.$emit('onBackLoad', false, this.resolutionDetail.resolutionStatus)
@@ -928,9 +1004,14 @@ export default class FinalApproval extends Vue {
         const { data } = await getResolutions(this.finalFormID)
         data.resolutionPurchaseList.forEach(val => {
             val.deviceCategoryType = val.deviceCategoryType ? val.deviceCategoryType.split(',').map(val => Number(val)) : []
+            val.purchaseDiscountRate = val.purchaseDiscountRate ? val.purchaseDiscountRate : 0
         })
+        data.salesGrossMargin = data.salesGrossMargin ? data.salesGrossMargin : 0
         this.purForm = { ...this.purForm, ...data }
         this.tableForm = data.resolutionPurchaseList || []
+        this.$nextTick(() => {
+            this.onAmount()
+        })
     }
 
     handleClose () {
@@ -995,5 +1076,5 @@ export default class FinalApproval extends Vue {
 </script>
 
 <style  lang='scss' scoped>
-@import '../css/finalApproval.scss';
+@import "../css/finalApproval.scss";
 </style>
