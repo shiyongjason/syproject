@@ -28,7 +28,7 @@
                     <div class="query-col__label">所属分部：</div>
                     <div class="query-col__input">
                         <el-select placeholder="请选择" v-model="queryParams.deptCode" :clearable='true'>
-                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmDeptList" :key="item.pkDeptDoc"></el-option>
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -76,7 +76,8 @@ import { eventType, quotaType, changedType } from './const'
 import { CreateElement } from 'vue'
 import { findQuotaPage } from './api/index'
 import { deepCopy } from '@/utils/utils'
-import { State, Action } from 'vuex-class'
+import { State, Action, Getter } from 'vuex-class'
+import { money } from '@/utils/filters'
 @Component({
     name: 'quotamonitor',
     components: {
@@ -85,6 +86,7 @@ import { State, Action } from 'vuex-class'
 })
 export default class Qutelist extends Vue {
     @State('userInfo') userInfo:Record<any, any>
+    @Getter('crmmanage/crmdepList') crmdepList!: Array<HCGCommonInterface.Branch>
     @Action('crmmanage/findCrmdeplist') findCrmdelist:Function
     $refs!: {
         form: HTMLFormElement
@@ -131,7 +133,7 @@ export default class Qutelist extends Vue {
             prop: 'status',
             displayAs: 'money',
             render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
-                return <span>总额度:{scope.row.beforeTotalQuotaAmount}<br/>已冻结额度:{scope.row.beforeFreezeQuotaAmount}<br/>可用额度:{scope.row.beforeTotalQuotaAmount - scope.row.beforeFreezeQuotaAmount}</span>
+                return <span>总额度:{scope.row.beforeTotalQuotaAmount}<br/>已冻结额度:{scope.row.beforeFreezeQuotaAmount}<br/>可用额度:{(scope.row.beforeTotalQuotaAmount - scope.row.beforeFreezeQuotaAmount) ? (scope.row.beforeTotalQuotaAmount - scope.row.beforeFreezeQuotaAmount).toFixed(6) : 0}</span>
             }
         },
         { label: '变动类型',
@@ -150,7 +152,7 @@ export default class Qutelist extends Vue {
             prop: 'afterTotalQuotaAmount',
             displayAs: 'money',
             render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
-                return <span>总额度:{scope.row.afterTotalQuotaAmount}<br/>已冻结额度:{scope.row.afterFreezeQuotaAmount}<br/>可用额度:{scope.row.afterTotalQuotaAmount - scope.row.afterFreezeQuotaAmount}</span>
+                return <span>总额度:{scope.row.afterTotalQuotaAmount}<br/>已冻结额度:{scope.row.afterFreezeQuotaAmount}<br/>可用额度:{(scope.row.afterTotalQuotaAmount - scope.row.afterFreezeQuotaAmount) ? (scope.row.afterTotalQuotaAmount - scope.row.afterFreezeQuotaAmount).toFixed(6) : 0}</span>
             }
         },
         { label: '变动时间', prop: 'createTime', displayAs: 'YYYY-MM-DD HH:mm:ss' }
@@ -161,7 +163,6 @@ export default class Qutelist extends Vue {
         total: 0
     }
     private tableData = []
-    crmDeptList:any[] = []
 
     get options () {
         return {
@@ -195,9 +196,7 @@ export default class Qutelist extends Vue {
         this.page.total = data.total
     }
     async findBranchList () {
-        if (sessionStorage.getItem('authCode')) {
-            const { data } = await this.findCrmdelist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
-        }
+        this.findCrmdelist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
     }
 
     onStartChange (val): void {
@@ -213,6 +212,8 @@ export default class Qutelist extends Vue {
         this._queryParams = deepCopy(this.queryParams)
         this.getList()
         this.findBranchList()
+        const _t = this.$minus(110, 1)
+        console.log(_t.toFixed(2))
     }
 }
 </script>
