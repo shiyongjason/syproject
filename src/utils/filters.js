@@ -1,8 +1,13 @@
 
 import moment from 'moment'
 
-// 金额格式化
-const money = function (value, int) {
+/**
+ * 金额格式化
+ * 此方法只用于针对input的value进行格式化，展示型的请用moneyFormat
+ *
+ * @param {*} value
+ */
+const money = function (value) {
     if (value == null) return '-'
     let money = ''
     let pointNum = ''

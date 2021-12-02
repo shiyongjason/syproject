@@ -269,8 +269,6 @@ export default {
                 pageSize: this.creditdata.size,
                 total: this.creditdata.total
             }
-            // await this.findProjectLoan(params)
-            // this.loanData = this.projectLoan ? this.projectLoan : ''
         },
         async onGetbranch () {
             await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
