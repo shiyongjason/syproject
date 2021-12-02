@@ -231,13 +231,13 @@
                         <!-- 仅可输入数字，区间为（0，100000000），最多保留2位小数。 -->
                         <!-- @input="(val)=>inputChage(val,baseInfoForm.name)" :value="money(baseInfoForm.name)" -->
                         <el-form-item label="采购总额：" prop='deviceAmount'>
-                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='100000000' @change="onAmount" v-model="purForm.deviceAmount" maxlength="50">
+                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='100000000' @input="onAmount" v-model="purForm.deviceAmount" maxlength="50">
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
                         <!-- 0-100,最多保留2位小数 -->
                         <el-form-item label="销售毛利率" prop='salesGrossMargin'>
-                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='1000' @change="onAmount" v-model="purForm.salesGrossMargin" maxlength="50">
+                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='1000' @input="onAmount" v-model="purForm.salesGrossMargin" maxlength="50">
                                 <template slot="append">%</template>
                             </el-input>
                         </el-form-item>
@@ -640,7 +640,7 @@ export default class FinalApproval extends Vue {
         { label: '上游供应商类型', prop: 'upstreamSupplierType', width: '150', dicData: [{ value: 1, label: '厂商' }, { value: 2, label: '代理商' }, { value: 3, label: '经销商' }] },
         { label: '上游支付方式', prop: 'upstreamPayTypeName', slot: 'upstreamPayTypeName', width: '140' },
         { label: '设备品类', prop: 'deviceCategory' },
-        { label: '上游货款方式', prop: 'upstreamLoanType', slot: 'upstreamLoanType' },
+        { label: '上游货款方式', prop: 'upstreamLoanType', slot: 'upstreamLoanType', width: '100' },
         { label: '采购折让(%)', prop: 'purchaseDiscountRate', width: '90' }
     ];
 
@@ -783,6 +783,13 @@ export default class FinalApproval extends Vue {
             }
         },
         {
+            label: '上游货款方式',
+            prop: 'upstreamLoanType',
+            width: '300',
+            className: 'form-table-header',
+            slot: 'upstreamLoanType'
+        },
+        {
             label: '采购折让(%)',
             prop: 'purchaseDiscountRate',
             className: 'form-table-header',
@@ -804,13 +811,6 @@ export default class FinalApproval extends Vue {
                     </div>
                 )
             }
-        },
-        {
-            label: '上游货款方式',
-            prop: 'upstreamLoanType',
-            width: '300',
-            className: 'form-table-header',
-            slot: 'upstreamLoanType'
         }
         // {
         //     label: '设备品类',
@@ -1035,7 +1035,7 @@ export default class FinalApproval extends Vue {
 
     // 计算销售总额
     onAmount () {
-        this.purForm.salesTotalAmount = this.purForm.deviceAmount * (1 + parseInt(this.purForm.salesGrossMargin) / 100)
+        this.purForm.salesTotalAmount = utils.moneyFormat(this.purForm.deviceAmount * (1 + parseInt(this.purForm.salesGrossMargin) / 100))
     }
 
     //
@@ -1075,6 +1075,13 @@ export default class FinalApproval extends Vue {
     // 记录
     async onFindRecords () {
         const { data } = await getRecordList(this.finalFormID)
+        data.forEach(item => {
+            if (item.projectPurchaseList) {
+                item.projectPurchaseList.forEach(it => {
+                    it.purchaseDiscountRate = it.purchaseDiscountRate || 0
+                })
+            }
+        })
         this.Lists = data
     }
 

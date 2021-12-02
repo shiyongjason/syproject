@@ -66,7 +66,7 @@
                         <div class="row-filed">
                             <p class="col-filed col-50">
                                 <span class="label">付款主体：</span>
-                                好享家舒适智能家居股份有限公司
+                                {{ paymentOrderDetail.paymentMain }}
                             </p>
                         </div>
                         <div class="row-filed">
@@ -88,18 +88,18 @@
                         </div>
                         <div class="row-filed">
                             <p class="col-filed col-50">
-                                <span class="label">采购折让：</span> 2%
+                                <span class="label">采购折让：</span> {{ paymentOrderDetail.payOrderDetail.purchaseDiscountRate }}%
                             </p>
                             <p class="col-filed col-50">
-                                <span class="label">采购金额(折让后)：</span> 490000元
+                                <span class="label">采购金额(折让后)：</span> {{ paymentOrderDetail.payOrderDetail.purchaseDiscountAmount | moneyFormat }}元
                             </p>
                         </div>
                         <div class="row-filed">
                             <p class="col-filed col-50">
-                                <span class="label">销售毛利率：</span> 20%
+                                <span class="label">销售毛利率：</span> {{ paymentOrderDetail.payOrderDetail.salesGrossMargin }}%
                             </p>
                             <p class="col-filed col-50">
-                                <span class="label">销售金额：</span> 60000元
+                                <span class="label">销售金额：</span> {{ paymentOrderDetail.payOrderDetail.salesTotalAmount | moneyFormat }}元
                             </p>
                         </div>
                         <div class="row-filed">
