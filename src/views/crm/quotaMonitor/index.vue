@@ -134,7 +134,7 @@ export default class Qutelist extends Vue {
             prop: 'status',
             displayAs: 'money',
             render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
-                return <span>总额度:{scope.row.beforeTotalQuotaAmount}<br/>已冻结额度:{scope.row.beforeFreezeQuotaAmount}<br/>可用额度:{(scope.row.beforeTotalQuotaAmount - scope.row.beforeFreezeQuotaAmount) ? (scope.row.beforeTotalQuotaAmount - scope.row.beforeFreezeQuotaAmount).toFixed(6) : 0}</span>
+                return <span>总额度:{scope.row.beforeTotalQuotaAmount}<br/>已冻结额度:{scope.row.beforeFreezeQuotaAmount}<br/>可用额度:{this.$minus(scope.row.beforeTotalQuotaAmount, scope.row.beforeFreezeQuotaAmount).toString()}</span>
             }
         },
         { label: '变动类型',
@@ -153,7 +153,10 @@ export default class Qutelist extends Vue {
             prop: 'afterTotalQuotaAmount',
             displayAs: 'money',
             render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
-                return <span>总额度:{scope.row.afterTotalQuotaAmount}<br/>已冻结额度:{scope.row.afterFreezeQuotaAmount}<br/>可用额度:{(scope.row.afterTotalQuotaAmount - scope.row.afterFreezeQuotaAmount) ? (scope.row.afterTotalQuotaAmount - scope.row.afterFreezeQuotaAmount).toFixed(6) : 0}</span>
+                return <span>
+                    总额度:{scope.row.afterTotalQuotaAmount}<br/>已冻结额度:{scope.row.afterFreezeQuotaAmount}<br/>
+                    可用额度:{this.$minus(scope.row.afterTotalQuotaAmount, scope.row.afterFreezeQuotaAmount).toString()}
+                </span>
             }
         },
         { label: '变动时间', prop: 'createTime', displayAs: 'YYYY-MM-DD HH:mm:ss' }
