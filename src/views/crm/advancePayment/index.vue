@@ -688,13 +688,13 @@ export default class Advancelist extends Vue {
     }
 
     public async onApprovalRecord (v) {
-        this.recordVisible = true
         const { data } = await Api.getApprovalHistory(v.id)
         this.recordInfo = {
             distributor: v.distributor,
             applyAmount: v.applyAmount
         }
         this.records = data
+        this.recordVisible = true
     }
 
     public onReset (): void {
