@@ -778,6 +778,7 @@ export default {
             } else {
                 await updateCreditUnFreeze(this.companyId)
                 this.getCompanyDetail()
+                this.creditUpdateRecord()
             }
         },
         // 关联企业
