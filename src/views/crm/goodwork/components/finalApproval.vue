@@ -246,7 +246,7 @@
                         <!-- 仅可输入数字，区间为（0，100000000），最多保留2位小数。 -->
                         <!-- @input="(val)=>inputChage(val,baseInfoForm.name)" :value="money(baseInfoForm.name)" -->
                         <el-form-item label="销售总额：" prop='salesTotalAmount'>
-                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='100000000' v-model="purForm.salesTotalAmount" disabled>
+                            <el-input placeholder="请输入" v-model="purForm.salesTotalAmount" disabled>
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -577,8 +577,8 @@ export default class FinalApproval extends Vue {
             salesGrossMargin: [{ required: true, message: '销售毛利率必填', trigger: 'blur' },
                 {
                     validator: (rule, value, callback) => {
-                        if (value < 0 || value > 1000) {
-                            return callback(new Error('销售毛利率比例区间为 [0，1000]'))
+                        if (value < 0 || value >= 1000) {
+                            return callback(new Error('销售毛利率比例区间为 [0，1000)'))
                         } else {
                             callback()
                         }
@@ -804,10 +804,13 @@ export default class FinalApproval extends Vue {
                             placeholder="请输入"
                             value={scope.row[scope.column.property]}
                             onInput={(val) => {
-                                let value = isNum(val, 2)
-                                scope.row[scope.column.property] = value
+                                if (val < 0 || val >= 100) {
+                                } else {
+                                    let value = isNum(val, 2)
+                                    scope.row[scope.column.property] = value
+                                }
                             }}
-                            maxlength={100}
+                            maxlength={5}
                         ></el-input>
                     </div>
                 )
