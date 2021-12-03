@@ -804,7 +804,8 @@ export default class FinalApproval extends Vue {
                             placeholder="请输入"
                             value={scope.row[scope.column.property]}
                             onInput={(val) => {
-                                scope.row[scope.column.property] = isNum(val, 2)
+                                let value = isNum(val, 2)
+                                scope.row[scope.column.property] = value
                             }}
                             maxlength={100}
                         ></el-input>
