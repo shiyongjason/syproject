@@ -131,7 +131,7 @@
                                 </template>
                             </template>
                             <template #upstreamLoanType="slotProps">
-                                <span>{{ slotProps.data.row.upstreamLoanType == 1 ? '先货后款' : slotProps.data.row.upstreamLoanType == 2 ? '先款后货' : '-' }}</span>
+                                <span>{{ slotProps.data.row.upstreamLoanType == 1 ? '先款后货' : slotProps.data.row.upstreamLoanType == 2 ? '先货后款' : '-' }}</span>
                             </template>
                         </hosJoyTable>
                     </div>
@@ -296,7 +296,7 @@
                             </template>
                             <template #upstreamLoanType="slotProps">
                                 <el-select v-model="slotProps.data.row.upstreamLoanType" clearable>
-                                    <el-option :value="1" label="先货后款"></el-option>
+                                    <el-option :value="1" label="先款后货"></el-option>
                                     <el-option :value="2" label="先款后货"></el-option>
                                 </el-select>
                             </template>
@@ -342,7 +342,7 @@
                                 </template>
                             </template>
                             <template #upstreamLoanType="slotProps">
-                                <span>{{ slotProps.data.row.upstreamLoanType == 1 ? '先货后款' : slotProps.data.row.upstreamLoanType == 2 ?'先款后货':'-' }}</span>
+                                <span>{{ slotProps.data.row.upstreamLoanType == 1 ? '先款后货' : slotProps.data.row.upstreamLoanType == 2 ?'先货后款':'-' }}</span>
                             </template>
                         </hosJoyTable>
                     </div>
