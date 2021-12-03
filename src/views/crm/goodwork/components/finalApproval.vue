@@ -1039,7 +1039,7 @@ export default class FinalApproval extends Vue {
 
     // 计算销售总额
     onAmount () {
-        this.purForm.salesTotalAmount = utils.moneyFormat(this.purForm.deviceAmount * (1 + parseInt(this.purForm.salesGrossMargin) / 100))
+        this.purForm.salesTotalAmount = utils.moneyFormat(this.purForm.deviceAmount * (1 + parseFloat(this.purForm.salesGrossMargin) / 100))
     }
 
     //
