@@ -100,7 +100,7 @@ export default class SetInfoDialog extends Vue {
     get grantOptions () {
         return {
             disabledDate (time) {
-                return Date.now() > time.getTime()
+                return Date.now() - 8.64e7 > time.getTime()
             }
         }
     }
