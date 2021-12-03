@@ -66,7 +66,7 @@
                         <div class="row-filed">
                             <p class="col-filed col-50">
                                 <span class="label">付款主体：</span>
-                                {{ paymentOrderDetail.paymentMain }}
+                                {{ paymentOrderDetail.payOrderPoDetail.paymentMain }}
                             </p>
                         </div>
                         <div class="row-filed">
