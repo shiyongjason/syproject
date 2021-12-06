@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col__label">剩余代采购额度：</div>
+                    <div class="query-col__label">可用额度：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.minRemainPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">万元</template></el-input>
                         ~
