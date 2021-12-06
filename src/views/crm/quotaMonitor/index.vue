@@ -77,7 +77,7 @@ import { CreateElement } from 'vue'
 import { findQuotaPage } from './api/index'
 import { deepCopy } from '@/utils/utils'
 import { State, Action, Getter } from 'vuex-class'
-import { money } from '@/utils/filters'
+
 @Component({
     name: 'quotamonitor',
     components: {
@@ -119,6 +119,7 @@ export default class Qutelist extends Vue {
         },
         { label: '描述',
             prop: 'projectNo',
+            width: '120px',
             render: (h: CreateElement, scope: TableRenderParam): JSX.Element => this.handleDescribe(scope.row)
         },
         { label: '额度种类',
@@ -133,7 +134,7 @@ export default class Qutelist extends Vue {
             prop: 'status',
             displayAs: 'money',
             render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
-                return <span>总额度:{scope.row.beforeTotalQuotaAmount}<br/>已冻结额度:{scope.row.beforeFreezeQuotaAmount}<br/>可用额度:{(scope.row.beforeTotalQuotaAmount - scope.row.beforeFreezeQuotaAmount) ? (scope.row.beforeTotalQuotaAmount - scope.row.beforeFreezeQuotaAmount).toFixed(6) : 0}</span>
+                return <span>总额度:{scope.row.beforeTotalQuotaAmount}<br/>已冻结额度:{scope.row.beforeFreezeQuotaAmount}<br/>可用额度:{this.$minus(scope.row.beforeTotalQuotaAmount, scope.row.beforeFreezeQuotaAmount).toString()}</span>
             }
         },
         { label: '变动类型',
@@ -152,7 +153,10 @@ export default class Qutelist extends Vue {
             prop: 'afterTotalQuotaAmount',
             displayAs: 'money',
             render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
-                return <span>总额度:{scope.row.afterTotalQuotaAmount}<br/>已冻结额度:{scope.row.afterFreezeQuotaAmount}<br/>可用额度:{(scope.row.afterTotalQuotaAmount - scope.row.afterFreezeQuotaAmount) ? (scope.row.afterTotalQuotaAmount - scope.row.afterFreezeQuotaAmount).toFixed(6) : 0}</span>
+                return <span>
+                    总额度:{scope.row.afterTotalQuotaAmount}<br/>已冻结额度:{scope.row.afterFreezeQuotaAmount}<br/>
+                    可用额度:{this.$minus(scope.row.afterTotalQuotaAmount, scope.row.afterFreezeQuotaAmount).toString()}
+                </span>
             }
         },
         { label: '变动时间', prop: 'createTime', displayAs: 'YYYY-MM-DD HH:mm:ss' }
@@ -175,12 +179,12 @@ export default class Qutelist extends Vue {
     }
 
     handleDescribe (val) {
-        if (val.eventType == (1 || 2 || 5 || 6)) {
-            return <span>操作人:{val.createBy}<br/>{val.createPhone}</span>
-        } else if (val.eventType == (3 || 4)) {
-            return <span>项目编号:{val.projectNo}</span>
+        if (val.eventType == 1 || val.eventType == 2 || val.eventType == 5 || val.eventType == 6) {
+            return <div>操作人:{val.createBy}<br/>{val.createPhone}</div>
+        } else if (val.eventType == 3 || val.eventType == 4) {
+            return <div>项目编号:{val.projectNo}</div>
         } else {
-            return <span>支付单编号:{val.paymentOrderNo}</span>
+            return <div>支付单编号:{val.paymentOrderNo}</div>
         }
     }
 

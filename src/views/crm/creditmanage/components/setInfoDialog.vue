@@ -100,7 +100,7 @@ export default class SetInfoDialog extends Vue {
     get grantOptions () {
         return {
             disabledDate (time) {
-                return Date.now() > time.getTime()
+                return Date.now() - 8.64e7 > time.getTime()
             }
         }
     }
@@ -124,10 +124,10 @@ export default class SetInfoDialog extends Vue {
         this.page.total = data.total
     }
     handleAdd () {
-        console.log(moment().format('yyyy-MM-DD'))
         this.isAddVisible = true
-        this.ruleForm = deepCopy(this._ruleForm)
-        this.ruleForm.expireTime = moment().format('YYYY-MM-DD')
+        this.ruleForm.remark = ''
+        this.ruleForm.quotaAmount = ''
+        this.ruleForm.expireTime = new Date()
     }
     // 手动失效
     handleLose (value) {
