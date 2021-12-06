@@ -119,7 +119,7 @@ export default class Qutelist extends Vue {
         },
         { label: '描述',
             prop: 'projectNo',
-            width: '120px',
+            width: '150px',
             render: (h: CreateElement, scope: TableRenderParam): JSX.Element => this.handleDescribe(scope.row)
         },
         { label: '额度种类',
@@ -128,7 +128,7 @@ export default class Qutelist extends Vue {
                 return <span>{this.quotaTypes[scope.row.quotaType - 1].value}</span>
             }
         },
-        { label: '企业名称', prop: 'companyName', width: '120px' },
+        { label: '企业名称', prop: 'companyName', width: '180px' },
         { label: '分部', prop: 'deptName' },
         { label: '变动前(万元)',
             prop: 'status',
@@ -159,7 +159,7 @@ export default class Qutelist extends Vue {
                 </span>
             }
         },
-        { label: '变动时间', prop: 'createTime', displayAs: 'YYYY-MM-DD HH:mm:ss' }
+        { label: '变动时间', prop: 'createTime', displayAs: 'YYYY-MM-DD HH:mm:ss', width: '180px' }
 
     ]
     page = {
@@ -182,9 +182,9 @@ export default class Qutelist extends Vue {
         if (val.eventType == 1 || val.eventType == 2 || val.eventType == 5 || val.eventType == 6) {
             return <div>操作人:{val.createBy}<br/>{val.createPhone}</div>
         } else if (val.eventType == 3 || val.eventType == 4) {
-            return <div>项目编号:{val.projectNo}</div>
+            return <div>项目编号:<br/>{val.projectNo}</div>
         } else {
-            return <div>支付单编号:{val.paymentOrderNo}</div>
+            return <div>支付单编号:<br/>{val.paymentOrderNo}</div>
         }
     }
 
