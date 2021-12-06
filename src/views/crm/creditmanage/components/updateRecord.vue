@@ -29,12 +29,12 @@
                 </template>
                 <template v-else-if="item.type == 6">
                     <p class="p">
-                        <font>{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font>{{ item.createTime | momentFormat }}</font> 将 <font>新增</font>临时额度
+                        <font>{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font>{{ item.createTime | momentFormat }}</font> 将 <font>"新增"</font>临时额度
                     </p>
                 </template>
                 <template v-else-if="item.type == 7">
                     <p class="p">
-                        <font>{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font>{{ item.createTime | momentFormat }}</font> 将临时额度手动设置为<font>失效</font>
+                        <font>{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font>{{ item.createTime | momentFormat }}</font> 将临时额度手动设置为<font>"失效"</font>
                     </p>
                 </template>
                 <template v-else-if="item.type == 8">
@@ -44,12 +44,12 @@
                 </template>
                 <template v-else-if="item.type == 9">
                     <p class="p">
-                        <font>{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font>{{ item.createTime | momentFormat }}</font><font>开启</font>风控冻结
+                        <font>{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font>{{ item.createTime | momentFormat }}</font> <font>"开启"</font>风控冻结
                     </p>
                 </template>
                 <template v-else-if="item.type == 10">
                     <p class="p">
-                        <font>{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font>{{ item.createTime | momentFormat }}</font><font>解除</font>风控冻结
+                        <font>{{ item.createBy || '-' }}{{ item.createPhone }}</font> 在 <font>{{ item.createTime | momentFormat }}</font> <font>"解除"</font>风控冻结
                     </p>
                 </template>
                 <template v-else-if="item.type == 11">
