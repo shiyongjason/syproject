@@ -200,8 +200,8 @@ export const CRM_LOOK_DETAIL = 109302 // 查看详情
 export const CRM_ADD_DETAIL = 109303 // 新增
 export const CRM_EDIT_DETAIL = 109304 // 修改
 export const CRM_CREDIT_DETAIL = 109305 // 查看信用
-export const CRM_CREDIT_SET = 109306 //  通用额度设置
-export const CRM_TEMPORARY_SET = 109307 //  临时额度设置
+export const CRM_CREDIT_SET = 109366 //  通用额度设置
+export const CRM_TEMPORARY_SET = 109367 //  临时额度设置
 export const CRM_MEATE_SAVE = 109311 //  好橙工资料保存
 export const CRM_MEATE_SUBMIT = 109312 //  好橙工资料提交
 // 好橙工 推荐奖励发放
