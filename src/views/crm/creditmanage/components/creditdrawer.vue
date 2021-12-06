@@ -54,9 +54,11 @@
                             <div class="drawer-wrap_right">
                                 <CustomAutocomplete placeholder="请选择" :suggestions="restaurants" v-if="restaurants">
                                     <template slot-scope="scope">
-                                        <span style="float: left;paddingRight:10px;">{{ scope.data.companyName }}</span>
+                                      <div class="autoFlex">
+                                            <span style="float: left;paddingRight:10px;">{{ scope.data.companyName }}</span>
                                         <el-button v-if="scope.data.companyLabel == 0" style="float: right;" type="primary" @click="handleRelevance(scope.data)" size="mini">关联</el-button>
                                         <el-tag v-else>{{ scope.data.companyLabel | companyLabelFilter }}</el-tag>
+                                      </div>
                                     </template>
                                 </CustomAutocomplete>
                             </div>
@@ -1153,5 +1155,10 @@ export default {
     background: #ffffff;
     width: 100%;
     z-index: 11;
+}
+.autoFlex{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 </style>
