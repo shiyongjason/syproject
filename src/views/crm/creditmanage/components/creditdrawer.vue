@@ -54,9 +54,11 @@
                             <div class="drawer-wrap_right">
                                 <CustomAutocomplete placeholder="请选择" :suggestions="restaurants" v-if="restaurants">
                                     <template slot-scope="scope">
-                                        <span style="float: left;paddingRight:10px;">{{ scope.data.companyName }}</span>
+                                      <div class="autoFlex">
+                                            <span style="float: left;paddingRight:10px;">{{ scope.data.companyName }}</span>
                                         <el-button v-if="scope.data.companyLabel == 0" style="float: right;" type="primary" @click="handleRelevance(scope.data)" size="mini">关联</el-button>
                                         <el-tag v-else>{{ scope.data.companyLabel | companyLabelFilter }}</el-tag>
+                                      </div>
                                     </template>
                                 </CustomAutocomplete>
                             </div>
@@ -265,7 +267,7 @@ export default {
                 { label: '可代采购额度(万元)', prop: 'purchaseAmount', width: '150' },
                 { label: '冻结中额度(万元)', prop: 'purchaseFreezeAmount', width: '150' },
                 { label: '占用中额度(万元)', prop: 'occupyAmount', width: '150', formatters: 'money' },
-                { label: '剩余代采购额度(万元)', prop: 'purchaseUsableAmount', width: '150', formatters: 'money' },
+                { label: '可用额度(万元)', prop: 'purchaseUsableAmount', width: '150', formatters: 'money' },
                 { label: '信用到期日', prop: 'endTime', width: '180', formatters: 'date' },
                 { label: '状态', prop: 'status' }
             ],
@@ -1153,5 +1155,10 @@ export default {
     background: #ffffff;
     width: 100%;
     z-index: 11;
+}
+.autoFlex{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 </style>
