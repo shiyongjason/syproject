@@ -38,7 +38,7 @@
                         <div class="drawer-wrap_box">
                             <span>以上信用为共享<font color="#ff7a45">{{ creditDetailObj.mainCompanyName }}</font>的信用评级。</span>
                             <el-button type="primary" size="mini" @click="toViewMainBusiness">查看主企业评级</el-button>
-                            <el-button type="primary" size="mini" @click="handleUnlink({ childCompanyId: companyId, mainCompanyId: creditDetailObj.mainCompanyId })">取消关联</el-button>
+                            <el-button v-if="hosAuthCheck(auths.CRM_CREDIT_UNLINK)" type="primary" size="mini" @click="handleUnlink({ childCompanyId: companyId, mainCompanyId: creditDetailObj.mainCompanyId })">取消关联</el-button>
                         </div>
                     </template>
                     <!-- 主企业|无标签企业展示内容 -->
@@ -55,9 +55,9 @@
                                 <CustomAutocomplete placeholder="请选择" :suggestions="restaurants" v-if="restaurants">
                                     <template slot-scope="scope">
                                       <div class="autoFlex">
-                                            <span style="float: left;paddingRight:10px;">{{ scope.data.companyName }}</span>
-                                        <el-button v-if="scope.data.companyLabel == 0" style="float: right;" type="primary" @click="handleRelevance(scope.data)" size="mini">关联</el-button>
-                                        <el-tag v-else>{{ scope.data.companyLabel | companyLabelFilter }}</el-tag>
+                                        <span style="float: left;paddingRight:10px;">{{ scope.data.companyName }}</span>
+                                        <el-button v-if="scope.data.companyLabel == 0&&hosAuthCheck(auths.CRM_CREDIT_LINK)" style="float: right;" type="primary" @click="handleRelevance(scope.data)" size="mini">关联</el-button>
+                                        <el-tag v-if="scope.data.companyLabel != 0">{{ scope.data.companyLabel | companyLabelFilter }}</el-tag>
                                       </div>
                                     </template>
                                 </CustomAutocomplete>
