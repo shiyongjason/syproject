@@ -204,6 +204,9 @@ export const CRM_CREDIT_SET = 109306 //  通用额度设置
 export const CRM_TEMPORARY_SET = 109367 //  临时额度设置
 export const CRM_MEATE_SAVE = 109311 //  好橙工资料保存
 export const CRM_MEATE_SUBMIT = 109312 //  好橙工资料提交
+export const CRM_CREDIT_LINK = 109321 // 关联企业
+export const CRM_CREDIT_UNLINK = 109322 // 取消关联企业
+
 // 好橙工 推荐奖励发放
 export const CRM_AWARD_SEND = 109309 //  推荐奖励发放
 
