@@ -267,7 +267,7 @@ export default {
                 { label: '可代采购额度(万元)', prop: 'purchaseAmount', width: '150' },
                 { label: '冻结中额度(万元)', prop: 'purchaseFreezeAmount', width: '150' },
                 { label: '占用中额度(万元)', prop: 'occupyAmount', width: '150', formatters: 'money' },
-                { label: '剩余代采购额度(万元)', prop: 'purchaseUsableAmount', width: '150', formatters: 'money' },
+                { label: '可用额度(万元)', prop: 'purchaseUsableAmount', width: '150', formatters: 'money' },
                 { label: '信用到期日', prop: 'endTime', width: '180', formatters: 'date' },
                 { label: '状态', prop: 'status' }
             ],
