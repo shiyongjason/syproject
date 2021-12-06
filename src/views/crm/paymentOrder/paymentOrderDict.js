@@ -33,6 +33,14 @@ const PaymentOrderDict = Object.freeze({
             {
                 key: 12,
                 value: '支付单关闭'
+            },
+            {
+                key: 14,
+                value: '待分财审核'
+            },
+            {
+                key: 15,
+                value: '流程审批中'
             }
         ]
     },
