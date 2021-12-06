@@ -88,6 +88,12 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col__label">付款主体：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.paymentMain" placeholder="请输入" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
                     <h-button type="primary" @click="findPaymentOrderList({...queryParamsUseQuery, pageNumber: 1})">
                         查询
                     </h-button>
@@ -258,6 +264,7 @@ export default {
                 startApprovalTime: '',
                 endApprovalTime: '',
                 status: '',
+                paymentMain: '', // 付款主体
                 pageSize: 10,
                 pageNumber: 1,
                 'sort.property': null,
@@ -273,6 +280,7 @@ export default {
                 { label: '金额', prop: 'applyAmount', width: '150', align: 'right' },
                 { label: '上游支付进度', prop: 'paymentStatus', width: '150' },
                 { label: '放款交接状态', prop: 'loanTransferStatus', width: '150' },
+                { label: '付款主体', prop: 'paymentMain', width: '200' },
                 { label: '状态', prop: 'status', width: '150' },
                 { label: '合作方式', prop: 'dealerCooperationMethod', width: '150' },
                 { label: '申请人', prop: 'applyName', width: '150' },

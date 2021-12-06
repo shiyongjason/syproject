@@ -765,6 +765,17 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/crm/advancePayment/index.vue')
+            },
+            {
+                path: 'quotamonitor',
+                name: 'quotamonitor',
+                meta: {
+                    title: '好橙工额度变动表',
+                    tagName: '好橙工额度变动表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/quotaMonitor/index.vue')
             }
         ]
     }
