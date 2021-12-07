@@ -630,7 +630,7 @@ export default class FinalApproval extends Vue {
     }
     get lastFormRules () {
         let rules = {
-            remark: [{ required: true, message: '备注信息必填', trigger: 'blur' }]
+            remark: [{ required: true, message: '评审要求必填', trigger: 'blur' }]
         }
         return rules
     }
