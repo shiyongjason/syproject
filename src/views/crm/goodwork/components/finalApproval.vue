@@ -210,7 +210,7 @@
             </div>
         </el-dialog>
         <!-- 弹窗 -->
-        <el-dialog title="采购结论" :close-on-click-modal='false' :visible.sync="purchaseConclusionVisible" width="70%" :before-close="handleClose" :modal='false'>
+        <el-dialog v-if="purchaseConclusionVisible" title="采购结论" :close-on-click-modal='false' :visible.sync="purchaseConclusionVisible" width="70%" :before-close="handleClose" :modal='false'>
             <div class="dialog-ctx reviewResolution">
                 <el-form id='elform' :model="purForm" :rules="purFormRules" label-width="180px" label-position='right' ref="purchaseConclusionForm" class="purchaseConclusion">
                     <div class="form-item">
@@ -231,13 +231,13 @@
                         <!-- 仅可输入数字，区间为（0，100000000），最多保留2位小数。 -->
                         <!-- @input="(val)=>inputChage(val,baseInfoForm.name)" :value="money(baseInfoForm.name)" -->
                         <el-form-item label="采购总额：" prop='deviceAmount'>
-                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='100000000' @input="onAmount" v-model="purForm.deviceAmount" maxlength="50">
+                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='100000000' v-model="purForm.deviceAmount" maxlength="50">
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
                         <!-- 0-100,最多保留2位小数 -->
                         <el-form-item label="销售毛利率" prop='salesGrossMargin'>
-                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='1000' @input="onAmount" v-model="purForm.salesGrossMargin" maxlength="50">
+                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='1000' v-model="purForm.salesGrossMargin" maxlength="50">
                                 <template slot="append">%</template>
                             </el-input>
                         </el-form-item>
@@ -247,7 +247,7 @@
                         <!-- @input="(val)=>inputChage(val,baseInfoForm.name)" :value="money(baseInfoForm.name)" -->
                         <el-form-item label="销售总额：" prop='salesTotalAmount'>
                             <el-input placeholder="请输入" v-model="purForm.salesTotalAmount" disabled>
-                                <template slot="append">元</template>
+                                <template slot="append">{{ salesTotalAmount }}元</template>
                             </el-input>
                         </el-form-item>
                         <!--  -->
@@ -535,6 +535,11 @@ export default class FinalApproval extends Vue {
         return rules
     }
 
+    get salesTotalAmount () {
+        this.purForm.salesTotalAmount = utils.moneyFormat(this.purForm.deviceAmount * (1 + parseFloat(this.purForm.salesGrossMargin) / 100))
+        return ''
+    }
+
     get purFormRules () {
         let rules = {
             predictLoanAmount: [
@@ -630,7 +635,7 @@ export default class FinalApproval extends Vue {
     }
     get lastFormRules () {
         let rules = {
-            remark: [{ required: true, message: '备注信息必填', trigger: 'blur' }]
+            remark: [{ required: true, message: '评审要求必填', trigger: 'blur' }]
         }
         return rules
     }
@@ -1037,11 +1042,6 @@ export default class FinalApproval extends Vue {
         })
     }
 
-    // 计算销售总额
-    onAmount () {
-        this.purForm.salesTotalAmount = utils.moneyFormat(this.purForm.deviceAmount * (1 + parseFloat(this.purForm.salesGrossMargin) / 100))
-    }
-
     //
     changeGroup (value) {
         this.$forceUpdate()
@@ -1100,9 +1100,6 @@ export default class FinalApproval extends Vue {
         data.salesGrossMargin = data.salesGrossMargin ? data.salesGrossMargin : 0
         this.purForm = { ...this.purForm, ...data }
         this.tableForm = data.resolutionPurchaseList || []
-        this.$nextTick(() => {
-            this.onAmount()
-        })
     }
 
     handleClose () {
@@ -1180,6 +1177,7 @@ export default class FinalApproval extends Vue {
             this.tableForm[index].acceptanceRate = ''
         }
     }
+
     mounted () {
         this.onFindRes()
     }
