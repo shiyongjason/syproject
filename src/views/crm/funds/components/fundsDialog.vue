@@ -10,7 +10,7 @@
                         金额(元)：{{dialogDetail.paymentAmount | moneyFormat}}
                     </p>
                     <p v-if="!detail._seeing">
-                        支付时间：{{moment(dialogDetail.paidTime).format('YY-MM-DD HH:mm:ss')}}
+                        支付时间：{{moment(dialogDetail.paidTime).format('YYYY-MM-DD HH:mm:ss')}}
                     </p>
                 </div>
                 <div class="label">支付凭证：</div>
