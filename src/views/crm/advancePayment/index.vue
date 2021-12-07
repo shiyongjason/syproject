@@ -74,7 +74,7 @@
                 <template #action="slotProps">
                     <h-button table @click="onApproval(slotProps.data.row)" v-if="hosAuthCheck(advanceapprove)&&(slotProps.data.row.status==-1)">审核</h-button>
                     <h-button table @click="onApproval(slotProps.data.row)" v-if="hosAuthCheck(operateapprove)&&(slotProps.data.row.status==1)">审核</h-button>
-                    <h-button table @click="onWriteOff(slotProps.data.row)" v-if="slotProps.data.row.paymentType&&hosAuthCheck(advancewriteoff)">核销</h-button>
+                    <h-button table @click="onWriteOff(slotProps.data.row)" v-if="slotProps.data.row.paymentType==1&&slotProps.data.row.status==5&&hosAuthCheck(advancewriteoff)">核销</h-button>
                     <h-button table @click="onLook(slotProps.data.row)" v-if="hosAuthCheck(advancelook)">查看详情</h-button>
                     <h-button table @click="onApprovalRecord(slotProps.data.row)" v-if="hosAuthCheck(advancerecords)">审批记录</h-button>
                     <h-button table @click="onUploadPrePay(slotProps.data.row)" v-if="hosAuthCheck(uploadprepay)&&slotProps.data.row.status==0">上传预付凭证</h-button>
