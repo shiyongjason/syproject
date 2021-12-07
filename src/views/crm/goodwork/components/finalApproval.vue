@@ -31,7 +31,7 @@
                             <span>{{resolutionDetail.purchaseQuota|moneyFormat}}</span>
                         </div>
                         <div class="info-layout-item">
-                            <font style="flex:0 0 150px">剩余代采购额度(元)：</font>
+                            <font style="flex:0 0 150px">可用额度(元)：</font>
                             <span>{{resolutionDetail.purchaseBalance|moneyFormat}}</span>
                         </div>
                     </div>
@@ -175,7 +175,7 @@
                 </div>
                 <div class="dialogbaseinfo">
                     <div class="dialogbaseinfo-item">可代采购额度(元)：{{resolutionDetail.purchaseQuota|moneyFormat}}</div>
-                    <div class="dialogbaseinfo-item">剩余代采购额度(元)：{{resolutionDetail.purchaseBalance|moneyFormat}}</div>
+                    <div class="dialogbaseinfo-item">可用额度(元)：{{resolutionDetail.purchaseBalance|moneyFormat}}</div>
                 </div>
                 <div class="dialogbaseinfo">
                     <div class="dialogbaseinfo-item">经销商评级：{{resolutionDetail.companyLevel||'-'}}</div>
@@ -322,7 +322,7 @@
                             <template #upstreamLoanType="slotProps">
                                 <el-select v-model="slotProps.data.row.upstreamLoanType" clearable>
                                     <el-option :value="1" label="先款后货"></el-option>
-                                    <el-option :value="2" label="先款后货"></el-option>
+                                    <el-option :value="2" label="先货后款"></el-option>
                                 </el-select>
                             </template>
                             <template #action="slotProps">
