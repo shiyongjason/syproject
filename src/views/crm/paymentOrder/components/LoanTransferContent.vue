@@ -6,7 +6,7 @@
                 <span></span>
                 <div class="tab-layout-title-box">
                     质押与终审决议信息
-                    <h-button table @click="handleOpenDialog" v-if="operateStatus==1&&!LoanTransferContent.reviewResolutionResponse.pledgeNo">上传质押信息</h-button>
+                    <h-button table @click="handleOpenDialog" v-if="operateStatus==1&&!LoanTransferContent.reviewResolutionResponse.pledgeNo&&hosAuthCheck(Auths.CRM_PAYMENT_ZYINFO)">上传质押信息</h-button>
                 </div>
             </div>
             <div class="info-layout">
@@ -331,6 +331,7 @@ import { ccpBaseUrl, ossAliyun, ossOldBucket } from '@/api/config'
 import OssFileUtils from '@/utils/OssFileUtils'
 import downloadFileAddToken from '@/components/downloadFileAddToken'
 import utils from '@/utils/filters'
+import * as Auths from '@/utils/auth_const'
 import { isNum } from '@/utils/validate/format'
 import moment from 'moment'
 // api
@@ -342,6 +343,7 @@ export default {
     data () {
         return {
             moment,
+            Auths,
             suppDialog: false,
             // 上游支付方式:1-银行转帐;2-银行承兑
             upstreamPaymentMethod: {
