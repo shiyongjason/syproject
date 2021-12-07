@@ -69,7 +69,8 @@
                 <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span>上游预付款支付单总金额：{{totalMoney|moneyFormat}}</span></el-tag>
             </div>
             <!-- end search bar -->
-            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='300' isAction :isActionFixed='tableData&&tableData.length>0'>
+            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='300' isAction
+                :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
                     <h-button table @click="onApproval(slotProps.data.row)" v-if="hosAuthCheck(advanceapprove)&&(slotProps.data.row.status==-1)">审核</h-button>
                     <h-button table @click="onApproval(slotProps.data.row)" v-if="hosAuthCheck(operateapprove)&&(slotProps.data.row.status==1)">审核</h-button>
@@ -93,6 +94,7 @@
                 <el-row type="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>申请金额(元)：{{detailForm.applyAmount | moneyFormat}}</el-col>
                     <el-col :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
+                    <el-col :span="10" :offset='1'>支付方式： {{ detailForm.paymentType&&paymentTypes[detailForm.paymentType-1].label||'-' }}</el-col>
                 </el-row>
                 <el-row type="flex" class="row-bg">
                     <el-col :span="16" :offset='1'>付款主体：{{detailForm.paymentCompanyName||'-'}}</el-col>
@@ -208,6 +210,7 @@
                     <el-row>
                         <el-col class="col-padding" :span="23" :offset='1'>申请金额(元)：{{detailForm.applyAmount|moneyFormat}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
+                        <el-col class="col-padding" :span="23" :offset='1'>支付方式： {{detailForm.paymentType&& paymentTypes[detailForm.paymentType-1].label||'-' }}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>上游供应商：{{detailForm.supplierCompanyName||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>供应商开户行名称：{{detailForm.supplierAccountName||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>银行联行号：{{detailForm.supplierBankNo||'-'}}</el-col>
