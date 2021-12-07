@@ -210,7 +210,7 @@
             </div>
         </el-dialog>
         <!-- 弹窗 -->
-        <el-dialog title="采购结论" :close-on-click-modal='false' :visible.sync="purchaseConclusionVisible" width="70%" :before-close="handleClose" :modal='false'>
+        <el-dialog v-if="purchaseConclusionVisible" title="采购结论" :close-on-click-modal='false' :visible.sync="purchaseConclusionVisible" width="70%" :before-close="handleClose" :modal='false'>
             <div class="dialog-ctx reviewResolution">
                 <el-form id='elform' :model="purForm" :rules="purFormRules" label-width="180px" label-position='right' ref="purchaseConclusionForm" class="purchaseConclusion">
                     <div class="form-item">
