@@ -930,7 +930,7 @@ export default class FinalApproval extends Vue {
             'upstreamPayType': [],
             'upstreamSupplierName': '',
             'upstreamSupplierType': '',
-            'purchaseDiscountRate': '',
+            'purchaseDiscountRate': 0,
             'transferRateType': '',
             'transferRate': '',
             'acceptanceRateType': '',
