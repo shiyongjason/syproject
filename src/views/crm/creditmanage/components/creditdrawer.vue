@@ -1,6 +1,6 @@
 <template>
     <div class="projectRecord">
-        <h-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" :zIndex="999" :wrapperClosable=false size="50%">
+        <h-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" :wrapperClosable=false size="50%">
             <template #connect>
                 <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
                     <el-tab-pane label="信用详情" name="1"></el-tab-pane>
@@ -38,7 +38,7 @@
                         <div class="drawer-wrap_box">
                             <span>以上信用为共享<font color="#ff7a45">{{ creditDetailObj.mainCompanyName }}</font>的信用评级。</span>
                             <el-button type="primary" size="mini" @click="toViewMainBusiness">查看主企业评级</el-button>
-                            <el-button type="primary" size="mini" @click="handleUnlink({ childCompanyId: companyId, mainCompanyId: creditDetailObj.mainCompanyId })">取消关联</el-button>
+                            <el-button v-if="hosAuthCheck(auths.CRM_CREDIT_UNLINK)" type="primary" size="mini" @click="handleUnlink({ childCompanyId: companyId, mainCompanyId: creditDetailObj.mainCompanyId })">取消关联</el-button>
                         </div>
                     </template>
                     <!-- 主企业|无标签企业展示内容 -->
@@ -54,9 +54,11 @@
                             <div class="drawer-wrap_right">
                                 <CustomAutocomplete placeholder="请选择" :suggestions="restaurants" v-if="restaurants">
                                     <template slot-scope="scope">
+                                      <div class="autoFlex">
                                         <span style="float: left;paddingRight:10px;">{{ scope.data.companyName }}</span>
-                                        <el-button v-if="scope.data.companyLabel == 0" style="float: right;" type="primary" @click="handleRelevance(scope.data)" size="mini">关联</el-button>
-                                        <el-tag v-else>{{ scope.data.companyLabel | companyLabelFilter }}</el-tag>
+                                        <el-button v-if="scope.data.companyLabel == 0&&hosAuthCheck(auths.CRM_CREDIT_LINK)" style="float: right;" type="primary" @click="handleRelevance(scope.data)" size="mini">关联</el-button>
+                                        <el-tag v-if="scope.data.companyLabel != 0">{{ scope.data.companyLabel | companyLabelFilter }}</el-tag>
+                                      </div>
                                     </template>
                                 </CustomAutocomplete>
                             </div>
@@ -265,7 +267,7 @@ export default {
                 { label: '可代采购额度(万元)', prop: 'purchaseAmount', width: '150' },
                 { label: '冻结中额度(万元)', prop: 'purchaseFreezeAmount', width: '150' },
                 { label: '占用中额度(万元)', prop: 'occupyAmount', width: '150', formatters: 'money' },
-                { label: '剩余代采购额度(万元)', prop: 'purchaseUsableAmount', width: '150', formatters: 'money' },
+                { label: '可用额度(万元)', prop: 'purchaseUsableAmount', width: '150', formatters: 'money' },
                 { label: '信用到期日', prop: 'endTime', width: '180', formatters: 'date' },
                 { label: '状态', prop: 'status' }
             ],
@@ -1153,5 +1155,10 @@ export default {
     background: #ffffff;
     width: 100%;
     z-index: 11;
+}
+.autoFlex{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 </style>
