@@ -23,7 +23,7 @@
             <div class="info-layout">
                 <div class="info-layout-item">
                     <font style="flex:0 0 110px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>货款支付流程：</font>
-                    <span>{{LoanTransferContent.reviewResolutionResponse.oaStatus==1?'已完结':''}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?' （':''}}{{LoanTransferContent.reviewResolutionResponse.oaNo||'-'}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?'）':''}}</span>
+                    <span>{{jOaStatus}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?' （':''}}{{LoanTransferContent.reviewResolutionResponse.oaNo||''}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?'）':''}}</span>
                 </div>
             </div>
             <!-- 采购合同信息 -->
@@ -398,7 +398,8 @@ export default {
             moreBillAmount: '',
             loanTransfersConfirm: {
                 paymentOrderId: '',
-                remark: ''
+                remark: '',
+                pledgeNo: ''
             },
             openDialogContract: false
         }
@@ -415,6 +416,18 @@ export default {
                 return t
             }, 0)
             return total
+        },
+        jOaStatus () {
+            let _oaStatus = this.LoanTransferContent.reviewResolutionResponse.oaStatus
+            let _showString = ''
+            if (_oaStatus * 1 === 1) {
+                _showString = '已完结'
+            } else if (_oaStatus * 1 === 0) {
+                _showString = '审批中'
+            } else if (_oaStatus * 1 === 2) {
+                _showString = '未通过'
+            }
+            return _showString
         },
         supplierRules () {
             return {
@@ -506,6 +519,7 @@ export default {
                 return
             }
             this.loanTransfersConfirm.paymentOrderId = this.paymentOrderId
+            this.loanTransfersConfirm.pledgeNo = this.LoanTransferContent.reviewResolutionResponse.pledgeNo
             await postLoanTransfersConfirm(this.loanTransfersConfirm)
             this.$emit('closeLoanTransferContentVisible')
         },
