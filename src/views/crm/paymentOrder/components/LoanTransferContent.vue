@@ -6,7 +6,7 @@
                 <span></span>
                 <div class="tab-layout-title-box">
                     质押与终审决议信息
-                    <h-button table @click="handleOpenDialog" v-if="operateStatus==1&&!LoanTransferContent.reviewResolutionResponse.pledgeNo">上传质押信息</h-button>
+                    <h-button table @click="handleOpenDialog" v-if="operateStatus==1&&!LoanTransferContent.reviewResolutionResponse.pledgeNo&&hosAuthCheck(Auths.CRM_PAYMENT_ZYINFO)">上传质押信息</h-button>
                 </div>
             </div>
             <div class="info-layout">
@@ -23,7 +23,7 @@
             <div class="info-layout">
                 <div class="info-layout-item">
                     <font style="flex:0 0 110px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>货款支付流程：</font>
-                    <span>{{LoanTransferContent.reviewResolutionResponse.oaStatus==1?'已完结':''}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?' （':''}}{{LoanTransferContent.reviewResolutionResponse.oaNo||'-'}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?'）':''}}</span>
+                    <span>{{jOaStatus}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?' （':''}}{{LoanTransferContent.reviewResolutionResponse.oaNo||''}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?'）':''}}</span>
                 </div>
             </div>
             <!-- 采购合同信息 -->
@@ -331,6 +331,7 @@ import { ccpBaseUrl, ossAliyun, ossOldBucket } from '@/api/config'
 import OssFileUtils from '@/utils/OssFileUtils'
 import downloadFileAddToken from '@/components/downloadFileAddToken'
 import utils from '@/utils/filters'
+import * as Auths from '@/utils/auth_const'
 import { isNum } from '@/utils/validate/format'
 import moment from 'moment'
 // api
@@ -342,6 +343,7 @@ export default {
     data () {
         return {
             moment,
+            Auths,
             suppDialog: false,
             // 上游支付方式:1-银行转帐;2-银行承兑
             upstreamPaymentMethod: {
@@ -396,7 +398,8 @@ export default {
             moreBillAmount: '',
             loanTransfersConfirm: {
                 paymentOrderId: '',
-                remark: ''
+                remark: '',
+                pledgeNo: ''
             },
             openDialogContract: false
         }
@@ -413,6 +416,18 @@ export default {
                 return t
             }, 0)
             return total
+        },
+        jOaStatus () {
+            let _oaStatus = this.LoanTransferContent.reviewResolutionResponse.oaStatus
+            let _showString = ''
+            if (_oaStatus * 1 === 1) {
+                _showString = '已完结'
+            } else if (_oaStatus * 1 === 0) {
+                _showString = '审批中'
+            } else if (_oaStatus * 1 === 2) {
+                _showString = '未通过'
+            }
+            return _showString
         },
         supplierRules () {
             return {
@@ -504,6 +519,7 @@ export default {
                 return
             }
             this.loanTransfersConfirm.paymentOrderId = this.paymentOrderId
+            this.loanTransfersConfirm.pledgeNo = this.LoanTransferContent.reviewResolutionResponse.pledgeNo
             await postLoanTransfersConfirm(this.loanTransfersConfirm)
             this.$emit('closeLoanTransferContentVisible')
         },
