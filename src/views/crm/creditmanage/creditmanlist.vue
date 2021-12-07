@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col__label">剩余代采购额度：</div>
+                    <div class="query-col__label">可用额度：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.minRemainPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">万元</template></el-input>
                         ~
@@ -165,7 +165,7 @@ export default {
                 { label: '信用评级', prop: 'creditLevel' },
                 { label: '服务费', prop: 'serviceFee' },
                 { label: '可代采购额度（万元）', prop: 'purchaseQuota', formatters: 'money' },
-                { label: '剩余代采购金额（万元）', prop: 'remainPurchaseQuota', formatters: 'money' },
+                { label: '可用额度（万元）', prop: 'remainPurchaseQuota', formatters: 'money' },
                 { label: '信用到期时间', prop: 'endTime', formatters: 'date' },
                 { label: '状态', prop: 'status' },
                 { label: '资料状态', prop: 'documentStatus' },
@@ -269,8 +269,6 @@ export default {
                 pageSize: this.creditdata.size,
                 total: this.creditdata.total
             }
-            // await this.findProjectLoan(params)
-            // this.loanData = this.projectLoan ? this.projectLoan : ''
         },
         async onGetbranch () {
             await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })

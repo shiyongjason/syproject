@@ -5,36 +5,36 @@
             <div class="query-cont-col">
                 <div class="query-col-title">会员账号：</div>
                 <div class="query-col-input">
-                    <el-input v-model.trim="queryParams.memberAccount" maxlength="30" placeholder="请输入"></el-input>
+                    <el-input v-model.trim="searchParams.memberAccount" maxlength="30" placeholder="请输入"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">商家账号：</div>
                 <div class="query-col-input">
-                    <el-input v-model.trim="queryParams.merchantAccount" maxlength="30" placeholder="请输入"></el-input>
+                    <el-input v-model.trim="searchParams.merchantAccount" maxlength="30" placeholder="请输入"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">满返余额：</div>
                 <div class="query-col-input">
-                    <el-input v-model.trim="queryParams.minBalance" maxlength="30" placeholder="请输入" class="smallBtn"></el-input> -
-                    <el-input v-model.trim="queryParams.maxBalance" maxlength="30" placeholder="请输入" class="smallBtn"></el-input>
+                    <el-input v-model.trim="searchParams.minBalance" maxlength="30" placeholder="请输入" class="smallBtn" oninput="if(isNaN(value)) { value = null } if(value.indexOf('.')>0){value=value.slice(0,value.indexOf('.')+3)}"></el-input> -
+                    <el-input v-model.trim="searchParams.maxBalance" maxlength="30" placeholder="请输入" class="smallBtn" oninput="if(isNaN(value)) { value = null } if(value.indexOf('.')>0){value=value.slice(0,value.indexOf('.')+3)}"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">经营区域：</div>
                 <div class="query-col-input">
-                    <el-select v-model="queryParams.provinceId" placeholder="请选择省" @change="onchange">
+                    <el-select v-model="searchParams.provinceId" placeholder="请选择省" @change="onchange">
                         <el-option v-for="item in nestDdata" :key="item.provinceId" :value="item.provinceId" :label="item.name"></el-option>
                     </el-select>
                 </div>
                 <div class="query-col-input ml10">
-                    <el-select v-model="queryParams.cityId" placeholder="请选择市">
+                    <el-select v-model="searchParams.cityId" placeholder="请选择市">
                         <el-option v-for="item in cityOptions" :key="item.cityId" :value="item.cityId" :label="item.name"></el-option>
                     </el-select>
                 </div>
                 <div class="query-col-input ml10">
-                    <el-select v-model="queryParams.countryId" placeholder="请选择区">
+                    <el-select v-model="searchParams.countryId" placeholder="请选择区">
                         <el-option v-for="item in areaOptions" :key="item.countryId" :value="item.countryId" :label="item.name"></el-option>
                     </el-select>
                 </div>
@@ -57,7 +57,6 @@
     </div>
 </template>
 <script>
-// import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     name: 'memberBalance',
@@ -75,7 +74,17 @@ export default {
                 cityId: '',
                 countryId: ''
             },
-            searchParams: {},
+            searchParams: {
+                pageNumber: 1,
+                pageSize: 10,
+                memberAccount: '',
+                merchantAccount: '',
+                minBalance: '',
+                maxBalance: '',
+                provinceId: '',
+                cityId: '',
+                countryId: ''
+            },
             tableData: [],
             pagination: {
                 pageNumber: 1,
@@ -87,7 +96,7 @@ export default {
                 { label: '企业名称', prop: 'memberName' },
                 { label: '经营区域', prop: 'provinceId' },
                 { label: '商家名称', prop: 'merchantName' },
-                { label: '满返余额(元)', prop: 'balance', formatters: 'moneyShow' }
+                { label: '满返余额(元)', prop: 'balance', formatters: '' }
             ]
 
         }
@@ -102,7 +111,7 @@ export default {
         }),
         cityOptions () {
             if (this.nestDdata.length) {
-                const province = this.nestDdata.filter(item => item.provinceId == this.queryParams.provinceId)
+                const province = this.nestDdata.filter(item => item.provinceId == this.searchParams.provinceId)
                 if (province.length > 0) {
                     return province[0].cities
                 }
@@ -111,7 +120,7 @@ export default {
             return []
         },
         areaOptions () {
-            const city = this.cityOptions.filter(item => item.cityId == this.queryParams.cityId)
+            const city = this.cityOptions.filter(item => item.cityId == this.searchParams.cityId)
             if (city.length > 0) {
                 return city[0].countries
             }
@@ -142,10 +151,8 @@ export default {
         },
         async getdate () {
             await this.findNest()
-            console.log(this.nestDdata)
         },
         onSearch () {
-            this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
         onCurrentChange (val) {
@@ -157,9 +164,19 @@ export default {
             this.onQuery()
         },
         onReset () {
-            this.searchParams = { ...this.queryParams }
+            this.searchParams = {
+                pageNumber: 1,
+                pageSize: 10,
+                memberAccount: '',
+                merchantAccount: '',
+                minBalance: '',
+                maxBalance: '',
+                provinceId: '',
+                cityId: '',
+                countryId: ''
+            }
+            console.log(this.searchParams)
             this.onQuery()
-            this.getFindNest()
         }
     }
 }

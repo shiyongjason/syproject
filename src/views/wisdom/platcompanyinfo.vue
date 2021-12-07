@@ -11,7 +11,7 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司：</div>
-                    <HAutocomplete @back-event="backPlat($event,'P')" :selectArr="platformData" :placeholder="'选择平台公司'" :selectObj="selectAuth.platformObj"></HAutocomplete>
+                    <HAutocomplete @back-event="backPlat($event,'P')" v-if="platformData" :selectArr="platformData" :placeholder="'选择平台公司'" :selectObj="selectAuth.platformObj"></HAutocomplete>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">城市：</div>
@@ -54,7 +54,7 @@
     </div>
 </template>
 <script>
-import { findCompanyList, findPaltList, findProvinceAndCity } from './api/index.js'
+import { findCompanyList, findPaltList, findProvinceAndCity, findOrganizationCompany } from './api/index.js'
 import platCompanyTable from './components/platCompanyTable'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import RegionCascader from './components/regionCascader.vue'
@@ -106,7 +106,8 @@ export default {
                 }
             },
             exportAuth: AUTH_WIXDOM_BASIC_INFO_EXPORT,
-            toggle: true
+            toggle: true,
+            platformData: []
         }
     },
     components: {
@@ -117,8 +118,8 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
-            branchList: state => state.branchList,
-            platformData: state => state.platformData
+            branchList: state => state.branchList
+            // platformData: state => state.platformData
         })
     },
     async  mounted () {
@@ -130,6 +131,7 @@ export default {
         // this.newBossAuth(['F', 'P'])
         this.searchParamsReset = { ...this.searchParams }
         this.countHeight()
+        this.findNewPlatCompany()
     },
     watch: {
         async 'searchParams.provinceCode' (newV, oldV) {
@@ -143,8 +145,24 @@ export default {
         }
     },
     methods: {
+        async  findNewPlatCompany () {
+            let userInfo = sessionStorage.getItem('userInfo')
+
+            const { data } = await findOrganizationCompany({
+                organizationCodes: this.searchParams.organizationCodes,
+                jobNumber: JSON.parse(userInfo).jobNumber,
+                authCode: JSON.parse(sessionStorage.getItem('authCode'))
+            })
+            console.log(data)
+            data.data.pageContent.map(i => {
+                i.value = i.companyShortName
+                i.selectCode = i.companyCode
+            })
+            this.platformData = data.data.pageContent
+        },
         findRegionCode (val) {
             this.searchParams.organizationCodes = val.toString()
+            this.findNewPlatCompany()
         },
         onReset () {
             this.searchParams = { ...this.searchParamsReset }

@@ -144,6 +144,11 @@ export default {
                 fileName: this.successFileTemp.name,
                 fileUrl: this.successFileTemp.url
             }
+            console.log('obj', obj)
+            if (!obj.fileName || !obj.fileUrl) {
+                this.$message.error(`上传图片异常请重试`)
+                return
+            }
             setTimeout(() => {
                 if (this.fileList.length < this.fileNum) {
                     this.fileList.push(obj)

@@ -56,6 +56,7 @@
             <div class="button-cont">
                 <template v-if="productType == 'SPU'">
                     <h-button type='create' @click="onCreateProduct">新建商品</h-button>
+                    <h-button @click="onExports">批量导入</h-button>
                     <h-button @click="onBatchEffective()" v-if="tabName == 'EFFICACY'">批量生效</h-button>
                     <h-button @click="onBatchEfficacy()" v-if="tabName == 'EFFECTIVE'">批量失效</h-button>
                     <h-button @click="onBatchDelete()" v-if="tabName == 'AUDIT' || tabName == 'REJECT'">批量删除</h-button>
@@ -81,6 +82,20 @@
                 </template>
             </basicTable>
         </div>
+        <el-dialog title="批量导入" :visible.sync="uploadShow" class="upload-show" width="600px" :close-on-click-modal="false" :before-close="onCloseDialog">
+            <el-upload class="upload-fault" ref="upload" :file-list="fileList" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="beforeAvatarUpload" v-bind="uploadData">
+                <el-button type="primary" slot="trigger">上传文件</el-button>
+                <p slot="tip" class="el-upload__tip">仅支持excel格式文件（大小在10M以内）</p>
+            </el-upload>
+            <a type="primary" class="download-template"></a>
+            <el-link @click="frontDownload">点击下载 导入模板</el-link>
+            <br />
+            <el-button type="primary" class="download-template" @click="importResults" v-if="judge">批导结果:下载导入结果</el-button>
+            <span slot="footer">
+                <el-button :loading="loading" @click="onCloseDialog">取消</el-button>
+                <el-button type="primary" @click="onImport" :loading="loading">确定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -117,12 +132,33 @@ export default {
                 value: 'id',
                 label: 'name',
                 children: 'subCategoryList'
-            }
+            },
+            uploadShow: false,
+            loading: false,
+            fileList: [],
+            uploadData: {
+                accept: '.xlsx,.xls',
+                action: `${B2bUrl}product/boss/main-spu/batch-import`,
+                limit: 1,
+                autoUpload: false,
+                headers: { // todo I'm need a config file
+                    refreshToken: localStorage.getItem('refreshToken'),
+                    AccessKeyId: '5ksbfewexbfc',
+                    Authorization: `Bearer ` + localStorage.getItem('tokenB2b')
+                },
+                data: {
+                    operator: ''
+                }
+
+            },
+            judge: false,
+            errExcel: ''
+
         }
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo.principal,
+            userInfo: state => state.userInfo,
             brandData: state => state.hmall.productManage.brandData,
             productSpuData: state => state.hmall.productManage.productSpuData,
             productSkuData: state => state.hmall.productManage.productSkuData
@@ -235,6 +271,144 @@ export default {
                 }
             } else if (this.productType == 'SKU') {
                 this.$router.push({ path: '/b2b/product/createProduct', query: { id: row.mainSpuId } })
+            }
+        },
+        onExports () {
+            this.uploadShow = true
+            this.judge = false
+        },
+        onCloseDialog () {
+            if (this.hasFile()) {
+                this.$confirm('是否确定取消选中的文件', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$refs.upload.clearFiles()
+                    this.uploadShow = false
+                    this.judge = false
+                    this.$message({
+                        type: 'success',
+                        message: '已取消选中的文件!'
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'success',
+                        message: '已取消删除'
+                    })
+                })
+            } else {
+                this.$refs.upload.clearFiles()
+                this.uploadShow = false
+
+                this.judge = false
+            }
+        },
+        hasFile () {
+            console.log(this.$refs.upload.uploadFiles, this.fileList)
+            return this.$refs.upload.uploadFiles.length > 0
+        },
+        uploadError () {
+            this.$refs.upload.clearFiles()
+            this.$message.error('文件上传失败，请重试！')
+            this.loading = false
+        },
+        uploadSuccess (response) {
+            this.$refs.upload.clearFiles()
+            this.loading = false
+            console.log(response)
+            if (response.success) {
+                this.$message.success(response.message)
+                this.uploadShow = false
+                // this.onQuery()
+            } else {
+                this.$message.error(response.message)
+                this.uid = response.uid
+                this.judge = true
+                this.errExcel = response.fileBytes
+                this.importResults()
+                // 调用下载方法
+            }
+        },
+        frontDownload () {
+            var a = document.createElement('a') // 创建一个<a></a>标签
+            a.href = '/static/商品导入模板.xlsx' // 给a标签的href属性值加上地址，注意，这里是绝对路径，不用加 点.
+            a.download = '商品导入模板.xlsx' // 设置下载文件文件名，这里加上.xlsx指定文件类型，pdf文件就指定.fpd即可
+            a.style.display = 'none' // 障眼法藏起来a标签
+            document.body.appendChild(a) // 将a标签追加到文档对象中
+            a.click() // 模拟点击了a标签，会触发a标签的href的读取，浏览器就会自动下载了
+            a.remove() // 一次性的，用完就删除a标签
+        },
+        beforeAvatarUpload (file) {
+            console.log(file)
+            const isLt10M = file.size / (1024 * 1024 * 10) < 1
+            // const isCsv = file.type === 'application/vnd.ms-excel'
+
+            const isCsv = file.name.lastIndexOf('.') > 0 ? ['.xlsx', '.xls'].indexOf(file.name.slice(file.name.lastIndexOf('.'), file.name.length)) > -1 : false
+            if (!isCsv) {
+                // this.$message.error('上传文件只能是 excel 格式!')
+                this.loading = true
+                this.$message({
+                    type: 'error',
+                    message: '上传文件只能是 excel 格式!',
+                    duration: 800,
+                    onClose: () => {
+                        this.loading = false
+                    }
+                })
+                return false
+            }
+            if (!isLt10M) {
+                // this.$message.error('上传文件大小不能超过 10MB!')
+                this.loading = true
+                this.$message({
+                    type: 'error',
+                    message: '上传文件大小不能超过 10MB!',
+                    duration: 800,
+                    onClose: () => {
+                        this.loading = false
+                    }
+                })
+                return false
+            }
+            return isCsv && isLt10M
+        },
+        async onImport () {
+            this.uploadData.data.operator = this.userInfo.employeeName
+            if (this.loading) return
+            this.loading = true
+            if (this.hasFile()) {
+                try {
+                    await this.$refs.upload.submit()
+                } catch (e) { }
+            } else {
+                this.$message.error('请选择上传的文件')
+                this.loading = false
+            }
+        },
+        onDownload () {
+            downloadQuestionTemp()
+        },
+        importResults () {
+            let result = this.errExcel
+            let raw = window.atob(result)
+            let uInt8Array = new Uint8Array(result.length)
+            for (var i = 0; i < raw.length; i++) {
+                uInt8Array[i] = raw.charCodeAt(i)
+            }
+            const blob = new Blob([uInt8Array], {
+                type: 'application/vnd.ms-excel'
+            })
+
+            const reader = new FileReader()
+            reader.readAsDataURL(blob)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '失败明细.xls'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
             }
         },
         // 批量生效

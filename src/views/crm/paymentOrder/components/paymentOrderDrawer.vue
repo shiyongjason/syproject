@@ -64,6 +64,12 @@
                             </p>
                         </div>
                         <div class="row-filed">
+                            <p class="col-filed col-50">
+                                <span class="label">付款主体：</span>
+                                {{ paymentOrderDetail.payOrderPoDetail.paymentMain }}
+                            </p>
+                        </div>
+                        <div class="row-filed">
                             <p class="col-filed">
                                 <span class="info-title">支付单信息</span>
                                 <span class="info-status">
@@ -78,6 +84,22 @@
                             </p>
                             <p class="col-filed col-50">
                                 <span class="label">最迟发货日期：</span> {{ paymentOrderDetail.payOrderDetail.lastGoodsDate||'-' }}
+                            </p>
+                        </div>
+                        <div class="row-filed">
+                            <p class="col-filed col-50">
+                                <span class="label">采购折让：</span> {{ paymentOrderDetail.payOrderDetail.purchaseDiscountRate }}%
+                            </p>
+                            <p class="col-filed col-50">
+                                <span class="label">采购金额(折让后)：</span> {{ paymentOrderDetail.payOrderDetail.purchaseDiscountAmount | moneyFormat }}元
+                            </p>
+                        </div>
+                        <div class="row-filed">
+                            <p class="col-filed col-50">
+                                <span class="label">销售毛利率：</span> {{ paymentOrderDetail.payOrderDetail.salesGrossMargin }}%
+                            </p>
+                            <p class="col-filed col-50">
+                                <span class="label">销售金额：</span> {{ paymentOrderDetail.payOrderDetail.salesTotalAmount | moneyFormat }}元
                             </p>
                         </div>
                         <div class="row-filed">
@@ -120,7 +142,7 @@
                         <div class="row-filed">
                             <p class="col-filed col-33">
                                 <span class="label">上游支付方式：</span>
-                                {{ paymentOrderConst.SUPPLIER_PAYMENT_TYPE.get(paymentOrderDetail.payOrderDetail.supplierPaymentType) }}
+                                {{ paymentOrderConst.SUPPLIER_PAYMENT_TYPE.get(paymentOrderDetail.payOrderDetail.supplierPaymentType) }}:{{paymentOrderDetail.payOrderDetail.serviceFeeRate}}%
                             </p>
                             <p class="col-filed col-33">
                                 <span class="label">期望上游支付日期：</span>
@@ -129,6 +151,25 @@
                             <p class="col-filed  col-33">
                                 <span class="label">备注信息：</span>
                                 {{ paymentOrderDetail.payOrderDetail.specialRemark }}
+                            </p>
+                        </div>
+                        <div class="row-filed">
+                            <p class="col-filed col-33">
+                                <span class="label">上游货款方式：</span>
+                                {{ paymentOrderConst.SUPPLIER_PAYMENT_METHOD.get(paymentOrderDetail.payOrderDetail.supplierPaymentMethod) || '-'}}
+                            </p>
+                            <p class="col-filed col-33">
+                                <span class="label">下游合作方式：</span>
+                                {{ paymentOrderConst.DEALER_COOPERATION_METHOD.get(paymentOrderDetail.payOrderDetail.dealerCooperationMethod) || '-' }}
+                            </p>
+                        </div>
+                        <div class="row-filed">
+                            <p class="col-filed col-33">
+                                <span class="label">首付款金额：</span>
+                                {{ paymentOrderDetail.payOrderDetail.downPaymentAmount | moneyFormat }}元
+                            </p>
+                            <p class="col-filed col-33" v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod == 1">
+                                <span class="label">尾款金额：</span> {{ paymentOrderDetail.payOrderDetail.arrearAmount | moneyFormat }}元
                             </p>
                         </div>
                         <!-- 银行承兑才有票面信息 -->
@@ -230,14 +271,6 @@
                                         {{ paymentOrderConst.ACCOUNT_RECEIVABLE_PLEDGE_TYPE.get(paymentOrderDetail.payOrderDetail.accountReceivablePledgeType) || '-' }}
                                     </p>
 
-                                    <p class="col-filed col-33">
-                                        <span class="label">上游货款方式：</span>
-                                        {{ paymentOrderConst.SUPPLIER_PAYMENT_METHOD.get(paymentOrderDetail.payOrderDetail.supplierPaymentMethod) || '-'}}
-                                    </p>
-                                    <p class="col-filed col-33">
-                                        <span class="label">下游合作方式：</span>
-                                        {{ paymentOrderConst.DEALER_COOPERATION_METHOD.get(paymentOrderDetail.payOrderDetail.dealerCooperationMethod) || '-' }}
-                                    </p>
                                 </div>
                                 <div class="row-filed">
                                     <p class="col-filed col-33">
@@ -248,15 +281,7 @@
                                         <span class="label" style="min-width:100px">OA货款支付编号：</span>{{ paymentOrderDetail.payOrderDetail.oaNo || '-' }}
                                     </p>
                                 </div>
-                                <div class="row-filed">
-                                    <p class="col-filed col-50">
-                                        <span class="label">经销商预付款：</span>
-                                        {{ paymentOrderDetail.payOrderDetail.downPaymentAmount | moneyFormat }}元
-                                    </p>
-                                    <p class="col-filed col-50" v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod == 1">
-                                        <span class="label">剩余货款：</span> {{ paymentOrderDetail.payOrderDetail.arrearAmount | moneyFormat }}元
-                                    </p>
-                                </div>
+
                                 <!-- 剩余支付方式 -->
                                 <template v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod == 1">
                                     <div class="row-filed">
@@ -308,9 +333,9 @@
                                             {{ paymentOrderDetail.respFundResults.downpaymentFund.paidTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}
                                         </template>
                                         <template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === paymentFlagKey.CONFIRM">
-                                            <!-- <h-button table class="ml-20" v-if="hosAuthCheck(Auths.CRM_DOWN_PAYMENT_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.downpaymentFund.id,FundsDict.repaymentTypeArrays.list[0].key)">
+                                             <h-button table class="ml-20" v-if="hosAuthCheck(Auths.CRM_DOWN_PAYMENT_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.downpaymentFund.id,FundsDict.repaymentTypeArrays.list[0].key)">
                                                 {{ paymentOrderConst.PAYMENT_FLAG.get(paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag) }}
-                                            </h-button> -->
+                                            </h-button>
                                         </template>
                                         <template v-else>
                                             <span class="info-status ml-20">
@@ -353,9 +378,9 @@
                                                 </template>
                                             </p>
                                             <template v-if="item.paymentFlag === paymentFlagKey.CONFIRM">
-                                                <!-- <h-button table v-if="hosAuthCheck(Auths.CRM_SERVICE_FUND_CONFIRM)" @click="openFundsDialog(item.id, FundsDict.repaymentTypeArrays.list[1].key)">
+                                                 <h-button table v-if="hosAuthCheck(Auths.CRM_SERVICE_FUND_CONFIRM)" @click="openFundsDialog(item.id, FundsDict.repaymentTypeArrays.list[1].key)">
                                                     {{ paymentOrderConst.PAYMENT_FLAG.get(item.paymentFlag) }}
-                                                </h-button> -->
+                                                </h-button>
                                             </template>
                                             <template v-else>
                                                 <span class="info-status">
@@ -413,7 +438,8 @@
                                         </p>
                                     </div>
                                     <div class="row-filed">
-                                        <h-button type="assist" @click="openConfirmReceipt" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && ((paymentOrderDetail.respGoodsAmount.goodsAmount !== paymentOrderDetail.respGoodsAmount.totalAmount)&&paymentOrderDetail.payOrderDetail.status!=statusKey.CLOSED)">确认收货
+                                        <h-button type="assist" @click="openConfirmReceipt"
+                                            v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && ((paymentOrderDetail.respGoodsAmount.goodsAmount !== paymentOrderDetail.respGoodsAmount.totalAmount)&&paymentOrderDetail.payOrderDetail.status!=statusKey.CLOSED)">确认收货
                                         </h-button>
                                     </div>
                                 </template>
@@ -441,9 +467,9 @@
                                             <span class="label">{{ paymentLabel(paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }}</span>
                                             {{ paymentOrderDetail.respFundResults.arrearFund.paidTime | momentFormat }}
                                             <template v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === paymentFlagKey.CONFIRM">
-                                                <!-- <h-button table v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.arrearFund.id,FundsDict.repaymentTypeArrays.list[2].key)">
+                                                 <h-button table v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.arrearFund.id,FundsDict.repaymentTypeArrays.list[2].key)">
                                                     {{ paymentOrderConst.PAYMENT_FLAG.get(paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }}
-                                                </h-button> -->
+                                                </h-button>
                                             </template>
                                             <template v-else>
                                                 <span class="info-status">
@@ -472,7 +498,7 @@
                             </p>
                             <div class="close_vocher">
                                 <span class="img-box" :key="item.fileUrl" v-for="item in paymentOrderDetail.payOrderDetail.closeAttachDocResponseList">
-                                    <downloadFileAddToken isPreview isType='preview' :file-url="item.fileUrl" :a-link-words="item.fileName"/>
+                                    <downloadFileAddToken isPreview isType='preview' :file-url="item.fileUrl" :a-link-words="item.fileName" />
                                 </span>
                             </div>
                         </template>

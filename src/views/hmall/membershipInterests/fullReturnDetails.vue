@@ -3,12 +3,13 @@
         <div class="page-body-cont">
             <div class="balance-cont-row">
                 <div class="balance-cont-col">
+
                     <div class="balance-col-icon">
                         <i class="icon iconfont hosjoy_money"></i>
                     </div>
                     <div class="balance-col-money">
-                        <p>{{ totalBalances| moneyShow}}</p>
-                        <p>平台服务费总资产<span>（元）</span></p>
+                        <p>满返总余额<span>（元）</span></p>
+                        <p>{{totalBalances | moneyShow}}</p>
                     </div>
                 </div>
             </div>
@@ -39,8 +40,21 @@
                         <el-date-picker v-model="queryParams.startTime" type="datetime" placeholder="开始日期" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker v-model="queryParams.endTime" type="datetime" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.endTime" type="datetime" placeholder="结束日期" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">金额：</div>
+                    <div class="query-col-input">
+                        <el-input v-model.trim="queryParams.minAmount" v-number maxlength="30" placeholder="请输入" class="smallBtn" oninput="if(isNaN(value)) { value = null } if(value.indexOf('.')>0){value=value.slice(0,value.indexOf('.')+3)}"></el-input> -
+                        <el-input v-model.trim="queryParams.maxAmount" v-number maxlength="30" placeholder="请输入" class="smallBtn" oninput="if(isNaN(value)) { value = null } if(value.indexOf('.')>0){value=value.slice(0,value.indexOf('.')+3)}"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">来源单号：</div>
+                    <div class="query-col-input">
+                        <el-input v-model.trim="queryParams.sourceNo" maxlength="30" placeholder="请输入"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -70,7 +84,7 @@ export default {
             queryParams: {
                 memberAccount: '',
                 merchantAccount: '',
-                flowType: '',
+                flowType: 0,
                 startTime: '',
                 endTime: '',
                 minAmount: '',
@@ -109,20 +123,24 @@ export default {
         },
         pickerOptionsStart () {
             return {
-                disabledDate: (time) => {
-                    let endDateVal = this.queryParams.endTime
-                    if (endDateVal) {
-                        return time.getTime() >= new Date(endDateVal).getTime()
+                disabledDate: time => {
+                    let beginDateVal = this.queryParams.endTime
+                    if (beginDateVal) {
+                        return (
+                            time.getTime() > new Date(beginDateVal).getTime()
+                        )
                     }
                 }
             }
         },
         pickerOptionsEnd () {
             return {
-                disabledDate: (time) => {
+                disabledDate: time => {
                     let beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                        return (
+                            time.getTime() < new Date(beginDateVal).getTime()
+                        )
                     }
                 }
             }
@@ -149,7 +167,7 @@ export default {
             this.queryParams = {
                 memberAccount: '',
                 merchantAccount: '',
-                flowType: '',
+                flowType: 0,
                 startTime: '',
                 endTime: '',
                 minAmount: '',
@@ -163,7 +181,7 @@ export default {
 
         onExport () {
             if (this.tableData.length <= 0) {
-                this.$message.warning('无商品可导出！')
+                this.$message.warning('无商品可导出!')
             } else {
                 let url = ''
                 for (let key in this.queryParams) {
@@ -268,14 +286,14 @@ export default {
         display: inline-block;
 
         p:first-child {
-            line-height: 45px;
-            font-size: 32px;
-        }
-        p:last-child {
             line-height: 20px;
             span {
                 color: #666;
             }
+        }
+        p:last-child {
+            line-height: 45px;
+            font-size: 32px;
         }
     }
 }

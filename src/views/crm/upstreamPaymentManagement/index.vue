@@ -85,6 +85,12 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
+                    <div class="query-col__label">付款主体：</div>
+                    <div class="query-col__input">
+                        <el-input type="text" v-model="queryParams.paymentMain" maxlength="20" placeholder="请输入"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
                     <h-button type="primary" @click="getList">查询</h-button>
                     <h-button @click="onReset">重置</h-button>
                     <h-button @click="onExport" v-if="hosAuthCheck(upstreamExport)">导出列表数据</h-button>
@@ -94,8 +100,7 @@
                 <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span v-if="totalAmount">累计金额：{{totalAmount|moneyFormat}}</span></el-tag>
             </div>
             <!-- end search bar -->
-            <hosJoyTable localName="V3.5.1" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList"
-                actionWidth='330' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+            <hosJoyTable localName="V3.5.1" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='330' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template #action="slotProps">
                     <h-button table v-if="hosAuthCheck(upstreamPayDetail)" @click="viewDetail(slotProps.data.row.paymentOrderId,slotProps.data.row.status)">查看详情</h-button>
                     <h-button table v-if="slotProps.data.row.showChangeButton" @click="onShowChangeLoanTransferStatus(slotProps.data.row.loanTransferId)">变更交接状态</h-button>
@@ -201,16 +206,22 @@
         <!-- 首付款确认 -->
         <FundsDialog :is-open="isProofDialog" :detail="fundsDialogDetail" :status="'1'" @onClose="getList"></FundsDialog>
         <!-- 确认网银支付 -->
-        <el-dialog :close-on-click-modal='false' title="确认网银支付" :visible.sync="isShowLinkBank" width="500px" class="prev-payment-dialog">
-            <el-form :model="bankForm" :rules="bankRules" ref="bankForm" label-width="140px" class="demo-ruleForm">
+        <el-dialog :close-on-click-modal='false' title="确认网银支付" :visible.sync="isShowLinkBank" width="600px" class="prev-payment-dialog" :before-close="()=> onBankCancel()">
+            <el-form :model="bankForm" :rules="bankRules" ref="bankForm" label-width="150px" class="demo-ruleForm">
                 <el-form-item label="网银支付时间：" prop="paymentTime">
-                    <!-- <el-date-picker type="date" placeholder="选择日期" v-model="bankForm.paymentTime" ></el-date-picker> -->
-                    <el-date-picker v-model="bankForm.paymentTime" value-format='yyyy-MM-dd' type="date" placeholder="选择日期" :picker-options="pickerOptions">
-                        </el-date-picker>
+                    <el-date-picker v-model="bankForm.paymentTime" value-format='yyyy-MM-dd' type="date" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="上传上游支付凭证：" prop="attachDocRequestList" style="margin-bottom:20px">
+                    <OssFileHosjoyUpload v-model="bankForm.attachDocRequestList" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.bankForm.clearValidate()" accept=".jpg,.png,.pdf">
+                        <div class="a-line">
+                            <h-button>上传文件</h-button>
+                        </div>
+                    </OssFileHosjoyUpload>
+                    <p class="tips">支持扩展名：jpg.png.pdf...</p>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <h-button @click="isShowLinkBank = false">取消</h-button>
+                <h-button @click="onBankCancel()">取消</h-button>
                 <h-button type="primary" @click="handleSubBank">确定</h-button>
             </div>
         </el-dialog>
@@ -278,10 +289,10 @@ export default class UpstreamPaymentManagement extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
-     uploadParameters = {
-         updateUid: '',
-         reservedName: false
-     }
+    uploadParameters = {
+        updateUid: '',
+        reservedName: false
+    }
     page = {
         sizes: [10, 20, 50, 100],
         total: 0
@@ -301,6 +312,7 @@ export default class UpstreamPaymentManagement extends Vue {
     queryParams: Query = {
         pageNumber: 1,
         pageSize: 10,
+        paymentMain: '', // 付款主体
         paymentOrderNo: '',
         deptName: '',
         companyName: '',
@@ -338,7 +350,8 @@ export default class UpstreamPaymentManagement extends Vue {
     }
     bankForm:SupplierOnlineBankTransferConfirmRequest={
         paymentOrderId: '',
-        paymentTime: ''
+        paymentTime: '',
+        attachDocRequestList: []
     }
 
     totalAmount:number = 0
@@ -387,7 +400,8 @@ export default class UpstreamPaymentManagement extends Vue {
 
     get bankRules () {
         return {
-            paymentTime: [{ required: true, message: '请选择网银支付时间', trigger: 'change' }]
+            paymentTime: [{ required: true, message: '请选择网银支付时间', trigger: 'change' }],
+            attachDocRequestList: [{ required: true, message: '请上传上游支付凭证', trigger: 'change' }]
         }
     }
 
@@ -423,13 +437,10 @@ export default class UpstreamPaymentManagement extends Vue {
         }
     }
     get pickerOptions () {
-        let that = this
         return {
             disabledDate (time) {
-                if (that.maxTime) {
-                    // @ts-ignore
-                    return Date.now() < time.getTime() < new Date(that.maxTime).getTime()// 如果当天可选，就不用减8.64e7
-                }
+                // @ts-ignore
+                return Date.now() < time.getTime()// 如果当天可选，就不用减8.64e7
             }
         }
     }
@@ -469,6 +480,7 @@ export default class UpstreamPaymentManagement extends Vue {
         { label: '剩余应支付金额（元）', prop: 'noPayAmount', width: '150', displayAs: 'money' },
         { label: '运营确认时间', prop: 'initiateTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '期望上游支付日期', prop: 'expectSupplierPaymentDate', width: '160', displayAs: 'YYYY-MM-DD' },
+        { label: '付款主体', prop: 'paymentMain', width: '160' },
         { label: '上游支付方式', prop: 'supplierPaymentType', width: '150', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] }
 
     ]
@@ -522,6 +534,11 @@ export default class UpstreamPaymentManagement extends Vue {
         this.maxTime = val.loanTransferDate
         this.bankForm.paymentOrderId = val.paymentOrderId
         this.bankForm.paymentTime = moment(new Date()).format('YYYY-MM-DD')
+    }
+
+    onBankCancel () {
+        this.isShowLinkBank = false
+        this.bankForm.attachDocRequestList = []
         this.$nextTick(() => {
             this.$refs['bankForm'].clearValidate()
         })

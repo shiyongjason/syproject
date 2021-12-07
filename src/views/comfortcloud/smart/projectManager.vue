@@ -147,6 +147,7 @@
 </template>
 
 <script>
+
 import { iotUrl, interfaceUrl } from '@/api/config'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { createControlProject, editControlProject } from '../api/index'
@@ -426,7 +427,8 @@ export default {
                 this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_ELECTRICITY_METER) + 1 ||
                 this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_HEAT_METER) + 1 ||
                 this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_FT_AIR) + 1 ||
-                this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_TIME) + 1
+                this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_TIME) + 1 ||
+                this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_SOCKET) + 1
             if (index > 0) {
                 this.$set(this.form, 'feeType', `${this.form.projectType[index - 1] - PROJECT_TYPE_KEY.BILLING_SYSTEM}`)
                 this.form.projectType[index - 1] = PROJECT_TYPE_KEY.BILLING_SYSTEM

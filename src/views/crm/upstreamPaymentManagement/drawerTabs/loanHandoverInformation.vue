@@ -48,6 +48,12 @@
             </div>
             <div class="info-layout">
                 <div class="info-layout-item">
+                    <font style="flex: 0 0 100px">付款主体：</font>
+                    <span>{{ data.paymentMain || '-' }}</span>
+                </div>
+            </div>
+            <div class="info-layout">
+                <div class="info-layout-item">
                     <font style="flex: 0 0 100px">监管账户账号：</font>
                     <span>{{data.regulatorAccountNo?data.regulatorAccountNo:'-'}}</span>
                 </div>
@@ -354,7 +360,6 @@ export default class LoanHandoverInformation extends Vue {
                 {
                     required: true,
                     validator: (rule, value, callback) => {
-                        console.log('22', this.title)
                         if (value === '') {
                             if (this.title == '驳回') {
                                 return callback(new Error('请输入驳回原因'))
@@ -362,7 +367,7 @@ export default class LoanHandoverInformation extends Vue {
                                 return callback(new Error('请输入交接备注'))
                             }
                         } else {
-                            callback(new Error('123'))
+                            callback()
                         }
                     },
                     trigger: 'blur'

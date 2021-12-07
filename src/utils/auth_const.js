@@ -200,9 +200,13 @@ export const CRM_LOOK_DETAIL = 109302 // 查看详情
 export const CRM_ADD_DETAIL = 109303 // 新增
 export const CRM_EDIT_DETAIL = 109304 // 修改
 export const CRM_CREDIT_DETAIL = 109305 // 查看信用
-export const CRM_CREDIT_SET = 109306 //  设置信用
+export const CRM_CREDIT_SET = 109306 //  通用额度设置
+export const CRM_TEMPORARY_SET = 109367 //  临时额度设置
 export const CRM_MEATE_SAVE = 109311 //  好橙工资料保存
 export const CRM_MEATE_SUBMIT = 109312 //  好橙工资料提交
+export const CRM_CREDIT_LINK = 109321 // 关联企业
+export const CRM_CREDIT_UNLINK = 109322 // 取消关联企业
+
 // 好橙工 推荐奖励发放
 export const CRM_AWARD_SEND = 109309 //  推荐奖励发放
 
@@ -252,6 +256,8 @@ export const CRM_PURCHASE_CO_MANAGER = 109525
 export const CRM_PURCHASE_DETAIL_FILE = 109526
 // 分财审核
 export const CRM_PAYMENT_FINANCE_AUDIT = 109527
+// 上传质押信息
+export const CRM_PAYMENT_CO_ZYINFO = 109529
 
 // 资金逾期
 export const BRANCH_OVERDUE_SUM_EXPORT = 110003
@@ -425,6 +431,7 @@ export const CRM_ADVACE_RECORDS = 118504
 export const CRM_UPLOAD_PREPAY = 118506
 export const CRM_UPSTREAM_BANK = 118507
 export const CRM_OPREATE_APPROVE = 118508
+export const CRM_ADVACE_WRITEOFF = 118509
 
 // 舒适云智能化 -- 设备升级详情
 export const COMFORT_SMART_DEVICE_UPGRADE_DETAIL = 118505
@@ -453,3 +460,7 @@ export const CREDITMANLIST_LINK_AUTHENLIST = 1000007
 export const VIPMANLIST_LINK_AUTHENLIST = 1000008
 // 好橙工VIP申请列表 - 点击企业名称 查看企业管理列表 authenlist
 export const APPLICATIONLIST_LINK_AUTHENLIST = 1000009
+
+/* 线索 */
+export const THREAD_DISTRIBUTOR = 1600001
+export const THREAD_SAVE = 1600002
