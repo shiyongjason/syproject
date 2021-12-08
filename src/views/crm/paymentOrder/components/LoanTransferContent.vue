@@ -398,8 +398,7 @@ export default {
             moreBillAmount: '',
             loanTransfersConfirm: {
                 paymentOrderId: '',
-                remark: '',
-                pledgeNo: ''
+                remark: ''
             },
             openDialogContract: false
         }
@@ -519,7 +518,6 @@ export default {
                 return
             }
             this.loanTransfersConfirm.paymentOrderId = this.paymentOrderId
-            this.loanTransfersConfirm.pledgeNo = this.LoanTransferContent.reviewResolutionResponse.pledgeNo
             await postLoanTransfersConfirm(this.loanTransfersConfirm)
             this.$emit('closeLoanTransferContentVisible')
         },
