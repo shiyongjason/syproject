@@ -385,6 +385,7 @@ import { PrepaymentDetailResponse, PrepaymentSupplierOnlineBankTransferConfirmRe
 import { CRM_ADVACE_UPSTREAMPAY, CRM_ADVACE_APPROVE, CRM_ADVACE_LOOK, CRM_OPREATE_APPROVE, CRM_ADVACE_RECORDS, CRM_UPSTREAM_BANK, CRM_UPLOAD_PREPAY, CRM_ADVACE_WRITEOFF } from '@/utils/auth_const'
 import { newCache } from '@/utils/index'
 import './css/css.scss'
+import { CreateElement } from 'vue'
 
 // 定义类型
 interface Query{
@@ -515,9 +516,18 @@ export default class Advancelist extends Vue {
         { label: '所属分部', prop: 'subsectionName' },
         { label: '经销商', prop: 'distributor' },
         { label: '项目名称', prop: 'projectName', width: '120' },
-        { label: '金额', prop: 'applyAmount', displayAs: 'money' },
+        { label: '金额', prop: 'applyAmount', displayAs: 'money', width: '130' },
         { label: '支付类型', prop: 'paymentType', dicData: paymentTypes },
-        { label: '状态', prop: 'status', dicData: preStatus },
+        { label: '状态',
+            prop: 'status',
+            // dicData: preStatus,
+            render: (h: CreateElement, scope:TableRenderParam): JSX.Element => {
+                if (scope.row.paymentType != 1) {
+                    return (<div>-</div>)
+                } else {
+                    return <div>{preStatus[scope.row.paymentType].label}</div>
+                }
+            } },
         { label: '核销采购单编号', prop: 'purchaseOrderNo' },
         { label: '申请人', prop: 'applyUser' },
         { label: '申请时间', prop: 'applyTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
