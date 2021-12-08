@@ -77,7 +77,7 @@ export default {
     },
     methods: {
         async searchList () {
-            const { data } = await getHolidayList()
+            const { data } = await getHolidayList(this.queryParams)
             this.tableData = data.records
             this.paginationInfo = {
                 pageNumber: data.current,
