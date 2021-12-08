@@ -132,12 +132,12 @@
                     <el-col :span="10" :offset='1'>审核备注：{{detailForm.approvalRemark||'-'}}</el-col>
                 </el-row>
                 <template v-if="detailForm.prepaymentDetails&&detailForm.prepaymentDetails.length>0">
-                    <el-row ype="flex" class="row-bg" v-for="(item,index) in detailForm.prepaymentDetails" :key="index">
+                    <el-row ype="flex" class="row-bg" v-for="(item,index) in detailForm.prepaymentDetails" :key="item.id+index">
                         <el-col :span="10" :offset='1'>预付款支付凭证提交人：{{item.createBy}}({{item.createPhone||'-'}})</el-col>
                         <el-col :span="10" :offset='1'>上传时间：{{ item.createTime | momentFormat }}</el-col>
                         <el-col class="mt10 pay_vouchers" :span="20" :offset='1'>预付款支付凭证：
                             <div class="advance_wrap-flex" v-if="item.payVouchers.length>0">
-                                <div v-for="(v,index) in item.payVouchers" :key="index+v.id">
+                                <div v-for="(v,index) in item.payVouchers" :key="index">
                                     <downloadFileAddToken isPreview isType='preview' :file-url="v.fileUrl" :a-link-words="v.fileName" />
                                 </div>
                             </div>
@@ -164,8 +164,8 @@
                     <el-col :span="10" :offset='1'>支付日期：{{item.payDate}}</el-col>
                     <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">操作人：{{item.createBy}}</el-col>
                     <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">操作时间：{{ item.createTime | momentFormat }}</el-col>
-                    <el-col :span="20" :offset='1' class="credentials">上游支付凭证：
-                        <div>
+                    <el-col :span="20" :offset='1' class="credentials">上游支付凭证123123123：
+                        <div v-if="item.payVouchers&&item.payVouchers.length>0">
                             <!-- 司库返回凭证 showSaasButton区分-->
                             <template v-if="detailForm.showSaasButton">
                                 <a class="color" :href="item.payVouchers[0].fileUrl" target="_blank">查看好享家专用付款凭证</a>
@@ -385,6 +385,7 @@ import { PrepaymentDetailResponse, PrepaymentSupplierOnlineBankTransferConfirmRe
 import { CRM_ADVACE_UPSTREAMPAY, CRM_ADVACE_APPROVE, CRM_ADVACE_LOOK, CRM_OPREATE_APPROVE, CRM_ADVACE_RECORDS, CRM_UPSTREAM_BANK, CRM_UPLOAD_PREPAY, CRM_ADVACE_WRITEOFF } from '@/utils/auth_const'
 import { newCache } from '@/utils/index'
 import './css/css.scss'
+import { CreateElement } from 'vue'
 
 // 定义类型
 interface Query{
@@ -515,9 +516,18 @@ export default class Advancelist extends Vue {
         { label: '所属分部', prop: 'subsectionName' },
         { label: '经销商', prop: 'distributor' },
         { label: '项目名称', prop: 'projectName', width: '120' },
-        { label: '金额', prop: 'applyAmount', displayAs: 'money' },
+        { label: '金额', prop: 'applyAmount', displayAs: 'money', width: '130' },
         { label: '支付类型', prop: 'paymentType', dicData: paymentTypes },
-        { label: '状态', prop: 'status', dicData: preStatus },
+        { label: '状态',
+            prop: 'status',
+            // dicData: preStatus,
+            render: (h: CreateElement, scope:TableRenderParam): JSX.Element => {
+                if (scope.row.paymentType != 1) {
+                    return (<div>-</div>)
+                } else {
+                    return <div>{preStatus[scope.row.paymentType].label}</div>
+                }
+            } },
         { label: '核销采购单编号', prop: 'purchaseOrderNo' },
         { label: '申请人', prop: 'applyUser' },
         { label: '申请时间', prop: 'applyTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
