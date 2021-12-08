@@ -520,14 +520,8 @@ export default class Advancelist extends Vue {
         { label: '支付类型', prop: 'paymentType', dicData: paymentTypes },
         { label: '状态',
             prop: 'status',
-            // dicData: preStatus,
-            render: (h: CreateElement, scope:TableRenderParam): JSX.Element => {
-                if (scope.row.paymentType != 1) {
-                    return (<div>-</div>)
-                } else {
-                    return <div>{preStatus[scope.row.status].label}</div>
-                }
-            } },
+            dicData: preStatus
+        },
         { label: '核销采购单编号', prop: 'purchaseOrderNo' },
         { label: '申请人', prop: 'applyUser' },
         { label: '申请时间', prop: 'applyTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
