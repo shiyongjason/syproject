@@ -525,7 +525,7 @@ export default class Advancelist extends Vue {
                 if (scope.row.paymentType != 1) {
                     return (<div>-</div>)
                 } else {
-                    return <div>{preStatus[scope.row.paymentType].label}</div>
+                    return <div>{preStatus[scope.row.status].label}</div>
                 }
             } },
         { label: '核销采购单编号', prop: 'purchaseOrderNo' },
