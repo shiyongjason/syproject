@@ -114,11 +114,11 @@
                     <div class="info-layout" style="margin-left:50px">
                         <div class="info-layout-item">
                             <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>银行承兑：</font>
-                            <span>{{resolutionDetail.acceptBankRate||'-'}}%</span>
+                            <span>{{Number.isFinite(resolutionDetail.acceptBankRate)?resolutionDetail.transferBankRate:'-'}}%</span>
                         </div>
                         <div class="info-layout-item">
                             <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>银行转账：</font>
-                            <span>{{resolutionDetail.transferBankRate||'-'}}%</span>
+                            <span>{{Number.isFinite(resolutionDetail.transferBankRate)?resolutionDetail.transferBankRate:'-'}}%</span>
                         </div>
                     </div>
                     <div class="info-layout">
