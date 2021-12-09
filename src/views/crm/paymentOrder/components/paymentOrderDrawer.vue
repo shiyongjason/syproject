@@ -467,7 +467,7 @@
                                             <span class="label">{{ paymentLabel(paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }}</span>
                                             {{ paymentOrderDetail.respFundResults.arrearFund.paidTime | momentFormat }}
                                             <template v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === paymentFlagKey.CONFIRM">
-                                                 <h-button table v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.arrearFund.id,FundsDict.repaymentTypeArrays.list[2].key)">
+                                                 <h-button table v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)" @click="openReduleDialog(paymentOrderDetail.respFundResults.arrearFund.id,FundsDict.repaymentTypeArrays.list[2].key)">
                                                     {{ paymentOrderConst.PAYMENT_FLAG.get(paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }}
                                                 </h-button>
                                             </template>
@@ -717,6 +717,13 @@ export default {
                 paymentOrderId: this.paymentOrderDetail.payOrderDetail.id
             }
             this.$emit('openConfirmReceiptDialog', params)
+        },
+        openReduleDialog (id, type) {
+            const params = {
+                id: id,
+                orderId: this.paymentOrderDetail.respFundResults.downpaymentFund.orderId
+            }
+            this.$emit('openReduleDialog', params, type)
         },
         openFundsDialog (id, type) {
             const params = {
