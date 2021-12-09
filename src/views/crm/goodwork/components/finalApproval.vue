@@ -132,11 +132,11 @@
                                 <template v-for="(value, index) in slotProps.data.row.upstreamPayTypeName">
                                     <div :key="index" v-if="value == '银行转账'">{{ value }}
                                         <span v-if="slotProps.data.row.transferRateType == 2">：{{ slotProps.data.row.transferRate }}%</span>
-                                        <span v-else>：{{ Number.isFinite(resolutionDetail.acceptBankRate)?resolutionDetail.acceptBankRate:'-' }}%</span>
+                                        <span v-else>：{{ Number.isFinite(resolutionDetail.transferBankRate)?resolutionDetail.transferBankRate:'-' }}%</span>
                                     </div>
                                     <div :key="index" v-if="value == '银行承兑'">{{ value }}
                                         <span v-if="slotProps.data.row.acceptanceRateType == 2">：{{ slotProps.data.row.acceptanceRate }}%</span>
-                                        <span v-else>：{{Number.isFinite(resolutionDetail.transferBankRate)?resolutionDetail.transferBankRate:'-' }}%</span>
+                                        <span v-else>：{{Number.isFinite(resolutionDetail.acceptBankRate)?resolutionDetail.acceptBankRate:'-' }}%</span>
                                     </div>
                                 </template>
                             </template>
