@@ -58,6 +58,9 @@
                         <el-form-item label="免息方式：">
                             {{paymentDetail.payOrderPoDetail.freeInterestType | attributeComputed(PurchaseOrderDict.freeInterestType.list)}}
                         </el-form-item>
+                        <el-form-item label="付款主体：">
+                            {{ paymentDetail.payOrderPoDetail.paymentMain || '-' }}
+                        </el-form-item>
                     </div>
                     <div class="col-filed">
                         <div class="info-title">上游支付申请信息</div>
@@ -84,6 +87,18 @@
                         </el-form-item>
                         <el-form-item label="上游支付方式：">
                             {{paymentDetail.payOrderDetail.supplierPaymentType==1?'银行转账':'银行承兑'}}：{{paymentDetail.payOrderDetail.serviceFeeRate}}%
+                        </el-form-item>
+                        <el-form-item label="采购折让：">
+                            {{ paymentDetail.payOrderDetail.purchaseDiscountRate }}%
+                        </el-form-item>
+                        <el-form-item label="采购金额(折让后)：">
+                            {{ paymentDetail.payOrderDetail.purchaseDiscountAmount | moneyFormat }}元
+                        </el-form-item>
+                        <el-form-item label="销售毛利率：">
+                            {{ paymentDetail.payOrderDetail.salesGrossMargin }}%
+                        </el-form-item>
+                        <el-form-item label="销售金额：">
+                            {{ paymentDetail.payOrderDetail.salesTotalAmount | moneyFormat }}元
                         </el-form-item>
                         <el-form-item label="票面金额：" v-if="paymentDetail.payOrderDetail.supplierPaymentType != 1">
                             {{paymentDetail.payOrderDetail.billClaim == 1 ? '有要求' : '无要求'}}
@@ -115,7 +130,7 @@
                         </el-form-item>
                     </div>
                     <div class="col-filed">
-                        <el-form-item label="合作方式：" label-width="165px">
+                        <el-form-item label="下游合作方式：" label-width="165px">
                             {{ paymentOrderConst.DEALER_COOPERATION_METHOD.get(paymentDetail.payOrderDetail.dealerCooperationMethod) || '-' }}
                         </el-form-item>
                          <el-form-item label="上游货款方式：" label-width="165px">
@@ -131,8 +146,11 @@
                             <el-form-item label="预计每期服务费：" label-width="165px">
                                 {{ paymentDetail.payOrderDetail.feeAmountPer | moneyFormat }}元
                             </el-form-item>
-                            <el-form-item label="尾款金额：" label-width="165px">
+                            <el-form-item label="剩余货款：" label-width="165px">
                                 {{ paymentDetail.payOrderDetail.arrearAmount | moneyFormat }}元
+                            </el-form-item>
+                            <el-form-item label="毛利总额：" label-width="165px">
+                                {{ paymentDetail.payOrderDetail.salesGrossTotalAmount | moneyFormat }}元
                             </el-form-item>
                         </template>
                         <template v-if="paymentDetail.payOrderDetail.status === paymentOrderStatusKey.FINANCE_AUDIT">

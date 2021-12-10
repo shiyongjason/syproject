@@ -6,7 +6,7 @@
                 <span></span>
                 <div class="tab-layout-title-box">
                     质押与终审决议信息
-                    <h-button table @click="handleOpenDialog" v-if="operateStatus==1">编辑</h-button>
+                    <h-button table @click="handleOpenDialog" v-if="operateStatus==1&&!LoanTransferContent.reviewResolutionResponse.pledgeNo&&hosAuthCheck(Auths.CRM_PAYMENT_ZYINFO)">上传质押信息</h-button>
                 </div>
             </div>
             <div class="info-layout">
@@ -23,7 +23,7 @@
             <div class="info-layout">
                 <div class="info-layout-item">
                     <font style="flex:0 0 110px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>货款支付流程：</font>
-                    <span>{{LoanTransferContent.reviewResolutionResponse.oaStatus==1?'已完结':''}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?' （':''}}{{LoanTransferContent.reviewResolutionResponse.oaNo||'-'}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?'）':''}}</span>
+                    <span>{{jOaStatus}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?' （':''}}{{LoanTransferContent.reviewResolutionResponse.oaNo||''}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?'）':''}}</span>
                 </div>
             </div>
             <!-- 采购合同信息 -->
@@ -199,17 +199,17 @@
             </div>
         </el-dialog>
         <!-- 质押与终审决议信息 dialog -->
-        <el-dialog title="质押与终审决议信息" :close-on-click-modal='false' :visible.sync="openDialog" width="750px" :before-close="()=>onCancel('reviewResolutionForm')" :modal='false'>
+        <el-dialog title="质押信息" :close-on-click-modal='false' :visible.sync="openDialog" width="750px" :before-close="()=>onCancel('reviewResolutionForm')" :modal='false'>
             <div class="dialog-ctx reviewResolution">
                 <el-form id='elform' :model="reviewResolutionForm" :rules="formRules" label-width="180px" label-position='right' ref="reviewResolutionForm">
-                    <div class="reviewResolutionForm-title" style="marginTop:0px">
+                    <!--<div class="reviewResolutionForm-title" style="marginTop:0px">
                         质押信息：
-                    </div>
+                    </div>-->
                     <el-form-item label="中登网质押编号：" prop='pledgeNo' style="marginLeft:-8px">
                         <!-- 长度为50位以内字母或数字。 -->
                         <el-input placeholder="请输入中登网质押编号" v-model="reviewResolutionForm.pledgeNo" maxlength="50"></el-input>
                     </el-form-item>
-                    <div class="reviewResolutionForm-title">
+                    <!--<div class="reviewResolutionForm-title">
                         货款支付流程：
                     </div>
                     <el-form-item label="OA货款支付编号：" prop='oaNo' style="marginLeft:-9px">
@@ -219,13 +219,13 @@
                         <el-select v-model="reviewResolutionForm.oaStatus" placeholder="请选择">
                             <el-option label="已完结" :value="1"></el-option>
                         </el-select>
-                    </el-form-item>
+                    </el-form-item>-->
 
                 </el-form>
             </div>
             <div slot="footer" class="dialog-footer">
                 <h-button @click="()=>onCancel('reviewResolutionForm')">取消</h-button>
-                <h-button type="primary" @click="submitReviewResolutionForm">确定</h-button>
+                <h-button type="primary" @click="submitReviewResolutionForm">提交质押信息</h-button>
             </div>
         </el-dialog>
         <!-- 单次采购明细合同 dialog -->
@@ -331,10 +331,11 @@ import { ccpBaseUrl, ossAliyun, ossOldBucket } from '@/api/config'
 import OssFileUtils from '@/utils/OssFileUtils'
 import downloadFileAddToken from '@/components/downloadFileAddToken'
 import utils from '@/utils/filters'
+import * as Auths from '@/utils/auth_const'
 import { isNum } from '@/utils/validate/format'
 import moment from 'moment'
 // api
-import { postPledgeResolution, getMoreBillAmount, getLoanTransferDoc, postLoanTransferDoc, postBillAmount, postLoanTransfersConfirm, getReviewResolution, postSupplierLoan, getHistoryContract } from '../api/index'
+import { postPledgeResolution, getMoreBillAmount, getLoanTransferDoc, postLoanTransferDoc, postBillAmount, postLoanTransfersConfirm, getReviewResolution, postSupplierLoan, getHistoryContract, postPledgeSave } from '../api/index'
 export default {
     name: 'LoanTransferContent',
     components: { OssFileHosjoyUpload, downloadFileAddToken },
@@ -342,6 +343,7 @@ export default {
     data () {
         return {
             moment,
+            Auths,
             suppDialog: false,
             // 上游支付方式:1-银行转帐;2-银行承兑
             upstreamPaymentMethod: {
@@ -414,6 +416,18 @@ export default {
             }, 0)
             return total
         },
+        jOaStatus () {
+            let _oaStatus = this.LoanTransferContent.reviewResolutionResponse.oaStatus
+            let _showString = ''
+            if (_oaStatus * 1 === 1) {
+                _showString = '已完结'
+            } else if (_oaStatus * 1 === 0) {
+                _showString = '审批中'
+            } else if (_oaStatus * 1 === 2) {
+                _showString = '未通过'
+            }
+            return _showString
+        },
         supplierRules () {
             return {
                 supplierAccountName: [
@@ -471,7 +485,7 @@ export default {
                         trigger: 'blur'
                     }
                 ],
-                oaNo: [
+                /* oaNo: [
                     {
                         required: true,
                         validator: (rule, value, callback) => {
@@ -489,7 +503,7 @@ export default {
                 ],
                 oaStatus: [
                     { required: true, message: '必填项不能为空' }
-                ],
+                ], */
                 reviewResolutionStatus: [
                     { required: true, message: '必填项不能为空' }
                 ]
@@ -697,7 +711,9 @@ export default {
         submitReviewResolutionForm () {
             this.$refs['reviewResolutionForm'].validate(async (valid) => {
                 if (valid) {
-                    await postPledgeResolution(this.reviewResolutionForm)
+                    // await postPledgeResolution(this.reviewResolutionForm)
+                    const { paymentOrderId, pledgeNo } = this.reviewResolutionForm
+                    await postPledgeSave({ paymentOrderId, pledgeNo })
                     this.getDetailAgain()
                     this.openDialog = false
                 } else {

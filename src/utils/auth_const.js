@@ -256,7 +256,10 @@ export const CRM_PURCHASE_CO_MANAGER = 109525
 export const CRM_PURCHASE_DETAIL_FILE = 109526
 // 分财审核
 export const CRM_PAYMENT_FINANCE_AUDIT = 109527
-
+// 上传质押信息
+export const CRM_PAYMENT_CO_ZYINFO = 109529
+// 发放款交接-上传质押信息
+export const CRM_PAYMENT_ZYINFO = 109530
 // 资金逾期
 export const BRANCH_OVERDUE_SUM_EXPORT = 110003
 export const PLATFORM_OVERDUE_SUM_EXPORT = 110004
@@ -429,6 +432,7 @@ export const CRM_ADVACE_RECORDS = 118504
 export const CRM_UPLOAD_PREPAY = 118506
 export const CRM_UPSTREAM_BANK = 118507
 export const CRM_OPREATE_APPROVE = 118508
+export const CRM_ADVACE_WRITEOFF = 118509
 
 // 舒适云智能化 -- 设备升级详情
 export const COMFORT_SMART_DEVICE_UPGRADE_DETAIL = 118505

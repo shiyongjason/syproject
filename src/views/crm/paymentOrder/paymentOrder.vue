@@ -88,6 +88,12 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col__label">付款主体：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.paymentMain" placeholder="请输入" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
                     <h-button type="primary" @click="findPaymentOrderList({...queryParamsUseQuery, pageNumber: 1})">
                         查询
                     </h-button>
@@ -157,13 +163,14 @@
                 </template>
             </basicTable>
         </div>
-        <PaymentOrderDrawer :drawer=drawer @backEvent='paymentOrderBackEvent' @openApproveDialog="openApproveDialog" @openPrevPayDialog="openPrevPayDialog" @openFundsDialog="openFundsDialog" @openConfirmReceiptDialog="openConfirmReceiptDialog" @openLookReceiptDetail="openLookReceiptDetail" @openLookPrevPaymentDialog="openLookPrevPaymentDialog" :row="paymentOrderRow" ref="paymentOrderDrawer"></PaymentOrderDrawer>
+        <PaymentOrderDrawer :drawer=drawer @backEvent='paymentOrderBackEvent' @openApproveDialog="openApproveDialog" @openPrevPayDialog="openPrevPayDialog" @openFundsDialog="openFundsDialog" @openReduleDialog='openReduleDialog' @openConfirmReceiptDialog="openConfirmReceiptDialog" @openLookReceiptDetail="openLookReceiptDetail" @openLookPrevPaymentDialog="openLookPrevPaymentDialog" :row="paymentOrderRow" ref="paymentOrderDrawer"></PaymentOrderDrawer>
         <ApprovePaymentOrder :is-open="approvePaymentVisible" :paymentDetail="paymentDetail" @onClose="approvePaymentVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery"></ApprovePaymentOrder>
         <PrevPaymentDialog :params="paymentParams" :is-open="prevPaymentVisible" @onClose="prevPaymentVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery('prevPaymentVisible')" @onCloseDialogAndQueryDetail="onCloseDialogAndQueryDetail"></PrevPaymentDialog>
         <LookPrevPaymentDialog :params="paymentParams" :is-open="lookPrevPaymentVisible" @onClose="lookPrevPaymentVisible = false"></LookPrevPaymentDialog>
         <ConfirmReceiptDialog :params="paymentParams" :is-open="confirmReceiptVisible" @onClose="confirmReceiptVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery"></ConfirmReceiptDialog>
         <LookReceiptDetail :params="paymentParams" :is-open="lookReceiptVisible" @onClose="lookReceiptVisible = false"></LookReceiptDetail>
         <FundsDialog :detail="fundsDialogDetail" :status="status" :is-open="fundsDialogVisible" @onClose="fundsDialogClose"></FundsDialog>
+        <ReduleDialog :is-open="reduleDialogVisible" ref="reduleDialog" @onClose="fundsDialogClose"></ReduleDialog>
         <!-- 审批记录 -->
         <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='500px' :wrapperClosable="false" :beforeClose="handleClose">
             <FundsDialog :detail="fundsDialogDetail" :status="paymentStatus" :is-open="fundsDialogVisible" @onClose="fundsDialogClose"></FundsDialog>
@@ -214,6 +221,7 @@ import LookPrevPaymentDialog from './components/lookPrevPaymentDialog'
 import ConfirmReceiptDialog from './components/confirmReceiptDialog'
 import LookReceiptDetail from './components/lookReceiptDetail'
 import FundsDialog from '@/views/crm/funds/components/fundsDialog'
+import ReduleDialog from '@/views/crm/funds/components/redulePayDialog'
 import CancelPayment from './components/cancelPayment.vue'
 
 import * as Auths from '@/utils/auth_const'
@@ -235,6 +243,7 @@ export default {
         FundsDialog,
         LoanTransferContent,
         ViewHandoverRecords,
+        ReduleDialog,
         UploadPayDialog,
         CancelPayment
     },
@@ -243,6 +252,7 @@ export default {
             operateStatus: null,
             activeName: 'LoanTransferContent',
             loanTransferContentVisible: false,
+            reduleDialogVisible: false,
             Auths,
             dealerCooperationMethod: [{ key: 1, value: '垫资代采' }, { key: 2, value: '代收代付' }],
             loanTransferStatus: [{ key: 2, value: '已对接' }, { key: 1, value: '待对接' }],
@@ -258,6 +268,7 @@ export default {
                 startApprovalTime: '',
                 endApprovalTime: '',
                 status: '',
+                paymentMain: '', // 付款主体
                 pageSize: 10,
                 pageNumber: 1,
                 'sort.property': null,
@@ -273,6 +284,7 @@ export default {
                 { label: '金额', prop: 'applyAmount', width: '150', align: 'right' },
                 { label: '上游支付进度', prop: 'paymentStatus', width: '150' },
                 { label: '放款交接状态', prop: 'loanTransferStatus', width: '150' },
+                { label: '付款主体', prop: 'paymentMain', width: '200' },
                 { label: '状态', prop: 'status', width: '150' },
                 { label: '合作方式', prop: 'dealerCooperationMethod', width: '150' },
                 { label: '申请人', prop: 'applyName', width: '150' },
@@ -398,6 +410,7 @@ export default {
         },
         fundsDialogClose () {
             this.fundsDialogVisible = false
+            this.reduleDialogVisible = false
             this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
             this.findPaymentOrderList(this.queryParamsUseQuery)
         },
@@ -448,6 +461,10 @@ export default {
             this.fundsDialogVisible = true
             this.fundsDialogDetail = row
             this.status = status
+        },
+        openReduleDialog (row, status) {
+            this.reduleDialogVisible = true
+            this.$refs.reduleDialog.findRemainConfirm(row)
         },
         openConfirmReceiptDialog (params) {
             this.paymentParams = params
