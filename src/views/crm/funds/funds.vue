@@ -28,7 +28,7 @@
                         <el-input v-model="queryParams.companyName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont__col" v-if="queryParams.repaymentTypeArrays==2">
+                <div class="query-cont__col" v-if="queryParams.repaymentTypeArrays!==1">
                     <div class="query-col__label">已支付金额：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.minPaidAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">元</template></el-input>
@@ -36,7 +36,7 @@
                         <el-input v-model="queryParams.maxPaidAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">元</template></el-input>
                     </div>
                 </div>
-                <div class="query-cont__col" v-if="queryParams.repaymentTypeArrays==2">
+                <div class="query-cont__col" v-if="queryParams.repaymentTypeArrays!==1">
                     <div class="query-col__label">支付待确认金额：</div>
                     <div class="query-col__input">
                         <el-input v-model.trim="queryParams.minUnconfirmedAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">元</template></el-input>
@@ -44,8 +44,8 @@
                         <el-input v-model.trim="queryParams.maxUnconfirmedAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">元</template></el-input>
                     </div>
                 </div>
-                <div class="query-cont__col" v-if="queryParams.repaymentTypeArrays==2">
-                    <div class="query-col__label">剩余应支付金额：</div>
+                <div class="query-cont__col" v-if="queryParams.repaymentTypeArrays!==1">
+                    <div class="query-col__label">待支付金额：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.minUnpaidAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">元</template></el-input>
                         -
@@ -121,13 +121,22 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="seePayEnter(scope.data.row)" v-if="hasSeePayEnterAuth(queryParams.repaymentTypeArrays)">查看凭证</h-button>
-                    <h-button table @click="onUploadPay(scope.data.row)" v-if="(scope.data.row.paymentFlag==0||scope.data.row.paymentFlag==3)&&hosAuthCheck(Auths.CRM_FUNDS_DOWN_UPLOAD)&&scope.data.row.unpaidAmount != 0">
+                    <h-button table @click="onUploadPay(scope.data.row)" v-if="(scope.data.row.paymentFlag==0||scope.data.row.paymentFlag==3)&&hosAuthCheck(Auths.CRM_FUNDS_DOWN_UPLOAD)&&scope.data.row.unpaidAmount > 0">
                         上传支付凭证
                     </h-button>
-                    <template v-if="scope.data.row.repaymentType !='2'">
+                    <template v-if="scope.data.row.repaymentType =='1'">
+                        <!-- 服务费(支付待确认金额大于0)才显示支付确认 -->
                         <h-button table @click="onPayEnter(scope.data.row)" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)&&!scope.data.row.payBatch">支付确认</h-button>
                         <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.payBatch&&scope.data.row.paymentFlag==1">
                             批量确认
+                        </h-button>
+                    </template>
+                    <template v-if="scope.data.row.repaymentType =='3'">
+                        <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.showPayBatchConfirm">
+                            批量确认
+                        </h-button>
+                        <h-button table @click="onPayDetail(scope.data.row)" v-if="scope.data.row.showPayConfirm && scope.data.row.unconfirmedAmount > 0">
+                            支付确认
                         </h-button>
                     </template>
                     <template v-if="scope.data.row.repaymentType =='2'">
@@ -144,7 +153,7 @@
             <FundsDialog :is-open="fundsDialogVisible" :detail="fundsDialogDetail" :status="queryParams.repaymentTypeArrays" @onClose="fundsDialogClose"></FundsDialog>
             <UploadDialog ref="uploaddialog" @onBackSearch="findFundsList(queryParams)"></UploadDialog>
             <ReduleDialog :is-open="reduleDialogVisible" ref="reduleDialog" @onClose="fundsDialogClose"></ReduleDialog>
-             <ConfirmReceiptDialog :params="paymentParams" :is-open="confirmReceiptVisible" @onClose="confirmReceiptVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery"></ConfirmReceiptDialog>
+            <ConfirmReceiptDialog :params="paymentParams" :is-open="confirmReceiptVisible" @onClose="confirmReceiptVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery"></ConfirmReceiptDialog>
         </div>
     </div>
 </template>
@@ -248,9 +257,9 @@ export default {
                 { label: '期数', prop: 'feeRepaymentOrder', width: '100', isHidden: this.queryParams.repaymentTypeArrays !== '3' },
                 { label: '金额', prop: 'paymentAmount', width: '150', isHidden: this.queryParams.repaymentTypeArrays == '2' },
                 { label: '剩余货款总金额', prop: 'paymentAmount', formatters: 'moneyShow', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays !== '2' },
-                { label: '已支付金额', prop: 'paidAmount', formatters: 'moneyShow', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays !== '2' },
-                { label: '支付待确认金额', prop: 'unconfirmedAmount', formatters: 'moneyShow', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays !== '2' },
-                { label: '待支付金额', prop: 'unpaidAmount', formatters: 'moneyShow', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays !== '2' },
+                { label: '已支付金额', prop: 'paidAmount', formatters: 'moneyShow', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays == '1' },
+                { label: '支付待确认金额', prop: 'unconfirmedAmount', formatters: 'moneyShow', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays == '1' },
+                { label: '待支付金额', prop: 'unpaidAmount', formatters: 'moneyShow', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays == '1' },
                 { label: '状态', prop: 'paymentFlag', width: '150' },
                 {
                     label: '应支付日期',
@@ -369,16 +378,16 @@ export default {
         },
         onPayDetail (row) {
             console.log('row', row)
-            if (row.repaymentType == 2) {
+            if (row.repaymentType !== 1) {
                 // 剩余货款展示新的支付确认
                 this.reduleDialogVisible = true
-                this.$refs.reduleDialog.findRemainConfirm(row)
+                this.$refs.reduleDialog.findRemainConfirm(row, row.repaymentType)
             }
         },
         seePayEnter (row) {
-            if (row.repaymentType == 2) {
+            if (row.repaymentType !== 1) {
                 this.reduleDialogVisible = true
-                this.$refs.reduleDialog.getFundsTicket(row)
+                this.$refs.reduleDialog.getFundsTicket(row, row.repaymentType)
             } else {
                 this.fundsDialogVisible = true
                 this.fundsDialogDetail = {
