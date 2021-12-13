@@ -424,7 +424,7 @@
                                         </div>
                                         <div class="row-filed-wrap" v-for="(jtem,jindex) in item.fundDetails" :key="jindex">
                                             <div class="row-filed-flex">
-                                               {{index+1}}、 实收：{{jtem.paymentAmount|moneyFormat}} 元
+                                               {{jindex+1}}、 实收：{{jtem.paymentAmount|moneyFormat}} 元
                                             </div>
                                             <div class="row-filed-flex">
                                                 支付成功时间： {{ jtem.paymentConfirmTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}

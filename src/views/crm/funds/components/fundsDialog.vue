@@ -36,7 +36,7 @@ import {
     updateFirstPay,
     updateFirstUnPay,
     updateServicePay,
-    updateServiceUnPay
+    updateRemainPaymentConfirm
 } from '../api'
 import { mapState } from 'vuex'
 import imageAddToken from '@/components/imageAddToken'
@@ -93,7 +93,12 @@ export default {
                 await updateFirstPay(params)
             }
             if (this.status === FundsDict.repaymentTypeArrays.list[1].key) {
-                await updateServicePay(params)
+                await updateRemainPaymentConfirm({
+                    fundDetailId: this.detail.id,
+                    confirmType: 1,
+                    updateBy: JSON.parse(sessionStorage.getItem('userInfo')).employeeName,
+                    updatePhone: JSON.parse(sessionStorage.getItem('userInfo')).phoneNumber
+                })
             }
             if (this.status === FundsDict.repaymentTypeArrays.list[2].key) {
                 await updateFinalPay(params)
@@ -109,7 +114,12 @@ export default {
                 await updateFirstUnPay(params)
             }
             if (this.status === FundsDict.repaymentTypeArrays.list[1].key) {
-                await updateServiceUnPay(params)
+                await updateRemainPaymentConfirm({
+                    fundDetailId: this.detail.id,
+                    confirmType: 2,
+                    updateBy: JSON.parse(sessionStorage.getItem('userInfo')).employeeName,
+                    updatePhone: JSON.parse(sessionStorage.getItem('userInfo')).phoneNumber
+                })
             }
             if (this.status === FundsDict.repaymentTypeArrays.list[2].key) {
                 await updateFinalUnPay(params)
