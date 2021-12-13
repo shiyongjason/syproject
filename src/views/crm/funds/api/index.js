@@ -45,3 +45,5 @@ export const updateRemainPayment = (params) => axios.post('/project/api/fund/bos
 export const findRemainPayConfirm = (params) => axios.get(`/project/api/fund/boss/${params}/remain-payment-confirm-detail`)
 // 剩余货款支付确认
 export const updateRemainPayConfirm = (params) => axios.put(`/project/api/fund/boss/remain-payment/confirm`, params)
+
+export const findFundDetailId = (params) => axios.get(`/project/api/fund/fund-detail/${params}`)

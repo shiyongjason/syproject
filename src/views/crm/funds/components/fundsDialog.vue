@@ -31,7 +31,7 @@
 <script>
 import FundsDict from '../fundsDict'
 import {
-    getFundsTicket,
+    findFundDetailId,
     updateFinalPay, updateFinalUnPay,
     updateFirstPay,
     updateFirstUnPay,
@@ -117,7 +117,8 @@ export default {
             this.$emit('onClose')
         },
         async getFundsTicket () {
-            const { data } = await getFundsTicket(this.detail.id)
+            // const { data } = await getFundsTicket(this.detail.id)
+            const { data } = await findFundDetailId(this.detail.id)
             this.dialogDetail = data
         },
         goDetail (url) {
