@@ -392,7 +392,8 @@ export default {
                 this.fundsDialogVisible = true
                 this.fundsDialogDetail = {
                     _seeing: true,
-                    id: row.id
+                    id: row.id,
+                    type: 'downPay'
                 }
             }
         },

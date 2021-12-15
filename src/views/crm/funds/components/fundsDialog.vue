@@ -36,6 +36,7 @@ import {
     updateFirstPay,
     updateFirstUnPay,
     updateServicePay,
+    getFundsTicket,
     updateRemainPaymentConfirm
 } from '../api'
 import { mapState } from 'vuex'
@@ -126,10 +127,14 @@ export default {
             }
             this.$emit('onClose')
         },
-        async getFundsTicket () {
-            // const { data } = await getFundsTicket(this.detail.id)
-            const { data } = await findFundDetailId(this.detail.id)
-            this.dialogDetail = data
+        async getFundsTicket (val) {
+            if (this.detail.type == 'downPay') {
+                const { data } = await getFundsTicket(this.detail.id)
+                this.dialogDetail = data
+            } else {
+                const { data } = await findFundDetailId(this.detail.id)
+                this.dialogDetail = data
+            }
         },
         goDetail (url) {
             window.open(url)
