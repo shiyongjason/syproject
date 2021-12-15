@@ -108,7 +108,7 @@ export default {
                                     createBy: JSON.parse(sessionStorage.getItem('userInfo')).employeeName
                                 }
                                 await updateRemainPayment(params)
-                                this.$message.success('剩余货款上传成功')
+                                this.$message.success('支付凭证上传成功')
                                 this.$emit('onBackSearch')
                                 this.dialogVisible = false
                             } else {
