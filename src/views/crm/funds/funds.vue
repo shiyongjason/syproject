@@ -371,9 +371,17 @@ export default {
         onPayEnter (row) {
             // 服务费 首付款 支付确认
             this.fundsDialogVisible = true
-            this.fundsDialogDetail = {
-                orderId: row.orderId,
-                id: row.id
+            if (row.repaymentType === 1) {
+                this.fundsDialogDetail = {
+                    orderId: row.orderId,
+                    id: row.id,
+                    type: 'downPay'
+                }
+            } else {
+                this.fundsDialogDetail = {
+                    orderId: row.orderId,
+                    id: row.id
+                }
             }
         },
         onPayDetail (row) {
