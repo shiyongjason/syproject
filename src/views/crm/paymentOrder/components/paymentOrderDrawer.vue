@@ -333,7 +333,7 @@
                                             {{ paymentOrderDetail.respFundResults.downpaymentFund.paidTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}
                                         </template>
                                         <template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === paymentFlagKey.CONFIRM">
-                                            <h-button table class="ml-20" v-if="hosAuthCheck(Auths.CRM_DOWN_PAYMENT_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.downpaymentFund.id,FundsDict.repaymentTypeArrays.list[0].key)">
+                                            <h-button table class="ml-20" v-if="hosAuthCheck(Auths.CRM_DOWN_PAYMENT_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.downpaymentFund,FundsDict.repaymentTypeArrays.list[0].key)">
                                                 {{ paymentOrderConst.PAYMENT_FLAG.get(paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag) }}
                                             </h-button>
                                         </template>
@@ -431,7 +431,7 @@
                                             </div>
                                             <div class="row-filed-flex">
                                                 <template v-if="jtem.paymentFlag === paymentFlagKey.CONFIRM">
-                                                    <h-button table v-if="hosAuthCheck(Auths.CRM_SERVICE_FUND_CONFIRM)" @click="openFundsDialog(jtem.id, FundsDict.repaymentTypeArrays.list[1].key)">
+                                                    <h-button table v-if="hosAuthCheck(Auths.CRM_SERVICE_FUND_CONFIRM)" @click="openFundsDialog(jtem, FundsDict.repaymentTypeArrays.list[1].key,item)">
                                                         {{ paymentOrderConst.PAYMENT_FLAG.get(jtem.paymentFlag) }}
                                                     </h-button>
                                                 </template>
@@ -774,12 +774,28 @@ export default {
             }
             this.$emit('openReduleDialog', params, type)
         },
-        openFundsDialog (id, type) {
-            const params = {
-                id: id,
-                orderId: this.paymentOrderDetail.respFundResults.downpaymentFund.orderId
+        openFundsDialog (val, type, obj) {
+            console.log(val, type, obj)
+            if (obj) {
+                if (val.payBatch) {
+                    // 跳转批量确认页面
+                    this.$router.push({ path: '/goodwork/batchpsubmit', query: { fundId: obj.id } })
+                } else {
+                    const params = {
+                        id: val.id,
+                        orderId: this.paymentOrderDetail.respFundResults.downpaymentFund.orderId,
+                        type: 'downPay'
+                    }
+                    this.$emit('openFundsDialog', params, type)
+                }
+            } else {
+                const params = {
+                    id: val.id,
+                    orderId: this.paymentOrderDetail.respFundResults.downpaymentFund.orderId
+                }
+                this.$emit('openFundsDialog', params, type)
             }
-            this.$emit('openFundsDialog', params, type)
+            return false
         },
         async tableOpenFundsDialog (id, status) {
             const { data } = await getPaymentOrderDetail(id)
