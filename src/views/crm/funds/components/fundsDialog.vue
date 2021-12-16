@@ -128,7 +128,8 @@ export default {
             this.$emit('onClose')
         },
         async getFundsTicket (val) {
-            if (this.detail.type == 'downPay') {
+            // type为downPay判断是否从服务费或者剩余货款来的
+            if (this.detail.type !== 'downPay') {
                 const { data } = await getFundsTicket(this.detail.id)
                 this.dialogDetail = data
             } else {
