@@ -2,7 +2,7 @@
     <div>
         <el-dialog title="上传支付凭证" :visible.sync="dialogVisible" width="45%" :before-close="handleClose">
             <div class="uploadpay">
-                <template v-if="repaymentType == 2">
+                <template v-if="repaymentType !== 1">
                     <p>剩余应支付金额：{{unpaidAmount|moneyFormat}} 元</p>
                     <el-form :model="uploadpayForm" :rules="rules" ref="uploadpayForm" label-width="130px">
                         <el-form-item label="本次支付金额：" prop="paidAmount">
@@ -96,7 +96,7 @@ export default {
         async onSavePay () {
             if (this.type == 2) {
                 // 如果是剩余货款 先进行本次金额校验
-                if (this.repaymentType == 2) {
+                if (this.repaymentType !== 1) {
                     this.$refs.uploadpayForm.validate(async valid => {
                         if (valid) {
                             if (this.attachDocs.length > 0) {
@@ -108,7 +108,7 @@ export default {
                                     createBy: JSON.parse(sessionStorage.getItem('userInfo')).employeeName
                                 }
                                 await updateRemainPayment(params)
-                                this.$message.success('剩余货款上传成功')
+                                this.$message.success('支付凭证上传成功')
                                 this.$emit('onBackSearch')
                                 this.dialogVisible = false
                             } else {
