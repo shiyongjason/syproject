@@ -134,6 +134,7 @@ export default {
                 this.dialogDetail = data
             } else {
                 const { data } = await findFundDetailId(this.detail.id)
+                data.attachDocList = data.attachDocResponseList
                 this.dialogDetail = data
             }
         },
