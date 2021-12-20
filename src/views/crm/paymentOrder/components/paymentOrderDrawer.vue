@@ -564,7 +564,7 @@
                 </div>
             </template>
         </h-drawer>
-        <el-dialog title="修改" :visible.sync="updateRowVisible" width="450px" :before-close="()=> updateRowClose()" class="update-row">
+        <el-dialog title="修改" :visible.sync="updateRowVisible" :close-on-click-modal="false" width="450px" :before-close="()=> updateRowClose()" class="update-row">
             <el-form label-width="150px" :model="updateForm" :rules="rules" ref="form">
                 <el-form-item :label="updateRowLabel" prop="amount" v-if="showAmount">
                     <el-input v-model="updateForm.amount" v-isNegative="updateForm.amount" maxlength="20"></el-input>
