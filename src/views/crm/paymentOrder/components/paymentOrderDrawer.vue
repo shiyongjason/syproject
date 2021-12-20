@@ -430,11 +430,13 @@
                                                 支付成功时间： {{ jtem.paymentConfirmTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}
                                             </div>
                                             <div class="row-filed-flex">
+
                                                 <template v-if="jtem.paymentFlag === paymentFlagKey.CONFIRM">
                                                     <h-button table v-if="hosAuthCheck(Auths.CRM_SERVICE_FUND_CONFIRM)" @click="openFundsDialog(jtem, FundsDict.repaymentTypeArrays.list[1].key,item)">
                                                         {{ paymentOrderConst.PAYMENT_FLAG.get(jtem.paymentFlag) }}
                                                     </h-button>
                                                 </template>
+                                                <template v-else><span class="info-status">{{ paymentOrderConst.PAYMENT_FLAG.get(item.paymentFlag) }}</span></template>
                                             </div>
                                         </div>
                                     </div>
