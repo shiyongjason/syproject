@@ -569,7 +569,7 @@
         <el-dialog title="修改" :visible.sync="updateRowVisible" :close-on-click-modal="false" width="450px" :before-close="()=> updateRowClose()" class="update-row">
             <el-form label-width="150px" :model="updateForm" :rules="rules" ref="form">
                 <el-form-item :label="updateRowLabel" prop="amount" v-if="showAmount">
-                    <el-input v-model="updateForm.amount" v-isNegative="updateForm.amount" maxlength="20"></el-input>
+                    <el-input v-model="updateForm.amount" v-isNegative="updateForm.amount" maxlength="18"></el-input>
                 </el-form-item>
                 <el-form-item label="应支付时间：" prop="time">
                     <el-date-picker v-model="updateForm.time" value-format="yyyy-MM-dd" type="date" placeholder="选择日期时间">
