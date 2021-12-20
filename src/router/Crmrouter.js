@@ -767,6 +767,18 @@ export default [
                 component: () => import('@/views/crm/advancePayment/index.vue')
             },
             {
+                path: 'unionpayAccountList',
+                name: 'unionpayAccountList',
+                meta: {
+                    title: '银联直联入账清单',
+                    tagName: '银联直联入账清单',
+                    parentName: '银联直联入账清单',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/unionpayAccountList/index.vue')
+            },
+            {
                 path: 'quotamonitor',
                 name: 'quotamonitor',
                 meta: {

@@ -305,7 +305,7 @@ export const HOLIDAY_EDIT = 800082
 
 // 上游支付
 
-export const UPSTREAM_PAY_DETAIL = 500001// 详情
+export const UPSTREAM_PAY_DETAIL = 500001 // 详情
 // 确认信息 资金部审核
 export const UPSTREAM_PAY_CONFIRM_EX = 500002
 // 确认信息 资金部放款
@@ -433,6 +433,7 @@ export const CRM_UPLOAD_PREPAY = 118506
 export const CRM_UPSTREAM_BANK = 118507
 export const CRM_OPREATE_APPROVE = 118508
 export const CRM_ADVACE_WRITEOFF = 118509
+export const CRM_SUBMIT_PAY = 118510
 
 // 舒适云智能化 -- 设备升级详情
 export const COMFORT_SMART_DEVICE_UPGRADE_DETAIL = 118505
