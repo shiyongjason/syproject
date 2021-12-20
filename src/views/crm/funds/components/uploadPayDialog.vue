@@ -50,7 +50,7 @@ export default {
             type: 2, // 1 = 支付单 2 = 账单
             rules: {
                 paidAmount: [
-                    { required: true, message: '请输入本次支付金额', trigger: 'blur' }
+                    { required: true, validator: this.validatorPaidAmount, trigger: 'blur' }
                 ]
             },
             uploadpayForm: { paidAmount: '' }
@@ -78,6 +78,18 @@ export default {
             this.$nextTick(() => {
                 this.$refs.uploadpayForm && this.$refs.uploadpayForm.clearValidate()
             })
+        },
+        // 校验本次金额不能输入0
+        validatorPaidAmount (rule, value, callback) {
+            if (!value) {
+                return callback(new Error('请输入本次支付金额'))
+            } else {
+                if (value == 0) {
+                    return callback(new Error('请输入本次支付金额'))
+                } else {
+                    callback()
+                }
+            }
         },
         handleClose () {
             this.dialogVisible = false
