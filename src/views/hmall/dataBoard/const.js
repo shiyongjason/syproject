@@ -17,7 +17,8 @@ export const transactionInfoTableLabel = [
     { label: '下单时间', prop: 'createTime', formatters: 'dateTime' },
     { label: '支付时间', prop: 'payTime', formatters: 'dateTime' },
     { label: '订单状态', prop: 'childOrderStatusDescribe' },
-    { label: '支付方式', prop: 'payWayDescribe' }
+    { label: '支付方式', prop: 'payWayDescribe' },
+    { label: '售后单号', prop: 'refundOrderNo' }
 ]
 
 // 会员注册明细table
@@ -49,3 +50,9 @@ export const biGoodDetailTableLabel = function (isHidden) {
         { label: '购买次数', prop: 'orderNum' }
     ]
 }
+
+export const CHILD_ORDER_TYPE = [
+    { label: '全部', value: '' },
+    { label: '常规', value: 1 },
+    { label: '售后', value: 2 }
+]
