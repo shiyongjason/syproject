@@ -394,10 +394,10 @@
                                         <div class="row-filed-wrap">
                                             <div class="row-filed-flex">
                                                 <span class="label">第{{ index + 1 }}期服务费：</span>
-                                                  <span class="label"> 预计应收：</span>{{item.receivableAmount|moneyFormat}}元
+                                                <span class="label"> 预计应收：</span>{{item.receivableAmount|moneyFormat}}元
                                             </div>
                                             <div class="row-filed-flex">
-                                               <span class="label"> 实际应收：</span>{{item.paymentAmount|moneyFormat}}元
+                                                <span class="label"> 实际应收：</span>{{item.paymentAmount|moneyFormat}}元
                                                 <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
                                                     <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow(`第${index + 1}期服务费`, item)" v-if="canUpdatePaymentInfo(item.paymentFlag)" class="info-img-edit">
                                                 </template>
@@ -424,13 +424,19 @@
                                         </div>
                                         <div class="row-filed-wrap" v-for="(jtem,jindex) in item.fundDetails" :key="jindex">
                                             <div class="row-filed-flex">
-                                               {{jindex+1}}、 实收：{{jtem.paymentAmount|moneyFormat}} 元
+                                                {{jindex+1}}、 实收：{{jtem.paymentAmount|moneyFormat}} 元
                                             </div>
                                             <div class="row-filed-flex">
-                                                支付成功时间： {{ jtem.paymentConfirmTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}
-                                            </div>
-                                            <div class="row-filed-flex">
+                                                <span class="label">{{ paymentLabel(jtem.paymentFlag) }}</span>
+                                                <template v-if="jtem.paymentFlag ===2">
+                                                    {{ jtem.paymentConfirmTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}
+                                                </template>
+                                                <template v-else>
+                                                    {{ jtem.createTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}
+                                                </template>
 
+                                            </div>
+                                            <div class="row-filed-flex">
                                                 <template v-if="jtem.paymentFlag === paymentFlagKey.CONFIRM">
                                                     <h-button table v-if="hosAuthCheck(Auths.CRM_SERVICE_FUND_CONFIRM)" @click="openFundsDialog(jtem, FundsDict.repaymentTypeArrays.list[1].key,item)">
                                                         {{ paymentOrderConst.PAYMENT_FLAG.get(jtem.paymentFlag) }}
