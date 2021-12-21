@@ -442,7 +442,7 @@
                                                         {{ paymentOrderConst.PAYMENT_FLAG.get(jtem.paymentFlag) }}
                                                     </h-button>
                                                 </template>
-                                                <template v-else><span class="info-status">{{ paymentOrderConst.PAYMENT_FLAG.get(item.paymentFlag) }}</span></template>
+                                                <template v-else><span class="info-status">{{ paymentOrderConst.PAYMENT_FLAG.get(jtem.paymentFlag) }}</span></template>
                                             </div>
                                         </div>
                                     </div>
