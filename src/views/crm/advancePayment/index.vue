@@ -231,9 +231,12 @@
                         <el-col class="col-padding" :span="23" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>备注信息：{{detailForm.applyRemark||'-'}}</el-col>
                         <el-col class="col-padding disFlex" :span="23" :offset='1'>附件：
-                            <span class="img-box" :key="item.fileUrl" v-for="item in detailForm.attachDocList" @click="goDetail(item.fileUrl)">
-                                <img :src="item.fileUrl" alt="">
-                            </span>
+                            <div v-if="detailForm.attachDocList && detailForm.attachDocList.length>0">
+                                <span class="img-box" :key="item.fileUrl" v-for="item in detailForm.attachDocList" @click="goDetail(item.fileUrl)">
+                                    <img :src="item.fileUrl" alt="">
+                                </span>
+                            </div>
+                            <div v-else>-</div>
                         </el-col>
                     </el-row>
                 </div>
