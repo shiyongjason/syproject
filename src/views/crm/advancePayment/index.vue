@@ -112,14 +112,14 @@
                     <el-col :span="10" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate||'-'}}</el-col>
                     <el-col :span="10" :offset='1'>备注：{{detailForm.applyRemark||'-'}}</el-col>
                 </el-row>
-                <el-row type="flex" class="row-bg" v-for="(item,index) in detailForm.prepaymentDetails" :key="item.id+index">
+                <el-row type="flex" class="row-bg">
                     <el-col class="pay_vouchers mtNone" :span="20" :offset='1'>附件：
-                        <div class="advance_wrap-flex" v-if="item.payVouchers.length>0">
-                            <div v-for="(v,index) in item.payVouchers" :key="index">
-                                <downloadFileAddToken isPreview isType='preview' :file-url="v.fileUrl" :a-link-words="v.fileName" />
-                            </div>
+                        <div class="disFlex" v-if="detailForm.attachDocList && detailForm.attachDocList.length>0">
+                            <span class="img-box" :key="item.fileUrl" v-for="item in detailForm.attachDocList" @click="goDetail(item.fileUrl)">
+                                <img :src="item.fileUrl" alt="">
+                            </span>
                         </div>
-                        <span v-if="item.payVouchers&&item.payVouchers.length==0">
+                        <span v-if="detailForm.attachDocList && detailForm.attachDocList.length==0">
                             -
                         </span>
                     </el-col>
@@ -230,8 +230,10 @@
                         <el-col class="col-padding" :span="23" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>备注信息：{{detailForm.applyRemark||'-'}}</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>附件：
-                            <!-- <span v-for="(v) in item.payVouchers" :key="v.id"><downloadFileAddToken isPreview :file-name="v.fileName" :file-url="v.fileUrl" :a-link-words="v.fileName" is-type="main" /></span> -->
+                        <el-col class="col-padding disFlex" :span="23" :offset='1'>附件：
+                            <span class="img-box" :key="item.fileUrl" v-for="item in detailForm.attachDocList" @click="goDetail(item.fileUrl)">
+                                <img :src="item.fileUrl" alt="">
+                            </span>
                         </el-col>
                     </el-row>
                 </div>
@@ -618,6 +620,9 @@ export default class Advancelist extends Vue {
     }
     public onEndChange (val): void {
         this.queryParams.applyTimeEnd = val
+    }
+    public goDetail (url) {
+        window.open(url)
     }
 
     public async getList () {

@@ -52,6 +52,27 @@
 		}
 	}
 }
+.disFlex {
+	display: flex;
+	flex-wrap: wrap;
+	.img-box {
+		display: flex;
+		width: 80px;
+		height: 80px;
+		margin-bottom: 12px;
+		margin-right: 12px;
+		cursor: pointer;
+		border: 1px solid #e5e5e5;
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+		img {
+			display: block;
+			margin: auto;
+			max-height: 78px;
+			max-width: 78px;
+		}
+	}
+}
 .advance_examine {
 	h3 {
 		color: #ff7a45;

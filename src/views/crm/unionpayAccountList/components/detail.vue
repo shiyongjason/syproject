@@ -11,7 +11,7 @@
             <div class="unionpayDetail-ctx" :style="radio=='跟进记录'?'bottom:0':'bottom:60px'" >
                 <div v-if="radio=='入账信息'">
                     <div class="info-title">认领信息：</div>
-                    <div class="info-p padLeft20">认领状态：{{ enterAccount.receiptName }}（400000.00元/600000.00元）<h-button @click="onClaimStatus" table>{{ enterAccount.receiptResponseLis.length > 0 ? '继续认领' : '去认领' }}</h-button></div>
+                    <div class="info-p padLeft20">认领状态：{{ enterAccount.receiptName }}（{{ enterAccount.receiptAmount | moneyFormat }}元/{{ enterAccount.totalAmount | moneyFormat }}元）<h-button @click="onClaimStatus" table>{{ enterAccount.receiptResponseLis.length > 0 ? '继续认领' : '去认领' }}</h-button></div>
                     <div v-show="enterAccount && enterAccount.receiptResponseList.length" class="unionpay-content" v-for="(item, index) in enterAccount.receiptResponseList" :key="index">
                         <div class="index">{{ index + 1 }}，</div>
                         <div class="content">
