@@ -49,3 +49,7 @@ export const updateRemainPayConfirm = (params) => axios.put(`/project/api/fund/b
 export const findFundDetailId = (params) => axios.get(`/project/api/fund/fund-detail/${params}`)
 // 新的服务费支付确认
 export const updateRemainPaymentConfirm = (params) => axios.put(`/project/api/fund/boss/remain-payment/confirm`, params)
+//  预付款列表
+export const findPrePaymentList = (params) => axios.get(`/project/api/fund/prepayment-funds`, { params })
+// 预付款总金额
+export const findPrePaymentAmount = (params) => axios.get('/project/api/fund/prepayment-fund-amount', { params })

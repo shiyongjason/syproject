@@ -12,6 +12,10 @@
                         </el-form-item>
                     </el-form>
                 </template>
+                <template v-else>
+                    <p>本次支付金额：{{unpaidAmount|moneyFormat}} 元</p>
+                    <p>应支付金额：{{payMoney|moneyFormat}} 元</p>
+                </template>
                 <p class="uploadpay_second"><i>*</i>支付凭证：<span class="uploadpay_third">（请上传JPG/PNG/JPEG等主流图片格式，最多上传9张，单张大小不得超过20M）</span></p>
                 <HosJoyUpload v-model="attachDocs" :showPreView=true :fileSize=20 :action='action' :fileNum='9' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb()}" accept='.jpg,.png,jpeg'>
                 </HosJoyUpload>
@@ -58,9 +62,11 @@ export default {
     },
     methods: {
         async onDialogClick (val, source, fundMoney) {
+            console.log(val, source, fundMoney)
             this.attachDocs = []
             this.unpaidAmount = 0
             const { data } = await getBnumber({ companyId: val.companyId })
+            console.log(data)
             this.unpaidAmount = val.unpaidAmount || 0
             if (val.unpaidAmount == 0) {
                 this.isZero = true
@@ -149,11 +155,11 @@ export default {
                     return
                 }
                 const params = {
-                    paymentOrderId: this.fundId,
+                    fundId: this.fundId,
                     attachDocs: this.attachDocs,
                     companyId: this.companyId
                 }
-                await payOrderVoucher(params)
+                await payVoucher(params)
                 this.$message.success('上传成功')
                 this.$emit('onBackSearch')
                 this.dialogVisible = false

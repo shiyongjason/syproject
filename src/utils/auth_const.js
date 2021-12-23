@@ -240,6 +240,9 @@ export const CRM_FUNDS_DOWN_PAYMENT_FUND_CONFIRM = 109515 // 首付款账单-支
 export const CRM_FUNDS_DOWN_PAYMENT_FUND_SEE = 109516 // 首付款账单-查看凭证
 export const CRM_FUNDS_SERVICE_FUND_CONFIRM = 109517 // 服务费账单-支付确认
 export const CRM_FUNDS_SERVICE_FUND_SEE = 109518 // 服务费账单-查看凭证
+export const CRM_FUNDS_CHARGE_FUND_SEE = 109580 // 预付款-查看凭证
+export const CRM_FUNDS_CHARGE_FUND_CONFIRM = 109581 // 预付款-支付确认
+
 export const CRM_FUNDS_ARREAR_FUND_CONFIRM = 109519 // 尾款账单-支付确认
 export const CRM_FUNDS_ARREAR_FUND_SEE = 109520 // 尾款账单-查看凭证
 export const CRM_FUNDS_DOWN_UPLOAD = 1096001 // 首付款上传
