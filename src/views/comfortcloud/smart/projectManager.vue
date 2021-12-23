@@ -47,7 +47,7 @@
                 </div>
             </div>
         </div>
-        <el-dialog id='el-dialog' :title="form.id?'项目编辑':'新建项目'" :visible.sync="addProject" :before-close="cancelDialog" width="920px" :close-on-click-modal="false">
+        <el-dialog id='el-dialog' :title="form.id?'项目编辑':'新建项目'" :visible.sync="addProject" :before-close="cancelDialog" width="1000px" :close-on-click-modal="false">
             <el-form ref="form" :model="form" :rules="rules" label-width="130px" label-position="right">
                 <el-form-item label="项目名称：" prop="projectName">
                     <el-input v-model.trim="form.projectName" show-word-limit placeholder="请输入项目全称" maxlength='50' style="width:356px"></el-input>
@@ -98,16 +98,205 @@
                     <el-input v-model.trim="form.username" show-word-limit placeholder="请输入管理员手机号" :disabled="form.id&&form.id.length>0" maxlength='11'></el-input>
                 </el-form-item>
                 <el-form-item label="项目类型：" prop="projectType">
-                    <el-checkbox-group v-model="form.projectType">
-                        <el-checkbox v-for="[key, value] of projectTypeOptions" :key="key" :label="key">
+                    <el-row>
+                        <el-col :span="4">
+                            <el-checkbox label="空调集控系统" @change="onChangeShowAirConditioning"></el-checkbox>
+                        </el-col>
+                        <el-col :span="20" v-if="isShowAirConditioning">
+                            <el-checkbox-group v-model="airConditioningOption">
+                                <el-col :span="4">
+                                    <el-checkbox value="氟机空调" :label="1">氟机空调</el-checkbox>
+                                </el-col>
+                                <el-col :span="4">
+                                    <el-checkbox value="水机空调" :label="2">水机空调</el-checkbox>
+                                </el-col>
+                                <el-col :span="4">
+                                    <el-checkbox value="分体空调" :label="12">分体空调</el-checkbox>
+                                </el-col>
+                            </el-checkbox-group>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="4">
+                            <el-checkbox label="照明集控系统" @change="onChangeShowLighting"></el-checkbox>
+                        </el-col>
+                        <el-col :span="20" v-if="isShowLighting">
+                            <el-checkbox-group v-model="lightingOption">
+                                <el-col :span="4">
+                                    <el-checkbox value="调光面板" :label="14">调光面板</el-checkbox>
+                                </el-col>
+                                <el-col :span="4">
+                                    <el-checkbox value="普通开关" :label="13">普通开关</el-checkbox>
+                                </el-col>
+                            </el-checkbox-group>
+                        </el-col>
+                    </el-row>
+                    <el-checkbox-group v-model="socketOption">
+                        <el-checkbox value="插座集控系统" :label="16">插座集控系统</el-checkbox>
+                    </el-checkbox-group>
+                    <el-row>
+                        <el-col :span="4">
+                            <el-checkbox label="窗帘集控系统" @change="onChangeShowCurtain"></el-checkbox>
+                        </el-col>
+                        <el-col :span="20" v-if="isShowCurtain">
+                            <el-radio-group v-model="curtainRadioOption">
+                                <el-col :span="4">
+                                    <el-radio :label="15" value="电机">电机</el-radio>
+                                    <el-radio :label="19" value="面板">面板</el-radio>
+                                </el-col>
+                            </el-radio-group>
+                        </el-col>
+                    </el-row>
+                    <el-checkbox-group v-model="environmentOption">
+                        <el-checkbox value="环境监测系统" :label="17">环境监测系统</el-checkbox>
+                    </el-checkbox-group>
+                    <el-checkbox-group v-model="doorlockOption">
+                        <el-checkbox value="门禁系统" :label="18">门禁系统</el-checkbox>
+                    </el-checkbox-group>
+                    <el-row>
+                        <el-col :span="4">
+                            <el-checkbox label="能耗分析系统" @change="onChangeShowEnergy"></el-checkbox>
+                        </el-col>
+                        <el-col :span="20" v-if="isShowEnergy">
+                            <el-row>
+                                <el-checkbox label="空调计费" @change="onChangeShowAirEnergy"></el-checkbox>
+                                <el-row v-if="isShowAirEnergy">
+                                    <el-col :span="5" class="pl30">
+                                        <el-checkbox label="水机" @change="onChangeShowWaterAir"></el-checkbox>
+                                    </el-col>
+                                    <el-col :span="19" v-if="isShowWaterAir">
+                                        <el-radio-group v-model="waterAirRadioOption">
+                                            <el-col :span="5">
+                                                <el-radio :label="101" value="热量表">热量表</el-radio>
+                                            </el-col>
+                                            <el-col :span="5">
+                                                <el-radio :label="102" value="时间型">时间型</el-radio>
+                                            </el-col>
+                                            <el-col :span="5">
+                                                <el-radio :label="103" value="智能电表">智能电表</el-radio>
+                                            </el-col>
+                                            <el-col :span="5">
+                                                <el-radio :label="104" value="智能空开">智能空开</el-radio>
+                                            </el-col>
+                                        </el-radio-group>
+                                    </el-col>
+                                </el-row>
+                                <el-row v-if="isShowAirEnergy">
+                                    <el-col :span="5" class="pl30">
+                                        <el-checkbox label="氟机" @change="onChangeShowFluorineAir"></el-checkbox>
+                                    </el-col>
+                                    <el-col :span="19" v-if="isShowFluorineAir">
+                                        <el-radio-group v-model="fluorineAirRadioOption">
+                                            <el-col :span="5">
+                                                <el-radio :label="112" value="时间型">时间型</el-radio>
+                                            </el-col>
+                                            <el-col :span="5">
+                                                <el-radio :label="113" value="智能电表">智能电表</el-radio>
+                                            </el-col>
+                                            <el-col :span="5">
+                                                <el-radio :label="114" value="智能空开">智能空开</el-radio>
+                                            </el-col>
+                                        </el-radio-group>
+                                    </el-col>
+                                </el-row>
+                                <el-row v-if="isShowAirEnergy">
+                                    <el-col :span="5" class="pl30">
+                                        <el-checkbox label="分体空调" @change="onChangeShowFtAir"></el-checkbox>
+                                    </el-col>
+                                    <el-col :span="19" v-if="isShowFtAir">
+                                        <el-radio-group v-model="ftAirRadioOption">
+                                            <el-col :span="5">
+                                                <el-radio :label="120" value="分体空调计费">分体空调计费</el-radio>
+                                            </el-col>
+                                        </el-radio-group>
+                                    </el-col>
+                                </el-row>
+                            </el-row>
+                            <el-row>
+                                <el-checkbox label="能耗" @change="onChangeShowOtherEnergy"></el-checkbox>
+                                <el-row v-if="isShowOtherEnergy">
+                                    <el-col :span="24" class="pl30">
+                                        <el-checkbox-group v-model="energyOption">
+                                            <el-col :span="4">
+                                                <el-checkbox :label="4" value="智能电表">智能电表</el-checkbox>
+                                            </el-col>
+                                            <el-col :span="4">
+                                                <el-checkbox :label="3" value="智能空开">智能空开</el-checkbox>
+                                            </el-col>
+                                            <el-col :span="4">
+                                                <el-checkbox :label="5" value="热量表">热量表</el-checkbox>
+                                            </el-col>
+                                            <el-col :span="4">
+                                                <el-checkbox :label="6" value="时间型">时间型</el-checkbox>
+                                            </el-col>
+                                            <el-col :span="4">
+                                                <el-checkbox :label="7" value="分体空调">分体空调</el-checkbox>
+                                            </el-col>
+                                        </el-checkbox-group>
+                                    </el-col>
+                                </el-row>
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="4">
+                            <el-checkbox label="安防系统" @change="onChangeShowSecurity"></el-checkbox>
+                        </el-col>
+                        <el-col :span="20" v-if="isShowSecurity">
+                            <el-checkbox-group v-model="securityOption">
+                                <el-col :span="6">
+                                    <el-checkbox :label="20" value="人体存在传感器">人体存在传感器</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-checkbox :label="21" value="人体移动传感器">人体移动传感器</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-checkbox :label="22" value="水浸监测">水浸监测</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-checkbox :label="23" value="烟雾监测">烟雾监测</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-checkbox :label="24" value="可燃气体监测">可燃气体监测</el-checkbox>
+                                </el-col>
+                            </el-checkbox-group>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="4">
+                            <el-checkbox label="场景管理" @change="onChangeShowScene"></el-checkbox>
+                        </el-col>
+                        <el-col :span="20" v-if="isShowScene">
+                            <el-radio-group v-model="scenePanelRadioOption" @change="onChaneShowScenePanel">
+                                <el-row>
+                                    <el-radio :label="30" value="场景列表">场景列表</el-radio>
+                                </el-row>
+                                <el-row>
+                                    <el-col :span="6">
+                                        <el-radio label="场景面板(含列表)">场景面板(含列表)</el-radio>
+                                    </el-col>
+                                    <el-col :span="18" v-if="isShowScenePanel">
+                                        <el-checkbox-group v-model="scenePanelOption">
+                                            <el-col :span="4">
+                                                <el-checkbox :label="31" value="四键">四键</el-checkbox>
+                                            </el-col>
+                                            <el-col :span="4">
+                                                <el-checkbox :label="32" value="六键">六键</el-checkbox>
+                                            </el-col>
+                                        </el-checkbox-group>
+                                    </el-col>
+                                </el-row>
+                            </el-radio-group>
+                        </el-col>
+                    </el-row>
+                    <!-- <el-checkbox v-for="[key, value] of projectTypeOptions" :key="key" :label="key">
                             {{value}}
                             <el-form-item prop="feeType" v-if="showFeeType && key === projectTypeKey.BILLING_SYSTEM" class="inline-form-item">
                                 <el-radio-group v-model="form.feeType">
                                     <el-radio v-for="[key, value] of feeTypeOptions" :key="key" :label="key" @click="onRadioClick">{{value}}</el-radio>
                                 </el-radio-group>
                             </el-form-item>
-                        </el-checkbox>
-                    </el-checkbox-group>
+                        </el-checkbox> -->
                 </el-form-item>
                 <el-form-item label="项目包含设备：" prop="deviceTypes">
                     <el-button type="primary" @click="addDeviceTypes">新增</el-button>
@@ -152,7 +341,8 @@ import { iotUrl, interfaceUrl } from '@/api/config'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { createControlProject, editControlProject } from '../api/index'
 import { getChiness } from '../../hmall/membership/api'
-import { PROJECT_TYPE_KEY, PROJECT_TYPE_OPTIONS, FEE_TYPE_OPTIONS } from './const.js'
+import * as consts from './const.js'
+import { isNumber } from 'highcharts'
 
 const _form = {
     projectName: '',
@@ -177,7 +367,7 @@ const _queryParams = {
     createTimeStart: null,
     createTimeEnd: null,
     companyName: null,
-    projectName: null,
+    projectName: '许',
     adminName: null,
     username: null,
     pageNumber: 1,
@@ -186,11 +376,11 @@ const _queryParams = {
 export default {
     name: 'projectManager',
     watch: {
-        'form.projectType' (val) {
-            if (!val.includes(PROJECT_TYPE_KEY.BILLING_SYSTEM)) {
-                this.form.feeType = ''
-            }
-        }
+        // 'form.projectType' (val) {
+        //     if (!val.includes(consts.PROJECT_TYPE_KEY.BILLING_SYSTEM)) {
+        //         this.form.feeType = ''
+        //     }
+        // }
     },
     data () {
         const checkDeviceTypeRule = (rule, value, callback) => {
@@ -280,9 +470,32 @@ export default {
                 ]
             },
             loading: false,
-            projectTypeOptions: PROJECT_TYPE_OPTIONS,
-            feeTypeOptions: FEE_TYPE_OPTIONS,
-            projectTypeKey: PROJECT_TYPE_KEY
+            projectTypeOptions: consts.PROJECT_TYPE_OPTIONS,
+            isShowAirConditioning: false,
+            airConditioningOption: [],
+            isShowLighting: false,
+            lightingOption: [],
+            socketOption: [],
+            isShowCurtain: false,
+            curtainRadioOption: '',
+            environmentOption: [],
+            doorlockOption: [],
+            isShowEnergy: false,
+            isShowAirEnergy: false,
+            isShowWaterAir: false,
+            isShowFluorineAir: false,
+            isShowFtAir: false,
+            waterAirRadioOption: '',
+            fluorineAirRadioOption: '',
+            ftAirRadioOption: '',
+            isShowOtherEnergy: false,
+            energyOption: [],
+            isShowSecurity: false,
+            securityOption: [],
+            isShowScene: false,
+            isShowScenePanel: false,
+            scenePanelRadioOption: '',
+            scenePanelOption: []
         }
     },
     computed: {
@@ -336,9 +549,9 @@ export default {
             }
             return []
         },
-        showFeeType () {
-            return this.form.projectType.includes(PROJECT_TYPE_KEY.BILLING_SYSTEM)
-        },
+        // showFeeType () {
+        //     return this.form.projectType.includes(PROJECT_TYPE_KEY.BILLING_SYSTEM)
+        // },
         ...mapGetters({
             clouldControlProjectList: 'clouldControlProjectList',
             clouldControlProjectDetail: 'clouldControlProjectDetail',
@@ -416,6 +629,49 @@ export default {
                 total: this.clouldControlProjectList.total
             }
         },
+        onChangeShowAirConditioning (value) {
+            this.isShowAirConditioning = value
+            if (!value) {
+
+            }
+        },
+        onChangeShowLighting (value) {
+            this.isShowLighting = value
+        },
+        onChangeShowCurtain (value) {
+            this.isShowCurtain = value
+        },
+        onChangeShowSecurity (value) {
+            this.isShowSecurity = value
+        },
+        onChangeShowScene (value) {
+            this.isShowScene = value
+        },
+        onChangeShowEnergy (value) {
+            this.isShowEnergy = value
+        },
+        onChangeShowWaterAir (value) {
+            this.isShowWaterAir = value
+        },
+        onChangeShowFluorineAir (value) {
+            this.isShowFluorineAir = value
+        },
+        onChangeShowFtAir (value) {
+            this.isShowFtAir = value
+        },
+        onChangeShowAirEnergy (value) {
+            this.isShowAirEnergy = value
+        },
+        onChangeShowOtherEnergy (value) {
+            this.isShowOtherEnergy = value
+        },
+        onChaneShowScenePanel (value) {
+            if (value == 30) {
+                this.isShowScenePanel = false
+            } else {
+                this.isShowScenePanel = true
+            }
+        },
         addNewProject () {
             this.addProject = true
         },
@@ -423,27 +679,43 @@ export default {
             await this.getClouldControlProjectDetail({ id: id })
             this.form = this.clouldControlProjectDetail
             // 编辑页面拆分projectType为两个变量
-            let index = this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM) + 1 ||
-                this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_ELECTRICITY_METER) + 1 ||
-                this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_HEAT_METER) + 1 ||
-                this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_FT_AIR) + 1 ||
-                this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_TIME) + 1 ||
-                this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_SOCKET) + 1
-            if (index > 0) {
-                this.$set(this.form, 'feeType', `${this.form.projectType[index - 1] - PROJECT_TYPE_KEY.BILLING_SYSTEM}`)
-                this.form.projectType[index - 1] = PROJECT_TYPE_KEY.BILLING_SYSTEM
-            } else {
-                this.$set(this.form, 'feeType', '')
-            }
+            // let index = this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM) + 1 ||
+            //     this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_ELECTRICITY_METER) + 1 ||
+            //     this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_HEAT_METER) + 1 ||
+            //     this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_FT_AIR) + 1 ||
+            //     this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_TIME) + 1 ||
+            //     this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_SOCKET) + 1
+            // if (index > 0) {
+            //     this.$set(this.form, 'feeType', `${this.form.projectType[index - 1] - PROJECT_TYPE_KEY.BILLING_SYSTEM}`)
+            //     this.form.projectType[index - 1] = PROJECT_TYPE_KEY.BILLING_SYSTEM
+            // } else {
+            //     this.$set(this.form, 'feeType', '')
+            // }
             this.addProject = true
         },
         async saveProject () {
+            this.form.projectType = [
+                ...this.airConditioningOption,
+                ...this.lightingOption,
+                ...this.socketOption,
+                this.curtainRadioOption,
+                ...this.environmentOption,
+                ...this.doorlockOption,
+                this.waterAirRadioOption,
+                this.fluorineAirRadioOption,
+                this.ftAirRadioOption,
+                ...this.energyOption,
+                ...this.securityOption,
+                this.scenePanelRadioOption,
+                ...this.scenePanelOption
+            ].filter(item => !(item == '' || !isNumber(item))).map(item => item.toString())
+
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     if (this.form.id) {
-                        await editControlProject({ ...this._resolveForm(), updateBy: this.userInfo.employeeName })
+                        await editControlProject({ ...this.form, updateBy: this.userInfo.employeeName })
                     } else {
-                        await createControlProject({ ...this._resolveForm(), createBy: this.userInfo.employeeName })
+                        await createControlProject({ ...this.form, createBy: this.userInfo.employeeName })
                     }
                     if (this.$refs.form) {
                         console.log('新增', this.form.id)
@@ -561,8 +833,9 @@ export default {
     margin-left: 30px;
 }
 /deep/ .el-checkbox {
-    display: block;
-    width: 200px;
+    // display: flex;
+    // align-items: center;
+    // height: 40px;
 }
 /deep/ .city-select .el-input {
     width: 164px !important;
@@ -582,7 +855,13 @@ export default {
     overflow: auto;
 }
 /deep/ .el-radio {
-    margin-right: 0;
+    display: flex;
+    align-items: center;
+    height: 40px;
     padding-right: 30px;
+}
+
+.el-radio-group {
+    display: block;
 }
 </style>
