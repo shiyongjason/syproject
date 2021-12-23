@@ -11,8 +11,8 @@
             <div class="unionpayDetail-ctx" :style="radio=='跟进记录'?'bottom:0':'bottom:60px'" >
                 <div v-if="radio=='入账信息'">
                     <div class="info-title">认领信息：</div>
-                    <div class="info-p padLeft20">认领状态：{{ receiptName }}（400000.00元/600000.00元）<h-button @click="onClaimStatus" table>{{ enterAccount.receiptResponseLis.length > 0 ? '继续认领' : '去认领' }}</h-button></div>
-                    <div v-show="enterAccount && enterAccount.receiptResponseList.length > 0" class="unionpay-content" v-for="(item, index) in enterAccount.receiptResponseList" :key="index">
+                    <div class="info-p padLeft20">认领状态：{{ enterAccount.receiptName }}（400000.00元/600000.00元）<h-button @click="onClaimStatus" table>{{ enterAccount.receiptResponseLis.length > 0 ? '继续认领' : '去认领' }}</h-button></div>
+                    <div v-show="enterAccount && enterAccount.receiptResponseList.length" class="unionpay-content" v-for="(item, index) in enterAccount.receiptResponseList" :key="index">
                         <div class="index">{{ index + 1 }}，</div>
                         <div class="content">
                             <p><span>认领金额(元)：{{ item.claimAmount | moneyFormat }}</span><span>所属项目：{{ item.projectName }}</span></p>
@@ -22,7 +22,7 @@
                         </div>
                         <div class="btn"><h-button table @click="onCancelClaim(item)">取消认领</h-button></div>
                     </div>
-                    <div v-show="!enterAccount.receiptResponseList.length">
+                    <div v-show="!enterAccount && enterAccount.receiptResponseList.length">
                         <p class="noData">暂无认领的账单</p>
                     </div>
                 </div>
@@ -60,7 +60,7 @@ export default class unionPayDetail extends Vue {
     @State('userInfo') userInfo: any
     validatorPHONE = Phone
     radio: string = '入账信息';
-    enterAccount: object = {
+    enterAccount = {
         receiptStatus: 0,
         receiptName: '',
         receiptResponseLis: []
@@ -110,9 +110,11 @@ export default class unionPayDetail extends Vue {
     // 入账信息
     public async enterAccountInfo () {
         const data:any = await Api.getEnterAccount({ bankBillId: this.bankBillId })
-        const dataInfo = data.data
-        dataInfo.receiptName = this.unionstatus[dataInfo.receiptStatus].label
-        this.enterAccount = dataInfo || []
+        if (data) {
+            const dataInfo = data.data
+            dataInfo.receiptName = this.unionstatus[dataInfo.receiptStatus].label
+            this.enterAccount = dataInfo
+        }
     }
 
     // 认领记录
