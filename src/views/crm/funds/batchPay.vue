@@ -47,7 +47,7 @@ export default {
                 { label: '项目名称', prop: 'projectName' },
                 { label: '账单流水号', prop: 'id' },
                 { label: '账单类型', prop: 'repaymentType', dicData: [{ value: 1, label: '首付款' }, { value: 2, label: '剩余货款' }, { value: 3, label: '服务费' }] },
-                { label: '金额(元)', prop: 'paymentAmount', displayAs: 'money' },
+                { label: '待支付金额(元)', prop: 'paymentAmount', displayAs: 'money' },
                 { label: '状态', prop: 'paymentFlag', dicData: [{ value: 0, label: '待支付' }, { value: 1, label: '支付待确认' }, { value: 2, label: '已支付' }, { value: 3, label: '支付失败' }, { value: 4, label: '已取消' }] },
                 { label: '应支付日期', prop: 'schedulePaymentDate', displayAs: 'YYYY-MM-DD', sortable: 'custom' }
             ],

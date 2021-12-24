@@ -53,3 +53,5 @@ export const updateRemainPaymentConfirm = (params) => axios.put(`/project/api/fu
 export const findPrePaymentList = (params) => axios.get(`/project/api/fund/prepayment-funds`, { params })
 // 预付款总金额
 export const findPrePaymentAmount = (params) => axios.get('/project/api/fund/prepayment-fund-amount', { params })
+// 帅选 付款账号
+export const findPayeeAccount = (params) => axios.get('/project/api/bank/receipt/payee-account/list', { params })

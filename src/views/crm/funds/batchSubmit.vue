@@ -14,28 +14,52 @@
                 </div>
                 <div class="batch_bot">
                     <span>待确认总金额(元)：{{payDetail.totalAmount|moneyFormat}}</span>
-                    <div>
+                    <!-- <div>
                         <el-button type="primary" @click="onNoReceived">并未收到</el-button>
                         <el-button type="primary" @click="onReceived">确认收到</el-button>
+                    </div> -->
+                    <p>是否确认收到经销商***支付的***元服务费？</p>
+                    <p>你可以选择以下方式确认这笔入账👇：</p>
+                    <div class="batch_bot-btn">
+                        <el-button type="info" @click="handleOffine">线下确认</el-button>
+                        <el-button @click="onNoReceived">并未收到</el-button>
+                        <el-button type="primary" @click="handleClaim">认领流水</el-button>
                     </div>
                 </div>
             </div>
-
         </div>
+         <el-dialog title="再次确认" :visible.sync="offineVisible" :close-on-click-modal=false width="670px" :before-close="()=>offineVisible = false">
+            <p style="color:red">是否确认使用线下方式确认，如果确认则后面不可再关联流水。</p>
+            <div class="remain_title">请确认收款账户信息：</div>
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                <el-form-item label="收款方：" prop="resource">
+                    <el-radio-group v-model="ruleForm.resource" @change="handleChangeRadio">
+                        <el-radio :label=item v-for="(item,index) in accountList" :key=index>{{item.payeeName}}</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="收款方账户：" prop="resource">
+                    <el-radio-group v-model="ruleForm.resource1">
+                        <el-radio :label=item.id v-for="(item,index) in payeeAccountList" :key=index>{{item.payeeBankName + item.payeeBankAccount}}</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="handleSubmit">确认收到</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
 import HosjoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
-import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import ImageAddToken from '@/components/imageAddToken/index.vue'
-import { ccpBaseUrl } from '@/api/config'
-import { confirmPay, payReceived, payNoReceived } from './api/index'
+import { confirmPay, payReceived, payNoReceived, findPayeeAccount } from './api/index'
 export default {
     name: 'batchpay',
     components: { HosjoyTable, ImageAddToken },
     data () {
         return {
             fileDialog: false,
+            offineVisible: false,
             docPos: [],
             tableLabel: [
                 { label: '项目名称', prop: 'projectName' },
@@ -55,7 +79,15 @@ export default {
             paginationInfo: {
 
             },
-            payDetail: {}
+            payDetail: {},
+            ruleForm: {},
+            rules: {
+                name: [
+                    { required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+                ]
+            },
+            payeeAccountList: [],
+            accountList: []
         }
     },
     methods: {
@@ -94,6 +126,25 @@ export default {
                 this.$router.push({ path: '/goodwork/funds' })
             }).catch(() => {
             })
+        },
+        handleSubmit () {
+            this.$refs.ruleForm.validate(valid => {
+                if (valid) {
+
+                }
+            })
+        },
+        handleChangeRadio (val) {
+            this.payeeAccountList = this.accountList.filter(item => item == val)[0].payeeAccountList
+        },
+        async handleOffine () {
+            const { data } = await findPayeeAccount()
+            console.log(data)
+            this.accountList = data
+            this.offineVisible = true
+        },
+        handleClaim () {
+
         }
     },
     mounted () {
@@ -116,6 +167,7 @@ export default {
     }
     p {
         color: #909399;
+        margin-top: 10px;
     }
     &_files {
         margin: 10px 0 0 0;
@@ -144,11 +196,14 @@ export default {
     &_bot {
         margin-top: 20px;
         display: flex;
-        justify-content: space-between;
         padding: 20px 0;
         border-top: 1px solid #e5e5e5;
+        flex-direction: column;
         span {
             font-size: 25px;
+        }
+        &-btn{
+            margin-top: 10px;
         }
     }
 }
@@ -158,12 +213,12 @@ export default {
     line-height: 24px !important;
     color: #fff;
 }
-.batch_img{
+.batch_img {
     display: flex;
-    &-flex{
+    &-flex {
         width: 150px;
         height: 150px;
-margin:10px
+        margin: 10px;
     }
 }
 </style>

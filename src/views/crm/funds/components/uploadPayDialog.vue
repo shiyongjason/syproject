@@ -66,7 +66,6 @@ export default {
             this.attachDocs = []
             this.unpaidAmount = 0
             const { data } = await getBnumber({ companyId: val.companyId })
-            console.log(data)
             this.unpaidAmount = val.unpaidAmount || 0
             if (val.unpaidAmount == 0) {
                 this.isZero = true
@@ -171,6 +170,7 @@ export default {
 <style scoped lang="scss">
 .uploadpay {
     p {
+        margin-bottom: 5px;
         i {
             color: red;
             padding: 0 3px 0 10px;
