@@ -1,9 +1,17 @@
 <template>
-    <el-dialog  :close-on-click-modal=false title="认领账单 |" :visible.sync="isOpen" width="60%" :before-close="onCancel" class="payment-dialog">
+    <el-dialog  :close-on-click-modal=false :title="dialogTitle" :visible.sync="isOpen" width="60%" :before-close="onCancel" class="payment-dialog">
         <div class="refresh" @click="bankDetailInfo"><el-button type="primary">刷新</el-button></div>
-        <div class="unionPay">
+        <div class="unionPay" v-if="bankType==1">
             <p><span>入账流水号：{{ bankDetail.billNo }}</span><span>入账时间：{{bankDetail.receiptTime | momentFormat }}</span><span>入账金额：{{bankDetail.totalAmount | moneyFormat }}</span></p>
             <p><span>付款方：{{ bankDetail.payeeName }}</span><span>已认领金额：{{bankDetail.receiptAmount | moneyFormat }}</span><span>待认领金额：{{bankDetail.unReceiptAmount | moneyFormat }}</span></p>
+        </div>
+        <div class="unionPay" v-if="bankType==2||bankType==3">
+            <p><span>账单类型：{{ bankDetail.billNo }}</span><span>应支付时间：{{bankDetail.receiptTime | momentFormat }}</span><span>账单总金额：{{bankDetail.totalAmount | moneyFormat }}</span></p>
+            <p><span>项目名称：{{ bankDetail.payeeName }}</span><span>经销商：{{bankDetail.receiptAmount | moneyFormat }}</span><span>本次支付金额：{{bankDetail.unReceiptAmount | moneyFormat }}</span></p>
+        </div>
+        <div class="unionPay" v-if="bankType==4">
+            <p><span>本次批量支付总金额：{{ bankDetail.billNo }}</span></p>
+            <p><span>经销商：{{ bankDetail.payeeName }}</span><span>账单数量：{{bankDetail.unReceiptAmount | moneyFormat }}</span></p>
         </div>
         <div class="approve">
             <hosJoyTable
@@ -11,11 +19,10 @@
                 align="center"
                 border stripe
                 isShowselection
-                :height='500'
+                :maxHeight='500'
                 @selection-change="selectChange"
                 :column="formTableLabel"
                 :data="bankList"
-                @pagination="bankPage"
                 prevLocalName="V3.*" localName="V3.*.26">
             </hosJoyTable>
             <div class="selectPrice">已选金额：¥{{ selectMoeny | moneyFormat }}</div>
@@ -49,6 +56,7 @@ const status = [{ value: 1, label: '待支付' }, { value: 2, label: '部分支�
 export default class ApproveBill extends Vue {
     @Prop({ type: Boolean, required: true, default: false }) isOpen: boolean;
     @Prop({ type: Number, required: true, default: '' }) bankBillId : number;
+    @Prop({ type: Number, required: true, default: 1 }) bankType : number;
     @Ref('hosjoyTable') readonly hosjoyTableRef!: HTMLFormElement;
     @State('userInfo') userInfo: any
     fundType = fundType
@@ -57,6 +65,8 @@ export default class ApproveBill extends Vue {
     selectList = []
     bankList = []
     bankDetail:any = {}
+    dialogTitle:string = '认领账单 |'
+    // :any = 1
     formTableLabel: tableLabelProps = [
         { label: '账单流水号', prop: 'fundId', width: '120' },
         { label: '账单类型', prop: 'fundType', width: '100', dicData: fundType },
@@ -210,6 +220,16 @@ export default class ApproveBill extends Vue {
 
     public async mounted () {
         this.bankDetailInfo()
+        console.log(this.bankType)
+        if (this.bankType == 2) {
+            this.dialogTitle = '手动认领 |'
+        }
+        if (this.bankType == 3) {
+            this.dialogTitle = '认领流水 |'
+        }
+        if (this.bankType == 4) {
+            this.dialogTitle = '批量手动认领 |'
+        }
         // this.bankListInfo()
     }
 }
@@ -240,9 +260,10 @@ export default class ApproveBill extends Vue {
     }
 }
 .refresh {
-    position: absolute;
-    top: 10px;
-    left: 120px;
+    // position: absolute;
+    // top: 10px;
+    // left: 120px;
+    margin-bottom: 10px;
 }
 /deep/.el-dialog .el-input {
     width: 100%;

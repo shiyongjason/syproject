@@ -47,19 +47,23 @@
                 <el-button @click="handleSubmit">确认收到</el-button>
             </span>
         </el-dialog>
+          <ApproveBill :isOpen="isOpen" :bankBillId="1" :bankType="4" @onCancel="()=>isOpen=false" v-if="isOpen" />
     </div>
 </template>
 <script>
 import HosjoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import ImageAddToken from '@/components/imageAddToken/index.vue'
+import ApproveBill from '../unionpayAccountList/components/approveBill.vue'
+
 import { confirmPay, payReceived, payNoReceived, findPayeeAccount } from './api/index'
 export default {
     name: 'batchpay',
-    components: { HosjoyTable, ImageAddToken },
+    components: { HosjoyTable, ImageAddToken, ApproveBill },
     data () {
         return {
             fileDialog: false,
             offineVisible: false,
+            isOpen: false,
             docPos: [],
             tableLabel: [
                 { label: '项目名称', prop: 'projectName' },
@@ -144,7 +148,7 @@ export default {
             this.offineVisible = true
         },
         handleClaim () {
-
+            this.isOpen = true
         }
     },
     mounted () {
