@@ -55,3 +55,7 @@ export const findPrePaymentList = (params) => axios.get(`/project/api/fund/prepa
 export const findPrePaymentAmount = (params) => axios.get('/project/api/fund/prepayment-fund-amount', { params })
 // 帅选 付款账号
 export const findPayeeAccount = (params) => axios.get('/project/api/bank/receipt/payee-account/list', { params })
+// 认领流水
+export const findFundDetail = (params) => { return axios.get(`/project/api/fund/fund-detail-claim/${params}`) }
+// 手动认领
+export const findFundClaim = (params) => { return axios.get(`/project/api/fund/fund-claim/${params}`) }

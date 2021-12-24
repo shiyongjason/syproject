@@ -15,7 +15,7 @@ export const getAccountList: (params) => AxiosPromise<IPagePrepaymentResponse> =
 }
 // 认领详情
 export const getBankDetail: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
-    return axios.get(`/project/api/bank/receipt/bank/${params.bankBillId}/detail`)
+    return axios.get(`/project/api/bank/receipt/bank/${params}/detail`)
 }
 // 认领账单
 export const getBankList: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
@@ -36,4 +36,12 @@ export const getCancelClaim: (params) => AxiosPromise<IPagePrepaymentResponse> =
 // 认领账单
 export const setClaimFund: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
     return axios.post(`/project/api/bank/receipt/bank/claim-fund`, params)
+}
+// 认领流水
+export const findFundDetail: (params) => AxiosPromise<any> = (params) => {
+    return axios.get(`/project/api/fund/fund-detail-claim/${params}`)
+}
+// 手动认领
+export const findFundClaim: (params) => AxiosPromise<any> = (params) => {
+    return axios.get(`/project/api/fund/fund-claim/${params}`)
 }

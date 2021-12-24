@@ -113,7 +113,7 @@
                     <div class="mt10" v-if="!lookBoolean">
                         <h-button type="assist" @click="handleOffine">线下确认</h-button>
                         <h-button @click="handleReceived(2,item)">并未收到</h-button>
-                        <h-button type="primary">认领流水</h-button>
+                        <h-button type="primary" @click="handleBill(item)">认领流水</h-button>
                     </div>
                 </div>
                 <div class="remain_wrap" v-if="dialogDetail&&dialogDetail.fundDetailResponseList.length==0">
@@ -183,6 +183,8 @@
                 <el-button @click="handleSubmit">确认收到</el-button>
             </span>
         </el-dialog>
+          <ApproveBill :isOpen="isApproveShow" :bankBillId="bankBillId" :bankType="bankType"  @onCancel="()=>isApproveShow=false" v-if="isApproveShow" />
+
     </div>
 </template>
 <script>
@@ -194,13 +196,15 @@ import {
 } from '../api'
 import { mapState } from 'vuex'
 import imageAddToken from '@/components/imageAddToken'
+import ApproveBill from '../../unionpayAccountList/components/approveBill.vue'
 import moment from 'moment'
 import FiltUtil from '@/utils/filters'
 
 export default {
     name: 'redulePayDialog',
     components: {
-        imageAddToken
+        imageAddToken,
+        ApproveBill
     },
     props: {
         isOpen: {
@@ -211,11 +215,14 @@ export default {
     data () {
         return {
             offineVisible: false,
+            isApproveShow: false,
+            bankType: 2,
             dialogDetail: { fundDetailResponseList: [] },
             title: '',
             companyName: '',
             repaymentType: 0,
             lookBoolean: false,
+            bankBillId: '',
             ruleForm: {
 
             },
@@ -277,6 +284,12 @@ export default {
         },
         handleChangeRadio (val) {
             this.payeeAccountList = this.accountList.filter(item => item == val)[0].payeeAccountList
+        },
+        handleBill (val) {
+            console.log(val)
+            this.bankBillId = val.fundId
+            this.bankType = 3
+            this.isApproveShow = true
         }
     }
 }
