@@ -82,14 +82,14 @@
                 </template>
             </hosJoyTable>
         </div>
-        <Detail :drawer='dialogVisible' :bankBillId="bankBillId" @onClamin='onClamin' @handleClose="()=>dialogVisible = false" v-if="dialogVisible" />
-        <ApproveBill :isOpen="isOpen" :bankBillId="bankBillId" @onCancel="()=>isOpen=false" v-if="isOpen" />
+        <Detail ref="detailRef" :drawer='dialogVisible' :bankBillId="bankBillId" @onClamin='onClamin' @handleClose="()=>dialogVisible = false" v-if="dialogVisible" />
+        <ApproveBill :isOpen="isOpen" :bankBillId="bankBillId" @submitResult='submitResult' @onCancel="()=>isOpen=false" v-if="isOpen" />
     </div>
 </template>
 
 <script lang="tsx">
 import moment from 'moment'
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Ref } from 'vue-property-decorator'
 import { State } from 'vuex-class'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { deepCopy } from '@/utils/utils'
@@ -128,6 +128,7 @@ export default class Advancelist extends Vue {
     private bankBillId:number|string = null
     private records:Array<RespContractSignHistory> = null
     private accountList:Array<RespContractSignHistory> = null
+    @Ref('detailRef') readonly detailRefs!: HTMLFormElement;
     @State('userInfo') userInfo: any
     queryParams:Query = {
         pageSize: 10,
@@ -152,6 +153,7 @@ export default class Advancelist extends Vue {
         total: 0
     }
     payeeBank = []
+    source = ''
 
     private tableLabel:tableLabelProps = [
         { label: '入账流水号', prop: 'billNo', width: '120px' },
@@ -179,6 +181,7 @@ export default class Advancelist extends Vue {
     }
     // 详情弹窗
     public onClamin (bankBillId) {
+        this.source = 'detail'
         this.bankBillId = bankBillId
         this.isOpen = true
     }
@@ -213,6 +216,14 @@ export default class Advancelist extends Vue {
     public onApprovalRecord (row):void {
         this.bankBillId = row.id
         this.isOpen = true
+    }
+
+    // 认领账单提交成功
+    public submitResult () {
+        this.isOpen = false
+        if (this.source === 'detail') {
+            this.detailRefs.enterAccountInfo()
+        }
     }
 
     public onPayee (val): void {

@@ -29,6 +29,7 @@
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { isNum } from '@/utils/validate/format'
 import { Vue, Component, Prop, Ref } from 'vue-property-decorator'
+import { State } from 'vuex-class'
 import { CreateElement } from 'vue'
 import * as Api from '../api/index'
 
@@ -50,6 +51,7 @@ export default class ApproveBill extends Vue {
     @Prop({ type: Boolean, required: true, default: false }) isOpen: boolean;
     @Prop({ type: Number, required: true, default: '' }) bankBillId : number;
     @Ref('hosjoyTable') readonly hosjoyTableRef!: HTMLFormElement;
+    @State('userInfo') userInfo: any
     fundType = fundType
     status = status
     disabled = true
@@ -1209,7 +1211,7 @@ export default class ApproveBill extends Vue {
     }
 
     // 确认认领
-    public onSubmit () {
+    public async onSubmit () {
         const claimPrice = this.selectList.map(item => item.claimAmount)
         if (claimPrice.indexOf('') >= 0 || claimPrice.indexOf('0') >= 0) {
             this.$message.error('输入的认领金额不得为0')
@@ -1219,6 +1221,20 @@ export default class ApproveBill extends Vue {
             this.$message.error('当前已选账单水金额不得超过待认领金额')
             return false
         }
+        const claimFundRequestList = this.selectList.map(item => {
+            return {
+                fundId: item.fundId,
+                unPaidAmount: item.unPaidAmount,
+                claimAmount: item.claimAmount
+            }
+        })
+        await Api.setClaimFund({
+            bankBillId: this.bankBillId,
+            claimFundRequestList: claimFundRequestList,
+            createBy: this.userInfo.employeeName,
+            createPhone: this.userInfo.user_name
+        })
+        this.$emit('submitResult')
     }
 
     public async mounted () {

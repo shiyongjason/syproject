@@ -33,3 +33,7 @@ export const getClaimFund: (params) => AxiosPromise<IPagePrepaymentResponse> = (
 export const getCancelClaim: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
     return axios.put(`/project/api/bank/receipt/bank/claim-fund-cancel`, params)
 }
+// 认领账单
+export const setClaimFund: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
+    return axios.post(`/project/api/bank/receipt/bank/claim-fund`, params)
+}
