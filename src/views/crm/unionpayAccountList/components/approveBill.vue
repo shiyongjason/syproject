@@ -174,9 +174,9 @@ export default class ApproveBill extends Vue {
         this.bankDetail = dataInfo
         this.bankList = dataInfo.claimFundResponseList
         // 默认选中对应的流水
-        // this.$nextTick(() => {
-        //     this.selectSum()
-        // })
+        this.$nextTick(() => {
+            this.selectSum()
+        })
     }
 
     // 确认认领
