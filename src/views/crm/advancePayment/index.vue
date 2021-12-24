@@ -158,7 +158,7 @@
                                 -
                             </span>
                         </el-col>
-                        <el-col class="mt10" :span="10" :offset='1'>支付成功时间：{{detailForm.approvalTime?moment(detailForm.approvalTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
+                        <el-col class="mt10" :span="10" :offset='1'>支付成功时间：{{detailForm.paidTime?moment(detailForm.paidTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
                     </el-row>
                 </template>
                 <el-row ype="flex" class="row-bg">
@@ -320,7 +320,7 @@
         <el-dialog title="上传预付款支付凭证" :visible.sync="prePayVisble" width="600px" :close-on-click-modal=false :before-close="()=>{prePayVisble = false}">
             <div>
                 <el-row ype="flex" class="row-bg">
-                    <el-col :span="20" :offset='1'>本次支付金额(元)：{{prePayForm.payAmount|moneyFormat}}</el-col>
+                    <el-col :span="20" :offset='1'>本次支付金额(元)：{{(prePayForm.payAmount - prePayForm.confirmAmount - prePayForm.paidAmount)|moneyFormat}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="20" :offset='1'>应支付金额(元)：{{prePayForm.payAmount|moneyFormat}}</el-col>
@@ -523,6 +523,8 @@ export default class Advancelist extends Vue {
     prePayForm:Record<string, any>={
         prepaymentOrderId: '',
         payAmount: '',
+        confirmAmount: '',
+        paidAmount: '',
         operator: '',
         operatorPhone: '',
         payVouchers: []
@@ -670,6 +672,8 @@ export default class Advancelist extends Vue {
         this.prePayForm = {
             ...this.prePayForm,
             payAmount: val.applyAmount,
+            confirmAmount: val.confirmAmount,
+            paidAmount: val.paidAmount,
             prepaymentOrderId: val.id,
             operator: this.userInfo.employeeName,
             operatorPhone: this.userInfo.phoneNumber

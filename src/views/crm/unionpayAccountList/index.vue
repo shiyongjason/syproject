@@ -192,7 +192,6 @@ export default class Advancelist extends Vue {
         this.tableData = res[1].data.records
         this.page.total = res[1].data.total as number
         this.totalMoney = res[0].data
-        console.log(this.totalMoney)
     }
     // 重置
     public onReset (): void {
