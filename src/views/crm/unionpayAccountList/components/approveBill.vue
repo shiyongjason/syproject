@@ -1,5 +1,6 @@
 <template>
-    <el-dialog  :close-on-click-modal=false title="认领账单" :visible.sync="isOpen" width="60%" :before-close="onCancel" class="payment-dialog">
+    <el-dialog  :close-on-click-modal=false title="认领账单 |" :visible.sync="isOpen" width="60%" :before-close="onCancel" class="payment-dialog">
+        <div class="refresh" @click="bankDetailInfo"><el-button type="primary">刷新</el-button></div>
         <div class="unionPay">
             <p><span>入账流水号：{{ bankDetail.billNo }}</span><span>入账时间：{{bankDetail.receiptTime | momentFormat }}</span><span>入账金额：{{bankDetail.totalAmount | moneyFormat }}</span></p>
             <p><span>付款方：{{ bankDetail.payeeName }}</span><span>已认领金额：{{bankDetail.receiptAmount | moneyFormat }}</span><span>待认领金额：{{bankDetail.unReceiptAmount | moneyFormat }}</span></p>
@@ -10,6 +11,7 @@
                 align="center"
                 border stripe
                 isShowselection
+                :height='500'
                 @selection-change="selectChange"
                 :column="formTableLabel"
                 :data="bankList"
@@ -236,6 +238,11 @@ export default class ApproveBill extends Vue {
     .btn {
         text-align: right;
     }
+}
+.refresh {
+    position: absolute;
+    top: 10px;
+    left: 120px;
 }
 /deep/.el-dialog .el-input {
     width: 100%;
