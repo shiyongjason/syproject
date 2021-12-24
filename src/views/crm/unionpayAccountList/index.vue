@@ -221,6 +221,7 @@ export default class Advancelist extends Vue {
     // 认领账单提交成功
     public submitResult () {
         this.isOpen = false
+        this.getList()
         if (this.source === 'detail') {
             this.detailRefs.enterAccountInfo()
         }
