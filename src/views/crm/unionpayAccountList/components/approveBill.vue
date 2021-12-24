@@ -15,7 +15,6 @@
                 @selection-change="selectChange"
                 :column="formTableLabel"
                 :data="bankList"
-                @pagination="bankPage"
                 prevLocalName="V3.*" localName="V3.*.26">
             </hosJoyTable>
             <div class="selectPrice">已选金额：¥{{ selectMoeny | moneyFormat }}</div>
@@ -167,7 +166,7 @@ export default class ApproveBill extends Vue {
 
     // 获取认领银企账单详情
     public async bankDetailInfo () {
-        const data:any = await Api.getBankDetail({ bankBillId: this.bankBillId })
+        const data:any = await Api.getBankDetail(this.bankBillId)
         let dataInfo = data.data
         dataInfo.claimFundResponseList.length > 0 && dataInfo.claimFundResponseList.forEach(item => {
             item.claimAmount = ''
