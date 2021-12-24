@@ -1,51 +1,39 @@
 
 import { IPagePrepaymentResponse, PrepaymentDetailResponse, PrepaymentSupplierSubmitResponse, RespContractSignHistory } from '@/interface/hbp-project'
 import axios, { AxiosPromise } from 'axios'
-
-export const getPrePayList: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
-    return axios.get('/project/api/prepayments/boss', { params })
+// 银企列表
+export const getUnionPayList: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
+    return axios.get('/project/api/bank/receipt/bank-receipt/page', { params })
 }
-// 预付款详情
-export const getPrePayDetail: (params) => AxiosPromise<PrepaymentDetailResponse> = (params:number) => {
-    return axios.get(`/project/api/prepayments/boss/${params}`)
+// 银企金额
+export const getUnionPayTotal: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
+    return axios.get('/project/api/bank/receipt/bank-receipt/amount-statics', { params })
 }
-
-export const submitPrePay: (params) => AxiosPromise<void> = (params:PrepaymentSupplierSubmitResponse) => {
-    return axios.post(`/project/api/supplier-payments/prepayment-submit`, params)
+// 收款方主体
+export const getAccountList: (params) => AxiosPromise<IPagePrepaymentResponse> = () => {
+    return axios.get('/project/api/bank/receipt/payee-account/list')
 }
-
-export const getPreTotal: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
-    return axios.get(`/project/api/prepayments/boss/total-amount`, { params })
+// 认领详情
+export const getBankDetail: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
+    return axios.get(`/project/api/bank/receipt/bank/${params.bankBillId}/detail`)
 }
-
-export const passPre: (params) => AxiosPromise<void> = (id) => {
-    return axios.patch(`/project/api/prepayments/boss/${id}/examine-pass`)
+// 认领账单
+export const getBankList: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
+    return axios.get(`/project/api/bank/receipt/bank/claim-fund-page`, { params })
 }
-
-export const passFailPre: (id, params) => AxiosPromise<void> = (id, params) => {
-    return axios.patch(`/project/api/prepayments/boss/${id}/examine-fail`, params)
+// 入账信息
+export const getEnterAccount: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
+    return axios.get(`/project/api/bank/receipt/bank/${params.bankBillId}`)
 }
-
-export const updateFinancePass : (id)=>AxiosPromise<void> = (id) => {
-    return axios.patch(`/project/api/prepayments/boss/${id}/finance-examine-pass`)
+// 认领记录
+export const getClaimFund: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
+    return axios.get(`/project/api/bank/receipt/bank/${params.bankBillId}/claim-fund-record`)
 }
-
-export const updateFinanceFail : (id, params)=>AxiosPromise<void> = (id, params) => {
-    return axios.patch(`/project/api/prepayments/boss/${id}/finance-examine-fail`, params)
+// 取消认领
+export const getCancelClaim: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
+    return axios.put(`/project/api/bank/receipt/bank/claim-fund-cancel`, params)
 }
-
-export const getApprovalHistory: (params) => AxiosPromise<RespContractSignHistory[]> = (params) => {
-    return axios.get(`/project/api/contract-approval/${params}/prepayment-order/approval-history`)
-}
-
-export const saveWriteOff: (id, params) => AxiosPromise = (id, params) => {
-    return axios.patch(`/project/api/prepayments/boss/${id}/write-off`, params)
-}
-
-export const updatePrePay: (params) => AxiosPromise = (params) => {
-    return axios.post(`/project/api/supplier-payments/prepayment-member`, params)
-}
-
-export const updateOnlineBank :(params)=>AxiosPromise = (params) => {
-    return axios.post(`/project/api/supplier-payments/prepayment/online-bank-payment-confirm`, params)
+// 认领账单
+export const setClaimFund: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
+    return axios.post(`/project/api/bank/receipt/bank/claim-fund`, params)
 }
