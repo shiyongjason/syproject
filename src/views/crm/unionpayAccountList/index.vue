@@ -77,8 +77,8 @@
             <hosJoyTable ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='300' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <h-button table @click="onLook(slotProps.data.row)">查看详情</h-button>
-                    <h-button table @click="onApprovalRecord(slotProps.data.row)" v-if="slotProps.data.row.receiptStatus !== 2">认领账单</h-button>
+                    <h-button table @click="onLook(slotProps.data.row)" v-if="hosAuthCheck(Auth.CRM_ACCOUNT_DETAIL)">查看详情</h-button>
+                    <h-button table @click="onApprovalRecord(slotProps.data.row)" v-if="hosAuthCheck(Auth.CRM_ACCOUNT_CLAIM) && slotProps.data.row.receiptStatus !== 2">认领账单</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -96,6 +96,7 @@ import { deepCopy } from '@/utils/utils'
 import * as Api from './api/index'
 import { RespContractSignHistory } from '@/interface/hbp-project'
 import { newCache } from '@/utils/index'
+import * as Auth from '@/utils/auth_const'
 import './css/css.scss'
 import Detail from './components/detail.vue'
 import ApproveBill from './components/approveBill.vue'
@@ -119,6 +120,7 @@ export default class Advancelist extends Vue {
         form: HTMLFormElement
     }
     Unionstatus = Unionstatus
+    Auth = Auth
     moment = moment
     private _queryParams:Query = {}
     private dialogVisible:boolean = false
