@@ -770,9 +770,9 @@ export default [
                 path: 'unionpayAccountList',
                 name: 'unionpayAccountList',
                 meta: {
-                    title: '银联直联入账清单',
-                    tagName: '银联直联入账清单',
-                    parentName: '银联直联入账清单',
+                    title: '银企直联入账清单',
+                    tagName: '银企直联入账清单',
+                    parentName: '银企直联入账清单',
                     isMenu: true,
                     icon: ''
                 },

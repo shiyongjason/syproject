@@ -177,7 +177,7 @@
                     <el-col :span="10" :offset='1'>支付日期：{{item.payDate}}</el-col>
                     <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">操作人：{{item.createBy}}</el-col>
                     <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">操作时间：{{ item.createTime | momentFormat }}</el-col>
-                    <el-col :span="20" :offset='1' class="credentials">上游支付凭证123123123：
+                    <el-col :span="20" :offset='1' class="credentials">上游支付凭证：
                         <div v-if="item.payVouchers&&item.payVouchers.length>0">
                             <!-- 司库返回凭证 showSaasButton区分-->
                             <template v-if="detailForm.showSaasButton">
