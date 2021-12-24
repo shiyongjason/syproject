@@ -370,7 +370,7 @@ const _queryParams = {
     createTimeStart: null,
     createTimeEnd: null,
     companyName: null,
-    projectName: '许',
+    projectName: '',
     adminName: null,
     username: null,
     pageNumber: 1,
