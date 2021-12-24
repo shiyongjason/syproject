@@ -237,7 +237,7 @@
                         </el-form-item>
                         <!-- 0-100,最多保留2位小数 -->
                         <el-form-item label="销售毛利率" prop='salesGrossMargin'>
-                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='1000' v-model="purForm.salesGrossMargin" maxlength="50">
+                            <el-input placeholder="请输入" v-isNum:6 v-inputMAX='1000' v-model="purForm.salesGrossMargin" maxlength="50">
                                 <template slot="append">%</template>
                             </el-input>
                         </el-form-item>
