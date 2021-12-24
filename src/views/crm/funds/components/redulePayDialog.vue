@@ -1,51 +1,123 @@
 <template>
     <div>
-        <el-dialog :title="title" :visible.sync="isOpen" :close-on-click-modal=false width="670px" :before-close="()=> $emit('onClose')">
+        <el-dialog :title="title" :visible.sync="isOpen" :close-on-click-modal=false width="670px" :before-close="()=> $emit('onClose',false)">
             <template v-if="repaymentType==3">
                 <div class="remain_head">
-                    <div>总金额：<b>123123</b></div>
-                    <div>已支付金额：<b>123123</b></div>
-                    <div>待支付金额：<b>123123</b></div>
-                    <div>支付待确认金额：<b>123123</b></div>
-                    <div>应支付日期：<b>123123</b></div>
+                    <div>总金额：<b>{{dialogDetail.paymentAmount|moneyFormat}}</b></div>
+                    <div>已支付金额：<b>{{dialogDetail.paidAmount|moneyFormat}}</b></div>
+                    <div>待支付金额：<b>{{dialogDetail.unpaidAmount|moneyFormat}}</b></div>
+                    <div>支付待确认金额：<b>{{dialogDetail.unconfirmedAmount|moneyFormat}}</b></div>
+                    <div>应支付日期：<b>{{dialogDetail.schedulePaymentDate?moment(dialogDetail.schedulePaymentDate).format('yyyy-MM-DD HH:mm:ss'):'-'}}</b></div>
                 </div>
-                <div class="remain_manual">
-                    <h-button type="primary" @click="handleReceived(2,item)">认领流水</h-button>点击可读取当前经销商的入账流水
+                <div class="remain_manual" v-if="dialogDetail&&dialogDetail.fundDetailResponseList.length==0&&!lookBoolean">
+                    <h-button type="primary" @click="handleReceived(2,item)">认领流水</h-button> &nbsp;点击可读取当前经销商的入账流水
                 </div>
                 <div class="remain_wrap" v-for="(item) in dialogDetail&&dialogDetail.fundDetailResponseList" :key="item.id">
                     <div class="remian_wrap-top">
                         <el-row>
                             <el-col :span="12">
-                                本次支付金额（元）：12313
+                                本次支付金额（元）：{{item.paymentAmount|moneyFormat}}
                             </el-col>
                             <el-col :span="12">
-                                支付时间：123123
+                                支付时间：{{moment(item.createTime).format('yyyy-MM-DD HH:mm:ss')}}
                             </el-col>
-                            <el-col :span="12" class="mt10">
-                                支付成功时间：12323
+                            <el-col :span="12">
+                                支付凭证：
+                                <div class="remian_voucher">
+                                    <span class="img-box" :key="i.id" v-for="(i) in item.attachDocResponseList">
+                                        <imageAddToken :file-url="i.fileUrl" />
+                                    </span>
+                                </div>
                             </el-col>
-                            <el-col class="mt10" :span="12">
-                                操作人：123123123
+                            <el-col :span="12">
+                                操作人：{{item.createBy}} ({{item.createPhone||'-'}})
                             </el-col>
                         </el-row>
-                        <el-row class="mt10">
-                            支付凭证：
-                            <div class="remian_voucher">
-                                <!-- <span class="img-box" :key="i.id" v-for="(i) in item.attachDocResponseList">
-                                <imageAddToken :file-url="i.fileUrl" />
-                            </span> -->
-                            </div>
+
+                        <el-row v-if="lookBoolean">
+                            <el-col :span="12">
+                                审核人/认领人：{{item.paymentAmount|moneyFormat}}
+                            </el-col>
+                            <el-col :span="12">
+                                审核结果：{{moment(item.createTime).format('yyyy-MM-DD HH:mm:ss')}}
+                            </el-col>
+                            <el-col :span="12">
+                                审核时间：{{item.paymentConfirmTime | momentFormat}}
+                            </el-col>
+                            <el-col :span="12">
+                                确认方式：{{item.createBy}} ({{item.createPhone||'-'}})
+                            </el-col>
+                            <el-col :span="12">
+                                是否批量：{{item.createBy}} ({{item.createPhone||'-'}})
+                            </el-col>
+                            <el-col :span="12">
+                                收款方：{{item.createBy}} ({{item.createPhone||'-'}})
+                            </el-col>
+                            <el-col :span="12">
+                                收款方账户：{{item.createBy}} ({{item.createPhone||'-'}})
+                            </el-col>
                         </el-row>
-                        <el-row class="mt10">
-                            <p style="color:#9999">是否确认收到经销商<span style="color:red">{{companyName}}</span>支付的<span style="color:red">{{item.paymentAmount|moneyFormat}}</span>元服务费</p>
-                            <strong style="color:red">你可以选择以下方式确认这笔入账👇：</strong>
+                        <el-row v-if="lookBoolean">
+                            <!--取消认领 预付款支付单/支付单取消  -->
+                            <el-col :span="12">
+                                取消金额（元）：{{item.paymentAmount|moneyFormat}}
+                            </el-col>
+                            <el-col :span="12">
+                                取消时间：{{moment(item.createTime).format('yyyy-MM-DD HH:mm:ss')}}
+                            </el-col>
+                            <el-col :span="12">
+                                取消流水号：{{item.paymentConfirmTime | momentFormat}}
+                            </el-col>
+                            <el-col :span="12">
+                                取消人：{{item.paymentConfirmTime | momentFormat}}
+                            </el-col>
+                            <el-col :span="12">
+                                确认方式：{{item.paymentConfirmTime | momentFormat}}
+                            </el-col>
+                            <el-col :span="12">
+                                收款方：{{item.paymentConfirmTime | momentFormat}}
+                            </el-col>
+                            <el-col :span="12">
+                                收款方账户：{{item.paymentConfirmTime | momentFormat}}
+                            </el-col>
                         </el-row>
-                        <div class="mt10">
-                            <h-button type="assist" @click="handleOffine(item)">线下确认</h-button>
-                            <h-button @click="handleReceived(2,item)">并未收到</h-button>
-                            <h-button type="primary" @click="handleReceived(2,item)">认领流水</h-button>
-                        </div>
+                        <el-row v-if="lookBoolean">
+                            <!--系统自动 手动认领  -->
+                            <el-col :span="12">
+                                认领金额（元）：{{item.paymentAmount|moneyFormat}}
+                            </el-col>
+                            <el-col :span="12">
+                                认领时间：{{moment(item.createTime).format('yyyy-MM-DD HH:mm:ss')}}
+                            </el-col>
+                            <el-col :span="12">
+                                认领流水号：{{item.paymentConfirmTime | momentFormat}}
+                            </el-col>
+                            <el-col :span="12">
+                                认领人：{{item.paymentConfirmTime | momentFormat}}
+                            </el-col>
+                            <el-col :span="12">
+                                确认方式：{{item.paymentConfirmTime | momentFormat}}
+                            </el-col>
+                            <el-col :span="12">
+                                收款方：{{item.paymentConfirmTime | momentFormat}}
+                            </el-col>
+                            <el-col :span="12">
+                                收款方账户：{{item.paymentConfirmTime | momentFormat}}
+                            </el-col>
+                        </el-row>
                     </div>
+                    <el-row class="mt10" v-if="!lookBoolean">
+                        <p style="color:#9999">是否确认收到经销商<span style="color:red">{{companyName}}</span>支付的<span style="color:red">{{item.paymentAmount|moneyFormat}}</span>元服务费</p>
+                        <strong style="color:red">你可以选择以下方式确认这笔入账👇：</strong>
+                    </el-row>
+                    <div class="mt10" v-if="!lookBoolean">
+                        <h-button type="assist" @click="handleOffine">线下确认</h-button>
+                        <h-button @click="handleReceived(2,item)">并未收到</h-button>
+                        <h-button type="primary">认领流水</h-button>
+                    </div>
+                </div>
+                <div class="remain_wrap" v-if="dialogDetail&&dialogDetail.fundDetailResponseList.length==0">
+                    <p style="text-align:center">暂无待确认的凭证</p>
                 </div>
             </template>
             <template v-else>
@@ -88,28 +160,28 @@
                 <p class="remain_mes" v-if="dialogDetail.fundDetailResponseList.length==0">暂无数据</p>
                 <span slot="footer" class="dialog-footer" v-if="lookBoolean">
                     <span>剩余货款支付进度：{{dialogDetail.paidAmount | moneyFormat}}/{{dialogDetail.paymentAmount | moneyFormat}}</span>
-                    <el-button @click="()=> $emit('onClose')">取 消</el-button>
+                    <el-button @click="()=> $emit('onClose',false)">取 消</el-button>
                 </span>
             </template>
         </el-dialog>
-        <el-dialog title="再次确认" :visible.sync="offineVisible" :close-on-click-modal=false width="670px" :before-close="()=> $emit('onClose')">
+        <el-dialog title="再次确认" :visible.sync="offineVisible" :close-on-click-modal=false width="670px" :before-close="()=>offineVisible = false">
             <p style="color:red">是否确认使用线下方式确认，如果确认则后面不可再关联流水。</p>
             <div class="remain_title">请确认收款账户信息：</div>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                <el-form-item label="特殊资源" prop="resource">
-                    <el-radio-group v-model="ruleForm.resource">
-                        <el-radio label="线上品牌商赞助"></el-radio>
-                        <el-radio label="线下场地免费"></el-radio>
+                <el-form-item label="收款方" prop="resource">
+                    <el-radio-group v-model="ruleForm.resource" @change="handleChangeRadio">
+                        <el-radio :label=item v-for="(item,index) in accountList" :key=index>{{item.payeeName}}</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                 <el-form-item label="特殊资源" prop="resource">
-                    <el-radio-group v-model="ruleForm.resource">
-                        <el-radio label="线上品牌商赞助"></el-radio>
-                        <el-radio label="线下场地免费"></el-radio>
+                <el-form-item label="收款方账户" prop="resource">
+                    <el-radio-group v-model="ruleForm.resource1">
+                        <el-radio :label=item.id v-for="(item,index) in payeeAccountList" :key=index>{{item.payeeBankName + item.payeeBankAccount}}</el-radio>
                     </el-radio-group>
                 </el-form-item>
             </el-form>
-
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="handleSubmit">确认收到</el-button>
+            </span>
         </el-dialog>
     </div>
 </template>
@@ -117,12 +189,14 @@
 import {
     findRemainPayDetail,
     findRemainPayConfirm,
-    updateRemainPayConfirm
+    updateRemainPayConfirm,
+    findPayeeAccount
 } from '../api'
 import { mapState } from 'vuex'
 import imageAddToken from '@/components/imageAddToken'
 import moment from 'moment'
 import FiltUtil from '@/utils/filters'
+
 export default {
     name: 'redulePayDialog',
     components: {
@@ -133,7 +207,6 @@ export default {
             type: Boolean,
             default: false
         }
-
     },
     data () {
         return {
@@ -143,12 +216,16 @@ export default {
             companyName: '',
             repaymentType: 0,
             lookBoolean: false,
-            ruleForm: {},
+            ruleForm: {
+
+            },
             rules: {
                 name: [
                     { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
                 ]
-            }
+            },
+            accountList: [],
+            payeeAccountList: []
         }
     },
     computed: {
@@ -188,8 +265,18 @@ export default {
                 this.title = `支付确认 | 剩余货款支付进度:${FiltUtil.moneyFormat(data.paidAmount)}/${FiltUtil.moneyFormat(data.paymentAmount)}`
             }
         },
-        handleOffine () {
+        async handleOffine () {
+            const { data } = await findPayeeAccount()
+            console.log(data)
+            this.accountList = data
             this.offineVisible = true
+        },
+        handleSubmit () {
+            this.offineVisible = false
+            this.$emit('onClose')
+        },
+        handleChangeRadio (val) {
+            this.payeeAccountList = this.accountList.filter(item => item == val)[0].payeeAccountList
         }
     }
 }
@@ -212,14 +299,21 @@ export default {
         }
     }
 }
+.remain_manual {
+    margin-bottom: 10px;
+}
 .remain_wrap {
     border: 1px solid #e5e5ee;
     padding: 10px;
     margin-bottom: 10px;
     box-shadow: 2px 2px 3px #e5e5e5;
+    /deep/.el-col {
+        margin-top: 10px;
+    }
 }
 .remian_voucher {
     display: flex;
+    flex-wrap: wrap;
 }
 .remain_mes {
     display: flex;

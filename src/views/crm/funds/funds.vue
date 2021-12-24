@@ -319,13 +319,15 @@ export default {
         onEndPay (val) {
             this.queryParams.paidEndTime = val
         },
-        fundsDialogClose () {
+        fundsDialogClose (isRefresh = true) {
             this.fundsDialogVisible = false
             this.reduleDialogVisible = false
-            this.onSwtichInfo(this.queryParamsUseQuery)
+            if (isRefresh) {
+                this.onSwtichInfo(this.queryParamsUseQuery)
+            }
         },
         hasPayEnterAuth (type) {
-            // 1-首付款；2-剩余货款；3-服务费；
+            // 1-首付款；2-剩余货款；3-服务费；4-预付款
             if (type === '1') {
                 return this.hosAuthCheck(this.Auths.CRM_FUNDS_DOWN_PAYMENT_FUND_CONFIRM)
             }
@@ -340,7 +342,7 @@ export default {
             }
         },
         hasSeePayEnterAuth (type) {
-            // 1-首付款；2-剩余货款；3-服务费；
+            // 1-首付款；2-剩余货款；3-服务费；4-预付款
             if (type === '1') {
                 return this.hosAuthCheck(this.Auths.CRM_FUNDS_DOWN_PAYMENT_FUND_SEE)
             }
