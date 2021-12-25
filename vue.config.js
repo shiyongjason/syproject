@@ -1,4 +1,4 @@
-const SentryPlugin = require('@sentry/webpack-plugin')
+// const SentryPlugin = require('@sentry/webpack-plugin')
 // const SentryPlugin = require('webpack-sentry-plugin')
 module.exports = {
     devServer: {
