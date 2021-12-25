@@ -37,12 +37,12 @@ export const PROJECT_TYPE_OPTIONS = new Map([
 ])
 
 export const FEE_TYPE_OPTIONS = new Map([
-    ['4', '分体空调'],
-    ['3', '时间型'],
-    ['2', '热量表'],
     ['1', '智能电表'],
     ['0', '智能空开'],
-    ['5', '计量插座']
+    ['2', '热量表'],
+    ['3', '时间型'],
+    ['4', '分体空调']
+    // ['5', '计量插座']
 ])
 
 // 是否是通用升级
@@ -50,3 +50,52 @@ export const DEVICE_UPGRADE_IS_COMMON_KEY = {
     YES: '1',
     NO: '0'
 }
+
+// 空调集控系统
+export const AIR_PROJECT_TYPE_OPTIONS = new Map([
+    ['1', '氟机空调'],
+    ['2', '水机空调'],
+    ['12', '分体空调']
+])
+
+// 照明集控系统
+export const LIGHTING_PROJECT_TYPE_OPTIONS = new Map([
+    ['14', '调光面板'],
+    ['13', '普通开关']
+])
+
+// 插座集控系统
+export const SCOKET_PROJECT_TYPE_OPTIONS = new Map([
+    ['16', '插座集控系统']
+])
+
+// 窗帘集控系统
+export const CURTAIN_PROJECT_TYPE_OPTIONS = new Map([
+    ['15', '电机'],
+    ['19', '面板']
+])
+
+// 环境监测系统environment
+export const ENVIRONMENT_PROJECT_TYPE_OPTIONS = new Map([
+    ['16', '环境监测系统']
+])
+
+// 门禁系统
+export const DOOR_LOCK_PROJECT_TYPE_OPTIONS = new Map([
+    ['16', '门禁系统']
+])
+
+// 安防系统security
+export const SECURITY_PROJECT_TYPE_OPTIONS = new Map([
+    ['20', '人体存在传感器'],
+    ['21', '人体移动传感器'],
+    ['22', '水浸监测'],
+    ['23', '烟雾监测'],
+    ['24', '可燃气体监测']
+])
+
+// 场景管理
+export const SCENE_PROJECT_TYPE_OPTIONS = new Map([
+    ['31', '四键'],
+    ['32', '六键']
+])
