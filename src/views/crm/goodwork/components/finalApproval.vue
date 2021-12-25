@@ -114,11 +114,11 @@
                     <div class="info-layout" style="margin-left:50px">
                         <div class="info-layout-item">
                             <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>银行承兑：</font>
-                            <span>{{Number.isFinite(resolutionDetail.acceptBankRate)?resolutionDetail.acceptBankRate:'-'}}%</span>
+                            <span>{{onCheckZero(resolutionDetail.acceptBankRate)}}%</span>
                         </div>
                         <div class="info-layout-item">
                             <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>银行转账：</font>
-                            <span>{{Number.isFinite(resolutionDetail.transferBankRate)?resolutionDetail.transferBankRate:'-'}}%</span>
+                            <span>{{onCheckZero(resolutionDetail.transferBankRate)}}%</span>
                         </div>
                     </div>
                     <div class="info-layout">
@@ -132,11 +132,11 @@
                                 <template v-for="(value, index) in slotProps.data.row.upstreamPayTypeName">
                                     <div :key="index" v-if="value == '银行转账'">{{ value }}
                                         <span v-if="slotProps.data.row.transferRateType == 2">：{{ slotProps.data.row.transferRate }}%</span>
-                                        <span v-else>：{{ Number.isFinite(resolutionDetail.transferBankRate)?resolutionDetail.transferBankRate:'-' }}%</span>
+                                        <span v-else>：{{ onCheckZero(resolutionDetail.transferRateType)  }}%</span>
                                     </div>
                                     <div :key="index" v-if="value == '银行承兑'">{{ value }}
                                         <span v-if="slotProps.data.row.acceptanceRateType == 2">：{{ slotProps.data.row.acceptanceRate }}%</span>
-                                        <span v-else>：{{Number.isFinite(resolutionDetail.acceptBankRate)?resolutionDetail.acceptBankRate:'-' }}%</span>
+                                        <span v-else>：{{onCheckZero(resolutionDetail.acceptanceRateType)}}%</span>
                                     </div>
                                 </template>
                             </template>
@@ -237,7 +237,7 @@
                         </el-form-item>
                         <!-- 0-100,最多保留2位小数 -->
                         <el-form-item label="销售毛利率" prop='salesGrossMargin'>
-                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='1000' v-model="purForm.salesGrossMargin" maxlength="50">
+                            <el-input placeholder="请输入" v-isNum:6 v-inputMAX='1000' v-model="purForm.salesGrossMargin" maxlength="50">
                                 <template slot="append">%</template>
                             </el-input>
                         </el-form-item>
@@ -1176,6 +1176,10 @@ export default class FinalApproval extends Vue {
         } else {
             this.tableForm[index].acceptanceRate = ''
         }
+    }
+
+    onCheckZero (val) {
+        return val ?? '-'
     }
 
     mounted () {

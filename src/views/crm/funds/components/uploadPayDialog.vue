@@ -2,7 +2,7 @@
     <div>
         <el-dialog title="上传支付凭证" :visible.sync="dialogVisible" width="45%" :before-close="handleClose">
             <div class="uploadpay">
-                <template v-if="repaymentType == 2">
+                <template v-if="repaymentType == 2 || repaymentType == 3">
                     <p>剩余应支付金额：{{unpaidAmount|moneyFormat}} 元</p>
                     <el-form :model="uploadpayForm" :rules="rules" ref="uploadpayForm" label-width="130px">
                         <el-form-item label="本次支付金额：" prop="paidAmount">
@@ -50,7 +50,7 @@ export default {
             type: 2, // 1 = 支付单 2 = 账单
             rules: {
                 paidAmount: [
-                    { required: true, message: '请输入本次支付金额', trigger: 'blur' }
+                    { required: true, validator: this.validatorPaidAmount, trigger: 'blur' }
                 ]
             },
             uploadpayForm: { paidAmount: '' }
@@ -79,6 +79,18 @@ export default {
                 this.$refs.uploadpayForm && this.$refs.uploadpayForm.clearValidate()
             })
         },
+        // 校验本次金额不能输入0
+        validatorPaidAmount (rule, value, callback) {
+            if (!value) {
+                return callback(new Error('请输入本次支付金额'))
+            } else {
+                if (value == 0) {
+                    return callback(new Error('请输入本次支付金额'))
+                } else {
+                    callback()
+                }
+            }
+        },
         handleClose () {
             this.dialogVisible = false
             this.attachDocs = []
@@ -96,7 +108,7 @@ export default {
         async onSavePay () {
             if (this.type == 2) {
                 // 如果是剩余货款 先进行本次金额校验
-                if (this.repaymentType == 2) {
+                if (this.repaymentType == 2 || this.repaymentType == 3) {
                     this.$refs.uploadpayForm.validate(async valid => {
                         if (valid) {
                             if (this.attachDocs.length > 0) {
@@ -108,7 +120,7 @@ export default {
                                     createBy: JSON.parse(sessionStorage.getItem('userInfo')).employeeName
                                 }
                                 await updateRemainPayment(params)
-                                this.$message.success('剩余货款上传成功')
+                                this.$message.success('支付凭证上传成功')
                                 this.$emit('onBackSearch')
                                 this.dialogVisible = false
                             } else {
