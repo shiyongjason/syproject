@@ -379,6 +379,9 @@ const _queryParams = {
 export default {
     name: 'projectManager',
     watch: {
+        // isShowEnergy (value) {
+
+        // }
         // 'form.projectType' (val) {
         //     if (!val.includes(consts.PROJECT_TYPE_KEY.BILLING_SYSTEM)) {
         //         this.form.feeType = ''
@@ -687,7 +690,7 @@ export default {
         onChangeShowAirEnergy (value) {
             this.isShowAirEnergy = value
             if (!value) {
-                this.isShowEnergy = false
+                // this.isShowEnergy = false
                 this.isShowAirEnergy = false
                 this.isShowWaterAir = false
                 this.isShowFluorineAir = false
@@ -695,6 +698,9 @@ export default {
                 this.waterAirRadioOption = ''
                 this.fluorineAirRadioOption = ''
                 this.ftAirRadioOption = ''
+                if (!this.isShowOtherEnergy) {
+                    this.isShowEnergy = false
+                }
             }
         },
         onChangeShowOtherEnergy (value) {
@@ -702,6 +708,9 @@ export default {
             if (!value) {
                 this.isShowOtherEnergy = false
                 this.energyOption = []
+                if (!this.isShowAirEnergy) {
+                    this.isShowEnergy = false
+                }
             }
         },
         onChangeShowSecurity (value) {
