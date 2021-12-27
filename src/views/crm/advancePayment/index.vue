@@ -69,7 +69,7 @@
                 <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span>上游预付款支付单总金额：{{totalMoney|moneyFormat}}</span></el-tag>
             </div>
             <!-- end search bar -->
-            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='300' isAction
+            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='400' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
                     <h-button table @click="onApproval(slotProps.data.row)" v-if="hosAuthCheck(advanceapprove)&&(slotProps.data.row.status==-1)">审核</h-button>
@@ -80,6 +80,7 @@
                     <h-button table @click="onUploadPrePay(slotProps.data.row)" v-if="hosAuthCheck(uploadprepay)&&slotProps.data.row.status==0&&slotProps.data.row.applyAmount > 0">上传预付凭证</h-button>
                     <h-button table v-if="slotProps.data.row.showOnlineBank&&hosAuthCheck(banklink)" @click="handleIsPay(slotProps.data.row)">确认已网银支付</h-button>
                     <h-button table v-if="hosAuthCheck(submitPay)&& (slotProps.data.row.status === 0 || slotProps.data.row.status === 8)">确认支付</h-button>
+                     <h-button table >司库支付</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -326,7 +327,7 @@
                     <el-col :span="20" :offset='1'>应支付金额(元)：{{prePayForm.payAmount|moneyFormat}}</el-col>
                 </el-row>
                 <el-form :model="prePayForm" :rules="prePayRules" ref="prePayForm" label-width="150px" class="demo-ruleForm">
-                    <el-form-item label="预付凭证：" prop="payVouchers" style="margin:20px 0">
+                    <el-form-item label="预付凭证：" prop="payVouchers" >
                         <OssFileHosjoyUpload v-model="prePayForm.payVouchers" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.prePayForm.clearValidate('payVouchers')" accept=".jpg,.png,.pdf">
                             <div class="a-line">
                                 <h-button>上传文件</h-button>

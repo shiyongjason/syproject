@@ -59,3 +59,11 @@ export const findPayeeAccount = (params) => axios.get('/project/api/bank/receipt
 export const findFundDetail = (params) => { return axios.get(`/project/api/fund/fund-detail-claim/${params}`) }
 // 手动认领
 export const findFundClaim = (params) => { return axios.get(`/project/api/fund/fund-claim/${params}`) }
+// 流水账单明细
+export const findBankReceipt = (params) => { return axios.get(`/project/api/bank/receipt/bank-receipt/list`) }
+// 手动认领确认
+export const updateReceiptBank = (params) => axios.post(`/project/api/bank/receipt/fund/receipt/fund-bank-bill`, params)
+// 认领账单明细流水
+export const updateReceiptDetailBank = (params) => axios.post(`/project/api/bank/receipt/fund/receipt/fund-detail-bank-bill`, params)
+// ping
+export const updateReceiptBatchBank = (params) => axios.post(`/project/api/bank/receipt/fund/batch-receipt/bank-bill`, params)

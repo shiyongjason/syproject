@@ -2,7 +2,7 @@
     <el-drawer title="查看详情" :visible.sync="drawer" :before-close="handleClose" :wrapperClosable='false' :modal-append-to-body='false' :close-on-click-modal='false' size='680px'>
         <div class="unionpayDetail">
             <div class="radio-group">
-                <el-radio-group v-model="radio" @change="()=>onTabRadio()">
+                <el-radio-group v-model="radio" @change="onTabRadio">
                     <el-radio-button label="入账信息"></el-radio-button>
                     <el-radio-button label="认领记录"></el-radio-button>
                 </el-radio-group>
@@ -11,23 +11,23 @@
             <div class="unionpayDetail-ctx" :style="radio=='跟进记录'?'bottom:0':'bottom:60px'" >
                 <div v-if="radio=='入账信息'">
                     <div class="info-title">认领信息：</div>
-                    <div class="info-p padLeft20">认领状态：{{ enterAccount.receiptName }}（{{ enterAccount.receiptAmount | moneyFormat }}元/{{ enterAccount.totalAmount | moneyFormat }}元）<h-button @click="onClaimStatus" table>{{ enterAccount.receiptResponseLis.length > 0 ? '继续认领' : '去认领' }}</h-button></div>
+                    <div class="info-p padLeft20">认领状态：{{ enterAccount.receiptName }}（{{ enterAccount.receiptAmount | moneyFormat }}元/{{ enterAccount.totalAmount | moneyFormat }}元）<h-button @click="onClaimStatus" table>{{ enterAccount.receiptResponseList&&enterAccount.receiptResponseList.length > 0 ? '继续认领' : '去认领' }}</h-button></div>
                     <div v-show="enterAccount && enterAccount.receiptResponseList.length" class="unionpay-content" v-for="(item, index) in enterAccount.receiptResponseList" :key="index">
                         <div class="index">{{ index + 1 }}，</div>
                         <div class="content">
                             <p><span>认领金额(元)：{{ item.claimAmount | moneyFormat }}</span><span>所属项目：{{ item.projectName }}</span></p>
-                            <p><span>账单类型：{{ fundType[item.fundType - 1].label }}</span><span>支付单编号：{{ item.paymentOrderNo }}</span></p>
+                            <p><span>账单类型：{{ fundType[item.fundType - 1].label }}</span><span>支付单编号：{{ item.orderNo }}</span></p>
                             <p><span>账单流水号：{{ item.fundId }}</span><span>应支付日期：{{ item.schedulePaymentDate | momentFormat }}</span></p>
                             <p><span>认领时间：{{ item.createTime | momentFormat }}</span></p>
                         </div>
-                        <div class="btn"><h-button table @click="onCancelClaim(item)">取消认领</h-button></div>
+                        <div class="btn"><h-button v-if="item.fundType!=2" table @click="onCancelClaim(item)">取消认领</h-button></div>
                     </div>
-                    <div v-show="!enterAccount && enterAccount.receiptResponseList.length">
+                    <div v-show="!enterAccount.receiptResponseList|| enterAccount.receiptResponseList&&enterAccount.receiptResponseList.length==0">
                         <p class="noData">暂无认领的账单</p>
                     </div>
                 </div>
                 <div v-if="radio=='认领记录'" class="project-information">
-                    <p v-for="(item, index) in claimFund" :key="index"><span>{{ item.operatorType ? item.receiptUser : '系统自动' }}</span> 在 <span>{{ item.receiptTime | momentFormat }}</span> 认领 <span>{{ item.receiptAmount }}</span>元到{{ fundType[item.fundType - 1].label }}账单（流水号：{{ item.receiptOrderNo }}）{{ item.type === 2 ? '取消认领' : '' }}</p>
+                    <p v-for="(item, index) in claimFund" :key="index"><span>{{ item.operatorType ? item.receiptUser : '系统自动' }}</span> 在 <span>{{ item.receiptTime | momentFormat }}</span> 认领 <span>{{ item.receiptAmount }}</span>元到{{ item.fundType&&fundType[item.fundType - 1].label }}账单（流水号：{{ item.billNo }}）{{ item.receiptType ? '取消认领' : '' }}</p>
                     <div v-show="!claimFund.length">
                         <p class="noData">暂无认领记录</p>
                     </div>
@@ -109,9 +109,10 @@ export default class unionPayDetail extends Vue {
     }
     // 入账信息
     public async enterAccountInfo () {
-        const data:any = await Api.getEnterAccount({ bankBillId: this.bankBillId })
+        const { data } = await Api.getEnterAccount({ bankBillId: this.bankBillId })
         if (data) {
-            const dataInfo = data.data
+            const dataInfo:any = data
+            console.log(dataInfo)
             dataInfo.receiptName = this.unionstatus[dataInfo.receiptStatus].label
             this.enterAccount = dataInfo
         }
