@@ -115,11 +115,16 @@
                 </el-row>
                 <el-row type="flex" class="row-bg">
                     <el-col class="pay_vouchers mtNone" :span="20" :offset='1'>附件：
-                        <div class="disFlex" v-if="detailForm.attachDocList && detailForm.attachDocList.length>0">
+                        <!-- <div class="disFlex" v-if="detailForm.attachDocList && detailForm.attachDocList.length>0">
                             <span class="img-box" :key="item.fileUrl" v-for="item in detailForm.attachDocList" @click="goDetail(item.fileUrl)">
                                 <img :src="item.fileUrl" alt="">
                             </span>
-                        </div>
+                        </div> -->
+                          <div class="advance_wrap-flex" v-if="detailForm.attachDocList &&detailForm.attachDocList.length>0">
+                                <div v-for="(v,index) in detailForm.attachDocList" :key="index">
+                                    <downloadFileAddToken isPreview isType='preview' :file-url="v.fileUrl" :a-link-words="v.fileName" />
+                                </div>
+                            </div>
                         <span v-if="detailForm.attachDocList && detailForm.attachDocList.length==0">
                             -
                         </span>
@@ -232,10 +237,10 @@
                         <el-col class="col-padding" :span="23" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>备注信息：{{detailForm.applyRemark||'-'}}</el-col>
                         <el-col class="col-padding disFlex" :span="23" :offset='1'>附件：
-                            <div v-if="detailForm.attachDocList && detailForm.attachDocList.length>0">
-                                <span class="img-box" :key="item.fileUrl" v-for="item in detailForm.attachDocList" @click="goDetail(item.fileUrl)">
-                                    <img :src="item.fileUrl" alt="">
-                                </span>
+                           <div class="advance_wrap-flex" v-if="detailForm.attachDocList &&detailForm.attachDocList.length>0">
+                                <div v-for="(v,index) in detailForm.attachDocList" :key="index">
+                                    <downloadFileAddToken isPreview isType='preview' :file-url="v.fileUrl" :a-link-words="v.fileName" />
+                                </div>
                             </div>
                             <div v-else>-</div>
                         </el-col>

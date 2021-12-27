@@ -65,5 +65,7 @@ export const findBankReceipt = (params) => { return axios.get(`/project/api/bank
 export const updateReceiptBank = (params) => axios.post(`/project/api/bank/receipt/fund/receipt/fund-bank-bill`, params)
 // 认领账单明细流水
 export const updateReceiptDetailBank = (params) => axios.post(`/project/api/bank/receipt/fund/receipt/fund-detail-bank-bill`, params)
-// ping
+// 批量支付
 export const updateReceiptBatchBank = (params) => axios.post(`/project/api/bank/receipt/fund/batch-receipt/bank-bill`, params)
+
+export const findDetailByFundId = (params) => axios.get(`/project/api/fund/${params}/detail`)

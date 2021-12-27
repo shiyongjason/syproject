@@ -13,8 +13,8 @@
                     </el-form>
                 </template>
                 <template v-else>
-                    <p>本次支付金额：{{unpaidAmount|moneyFormat}} 元</p>
-                    <p>应支付金额：{{payMoney|moneyFormat}} 元</p>
+                    <p>本次支付金额：{{payMoney.unPaidAmount|moneyFormat}} 元</p>
+                    <p>应支付金额：{{payMoney.paymentAmount|moneyFormat}} 元</p>
                 </template>
                 <p class="uploadpay_second"><i>*</i>支付凭证：<span class="uploadpay_third">（请上传JPG/PNG/JPEG等主流图片格式，最多上传9张，单张大小不得超过20M）</span></p>
                 <HosJoyUpload v-model="attachDocs" :showPreView=true :fileSize=20 :action='action' :fileNum='9' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb()}" accept='.jpg,.png,jpeg'>
@@ -32,7 +32,7 @@
 <script>
 import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import { ccpBaseUrl } from '@/api/config'
-import { payVoucher, getBnumber, payOrderVoucher, updateRemainPayment } from '../api/index'
+import { payVoucher, getBnumber, payOrderVoucher, updateRemainPayment, findDetailByFundId } from '../api/index'
 export default {
     name: 'uploadPay',
     components: { HosJoyUpload },
@@ -62,11 +62,12 @@ export default {
     },
     methods: {
         async onDialogClick (val, source, fundMoney) {
+            // 这里调整 fundID 查询详情
             console.log(val, source, fundMoney)
             this.attachDocs = []
             this.unpaidAmount = 0
             const { data } = await getBnumber({ companyId: val.companyId })
-            this.unpaidAmount = val.unpaidAmount || 0
+
             if (val.unpaidAmount == 0) {
                 this.isZero = true
             } else {
@@ -74,9 +75,12 @@ export default {
             }
             this.batchNumber = data
             this.dialogVisible = true
-            this.fundId = val.id
+            // this.fundId = val.id
             this.companyId = val.companyId
-            this.payMoney = source == 1 ? fundMoney : val.applyAmount ? val.applyAmount : val.paymentAmount
+            const { data: fundDetail } = await findDetailByFundId(val.id)
+            this.payMoney = fundDetail
+            this.unpaidAmount = val.unpaidAmount || 0
+
             this.type = source || this.type
             this.repaymentType = val.repaymentType
             this.uploadpayForm.paidAmount = ''
