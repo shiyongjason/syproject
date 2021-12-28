@@ -178,7 +178,7 @@
                 </div>
                 <p class="remain_mes" v-if="dialogDetail.fundDetailResponseList.length==0">暂无数据</p>
                 <span slot="footer" class="dialog-footer" v-if="lookBoolean">
-                    <span>剩余货款支付进度：{{dialogDetail.paidAmount | moneyFormat}}/{{dialogDetail.paymentAmount | moneyFormat}}</span>
+                    <span>支付进度：{{dialogDetail.paidAmount | moneyFormat}}/{{dialogDetail.paymentAmount | moneyFormat}}</span>
                     <el-button @click="()=> $emit('onClose',false)">取 消</el-button>
                 </span>
             </template>
@@ -321,7 +321,7 @@ export default {
             this.payeeAccountList = this.accountList.filter(item => item == val)[0].payeeAccountList
         },
         handleBill (val, type) {
-            this.bankBillId = val == 2 ? val.id : val.fundId
+            this.bankBillId = type == 2 ? val.id : val.fundId
             this.bankType = type
             this.isApproveShow = true
         }

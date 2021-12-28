@@ -7,7 +7,7 @@
                     <el-form :model="uploadpayForm" :rules="rules" ref="uploadpayForm" label-width="130px">
                         <el-form-item label="本次支付金额：" prop="paidAmount">
                             <!-- unpaidAmount-inputMAX指令金额不刷新问题 -->
-                            <el-input v-if="unpaidAmount" v-model.trim="uploadpayForm.paidAmount" v-isNum:2="uploadpayForm.paidAmount" placeholder="请输入" maxlength="50" v-inputMAX='unpaidAmount'><template slot="append">元</template></el-input>
+                            <el-input  v-model.trim="uploadpayForm.paidAmount" v-isNum:2="uploadpayForm.paidAmount" placeholder="请输入" maxlength="50" v-inputMAX='unpaidAmount'><template slot="append">元</template></el-input>
                             <span style="width:50px;height:50px;text-align:center;margin-left:10px;color:#13C2C2" @click="handleAll">全部</span>
                         </el-form-item>
                     </el-form>
@@ -66,21 +66,22 @@ export default {
             console.log(val, source, fundMoney)
             this.attachDocs = []
             this.unpaidAmount = 0
-            const { data } = await getBnumber({ companyId: val.companyId })
-
-            if (val.unpaidAmount == 0) {
-                this.isZero = true
-            } else {
-                this.isZero = false
+            if (val.companyId) {
+                const { data } = await getBnumber({ companyId: val.companyId })
+                this.batchNumber = data
             }
-            this.batchNumber = data
             this.dialogVisible = true
-            // this.fundId = val.id
-            this.companyId = val.companyId
-            const { data: fundDetail } = await findDetailByFundId(val.id)
-            this.payMoney = fundDetail
-            this.unpaidAmount = val.unpaidAmount || 0
 
+            // if (val.unpaidAmount == 0) {
+            //     this.isZero = true
+            // } else {
+            //     this.isZero = false
+            // }
+            this.fundId = val.advanceId || val.id
+            this.companyId = val.companyId
+            const { data: fundDetail } = await findDetailByFundId(this.fundId)
+            this.payMoney = fundDetail
+            // this.unpaidAmount = val.unpaidAmount || 0
             this.type = source || this.type
             this.repaymentType = val.repaymentType
             this.uploadpayForm.paidAmount = ''
@@ -115,43 +116,27 @@ export default {
             this.uploadpayForm.paidAmount = this.unpaidAmount
         },
         async onSavePay () {
-            if (this.type == 2) {
+            if (this.repaymentType == 2 || this.repaymentType == 3) {
                 // 如果是剩余货款 先进行本次金额校验
-                if (this.repaymentType == 2 || this.repaymentType == 3) {
-                    this.$refs.uploadpayForm.validate(async valid => {
-                        if (valid) {
-                            if (this.attachDocs.length > 0) {
-                                const params = {
-                                    fundId: this.fundId,
-                                    urlList: this.attachDocs,
-                                    paidAmount: this.uploadpayForm.paidAmount,
-                                    createPhone: JSON.parse(sessionStorage.getItem('userInfo')).phoneNumber,
-                                    createBy: JSON.parse(sessionStorage.getItem('userInfo')).employeeName
-                                }
-                                await updateRemainPayment(params)
-                                this.$message.success('支付凭证上传成功')
-                                this.$emit('onBackSearch')
-                                this.dialogVisible = false
-                            } else {
-                                this.$message.warning('请上传支付凭证！')
+                this.$refs.uploadpayForm.validate(async valid => {
+                    if (valid) {
+                        if (this.attachDocs.length > 0) {
+                            const params = {
+                                fundId: this.fundId,
+                                urlList: this.attachDocs,
+                                paidAmount: this.uploadpayForm.paidAmount,
+                                createPhone: JSON.parse(sessionStorage.getItem('userInfo')).phoneNumber,
+                                createBy: JSON.parse(sessionStorage.getItem('userInfo')).employeeName
                             }
+                            await updateRemainPayment(params)
+                            this.$message.success('支付凭证上传成功')
+                            this.$emit('onBackSearch')
+                            this.dialogVisible = false
+                        } else {
+                            this.$message.warning('请上传支付凭证！')
                         }
-                    })
-                } else {
-                    const params = {
-                        fundId: this.fundId,
-                        attachDocs: this.attachDocs,
-                        companyId: this.companyId
                     }
-                    if (this.attachDocs.length == 0) {
-                        this.$message.warning('请上传支付凭证！')
-                        return
-                    }
-                    await payVoucher(params)
-                    this.$message.success('上传成功')
-                    this.$emit('onBackSearch')
-                    this.dialogVisible = false
-                }
+                })
             } else {
                 if (this.attachDocs.length == 0) {
                     this.$message.warning('请上传支付凭证！')
@@ -159,10 +144,12 @@ export default {
                 }
                 const params = {
                     fundId: this.fundId,
-                    attachDocs: this.attachDocs,
-                    companyId: this.companyId
+                    urlList: this.attachDocs,
+                    paidAmount: this.payMoney.unPaidAmount,
+                    createPhone: JSON.parse(sessionStorage.getItem('userInfo')).phoneNumber,
+                    createBy: JSON.parse(sessionStorage.getItem('userInfo')).employeeName
                 }
-                await payVoucher(params)
+                await updateRemainPayment(params)
                 this.$message.success('上传成功')
                 this.$emit('onBackSearch')
                 this.dialogVisible = false

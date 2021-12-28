@@ -166,6 +166,7 @@ export default class ApproveBill extends Vue {
 
     // 获取认领银企账单详情
     public async bankDetailInfo () {
+        this.bankList = []
         const data:any = await Api.getBankDetail(this.bankBillId)
         let dataInfo = data.data
         dataInfo.claimFundResponseList.length > 0 && dataInfo.claimFundResponseList.forEach(item => {

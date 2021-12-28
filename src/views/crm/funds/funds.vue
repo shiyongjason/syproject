@@ -126,7 +126,7 @@
                     </h-button>
                     <template v-if="scope.data.row.repaymentType =='1'">
                         <!-- 服务费(支付待确认金额大于0)才显示支付确认 -->
-                        <h-button table @click="onPayEnter(scope.data.row)" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)&&!scope.data.row.payBatch">支付确认</h-button>
+                        <h-button table @click="onPayDetail(scope.data.row)" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)&&!scope.data.row.payBatch">支付确认</h-button>
                         <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.payBatch&&scope.data.row.paymentFlag==1">
                             批量确认
                         </h-button>
@@ -408,24 +408,22 @@ export default {
             }
         },
         onPayDetail (row) {
-            console.log('row', row)
-            if (row.repaymentType !== 1) {
-                // 剩余货款展示新的支付确认
-                this.reduleDialogVisible = true
-                this.$refs.reduleDialog.findRemainConfirm(row, row.repaymentType)
-            }
+            // if (row.repaymentType !== 1) {
+            //     // 剩余货款展示新的支付确认
+            //     this.reduleDialogVisible = true
+            //     this.$refs.reduleDialog.findRemainConfirm(row, row.repaymentType)
+            // }
+            this.$refs.reduleDialog.findRemainConfirm(row, row.repaymentType)
+            this.reduleDialogVisible = true
         },
         seePayEnter (row) {
-            if (row.repaymentType !== 1) {
-                this.reduleDialogVisible = true
-                this.$refs.reduleDialog.getFundsTicket(row, row.repaymentType)
-            } else {
-                this.fundsDialogVisible = true
-                this.fundsDialogDetail = {
-                    _seeing: true,
-                    id: row.id
-                }
-            }
+            // if (row.repaymentType !== 1) {
+            //     this.reduleDialogVisible = true
+            //     this.$refs.reduleDialog.getFundsTicket(row, row.repaymentType)
+            // } else {
+            this.$refs.reduleDialog.getFundsTicket(row, row.repaymentType)
+            this.reduleDialogVisible = true
+            // }
         },
         switchName () {
             if (this.queryParams.repaymentTypeArrays === '1') {

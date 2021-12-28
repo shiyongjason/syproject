@@ -43,7 +43,7 @@ interface Query{
 const fundType = [{ value: 1, label: '首付款' }, { value: 2, label: '尾款' }, { value: 3, label: '服务费' }, { value: 4, label: '预付款' }]
 const status = [{ value: 0, label: '未认领' }, { value: 1, label: '部分认领' }, { value: 2, label: '全部认领' }]
 
-const BankApi = { 1: 'getBankDetail', 2: 'findFundClaim', 3: 'findFundDetail', 4: 'findFundDetail' }
+const BankApi = { 1: 'getBankDetail', 2: 'findFundDetail', 3: 'findFundClaim', 4: 'findFundDetail' }
 
 @Component({
     name: 'ApproveBill',
@@ -56,7 +56,7 @@ export default class ApproveBill extends Vue {
     @Prop({ type: Boolean, required: true, default: false }) isOpen: boolean;
     @Prop({ type: Number, required: false, default: 0 }) payeeMoney: Number;
     @Prop({ type: String, required: false, default: '' }) payeeName: string;
-    @Prop({ type: String, required: false, default: '' }) bankBillId : any;
+    @Prop({ type: String, required: false, default: '' }) bankBillId : string;
     @Prop({ type: Number, required: true, default: 1 }) bankType : number;
     @Ref('hosjoyTable') readonly hosjoyTableRef!: HTMLFormElement;
     @State('userInfo') userInfo: any
@@ -121,7 +121,7 @@ export default class ApproveBill extends Vue {
     get selectMoeny () {
         const moneny = this.selectList.reduce((sum, val) => {
             // console.log(parseFloat(val.currentReceiptAmount))
-            return sum + parseFloat(val.currentReceiptAmount)
+            return sum + parseFloat(val.currentReceiptAmount || 0)
         }, 0)
         return moneny
     }

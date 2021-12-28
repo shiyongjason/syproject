@@ -437,6 +437,7 @@ export const CRM_UPSTREAM_BANK = 118507
 export const CRM_OPREATE_APPROVE = 118508
 export const CRM_ADVACE_WRITEOFF = 118509
 export const CRM_SUBMIT_PAY = 118510
+export const CRM_ONLINE_PAY = 118513
 // 银企直联入账清单
 export const CRM_ACCOUNT_DETAIL = 118511 // 查看详情
 export const CRM_ACCOUNT_CLAIM = 118512 // 认领账单
