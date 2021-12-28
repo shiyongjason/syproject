@@ -739,6 +739,32 @@ export default {
         },
         addNewProject () {
             this.addProject = true
+            this.isShowAirConditioning = false
+            this.airConditioningOption = []
+            this.isShowLighting = false
+            this.lightingOption = []
+            this.socketOption = []
+            this.isShowCurtain = false
+            this.curtainRadioOption = ''
+            this.environmentOption = []
+            this.doorlockOption = []
+            this.isShowEnergy = false
+            this.isShowAirEnergy = false
+            this.isShowWaterAir = false
+            this.isShowFluorineAir = false
+            this.isShowFtAir = false
+            this.waterAirRadioOption = ''
+            this.fluorineAirRadioOption = ''
+            this.ftAirRadioOption = ''
+            this.isShowOtherEnergy = false
+            this.energyOption = []
+            this.isShowSecurity = false
+            this.securityOption = []
+            this.isShowScene = false
+            this.isShowScenePanel = false
+            this.scenePanelRadioOption = ''
+            this.scenePanelOption = []
+            this.energyConservationOption = []
         },
         async editProject (id) {
             await this.getClouldControlProjectDetail({ id: id })
