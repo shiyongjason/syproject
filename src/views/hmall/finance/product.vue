@@ -87,15 +87,15 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">订单类型：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.childOrderType">
-                            <el-option v-for="item in childOrderType" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        <el-select v-model="queryParams.orderType">
+                            <el-option v-for="item in orderType" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">原订单单号：</div>
                     <div class="query-col-input">
-                        <el-input v-model.trim="queryParams.originalOrderId" placeholder="请输入" maxlength="20"></el-input>
+                        <el-input v-model.trim="queryParams.originalOrderNo" placeholder="请输入" maxlength="20"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -141,7 +141,7 @@ export default {
             orderChannelMap: ORDER_CHANNERL_MAP,
             productStatusOptions: PRODUCT_STATUS_OPTIONS,
             productStatusMap: PRODUCT_STATUS_MAP,
-            childOrderType: CHILD_ORDER_TYPE,
+            orderType: CHILD_ORDER_TYPE,
             initParams: {},
             queryParams: {
                 spuCode: '',
@@ -153,8 +153,8 @@ export default {
                 quantity: '',
                 categoryId: '',
                 childOrderStatus: '',
-                originalOrderId: '',
-                childOrderType: '',
+                originalOrderNo: '',
+                orderType: '',
                 source: '',
                 startPayTime: '',
                 endPayTime: '',
