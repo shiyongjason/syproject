@@ -1,6 +1,6 @@
 <template>
     <el-dialog  :close-on-click-modal=false :title="dialogTitle" :visible.sync="isOpen" width="60%" :before-close="onCancel" class="payment-dialog">
-        <div class="refresh" @click="bankDetailInfo"><el-button type="primary">刷新</el-button></div>
+        <div class="refresh" @click="bankDetailInfo"><el-button type="primary">刷新{{bankType}}</el-button></div>
         <div class="unionPay" v-if="bankType==2||bankType==3">
             <p><span>账单类型：{{ bankDetail.repaymentType&&fundType[bankDetail.repaymentType-1].label }}</span><span>应支付时间：{{bankDetail.schedulePaymentDate | momentFormat('YYYY-MM-DD') }}</span><span>账单总金额：{{bankDetail.fundAmount | moneyFormat }}</span></p>
             <p><span>项目名称：{{ bankDetail.projectName }}</span><span>经销商：{{bankDetail.companyName }}</span><span>本次支付金额：{{bankDetail.paymentAmount | moneyFormat }}</span></p>
@@ -54,7 +54,7 @@ const BankApi = { 1: 'getBankDetail', 2: 'findFundDetail', 3: 'findFundClaim', 4
 
 export default class ApproveBill extends Vue {
     @Prop({ type: Boolean, required: true, default: false }) isOpen: boolean;
-    @Prop({ type: Number, required: false, default: 0 }) payeeMoney: Number;
+    @Prop({ type: Number, required: false, default: 0 }) payeeMoney: number;
     @Prop({ type: String, required: false, default: '' }) payeeName: string;
     @Prop({ type: String, required: false, default: '' }) bankBillId : string;
     @Prop({ type: Number, required: true, default: 1 }) bankType : number;
@@ -67,41 +67,47 @@ export default class ApproveBill extends Vue {
     bankList = []
     bankDetail:any = {}
     dialogTitle:string = '认领账单 |'
-    // :any = 1
-    formTableLabel: tableLabelProps = [
-        { label: '入账流水号', prop: 'billNo' },
-        { label: '入账金额', prop: 'totalAmount', displayAs: 'money' },
-        { label: '已认领金额', prop: 'receiptAmount', displayAs: 'money' },
-        { label: '可认领金额', prop: 'noReceiptAmount', width: '100', displayAs: 'money' },
-        { label: '入账时间', prop: 'receiptTime', displayAs: 'YYYY-MM-DD HH:mm:ss', width: '150' },
-        { label: '认领状态', prop: 'receiptStatus', dicData: status, width: '100' },
-        {
-            label: '本次认领金额',
-            prop: 'currentReceiptAmount',
-            className: 'form-table-header',
-            showOverflowTooltip: false,
-            width: '200',
-            render: (h: CreateElement, scope: TableRenderParam) => {
-                return (
-                    <div v-show={scope.row.checked}>
-                        <el-input
-                            class="mini"
-                            size="mini"
-                            placeholder="请输入"
-                            value={scope.row[scope.column.property]}
-                            onInput={(val) => {
-                                if (val < 0 || val >= scope.row.noReceiptAmount) {
-                                    scope.row[scope.column.property] = scope.row.noReceiptAmount
-                                } else {
-                                    scope.row[scope.column.property] = isNum(val, 2)
-                                }
-                            }}
-                        ></el-input>
-                    </div>
-                )
+
+    get formTableLabel () {
+        let formTableLabel: tableLabelProps = [
+            { label: '入账流水号', prop: 'billNo' },
+            // @ts-ignore
+            { label: '银企直联银行', prop: 'receiptName', isHidden: this.bankType != 4 },
+            { label: '入账金额', prop: 'totalAmount', displayAs: 'money' },
+            { label: '已认领金额', prop: 'receiptAmount', displayAs: 'money' },
+            { label: '可认领金额', prop: 'noReceiptAmount', width: '100', displayAs: 'money' },
+            { label: '入账时间', prop: 'receiptTime', displayAs: 'YYYY-MM-DD HH:mm:ss', width: '150' },
+            { label: '认领状态', prop: 'receiptStatus', dicData: status, width: '100' },
+            {
+                label: '本次认领金额',
+                prop: 'currentReceiptAmount',
+                className: 'form-table-header',
+                showOverflowTooltip: false,
+                width: '200',
+                render: (h: CreateElement, scope: TableRenderParam) => {
+                    return (
+                        <div v-show={scope.row.checked}>
+                            <el-input
+                                class="mini"
+                                size="mini"
+                                placeholder="请输入"
+                                value={scope.row[scope.column.property]}
+                                onInput={(val) => {
+                                    if (val < 0 || val >= scope.row.noReceiptAmount) {
+                                        scope.row[scope.column.property] = scope.row.noReceiptAmount
+                                    } else {
+                                        scope.row[scope.column.property] = isNum(val, 2)
+                                    }
+                                }}
+                            ></el-input>
+                        </div>
+                    )
+                }
             }
-        }
-    ]
+        ]
+        return formTableLabel
+    }
+
     // 获取checked选中数组
     public selectChange (data):void {
         const selectListId = data.map(item => item.billNo)
@@ -159,7 +165,10 @@ export default class ApproveBill extends Vue {
         let index = 0
         for (let i = 0; i < this.bankList.length; i++) {
             if (sum <= this.bankDetail.unReceiptAmount) {
+                console.log('sum', sum)
+
                 if ((sum + this.bankList[i].noReceiptAmount) <= this.bankDetail.unReceiptAmount) {
+                    console.log(index, (sum + this.bankList[i].noReceiptAmount), this.bankDetail.unReceiptAmount)
                     this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                     sum += this.bankList[i].noReceiptAmount
                     index = i + 1
@@ -167,6 +176,7 @@ export default class ApproveBill extends Vue {
                     if (index === i) {
                         let price = this.bankDetail.unReceiptAmount - sum
                         this.bankList[i].currentReceiptAmount = price
+                        sum += this.bankList[i].currentReceiptAmount
                         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                     }
                 }
@@ -236,7 +246,6 @@ export default class ApproveBill extends Vue {
 
     public async mounted () {
         this.bankDetailInfo()
-        console.log(this.bankType)
         if (this.bankType == 3) {
             this.dialogTitle = '手动认领 |'
         }

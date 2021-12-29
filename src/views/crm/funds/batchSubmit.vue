@@ -241,6 +241,10 @@ export default {
         width: 150px;
         height: 150px;
         margin: 10px;
+        img{
+            width: 150px;
+        height: 150px;
+        }
     }
 }
 </style>
