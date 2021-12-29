@@ -384,5 +384,5 @@ export const PAY_METHOD_MAP = new Map([
 export const CHILD_ORDER_TYPE = [
     { label: '全部', value: 0 },
     { label: '常规', value: 1 },
-    { label: '售后', value: 3 }
+    { label: '售后', value: 2 }
 ]
