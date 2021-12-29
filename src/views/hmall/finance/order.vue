@@ -152,7 +152,7 @@ export default {
                 { label: '自有商品', prop: 'own' },
                 { label: '订单来源', prop: 'sourceMerchantName' },
                 { label: '商品所属', prop: 'merchantName' },
-                { label: '售后单号', prop: 'refundOrderNo' }
+                { label: '售后单号', prop: 'returnOrderNo' }
             ]
         }
     },

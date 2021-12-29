@@ -18,7 +18,7 @@ export const transactionInfoTableLabel = [
     { label: '支付时间', prop: 'payTime', formatters: 'dateTime' },
     { label: '订单状态', prop: 'childOrderStatusDescribe' },
     { label: '支付方式', prop: 'payWayDescribe' },
-    { label: '售后单号', prop: 'refundOrderNo' }
+    { label: '售后单号', prop: 'returnOrderNo' }
 ]
 
 // 会员注册明细table

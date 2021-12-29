@@ -216,7 +216,7 @@ export default {
                 { label: '订单状态', prop: 'childOrderStatus' },
                 { label: '商品状态', prop: 'orderProductStatus' },
                 { label: '订单渠道', prop: 'source' },
-                { label: '售后单号', prop: 'refundOrderNo' }
+                { label: '售后单号', prop: 'returnOrderNo' }
             ]
         }
     },
