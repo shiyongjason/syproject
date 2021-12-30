@@ -148,10 +148,10 @@
                         </h-button>
                     </template>
                     <template v-if="queryParams.repaymentTypeArrays =='4'">
-                        <h-button table @click="onPayDetail(scope.data.row)" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key">
+                        <h-button table @click="onPayDetail(scope.data.row)" v-if="(scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key)&&hosAuthCheck(Auths.CRM_FUNDS_CHARGE_FUND_CONFIRM)">
                             支付确认
                         </h-button>
-                        <h-button table @click="onUploadPay(scope.data.row)" v-if="(scope.data.row.paymentFlag==0)&&hosAuthCheck(Auths.CRM_FUNDS_DOWN_UPLOAD)">
+                        <h-button table @click="onUploadPay(scope.data.row)" v-if="(scope.data.row.paymentFlag==0)&&hosAuthCheck(Auths.CRM_FUNDS_CHARGE_FUND_UPLOAD)">
                             上传支付凭证
                         </h-button>
                     </template>
@@ -337,9 +337,9 @@ export default {
             if (type === '3') {
                 return this.hosAuthCheck(this.Auths.CRM_FUNDS_SERVICE_FUND_CONFIRM)
             }
-            if (type === '4') {
-                return this.hosAuthCheck(this.Auths.CRM_FUNDS_CHARGE_FUND_CONFIRM)
-            }
+            // if (type === '4') {
+            //     return this.hosAuthCheck(this.Auths.CRM_FUNDS_CHARGE_FUND_CONFIRM)
+            // }
         },
         hasSeePayEnterAuth (type) {
             // 1-首付款；2-剩余货款；3-服务费；4-预付款
