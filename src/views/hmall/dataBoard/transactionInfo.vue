@@ -121,6 +121,20 @@
                         </el-date-picker>
                     </div>
                 </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">订单类型：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.orderType">
+                            <el-option v-for="item in orderType" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">原订单单号：</div>
+                    <div class="query-col-input">
+                        <el-input v-model.trim="queryParams.originalOrderNo" placeholder="请输入" maxlength="20"></el-input>
+                    </div>
+                </div>
                 <div class="query-cont__col">
                     <h-button type="primary" @click="onSearch">查询</h-button>
                     <h-button @click="onReset">重置</h-button>
@@ -133,7 +147,7 @@
     </div>
 </template>
 <script>
-import { transactionInfoTableLabel } from './const'
+import { transactionInfoTableLabel, CHILD_ORDER_TYPE } from './const'
 import { downloadTransactionInfoList } from './api'
 import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
@@ -150,6 +164,8 @@ export default {
                 keyManName: '',
                 brandName: '',
                 childOrderStatus: '',
+                originalOrderNo: '',
+                orderType: 0,
                 source: '',
                 payWay: '',
                 merchantName: '',
@@ -159,7 +175,8 @@ export default {
                 endPayTime: ''
             },
             searchParams: {},
-            tableLabel: transactionInfoTableLabel
+            tableLabel: transactionInfoTableLabel,
+            orderType: CHILD_ORDER_TYPE
         }
     },
     computed: {
@@ -220,6 +237,8 @@ export default {
                 keyManName: '',
                 brandName: '',
                 childOrderStatus: '',
+                originalOrderNo: '',
+                orderType: 0,
                 source: '',
                 payWay: '',
                 merchantName: '',

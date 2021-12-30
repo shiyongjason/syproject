@@ -24,21 +24,21 @@
                         </span>
                     </div>
                 </el-row>
-                <el-row class="mt10" v-if="title!='查看凭证'">
-                    <p style="color:#9999">是否确认收到经销商<span style="color:red">{{companyName}}</span>支付的<span style="color:red">{{item.paymentAmount|moneyFormat}}</span>元货款？</p>
+                <el-row class="mt10" v-if="!lookBoolean">
+                    <p style="color:#9999">是否确认收到经销商<span style="color:red">{{companyName}}</span>支付的<span style="color:red">{{item.paymentAmount|moneyFormat}}</span>元{{repaymentType==3?'服务费':'贷款'}}？</p>
                 </el-row>
             </div>
-            <div class="remian_wrap-bot" v-if="title!='查看凭证'">
+            <div class="remian_wrap-bot" v-if="!lookBoolean && repaymentType!==3">
                 <span class="mr10"><i class="el-icon-warning" style="color:#E6A23C"></i> 确认到账后，将释放掉经销商 <span>{{item.paymentAmount|moneyFormat}}</span> 元的可用额度</span>
             </div>
-            <div class="mt10" v-if="title!='查看凭证'">
+            <div class="mt10" v-if="!lookBoolean">
                 <h-button type="assist" @click="handleReceived(1,item)">确认收到</h-button>
                 <h-button @click="handleReceived(2,item)">并未收到</h-button>
             </div>
         </div>
         <p class="remain_mes" v-if="dialogDetail.fundDetailResponseList.length==0">暂无数据</p>
-        <span slot="footer" class="dialog-footer" v-if="title=='查看凭证'">
-            <span>剩余货款支付进度：{{dialogDetail.paidAmount | moneyFormat}}/{{dialogDetail.paymentAmount | moneyFormat}}</span>
+        <span slot="footer" class="dialog-footer" v-if="lookBoolean">
+            <span>{{ repaymentType == 3 ? '服务费' : '剩余货款' }}支付进度：{{dialogDetail.paidAmount | moneyFormat}}/{{dialogDetail.paymentAmount | moneyFormat}}</span>
             <el-button @click="()=> $emit('onClose')">取 消</el-button>
         </span>
     </el-dialog>
@@ -69,7 +69,9 @@ export default {
         return {
             dialogDetail: { fundDetailResponseList: [] },
             title: '',
-            companyName: ''
+            companyName: '',
+            repaymentType: 0,
+            lookBoolean: false
         }
     },
     computed: {
@@ -89,16 +91,25 @@ export default {
             await updateRemainPayConfirm(params)
             this.$emit('onClose')
         },
-        async getFundsTicket (val) {
+        async getFundsTicket (val, bol) {
             const { data } = await findRemainPayDetail(val.id)
             this.dialogDetail = data
+            this.lookBoolean = true
+            this.repaymentType = bol // 来源服务费tab
             this.title = '查看凭证'
         },
-        async findRemainConfirm (val) {
+        async findRemainConfirm (val, bol) {
             const { data } = await findRemainPayConfirm(val.id)
             this.dialogDetail = data
             this.companyName = val.companyName
-            this.title = `支付确认 | 剩余货款支付进度:${FiltUtil.moneyFormat(data.paidAmount)}/${FiltUtil.moneyFormat(data.paymentAmount)}`
+            this.lookBoolean = false
+            this.repaymentType = bol // 来源服务费tab
+            // 针对服务费进行了处理
+            if (bol == 3) {
+                this.title = `支付确认 | 服务费支付进度:${FiltUtil.moneyFormat(data.paidAmount)}/${FiltUtil.moneyFormat(data.paymentAmount)}`
+            } else {
+                this.title = `支付确认 | 剩余货款支付进度:${FiltUtil.moneyFormat(data.paidAmount)}/${FiltUtil.moneyFormat(data.paymentAmount)}`
+            }
         }
     }
 }

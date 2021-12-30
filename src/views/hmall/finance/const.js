@@ -380,3 +380,9 @@ export const PAY_METHOD_MAP = new Map([
     [11, '活动钱包支付'],
     [5, '组合支付']
 ])
+
+export const CHILD_ORDER_TYPE = [
+    { label: '全部', value: 0 },
+    { label: '常规', value: 1 },
+    { label: '售后', value: 2 }
+]
