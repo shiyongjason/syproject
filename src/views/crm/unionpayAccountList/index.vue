@@ -11,17 +11,17 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">入账金额：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.minTotalAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">万元</template></el-input>
+                        <el-input v-model="queryParams.minTotalAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">元</template></el-input>
                         -
-                        <el-input v-model="queryParams.maxTotalAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">万元</template></el-input>
+                        <el-input v-model="queryParams.maxTotalAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">元</template></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">可认领金额：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.minNoReceiptAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">万元</template></el-input>
+                        <el-input v-model="queryParams.minNoReceiptAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">元</template></el-input>
                         -
-                        <el-input v-model="queryParams.maxNoReceiptAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">万元</template></el-input>
+                        <el-input v-model="queryParams.maxNoReceiptAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">元</template></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
