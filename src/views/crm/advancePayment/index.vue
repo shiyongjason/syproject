@@ -323,7 +323,7 @@
             </span>
         </el-dialog>
         <!-- 预付款支付 -->
-        <el-dialog title="上传预付款支付凭证" :visible.sync="prePayVisble" width="600px" :close-on-click-modal=false :before-close="()=>{prePayVisble = false}">
+        <!-- <el-dialog title="上传预付款支付凭证" :visible.sync="prePayVisble" width="600px" :close-on-click-modal=false :before-close="()=>{prePayVisble = false}">
             <div>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="20" :offset='1'>本次支付金额(元)：{{(prePayForm.payAmount - prePayForm.confirmAmount - prePayForm.paidAmount)|moneyFormat}}</el-col>
@@ -346,7 +346,7 @@
                 <el-button @click="prePayVisble = false">取 消</el-button>
                 <el-button type="primary" @click="handleSubmit">确认支付</el-button>
             </span>
-        </el-dialog>
+        </el-dialog> -->
         <!-- 记录 -->
         <el-dialog title="审批记录" :visible.sync="recordVisible" width="30%" :before-close="()=>{recordVisible = false}">
             <div class="advance_wrap">
@@ -398,6 +398,8 @@
                 <h-button type="primary" @click="handleSubBank">确定</h-button>
             </div>
         </el-dialog>
+            <UploadDialog ref="uploaddialog" @onBackSearch="getList"></UploadDialog>
+
     </div>
 </template>
 
@@ -410,12 +412,12 @@ import ImageAddToken from '@/components/imageAddToken/index.vue'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import downloadFileAddToken from '@/components/downloadFileAddToken/index.vue'
 import { deepCopy } from '@/utils/utils'
-import * as Api from './api/index'
+import UploadDialog from '../funds/components/uploadPayDialog.vue'
 import { PrepaymentDetailResponse, PrepaymentSupplierOnlineBankTransferConfirmRequest, PrepaymentSupplierSubmitResponse, RespContractSignHistory, SupplierOnlineBankTransferConfirmRequest } from '@/interface/hbp-project'
 import { CRM_ADVACE_UPSTREAMPAY, CRM_ADVACE_APPROVE, CRM_ADVACE_LOOK, CRM_OPREATE_APPROVE, CRM_ADVACE_RECORDS, CRM_UPSTREAM_BANK, CRM_UPLOAD_PREPAY, CRM_ADVACE_WRITEOFF, CRM_SUBMIT_PAY, CRM_ONLINE_PAY } from '@/utils/auth_const'
 import { newCache } from '@/utils/index'
 import './css/css.scss'
-import { updatePayOnline } from './api/index'
+import * as Api from './api/index'
 
 // 定义类型
 interface Query{
@@ -443,7 +445,8 @@ enum SubmitApi {
         hosJoyTable,
         OssFileHosjoyUpload,
         ImageAddToken,
-        downloadFileAddToken
+        downloadFileAddToken,
+        UploadDialog
     }
 })
 export default class Advancelist extends Vue {
@@ -638,7 +641,7 @@ export default class Advancelist extends Vue {
     }
 
     public async handlePayOnline (val) {
-        await updatePayOnline({ prepaymentOrderId: val.id })
+        await Api.updatePayOnline({ prepaymentOrderId: val.id })
         this.getList()
     }
 
@@ -681,21 +684,22 @@ export default class Advancelist extends Vue {
     }
 
     public onUploadPrePay (val) {
-        this.prePayForm = {
-            ...this.prePayForm,
-            payAmount: val.applyAmount,
-            confirmAmount: val.confirmAmount,
-            paidAmount: val.paidAmount,
-            prepaymentOrderId: val.id,
-            operator: this.userInfo.employeeName,
-            operatorPhone: this.userInfo.phoneNumber
-        }
-        this.prePayVisble = true
+        // this.prePayForm = {
+        //     ...this.prePayForm,
+        //     payAmount: val.applyAmount,
+        //     confirmAmount: val.confirmAmount,
+        //     paidAmount: val.paidAmount,
+        //     prepaymentOrderId: val.id,
+        //     operator: this.userInfo.employeeName,
+        //     operatorPhone: this.userInfo.phoneNumber
+        // }
+        // this.prePayVisble = true
 
-        this.$nextTick(() => {
-            this.prePayForm.payVouchers = []
-            this.$refs['prePayForm'].clearValidate()
-        })
+        // this.$nextTick(() => {
+        //     this.prePayForm.payVouchers = []
+        //     this.$refs['prePayForm'].clearValidate()
+        // })
+        this.$refs['uploaddialog'].onDialogClick(val)
     }
 
     public handleSubmit () {

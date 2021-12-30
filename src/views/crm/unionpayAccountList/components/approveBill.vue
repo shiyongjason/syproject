@@ -84,7 +84,7 @@ export default class ApproveBill extends Vue {
                                 if (val < 0 || val >= scope.row.unPaidAmount) {
                                     scope.row[scope.column.property] = scope.row.unPaidAmount
                                 } else {
-                                    scope.row[scope.column.property] = val
+                                    scope.row[scope.column.property] = isNum(val, 2)
                                 }
                             }}
                         ></el-input>
@@ -111,6 +111,7 @@ export default class ApproveBill extends Vue {
     // 获取已选中的认领金额
     get selectMoeny () {
         const moneny = this.selectList.reduce((sum, val) => {
+            console.log('val', val.claimAmount)
             return sum + parseFloat(val.claimAmount)
         }, 0)
         return moneny
@@ -149,7 +150,7 @@ export default class ApproveBill extends Vue {
         let index = 0
         for (let i = 0; i < this.bankList.length; i++) {
             if (sum <= this.bankDetail.unReceiptAmount) {
-                if ((sum + this.bankList[i].unPaidAmount) <= this.bankDetail.unReceiptAmount) {
+                if ((sum + this.bankList[i].unPaidAmount) < this.bankDetail.unReceiptAmount) {
                     this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                     sum += this.bankList[i].unPaidAmount
                     index = i + 1
@@ -157,6 +158,7 @@ export default class ApproveBill extends Vue {
                     if (index === i) {
                         let price = this.bankDetail.unReceiptAmount - sum
                         this.bankList[i].claimAmount = price
+                        sum += this.bankList[i].claimAmount
                         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                     }
                 }

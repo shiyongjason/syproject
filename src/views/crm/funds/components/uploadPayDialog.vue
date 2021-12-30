@@ -71,13 +71,7 @@ export default {
                 this.batchNumber = data
             }
             this.dialogVisible = true
-
-            // if (val.unpaidAmount == 0) {
-            //     this.isZero = true
-            // } else {
-            //     this.isZero = false
-            // }
-            this.fundId = val.advanceId || val.id
+            this.fundId = val.fundId || val.advanceId || val.id
             this.companyId = val.companyId
             const { data: fundDetail } = await findDetailByFundId(this.fundId)
             this.payMoney = fundDetail
