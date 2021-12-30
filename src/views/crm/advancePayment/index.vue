@@ -69,7 +69,7 @@
                 <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span>上游预付款支付单总金额：{{totalMoney|moneyFormat}}</span></el-tag>
             </div>
             <!-- end search bar -->
-            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='300' isAction
+            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='400' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
                     <h-button table @click="onApproval(slotProps.data.row)" v-if="hosAuthCheck(advanceapprove)&&(slotProps.data.row.status==-1)">审核</h-button>
@@ -77,8 +77,10 @@
                     <h-button table @click="onWriteOff(slotProps.data.row)" v-if="slotProps.data.row.paymentType==1&&slotProps.data.row.status==5&&hosAuthCheck(advancewriteoff)">核销</h-button>
                     <h-button table @click="onLook(slotProps.data.row)" v-if="hosAuthCheck(advancelook)">查看详情</h-button>
                     <h-button table @click="onApprovalRecord(slotProps.data.row)" v-if="hosAuthCheck(advancerecords)">审批记录</h-button>
-                    <h-button table @click="onUploadPrePay(slotProps.data.row)" v-if="hosAuthCheck(uploadprepay)&&slotProps.data.row.status==0">上传预付凭证</h-button>
+                    <h-button table @click="onUploadPrePay(slotProps.data.row)" v-if="hosAuthCheck(uploadprepay)&&slotProps.data.row.status==0&&slotProps.data.row.applyAmount > 0">上传预付凭证</h-button>
                     <h-button table v-if="slotProps.data.row.showOnlineBank&&hosAuthCheck(banklink)" @click="handleIsPay(slotProps.data.row)">确认已网银支付</h-button>
+                    <h-button table v-if="hosAuthCheck(submitPay)&& (slotProps.data.row.status === 0 || slotProps.data.row.status === 8)">确认支付</h-button>
+                     <h-button table v-if="hosAuthCheck(onlinePay)&&slotProps.data.row.status === 3" @click="handlePayOnline(slotProps.data.row)">司库支付</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -110,6 +112,23 @@
                 <el-row type="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate||'-'}}</el-col>
                     <el-col :span="10" :offset='1'>备注：{{detailForm.applyRemark||'-'}}</el-col>
+                </el-row>
+                <el-row type="flex" class="row-bg">
+                    <el-col class="pay_vouchers mtNone" :span="20" :offset='1'>附件：
+                        <!-- <div class="disFlex" v-if="detailForm.attachDocList && detailForm.attachDocList.length>0">
+                            <span class="img-box" :key="item.fileUrl" v-for="item in detailForm.attachDocList" @click="goDetail(item.fileUrl)">
+                                <img :src="item.fileUrl" alt="">
+                            </span>
+                        </div> -->
+                          <div class="advance_wrap-flex" v-if="detailForm.attachDocList &&detailForm.attachDocList.length>0">
+                                <div v-for="(v,index) in detailForm.attachDocList" :key="index">
+                                    <downloadFileAddToken isPreview isType='preview' :file-url="v.fileUrl" :a-link-words="v.fileName" />
+                                </div>
+                            </div>
+                        <span v-if="detailForm.attachDocList && detailForm.attachDocList.length==0">
+                            -
+                        </span>
+                    </el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>申请时间：{{moment(detailForm.applyTime).format('yyyy-MM-DD HH:mm:ss')||'-'}}</el-col>
@@ -145,12 +164,12 @@
                                 -
                             </span>
                         </el-col>
+                        <el-col class="mt10" :span="10" :offset='1'>支付成功时间：{{detailForm.paidTime?moment(detailForm.paidTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
                     </el-row>
                 </template>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>核销人：{{detailForm.writeOffUser||'-'}}</el-col>
                     <el-col :span="10" :offset='1'>核销时间：{{detailForm.writeOffTime?moment(detailForm.writeOffTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
-
                 </el-row>
                 <el-row>
                     <el-col :span="20" :offset='1'>核销原因：{{detailForm.writeOffRemark||'-'}}</el-col>
@@ -164,7 +183,7 @@
                     <el-col :span="10" :offset='1'>支付日期：{{item.payDate}}</el-col>
                     <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">操作人：{{item.createBy}}</el-col>
                     <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">操作时间：{{ item.createTime | momentFormat }}</el-col>
-                    <el-col :span="20" :offset='1' class="credentials">上游支付凭证123123123：
+                    <el-col :span="20" :offset='1' class="credentials">上游支付凭证：
                         <div v-if="item.payVouchers&&item.payVouchers.length>0">
                             <!-- 司库返回凭证 showSaasButton区分-->
                             <template v-if="detailForm.showSaasButton">
@@ -217,6 +236,14 @@
                         <el-col class="col-padding" :span="23" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>备注信息：{{detailForm.applyRemark||'-'}}</el-col>
+                        <el-col class="col-padding disFlex" :span="23" :offset='1'>附件：
+                           <div class="advance_wrap-flex" v-if="detailForm.attachDocList &&detailForm.attachDocList.length>0">
+                                <div v-for="(v,index) in detailForm.attachDocList" :key="index">
+                                    <downloadFileAddToken isPreview isType='preview' :file-url="v.fileUrl" :a-link-words="v.fileName" />
+                                </div>
+                            </div>
+                            <div v-else>-</div>
+                        </el-col>
                     </el-row>
                 </div>
                 <div class="advance_examine-right">
@@ -299,10 +326,13 @@
         <el-dialog title="上传预付款支付凭证" :visible.sync="prePayVisble" width="600px" :close-on-click-modal=false :before-close="()=>{prePayVisble = false}">
             <div>
                 <el-row ype="flex" class="row-bg">
+                    <el-col :span="20" :offset='1'>本次支付金额(元)：{{(prePayForm.payAmount - prePayForm.confirmAmount - prePayForm.paidAmount)|moneyFormat}}</el-col>
+                </el-row>
+                <el-row ype="flex" class="row-bg">
                     <el-col :span="20" :offset='1'>应支付金额(元)：{{prePayForm.payAmount|moneyFormat}}</el-col>
                 </el-row>
                 <el-form :model="prePayForm" :rules="prePayRules" ref="prePayForm" label-width="150px" class="demo-ruleForm">
-                    <el-form-item label="预付凭证：" prop="payVouchers" style="margin:20px 0">
+                    <el-form-item label="预付凭证：" prop="payVouchers" >
                         <OssFileHosjoyUpload v-model="prePayForm.payVouchers" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.prePayForm.clearValidate('payVouchers')" accept=".jpg,.png,.pdf">
                             <div class="a-line">
                                 <h-button>上传文件</h-button>
@@ -382,10 +412,10 @@ import downloadFileAddToken from '@/components/downloadFileAddToken/index.vue'
 import { deepCopy } from '@/utils/utils'
 import * as Api from './api/index'
 import { PrepaymentDetailResponse, PrepaymentSupplierOnlineBankTransferConfirmRequest, PrepaymentSupplierSubmitResponse, RespContractSignHistory, SupplierOnlineBankTransferConfirmRequest } from '@/interface/hbp-project'
-import { CRM_ADVACE_UPSTREAMPAY, CRM_ADVACE_APPROVE, CRM_ADVACE_LOOK, CRM_OPREATE_APPROVE, CRM_ADVACE_RECORDS, CRM_UPSTREAM_BANK, CRM_UPLOAD_PREPAY, CRM_ADVACE_WRITEOFF } from '@/utils/auth_const'
+import { CRM_ADVACE_UPSTREAMPAY, CRM_ADVACE_APPROVE, CRM_ADVACE_LOOK, CRM_OPREATE_APPROVE, CRM_ADVACE_RECORDS, CRM_UPSTREAM_BANK, CRM_UPLOAD_PREPAY, CRM_ADVACE_WRITEOFF, CRM_SUBMIT_PAY, CRM_ONLINE_PAY } from '@/utils/auth_const'
 import { newCache } from '@/utils/index'
 import './css/css.scss'
-import { CreateElement } from 'vue'
+import { updatePayOnline } from './api/index'
 
 // 定义类型
 interface Query{
@@ -394,7 +424,7 @@ interface Query{
 
 const paymentTypes = [{ value: 1, label: '货款' }, { value: 2, label: '费用' }]
 
-const preStatus = [{ value: -1, label: '待分财审核' }, { value: 0, label: '预付款待支付' }, { value: 1, label: '待项目运营审核' }, { value: 2, label: '流程审批中' }, { value: 3, label: '待支付' }, { value: 4, label: '支付单完成' }, { value: 5, label: '待核销' }, { value: 6, label: '已核销' }, { value: 7, label: '支付单关闭' }]
+const preStatus = [{ value: -1, label: '待分财审核' }, { value: 0, label: '预付款待支付' }, { value: 8, label: '预付款支付待确认' }, { value: 1, label: '待项目运营审核' }, { value: 2, label: '流程审批中' }, { value: 3, label: '待支付' }, { value: 4, label: '支付单完成' }, { value: 5, label: '待核销' }, { value: 6, label: '已核销' }, { value: 7, label: '支付单关闭' }]
 
 enum SubmitApi {
     /** 分财审核通过 */
@@ -439,6 +469,8 @@ export default class Advancelist extends Vue {
     advancerecords = CRM_ADVACE_RECORDS
     uploadprepay = CRM_UPLOAD_PREPAY
     banklink = CRM_UPSTREAM_BANK
+    submitPay = CRM_SUBMIT_PAY
+    onlinePay = CRM_ONLINE_PAY // 司库
     private writeOffVisible:boolean = false
     private dialogVisible:boolean = false
     private comfirmVisble:boolean = false
@@ -498,6 +530,8 @@ export default class Advancelist extends Vue {
     prePayForm:Record<string, any>={
         prepaymentOrderId: '',
         payAmount: '',
+        confirmAmount: '',
+        paidAmount: '',
         operator: '',
         operatorPhone: '',
         payVouchers: []
@@ -599,6 +633,14 @@ export default class Advancelist extends Vue {
     public onEndChange (val): void {
         this.queryParams.applyTimeEnd = val
     }
+    public goDetail (url) {
+        window.open(url)
+    }
+
+    public async handlePayOnline (val) {
+        await updatePayOnline({ prepaymentOrderId: val.id })
+        this.getList()
+    }
 
     public async getList () {
         this.queryParams.jobNumber = this.userInfo.jobNumber as string
@@ -642,6 +684,8 @@ export default class Advancelist extends Vue {
         this.prePayForm = {
             ...this.prePayForm,
             payAmount: val.applyAmount,
+            confirmAmount: val.confirmAmount,
+            paidAmount: val.paidAmount,
             prepaymentOrderId: val.id,
             operator: this.userInfo.employeeName,
             operatorPhone: this.userInfo.phoneNumber

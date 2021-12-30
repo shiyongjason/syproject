@@ -14,29 +14,57 @@
                 </div>
                 <div class="batch_bot">
                     <span>待确认总金额(元)：{{payDetail.totalAmount|moneyFormat}}</span>
-                    <div>
+                    <!-- <div>
                         <el-button type="primary" @click="onNoReceived">并未收到</el-button>
                         <el-button type="primary" @click="onReceived">确认收到</el-button>
+                    </div> -->
+                    <p>是否确认收到经销商{{payDetail.companyName}}支付的{{payDetail.totalAmount|moneyFormat}}元？</p>
+                    <p>你可以选择以下方式确认这笔入账👇：</p>
+                    <div class="batch_bot-btn">
+                        <el-button type="info" @click="handleOffine">线下确认</el-button>
+                        <el-button @click="onNoReceived">并未收到</el-button>
+                        <el-button type="primary" @click="handleClaim">认领流水</el-button>
                     </div>
                 </div>
             </div>
-
         </div>
+         <el-dialog title="再次确认" :visible.sync="offineVisible" :close-on-click-modal=false width="670px" :before-close="()=>offineVisible = false">
+            <p style="color:red">是否确认使用线下方式确认，如果确认则后面不可再关联流水。</p>
+            <div class="remain_title">请确认收款账户信息：</div>
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
+                <el-form-item label="收款方：" prop="payeeName">
+                    <el-radio-group v-model="ruleForm.payeeName" @change="handleChangeRadio">
+                        <el-radio :label=item.payeeName v-for="(item,index) in accountList" :key=index>{{item.payeeName}}</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="收款方账户：" prop="id">
+                    <el-radio-group v-model="ruleForm.id">
+                        <el-radio :label=item.id v-for="(item,index) in payeeAccountList" :key=index>{{item.payeeBankName + item.payeeBankAccount}}</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="handleSubmit">确认收到</el-button>
+            </span>
+        </el-dialog>
+          <ApproveBill :isOpen="isOpen" :payeeName = payDetail.companyName  :payeeMoney = payDetail.totalAmount :bankType="4" @onCancel="()=>isOpen=false" @backonReceived = "onReceived" v-if="isOpen" />
     </div>
 </template>
 <script>
 import HosjoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
-import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import ImageAddToken from '@/components/imageAddToken/index.vue'
-import { ccpBaseUrl } from '@/api/config'
-import { confirmPay, payReceived, payNoReceived } from './api/index'
+import ApproveBill from './components/approveBill.vue'
+import { confirmPay, updateReceiptBatchBank, payNoReceived, payReceived, findPayeeAccount } from './api/index'
 export default {
     name: 'batchpay',
-    components: { HosjoyTable, ImageAddToken },
+    components: { HosjoyTable, ImageAddToken, ApproveBill },
     data () {
         return {
             fileDialog: false,
+            offineVisible: false,
+            isOpen: false,
             docPos: [],
+            bankBillId: '',
             tableLabel: [
                 { label: '项目名称', prop: 'projectName' },
                 { label: '账单流水号', prop: 'id' },
@@ -55,7 +83,18 @@ export default {
             paginationInfo: {
 
             },
-            payDetail: {}
+            payDetail: {},
+            ruleForm: {},
+            rules: {
+                payeeName: [
+                    { required: true, message: '请至少选择一个收款方', trigger: 'change' }
+                ],
+                id: [
+                    { required: true, message: '请至少选择一个收款方账户', trigger: 'change' }
+                ]
+            },
+            payeeAccountList: [],
+            accountList: []
         }
     },
     methods: {
@@ -80,20 +119,54 @@ export default {
             }).catch(() => {
             })
         },
-        onReceived () {
+        handleSubmit (val) {
             const fundId = []
             this.tableData.map(item => {
                 fundId.push(item.id)
             })
-            this.$confirm('确定后，当前页面所有账单的状态将置为「已支付」', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(async () => {
-                await payReceived({ fundId: fundId })
-                this.$router.push({ path: '/goodwork/funds' })
-            }).catch(() => {
+            const params = {
+                fundId: fundId,
+                misCode: this.ruleForm.misCode,
+                payeeName: this.ruleForm.payeeName
+            }
+            this.$refs.ruleForm.validate(async valid => {
+                if (valid) {
+                    await payReceived(params)
+                    this.$router.push({ path: '/goodwork/funds' })
+                }
             })
+        },
+        async onReceived (val) {
+            const params = {
+                fundList: this.tableData,
+                attachDocList: this.payDetail.attachDocs,
+                bankBillReceiptList: val,
+                totalReceiptAmount: this.payDetail.totalAmount
+            }
+            await updateReceiptBatchBank(params)
+            this.$router.push({ path: '/goodwork/funds' })
+            // this.$confirm('确定后，当前页面所有账单的状态将置为「已支付」', '提示', {
+            //     confirmButtonText: '确定',
+            //     cancelButtonText: '取消',
+            //     type: 'warning'
+            // }).then(async () => {
+            //     await payReceived({ fundId: fundId })
+            //     this.$router.push({ path: '/goodwork/funds' })
+            // }).catch(() => {
+            // })
+        },
+        handleChangeRadio (val) {
+            this.payeeAccountList = this.accountList.filter(item => item.payeeName == val)[0].payeeAccountList
+        },
+        async handleOffine () {
+            const { data } = await findPayeeAccount()
+
+            this.accountList = data
+            this.offineVisible = true
+        },
+        handleClaim () {
+            this.isOpen = true
+            this.bankBillId = this.$route.query.fundId
         }
     },
     mounted () {
@@ -116,6 +189,7 @@ export default {
     }
     p {
         color: #909399;
+        margin-top: 10px;
     }
     &_files {
         margin: 10px 0 0 0;
@@ -144,11 +218,14 @@ export default {
     &_bot {
         margin-top: 20px;
         display: flex;
-        justify-content: space-between;
         padding: 20px 0;
         border-top: 1px solid #e5e5e5;
+        flex-direction: column;
         span {
             font-size: 25px;
+        }
+        &-btn{
+            margin-top: 10px;
         }
     }
 }
@@ -158,12 +235,16 @@ export default {
     line-height: 24px !important;
     color: #fff;
 }
-.batch_img{
+.batch_img {
     display: flex;
-    &-flex{
+    &-flex {
         width: 150px;
         height: 150px;
-margin:10px
+        margin: 10px;
+        img{
+            width: 150px;
+        height: 150px;
+        }
     }
 }
 </style>

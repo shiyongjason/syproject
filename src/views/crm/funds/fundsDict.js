@@ -38,6 +38,10 @@ const FundsDict = Object.freeze({
             {
                 key: '2',
                 value: '剩余货款'
+            },
+            {
+                key: '4',
+                value: '预付款'
             }
         ]
     },

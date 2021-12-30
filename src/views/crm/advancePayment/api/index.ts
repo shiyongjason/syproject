@@ -49,3 +49,7 @@ export const updatePrePay: (params) => AxiosPromise = (params) => {
 export const updateOnlineBank :(params)=>AxiosPromise = (params) => {
     return axios.post(`/project/api/supplier-payments/prepayment/online-bank-payment-confirm`, params)
 }
+// 司库 支付
+export const updatePayOnline :(params)=>AxiosPromise = (params) => {
+    return axios.patch(`/project/api/prepayments/boss/pay-online`, params)
+}

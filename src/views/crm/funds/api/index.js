@@ -45,3 +45,27 @@ export const updateRemainPayment = (params) => axios.post('/project/api/fund/bos
 export const findRemainPayConfirm = (params) => axios.get(`/project/api/fund/boss/${params}/remain-payment-confirm-detail`)
 // 剩余货款支付确认
 export const updateRemainPayConfirm = (params) => axios.put(`/project/api/fund/boss/remain-payment/confirm`, params)
+// 新的 账单详情
+export const findFundDetailId = (params) => axios.get(`/project/api/fund/fund-detail/${params}`)
+// 新的服务费支付确认
+export const updateRemainPaymentConfirm = (params) => axios.put(`/project/api/fund/boss/remain-payment/confirm`, params)
+//  预付款列表
+export const findPrePaymentList = (params) => axios.get(`/project/api/fund/prepayment-funds`, { params })
+// 预付款总金额
+export const findPrePaymentAmount = (params) => axios.get('/project/api/fund/prepayment-fund-amount', { params })
+// 帅选 付款账号
+export const findPayeeAccount = (params) => axios.get('/project/api/bank/receipt/payee-account/list', { params })
+// 认领流水
+export const findFundDetail = (params) => { return axios.get(`/project/api/fund/fund-detail-claim/${params}`) }
+// 手动认领
+export const findFundClaim = (params) => { return axios.get(`/project/api/fund/fund-claim/${params}`) }
+// 流水账单明细
+export const findBankReceipt = (params) => { return axios.get(`/project/api/bank/receipt/bank-receipt/list`) }
+// 手动认领确认
+export const updateReceiptBank = (params) => axios.post(`/project/api/bank/receipt/fund/receipt/fund-bank-bill`, params)
+// 认领账单明细流水
+export const updateReceiptDetailBank = (params) => axios.post(`/project/api/bank/receipt/fund/receipt/fund-detail-bank-bill`, params)
+// 批量支付
+export const updateReceiptBatchBank = (params) => axios.post(`/project/api/bank/receipt/fund/batch-receipt/bank-bill`, params)
+
+export const findDetailByFundId = (params) => axios.get(`/project/api/fund/${params}/detail`)
