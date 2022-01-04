@@ -14,8 +14,8 @@
                 </div>
                 <div class="remain_wrap" v-for="(item) in dialogDetail&&dialogDetail.fundDetailResponseList" :key="item.id">
                     <div class="remian_wrap-top">
-                        <el-row v-if="lookBoolean&&(item.receiptType == OFFINE_APPROVEL||item.receiptType == MANUAL_CLAIM_DETAIL)">
-                            <el-row>
+                        <el-row v-if="lookBoolean">
+                            <el-row v-if="item.attachDocResponseList&&item.attachDocResponseList.length>0">
                                 <el-col :span="12">
                                     本次支付金额（元）：{{item.paymentAmount|moneyFormat}}
                                 </el-col>
@@ -34,75 +34,79 @@
                                     操作人：{{item.createBy}} ({{item.createPhone||'-'}})
                                 </el-col>
                             </el-row>
-                            <el-col :span="12">
-                                {{item.receiptType == MANUAL_CLAIM_DETAIL?'认领人':'审核人'}}：{{item.updateBy}}
-                            </el-col>
-                            <el-col :span="12">
-                                审核结果：{{paymentFlagMap&&paymentFlagMap.get(item.paymentFlag)}}
-                            </el-col>
-                            <el-col :span="12">
-                                 {{item.receiptType == MANUAL_CLAIM_DETAIL?'认领时间':'审核时间'}}：{{item.paymentConfirmTime | momentFormat}}
-                            </el-col>
-                            <el-col :span="12">
-                                确认方式：{{receiptTypeMap.get(item.receiptType)}}
-                            </el-col>
-                            <el-col :span="12" v-if="item.receiptType == OFFINE_APPROVEL">
-                                是否批量：{{item.payBatch?'是':'否'}}
-                            </el-col>
-                            <el-col :span="12">
-                                收款方：{{item.createBy}} ({{item.createPhone||'-'}})
-                            </el-col>
-                            <el-col :span="12">
-                                收款方账户：{{item.bankAccountNo}}
-                            </el-col>
-                        </el-row>
-                        <el-row v-if="lookBoolean&&(item.receiptType==ORDER_CANCEL||item.receiptType==MANUAL_CANCELLATION)">
-                            <!--取消认领 预付款支付单/支付单取消  -->
-                            <el-col :span="12">
-                                取消金额（元）：{{item.receiptAmount|moneyFormat}}
-                            </el-col>
-                            <el-col :span="12">
-                                取消时间：{{moment(item.receiptTime).format('yyyy-MM-DD HH:mm:ss')}}
-                            </el-col>
-                            <el-col :span="12">
-                                取消流水号：{{item.billNo}}
-                            </el-col>
-                            <el-col :span="12">
-                                取消人：{{item.receiptUser}}
-                            </el-col>
-                            <el-col :span="12">
-                                确认方式：{{receiptTypeMap.get(item.receiptType)}}
-                            </el-col>
-                            <el-col :span="12">
-                                收款方：{{item.paymentConfirmTime | momentFormat}}
-                            </el-col>
-                            <el-col :span="12">
-                                收款方账户：{{item.bankAccountNo}}
-                            </el-col>
-                        </el-row>
-                        <el-row v-if="lookBoolean&&(item.receiptType==SYSTEM_CLAIM||item.receiptType==MANUAL_CLAIM)">
-                            <!--系统自动 手动认领  -->
-                            <el-col :span="12">
-                                认领金额（元）：{{item.receiptAmount|moneyFormat}}
-                            </el-col>
-                            <el-col :span="12">
-                                认领时间：{{moment(item.receiptTime).format('yyyy-MM-DD HH:mm:ss')}}
-                            </el-col>
-                            <el-col :span="12">
-                                认领流水号：{{item.billNo}}
-                            </el-col>
-                            <el-col :span="12">
-                                认领人：{{item.receiptUser}}
-                            </el-col>
-                            <el-col :span="12">
-                                确认方式：{{receiptTypeMap.get(item.receiptType)}}
-                            </el-col>
-                            <el-col :span="12">
-                                收款方：{{item.paymentConfirmTime | momentFormat}}
-                            </el-col>
-                            <el-col :span="12">
-                                收款方账户：{{item.bankAccountNo}}
-                            </el-col>
+                            <template v-for="(v,i) in item.bankReceiptRecordList">
+                                <el-row v-if="v.receiptType == OFFINE_APPROVEL||v.receiptType == MANUAL_CLAIM_DETAIL" :key="i">
+                                    <el-col :span="12">
+                                        {{item.receiptType == MANUAL_CLAIM_DETAIL?'认领人':'审核人'}}：{{v.receiptUser}}
+                                    </el-col>
+                                    <el-col :span="12">
+                                        审核结果：{{paymentFlagMap&&paymentFlagMap.get(item.paymentFlag)}}
+                                    </el-col>
+                                    <el-col :span="12">
+                                        {{item.receiptType == MANUAL_CLAIM_DETAIL?'认领时间':'审核时间'}}：{{v.paymentConfirmTime | momentFormat}}
+                                    </el-col>
+                                    <el-col :span="12">
+                                        确认方式：{{receiptTypeMap.get(v.receiptType)}}
+                                    </el-col>
+                                    <el-col :span="12">
+                                        是否批量：{{item.payBatch?'是':'否'}}
+                                    </el-col>
+                                    <el-col :span="12">
+                                        收款方：{{v.receiptName||'-'}}
+                                    </el-col>
+                                    <el-col :span="12">
+                                        收款方账户：{{v.bankAccountNo||'-'}}
+                                    </el-col>
+                                </el-row>
+                                <el-row v-if="(v.receiptType==ORDER_CANCEL||v.receiptType==MANUAL_CANCELLATION)" :key="i">
+                                    <!--取消认领 预付款支付单/支付单取消  -->
+                                    <el-col :span="12">
+                                        取消金额（元）：{{v.receiptAmount|moneyFormat}}
+                                    </el-col>
+                                    <el-col :span="12">
+                                        取消时间：{{moment(v.receiptTime).format('yyyy-MM-DD HH:mm:ss')}}
+                                    </el-col>
+                                    <el-col :span="12">
+                                        取消流水号：{{v.billNo}}
+                                    </el-col>
+                                    <el-col :span="12">
+                                        取消人：{{v.receiptUser}}
+                                    </el-col>
+                                    <el-col :span="12">
+                                        确认方式：{{receiptTypeMap.get(v.receiptType)}}
+                                    </el-col>
+                                    <el-col :span="12">
+                                        收款方：{{v.receiptName}}
+                                    </el-col>
+                                    <el-col :span="12">
+                                        收款方账户：{{v.bankAccountNo}}
+                                    </el-col>
+                                </el-row>
+                                <el-row v-if="(v.receiptType==SYSTEM_CLAIM||v.receiptType==MANUAL_CLAIM)" :key="i">
+                                    <!--系统自动 手动认领  -->
+                                    <el-col :span="12">
+                                        认领金额（元）：{{v.receiptAmount|moneyFormat}}
+                                    </el-col>
+                                    <el-col :span="12">
+                                        认领时间：{{moment(v.receiptTime).format('yyyy-MM-DD HH:mm:ss')}}
+                                    </el-col>
+                                    <el-col :span="12">
+                                        认领流水号：{{v.billNo}}
+                                    </el-col>
+                                    <el-col :span="12">
+                                        认领人：{{v.receiptUser}}
+                                    </el-col>
+                                    <el-col :span="12">
+                                        确认方式：{{receiptTypeMap.get(v.receiptType)}}
+                                    </el-col>
+                                    <el-col :span="12">
+                                        收款方：{{v.receiptName}}
+                                    </el-col>
+                                    <el-col :span="12">
+                                        收款方账户：{{v.bankAccountNo}}
+                                    </el-col>
+                                </el-row>
+                            </template>
                         </el-row>
                     </div>
                     <el-row class="mt10" v-if="!lookBoolean">
@@ -151,18 +155,19 @@
                             <el-col :span="12" class="mt10">
                                 支付成功时间：{{item.paymentConfirmTime | momentFormat}}
                             </el-col>
-                            <el-col class="mt10" :span="12">
+                            <el-col :span="12">
+                                支付凭证：
+                                <div class="remian_voucher">
+                                    <span class="img-box" :key="i.id" v-for="(i) in item.attachDocResponseList">
+                                        <imageAddToken :file-url="i.fileUrl" />
+                                    </span>
+                                </div>
+                            </el-col>
+                            <el-col :span="12">
                                 操作人：{{item.createBy}} ({{item.createPhone||'-'}})
                             </el-col>
                         </el-row>
-                        <el-row class="mt10">
-                            支付凭证：
-                            <div class="remian_voucher">
-                                <span class="img-box" :key="i.id" v-for="(i) in item.attachDocResponseList">
-                                    <imageAddToken :file-url="i.fileUrl" />
-                                </span>
-                            </div>
-                        </el-row>
+
                         <el-row class="mt10" v-if="!lookBoolean">
                             <p style="color:#9999">是否确认收到经销商<span style="color:red">{{companyName}}</span>支付的<span style="color:red">{{item.paymentAmount|moneyFormat}}</span>元{{repaymentType==3?'服务费':'贷款'}}？</p>
                         </el-row>

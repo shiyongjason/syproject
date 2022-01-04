@@ -417,6 +417,7 @@ export default {
             this.reduleDialogVisible = true
         },
         seePayEnter (row) {
+            console.log(row)
             // if (row.repaymentType !== 1) {
             //     this.reduleDialogVisible = true
             //     this.$refs.reduleDialog.getFundsTicket(row, row.repaymentType)
