@@ -215,15 +215,20 @@ export default class ApproveBill extends Vue {
             this.$message.error('输入的认领金额不得为0')
             return false
         }
-        if (this.selectMoeny > this.bankDetail.unReceiptAmount) {
-            this.$message.error('当前已选账单水金额不得超过待认领金额')
-            return false
-        }
+
         const claimFundRequestList = this.selectList.filter(item => item.checked)
         if (this.bankType == 4) {
+            if (this.selectMoeny != this.bankDetail.unReceiptAmount) {
+                this.$message.error('已选金额必须等于批量支付总金额')
+                return false
+            }
             // 批量认领
             this.$emit('backonReceived', claimFundRequestList)
         } else if (this.bankType == 2) {
+            if (this.selectMoeny != this.bankDetail.unReceiptAmount) {
+                this.$message.error('已选金额必须等于本次支付金额')
+                return false
+            }
             // 账单明细认领
             await Api.updateReceiptDetailBank({
                 fundDetailId: this.bankDetailId,
@@ -231,6 +236,10 @@ export default class ApproveBill extends Vue {
                 bankBillReceiptList: claimFundRequestList
             })
         } else if (this.bankType == 3) {
+            if (this.selectMoeny > this.bankDetail.unReceiptAmount) {
+                this.$message.error('已选金额不得超过待支付金额')
+                return false
+            }
             // 手动认领
             await Api.updateReceiptBank({
                 fundId: this.bankBillId,
