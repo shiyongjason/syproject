@@ -58,6 +58,7 @@ export default class ApproveBill extends Vue {
     @Prop({ type: String, required: false, default: '' }) payeeName: string;
     @Prop({ type: String, required: false, default: '' }) bankBillId : string;
     @Prop({ type: Number, required: true, default: 1 }) bankType : number;
+    @Prop({ type: String, required: false, default: '' }) bankDetailId:string;
     @Ref('hosjoyTable') readonly hosjoyTableRef!: HTMLFormElement;
     @State('userInfo') userInfo: any
     fundType = fundType
@@ -193,8 +194,8 @@ export default class ApproveBill extends Vue {
         })
         if (this.bankType != 4) {
             // 单个账单认领
-            const { data } = await Api[BankApi[this.bankType]](this.bankBillId)
-            this.bankDetail = { ...data, list: dataInfo, unReceiptAmount: data.fundAmount }
+            const { data } = await Api[BankApi[this.bankType]](this.bankType == 2 ? this.bankDetailId : this.bankBillId)
+            this.bankDetail = { ...data, list: dataInfo, unReceiptAmount: data.paymentAmount }
         } else {
             // 批量账单
             this.bankDetail = { list: dataInfo, unReceiptAmount: this.payeeMoney }
@@ -225,7 +226,8 @@ export default class ApproveBill extends Vue {
         } else if (this.bankType == 2) {
             // 账单明细认领
             await Api.updateReceiptDetailBank({
-                fundDetailId: this.bankBillId,
+                fundDetailId: this.bankDetailId,
+                fundId: this.bankBillId,
                 bankBillReceiptList: claimFundRequestList
             })
         } else if (this.bankType == 3) {
@@ -241,7 +243,8 @@ export default class ApproveBill extends Vue {
         //     createBy: this.userInfo.employeeName,
         //     createPhone: this.userInfo.user_name
         // })
-        // this.$emit('submitResult')
+        // this.isOpen = false
+        this.$emit('onCancel')
     }
 
     public async mounted () {

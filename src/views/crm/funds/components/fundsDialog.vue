@@ -4,9 +4,9 @@
             <div class="row-filed">
                 <div class="row-filed-flex">
                     <p class="tips" v-if="!detail._seeing">
-                        <template v-if="this.status === FundsDict.repaymentTypeArrays.list[0].key">首付款</template>
-                        <template v-if="this.status === FundsDict.repaymentTypeArrays.list[1].key">服务费</template>
-                        <template v-if="this.status === FundsDict.repaymentTypeArrays.list[2].key">剩余货款</template>
+                        <template v-if="status === FundsDict.repaymentTypeArrays.list[0].key">首付款</template>
+                        <template v-if="status === FundsDict.repaymentTypeArrays.list[1].key">服务费</template>
+                        <template v-if="status === FundsDict.repaymentTypeArrays.list[2].key">剩余货款</template>
                         金额(元)：{{dialogDetail.paymentAmount | moneyFormat}}
                     </p>
                     <p v-if="!detail._seeing">
