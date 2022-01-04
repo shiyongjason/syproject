@@ -75,7 +75,7 @@ export default {
             this.companyId = val.companyId
             const { data: fundDetail } = await findDetailByFundId(this.fundId)
             this.payMoney = fundDetail
-            // this.unpaidAmount = val.unpaidAmount || 0
+            this.unpaidAmount = fundDetail.unPaidAmount || 0
             this.type = source || this.type
             this.repaymentType = val.repaymentType
             this.uploadpayForm.paidAmount = ''

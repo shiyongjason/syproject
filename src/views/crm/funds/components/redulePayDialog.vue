@@ -14,7 +14,6 @@
                 </div>
                 <div class="remain_wrap" v-for="(item) in dialogDetail&&dialogDetail.fundDetailResponseList" :key="item.id">
                     <div class="remian_wrap-top">
-
                         <el-row v-if="lookBoolean&&(item.receiptType == OFFINE_APPROVEL||item.receiptType == MANUAL_CLAIM_DETAIL)">
                             <el-row>
                                 <el-col :span="12">
@@ -202,7 +201,7 @@
                 <el-button @click="handleSubmit">确认收到</el-button>
             </span>
         </el-dialog>
-        <ApproveBill :isOpen="isApproveShow" :bankBillId="bankBillId" :bankType="bankType" @onCancel="()=>isApproveShow=false" v-if="isApproveShow" />
+        <ApproveBill :isOpen="isApproveShow" :bankBillId="bankBillId" :bankDetailId="bankDetailId" :bankType="bankType" @onCancel="onBackCancel" v-if="isApproveShow" />
 
     </div>
 </template>
@@ -300,7 +299,8 @@ export default {
             if (bol == 3) {
                 this.title = `服务费支付确认`
             } else {
-                this.title = `支付确认 | 剩余货款支付进度:${FiltUtil.moneyFormat(data.paidAmount)}/${FiltUtil.moneyFormat(data.paymentAmount)}`
+                // 剩余货款
+                this.title = `支付确认 | 支付进度:${FiltUtil.moneyFormat(data.paidAmount)}/${FiltUtil.moneyFormat(data.paymentAmount)}`
             }
         },
         async handleOffine () {
@@ -321,9 +321,14 @@ export default {
             this.payeeAccountList = this.accountList.filter(item => item == val)[0].payeeAccountList
         },
         handleBill (val, type) {
-            this.bankBillId = type == 2 ? val.id : val.fundId
+            this.bankBillId = val.fundId
+            this.bankDetailId = val.id
             this.bankType = type
             this.isApproveShow = true
+        },
+        onBackCancel () {
+            this.isApproveShow = false
+            this.$emit('onClose')
         }
     }
 }
