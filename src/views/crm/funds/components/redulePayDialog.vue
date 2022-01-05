@@ -308,7 +308,7 @@ export default {
             this.title = '查看凭证'
         },
         async findRemainConfirm (val, bol) {
-            const { data } = await findRemainPayConfirm(val.id)
+            const { data } = await findRemainPayConfirm(val.fundId || val.id)
             this.dialogDetail = data
             this.companyName = val.companyName
             this.lookBoolean = false
@@ -329,7 +329,7 @@ export default {
         },
         handleSubmit () {
             const params = {
-                fundDetailId: itemID,
+                fundDetailId: this.itemID,
                 updateBy: JSON.parse(sessionStorage.getItem('userInfo')).employeeName,
                 updatePhone: JSON.parse(sessionStorage.getItem('userInfo')).phoneNumber,
                 confirmType: 1,
