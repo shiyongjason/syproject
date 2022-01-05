@@ -234,8 +234,8 @@ export default class Advancelist extends Vue {
             this.payeeBank = payeeAccountList[0].payeeAccountList
         } else {
             this.payeeBank = []
-            this.queryParams.receiptBankName = ''
         }
+        this.queryParams.receiptBankName = ''
     }
 
     public async getAccountList () {
