@@ -14,7 +14,9 @@
             <p><span>经销商：{{ payeeName }}</span><span>账单数量：{{bankDetail.list&&bankDetail.list.length}}</span></p>
         </div>
         <div class="approve">
-            <hosJoyTable ref="hosjoyTable" align="center" border stripe isShowselection :maxHeight='500' @selection-change="selectChange" :column="formTableLabel" :data="bankList">
+            <hosJoyTable showPagination ref="hosjoyTable" align="center" border stripe isShowselection :maxHeight='800' @selection-change="selectChange" :column="formTableLabel" :data="bankList"
+                :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="queryParams.total" @pagination="getList"
+            >
             </hosJoyTable>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -60,6 +62,7 @@ export default class ApproveBill extends Vue {
     @Prop({ type: String, required: false, default: '' }) bankDetailId:string;
     @Ref('hosjoyTable') readonly hosjoyTableRef!: HTMLFormElement;
     @State('userInfo') userInfo: any
+    copyTable = []
     fundType = fundType
     status = status
     disabled = true
@@ -67,7 +70,11 @@ export default class ApproveBill extends Vue {
     bankList = []
     bankDetail:any = {}
     dialogTitle:string = '认领账单 |'
-
+    queryParams={
+        pageNumber: 1,
+        pageSize: 10,
+        total: 0
+    }
     get formTableLabel () {
         let formTableLabel: tableLabelProps = [
             { label: '入账流水号', prop: 'billNo' },
@@ -86,18 +93,14 @@ export default class ApproveBill extends Vue {
                 width: '200',
                 render: (h: CreateElement, scope: TableRenderParam) => {
                     return (
-                        <div v-show={scope.row.checked}>
+                        <div v-show={this.selectList.includes(scope.row)}>
                             <el-input
                                 class="mini"
                                 size="mini"
                                 placeholder="请输入"
-                                value={scope.row[scope.column.property]}
+                                value={Number(scope.row[scope.column.property])}
                                 onInput={(val) => {
-                                    if (val < 0 || val >= scope.row.noReceiptAmount) {
-                                        scope.row[scope.column.property] = scope.row.noReceiptAmount
-                                    } else {
-                                        scope.row[scope.column.property] = isNum(val, 2)
-                                    }
+                                    scope.row.currentReceiptAmount = isNum(val, 2)
                                 }}
                             ></el-input>
                         </div>
@@ -110,17 +113,17 @@ export default class ApproveBill extends Vue {
 
     // 获取checked选中数组
     public selectChange (data):void {
-        const selectListId = data.map(item => item.billNo)
-        this.bankList.forEach(row => {
-            if (selectListId.indexOf(row.billNo) >= 0) {
-                row.checked = true
-                row.currentReceiptAmount = row.currentReceiptAmount || row.noReceiptAmount
-            } else {
-                row.checked = false
-                row.currentReceiptAmount = null
-            }
-        })
+        console.log('log::::::this.bankList', this.bankList)
         this.selectList = data
+        setTimeout(() => {
+            this.bankList.forEach(row => {
+                if (this.selectList.includes(row)) {
+                    row.currentReceiptAmount = row.currentReceiptAmount || row.noReceiptAmount
+                } else {
+                    row.currentReceiptAmount = null
+                }
+            })
+        }, 0)
         this.disabled = !data.length
     }
     // 获取已选中的认领金额
@@ -183,14 +186,27 @@ export default class ApproveBill extends Vue {
             }
         }
     }
-
+    getList () {
+        let start = this.queryParams.pageNumber > 1 ? this.queryParams.pageNumber * this.queryParams.pageSize : 0
+        let end = this.queryParams.pageNumber > 1 ? (this.queryParams.pageNumber + 1) * this.queryParams.pageSize : this.queryParams.pageSize
+        let newList = this.copyTable.slice(start, end)
+        this.bankList = newList
+        console.log('🚀 --- getList --- new', newList)
+        this.selectList.forEach(item => {
+            this.$nextTick(() => {
+                this.hosjoyTableRef.toggleRowSelection(item)
+            })
+        })
+    }
     // 获取认领银企账单详情
     public async bankDetailInfo () {
         const { data: dataInfo } = await Api.findBankReceipt({ payeeName: this.payeeName, receiptStatusArray: '0,1' })
+        this.queryParams.total = dataInfo.length
         dataInfo.length > 0 && dataInfo.forEach(item => {
             item.currentReceiptAmount = ''
-            item.checked = false
+            // item.checked = false
         })
+        this.copyTable = JSON.parse(JSON.stringify(dataInfo))
         if (this.bankType != 4) {
             // 单个账单认领
             const { data } = await Api[BankApi[this.bankType]](this.bankType == 2 ? this.bankDetailId : this.bankBillId)
@@ -200,7 +216,8 @@ export default class ApproveBill extends Vue {
             this.bankDetail = { list: dataInfo, unReceiptAmount: this.payeeMoney }
         }
         // let dataInfo = data
-        this.bankList = dataInfo
+        this.bankList = this.copyTable.slice(0, 10)
+        console.log('🚀 --- bankDetailInfo --- this.bankList', this.bankList)
         // 默认选中对应的流水
         this.$nextTick(() => {
             this.selectSum()
