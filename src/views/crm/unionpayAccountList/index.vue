@@ -229,8 +229,13 @@ export default class Advancelist extends Vue {
     }
 
     public onPayee (val): void {
-        const payeeAccountList = this.accountList.filter(item => item.payeeName == val)
-        this.payeeBank = payeeAccountList[0].payeeAccountList
+        if (val) {
+            const payeeAccountList = this.accountList.filter(item => item.payeeName == val)
+            this.payeeBank = payeeAccountList[0].payeeAccountList
+        } else {
+            this.payeeBank = []
+        }
+        this.queryParams.receiptBankName = ''
     }
 
     public async getAccountList () {
