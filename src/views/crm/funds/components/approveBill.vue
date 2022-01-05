@@ -1,8 +1,10 @@
 <template>
-    <el-dialog :close-on-click-modal=false :title="dialogTitle" :visible.sync="isOpen" width="60%" :before-close="onCancel" class="payment-dialog">
-        <div class="refresh" @click="bankDetailInfo">
-            <el-button type="primary">刷 新</el-button>
+    <el-dialog :close-on-click-modal=false  :visible.sync="isOpen" width="60%" :before-close="onCancel" class="payment-dialog">
+        <span slot="title" class="dialog-title">
+            {{dialogTitle}}
+            <div class="refresh" @click="bankDetailInfo"><el-button type="primary">刷 新</el-button>
         </div>
+        </span>
         <div class="unionPay" v-if="bankType==2||bankType==3">
             <p><span>账单类型：{{ bankDetail.repaymentType&&fundType[bankDetail.repaymentType-1].label }}</span><span>应支付时间：{{bankDetail.schedulePaymentDate | momentFormat('YYYY-MM-DD') }}</span><span>账单总金额：{{bankDetail.fundAmount | moneyFormat }}</span></p>
             <p><span>项目名称：{{ bankDetail.projectName }}</span><span>经销商：{{bankDetail.companyName }}</span><span>本次支付金额：{{bankDetail.paymentAmount | moneyFormat }}</span></p>
@@ -293,11 +295,17 @@ export default class ApproveBill extends Vue {
         text-align: right;
     }
 }
+.dialog-title{
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+}
 .refresh {
     // position: absolute;
     // top: 10px;
     // left: 120px;
-    margin-bottom: 10px;
+    padding-left: 10px;
+
 }
 /deep/.el-dialog .el-input {
     width: 100%;

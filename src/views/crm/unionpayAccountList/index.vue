@@ -158,17 +158,17 @@ export default class Advancelist extends Vue {
     source = ''
 
     private tableLabel:tableLabelProps = [
-        { label: '入账流水号', prop: 'billNo', width: '120px' },
-        { label: '入账金额', prop: 'totalAmount', displayAs: 'money', width: '100' },
-        { label: '已认领金额', prop: 'receiptAmount', displayAs: 'money', width: '100' },
-        { label: '可认领金额', prop: 'noReceiptAmount', displayAs: 'money', width: '100' },
-        { label: '付款方', prop: 'payeeName', width: '160' },
-        { label: '付款方账号', prop: 'payeeBankAccount', width: '120' },
-        { label: '付款银行', prop: 'payeeBankName', width: '120' },
-        { label: '收款方', prop: 'receiptName', width: '160' },
-        { label: '银企直联银行', prop: 'receiptBankName', width: '160' },
-        { label: '银企直联账户', prop: 'receiptBankAccount', width: '160' },
-        { label: '入账时间', prop: 'receiptTime', displayAs: 'YYYY-MM-DD HH:mm:ss', width: '160' },
+        { label: '入账流水号', prop: 'billNo', width: '150px' },
+        { label: '入账金额(元)', prop: 'totalAmount', displayAs: 'money', width: '100' },
+        { label: '已认领金额(元)', prop: 'receiptAmount', displayAs: 'money', width: '130' },
+        { label: '可认领金额(元)', prop: 'noReceiptAmount', displayAs: 'money', width: '130' },
+        { label: '付款方', prop: 'payeeName' },
+        { label: '付款方账号', prop: 'payeeBankAccount' },
+        { label: '付款银行', prop: 'payeeBankName' },
+        { label: '收款方', prop: 'receiptName', width: '160px' },
+        { label: '银企直联银行', prop: 'receiptBankName' },
+        { label: '银企直联账户', prop: 'receiptBankAccount', width: '160px' },
+        { label: '入账时间', prop: 'receiptTime', displayAs: 'YYYY-MM-DD HH:mm:ss', width: '160px' },
         { label: '认领状态', prop: 'receiptStatus', dicData: Unionstatus }
     ]
     private tableData = []

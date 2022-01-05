@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col__label">支付单编号：</div>
+                    <div class="query-col__label">{{queryParams.repaymentTypeArrays==4?'预付款':''}}支付单编号：</div>
                     <div class="query-col__input" v-if="queryParams.repaymentTypeArrays==4">
                         <el-input v-model="queryParams.prepaymentNo" placeholder="请输入" maxlength="50"></el-input>
                     </div>
@@ -34,7 +34,7 @@
                         <el-input v-model="queryParams.companyName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont__col" v-if="queryParams.repaymentTypeArrays!==1">
+                <div class="query-cont__col" >
                     <div class="query-col__label">已支付金额：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.minPaidAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">元</template></el-input>
@@ -42,7 +42,7 @@
                         <el-input v-model="queryParams.maxPaidAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">元</template></el-input>
                     </div>
                 </div>
-                <div class="query-cont__col" v-if="queryParams.repaymentTypeArrays!==1">
+                <div class="query-cont__col">
                     <div class="query-col__label">支付待确认金额：</div>
                     <div class="query-col__input">
                         <el-input v-model.trim="queryParams.minUnconfirmedAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">元</template></el-input>
@@ -50,7 +50,7 @@
                         <el-input v-model.trim="queryParams.maxUnconfirmedAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">元</template></el-input>
                     </div>
                 </div>
-                <div class="query-cont__col" v-if="queryParams.repaymentTypeArrays!==1">
+                <div class="query-cont__col" >
                     <div class="query-col__label">待支付金额：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.minUnpaidAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">元</template></el-input>
@@ -240,12 +240,22 @@ export default {
             crmDeptList: 'crmmanage/crmdepList'
         }),
         options () {
-            return {
-                type: 'datetime',
-                valueFormat: 'yyyy-MM-ddTHH:mm:ss',
-                format: 'yyyy-MM-dd HH:mm:ss',
-                startTime: this.queryParams.scheduleStartTime,
-                endTime: this.queryParams.scheduleEndTime
+            if (this.queryParams.repaymentTypeArrays == 4) {
+                return {
+                    type: 'date',
+                    valueFormat: 'yyyy-MM-dd',
+                    format: 'yyyy-MM-dd',
+                    startTime: this.queryParams.scheduleStartTime,
+                    endTime: this.queryParams.scheduleEndTime
+                }
+            } else {
+                return {
+                    type: 'datetime',
+                    valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+                    format: 'yyyy-MM-dd HH:mm:ss',
+                    startTime: this.queryParams.scheduleStartTime,
+                    endTime: this.queryParams.scheduleEndTime
+                }
             }
         },
         payOptions () {
@@ -259,7 +269,7 @@ export default {
         },
         tableLabel () {
             const label = [
-                { label: '', prop: 'id', width: '150' },
+                { label: '', prop: 'id', width: '155' },
                 { label: '所属分部', prop: 'subsectionName', width: '150' },
                 { label: '经销商', prop: 'companyName', width: '150' },
                 { label: '所属项目', prop: 'projectName', width: '150' },
@@ -275,10 +285,11 @@ export default {
                 { label: '首付款总金额', prop: 'paymentAmount', width: '150', isHidden: this.queryParams.repaymentTypeArrays !== '1' },
                 { label: '金额', prop: 'paymentAmount', width: '150', isHidden: this.queryParams.repaymentTypeArrays != '3' },
                 { label: '剩余货款总金额', prop: 'paymentAmount', formatters: 'moneyShow', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays !== '2' },
-                { label: '已支付金额', prop: 'paidAmount', formatters: 'moneyShow', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays == '4' },
-                { label: '支付待确认金额', prop: 'unconfirmedAmount', formatters: 'moneyShow', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays == '4' },
-                { label: '待支付金额', prop: 'unpaidAmount', formatters: 'moneyShow', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays == '4' },
                 { label: '预付款金额', prop: 'paymentAmount', formatters: 'moneyShow', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays !== '4' },
+                { label: '已支付金额', prop: 'paidAmount', formatters: 'moneyShow', width: '150', align: 'center' },
+                { label: '支付待确认金额', prop: 'unconfirmedAmount', formatters: 'moneyShow', width: '150', align: 'center' },
+                { label: '待支付金额', prop: 'unpaidAmount', formatters: 'moneyShow', width: '150', align: 'center' },
+
                 { label: '状态', prop: 'paymentFlag', width: '150' },
                 {
                     label: '应支付日期',
