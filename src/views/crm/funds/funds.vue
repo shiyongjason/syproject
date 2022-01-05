@@ -4,13 +4,19 @@
             <div class="query-cont__row">
                 <div class="query-cont-col">
                     <div class="query-col__label">{{labelName}}：</div>
-                    <div class="query-col__input">
+                    <div class="query-col__input" v-if="queryParams.repaymentTypeArrays==4">
+                        <el-input v-model="queryParams.prepaymentOrderId" placeholder="请输入" maxlength="50"></el-input>
+                    </div>
+                    <div class="query-col__input" v-else>
                         <el-input v-model="queryParams.fundId" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">支付单编号：</div>
-                    <div class="query-col__input">
+                    <div class="query-col__input" v-if="queryParams.repaymentTypeArrays==4">
+                        <el-input v-model="queryParams.prepaymentNo" placeholder="请输入" maxlength="50"></el-input>
+                    </div>
+                    <div class="query-col__input" v-else>
                         <el-input v-model="queryParams.paymentOrderNo" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
