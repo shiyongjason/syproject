@@ -77,6 +77,7 @@ export default class ApproveBill extends Vue {
     }
     get formTableLabel () {
         let formTableLabel: tableLabelProps = [
+            { label: 'id', prop: 'id' },
             { label: '入账流水号', prop: 'billNo' },
             // @ts-ignore
             { label: '银企直联银行', prop: 'receiptName', isHidden: this.bankType != 4 },
@@ -187,11 +188,10 @@ export default class ApproveBill extends Vue {
         }
     }
     getList () {
-        let start = this.queryParams.pageNumber > 1 ? this.queryParams.pageNumber * this.queryParams.pageSize : 0
-        let end = this.queryParams.pageNumber > 1 ? (this.queryParams.pageNumber + 1) * this.queryParams.pageSize : this.queryParams.pageSize
+        let start = (this.queryParams.pageNumber - 1) * this.queryParams.pageSize
+        let end = this.queryParams.pageNumber * this.queryParams.pageSize
         let newList = this.copyTable.slice(start, end)
         this.bankList = newList
-        console.log('🚀 --- getList --- new', newList)
         this.selectList.forEach(item => {
             this.$nextTick(() => {
                 this.hosjoyTableRef.toggleRowSelection(item)
