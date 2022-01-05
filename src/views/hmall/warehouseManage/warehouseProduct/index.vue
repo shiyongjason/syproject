@@ -71,8 +71,8 @@ export default {
                 { label: '商品名称', prop: 'skuName' },
                 { label: '归属商家名称', prop: 'merchantName' },
                 { label: '商品类型', prop: 'goodsType' },
-                { label: '市区单件运费价格（徐州）', prop: 'cityPrice', formatters: 'moneyShow' },
-                { label: '县区单件运费价格（徐州）', prop: 'countryPrice', formatters: 'moneyShow' },
+                { label: '市区单件运费价格', prop: 'cityPrice', formatters: 'moneyShow' },
+                { label: '县区单件运费价格', prop: 'countryPrice', formatters: 'moneyShow' },
                 { label: '添加时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '添加人', prop: 'createBy' },
                 { label: '最后维护人', prop: 'updateBy' }
