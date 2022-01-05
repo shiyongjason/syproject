@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-dialog :title="title" :visible.sync="isOpen" :close-on-click-modal=false width="670px" :before-close="()=> $emit('onClose',false)">
-            <template v-if="repaymentType==3">
+            <template>
                 <div class="remain_head">
                     <div>总金额：<b>{{dialogDetail.paymentAmount|moneyFormat}}</b></div>
                     <div>已支付金额：<b>{{dialogDetail.paidAmount|moneyFormat}}</b></div>
@@ -35,7 +35,7 @@
                                 </el-col>
                             </el-row>
                             <template v-for="(v,i) in item.bankReceiptRecordList">
-                                <el-row v-if="v.receiptType == OFFINE_APPROVEL||v.receiptType == MANUAL_CLAIM_DETAIL" :key="i">
+                                <el-row class="dialog_box" v-if="v.receiptType == OFFINE_APPROVEL||v.receiptType == MANUAL_CLAIM_DETAIL" :key="i">
                                     <el-col :span="12">
                                         {{item.receiptType == MANUAL_CLAIM_DETAIL?'认领人':'审核人'}}：{{v.receiptUser}}
                                     </el-col>
@@ -58,7 +58,7 @@
                                         收款方账户：{{v.bankAccountNo||'-'}}
                                     </el-col>
                                 </el-row>
-                                <el-row v-if="(v.receiptType==ORDER_CANCEL||v.receiptType==MANUAL_CANCELLATION)" :key="i">
+                                <el-row  class="dialog_box" v-if="(v.receiptType==ORDER_CANCEL||v.receiptType==MANUAL_CANCELLATION)" :key="i">
                                     <!--取消认领 预付款支付单/支付单取消  -->
                                     <el-col :span="12">
                                         取消金额（元）：{{v.receiptAmount|moneyFormat}}
@@ -82,7 +82,7 @@
                                         收款方账户：{{v.bankAccountNo}}
                                     </el-col>
                                 </el-row>
-                                <el-row v-if="(v.receiptType==SYSTEM_CLAIM||v.receiptType==MANUAL_CLAIM)" :key="i">
+                                <el-row class="dialog_box" v-if="(v.receiptType==SYSTEM_CLAIM||v.receiptType==MANUAL_CLAIM)" :key="i">
                                     <!--系统自动 手动认领  -->
                                     <el-col :span="12">
                                         认领金额（元）：{{v.receiptAmount|moneyFormat}}
@@ -129,11 +129,11 @@
                                 操作人：{{item.createBy}} ({{item.createPhone||'-'}})
                             </el-col>
                         </el-row>
-                        <p style="color:#9999">是否确认收到经销商<span style="color:red">{{companyName}}</span>支付的<span style="color:red">{{item.paymentAmount|moneyFormat}}</span>元服务费</p>
+                        <p style="color:#9999;margin-top:10px">是否确认收到经销商<span style="color:red">{{companyName}}</span>支付的<span style="color:red">{{item.paymentAmount|moneyFormat}}</span>元{{repaymentType==3?'服务费':'贷款'}}</p>
                         <strong style="color:red">你可以选择以下方式确认这笔入账👇：</strong>
                     </el-row>
                     <div class="mt10" v-if="!lookBoolean">
-                        <h-button type="assist" @click="handleOffine">线下确认</h-button>
+                        <h-button type="assist" @click="handleOffine(item)">线下确认</h-button>
                         <h-button @click="handleReceived(2,item)">并未收到</h-button>
                         <h-button type="primary" @click="handleBill(item,2)">认领流水</h-button>
                     </div>
@@ -142,7 +142,7 @@
                     <p style="text-align:center">暂无待确认的凭证</p>
                 </div>
             </template>
-            <template v-else>
+            <!-- <template v-else>
                 <div class="remain_wrap" v-for="(item) in dialogDetail&&dialogDetail.fundDetailResponseList" :key="item.id">
                     <div class="remian_wrap-top">
                         <el-row>
@@ -155,7 +155,7 @@
                             <el-col :span="12" class="mt10">
                                 支付成功时间：{{item.paymentConfirmTime | momentFormat}}
                             </el-col>
-                              <el-col :span="12">
+                            <el-col :span="12">
                                 操作人：{{item.createBy}} ({{item.createPhone||'-'}})
                             </el-col>
                             <el-col :span="12">
@@ -186,21 +186,27 @@
                     <span>支付进度：{{dialogDetail.paidAmount | moneyFormat}}/{{dialogDetail.paymentAmount | moneyFormat}}</span>
                     <el-button @click="()=> $emit('onClose',false)">取 消</el-button>
                 </span>
-            </template>
+            </template> -->
         </el-dialog>
         <el-dialog title="再次确认" :visible.sync="offineVisible" :close-on-click-modal=false width="670px" :before-close="()=>offineVisible = false">
             <p style="color:red">是否确认使用线下方式确认，如果确认则后面不可再关联流水。</p>
             <div class="remain_title">请确认收款账户信息：</div>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                <el-form-item label="收款方" prop="resource">
-                    <el-radio-group v-model="ruleForm.resource" @change="handleChangeRadio">
+                <el-form-item label="收款方" prop="payeeName">
+                    <el-radio-group v-model="ruleForm.payeeName" @change="handleChangeRadio">
                         <el-radio :label=item v-for="(item,index) in accountList" :key=index>{{item.payeeName}}</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="收款方账户" prop="resource">
-                    <el-radio-group v-model="ruleForm.resource1">
+                <el-form-item label="收款方账户" prop="id">
+                    <!-- <el-radio-group v-model="ruleForm.id">
                         <el-radio :label=item.id v-for="(item,index) in payeeAccountList" :key=index>{{item.payeeBankName + item.payeeBankAccount}}</el-radio>
-                    </el-radio-group>
+                    </el-radio-group> -->
+                    <el-select v-model="ruleForm.id" placeholder="请选择">
+                        <el-option v-for="item in payeeAccountList" :key="item.id" :label="item.payeeBankName" :value="item.id">
+                            <span style="float: left">{{ item.payeeBankName }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.payeeBankAccount }}</span>
+                        </el-option>
+                    </el-select>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -216,7 +222,8 @@ import {
     findRemainPayDetail,
     findRemainPayConfirm,
     updateRemainPayConfirm,
-    findPayeeAccount
+    findPayeeAccount,
+    payReceived
 } from '../api'
 import { mapState } from 'vuex'
 import imageAddToken from '@/components/imageAddToken'
@@ -259,12 +266,17 @@ export default {
             repaymentType: 0,
             lookBoolean: false,
             bankBillId: '',
+            itemID: '',
             ruleForm: {
-
+                payeeName: '',
+                id: ''
             },
             rules: {
-                name: [
-                    { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+                payeeName: [
+                    { required: true, message: '请至少选择一个收款方', trigger: 'change' }
+                ],
+                id: [
+                    { required: true, message: '请至少选择一个收款方账户', trigger: 'change' }
                 ]
             },
             accountList: [],
@@ -309,15 +321,25 @@ export default {
                 this.title = `支付确认 | 支付进度:${FiltUtil.moneyFormat(data.paidAmount)}/${FiltUtil.moneyFormat(data.paymentAmount)}`
             }
         },
-        async handleOffine () {
+        async handleOffine (val) {
+            this.itemID = val.id
             const { data } = await findPayeeAccount()
-            console.log(data)
             this.accountList = data
             this.offineVisible = true
         },
         handleSubmit () {
-            this.$refs.ruleForm.validate(valid => {
+            const params = {
+                fundDetailId: itemID,
+                updateBy: JSON.parse(sessionStorage.getItem('userInfo')).employeeName,
+                updatePhone: JSON.parse(sessionStorage.getItem('userInfo')).phoneNumber,
+                confirmType: 1,
+                payeeAccountId: this.ruleForm.id
+                // payeeName: this.ruleForm.payeeName
+            }
+
+            this.$refs.ruleForm.validate(async valid => {
                 if (valid) {
+                    await updateRemainPayConfirm(params)
                     this.offineVisible = false
                     this.$emit('onClose')
                 }
@@ -352,6 +374,7 @@ export default {
 
     div {
         margin-bottom: 10px;
+        padding-right: 15px;
         b {
             color: #ff7a45;
         }
@@ -390,5 +413,18 @@ export default {
         width: 60px;
         height: 60px;
     }
+}
+.dialog_box{
+    box-sizing: border-box;
+    padding-left: 10px;
+    border: 1px solid #dadada;
+    box-shadow: 2px 2px 4px  #dadada;
+    margin-bottom: 8px;
+}
+/deep/.el-dialog .el-select{
+    width: 100%;
+}
+/deep/.el-dialog .el-input{
+    width: 100%;
 }
 </style>

@@ -79,8 +79,8 @@
                     <h-button table @click="onApprovalRecord(slotProps.data.row)" v-if="hosAuthCheck(advancerecords)">审批记录</h-button>
                     <h-button table @click="onUploadPrePay(slotProps.data.row)" v-if="hosAuthCheck(uploadprepay)&&slotProps.data.row.status==0&&slotProps.data.row.applyAmount > 0">上传预付凭证</h-button>
                     <h-button table v-if="slotProps.data.row.showOnlineBank&&hosAuthCheck(banklink)" @click="handleIsPay(slotProps.data.row)">确认已网银支付</h-button>
-                    <h-button table v-if="hosAuthCheck(submitPay)&& (slotProps.data.row.status === 0 || slotProps.data.row.status === 8)">确认支付</h-button>
-                     <h-button table v-if="hosAuthCheck(onlinePay)&&slotProps.data.row.status === 3" @click="handlePayOnline(slotProps.data.row)">司库支付</h-button>
+                    <h-button table v-if="hosAuthCheck(submitPay)&& (slotProps.data.row.status === 0 || slotProps.data.row.status === 8)" @click="handlePreSubmit(slotProps.data.row)">确认支付</h-button>
+                    <h-button table v-if="hosAuthCheck(onlinePay)&&slotProps.data.row.status === 3" @click="handlePayOnline(slotProps.data.row)">司库支付</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -120,11 +120,11 @@
                                 <img :src="item.fileUrl" alt="">
                             </span>
                         </div> -->
-                          <div class="advance_wrap-flex" v-if="detailForm.attachDocList &&detailForm.attachDocList.length>0">
-                                <div v-for="(v,index) in detailForm.attachDocList" :key="index">
-                                    <downloadFileAddToken isPreview isType='preview' :file-url="v.fileUrl" :a-link-words="v.fileName" />
-                                </div>
+                        <div class="advance_wrap-flex" v-if="detailForm.attachDocList &&detailForm.attachDocList.length>0">
+                            <div v-for="(v,index) in detailForm.attachDocList" :key="index">
+                                <downloadFileAddToken isPreview isType='preview' :file-url="v.fileUrl" :a-link-words="v.fileName" />
                             </div>
+                        </div>
                         <span v-if="detailForm.attachDocList && detailForm.attachDocList.length==0">
                             -
                         </span>
@@ -237,7 +237,7 @@
                         <el-col class="col-padding" :span="23" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>备注信息：{{detailForm.applyRemark||'-'}}</el-col>
                         <el-col class="col-padding disFlex" :span="23" :offset='1'>附件：
-                           <div class="advance_wrap-flex" v-if="detailForm.attachDocList &&detailForm.attachDocList.length>0">
+                            <div class="advance_wrap-flex" v-if="detailForm.attachDocList &&detailForm.attachDocList.length>0">
                                 <div v-for="(v,index) in detailForm.attachDocList" :key="index">
                                     <downloadFileAddToken isPreview isType='preview' :file-url="v.fileUrl" :a-link-words="v.fileName" />
                                 </div>
@@ -398,8 +398,8 @@
                 <h-button type="primary" @click="handleSubBank">确定</h-button>
             </div>
         </el-dialog>
-            <UploadDialog ref="uploaddialog" @onBackSearch="getList"></UploadDialog>
-
+        <UploadDialog ref="uploaddialog" @onBackSearch="getList"></UploadDialog>
+   <ReduleDialog :is-open="reduleDialogVisible" ref="reduleDialog" @onClose="fundsDialogClose"></ReduleDialog>
     </div>
 </template>
 
@@ -413,6 +413,8 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import downloadFileAddToken from '@/components/downloadFileAddToken/index.vue'
 import { deepCopy } from '@/utils/utils'
 import UploadDialog from '../funds/components/uploadPayDialog.vue'
+import ReduleDialog from '../funds/components/redulePayDialog.vue'
+
 import { PrepaymentDetailResponse, PrepaymentSupplierOnlineBankTransferConfirmRequest, PrepaymentSupplierSubmitResponse, RespContractSignHistory, SupplierOnlineBankTransferConfirmRequest } from '@/interface/hbp-project'
 import { CRM_ADVACE_UPSTREAMPAY, CRM_ADVACE_APPROVE, CRM_ADVACE_LOOK, CRM_OPREATE_APPROVE, CRM_ADVACE_RECORDS, CRM_UPSTREAM_BANK, CRM_UPLOAD_PREPAY, CRM_ADVACE_WRITEOFF, CRM_SUBMIT_PAY, CRM_ONLINE_PAY } from '@/utils/auth_const'
 import { newCache } from '@/utils/index'
@@ -426,7 +428,7 @@ interface Query{
 
 const paymentTypes = [{ value: 1, label: '货款' }, { value: 2, label: '费用' }]
 
-const preStatus = [{ value: -1, label: '待分财审核' }, { value: 0, label: '预付款待支付' }, { value: 8, label: '预付款支付待确认' }, { value: 1, label: '待项目运营审核' }, { value: 2, label: '流程审批中' }, { value: 3, label: '待支付' }, { value: 4, label: '支付单完成' }, { value: 5, label: '待核销' }, { value: 6, label: '已核销' }, { value: 7, label: '支付单关闭' }]
+const preStatus = [{ value: -1, label: '待分财审核' }, { value: 1, label: '待项目运营审核' }, { value: 2, label: '流程审批中' }, { value: 0, label: '预付款待支付' }, { value: 8, label: '预付款支付待确认' }, { value: 3, label: '待支付' }, { value: 4, label: '支付单完成' }, { value: 5, label: '待核销' }, { value: 6, label: '已核销' }, { value: 7, label: '支付单关闭' }]
 
 enum SubmitApi {
     /** 分财审核通过 */
@@ -446,7 +448,8 @@ enum SubmitApi {
         OssFileHosjoyUpload,
         ImageAddToken,
         downloadFileAddToken,
-        UploadDialog
+        UploadDialog,
+        ReduleDialog
     }
 })
 export default class Advancelist extends Vue {
@@ -464,6 +467,7 @@ export default class Advancelist extends Vue {
          [1, '银行转账'],
          [2, '银行承兑']
      ])
+    reduleDialogVisible:boolean = false
     advancewriteoff = CRM_ADVACE_WRITEOFF
     advancepay = CRM_ADVACE_UPSTREAMPAY
     advanceapprove = CRM_ADVACE_APPROVE // 分财
@@ -643,6 +647,15 @@ export default class Advancelist extends Vue {
     public async handlePayOnline (val) {
         await Api.updatePayOnline({ prepaymentOrderId: val.id })
         this.getList()
+    }
+
+    // 确认支付
+    handlePreSubmit (val) {
+        this.$refs['reduleDialog'].findRemainConfirm(val, val.repaymentType)
+        this.reduleDialogVisible = true
+    }
+    fundsDialogClose () {
+        this.reduleDialogVisible = false
     }
 
     public async getList () {
