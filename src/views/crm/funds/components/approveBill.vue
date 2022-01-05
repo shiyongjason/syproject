@@ -1,6 +1,8 @@
 <template>
-    <el-dialog  :close-on-click-modal=false :title="dialogTitle" :visible.sync="isOpen" width="60%" :before-close="onCancel" class="payment-dialog">
-        <div class="refresh" @click="bankDetailInfo"><el-button type="primary">刷 新</el-button></div>
+    <el-dialog :close-on-click-modal=false :title="dialogTitle" :visible.sync="isOpen" width="60%" :before-close="onCancel" class="payment-dialog">
+        <div class="refresh" @click="bankDetailInfo">
+            <el-button type="primary">刷 新</el-button>
+        </div>
         <div class="unionPay" v-if="bankType==2||bankType==3">
             <p><span>账单类型：{{ bankDetail.repaymentType&&fundType[bankDetail.repaymentType-1].label }}</span><span>应支付时间：{{bankDetail.schedulePaymentDate | momentFormat('YYYY-MM-DD') }}</span><span>账单总金额：{{bankDetail.fundAmount | moneyFormat }}</span></p>
             <p><span>项目名称：{{ bankDetail.projectName }}</span><span>经销商：{{bankDetail.companyName }}</span><span>本次支付金额：{{bankDetail.paymentAmount | moneyFormat }}</span></p>
@@ -10,20 +12,15 @@
             <p><span>经销商：{{ payeeName }}</span><span>账单数量：{{bankDetail.list&&bankDetail.list.length}}</span></p>
         </div>
         <div class="approve">
-            <hosJoyTable
-                ref="hosjoyTable"
-                align="center"
-                border stripe
-                isShowselection
-                :maxHeight='500'
-                @selection-change="selectChange"
-                :column="formTableLabel"
-                :data="bankList"
-                >
+            <hosJoyTable ref="hosjoyTable" align="center" border stripe isShowselection :maxHeight='500' @selection-change="selectChange" :column="formTableLabel" :data="bankList">
             </hosJoyTable>
-            <div class="selectPrice">已选金额：¥{{ selectMoeny|moneyFormat }}</div>
-            <div class="btn"><h-button type="primary" @click="onSubmit" :disabled="disabled">确认认领</h-button></div>
         </div>
+        <span slot="footer" class="dialog-footer">
+            <div class="selectPrice">已选金额：¥{{ selectMoeny|moneyFormat }}</div>
+            <div class="btn">
+                <h-button type="primary" @click="onSubmit" :disabled="disabled">确认认领</h-button>
+            </div>
+        </span>
     </el-dialog>
 </template>
 
@@ -285,7 +282,7 @@ export default class ApproveBill extends Vue {
         }
     }
 }
-.approve {
+.dialog-footer {
     .selectPrice {
         text-align: right;
         padding: 10px 0;
