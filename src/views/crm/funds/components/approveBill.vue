@@ -114,7 +114,7 @@ export default class ApproveBill extends Vue {
         this.bankList.forEach(row => {
             if (selectListId.indexOf(row.billNo) >= 0) {
                 row.checked = true
-                row.currentReceiptAmount = row.currentReceiptAmount || row.unPaidAmount
+                row.currentReceiptAmount = row.currentReceiptAmount || row.noReceiptAmount
             } else {
                 row.checked = false
                 row.currentReceiptAmount = null
