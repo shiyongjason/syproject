@@ -38,9 +38,12 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="收款方账户：" prop="id">
-                    <el-radio-group v-model="ruleForm.id">
-                        <el-radio :label=item.id v-for="(item,index) in payeeAccountList" :key=index>{{item.payeeBankName + item.payeeBankAccount}}</el-radio>
-                    </el-radio-group>
+                     <el-select v-model="ruleForm.id" placeholder="请选择">
+                        <el-option v-for="item in payeeAccountList" :key="item.id" :label="item.payeeBankName" :value="item.id">
+                            <span style="float: left">{{ item.payeeBankName }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.payeeBankAccount }}</span>
+                        </el-option>
+                    </el-select>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -84,7 +87,10 @@ export default {
 
             },
             payDetail: {},
-            ruleForm: {},
+            ruleForm: {
+                payeeName: '',
+                id: ''
+            },
             rules: {
                 payeeName: [
                     { required: true, message: '请至少选择一个收款方', trigger: 'change' }
@@ -126,8 +132,8 @@ export default {
             })
             const params = {
                 fundId: fundId,
-                misCode: this.ruleForm.misCode,
-                payeeName: this.ruleForm.payeeName
+                payeeAccountId: this.ruleForm.id
+                // payeeName: this.ruleForm.payeeName
             }
             this.$refs.ruleForm.validate(async valid => {
                 if (valid) {
@@ -246,5 +252,11 @@ export default {
         height: 150px;
         }
     }
+}
+/deep/.el-dialog .el-select{
+    width: 100%;
+}
+/deep/.el-dialog .el-input{
+    width: 100%;
 }
 </style>

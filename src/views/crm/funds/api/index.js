@@ -60,7 +60,7 @@ export const findFundDetail = (params) => { return axios.get(`/project/api/fund/
 // 手动认领
 export const findFundClaim = (params) => { return axios.get(`/project/api/fund/fund-claim/${params}`) }
 // 流水账单明细
-export const findBankReceipt = (params) => { return axios.get(`/project/api/bank/receipt/bank-receipt/list`) }
+export const findBankReceipt = (params) => { return axios.get(`/project/api/bank/receipt/bank-receipt/list`, { params }) }
 // 手动认领确认
 export const updateReceiptBank = (params) => axios.post(`/project/api/bank/receipt/fund/receipt/fund-bank-bill`, params)
 // 认领账单明细流水

@@ -35,7 +35,7 @@
                     <div class="query-col__input">
                         <el-select v-model="queryParams.receiptName" placeholder="请选择" @change="onPayee">
                             <el-option label="全部" value=""></el-option>
-                            <el-option :label=item.payeeName :value=item.payeeName v-for="(item) in accountList" :key=item.payeeName></el-option>
+                            <el-option :label=item.payeeName :value=item.payeeName v-for="(item,index) in accountList" :key=index></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                     <div class="query-col__input">
                         <el-select v-model="queryParams.receiptBankName" placeholder="请选择">
                             <el-option label="全部" value=""></el-option>
-                            <el-option :label=item.payeeBankName :value=item.payeeBankName v-for="(item) in payeeBank" :key=item.payeeBankName></el-option>
+                            <el-option :label=item.payeeBankName :value=item.payeeBankName v-for="(item,index) in payeeBank" :key=index></el-option>
                         </el-select>
                     </div>
                 </div>
