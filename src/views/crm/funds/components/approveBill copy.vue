@@ -14,7 +14,7 @@
             <p><span>经销商：{{ payeeName }}</span><span>账单数量：{{bankDetail.list&&bankDetail.list.length}}</span></p>
         </div>
         <div class="approve">
-            <hosJoyTable showPagination ref="hosjoyTable" align="center" border stripe isShowselection :maxHeight='800' @selection-change="selectChange" :column="formTableLabel" :data="bankList"
+            <hosJoyTable showPagination ref="hosjoyTable" align="center" border stripe isShowselection :maxHeight='500' @selection-change="selectChange" :column="formTableLabel" :data="bankList"
                 :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="queryParams.total" @pagination="getList"
             >
             </hosJoyTable>
@@ -77,7 +77,6 @@ export default class ApproveBill extends Vue {
     }
     get formTableLabel () {
         let formTableLabel: tableLabelProps = [
-            { label: 'id', prop: 'id' },
             { label: '入账流水号', prop: 'billNo' },
             // @ts-ignore
             { label: '银企直联银行', prop: 'receiptName', isHidden: this.bankType != 4 },
@@ -125,7 +124,8 @@ export default class ApproveBill extends Vue {
                 }
             })
         }, 0)
-        this.disabled = !data.length
+
+        // this.disabled = !data.length
     }
     // 获取已选中的认领金额
     get selectMoeny () {
@@ -188,10 +188,11 @@ export default class ApproveBill extends Vue {
         }
     }
     getList () {
-        let start = (this.queryParams.pageNumber - 1) * this.queryParams.pageSize
-        let end = this.queryParams.pageNumber * this.queryParams.pageSize
+        let start = this.queryParams.pageNumber > 1 ? this.queryParams.pageNumber * this.queryParams.pageSize : 0
+        let end = this.queryParams.pageNumber > 1 ? (this.queryParams.pageNumber + 1) * this.queryParams.pageSize : 10
         let newList = this.copyTable.slice(start, end)
         this.bankList = newList
+        console.log('🚀 --- getList --- new', newList)
         this.selectList.forEach(item => {
             this.$nextTick(() => {
                 this.hosjoyTableRef.toggleRowSelection(item)
