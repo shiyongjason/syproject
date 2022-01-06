@@ -81,7 +81,7 @@ export default class ApproveBill extends Vue {
     dialogTitle:string = '认领账单 |'
     queryParams={
         pageNumber: 1,
-        pageSize: 20,
+        pageSize: 10,
         total: 0
     }
     get formTableLabel () {
