@@ -113,7 +113,8 @@
                     {{ orderChannelMap.get(scope.data.row.source) }}
                 </template>
                 <template slot="childOrderStatus" slot-scope="scope">
-                    {{ orderStatusMap.get(scope.data.row.childOrderStatus) }}
+                    <!-- {{ orderStatusMap.get(scope.data.row.childOrderStatus) }} -->
+                    {{scope.data.row.childOrderStatusDescribe}}
                 </template>
                 <template slot="orderProductStatus" slot-scope="scope">
                     {{ productStatusMap.get(scope.data.row.orderProductStatus) }}
