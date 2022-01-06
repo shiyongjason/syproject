@@ -178,10 +178,7 @@ export default class ApproveBill extends Vue {
         let index = 0
         for (let i = 0; i < this.bankList.length; i++) {
             if (sum <= this.bankDetail.unReceiptAmount) {
-                console.log('sum', sum)
-
                 if ((sum + this.bankList[i].noReceiptAmount) < this.bankDetail.unReceiptAmount) {
-                    console.log(index, (sum + this.bankList[i].noReceiptAmount), this.bankDetail.unReceiptAmount)
                     this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                     sum += this.bankList[i].noReceiptAmount
                     index = i + 1
