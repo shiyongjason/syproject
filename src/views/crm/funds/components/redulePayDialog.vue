@@ -58,7 +58,7 @@
                                         收款方账户：{{v.bankAccountNo||'-'}}
                                     </el-col>
                                 </el-row>
-                                <el-row  class="dialog_box" v-if="(v.receiptType==ORDER_CANCEL||v.receiptType==MANUAL_CANCELLATION)" :key="i">
+                                <el-row class="dialog_box" v-if="(v.receiptType==ORDER_CANCEL||v.receiptType==MANUAL_CANCELLATION)" :key="i">
                                     <!--取消认领 预付款支付单/支付单取消  -->
                                     <el-col :span="12">
                                         取消金额（元）：{{v.receiptAmount|moneyFormat}}
@@ -76,10 +76,10 @@
                                         确认方式：{{receiptTypeMap.get(v.receiptType)}}
                                     </el-col>
                                     <el-col :span="12">
-                                        收款方：{{v.receiptName}}
+                                        收款方：{{v.receiptName||'-'}}
                                     </el-col>
                                     <el-col :span="12">
-                                        收款方账户：{{v.bankAccountNo}}
+                                        收款方账户：{{v.bankAccountNo||'-'}}
                                     </el-col>
                                 </el-row>
                                 <el-row class="dialog_box" v-if="(v.receiptType==SYSTEM_CLAIM||v.receiptType==MANUAL_CLAIM)" :key="i">
@@ -100,10 +100,10 @@
                                         确认方式：{{receiptTypeMap.get(v.receiptType)}}
                                     </el-col>
                                     <el-col :span="12">
-                                        收款方：{{v.receiptName}}
+                                        收款方：{{v.receiptName||'-'}}
                                     </el-col>
                                     <el-col :span="12">
-                                        收款方账户：{{v.bankAccountNo}}
+                                        收款方账户：{{v.bankAccountNo||'-'}}
                                     </el-col>
                                 </el-row>
                             </template>
@@ -414,17 +414,17 @@ export default {
         height: 60px;
     }
 }
-.dialog_box{
+.dialog_box {
     box-sizing: border-box;
     padding-left: 10px;
     border: 1px solid #dadada;
-    box-shadow: 2px 2px 4px  #dadada;
-    margin-bottom: 8px;
+    box-shadow: 2px 2px 4px #dadada;
+    margin-top: 8px;
 }
-/deep/.el-dialog .el-select{
+/deep/.el-dialog .el-select {
     width: 100%;
 }
-/deep/.el-dialog .el-input{
+/deep/.el-dialog .el-input {
     width: 100%;
 }
 </style>
