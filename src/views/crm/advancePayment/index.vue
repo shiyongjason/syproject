@@ -84,7 +84,7 @@
                 </template>
             </hosJoyTable>
         </div>
-        <el-dialog title="上游预付款支付单详情" :visible.sync="dialogVisible" width="800px" :close-on-click-modal=false :before-close="()=>{dialogVisible = false}">
+        <el-dialog title="上游预付款支付单详情" :visible.sync="dialogVisible" width="850px" :close-on-click-modal=false :before-close="()=>{dialogVisible = false}">
             <div class="advance_wrap">
                 <h3>项目信息</h3>
                 <el-row type="flex" class="row-bg">

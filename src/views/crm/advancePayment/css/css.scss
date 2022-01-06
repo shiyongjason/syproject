@@ -29,8 +29,6 @@
 		}
 	}
 	.pay_vouchers {
-		display: flex;
-		flex-direction: row;
 		padding-top: 10px;
 	}
 	.mtNone {
@@ -38,7 +36,13 @@
 	}
 	&-flex {
 		display: flex;
-		flex-direction: column;
+		flex-direction: row;
+        flex-wrap: wrap;
+        // justify-content: space-around;
+        .download-flex{
+            border: 1px solid #e4eee4;
+            margin: 5px;
+        }
 	}
 	.credentials {
 		display: flex;
