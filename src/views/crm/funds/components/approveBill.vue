@@ -6,8 +6,17 @@
         </div>
         </span>
         <div class="unionPay" v-if="bankType==2||bankType==3">
-            <p><span>账单类型：{{ bankDetail.repaymentType&&fundType[bankDetail.repaymentType-1].label }}</span><span>应支付时间：{{bankDetail.schedulePaymentDate | momentFormat('YYYY-MM-DD') }}</span><span>账单总金额：{{bankDetail.fundAmount | moneyFormat }}</span></p>
-            <p><span>项目名称：{{ bankDetail.projectName }}</span><span>经销商：{{bankDetail.companyName }}</span><span>本次支付金额：{{bankDetail.paymentAmount | moneyFormat }}</span></p>
+            <p><span>账单类型：{{ bankDetail.repaymentType&&fundType[bankDetail.repaymentType-1].label }}</span><span>应支付时间：{{bankDetail.schedulePaymentDate | momentFormat('YYYY-MM-DD') }}</span><span>账单总金额：{{bankDetail.fundAmount | moneyFormat }}</span><span>项目名称：{{ bankDetail.projectName }}</span></p>
+            <p><span>经销商：{{bankDetail.companyName }}</span>
+            <template v-if="bankType==2">
+                  <span>本次支付金额：{{bankDetail.paymentAmount | moneyFormat }}</span>
+            </template>
+            <template v-else>
+                  <span>已支付金额：{{bankDetail.paidAmount | moneyFormat }}</span>
+                  <span>待支付金额：{{bankDetail.unpaidAmount | moneyFormat }}</span>
+                  <span>支付待确认金额：{{bankDetail.unconfirmedAmount | moneyFormat }}</span>
+            </template>
+            </p>
         </div>
         <div class="unionPay" v-if="bankType==4">
             <p><span>本次批量支付总金额：{{ payeeMoney | moneyFormat}}元</span></p>
@@ -179,7 +188,7 @@ export default class ApproveBill extends Vue {
                 } else {
                     if (index === i) {
                         let price = this.bankDetail.unReceiptAmount - sum
-                        this.bankList[i].currentReceiptAmount = price
+                        this.bankList[i].currentReceiptAmount = isNum(price, 2)
                         sum += this.bankList[i].currentReceiptAmount
                         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                     }
@@ -210,7 +219,7 @@ export default class ApproveBill extends Vue {
         if (this.bankType != 4) {
             // 单个账单认领
             const { data } = await Api[BankApi[this.bankType]](this.bankType == 2 ? this.bankDetailId : this.bankBillId)
-            this.bankDetail = { ...data, list: dataInfo, unReceiptAmount: data.paymentAmount }
+            this.bankDetail = { ...data, list: dataInfo, unReceiptAmount: data.paymentAmount || data.unpaidAmount }
         } else {
             // 批量账单
             this.bankDetail = { list: dataInfo, unReceiptAmount: this.payeeMoney }
