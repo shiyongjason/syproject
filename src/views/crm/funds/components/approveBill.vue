@@ -81,12 +81,12 @@ export default class ApproveBill extends Vue {
     dialogTitle:string = '认领账单 |'
     queryParams={
         pageNumber: 1,
-        pageSize: 10,
+        pageSize: 20,
         total: 0
     }
     get formTableLabel () {
         let formTableLabel: tableLabelProps = [
-            { label: 'id', prop: 'id' },
+            // { label: 'id', prop: 'id' },
             { label: '入账流水号', prop: 'billNo' },
             // @ts-ignore
             { label: '银企直联银行', prop: 'receiptName', isHidden: this.bankType != 4 },
@@ -108,9 +108,14 @@ export default class ApproveBill extends Vue {
                                 class="mini"
                                 size="mini"
                                 placeholder="请输入"
-                                value={Number(scope.row[scope.column.property])}
+                                value={scope.row[scope.column.property]}
                                 onInput={(val) => {
-                                    scope.row.currentReceiptAmount = isNum(val, 2)
+                                    if (val < 0 || val >= scope.row.noReceiptAmount) {
+                                        scope.row[scope.column.property] = scope.row.noReceiptAmount
+                                    } else {
+                                        scope.row[scope.column.property] = isNum(val, 2)
+                                    }
+                                    // scope.row.currentReceiptAmount = isNum(val, 2)
                                 }}
                             ></el-input>
                         </div>
@@ -222,7 +227,7 @@ export default class ApproveBill extends Vue {
             this.bankDetail = { list: dataInfo, unReceiptAmount: this.payeeMoney }
         }
         // let dataInfo = data
-        this.bankList = this.copyTable.slice(0, 10)
+        this.bankList = this.copyTable.slice(0, this.queryParams.pageSize)
         console.log('🚀 --- bankDetailInfo --- this.bankList', this.bankList)
         // 默认选中对应的流水
         this.$nextTick(() => {
@@ -238,7 +243,7 @@ export default class ApproveBill extends Vue {
             return false
         }
 
-        const claimFundRequestList = this.selectList.filter(item => item.checked)
+        const claimFundRequestList = this.selectList
         if (this.bankType == 4) {
             if (this.selectMoeny != this.bankDetail.unReceiptAmount) {
                 this.$message.error('已选金额必须等于批量支付总金额')
