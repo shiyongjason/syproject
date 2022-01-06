@@ -47,7 +47,7 @@
                 </div>
             </div>
         </div>
-        <el-dialog id='el-dialog' :title="form.id?'项目编辑':'新建项目'" :visible.sync="addProject" :before-close="cancelDialog" width="920px" :close-on-click-modal="false">
+        <el-dialog id='el-dialog' :title="form.id?'项目编辑':'新建项目'" :visible.sync="addProject" :before-close="cancelDialog" width="1000px" :close-on-click-modal="false">
             <el-form ref="form" :model="form" :rules="rules" label-width="130px" label-position="right">
                 <el-form-item label="项目名称：" prop="projectName">
                     <el-input v-model.trim="form.projectName" show-word-limit placeholder="请输入项目全称" maxlength='50' style="width:356px"></el-input>
@@ -98,16 +98,208 @@
                     <el-input v-model.trim="form.username" show-word-limit placeholder="请输入管理员手机号" :disabled="form.id&&form.id.length>0" maxlength='11'></el-input>
                 </el-form-item>
                 <el-form-item label="项目类型：" prop="projectType">
-                    <el-checkbox-group v-model="form.projectType">
-                        <el-checkbox v-for="[key, value] of projectTypeOptions" :key="key" :label="key">
+                    <el-row>
+                        <el-col :span="4">
+                            <el-checkbox v-model="isShowAirConditioning" @change="onChangeShowAirConditioning">空调集控系统</el-checkbox>
+                        </el-col>
+                        <el-col :span="20" v-if="isShowAirConditioning">
+                            <el-checkbox-group v-model="airConditioningOption">
+                                <el-col :span="4">
+                                    <el-checkbox value="氟机空调" label="1">氟机空调</el-checkbox>
+                                </el-col>
+                                <el-col :span="4">
+                                    <el-checkbox value="水机空调" label="2">水机空调</el-checkbox>
+                                </el-col>
+                                <el-col :span="4">
+                                    <el-checkbox value="分体空调" label="12">分体空调</el-checkbox>
+                                </el-col>
+                            </el-checkbox-group>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="4">
+                            <el-checkbox v-model="isShowLighting" @change="onChangeShowLighting">照明集控系统</el-checkbox>
+                        </el-col>
+                        <el-col :span="20" v-if="isShowLighting">
+                            <el-checkbox-group v-model="lightingOption">
+                                <el-col :span="4">
+                                    <el-checkbox value="调光面板" label="14">调光面板</el-checkbox>
+                                </el-col>
+                                <el-col :span="4">
+                                    <el-checkbox value="普通开关" label="13">普通开关</el-checkbox>
+                                </el-col>
+                            </el-checkbox-group>
+                        </el-col>
+                    </el-row>
+                    <el-checkbox-group v-model="socketOption">
+                        <el-checkbox label="16">插座集控系统</el-checkbox>
+                    </el-checkbox-group>
+                    <el-row>
+                        <el-col :span="4">
+                            <el-checkbox v-model="isShowCurtain" @change="onChangeShowCurtain">窗帘集控系统</el-checkbox>
+                        </el-col>
+                        <el-col :span="20" v-if="isShowCurtain">
+                            <el-radio-group v-model="curtainRadioOption">
+                                <el-col :span="4">
+                                    <el-radio label="15" value="电机">电机</el-radio>
+                                    <el-radio label="19" value="面板">面板</el-radio>
+                                </el-col>
+                            </el-radio-group>
+                        </el-col>
+                    </el-row>
+                    <el-checkbox-group v-model="environmentOption">
+                        <el-checkbox label="17">环境监测系统</el-checkbox>
+                    </el-checkbox-group>
+                    <el-checkbox-group v-model="doorlockOption">
+                        <el-checkbox label="18">门禁系统</el-checkbox>
+                    </el-checkbox-group>
+                    <el-row>
+                        <el-col :span="4">
+                            <el-checkbox v-model="isShowEnergy" @change="onChangeShowEnergy">能耗分析系统</el-checkbox>
+                        </el-col>
+                        <el-col :span="20" v-if="isShowEnergy">
+                            <el-row>
+                                <el-checkbox v-model="isShowAirEnergy" @change="onChangeShowAirEnergy">空调计费</el-checkbox>
+                                <el-row v-if="isShowAirEnergy">
+                                    <el-col :span="5" class="pl30">
+                                        <el-checkbox v-model="isShowWaterAir" @change="onChangeShowWaterAir">水机</el-checkbox>
+                                    </el-col>
+                                    <el-col :span="19" v-if="isShowWaterAir">
+                                        <el-radio-group v-model="waterAirRadioOption">
+                                            <el-col :span="5">
+                                                <el-radio label="101" value="热量表">热量表</el-radio>
+                                            </el-col>
+                                            <el-col :span="5">
+                                                <el-radio label="102" value="时间型">时间型</el-radio>
+                                            </el-col>
+                                            <el-col :span="5">
+                                                <el-radio label="103" value="智能电表">智能电表</el-radio>
+                                            </el-col>
+                                            <el-col :span="5">
+                                                <el-radio label="104" value="智能空开">智能空开</el-radio>
+                                            </el-col>
+                                        </el-radio-group>
+                                    </el-col>
+                                </el-row>
+                                <el-row v-if="isShowAirEnergy">
+                                    <el-col :span="5" class="pl30">
+                                        <el-checkbox v-model="isShowFluorineAir" @change="onChangeShowFluorineAir">氟机</el-checkbox>
+                                    </el-col>
+                                    <el-col :span="19" v-if="isShowFluorineAir">
+                                        <el-radio-group v-model="fluorineAirRadioOption">
+                                            <el-col :span="5">
+                                                <el-radio label="112" value="时间型">时间型</el-radio>
+                                            </el-col>
+                                            <el-col :span="5">
+                                                <el-radio label="113" value="智能电表">智能电表</el-radio>
+                                            </el-col>
+                                            <el-col :span="5">
+                                                <el-radio label="114" value="智能空开">智能空开</el-radio>
+                                            </el-col>
+                                        </el-radio-group>
+                                    </el-col>
+                                </el-row>
+                                <el-row v-if="isShowAirEnergy">
+                                    <el-col :span="5" class="pl30">
+                                        <el-checkbox v-model="isShowFtAir" @change="onChangeShowFtAir">分体空调</el-checkbox>
+                                    </el-col>
+                                    <el-col :span="19" v-if="isShowFtAir">
+                                        <el-radio-group v-model="ftAirRadioOption">
+                                            <el-col :span="5">
+                                                <el-radio label="120" value="分体空调计费">分体空调计费</el-radio>
+                                            </el-col>
+                                        </el-radio-group>
+                                    </el-col>
+                                </el-row>
+                            </el-row>
+                            <el-row>
+                                <el-checkbox v-model="isShowOtherEnergy" @change="onChangeShowOtherEnergy">能耗</el-checkbox>
+                                <el-row v-if="isShowOtherEnergy">
+                                    <el-col :span="24" class="pl30">
+                                        <el-checkbox-group v-model="energyOption">
+                                            <el-col :span="4">
+                                                <el-checkbox label="4" value="智能电表">智能电表</el-checkbox>
+                                            </el-col>
+                                            <el-col :span="4">
+                                                <el-checkbox label="3" value="智能空开">智能空开</el-checkbox>
+                                            </el-col>
+                                            <el-col :span="4">
+                                                <el-checkbox label="5" value="热量表">热量表</el-checkbox>
+                                            </el-col>
+                                            <el-col :span="4">
+                                                <el-checkbox label="6" value="时间型">时间型</el-checkbox>
+                                            </el-col>
+                                            <el-col :span="4">
+                                                <el-checkbox label="7" value="分体空调">分体空调</el-checkbox>
+                                            </el-col>
+                                        </el-checkbox-group>
+                                    </el-col>
+                                </el-row>
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="4">
+                            <el-checkbox v-model="isShowSecurity" @change="onChangeShowSecurity">安防系统</el-checkbox>
+                        </el-col>
+                        <el-col :span="20" v-if="isShowSecurity">
+                            <el-checkbox-group v-model="securityOption">
+                                <el-col :span="6">
+                                    <el-checkbox label="20" value="人体存在传感器">人体存在传感器</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-checkbox label="21" value="人体移动传感器">人体移动传感器</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-checkbox label="22" value="水浸监测">水浸监测</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-checkbox label="23" value="烟雾监测">烟雾监测</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-checkbox label="24" value="可燃气体监测">可燃气体监测</el-checkbox>
+                                </el-col>
+                            </el-checkbox-group>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="4">
+                            <el-checkbox v-model="isShowScene" @change="onChangeShowScene">场景管理</el-checkbox>
+                        </el-col>
+                        <el-col :span="20" v-if="isShowScene">
+                            <el-radio-group v-model="scenePanelRadioOption" @change="onChaneShowScenePanel">
+                                <el-row>
+                                    <el-radio label="30">场景列表</el-radio>
+                                </el-row>
+                                <el-row>
+                                    <el-col :span="6">
+                                        <el-radio label="true">场景面板(含列表)</el-radio>
+                                    </el-col>
+                                    <el-col :span="18" style="height:40px; line-height:40px;" v-if="isShowScenePanel">
+                                        <el-checkbox-group v-model="scenePanelOption">
+                                            <el-col :span="4">
+                                                <el-checkbox label="31" value="四键">四键</el-checkbox>
+                                            </el-col>
+                                            <el-col :span="4">
+                                                <el-checkbox label="32" value="六键">六键</el-checkbox>
+                                            </el-col>
+                                        </el-checkbox-group>
+                                    </el-col>
+                                </el-row>
+                            </el-radio-group>
+                        </el-col>
+                    </el-row>
+                    <el-checkbox-group v-model="energyConservationOption">
+                        <el-checkbox label="11">节能系统</el-checkbox>
+                    </el-checkbox-group>
+                    <!-- <el-checkbox v-for="[key, value] of projectTypeOptions" :key="key" :label="key">
                             {{value}}
                             <el-form-item prop="feeType" v-if="showFeeType && key === projectTypeKey.BILLING_SYSTEM" class="inline-form-item">
                                 <el-radio-group v-model="form.feeType">
                                     <el-radio v-for="[key, value] of feeTypeOptions" :key="key" :label="key" @click="onRadioClick">{{value}}</el-radio>
                                 </el-radio-group>
                             </el-form-item>
-                        </el-checkbox>
-                    </el-checkbox-group>
+                        </el-checkbox> -->
                 </el-form-item>
                 <el-form-item label="项目包含设备：" prop="deviceTypes">
                     <el-button type="primary" @click="addDeviceTypes">新增</el-button>
@@ -152,7 +344,8 @@ import { iotUrl, interfaceUrl } from '@/api/config'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { createControlProject, editControlProject } from '../api/index'
 import { getChiness } from '../../hmall/membership/api'
-import { PROJECT_TYPE_KEY, PROJECT_TYPE_OPTIONS, FEE_TYPE_OPTIONS } from './const.js'
+import * as consts from './const.js'
+import { isNumber } from 'highcharts'
 
 const _form = {
     projectName: '',
@@ -177,7 +370,7 @@ const _queryParams = {
     createTimeStart: null,
     createTimeEnd: null,
     companyName: null,
-    projectName: null,
+    projectName: '',
     adminName: null,
     username: null,
     pageNumber: 1,
@@ -186,11 +379,14 @@ const _queryParams = {
 export default {
     name: 'projectManager',
     watch: {
-        'form.projectType' (val) {
-            if (!val.includes(PROJECT_TYPE_KEY.BILLING_SYSTEM)) {
-                this.form.feeType = ''
-            }
-        }
+        // isShowEnergy (value) {
+
+        // }
+        // 'form.projectType' (val) {
+        //     if (!val.includes(consts.PROJECT_TYPE_KEY.BILLING_SYSTEM)) {
+        //         this.form.feeType = ''
+        //     }
+        // }
     },
     data () {
         const checkDeviceTypeRule = (rule, value, callback) => {
@@ -280,9 +476,33 @@ export default {
                 ]
             },
             loading: false,
-            projectTypeOptions: PROJECT_TYPE_OPTIONS,
-            feeTypeOptions: FEE_TYPE_OPTIONS,
-            projectTypeKey: PROJECT_TYPE_KEY
+            projectTypeOptions: consts.PROJECT_TYPE_OPTIONS,
+            isShowAirConditioning: false,
+            airConditioningOption: [],
+            isShowLighting: false,
+            lightingOption: [],
+            socketOption: [],
+            isShowCurtain: false,
+            curtainRadioOption: '',
+            environmentOption: [],
+            doorlockOption: [],
+            isShowEnergy: false,
+            isShowAirEnergy: false,
+            isShowWaterAir: false,
+            isShowFluorineAir: false,
+            isShowFtAir: false,
+            waterAirRadioOption: '',
+            fluorineAirRadioOption: '',
+            ftAirRadioOption: '',
+            isShowOtherEnergy: false,
+            energyOption: [],
+            isShowSecurity: false,
+            securityOption: [],
+            isShowScene: false,
+            isShowScenePanel: false,
+            scenePanelRadioOption: '',
+            scenePanelOption: [],
+            energyConservationOption: []
         }
     },
     computed: {
@@ -336,9 +556,9 @@ export default {
             }
             return []
         },
-        showFeeType () {
-            return this.form.projectType.includes(PROJECT_TYPE_KEY.BILLING_SYSTEM)
-        },
+        // showFeeType () {
+        //     return this.form.projectType.includes(PROJECT_TYPE_KEY.BILLING_SYSTEM)
+        // },
         ...mapGetters({
             clouldControlProjectList: 'clouldControlProjectList',
             clouldControlProjectDetail: 'clouldControlProjectDetail',
@@ -416,34 +636,208 @@ export default {
                 total: this.clouldControlProjectList.total
             }
         },
+        onChangeShowAirConditioning (value) {
+            this.isShowAirConditioning = value
+            if (!value) {
+                this.airConditioningOption = []
+            }
+        },
+        onChangeShowLighting (value) {
+            this.isShowLighting = value
+            if (!value) {
+                this.lightingOption = []
+            }
+        },
+        onChangeShowCurtain (value) {
+            this.isShowCurtain = value
+            if (!value) {
+                this.curtainRadioOption = ''
+            }
+        },
+        onChangeShowEnergy (value) {
+            this.isShowEnergy = value
+            if (!value) {
+                this.isShowEnergy = false
+                this.isShowAirEnergy = false
+                this.isShowWaterAir = false
+                this.isShowFluorineAir = false
+                this.isShowFtAir = false
+                this.isShowOtherEnergy = false
+                this.waterAirRadioOption = ''
+                this.fluorineAirRadioOption = ''
+                this.ftAirRadioOption = ''
+                this.energyOption = []
+            }
+        },
+        onChangeShowWaterAir (value) {
+            this.isShowWaterAir = value
+            if (!value) {
+                this.waterAirRadioOption = ''
+            }
+        },
+        onChangeShowFluorineAir (value) {
+            this.isShowFluorineAir = value
+            if (!value) {
+                this.fluorineAirRadioOption = ''
+            }
+        },
+        onChangeShowFtAir (value) {
+            this.isShowFtAir = value
+            if (!value) {
+                this.ftAirRadioOption = ''
+            }
+        },
+        onChangeShowAirEnergy (value) {
+            this.isShowAirEnergy = value
+            if (!value) {
+                // this.isShowEnergy = false
+                this.isShowAirEnergy = false
+                this.isShowWaterAir = false
+                this.isShowFluorineAir = false
+                this.isShowFtAir = false
+                this.waterAirRadioOption = ''
+                this.fluorineAirRadioOption = ''
+                this.ftAirRadioOption = ''
+                if (!this.isShowOtherEnergy) {
+                    this.isShowEnergy = false
+                }
+            }
+        },
+        onChangeShowOtherEnergy (value) {
+            this.isShowOtherEnergy = value
+            if (!value) {
+                this.isShowOtherEnergy = false
+                this.energyOption = []
+                if (!this.isShowAirEnergy) {
+                    this.isShowEnergy = false
+                }
+            }
+        },
+        onChangeShowSecurity (value) {
+            this.isShowSecurity = value
+            if (!value) {
+                this.securityOption = []
+            }
+        },
+        onChangeShowScene (value) {
+            this.isShowScene = value
+            if (!value) {
+                this.isShowScenePanel = false
+                this.scenePanelOption = []
+            } else {
+            }
+            this.scenePanelRadioOption = 'false'
+        },
+        onChaneShowScenePanel (value) {
+            console.log(this.scenePanelRadioOption)
+            if (value == 30) {
+                this.isShowScenePanel = false
+                this.scenePanelOption = []
+            } else {
+                this.isShowScenePanel = true
+            }
+        },
         addNewProject () {
             this.addProject = true
+            this.isShowAirConditioning = false
+            this.airConditioningOption = []
+            this.isShowLighting = false
+            this.lightingOption = []
+            this.socketOption = []
+            this.isShowCurtain = false
+            this.curtainRadioOption = ''
+            this.environmentOption = []
+            this.doorlockOption = []
+            this.isShowEnergy = false
+            this.isShowAirEnergy = false
+            this.isShowWaterAir = false
+            this.isShowFluorineAir = false
+            this.isShowFtAir = false
+            this.waterAirRadioOption = ''
+            this.fluorineAirRadioOption = ''
+            this.ftAirRadioOption = ''
+            this.isShowOtherEnergy = false
+            this.energyOption = []
+            this.isShowSecurity = false
+            this.securityOption = []
+            this.isShowScene = false
+            this.isShowScenePanel = false
+            this.scenePanelRadioOption = ''
+            this.scenePanelOption = []
+            this.energyConservationOption = []
         },
         async editProject (id) {
             await this.getClouldControlProjectDetail({ id: id })
             this.form = this.clouldControlProjectDetail
-            // 编辑页面拆分projectType为两个变量
-            let index = this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM) + 1 ||
-                this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_ELECTRICITY_METER) + 1 ||
-                this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_HEAT_METER) + 1 ||
-                this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_FT_AIR) + 1 ||
-                this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_TIME) + 1 ||
-                this.form.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM_SOCKET) + 1
-            if (index > 0) {
-                this.$set(this.form, 'feeType', `${this.form.projectType[index - 1] - PROJECT_TYPE_KEY.BILLING_SYSTEM}`)
-                this.form.projectType[index - 1] = PROJECT_TYPE_KEY.BILLING_SYSTEM
-            } else {
-                this.$set(this.form, 'feeType', '')
-            }
+            // console.log(this.form.projectType)
+            this.airConditioningOption = this.form.projectType.filter(item => item == 1 || item == 2 || item == 12)
+            this.isShowAirConditioning = this.airConditioningOption.length > 0
+
+            this.lightingOption = this.form.projectType.filter(item => item == 13 || item == 14)
+            this.isShowLighting = this.lightingOption.length > 0
+
+            this.socketOption = this.form.projectType.filter(item => item == 16)
+
+            this.curtainRadioOption = this.form.projectType.filter(item => item == 15 || item == 19)[0]
+            this.isShowCurtain = !!this.curtainRadioOption
+
+            this.environmentOption = this.form.projectType.filter(item => item == 17)
+
+            this.doorlockOption = this.form.projectType.filter(item => item == 18)
+
+            this.isShowEnergy = this.form.projectType.filter(item => item == 101 || item == 102 || item == 103 || item == 104 || item == 112 || item == 113 || item == 114 || item == 120 || item == 4 || item == 3 || item == 5 || item == 6 || item == 7).length > 0
+            this.isShowAirEnergy = this.form.projectType.filter(item => item == 101 || item == 102 || item == 103 || item == 104 || item == 112 || item == 113 || item == 114 || item == 120).length > 0
+
+            this.waterAirRadioOption = this.form.projectType.filter(item => item == 101 || item == 102 || item == 103 || item == 104)[0]
+            this.isShowWaterAir = !!this.waterAirRadioOption
+
+            this.fluorineAirRadioOption = this.form.projectType.filter(item => item == 112 || item == 113 || item == 114)[0]
+            this.isShowFluorineAir = !!this.fluorineAirRadioOption
+
+            this.ftAirRadioOption = this.form.projectType.filter(item => item == 120)[0]
+            this.isShowFtAir = !!this.ftAirRadioOption
+
+            this.energyOption = this.form.projectType.filter(item => item == 4 || item == 3 || item == 5 || item == 6 || item == 7)
+            this.isShowOtherEnergy = this.energyOption.length > 0
+
+            this.securityOption = this.form.projectType.filter(item => item == 20 || item == 21 || item == 22 || item == 23 || item == 24)
+            this.isShowSecurity = this.securityOption.length > 0
+
+            this.isShowScene = this.form.projectType.filter(item => item == 30 || item == 31 || item == 32).length > 0
+
+            this.scenePanelRadioOption = this.form.projectType.filter(item => item == 30)[0] || 'true'
+
+            this.scenePanelOption = this.form.projectType.filter(item => item == 31 || item == 32)
+            this.isShowScenePanel = this.scenePanelOption.length > 0
+
+            this.energyConservationOption = this.form.projectType.filter(item => item == 11)
+
             this.addProject = true
         },
         async saveProject () {
+            this.form.projectType = [
+                ...this.airConditioningOption,
+                ...this.lightingOption,
+                ...this.socketOption,
+                this.curtainRadioOption,
+                ...this.environmentOption,
+                ...this.doorlockOption,
+                this.waterAirRadioOption,
+                this.fluorineAirRadioOption,
+                this.ftAirRadioOption,
+                ...this.energyOption,
+                ...this.securityOption,
+                this.scenePanelRadioOption,
+                ...this.scenePanelOption,
+                ...this.energyConservationOption
+            ].filter(item => !(item == '' || !isNumber(Number(item))))
+
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     if (this.form.id) {
-                        await editControlProject({ ...this._resolveForm(), updateBy: this.userInfo.employeeName })
+                        await editControlProject({ ...this.form, updateBy: this.userInfo.employeeName })
                     } else {
-                        await createControlProject({ ...this._resolveForm(), createBy: this.userInfo.employeeName })
+                        await createControlProject({ ...this.form, createBy: this.userInfo.employeeName })
                     }
                     if (this.$refs.form) {
                         console.log('新增', this.form.id)
@@ -561,8 +955,9 @@ export default {
     margin-left: 30px;
 }
 /deep/ .el-checkbox {
-    display: block;
-    width: 200px;
+    // display: flex;
+    // align-items: center;
+    // height: 40px;
 }
 /deep/ .city-select .el-input {
     width: 164px !important;
@@ -582,7 +977,13 @@ export default {
     overflow: auto;
 }
 /deep/ .el-radio {
-    margin-right: 0;
+    display: flex;
+    align-items: center;
+    height: 40px;
     padding-right: 30px;
+}
+
+.el-radio-group {
+    display: block;
 }
 </style>

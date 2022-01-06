@@ -53,6 +53,10 @@ export default class ApproveBill extends Vue {
     selectList = []
     bankList = []
     bankDetail:any = {}
+    queryParams:Record<any, any> = {
+        pageSize: 1,
+        pageNumber: 10
+    }
     formTableLabel: tableLabelProps = [
         { label: '账单流水号', prop: 'fundId', width: '120' },
         { label: '账单类型', prop: 'fundType', width: '100', dicData: fundType },
@@ -154,7 +158,7 @@ export default class ApproveBill extends Vue {
                 } else {
                     if (index === i) {
                         let price = this.bankDetail.unReceiptAmount - sum
-                        this.bankList[i].claimAmount = price
+                        this.bankList[i].claimAmount = isNum(price, 2)
                         sum += this.bankList[i].claimAmount
                         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                     }

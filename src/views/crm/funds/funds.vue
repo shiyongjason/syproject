@@ -34,7 +34,7 @@
                         <el-input v-model="queryParams.companyName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont__col" >
+                <div class="query-cont__col">
                     <div class="query-col__label">已支付金额：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.minPaidAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">元</template></el-input>
@@ -50,7 +50,7 @@
                         <el-input v-model.trim="queryParams.maxUnconfirmedAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">元</template></el-input>
                     </div>
                 </div>
-                <div class="query-cont__col" >
+                <div class="query-cont__col">
                     <div class="query-col__label">待支付金额：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.minUnpaidAmount" v-isNum:2 placeholder="请输入" maxlength="20"><template slot="append">元</template></el-input>
@@ -127,34 +127,41 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="seePayEnter(scope.data.row)" v-if="hasSeePayEnterAuth(queryParams.repaymentTypeArrays)">查看凭证</h-button>
-                    <h-button table @click="onUploadPay(scope.data.row)" v-if="(scope.data.row.paymentFlag==0||scope.data.row.paymentFlag==3)&&hosAuthCheck(Auths.CRM_FUNDS_DOWN_UPLOAD)&&scope.data.row.unpaidAmount > 0">
-                        上传支付凭证
-                    </h-button>
+                        <!-- 待支付 支付待确认  出先支付确认 -->
                     <template v-if="scope.data.row.repaymentType =='1'">
-                        <!-- 服务费(支付待确认金额大于0)才显示支付确认 -->
-                        <h-button table @click="onPayDetail(scope.data.row)" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)&&!scope.data.row.payBatch">支付确认</h-button>
+                        <!-- 首付款(支付待确认金额大于0)才显示支付确认 -->
+                        <h-button table @click="onPayDetail(scope.data.row)" v-if="(scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[0].key||scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key) &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)&&!scope.data.row.payBatch">支付确认</h-button>
                         <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.payBatch&&scope.data.row.paymentFlag==1">
                             批量确认
+                        </h-button>
+                        <h-button table @click="onUploadPay(scope.data.row)" v-if="(scope.data.row.paymentFlag==0||scope.data.row.paymentFlag==3)&&hosAuthCheck(Auths.CRM_FUNDS_DOWN_UPLOAD)&&scope.data.row.unpaidAmount > 0">
+                            上传支付凭证
                         </h-button>
                     </template>
                     <template v-if="scope.data.row.repaymentType =='3'">
                         <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.showPayBatchConfirm">
                             批量确认
                         </h-button>
-                        <h-button table @click="onPayDetail(scope.data.row)" v-if="scope.data.row.showPayConfirm && scope.data.row.unconfirmedAmount > 0">
+                        <h-button table @click="onPayDetail(scope.data.row)" v-if="scope.data.row.paymentFlag==PaymentOrderDict.paymentFlag.list[0].key||(scope.data.row.showPayConfirm && scope.data.row.unconfirmedAmount > 0)">
                             支付确认
+                        </h-button>
+                        <h-button table @click="onUploadPay(scope.data.row)" v-if="(scope.data.row.paymentFlag==0||scope.data.row.paymentFlag==3)&&hosAuthCheck(Auths.CRM_FUNDS_DOWN_UPLOAD)&&scope.data.row.unpaidAmount > 0">
+                            上传支付凭证
                         </h-button>
                     </template>
                     <template v-if="scope.data.row.repaymentType =='2'">
                         <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.showPayBatchConfirm">
                             批量确认
                         </h-button>
-                        <h-button table @click="onPayDetail(scope.data.row)" v-if="scope.data.row.showPayConfirm">
+                        <h-button table @click="onPayDetail(scope.data.row)" v-if="scope.data.row.paymentFlag==PaymentOrderDict.paymentFlag.list[0].key||scope.data.row.showPayConfirm">
                             支付确认
+                        </h-button>
+                        <h-button table @click="onUploadPay(scope.data.row)" v-if="(scope.data.row.paymentFlag==0||scope.data.row.paymentFlag==3)&&hosAuthCheck(Auths.CRM_FUNDS_DOWN_UPLOAD)&&scope.data.row.unpaidAmount > 0">
+                            上传支付凭证
                         </h-button>
                     </template>
                     <template v-if="queryParams.repaymentTypeArrays =='4'">
-                        <h-button table @click="onPayDetail(scope.data.row)" v-if="(scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key)&&hosAuthCheck(Auths.CRM_FUNDS_CHARGE_FUND_CONFIRM)">
+                        <h-button table @click="onPayDetail(scope.data.row)" v-if="(scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[0].key||scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key)&&hosAuthCheck(Auths.CRM_FUNDS_CHARGE_FUND_CONFIRM)">
                             支付确认
                         </h-button>
                         <h-button table @click="onUploadPay(scope.data.row)" v-if="(scope.data.row.paymentFlag==0)&&hosAuthCheck(Auths.CRM_FUNDS_CHARGE_FUND_UPLOAD)">
