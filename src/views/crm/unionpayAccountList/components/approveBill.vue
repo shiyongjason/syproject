@@ -212,7 +212,7 @@ export default class ApproveBill extends Vue {
             return false
         }
         if (this.selectMoeny > this.bankDetail.unReceiptAmount) {
-            this.$message.error('当前已选账单水金额不得超过待认领金额')
+            this.$message.error('当前已选账单流水金额不得超过待认领金额')
             return false
         }
         const claimFundRequestList = this.selectList.map(item => {
