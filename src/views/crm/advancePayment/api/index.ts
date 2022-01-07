@@ -51,5 +51,5 @@ export const updateOnlineBank :(params)=>AxiosPromise = (params) => {
 }
 // 司库 支付
 export const updatePayOnline :(params)=>AxiosPromise = (params) => {
-    return axios.patch(`/project/api/prepayments/boss/pay-online`, params)
+    return axios.patch(`/project/api/prepayments/boss/pay-online/${params}`)
 }

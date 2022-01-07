@@ -26,6 +26,9 @@
                         <HosJoyUpload v-model="uploadpayForm.attachDocs" :showPreView=true :fileSize=20 :action='action' :fileNum='9' :uploadParameters='uploadParameters' @successCb="$refs.uploadpayForm.clearValidate()" accept='.jpg,.png,.jpeg'>
                         </HosJoyUpload>
                     </el-form-item>
+                    <p class="uploadpay_second">
+                    <span class="uploadpay_third">（请上传JPG/PNG/JPEG等主流图片格式，最多上传9张，单张大小不得超过20M）</span>
+                    </p>
                 </el-form>
                 <div v-if="batchNumber>0" class="uploadpay_bot">当前经销商还有{{batchNumber}}条待支付账单，你可能想<b @click="onAllPay">“批量支付”</b>？</div>
             </div>
@@ -144,10 +147,6 @@ export default {
                     }
                 })
             } else {
-                // if (this.attachDocs.length == 0) {
-                //     this.$message.warning('请上传支付凭证！')
-                //     return
-                // }
                 this.$refs.uploadpayForm.validate(async valid => {
                     if (valid) {
                         const params = {
@@ -184,6 +183,7 @@ export default {
     &_third {
         color: #909399;
         font-size: 14px;
+        padding-left: 130px;
     }
     b {
         color: skyblue;

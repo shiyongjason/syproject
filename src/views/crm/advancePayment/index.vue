@@ -643,7 +643,8 @@ export default class Advancelist extends Vue {
     }
 
     public async handlePayOnline (val) {
-        await Api.updatePayOnline({ prepaymentOrderId: val.id })
+        console.log(val.id)
+        await Api.updatePayOnline(val.id)
         this.getList()
     }
 

@@ -144,17 +144,8 @@
                     </h-button>
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW) && (paymentOrderStatusKey.FINANCE_AUDIT === scope.data.row.status)">审核</h-button>
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW_PROJECT) && (paymentOrderStatusKey.OPERATE_AUDIT === scope.data.row.status)">审核</h-button>
-                    <h-button table @click="$refs.paymentOrderDrawer.tableOpenFundsDialog(scope.data.row.id, scope.data.row.status)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM) && scope.data.row.status == 2">
-                        支付确认
-                    </h-button>
-                    <!-- <h-button table @click="tableOpenPrevPayDialog(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV) && (
-                                  scope.data.row.supplierPayFlag === 1
-                              )">
-                        上游支付
-                    </h-button> -->
-                    <h-button table @click="tableOpenConfirmReceiptDialog(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && (
-                                  scope.data.row.goodsConfirmFlag === 1
-                              )">确认收货</h-button>
+                    <h-button table @click="handleSubConfirmed(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM) &&( scope.data.row.status == 2|| scope.data.row.status == 1|| scope.data.row.status == 9)"> 支付确认</h-button>
+                    <h-button table @click="tableOpenConfirmReceiptDialog(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && (scope.data.row.goodsConfirmFlag === 1)">确认收货</h-button>
                     <h-button table @click="openDrawer(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_DETAIL)">查看详情</h-button>
                     <h-button table @click="openDrawerPur(scope.data.row)">审批记录</h-button>
                     <!-- dealerCooperationMethod 1 垫资代采 2 代收代付 -->
@@ -532,6 +523,13 @@ export default {
                 jobNumber: this.userInfo.jobNumber,
                 authCode: JSON.parse(sessionStorage.getItem('authCode'))
             })
+        },
+        // 支付确认
+        handleSubConfirmed (row) {
+            console.log('row', row)
+            row = { ...row, fundId: row.advanceId }
+            this.$refs.reduleDialog.findRemainConfirm(row, row.repaymentType)
+            this.reduleDialogVisible = true
         },
         ...mapActions({
             findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList',
