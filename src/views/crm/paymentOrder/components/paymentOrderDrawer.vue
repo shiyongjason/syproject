@@ -333,7 +333,7 @@
                                             {{ paymentOrderDetail.respFundResults.downpaymentFund.paidTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}
                                         </template>
                                         <template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === paymentFlagKey.CONFIRM">
-                                            <h-button table class="ml-20" v-if="hosAuthCheck(Auths.CRM_DOWN_PAYMENT_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.downpaymentFund,FundsDict.repaymentTypeArrays.list[0].key)">
+                                            <h-button table class="ml-20" v-if="hosAuthCheck(Auths.CRM_DOWN_PAYMENT_FUND_CONFIRM)" @click="openReduleDialog(paymentOrderDetail.respFundResults.downpaymentFund.id,FundsDict.repaymentTypeArrays.list[0].key)">
                                                 {{ paymentOrderConst.PAYMENT_FLAG.get(paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag) }}
                                             </h-button>
                                         </template>
@@ -353,43 +353,6 @@
                                             <span class="info-title">服务费支付计划：</span>
                                         </p>
                                     </div>
-                                    <!-- 调整 -->
-                                    <!-- <div class="row-filed need-center" :key="item.id" v-for="(item,index) in paymentOrderDetail.respFundResults.serviceFund">
-                                        <p class="col-filed col-30">
-                                            <span class="label">第{{ index + 1 }}期服务费：</span>
-                                            {{ item.paymentAmount  | moneyFormat }} 元
-                                            <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
-                                                <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow(`第${index + 1}期服务费`, item)" v-if="canUpdatePaymentInfo(item.paymentFlag)" class="info-img-edit">
-                                            </template>
-                                        </p>
-                                        <p class="col-filed col-30">
-                                            <span class="label">应支付时间：</span>{{ item.schedulePaymentDate }}
-                                            <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
-                                                <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow(`第${index + 1}期服务费`, item)" v-if="canUpdatePaymentInfo(item.paymentFlag)" class="info-img-edit">
-                                            </template>
-                                        </p>
-                                        <div class="col-filed col-40 service-pay-time need-center">
-                                            <p class="mr-50">
-                                                <span class="label">{{ paymentLabel(item.paymentFlag) }}</span>
-                                                <template v-if="item.paymentFlag === paymentFlagKey.CANCEL">
-                                                    {{ item.updateTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}
-                                                </template>
-                                                <template v-else>
-                                                    {{ item.paidTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}
-                                                </template>
-                                            </p>
-                                            <template v-if="item.paymentFlag === paymentFlagKey.CONFIRM">
-                                                <h-button table v-if="hosAuthCheck(Auths.CRM_SERVICE_FUND_CONFIRM)" @click="openFundsDialog(item.id, FundsDict.repaymentTypeArrays.list[1].key)">
-                                                    {{ paymentOrderConst.PAYMENT_FLAG.get(item.paymentFlag) }}
-                                                </h-button>
-                                            </template>
-                                            <template v-else>
-                                                <span class="info-status">
-                                                    {{ paymentOrderConst.PAYMENT_FLAG.get(item.paymentFlag) }}
-                                                </span>
-                                            </template>
-                                        </div>
-                                    </div> -->
                                     <div class="row-filed row-colum" :key="item.id" v-for="(item,index) in paymentOrderDetail.respFundResults.serviceFund">
                                         <div class="row-filed-wrap">
                                             <div class="row-filed-flex">
@@ -420,7 +383,6 @@
                                                     {{ paymentOrderConst.PAYMENT_FLAG.get(item.paymentFlag) }}
                                                 </span>
                                             </div>
-
                                         </div>
                                         <div class="row-filed-wrap" v-for="(jtem,jindex) in item.fundDetails" :key="jindex">
                                             <div class="row-filed-flex">
@@ -434,11 +396,10 @@
                                                 <template v-else>
                                                     {{ jtem.createTime | momentFormat('YYYY-MM-DD HH:mm:ss') }}
                                                 </template>
-
                                             </div>
                                             <div class="row-filed-flex">
                                                 <template v-if="jtem.paymentFlag === paymentFlagKey.CONFIRM">
-                                                    <h-button table v-if="hosAuthCheck(Auths.CRM_SERVICE_FUND_CONFIRM)" @click="openFundsDialog(jtem, FundsDict.repaymentTypeArrays.list[1].key,item)">
+                                                    <h-button table v-if="hosAuthCheck(Auths.CRM_SERVICE_FUND_CONFIRM)" @click="openReduleDialog(jtem.fundId, FundsDict.repaymentTypeArrays.list[1].key,item)">
                                                         {{ paymentOrderConst.PAYMENT_FLAG.get(jtem.paymentFlag) }}
                                                     </h-button>
                                                 </template>
@@ -776,6 +737,7 @@ export default {
             this.$emit('openConfirmReceiptDialog', params)
         },
         openReduleDialog (id, type) {
+            console.log(id, type)
             const params = {
                 id: id,
                 orderId: this.paymentOrderDetail.respFundResults.downpaymentFund.orderId
