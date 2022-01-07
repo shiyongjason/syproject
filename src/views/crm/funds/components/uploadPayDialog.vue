@@ -2,23 +2,31 @@
     <div>
         <el-dialog title="上传支付凭证" :visible.sync="dialogVisible" width="45%" :before-close="handleClose">
             <div class="uploadpay">
-                <template v-if="repaymentType == 2 || repaymentType == 3">
-                    <p>剩余应支付金额：{{unpaidAmount|moneyFormat}} 元</p>
-                    <el-form :model="uploadpayForm" :rules="rules" ref="uploadpayForm" label-width="130px">
+                <el-form :model="uploadpayForm" :rules="rules" ref="uploadpayForm" label-width="130px">
+                    <template v-if="repaymentType == 2 || repaymentType == 3">
+                        <p>剩余应支付金额：{{unpaidAmount|moneyFormat}} 元</p>
                         <el-form-item label="本次支付金额：" prop="paidAmount">
                             <!-- unpaidAmount-inputMAX指令金额不刷新问题 -->
-                            <el-input  v-model.trim="uploadpayForm.paidAmount" v-isNum:2="uploadpayForm.paidAmount" placeholder="请输入" maxlength="50" v-inputMAX='unpaidAmount'><template slot="append">元</template></el-input>
+                            <el-input v-model.trim="uploadpayForm.paidAmount" v-isNum:2="uploadpayForm.paidAmount" placeholder="请输入" maxlength="50" v-inputMAX='unpaidAmount'><template slot="append">元</template></el-input>
                             <span style="width:50px;height:50px;text-align:center;margin-left:10px;color:#13C2C2" @click="handleAll">全部</span>
                         </el-form-item>
-                    </el-form>
-                </template>
-                <template v-else>
-                    <p>本次支付金额：{{payMoney.unPaidAmount|moneyFormat}} 元</p>
-                    <p>应支付金额：{{payMoney.paymentAmount|moneyFormat}} 元</p>
-                </template>
-                <p class="uploadpay_second"><i>*</i>支付凭证：<span class="uploadpay_third">（请上传JPG/PNG/JPEG等主流图片格式，最多上传9张，单张大小不得超过20M）</span></p>
-                <HosJoyUpload v-model="attachDocs" :showPreView=true :fileSize=20 :action='action' :fileNum='9' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb()}" accept='.jpg,.png,jpeg'>
-                </HosJoyUpload>
+                    </template>
+                    <template v-else>
+                        <el-form-item label="本次支付金额：">
+                            {{payMoney.unPaidAmount|moneyFormat}} 元
+                        </el-form-item>
+                        <el-form-item label="应支付金额：">
+                            {{payMoney.paymentAmount|moneyFormat}} 元
+                        </el-form-item>
+                    </template>
+                    <!-- <p class="uploadpay_second"><i>*</i>支付凭证：<span class="uploadpay_third">（请上传JPG/PNG/JPEG等主流图片格式，最多上传9张，单张大小不得超过20M）</span></p> -->
+                       <el-form-item label="支付凭证：" prop="attachDocs">
+                    <HosJoyUpload v-model="attachDocs" :showPreView=true :fileSize=20 :action='action' :fileNum='9' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb()}" accept='.jpg,.png,.jpeg'>
+                    </HosJoyUpload>
+                        </el-form-item>
+
+                </el-form>
+
                 <div v-if="batchNumber>0" class="uploadpay_bot">当前经销商还有{{batchNumber}}条待支付账单，你可能想<b @click="onAllPay">“批量支付”</b>？</div>
             </div>
 
@@ -55,6 +63,9 @@ export default {
             rules: {
                 paidAmount: [
                     { required: true, validator: this.validatorPaidAmount, trigger: 'blur' }
+                ],
+                attachDocs: [
+                    { required: true }
                 ]
             },
             uploadpayForm: { paidAmount: '' }
@@ -176,5 +187,8 @@ export default {
 }
 .uploadpay_bot {
     margin-top: 20px;
+}
+/deep/.el-dialog .el-form .el-form-item {
+margin-bottom: 0;
 }
 </style>
