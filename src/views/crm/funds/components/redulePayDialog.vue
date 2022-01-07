@@ -347,6 +347,7 @@ export default {
         },
         handleChangeRadio (val) {
             this.payeeAccountList = this.accountList.filter(item => item == val)[0].payeeAccountList
+            this.ruleForm.id = ''
         },
         handleBill (val, type) {
             this.bankBillId = val.fundId

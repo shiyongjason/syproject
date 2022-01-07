@@ -217,24 +217,22 @@
                 <div class="advance_examine-left">
                     <h3>项目信息</h3>
                     <el-row type="flex" class="row-bg">
-                        <el-col :span="23" :offset='1'>项目：{{detailForm.projectName||'-'}}</el-col>
-                    </el-row>
-                    <el-row type="flex" class="row-bg">
-                        <el-col :span="23" :offset='1'>经销商：{{detailForm.distributor||'-'}}</el-col>
-                    </el-row>
-                    <el-row type="flex" class="row-bg">
-                        <el-col :span="23" :offset='1'>所属分部：{{detailForm.subsectionName||'-'}}</el-col>
+                        <el-col :span="10" :offset='1'>项目：{{detailForm.projectName||'-'}}</el-col>
+
+                        <el-col :span="10" :offset='1'>经销商：{{detailForm.distributor||'-'}}</el-col>
+
+                        <el-col :span="10" :offset='1'>所属分部：{{detailForm.subsectionName||'-'}}</el-col>
                     </el-row>
                     <h3>上游支付信息</h3>
                     <el-row>
-                        <el-col class="col-padding" :span="23" :offset='1'>申请金额(元)：{{detailForm.applyAmount|moneyFormat}}</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>支付方式： {{detailForm.paymentType&& paymentTypes[detailForm.paymentType-1].label||'-' }}</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>上游供应商：{{detailForm.supplierCompanyName||'-'}}</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>供应商开户行名称：{{detailForm.supplierAccountName||'-'}}</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>银行联行号：{{detailForm.supplierBankNo||'-'}}</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo||'-'}}</el-col>
-                        <el-col class="col-padding" :span="23" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate||'-'}}</el-col>
+                        <el-col class="col-padding" :span="10" :offset='1'>申请金额(元)：{{detailForm.applyAmount|moneyFormat}}</el-col>
+                        <el-col class="col-padding" :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
+                        <el-col class="col-padding" :span="10" :offset='1'>支付方式： {{detailForm.paymentType&& paymentTypes[detailForm.paymentType-1].label||'-' }}</el-col>
+                        <el-col class="col-padding" :span="10" :offset='1'>上游供应商：{{detailForm.supplierCompanyName||'-'}}</el-col>
+                        <el-col class="col-padding" :span="10" :offset='1'>供应商开户行名称：{{detailForm.supplierAccountName||'-'}}</el-col>
+                        <el-col class="col-padding" :span="10" :offset='1'>银行联行号：{{detailForm.supplierBankNo||'-'}}</el-col>
+                        <el-col class="col-padding" :span="10" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo||'-'}}</el-col>
+                        <el-col class="col-padding" :span="10" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>备注信息：{{detailForm.applyRemark||'-'}}</el-col>
                         <el-col class="col-padding disFlex" :span="23" :offset='1'>附件：
                             <div class="advance_wrap-flex" v-if="detailForm.attachDocList &&detailForm.attachDocList.length>0">

@@ -163,6 +163,7 @@ export default {
         },
         handleChangeRadio (val) {
             this.payeeAccountList = this.accountList.filter(item => item.payeeName == val)[0].payeeAccountList
+            this.ruleForm.id = ''
         },
         async handleOffine () {
             const { data } = await findPayeeAccount()
