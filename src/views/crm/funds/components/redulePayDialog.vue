@@ -3,10 +3,10 @@
         <el-dialog :title="title" :visible.sync="isOpen" :close-on-click-modal=false width="670px" :before-close="()=> $emit('onClose',false)">
             <template>
                 <div class="remain_head">
-                    <div>总金额：<b>{{dialogDetail.paymentAmount|moneyFormat}}</b></div>
-                    <div>已支付金额：<b>{{dialogDetail.paidAmount|moneyFormat}}</b></div>
-                    <div>待支付金额：<b>{{dialogDetail.unpaidAmount|moneyFormat}}</b></div>
-                    <div>支付待确认金额：<b>{{dialogDetail.unconfirmedAmount|moneyFormat}}</b></div>
+                    <div>总金额：<b>{{dialogDetail.paymentAmount|moneyFormat}}元</b></div>
+                    <div>已支付金额：<b>{{dialogDetail.paidAmount|moneyFormat}}元</b></div>
+                    <div>待支付金额：<b>{{dialogDetail.unpaidAmount|moneyFormat}}元</b></div>
+                    <div>支付待确认金额：<b>{{dialogDetail.unconfirmedAmount|moneyFormat}}元</b></div>
                     <div>应支付日期：<b>{{dialogDetail.schedulePaymentDate?moment(dialogDetail.schedulePaymentDate).format('yyyy-MM-DD'):'-'}}</b></div>
                 </div>
                 <div class="remain_manual" v-if="dialogDetail&&dialogDetail.fundDetailResponseList.length==0&&!lookBoolean">
@@ -355,9 +355,11 @@ export default {
             this.bankType = type
             this.isApproveShow = true
         },
-        onBackCancel () {
+        onBackCancel (val = true) {
+            if (val == true) {
+                this.$emit('onClose')
+            }
             this.isApproveShow = false
-            this.$emit('onClose')
         }
     }
 }
