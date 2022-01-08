@@ -325,7 +325,12 @@ export default {
             this.itemID = val.id
             const { data } = await findPayeeAccount()
             this.accountList = data
+            this.ruleForm.id = ''
+            this.ruleForm.payeeName = ''
             this.offineVisible = true
+            this.$nextTick(() => {
+                this.$refs.ruleForm.clearValidate()
+            })
         },
         handleSubmit () {
             const params = {

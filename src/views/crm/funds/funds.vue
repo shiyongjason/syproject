@@ -389,7 +389,7 @@ export default {
             }
             const { repaymentTypeArrays } = this.queryParams
             this.queryParams = { ...this.queryParamsTemp, repaymentTypeArrays }
-            this.onSwtichInfo(this.queryParams)
+            this.onSwtichInfo(this.queryParamsUseQuery)
             this.switchName()
         },
         handleSizeChange (val) {
@@ -519,6 +519,7 @@ export default {
         },
         // 预付款单独调用接口
         onSwtichInfo (queryParamsUseQuery) {
+            console.log('queryParamsUseQuery', queryParamsUseQuery)
             this.fundsListPagination = {}
             this.fundsList = []
             if (this.queryParams.repaymentTypeArrays == 4) {

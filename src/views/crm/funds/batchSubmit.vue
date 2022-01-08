@@ -167,9 +167,13 @@ export default {
         },
         async handleOffine () {
             const { data } = await findPayeeAccount()
-
             this.accountList = data
+            this.ruleForm.id = ''
+            this.ruleForm.payeeName = ''
             this.offineVisible = true
+            this.$nextTick(() => {
+                this.$refs.ruleForm.clearValidate()
+            })
         },
         handleClaim () {
             this.isOpen = true
