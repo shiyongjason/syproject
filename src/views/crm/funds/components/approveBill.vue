@@ -151,7 +151,7 @@ export default class ApproveBill extends Vue {
     }
     // 关闭弹窗
     public onCancel (val):void {
-        this.$emit('onCancel')
+        this.$emit('onCancel', false)
     }
     // 分页点击
     // public bankPage (val):void {
