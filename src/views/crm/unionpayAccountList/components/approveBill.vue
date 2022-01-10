@@ -120,7 +120,7 @@ export default class ApproveBill extends Vue {
         const moneny = this.selectList.reduce((sum, val) => {
             return sum + parseFloat(val.claimAmount)
         }, 0)
-        return moneny
+        return isNum(moneny, 2)
     }
     // 关闭弹窗
     public onCancel (val):void {

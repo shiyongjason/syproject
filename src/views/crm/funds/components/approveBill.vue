@@ -147,7 +147,7 @@ export default class ApproveBill extends Vue {
             // console.log(parseFloat(val.currentReceiptAmount))
             return sum + parseFloat(val.currentReceiptAmount || 0)
         }, 0)
-        return moneny
+        return isNum(moneny, 2)
     }
     // 关闭弹窗
     public onCancel (val):void {
@@ -256,7 +256,9 @@ export default class ApproveBill extends Vue {
                 this.$message.error('已选金额必须等于本次支付金额')
                 return false
             }
+
             // 账单明细认领
+
             await Api.updateReceiptDetailBank({
                 fundDetailId: this.bankDetailId,
                 fundId: this.bankBillId,

@@ -398,9 +398,10 @@
                                                 </template>
                                             </div>
                                             <div class="row-filed-flex">
-                                                <template v-if="jtem.paymentFlag === paymentFlagKey.CONFIRM">
+                                                <template v-if="jtem.paymentFlag === paymentFlagKey.CONFIRM||jtem.paymentFlag === paymentFlagKey.WAITING">
                                                     <h-button table v-if="hosAuthCheck(Auths.CRM_SERVICE_FUND_CONFIRM)" @click="openReduleDialog(jtem.fundId, FundsDict.repaymentTypeArrays.list[1].key,item)">
-                                                        {{ paymentOrderConst.PAYMENT_FLAG.get(jtem.paymentFlag) }}
+                                                        <!-- {{ paymentOrderConst.PAYMENT_FLAG.get(jtem.paymentFlag) }} -->
+                                                        支付确认
                                                     </h-button>
                                                 </template>
                                                 <template v-else><span class="info-status">{{ paymentOrderConst.PAYMENT_FLAG.get(jtem.paymentFlag) }}</span></template>
@@ -484,13 +485,14 @@
                                         <p class="col-filed col-50 resp-fund-results">
                                             <span class="label">{{ paymentLabel(paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }}</span>
                                             {{ paymentOrderDetail.respFundResults.arrearFund.paidTime | momentFormat }}
-                                            <template v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === paymentFlagKey.CONFIRM">
-                                                <h-button table v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)" @click="openReduleDialog(paymentOrderDetail.respFundResults.arrearFund.id,FundsDict.repaymentTypeArrays.list[2].key)">
-                                                    {{ paymentOrderConst.PAYMENT_FLAG.get(paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }}
+                                            <template v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === paymentFlagKey.CONFIRM||paymentOrderDetail.respFundResults.arrearFund.paymentFlag === paymentFlagKey.WAITING">
+                                                <h-button class="ml-20" table v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)" @click="openReduleDialog(paymentOrderDetail.respFundResults.arrearFund.id,FundsDict.repaymentTypeArrays.list[2].key)">
+                                                    <!-- {{ paymentOrderConst.PAYMENT_FLAG.get(paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }} -->
+                                                    支付确认
                                                 </h-button>
                                             </template>
                                             <template v-else>
-                                                <span class="info-status">
+                                                <span class="info-status ">
                                                     {{ paymentOrderConst.PAYMENT_FLAG.get(paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }}
                                                 </span>
                                             </template>
