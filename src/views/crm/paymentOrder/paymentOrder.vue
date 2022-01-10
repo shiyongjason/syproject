@@ -529,7 +529,8 @@ export default {
         // 支付确认
         handleSubConfirmed (row) {
             console.log('row', row)
-            row = { ...row, fundId: row.advanceId }
+            // 判断是 尾款的fundId 还是首付款fundId
+            row = { ...row, fundId: row.arreaFundId || row.advanceId }
             this.$refs.reduleDialog.findRemainConfirm(row, row.repaymentType)
             this.reduleDialogVisible = true
         },

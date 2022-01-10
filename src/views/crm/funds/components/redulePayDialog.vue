@@ -217,7 +217,7 @@
                 <el-button @click="handleSubmit">确认收到</el-button>
             </span>
         </el-dialog>
-        <ApproveBill :isOpen="isApproveShow" :bankBillId="bankBillId" :bankDetailId="bankDetailId" :bankType="bankType" @onCancel="onBackCancel" v-if="isApproveShow" />
+        <ApproveBill :isOpen="isApproveShow" :bankBillId="bankBillId" :companyId="companyId" :bankDetailId="bankDetailId" :bankType="bankType" @onCancel="onBackCancel" v-if="isApproveShow" />
 
     </div>
 </template>
@@ -362,6 +362,7 @@ export default {
             this.bankBillId = val.fundId
             this.bankDetailId = val.id
             this.bankType = type
+            this.companyId = this.dialogDetail.companyId
             this.isApproveShow = true
         },
         onBackCancel (val = true) {

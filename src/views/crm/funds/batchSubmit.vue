@@ -54,7 +54,7 @@
                 <el-button @click="handleSubmit">确认收到</el-button>
             </span>
         </el-dialog>
-          <ApproveBill :isOpen="isOpen" :payeeName = payDetail.companyName  :payeeMoney = payDetail.totalAmount :bankType="4" @onCancel="()=>isOpen=false" @backonReceived = "onReceived" v-if="isOpen" />
+          <ApproveBill :isOpen="isOpen" :payeeName = payDetail.companyName :companyId=payDetail.companyId  :payeeMoney = payDetail.totalAmount :bankType="4" @onCancel="()=>isOpen=false" @backonReceived = "onReceived" v-if="isOpen" />
     </div>
 </template>
 <script>
