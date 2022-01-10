@@ -18,7 +18,7 @@
                         <el-button type="primary" @click="onNoReceived">并未收到</el-button>
                         <el-button type="primary" @click="onReceived">确认收到</el-button>
                     </div> -->
-                    <p>是否确认收到经销商{{payDetail.companyName}}支付的{{payDetail.totalAmount|moneyFormat}}元？</p>
+                    <p>是否确认收到经销商{{payDetail.companyName}}支付的{{payDetail.totalAmount|moneyFormat}}元账单？</p>
                     <p>你可以选择以下方式确认这笔入账👇：</p>
                     <div class="batch_bot-btn">
                         <el-button type="info" @click="handleOffine">线下确认</el-button>

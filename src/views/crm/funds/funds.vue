@@ -381,7 +381,7 @@ export default {
             }
         },
         handleClick (val) {
-            // 剩余贷款 状态去除支付失败（key == 3）状态
+            // 剩余货款 状态去除支付失败（key == 3）状态
             if (val.name == 2) {
                 this.statusOption = this.FundsDict.paymentFlagArrays.list.filter(val => val.key != 3)
             } else {
@@ -530,7 +530,7 @@ export default {
         }
     },
     mounted () {
-        // 剩余贷款去除支付失败状态处理
+        // 剩余货款去除支付失败状态处理
         this.statusOption = this.FundsDict.paymentFlagArrays.list
         this.queryParamsTemp = { ...this.queryParams }
         const temp = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
