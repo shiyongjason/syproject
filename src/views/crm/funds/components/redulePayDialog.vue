@@ -103,7 +103,7 @@
                                         收款方：{{v.receiptName||'-'}}
                                     </el-col>
                                     <el-col :span="12">
-                                        收款方账户：{{v.bankAccountNo||'-'}}
+                                        收款方账户：{{v.receiptBankName||'-'}}{{v.bankAccountNo||'-'}}
                                     </el-col>
                                 </el-row>
                             </template>

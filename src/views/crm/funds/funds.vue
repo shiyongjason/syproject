@@ -153,7 +153,7 @@
                         <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.showPayBatchConfirm">
                             批量确认
                         </h-button>
-                        <h-button table @click="onPayDetail(scope.data.row)" v-if="scope.data.row.paymentFlag==PaymentOrderDict.paymentFlag.list[0].key||scope.data.row.showPayConfirm">
+                        <h-button table @click="onPayDetail(scope.data.row)" v-if="(scope.data.row.paymentFlag==PaymentOrderDict.paymentFlag.list[0].key||scope.data.row.showPayConfirm)&&scope.data.row.syncSaasTrade==2">
                             支付确认
                         </h-button>
                         <h-button table @click="onUploadPay(scope.data.row)" v-if="(scope.data.row.paymentFlag==0||scope.data.row.paymentFlag==3)&&hosAuthCheck(Auths.CRM_FUNDS_DOWN_UPLOAD)&&scope.data.row.unpaidAmount > 0">

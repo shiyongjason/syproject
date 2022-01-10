@@ -5,7 +5,7 @@
     <div class="download-flex" v-else-if="isType==='preview'">
         <div class="pdfimg" v-if="_checkPicType(fileUrl,['.jpg','.gif','.png','.jpeg'])">
             <a @click="handle">
-                <imageAddToken :file-url="fileUrl" />
+                <imageAddToken :file-url="fileUrl" :key="fileUrl"/>
             </a>
         </div>
         <div class="pdfimg" v-if="_checkPicType(fileUrl,['.pdf'])">
