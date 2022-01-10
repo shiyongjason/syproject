@@ -164,7 +164,7 @@
                                 -
                             </span>
                         </el-col>
-                        <el-col class="mt10" :span="10" :offset='1'>支付成功时间：{{detailForm.paidTime?moment(detailForm.paidTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
+                        <el-col v-if="detailForm.status==4||detalForm.status==5||detalForm.status==6" class="mt10" :span="10" :offset='1'>支付成功时间：{{detailForm.paidTime?moment(detailForm.paidTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
                     </el-row>
                 </template>
                 <el-row ype="flex" class="row-bg">
@@ -397,7 +397,7 @@
             </div>
         </el-dialog>
         <UploadDialog ref="uploaddialog" @onBackSearch="getList"></UploadDialog>
-   <ReduleDialog :is-open="reduleDialogVisible" ref="reduleDialog" @onClose="fundsDialogClose"></ReduleDialog>
+        <ReduleDialog :is-open="reduleDialogVisible" ref="reduleDialog" @onClose="fundsDialogClose"></ReduleDialog>
     </div>
 </template>
 
@@ -655,6 +655,7 @@ export default class Advancelist extends Vue {
     }
     fundsDialogClose () {
         this.reduleDialogVisible = false
+        this.getList()
     }
 
     public async getList () {

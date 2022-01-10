@@ -129,7 +129,7 @@
                                 操作人：{{item.createBy}} ({{item.createPhone||'-'}})
                             </el-col>
                         </el-row>
-                        <p style="color:#9999;margin-top:10px">是否确认收到经销商<span style="color:red">{{companyName}}</span>支付的<span style="color:red">{{item.paymentAmount|moneyFormat}}</span>元{{repaymentType==3?'服务费':'贷款'}}</p>
+                        <p style="color:#9999;margin-top:10px">是否确认收到经销商<span style="color:red">{{companyName}}</span>支付的<span style="color:red">{{item.paymentAmount|moneyFormat}}</span>元账单</p>
                         <strong style="color:red">你可以选择以下方式确认这笔入账👇：</strong>
                     </el-row>
                     <div class="mt10" v-if="!lookBoolean">
