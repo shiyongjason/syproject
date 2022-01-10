@@ -399,11 +399,13 @@ export default {
         onApproveEnd (val) {
             this.queryParams.endApprovalTime = val
         },
-        fundsDialogClose () {
+        fundsDialogClose (val = true) {
             this.fundsDialogVisible = false
             this.reduleDialogVisible = false
-            this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
-            this.findPaymentOrderList(this.queryParamsUseQuery)
+            if (val) {
+                this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
+                this.findPaymentOrderList(this.queryParamsUseQuery)
+            }
         },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
