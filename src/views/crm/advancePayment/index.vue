@@ -143,7 +143,7 @@
                     <el-col :span="10" :offset='1'>审核备注：{{detailForm.financeApprovalRemark||'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg" v-if="detailForm.approvalUser">
-                    <el-col :span="10" :offset='1'>项目运营审核人：{{detailForm.approvalUser||'-'}} {{detailForm.applyUserPhone?'('+detailForm.applyUserPhone+')':''}}</el-col>
+                    <el-col :span="10" :offset='1'>项目运营审核人：{{detailForm.approvalUser||'-'}} {{detailForm.approvalPhone?'('+detailForm.approvalPhone+')':''}}</el-col>
                     <el-col :span="10" :offset='1'>审核时间：{{detailForm.approvalTime?moment(detailForm.approvalTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
                 </el-row>
                 <el-row ype="flex" class="row-bg" v-if="detailForm.approvalUser">
@@ -164,7 +164,7 @@
                                 -
                             </span>
                         </el-col>
-                        <el-col v-if="detailForm.status==4||detalForm.status==5||detalForm.status==6" class="mt10" :span="10" :offset='1'>支付成功时间：{{detailForm.paidTime?moment(detailForm.paidTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
+                        <el-col v-if="(detailForm.status==4||detailForm.status==5||detailForm.status==6)" class="mt10" :span="10" :offset='1'>支付成功时间：{{detailForm.paidTime?moment(detailForm.paidTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
                     </el-row>
                 </template>
                 <el-row ype="flex" class="row-bg">

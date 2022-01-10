@@ -429,8 +429,11 @@ export default {
 .dialog_box {
     box-sizing: border-box;
     padding-left: 10px;
-    border: 1px solid #dadada;
-    box-shadow: 2px 2px 4px #dadada;
+    &:not(:last-child) {
+        padding-bottom: 10px;
+        border-bottom: 1px solid #dadada;
+    }
+    // box-shadow: 2px 2px 4px #dadada;
     margin-top: 8px;
 }
 /deep/.el-dialog .el-select {
