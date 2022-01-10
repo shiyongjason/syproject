@@ -69,6 +69,8 @@ export default class ApproveBill extends Vue {
     @Prop({ type: String, required: false, default: '' }) bankBillId : string;
     @Prop({ type: Number, required: true, default: 1 }) bankType : number;
     @Prop({ type: String, required: false, default: '' }) bankDetailId:string;
+    @Prop({ type: String, required: true, default: '' }) companyId:string;
+
     @Ref('hosjoyTable') readonly hosjoyTableRef!: HTMLFormElement;
     @State('userInfo') userInfo: any
     copyTable = []
@@ -211,7 +213,7 @@ export default class ApproveBill extends Vue {
     }
     // 获取认领银企账单详情
     public async bankDetailInfo () {
-        const { data: dataInfo } = await Api.findBankReceipt({ payeeName: this.payeeName, receiptStatusArray: '0,1' })
+        const { data: dataInfo } = await Api.findBankReceipt({ payeeName: this.payeeName, receiptStatusArray: '0,1', payeeCompanyId: this.companyId })
         this.queryParams.total = dataInfo.length
         dataInfo.length > 0 && dataInfo.forEach(item => {
             item.currentReceiptAmount = ''
