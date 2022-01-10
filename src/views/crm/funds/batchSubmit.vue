@@ -33,9 +33,13 @@
             <div class="remain_title">请确认收款账户信息：</div>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
                 <el-form-item label="收款方：" prop="payeeName">
-                    <el-radio-group v-model="ruleForm.payeeName" @change="handleChangeRadio">
+                    <!-- <el-radio-group v-model="ruleForm.payeeName" @change="handleChangeRadio">
                         <el-radio :label=item.payeeName v-for="(item,index) in accountList" :key=index>{{item.payeeName}}</el-radio>
-                    </el-radio-group>
+                    </el-radio-group> -->
+                    <el-select v-model="ruleForm.payeeName" placeholder="请选择" @change="handleChangeRadio">
+                        <el-option v-for="(item,index) in accountList" :key="index" :label="item.payeeName" :value="item.payeeName">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="收款方账户：" prop="id">
                      <el-select v-model="ruleForm.id" placeholder="请选择">
