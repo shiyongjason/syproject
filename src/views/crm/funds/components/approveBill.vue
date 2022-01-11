@@ -23,7 +23,7 @@
             <p><span>经销商：{{ payeeName }}</span><span>账单数量：{{bankDetail.list&&bankDetail.list.length}}</span></p>
         </div>
         <div class="approve">
-            <hosJoyTable showPagination ref="hosjoyTable" align="center" border stripe isShowselection :maxHeight='800' @selection-change="selectChange" :column="formTableLabel" :data="bankList"
+            <hosJoyTable showPagination ref="hosjoyTable" align="center" border stripe isShowselection :maxHeight='800' @selection-change="selectChange" @select="select" :selectable="selectable" :column="formTableLabel" :data="bankList"
                 :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="queryParams.total" @pagination="getList"
             >
             </hosJoyTable>
@@ -77,8 +77,10 @@ export default class ApproveBill extends Vue {
     fundType = fundType
     status = status
     disabled = true
+    newSelect = []
     selectList = []
     bankList = []
+    flag = false
     bankDetail:any = {}
     dialogTitle:string = '认领账单 |'
     queryParams={
@@ -130,7 +132,7 @@ export default class ApproveBill extends Vue {
 
     // 获取checked选中数组
     public selectChange (data):void {
-        console.log('log::::::this.bankList', this.bankList)
+        // console.log('log::::::this.bankList', this.bankList)
         this.selectList = data
         setTimeout(() => {
             this.bankList.forEach(row => {
@@ -155,29 +157,76 @@ export default class ApproveBill extends Vue {
     public onCancel (val):void {
         this.$emit('onCancel', false)
     }
-    // 分页点击
-    // public bankPage (val):void {
-    //     this.queryParams = {
-    //         ...this.queryParams,
-    //         ...val
-    //     }
-    //     this.bankDetailInfo()
-    // }
+    selectable (row) {
+        console.log('this.newSelect', this.newSelect, this.newSelect.includes(row) && this.flag, this.flag)
 
-    // 获取认领银企账单列表
-    // async bankListInfo () {
-    // this.queryParams.bankBillId = this.bankBillId
-    // const { data } = await Api.getBankList(this.queryParams)
-    // this.bankList = data.records
-    // this.page.total = data.total as number
-    // this.$nextTick(() => {
-    //     this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[0], true)
-    // })
+        if (this.newSelect.length > 0) {
+            if (this.flag) {
+                if (this.newSelect.includes(row)) {
+                    return true
+                } else {
+                    return false
+                }
+            } else {
+                return true
+            }
+        } else {
+            return true
+        }
+    }
+    select (val, row) {
+        let sum = 0
+        let index = 0
+        console.log('val', val)
+        this.flag = false
+        this.newSelect = val
+        for (let i = 0; i < val.length; i++) {
+            if (sum < this.bankDetail.unReceiptAmount) {
+                console.log(val)
 
-    // setTimeout(() => {
-    //     this.selectSum()
-    // }, 0)
-    // }
+                if ((sum + val[i].noReceiptAmount * 1) < this.bankDetail.unReceiptAmount) {
+                    val[i].currentReceiptAmount = val[i].noReceiptAmount
+                    // this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(val[i])
+                    sum += val[i].noReceiptAmount
+                    index = i + 1
+                } else {
+                    if (index === i) {
+                        let price = this.bankDetail.unReceiptAmount - sum
+                        val[i].currentReceiptAmount = price.toFixed(2)
+                        sum += val[i].currentReceiptAmount * 1
+
+                    // this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(val[i])
+                    }
+                    this.flag = true
+
+                    console.log(sum)
+                }
+            } else {
+                console.log(123123)
+            }
+        }
+        // this.selectMoney(val)
+    }
+    selectMoney (val) {
+        let sum = 0
+        let index = 0
+        for (let i = 0; i < val.length; i++) {
+            if (sum <= this.bankDetail.unReceiptAmount) {
+                if ((sum + val[i].noReceiptAmount) < this.bankDetail.unReceiptAmount) {
+                    this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(val[i])
+                    sum += val[i].noReceiptAmount
+                    index = i + 1
+                } else {
+                    if (index === i) {
+                        let price = this.bankDetail.unReceiptAmount - sum
+                        val[i].currentReceiptAmount = price.toFixed(2)
+                        sum += val[i].currentReceiptAmount
+                        this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(val[i])
+                    }
+                }
+            }
+        }
+    }
 
     // 用于计算选中的列表
     public selectSum () {
