@@ -23,7 +23,7 @@
             <p><span>经销商：{{ payeeName }}</span><span>账单数量：{{bankDetail.list&&bankDetail.list.length}}</span></p>
         </div>
         <div class="approve">
-            <hosJoyTable showPagination ref="hosjoyTable" align="center" border stripe isShowselection :maxHeight='800' @selection-change="selectChange" @select="select" :selectable="selectable" :column="formTableLabel" :data="bankList"
+            <hosJoyTable showPagination ref="hosjoyTable" align="center" border stripe isShowselection :maxHeight='800' @selection-change="selectChange" @select="select" :column="formTableLabel" :data="bankList"
                 :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="queryParams.total" @pagination="getList"
             >
             </hosJoyTable>
@@ -44,6 +44,7 @@ import { State } from 'vuex-class'
 import { isNum } from '@/utils/validate/format'
 import { CreateElement } from 'vue'
 import * as Api from '../api/index'
+import { Money } from '@/utils/rules'
 
 // 定义类型
 interface Query{
@@ -132,15 +133,15 @@ export default class ApproveBill extends Vue {
 
     // 获取checked选中数组
     public selectChange (data):void {
-        // console.log('log::::::this.bankList', this.bankList)
+        // console.log('log::::::this.bankList', data)
         this.selectList = data
         setTimeout(() => {
             this.bankList.forEach(row => {
-                if (this.selectList.includes(row)) {
-                    row.currentReceiptAmount = row.currentReceiptAmount || row.noReceiptAmount
-                } else {
-                    row.currentReceiptAmount = null
-                }
+                // if (this.selectList.includes(row)) {
+                //     row.currentReceiptAmount = row.currentReceiptAmount || row.noReceiptAmount
+                // } else {
+                //     row.currentReceiptAmount = null
+                // }
             })
         }, 0)
         this.disabled = !data.length
@@ -175,36 +176,55 @@ export default class ApproveBill extends Vue {
         }
     }
     select (val, row) {
-        let sum = 0
-        let index = 0
-        console.log('val', val)
-        this.flag = false
-        this.newSelect = val
-        for (let i = 0; i < val.length; i++) {
-            if (sum < this.bankDetail.unReceiptAmount) {
-                console.log(val)
+        console.log('1', val)
+        const moneny = val.reduce((sum, val) => {
+            // console.log(parseFloat(val.currentReceiptAmount))
+            return sum + parseFloat(val.currentReceiptAmount || 0)
+        }, 0)
 
-                if ((sum + val[i].noReceiptAmount * 1) < this.bankDetail.unReceiptAmount) {
-                    val[i].currentReceiptAmount = val[i].noReceiptAmount
-                    // this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(val[i])
-                    sum += val[i].noReceiptAmount
-                    index = i + 1
-                } else {
-                    if (index === i) {
-                        let price = this.bankDetail.unReceiptAmount - sum
-                        val[i].currentReceiptAmount = price.toFixed(2)
-                        sum += val[i].currentReceiptAmount * 1
-
-                    // this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(val[i])
-                    }
-                    this.flag = true
-
-                    console.log(sum)
-                }
+        if (!row.currentReceiptAmount) {
+            this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(row, false)
+            // this.$set(val, val.length - 1, '')
+            this.$message('金额超了')
+            this.selectList = []
+            console.log(this.selectList, moneny)
+            this.$forceUpdate()
+        } else {
+            let curr = (this.bankDetail.unReceiptAmount - moneny).toFixed(2)
+            if (curr > row.noReceiptAmount) {
+                row.currentReceiptAmount = row.noReceiptAmount
             } else {
-                console.log(123123)
+                row.currentReceiptAmount = curr
             }
         }
+
+        // this.$forceUpdate()
+        // let sum = 0
+        // let index = 0
+        // console.log('val', val)
+        // this.flag = false
+        // this.newSelect = val
+        // for (let i = 0; i < val.length; i++) {
+        //     if (sum < this.bankDetail.unReceiptAmount) {
+        //         if ((sum + val[i].currentReceiptAmount * 1) < this.bankDetail.unReceiptAmount) {
+        //             sum += val[i].currentReceiptAmount * 1
+        //             index = i + 1
+        //             console.log('sum', sum, index)
+        //         } else {
+        //             if (index == i) {
+        //                 let price = this.bankDetail.unReceiptAmount - sum
+        //                 console.log('price', price.toFixed(2))
+
+        //                 val[i].currentReceiptAmount = price.toFixed(2)
+        //                 sum += val[i].currentReceiptAmount * 1
+
+        //                 console.log(sum)
+        //             }
+        //         }
+        //     } else {
+        //         console.log(123123)
+        //     }
+        // }
         // this.selectMoney(val)
     }
     selectMoney (val) {
@@ -230,13 +250,15 @@ export default class ApproveBill extends Vue {
 
     // 用于计算选中的列表
     public selectSum () {
+        console.log(222222)
         let sum = 0
         let index = 0
         for (let i = 0; i < this.bankList.length; i++) {
             if (sum <= this.bankDetail.unReceiptAmount) {
                 if ((sum + this.bankList[i].noReceiptAmount) < this.bankDetail.unReceiptAmount) {
+                    this.bankList[i].currentReceiptAmount = this.bankList[i].noReceiptAmount
                     this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
-                    sum += this.bankList[i].noReceiptAmount
+                    sum += this.bankList[i].currentReceiptAmount
                     index = i + 1
                 } else {
                     if (index === i) {
@@ -245,7 +267,7 @@ export default class ApproveBill extends Vue {
                         sum += this.bankList[i].currentReceiptAmount
                         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                     }
-                    this.flag = true
+                    // this.flag = true
                 }
                 this.newSelect.push(this.bankList[i])
             }
