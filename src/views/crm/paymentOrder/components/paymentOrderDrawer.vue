@@ -401,7 +401,7 @@
                                                 <template v-if="jtem.paymentFlag === paymentFlagKey.CONFIRM||jtem.paymentFlag === paymentFlagKey.WAITING">
                                                     <h-button table v-if="hosAuthCheck(Auths.CRM_SERVICE_FUND_CONFIRM)" @click="openReduleDialog(jtem.fundId, FundsDict.repaymentTypeArrays.list[1].key,item)">
                                                         <!-- {{ paymentOrderConst.PAYMENT_FLAG.get(jtem.paymentFlag) }} -->
-                                                        支付确认
+                                                        确认支付
                                                     </h-button>
                                                 </template>
                                                 <template v-else><span class="info-status">{{ paymentOrderConst.PAYMENT_FLAG.get(jtem.paymentFlag) }}</span></template>
@@ -739,12 +739,23 @@ export default {
             this.$emit('openConfirmReceiptDialog', params)
         },
         openReduleDialog (id, type) {
-            console.log(id, type)
-            const params = {
-                id: id,
-                orderId: this.paymentOrderDetail.respFundResults.downpaymentFund.orderId
+            if (this.paymentOrderDetail.respGoodsAmount.goodsAmount !== this.paymentOrderDetail.respGoodsAmount.totalAmount) {
+                this.$confirm('支付单全部收货后，才可支付尾款哦～', '收货提示', {
+                    confirmButtonText: '去收货',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.openConfirmReceipt()
+                }).catch(() => {
+
+                })
+            } else {
+                const params = {
+                    id: id,
+                    orderId: this.paymentOrderDetail.respFundResults.downpaymentFund.orderId
+                }
+                this.$emit('openReduleDialog', params, type)
             }
-            this.$emit('openReduleDialog', params, type)
         },
         openFundsDialog (val, type, obj) {
             console.log(val, type, obj)
