@@ -119,15 +119,17 @@ export default {
             this.tableData.map(item => {
                 fundId.push(item.id)
             })
-            this.$confirm('确定后，当前页面所有账单的状态将置为「支付失败」', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(async () => {
-                await payNoReceived({ fundId: fundId })
-                this.$router.push({ path: '/goodwork/funds' })
-            }).catch(() => {
-            })
+            await payNoReceived({ fundId: fundId })
+            this.$router.push({ path: '/goodwork/funds' })
+            // this.$confirm('确定后，当前页面所有账单的状态将置为「支付失败」', '提示', {
+            //     confirmButtonText: '确定',
+            //     cancelButtonText: '取消',
+            //     type: 'warning'
+            // }).then(async () => {
+            //     await payNoReceived({ fundId: fundId })
+            //     this.$router.push({ path: '/goodwork/funds' })
+            // }).catch(() => {
+            // })
         },
         handleSubmit (val) {
             const fundId = []
