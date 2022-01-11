@@ -10,7 +10,7 @@
                     <div>应支付日期：<b>{{dialogDetail.schedulePaymentDate?moment(dialogDetail.schedulePaymentDate).format('yyyy-MM-DD'):'-'}}</b></div>
                 </div>
                 <div class="remain_manual" v-if="dialogDetail&&dialogDetail.fundDetailResponseList.length==0&&!lookBoolean">
-                    <h-button type="primary" @click="handleBill(dialogDetail,3)">认领流水</h-button> &nbsp;点击可读取当前经销商的入账流水
+                    <h-button type="primary" @click="handleBill(dialogDetail,3)">手动认领</h-button> &nbsp;点击可读取当前经销商的入账流水
                 </div>
                 <div class="remain_wrap" v-for="(item) in dialogDetail&&dialogDetail.fundDetailResponseList" :key="item.id">
                     <div class="remian_wrap-top">
