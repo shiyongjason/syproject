@@ -176,14 +176,22 @@ export default class ApproveBill extends Vue {
             return true
         }
     }
-    select (val, row) {
-        console.log('1', val)
-        const moneny = val.reduce((sum, val) => {
-            // console.log(parseFloat(val.currentReceiptAmount))
+    get currentSum () {
+        const moneny = this.selectList.reduce((sum, val) => {
             return sum + parseFloat(val.currentReceiptAmount || 0)
         }, 0)
+        return moneny
+    }
+    select (val, row) {
+        console.log('1', val)
+        console.log('log::::::row', row)
+        // const moneny = val.reduce((sum, val) => {
+        //     // console.log(parseFloat(val.currentReceiptAmount))
+        //     return sum + parseFloat(val.currentReceiptAmount || 0)
+        // }, 0)
+        // console.log('🚀 --- moneny --- moneny', moneny)
 
-        if (!row.currentReceiptAmount) {
+        if (this.currentSum >= this.bankDetail.unpaidAmount) {
             // this.$set(val, val.length - 1, '')
             this.$message('金额超了')
             // this.selectList = []
@@ -191,7 +199,7 @@ export default class ApproveBill extends Vue {
                 this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(row, false)
             })
         } else {
-            let curr = (this.bankDetail.unReceiptAmount - moneny).toFixed(2)
+            let curr = (this.bankDetail.unReceiptAmount - this.currentSum).toFixed(2)
             if (curr > row.noReceiptAmount) {
                 row.currentReceiptAmount = row.noReceiptAmount
             } else {
