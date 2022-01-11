@@ -135,6 +135,7 @@ export default class ApproveBill extends Vue {
     public selectChange (data):void {
         // console.log('log::::::this.bankList', data)
         this.selectList = data
+        console.log('🚀 --- selectChange ---  this.selectList', this.selectList)
         setTimeout(() => {
             this.bankList.forEach(row => {
                 // if (this.selectList.includes(row)) {
@@ -183,12 +184,12 @@ export default class ApproveBill extends Vue {
         }, 0)
 
         if (!row.currentReceiptAmount) {
-            this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(row, false)
             // this.$set(val, val.length - 1, '')
             this.$message('金额超了')
-            this.selectList = []
-            console.log(this.selectList, moneny)
-            this.$forceUpdate()
+            // this.selectList = []
+            this.$nextTick(() => {
+                this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(row, false)
+            })
         } else {
             let curr = (this.bankDetail.unReceiptAmount - moneny).toFixed(2)
             if (curr > row.noReceiptAmount) {
