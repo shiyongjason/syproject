@@ -114,7 +114,7 @@ export default {
             this.payDetail = data
             this.tableData = data.batchFunds
         },
-        onNoReceived () {
+        async onNoReceived () {
             const fundId = []
             this.tableData.map(item => {
                 fundId.push(item.id)
