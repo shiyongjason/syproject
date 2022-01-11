@@ -158,7 +158,7 @@ export default class ApproveBill extends Vue {
         this.$emit('onCancel', false)
     }
     selectable (row) {
-        console.log('this.newSelect', this.newSelect, this.newSelect.includes(row) && this.flag, this.flag)
+        // console.log('this.newSelect', this.newSelect, this.newSelect.includes(row) && this.flag, this.flag)
 
         if (this.newSelect.length > 0) {
             if (this.flag) {
@@ -245,7 +245,9 @@ export default class ApproveBill extends Vue {
                         sum += this.bankList[i].currentReceiptAmount
                         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                     }
+                    this.flag = true
                 }
+                this.newSelect.push(this.bankList[i])
             }
         }
     }
