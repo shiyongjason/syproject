@@ -144,7 +144,7 @@
                     </h-button>
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW) && (paymentOrderStatusKey.FINANCE_AUDIT === scope.data.row.status)">审核</h-button>
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW_PROJECT) && (paymentOrderStatusKey.OPERATE_AUDIT === scope.data.row.status)">审核</h-button>
-                    <h-button table @click="handleSubConfirmed(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM) &&( scope.data.row.status == 2|| scope.data.row.status == 1|| scope.data.row.status == 9)"> 支付确认</h-button>
+                    <h-button table @click="handleSubConfirmed(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM) &&( scope.data.row.status == 2|| scope.data.row.status == 1|| (scope.data.row.status == 9&&scope.data.row.syncSaasTrade==2))">支付确认</h-button>
                     <h-button table @click="tableOpenConfirmReceiptDialog(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && (scope.data.row.goodsConfirmFlag === 1)">确认收货</h-button>
                     <h-button table @click="openDrawer(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_DETAIL)">查看详情</h-button>
                     <h-button table @click="openDrawerPur(scope.data.row)">审批记录</h-button>

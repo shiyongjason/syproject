@@ -58,7 +58,7 @@ export default {
             // attachDocs: [],
             fundId: '',
             companyId: '',
-            batchNumber: '',
+            batchNumber: 0,
             payMoney: 0,
             unpaidAmount: 0,
             repaymentType: '', // 账单类型  2==剩余货款
@@ -83,6 +83,9 @@ export default {
             if (val.companyId) {
                 const { data } = await getBnumber({ companyId: val.companyId })
                 this.batchNumber = data
+            } else {
+                // 预付款不需要 批量支付展示
+                this.batchNumber = 0
             }
             this.dialogVisible = true
             this.fundId = val.fundId || val.advanceId || val.id

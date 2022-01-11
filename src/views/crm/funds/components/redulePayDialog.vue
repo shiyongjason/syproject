@@ -10,7 +10,7 @@
                     <div>应支付日期：<b>{{dialogDetail.schedulePaymentDate?moment(dialogDetail.schedulePaymentDate).format('yyyy-MM-DD'):'-'}}</b></div>
                 </div>
                 <div class="remain_manual" v-if="dialogDetail&&dialogDetail.fundDetailResponseList.length==0&&!lookBoolean">
-                    <h-button type="primary" @click="handleBill(dialogDetail,3)">认领流水</h-button> &nbsp;点击可读取当前经销商的入账流水
+                    <h-button type="primary" @click="handleBill(dialogDetail,3)">手动认领</h-button> &nbsp;点击可读取当前经销商的入账流水
                 </div>
                 <div class="remain_wrap" v-for="(item) in dialogDetail&&dialogDetail.fundDetailResponseList" :key="item.id">
                     <div class="remian_wrap-top">
@@ -54,8 +54,8 @@
                                     <el-col :span="12">
                                         收款方：{{v.receiptName||'-'}}
                                     </el-col>
-                                    <el-col :span="12">
-                                        收款方账户：{{v.bankAccountNo||'-'}}
+                                    <el-col :span="15">
+                                        收款方账户：{{v.receiptBankName||'-'}}{{v.bankAccountNo||'-'}}
                                     </el-col>
                                 </el-row>
                                 <el-row class="dialog_box" v-if="(v.receiptType==ORDER_CANCEL||v.receiptType==MANUAL_CANCELLATION)" :key="i">
@@ -78,8 +78,8 @@
                                     <el-col :span="12">
                                         收款方：{{v.receiptName||'-'}}
                                     </el-col>
-                                    <el-col :span="12">
-                                        收款方账户：{{v.bankAccountNo||'-'}}
+                                    <el-col :span="18">
+                                        收款方账户：{{v.receiptBankName||'-'}}{{v.bankAccountNo||'-'}}
                                     </el-col>
                                 </el-row>
                                 <el-row class="dialog_box" v-if="(v.receiptType==SYSTEM_CLAIM||v.receiptType==MANUAL_CLAIM)" :key="i">
@@ -102,8 +102,8 @@
                                     <el-col :span="12">
                                         收款方：{{v.receiptName||'-'}}
                                     </el-col>
-                                    <el-col :span="12">
-                                        收款方账户：{{v.receiptBankName||'-'}}{{v.bankAccountNo||'-'}}
+                                    <el-col :span="18">
+                                        收款方账户：{{v.receiptBankName||'-'}} {{v.bankAccountNo||'-'}}
                                     </el-col>
                                 </el-row>
                             </template>
@@ -125,7 +125,7 @@
                                     </span>
                                 </div>
                             </el-col>
-                            <el-col :span="12">
+                            <el-col :span="18">
                                 操作人：{{item.createBy}} ({{item.createPhone||'-'}})
                             </el-col>
                         </el-row>

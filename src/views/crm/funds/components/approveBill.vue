@@ -192,7 +192,7 @@ export default class ApproveBill extends Vue {
                 } else {
                     if (index === i) {
                         let price = this.bankDetail.unReceiptAmount - sum
-                        this.bankList[i].currentReceiptAmount = isNum(price, 2)
+                        this.bankList[i].currentReceiptAmount = price.toFixed(2)
                         sum += this.bankList[i].currentReceiptAmount
                         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                     }
