@@ -167,6 +167,10 @@
                         <el-col v-if="(detailForm.status==4||detailForm.status==5||detailForm.status==6)" class="mt10" :span="10" :offset='1'>支付成功时间：{{detailForm.paidTime?moment(detailForm.paidTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
                     </el-row>
                 </template>
+                <div class="pre_wrap">
+                    <h4>预付款支付计划：</h4>
+                     <hosJoyTable  ref="hosjoyTable" align="center"  border stripe  :column="tableLabelDetail" :data="tableData"></hosJoyTable>
+                </div>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>核销人：{{detailForm.writeOffUser||'-'}}</el-col>
                     <el-col :span="10" :offset='1'>核销时间：{{detailForm.writeOffTime?moment(detailForm.writeOffTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
@@ -320,31 +324,6 @@
                 <el-button type="primary" @click="onSubmitPay">确认支付</el-button>
             </span>
         </el-dialog>
-        <!-- 预付款支付 -->
-        <!-- <el-dialog title="上传预付款支付凭证" :visible.sync="prePayVisble" width="600px" :close-on-click-modal=false :before-close="()=>{prePayVisble = false}">
-            <div>
-                <el-row ype="flex" class="row-bg">
-                    <el-col :span="20" :offset='1'>本次支付金额(元)：{{(prePayForm.payAmount - prePayForm.confirmAmount - prePayForm.paidAmount)|moneyFormat}}</el-col>
-                </el-row>
-                <el-row ype="flex" class="row-bg">
-                    <el-col :span="20" :offset='1'>应支付金额(元)：{{prePayForm.payAmount|moneyFormat}}</el-col>
-                </el-row>
-                <el-form :model="prePayForm" :rules="prePayRules" ref="prePayForm" label-width="150px" class="demo-ruleForm">
-                    <el-form-item label="预付凭证：" prop="payVouchers" >
-                        <OssFileHosjoyUpload v-model="prePayForm.payVouchers" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.prePayForm.clearValidate('payVouchers')" accept=".jpg,.png,.pdf">
-                            <div class="a-line">
-                                <h-button>上传文件</h-button>
-                            </div>
-                        </OssFileHosjoyUpload>
-                        <p class="tips">请上传JPG/PNG/JPEG/PDF等主流格式，最多上传9张，单张大小不得超过20M</p>
-                    </el-form-item>
-                </el-form>
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="prePayVisble = false">取 消</el-button>
-                <el-button type="primary" @click="handleSubmit">确认支付</el-button>
-            </span>
-        </el-dialog> -->
         <!-- 记录 -->
         <el-dialog title="审批记录" :visible.sync="recordVisible" width="30%" :before-close="()=>{recordVisible = false}">
             <div class="advance_wrap">
@@ -549,7 +528,14 @@ export default class Advancelist extends Vue {
     page = {
         total: 0
     }
+    private tableLabelDetail:tableLabelProps = [
+        { label: '上游预付款支付单编号', prop: 'prepaymentNo', width: '160px' },
+        { label: '核销采购单编号', prop: 'purchaseOrderNo' },
+        { label: '申请人', prop: 'applyUser' },
+        { label: '申请时间', prop: 'applyTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+        { label: '更新时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss' }
 
+    ]
     private tableLabel:tableLabelProps = [
         { label: '上游预付款支付单编号', prop: 'prepaymentNo', width: '160px' },
         { label: '所属分部', prop: 'subsectionName' },

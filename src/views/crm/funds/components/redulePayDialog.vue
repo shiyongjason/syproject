@@ -55,7 +55,7 @@
                                         收款方：{{v.receiptName||'-'}}
                                     </el-col>
                                     <el-col :span="15">
-                                        收款方账户：{{v.receiptBankName||'-'}}{{v.bankAccountNo||'-'}}
+                                        收款方账户：{{v.receiptBankName||'-'}} {{v.bankAccountNo||'-'}}
                                     </el-col>
                                 </el-row>
                                 <el-row class="dialog_box" v-if="(v.receiptType==ORDER_CANCEL||v.receiptType==MANUAL_CANCELLATION)" :key="i">
@@ -79,7 +79,7 @@
                                         收款方：{{v.receiptName||'-'}}
                                     </el-col>
                                     <el-col :span="18">
-                                        收款方账户：{{v.receiptBankName||'-'}}{{v.bankAccountNo||'-'}}
+                                        收款方账户：{{v.receiptBankName||'-'}} {{v.bankAccountNo||'-'}}
                                     </el-col>
                                 </el-row>
                                 <el-row class="dialog_box" v-if="(v.receiptType==SYSTEM_CLAIM||v.receiptType==MANUAL_CLAIM)" :key="i">
