@@ -28,7 +28,7 @@
                 </div>
             </div>
         </div>
-         <el-dialog title="再次确认" :visible.sync="offineVisible" :close-on-click-modal=false width="670px" :before-close="()=>offineVisible = false">
+        <el-dialog title="再次确认" :visible.sync="offineVisible" :close-on-click-modal=false width="670px" :before-close="()=>offineVisible = false">
             <p style="color:red">是否确认使用线下方式确认，如果确认则后面不可再关联流水。</p>
             <div class="remain_title">请确认收款账户信息：</div>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
@@ -42,7 +42,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="收款方账户：" prop="id">
-                     <el-select v-model="ruleForm.id" placeholder="请选择">
+                    <el-select v-model="ruleForm.id" placeholder="请选择">
                         <el-option v-for="item in payeeAccountList" :key="item.id" :label="item.payeeBankName" :value="item.id">
                             <span style="float: left">{{ item.payeeBankName }}</span>
                             <span style="float: right; color: #8492a6; font-size: 13px">{{ item.payeeBankAccount }}</span>
@@ -54,7 +54,7 @@
                 <el-button @click="handleSubmit">确认收到</el-button>
             </span>
         </el-dialog>
-          <ApproveBill :isOpen="isOpen" :payeeName = payDetail.companyName :companyId=payDetail.companyId  :payeeMoney = payDetail.totalAmount :bankType="4" @onCancel="()=>isOpen=false" @backonReceived = "onReceived" v-if="isOpen" />
+        <ApproveBill :isOpen="isOpen" :payeeName=payDetail.companyName :companyId=payDetail.companyId :payeeMoney=payDetail.totalAmount :bankType="4" @onCancel="()=>isOpen=false" @backonReceived="onReceived" v-if="isOpen" />
     </div>
 </template>
 <script>
@@ -77,7 +77,7 @@ export default {
                 { label: '账单流水号', prop: 'id' },
                 { label: '账单类型', prop: 'repaymentType', dicData: [{ value: 1, label: '首付款' }, { value: 2, label: '剩余货款' }, { value: 3, label: '服务费' }] },
                 { label: '金额(元)', prop: 'paymentAmount', displayAs: 'money' },
-                { label: '状态', prop: 'paymentFlag', dicData: [{ value: 0, label: '待支付' }, { value: 1, label: '支付待确认' }, { value: 2, label: '已支付' }, { value: 3, label: '支付失败' }, { value: 4, label: '已取消' }] },
+                { label: '状态', prop: 'paymentFlag', dicData: [{ value: 0, label: '待支付' }, { value: 1, label: '支付待确认' }, { value: 2, label: '已支付' }, { value: 3, label: '待支付' }, { value: 4, label: '已取消' }] },
                 { label: '应支付日期', prop: 'schedulePaymentDate', displayAs: 'YYYY-MM-DD' },
                 { label: '支付时间', prop: 'paidTime', displayAs: 'YYYY-MM-DD HH:mm' }
             ],
@@ -114,22 +114,20 @@ export default {
             this.payDetail = data
             this.tableData = data.batchFunds
         },
-        async onNoReceived () {
+        onNoReceived () {
             const fundId = []
             this.tableData.map(item => {
                 fundId.push(item.id)
             })
-            await payNoReceived({ fundId: fundId })
-            this.$router.push({ path: '/goodwork/funds' })
-            // this.$confirm('确定后，当前页面所有账单的状态将置为「支付失败」', '提示', {
-            //     confirmButtonText: '确定',
-            //     cancelButtonText: '取消',
-            //     type: 'warning'
-            // }).then(async () => {
-            //     await payNoReceived({ fundId: fundId })
-            //     this.$router.push({ path: '/goodwork/funds' })
-            // }).catch(() => {
-            // })
+            this.$confirm('确定后，当前页面所有账单的状态将置为「待支付」', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await payNoReceived({ fundId: fundId })
+                this.$router.push({ path: '/goodwork/funds' })
+            }).catch(() => {
+            })
         },
         handleSubmit (val) {
             const fundId = []
@@ -241,7 +239,7 @@ export default {
         span {
             font-size: 25px;
         }
-        &-btn{
+        &-btn {
             margin-top: 10px;
         }
     }
@@ -258,16 +256,16 @@ export default {
         width: 150px;
         height: 150px;
         margin: 10px;
-        img{
+        img {
             width: 150px;
-        height: 150px;
+            height: 150px;
         }
     }
 }
-/deep/.el-dialog .el-select{
+/deep/.el-dialog .el-select {
     width: 100%;
 }
-/deep/.el-dialog .el-input{
+/deep/.el-dialog .el-input {
     width: 100%;
 }
 </style>

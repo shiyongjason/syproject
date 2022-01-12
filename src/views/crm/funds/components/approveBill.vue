@@ -161,13 +161,7 @@ export default class ApproveBill extends Vue {
             return true
         }
     }
-    // 获取checked选中数组
-    // public selectChange (data):void {
-    //     // console.log('log::::::this.bankList', data)
-    //     this.selectList = data
-    //     console.log('selectChange::::::::::', this.selectList)
-    //     this.disabled = !data.length
-    // }
+
     get currentSum () {
         const moneny = this.selectList.reduce((sum, val) => {
             return sum + parseFloat(val.currentReceiptAmount || 0)
@@ -178,7 +172,6 @@ export default class ApproveBill extends Vue {
         if (this.selectList.length < selectList.length) {
             // 勾选
             const moneny = this.selectList.reduce((sum, val) => {
-            // console.log(parseFloat(val.currentReceiptAmount))
                 return sum + parseFloat(val.currentReceiptAmount || 0)
             }, 0)
             if (moneny >= this.bankDetail.unpaidAmount && this.selectList.length > 0) {
@@ -207,48 +200,6 @@ export default class ApproveBill extends Vue {
             }
         }
         this.disabled = this.selectList.length == 0
-        // if (this.currentSum > this.bankDetail.unpaidAmount) {
-        //     // this.$set(val, val.length - 1, '')
-        //     this.$message('金额超了')
-        //     // this.selectList = []
-        //     // this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(row, false)
-        // } else {
-        //     let curr = (this.bankDetail.unReceiptAmount - this.currentSum).toFixed(2)
-        //     if (curr > row.noReceiptAmount) {
-        //         row.currentReceiptAmount = row.noReceiptAmount
-        //     } else {
-        //         row.currentReceiptAmount = curr
-        //     }
-        // }
-
-        // this.$forceUpdate()
-        // let sum = 0
-        // let index = 0
-        // console.log('val', val)
-        // this.flag = false
-        // this.newSelect = val
-        // for (let i = 0; i < val.length; i++) {
-        //     if (sum < this.bankDetail.unReceiptAmount) {
-        //         if ((sum + val[i].currentReceiptAmount * 1) < this.bankDetail.unReceiptAmount) {
-        //             sum += val[i].currentReceiptAmount * 1
-        //             index = i + 1
-        //             console.log('sum', sum, index)
-        //         } else {
-        //             if (index == i) {
-        //                 let price = this.bankDetail.unReceiptAmount - sum
-        //                 console.log('price', price.toFixed(2))
-
-        //                 val[i].currentReceiptAmount = price.toFixed(2)
-        //                 sum += val[i].currentReceiptAmount * 1
-
-        //                 console.log(sum)
-        //             }
-        //         }
-        //     } else {
-        //         console.log(123123)
-        //     }
-        // }
-        // this.selectMoney(val)
     }
     selectMoney (val) {
         let sum = 0
