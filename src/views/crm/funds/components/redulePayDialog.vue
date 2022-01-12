@@ -295,6 +295,15 @@ export default {
     methods: {
         moment,
         async handleReceived (val, item) {
+            //     this.$confirm('确定后，账单的状态将置为「待支付」', '提示', {
+            //     confirmButtonText: '确定',
+            //     cancelButtonText: '取消',
+            //     type: 'warning'
+            // }).then(async () => {
+            //     await payNoReceived({ fundId: fundId })
+            //     this.$router.push({ path: '/goodwork/funds' })
+            // }).catch(() => {
+            // })
             const params = {
                 fundDetailId: item.id,
                 updateBy: JSON.parse(sessionStorage.getItem('userInfo')).employeeName,
