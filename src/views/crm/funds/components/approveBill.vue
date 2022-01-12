@@ -175,7 +175,7 @@ export default class ApproveBill extends Vue {
                 return sum + parseFloat(val.currentReceiptAmount || 0)
             }, 0)
             if (moneny >= this.bankDetail.unpaidAmount && this.selectList.length > 0) {
-                this.$message('金额超了')
+                this.$message('已选金额不得超过待支付金额')
                 this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(row, false)
                 let index = this.selectList.findIndex(item => item.id == row.id)
                 row.currentReceiptAmount = ''
