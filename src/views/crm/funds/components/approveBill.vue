@@ -23,7 +23,7 @@
             <p><span>经销商：{{ payeeName }}</span><span>账单数量：{{bankDetail.list&&bankDetail.list.length}}</span></p>
         </div>
         <div class="approve">
-            <hosJoyTable showPagination ref="hosjoyTable" align="center" border stripe isShowselection :maxHeight='800' @selection-change="selectChange" @select="select" :column="formTableLabel" :data="bankList"
+            <hosJoyTable showPagination ref="hosjoyTable" align="center" border stripe isShowselection :maxHeight='800'  @select="select" :column="formTableLabel" :data="bankList"
                 :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="queryParams.total" @pagination="getList"
             >
             </hosJoyTable>
@@ -131,22 +131,6 @@ export default class ApproveBill extends Vue {
         return formTableLabel
     }
 
-    // 获取checked选中数组
-    public selectChange (data):void {
-        // console.log('log::::::this.bankList', data)
-        this.selectList = data
-        console.log('🚀 --- selectChange ---  this.selectList', this.selectList)
-        setTimeout(() => {
-            this.bankList.forEach(row => {
-                // if (this.selectList.includes(row)) {
-                //     row.currentReceiptAmount = row.currentReceiptAmount || row.noReceiptAmount
-                // } else {
-                //     row.currentReceiptAmount = null
-                // }
-            })
-        }, 0)
-        this.disabled = !data.length
-    }
     // 获取已选中的认领金额
     get selectMoeny () {
         const moneny = this.selectList.reduce((sum, val) => {
@@ -155,6 +139,7 @@ export default class ApproveBill extends Vue {
         }, 0)
         return isNum(moneny, 2)
     }
+
     // 关闭弹窗
     public onCancel (val):void {
         this.$emit('onCancel', false)
@@ -176,36 +161,65 @@ export default class ApproveBill extends Vue {
             return true
         }
     }
+    // 获取checked选中数组
+    // public selectChange (data):void {
+    //     // console.log('log::::::this.bankList', data)
+    //     this.selectList = data
+    //     console.log('selectChange::::::::::', this.selectList)
+    //     this.disabled = !data.length
+    // }
     get currentSum () {
         const moneny = this.selectList.reduce((sum, val) => {
             return sum + parseFloat(val.currentReceiptAmount || 0)
         }, 0)
         return moneny
     }
-    select (val, row) {
-        console.log('1', val)
-        console.log('log::::::row', row)
-        // const moneny = val.reduce((sum, val) => {
-        //     // console.log(parseFloat(val.currentReceiptAmount))
-        //     return sum + parseFloat(val.currentReceiptAmount || 0)
-        // }, 0)
-        // console.log('🚀 --- moneny --- moneny', moneny)
-
-        if (this.currentSum >= this.bankDetail.unpaidAmount) {
-            // this.$set(val, val.length - 1, '')
-            this.$message('金额超了')
-            // this.selectList = []
-            this.$nextTick(() => {
+    select (selectList, row) {
+        if (this.selectList.length < selectList.length) {
+            // 勾选
+            const moneny = this.selectList.reduce((sum, val) => {
+            // console.log(parseFloat(val.currentReceiptAmount))
+                return sum + parseFloat(val.currentReceiptAmount || 0)
+            }, 0)
+            if (moneny >= this.bankDetail.unpaidAmount && this.selectList.length > 0) {
+                this.$message('金额超了')
                 this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(row, false)
-            })
-        } else {
-            let curr = (this.bankDetail.unReceiptAmount - this.currentSum).toFixed(2)
-            if (curr > row.noReceiptAmount) {
-                row.currentReceiptAmount = row.noReceiptAmount
+                let index = this.selectList.findIndex(item => item.id == row.id)
+                row.currentReceiptAmount = ''
+                if (index > -1) {
+                    this.selectList.splice(index, 1)
+                }
             } else {
-                row.currentReceiptAmount = curr
+                this.selectList.push(row)
+                let curr = (this.bankDetail.unReceiptAmount - moneny).toFixed(2)
+                if (curr > row.noReceiptAmount) {
+                    row.currentReceiptAmount = row.noReceiptAmount
+                } else {
+                    row.currentReceiptAmount = curr
+                }
+            }
+        } else {
+            // 去勾选
+            let index = this.selectList.findIndex(item => item.id == row.id)
+            row.currentReceiptAmount = ''
+            if (index > -1) {
+                this.selectList.splice(index, 1)
             }
         }
+        this.disabled = this.selectList.length == 0
+        // if (this.currentSum > this.bankDetail.unpaidAmount) {
+        //     // this.$set(val, val.length - 1, '')
+        //     this.$message('金额超了')
+        //     // this.selectList = []
+        //     // this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(row, false)
+        // } else {
+        //     let curr = (this.bankDetail.unReceiptAmount - this.currentSum).toFixed(2)
+        //     if (curr > row.noReceiptAmount) {
+        //         row.currentReceiptAmount = row.noReceiptAmount
+        //     } else {
+        //         row.currentReceiptAmount = curr
+        //     }
+        // }
 
         // this.$forceUpdate()
         // let sum = 0
@@ -275,6 +289,8 @@ export default class ApproveBill extends Vue {
                         this.bankList[i].currentReceiptAmount = price.toFixed(2)
                         sum += this.bankList[i].currentReceiptAmount
                         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
+                        this.selectList.push(this.bankList[i])
+                        this.disabled = this.selectList.length == 0
                     }
                     // this.flag = true
                 }
