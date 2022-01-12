@@ -675,6 +675,7 @@
                 <h-button type="primary" @click="updateRowEnter">确认</h-button>
             </span>
         </el-dialog>
+
     </div>
 </template>
 
@@ -910,7 +911,7 @@ export default {
                 id: row.id,
                 orderId: this.paymentOrderDetail.respFundResults.downpaymentFund.orderId
             }
-            this.$emit('openReduleDialog', params, type)
+            this.$emit('findReduleDialog', params, type)
         },
         async tableOpenFundsDialog (id, status) {
             const { data } = await getPaymentOrderDetail(id)

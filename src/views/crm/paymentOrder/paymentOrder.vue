@@ -154,7 +154,7 @@
                 </template>
             </basicTable>
         </div>
-        <PaymentOrderDrawer :drawer=drawer @backEvent='paymentOrderBackEvent' @openApproveDialog="openApproveDialog" @openPrevPayDialog="openPrevPayDialog" @openFundsDialog="openFundsDialog" @openReduleDialog='openReduleDialog' @openConfirmReceiptDialog="openConfirmReceiptDialog" @openLookReceiptDetail="openLookReceiptDetail" @openLookPrevPaymentDialog="openLookPrevPaymentDialog" :row="paymentOrderRow" ref="paymentOrderDrawer"></PaymentOrderDrawer>
+        <PaymentOrderDrawer :drawer=drawer @backEvent='paymentOrderBackEvent' @openApproveDialog="openApproveDialog" @openPrevPayDialog="openPrevPayDialog" @openFundsDialog="openFundsDialog" @openReduleDialog='openReduleDialog' @findReduleDialog='findReduleDialog' @openConfirmReceiptDialog="openConfirmReceiptDialog" @openLookReceiptDetail="openLookReceiptDetail" @openLookPrevPaymentDialog="openLookPrevPaymentDialog" :row="paymentOrderRow" ref="paymentOrderDrawer"></PaymentOrderDrawer>
         <ApprovePaymentOrder :is-open="approvePaymentVisible" :paymentDetail="paymentDetail" @onClose="approvePaymentVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery"></ApprovePaymentOrder>
         <PrevPaymentDialog :params="paymentParams" :is-open="prevPaymentVisible" @onClose="prevPaymentVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery('prevPaymentVisible')" @onCloseDialogAndQueryDetail="onCloseDialogAndQueryDetail"></PrevPaymentDialog>
         <LookPrevPaymentDialog :params="paymentParams" :is-open="lookPrevPaymentVisible" @onClose="lookPrevPaymentVisible = false"></LookPrevPaymentDialog>
@@ -458,6 +458,10 @@ export default {
         openReduleDialog (row, status) {
             this.reduleDialogVisible = true
             this.$refs.reduleDialog.findRemainConfirm(row)
+        },
+        findReduleDialog (row) {
+            this.reduleDialogVisible = true
+            this.$refs.reduleDialog.getFundsTicket(row)
         },
         openConfirmReceiptDialog (params) {
             this.paymentParams = params
