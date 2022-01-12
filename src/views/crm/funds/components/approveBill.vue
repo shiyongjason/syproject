@@ -237,14 +237,14 @@ export default class ApproveBill extends Vue {
                     this.bankList[i].currentReceiptAmount = this.bankList[i].noReceiptAmount
                     this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                     sum += this.bankList[i].currentReceiptAmount
-                    this.bankList[i].checked = true
+
                     index = i + 1
                 } else {
                     if (index === i) {
                         let price = this.bankDetail.unReceiptAmount - sum
                         this.bankList[i].currentReceiptAmount = price.toFixed(2)
                         sum += this.bankList[i].currentReceiptAmount
-                        this.bankList[i].checked = true
+
                         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                     }
                     // this.flag = true
@@ -270,7 +270,7 @@ export default class ApproveBill extends Vue {
         this.queryParams.total = dataInfo.length
         dataInfo.length > 0 && dataInfo.forEach(item => {
             item.currentReceiptAmount = ''
-            item.checked = false
+            // item.checked = false
         })
         this.copyTable = JSON.parse(JSON.stringify(dataInfo))
         if (this.bankType != 4) {
@@ -293,7 +293,8 @@ export default class ApproveBill extends Vue {
     // 确认认领
     public async onSubmit () {
         const currentReceiptAmount = this.selectList.map(item => item.currentReceiptAmount)
-        if (Number(currentReceiptAmount) == 0) {
+        console.log('Number(currentReceiptAmount): ', Number(this.selectMoeny))
+        if (Number(this.selectMoeny) == 0) {
             this.$message.error('输入的认领金额不得为0')
             return false
         }

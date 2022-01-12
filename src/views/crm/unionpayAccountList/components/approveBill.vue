@@ -105,22 +105,22 @@ export default class ApproveBill extends Vue {
         console.log('data', this.bankList)
         this.selectList = data
         this.bankList.forEach(row => {
-            if (this.selectList.includes(row)) {
-                // row.checked = true
-                row.claimAmount = row.claimAmount || row.unPaidAmount
-            } else {
-                // row.checked = false
-                row.claimAmount = null
-            }
+            // if (this.selectList.includes(row)) {
+            //     // row.checked = true
+            //     row.claimAmount = row.claimAmount || row.unPaidAmount
+            // } else {
+            //     // row.checked = false
+            //     row.claimAmount = null
+            // }
         })
         this.disabled = !data.length
     }
     // 获取已选中的认领金额
     get selectMoeny () {
         const moneny = this.selectList.reduce((sum, val) => {
-            return sum + parseFloat(val.claimAmount)
+            return sum + parseFloat(val.claimAmount ?? 0)
         }, 0)
-        return isNum(moneny, 2)
+        return moneny.toFixed(2)
     }
     // 关闭弹窗
     public onCancel (val):void {
@@ -169,6 +169,8 @@ export default class ApproveBill extends Vue {
         for (let i = 0; i < this.bankList.length; i++) {
             if (sum <= this.bankDetail.unReceiptAmount) {
                 if ((sum + this.bankList[i].unPaidAmount) < this.bankDetail.unReceiptAmount) {
+                    this.bankList[i].claimAmount = this.bankList[i].unPaidAmount
+
                     this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                     sum += this.bankList[i].unPaidAmount
                     index = i + 1
@@ -207,7 +209,7 @@ export default class ApproveBill extends Vue {
     // 确认认领
     public async onSubmit () {
         const claimPrice = this.selectList.map(item => item.claimAmount)
-        if (claimPrice.indexOf('') >= 0 || claimPrice.indexOf('0') >= 0) {
+        if (Number(this.selectMoeny) == 0) {
             this.$message.error('输入的认领金额不得为0')
             return false
         }
@@ -215,7 +217,7 @@ export default class ApproveBill extends Vue {
             this.$message.error('当前已选账单流水金额不得超过待认领金额')
             return false
         }
-        const claimFundRequestList = this.selectList.map(item => {
+        const claimFundRequestList = this.selectList.filter(val => Number(val.claimAmount) > 0).map(item => {
             return {
                 fundId: item.fundId,
                 unPaidAmount: item.unPaidAmount,
