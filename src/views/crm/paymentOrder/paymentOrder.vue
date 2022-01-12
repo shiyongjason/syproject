@@ -529,10 +529,25 @@ export default {
         // 支付确认
         handleSubConfirmed (row) {
             console.log('row', row)
-            // 判断是 尾款的fundId 还是首付款fundId
-            row = { ...row, fundId: row.arreaFundId || row.advanceId }
-            this.$refs.reduleDialog.findRemainConfirm(row, row.repaymentType)
-            this.reduleDialogVisible = true
+            if (row.status == 8) {
+                this.$confirm('支付单全部收货后，才可支付确认哦～', '收货提示', {
+                    confirmButtonText: '去收货',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    const params = {
+                        paymentOrderId: row.id
+                    }
+                    this.openConfirmReceiptDialog(params)
+                }).catch(() => {
+
+                })
+            } else {
+                // 判断是 尾款的fundId 还是首付款fundId
+                row = { ...row, fundId: row.arreaFundId || row.advanceId }
+                this.$refs.reduleDialog.findRemainConfirm(row, row.repaymentType)
+                this.reduleDialogVisible = true
+            }
         },
         ...mapActions({
             findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList',
