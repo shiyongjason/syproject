@@ -118,9 +118,9 @@ export default class ApproveBill extends Vue {
     // 获取已选中的认领金额
     get selectMoeny () {
         const moneny = this.selectList.reduce((sum, val) => {
-            return sum + parseFloat(val.claimAmount)
+            return sum + parseFloat(val.claimAmount ?? 0)
         }, 0)
-        return isNum(moneny, 2)
+        return moneny.toFixed(2)
     }
     // 关闭弹窗
     public onCancel (val):void {
@@ -207,7 +207,7 @@ export default class ApproveBill extends Vue {
     // 确认认领
     public async onSubmit () {
         const claimPrice = this.selectList.map(item => item.claimAmount)
-        if (claimPrice.indexOf('') >= 0 || claimPrice.indexOf('0') >= 0) {
+        if (Number(claimPrice) == 0) {
             this.$message.error('输入的认领金额不得为0')
             return false
         }
