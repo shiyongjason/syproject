@@ -234,6 +234,7 @@ export default class ApproveBill extends Vue {
                     this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                     sum += this.bankList[i].currentReceiptAmount
                     index = i + 1
+                    this.selectList.push(this.bankList[i])
                 } else {
                     if (index === i) {
                         let price = this.bankDetail.unReceiptAmount - sum
@@ -241,10 +242,10 @@ export default class ApproveBill extends Vue {
                         sum += this.bankList[i].currentReceiptAmount
                         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                         this.selectList.push(this.bankList[i])
-                        this.disabled = this.selectList.length == 0
                     }
                     // this.flag = true
                 }
+                this.disabled = this.selectList.length == 0
                 this.newSelect.push(this.bankList[i])
             }
         }
