@@ -293,12 +293,12 @@ export default class ApproveBill extends Vue {
     // 确认认领
     public async onSubmit () {
         const currentReceiptAmount = this.selectList.map(item => item.currentReceiptAmount)
-        if (currentReceiptAmount.indexOf('') >= 0 || currentReceiptAmount.indexOf('0') >= 0 || Number(currentReceiptAmount) == 0) {
+        if (Number(currentReceiptAmount) == 0) {
             this.$message.error('输入的认领金额不得为0')
             return false
         }
 
-        const claimFundRequestList = this.selectList.filter(item => item.currentReceiptAmount)
+        const claimFundRequestList = this.selectList.filter(item => item.currentReceiptAmount && Number(item.currentReceiptAmount) > 0)
         if (this.bankType == 4) {
             if (this.selectMoeny != this.bankDetail.unReceiptAmount) {
                 this.$message.error('已选金额必须等于批量支付总金额')
