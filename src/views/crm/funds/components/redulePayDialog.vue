@@ -125,7 +125,7 @@
                                     </span>
                                 </div>
                             </el-col>
-                            <el-col :span="18">
+                            <el-col :span="12">
                                 操作人：{{item.createBy}} ({{item.createPhone||'-'}})
                             </el-col>
                         </el-row>
@@ -295,23 +295,21 @@ export default {
     methods: {
         moment,
         async handleReceived (val, item) {
-            //     this.$confirm('确定后，账单的状态将置为「待支付」', '提示', {
-            //     confirmButtonText: '确定',
-            //     cancelButtonText: '取消',
-            //     type: 'warning'
-            // }).then(async () => {
-            //     await payNoReceived({ fundId: fundId })
-            //     this.$router.push({ path: '/goodwork/funds' })
-            // }).catch(() => {
-            // })
-            const params = {
-                fundDetailId: item.id,
-                updateBy: JSON.parse(sessionStorage.getItem('userInfo')).employeeName,
-                updatePhone: JSON.parse(sessionStorage.getItem('userInfo')).phoneNumber,
-                confirmType: val
-            }
-            await updateRemainPayConfirm(params)
-            this.$emit('onClose')
+            this.$confirm('确定后，账单的状态将置为「待支付」', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                const params = {
+                    fundDetailId: item.id,
+                    updateBy: JSON.parse(sessionStorage.getItem('userInfo')).employeeName,
+                    updatePhone: JSON.parse(sessionStorage.getItem('userInfo')).phoneNumber,
+                    confirmType: val
+                }
+                await updateRemainPayConfirm(params)
+                this.$emit('onClose')
+            }).catch(() => {
+            })
         },
         async getFundsTicket (val, bol) {
             const { data } = await findRemainPayDetail(val.id)
@@ -321,11 +319,13 @@ export default {
             this.title = '查看凭证'
         },
         async findRemainConfirm (val, bol) {
+            console.log('val: ', val)
             const { data } = await findRemainPayConfirm(val.fundId || val.id)
             this.dialogDetail = data
-            this.companyName = val.companyName
+            this.companyName = val.companyName || val.distributor
             this.lookBoolean = false
             this.repaymentType = bol // 来源服务费tab
+
             // 针对服务费进行了处理
             if (bol == 3) {
                 this.title = `服务费支付确认`
@@ -339,8 +339,11 @@ export default {
             const { data } = await findPayeeAccount()
             this.accountList = data
             this.ruleForm.id = ''
-            this.ruleForm.payeeName = ''
             this.offineVisible = true
+            // 默认选中线下确认收款方
+            this.ruleForm.payeeName = this.companyName
+            this.handleChangeRadio(this.ruleForm.payeeName)
+            console.log('this.ruleForm: ', this.ruleForm)
             this.$nextTick(() => {
                 this.$refs.ruleForm.clearValidate()
             })
