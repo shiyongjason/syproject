@@ -439,7 +439,7 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.paymentParams = { paymentOrderId: val.orderId }
+                    this.paymentParams = { paymentOrderId: row.orderId }
                     this.confirmReceiptVisible = true
                 }).catch(() => {
 
