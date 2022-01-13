@@ -105,13 +105,13 @@ export default class ApproveBill extends Vue {
         console.log('data', this.bankList)
         this.selectList = data
         this.bankList.forEach(row => {
-            // if (this.selectList.includes(row)) {
-            //     // row.checked = true
-            //     row.claimAmount = row.claimAmount || row.unPaidAmount
-            // } else {
-            //     // row.checked = false
-            //     row.claimAmount = null
-            // }
+            if (this.selectList.includes(row)) {
+                // row.checked = true
+                row.claimAmount = row.claimAmount || row.unPaidAmount
+            } else {
+                // row.checked = false
+                row.claimAmount = null
+            }
         })
         this.disabled = !data.length
     }
@@ -170,7 +170,6 @@ export default class ApproveBill extends Vue {
             if (sum <= this.bankDetail.unReceiptAmount) {
                 if ((sum + this.bankList[i].unPaidAmount) < this.bankDetail.unReceiptAmount) {
                     this.bankList[i].claimAmount = this.bankList[i].unPaidAmount
-
                     this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                     sum += this.bankList[i].unPaidAmount
                     index = i + 1
@@ -209,7 +208,9 @@ export default class ApproveBill extends Vue {
     // 确认认领
     public async onSubmit () {
         const claimPrice = this.selectList.map(item => item.claimAmount)
-        if (Number(this.selectMoeny) == 0) {
+        console.log('this.selectMoeny: ', this.selectMoeny)
+
+        if (Number(this.selectMoeny) == 0 || !this.selectMoeny) {
             this.$message.error('输入的认领金额不得为0')
             return false
         }
