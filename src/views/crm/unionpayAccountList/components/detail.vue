@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div v-if="radio=='认领记录'" class="project-information">
-                    <p v-for="(item, index) in claimFund" :key="index"><span>{{ (item.operatorType!=3) ? item.receiptUser + '('+item.receiptPhone||'-' + ')': '系统自动' }}</span> 在 <span>{{ item.receiptTime | momentFormat }}</span> {{ item.receiptType!=5 ? '认领' : '将' }} <span>{{ item.receiptAmount }}</span> 元{{ item.receiptType!=5  ? '到' : '与' }}{{ item.fundType&&fundType[item.fundType - 1].label }}账单（流水号：{{ item.fundId }}）{{ item.receiptType!=5  ? '' : '取消认领' }}</p>
+                    <p v-for="(item, index) in claimFund" :key="index"><span>{{item.receiptUser }}{{ item.receiptPhone?'('+ item.receiptPhone+ ')':'' }}</span> 在 <span>{{ item.receiptTime | momentFormat }}</span> {{ item.receiptType!=5 ? '认领' : '将' }} <span>{{ item.receiptAmount }}</span> 元{{ item.receiptType!=5  ? '到' : '与' }}{{ item.fundType&&fundType[item.fundType - 1].label }}账单（流水号：{{ item.fundId }}）{{ item.receiptType!=5  ? '' : '取消认领' }}</p>
                     <div v-show="!claimFund.length">
                         <p class="noData">暂无认领记录</p>
                     </div>
