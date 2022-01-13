@@ -169,7 +169,7 @@
                 </template>
                 <div class="pre_wrap">
                     <h4>预付款支付计划：</h4>
-                     <hosJoyTable  ref="hosjoyTable" align="center"  border stripe  :column="tableLabelDetail" :data="tableData"></hosJoyTable>
+                     <hosJoyTable  ref="hosjoyTable" align="center"  border stripe  :column="tableLabelDetail" :data="planData"></hosJoyTable>
                 </div>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>核销人：{{detailForm.writeOffUser||'-'}}</el-col>
@@ -529,11 +529,10 @@ export default class Advancelist extends Vue {
         total: 0
     }
     private tableLabelDetail:tableLabelProps = [
-        { label: '上游预付款支付单编号', prop: 'prepaymentNo', width: '160px' },
-        { label: '核销采购单编号', prop: 'purchaseOrderNo' },
-        { label: '申请人', prop: 'applyUser' },
-        { label: '申请时间', prop: 'applyTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
-        { label: '更新时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss' }
+        { label: '预付款总金额', prop: 'prepaymentNo' },
+        { label: '待支付', prop: 'purchaseOrderNo' },
+        { label: '已支付', prop: 'applyUser' },
+        { label: '支付待确认', prop: 'applyTime' }
 
     ]
     private tableLabel:tableLabelProps = [
@@ -553,6 +552,8 @@ export default class Advancelist extends Vue {
         { label: '更新时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss' }
 
     ]
+    private planData = []
+
     private tableData = []
     @Getter('crmmanage/crmdepList') crmdepList!: Array<HCGCommonInterface.Branch>
     @Action('crmmanage/findCrmdeplist') findCrmdeplist!: Function
