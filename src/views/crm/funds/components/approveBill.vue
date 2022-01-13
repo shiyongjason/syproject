@@ -173,8 +173,8 @@ export default class ApproveBill extends Vue {
         console.log('currentReceiptAmount: ', row)
         console.log(' this.currentSum: ', moneny)
 
-        let cur = this.$minus(this.bankDetail.unpaidAmount, moneny).toString() ?? 0
-        console.log('cur', cur)
+        let cur = this.$minus(this.bankDetail.unReceiptAmount, moneny).toString()
+        console.log('cur', typeof cur, this.bankDetail.unReceiptAmount, moneny)
         if (cur > row.noReceiptAmount * 1) {
             this.$set(row, 'currentReceiptAmount', row.noReceiptAmount)
         } else {
