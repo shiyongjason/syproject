@@ -632,6 +632,7 @@ export default class Advancelist extends Vue {
     public async handlePayOnline (val) {
         console.log(val.id)
         await Api.updatePayOnline(val.id)
+        this.$message.success('司库支付成功')
         this.getList()
     }
 

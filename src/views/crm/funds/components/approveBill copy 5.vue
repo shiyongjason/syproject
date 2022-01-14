@@ -1,21 +1,22 @@
 <template>
-    <el-dialog :close-on-click-modal=false  :visible.sync="isOpen" width="60%" :before-close="onCancel" class="payment-dialog">
+    <el-dialog :close-on-click-modal=false :visible.sync="isOpen" width="60%" :before-close="onCancel" class="payment-dialog">
         <span slot="title" class="dialog-title">
             {{dialogTitle}}
-            <div class="refresh" @click="bankDetailInfo"><el-button type="primary">刷 新</el-button>
-        </div>
+            <div class="refresh" @click="bankDetailInfo">
+                <el-button type="primary">刷 新</el-button>
+            </div>
         </span>
         <div class="unionPay" v-if="bankType==2||bankType==3">
             <p><span>账单类型：{{ bankDetail.repaymentType&&fundType[bankDetail.repaymentType-1].label }}</span><span>应支付时间：{{bankDetail.schedulePaymentDate | momentFormat('YYYY-MM-DD') }}</span><span>账单总金额：{{bankDetail.fundAmount | moneyFormat }}</span><span>项目名称：{{ bankDetail.projectName }}</span></p>
             <p><span>经销商：{{bankDetail.companyName }}</span>
-            <template v-if="bankType==2">
-                  <span>本次支付金额：{{bankDetail.paymentAmount | moneyFormat }}</span>
-            </template>
-            <template v-else>
-                  <span>已支付金额：{{bankDetail.paidAmount | moneyFormat }}</span>
-                  <span>待支付金额：{{bankDetail.unpaidAmount | moneyFormat }}</span>
-                  <span>支付待确认金额：{{bankDetail.unconfirmedAmount | moneyFormat }}</span>
-            </template>
+                <template v-if="bankType==2">
+                    <span>本次支付金额：{{bankDetail.paymentAmount | moneyFormat }}</span>
+                </template>
+                <template v-else>
+                    <span>已支付金额：{{bankDetail.paidAmount | moneyFormat }}</span>
+                    <span>待支付金额：{{bankDetail.unpaidAmount | moneyFormat }}</span>
+                    <span>支付待确认金额：{{bankDetail.unconfirmedAmount | moneyFormat }}</span>
+                </template>
             </p>
         </div>
         <div class="unionPay" v-if="bankType==4">
@@ -23,10 +24,8 @@
             <p><span>经销商：{{ payeeName }}</span><span>账单数量：{{bankDetail.list&&bankDetail.list.length}}</span></p>
         </div>
         <div class="approve">
-            <hosJoyTable showPagination ref="hosjoyTable" align="center" border stripe isShowselection :maxHeight='800'  @select="select" :column="formTableLabel" :data="bankList"
-                :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="queryParams.total" @pagination="getList"
-                @select-all="selectAll"
-            >
+            <hosJoyTable showPagination ref="hosjoyTable" align="center" border stripe isShowselection :maxHeight='800'  @selection-change="selectChange" @select="select" :column="formTableLabel" :data="bankList" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize"
+                :total="queryParams.total" @pagination="getList">
             </hosJoyTable>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -45,7 +44,6 @@ import { State } from 'vuex-class'
 import { isNum } from '@/utils/validate/format'
 import { CreateElement } from 'vue'
 import * as Api from '../api/index'
-import { Money } from '@/utils/rules'
 
 // 定义类型
 interface Query{
@@ -79,12 +77,12 @@ export default class ApproveBill extends Vue {
     fundType = fundType
     status = status
     disabled = true
+    newSelect = []
     selectList = []
     bankList = []
     flag = false
     bankDetail:any = {}
     dialogTitle:string = '认领账单 |'
-    listCopy = []
     queryParams={
         pageNumber: 1,
         pageSize: 10,
@@ -132,122 +130,121 @@ export default class ApproveBill extends Vue {
         return formTableLabel
     }
 
+    // 获取checked选中数组
+    public selectChange (data):void {
+        // console.log('log::::::this.bankList', data)
+        this.selectList = data
+        // 默认选中对应的流水
+        // this.$nextTick(() => {
+        //     this.selectSum()
+        // })
+        this.disabled = !data.length
+    }
     // 获取已选中的认领金额
     get selectMoeny () {
-        console.log('log::::::xxx', this.selectList)
         const moneny = this.selectList.reduce((sum, val) => {
             // console.log(parseFloat(val.currentReceiptAmount))
-            return sum + parseFloat(val.currentReceiptAmount || 0)
+            return sum + (parseFloat(val.currentReceiptAmount) || 0)
         }, 0)
         return moneny.toFixed(2)
     }
-
     // 关闭弹窗
     public onCancel (val):void {
         this.$emit('onCancel', false)
     }
 
     get currentSum () {
-        const moneny = this.selectList.reduce((sum, val) => {
+        const moneny = this.newSelect.reduce((sum, val) => {
             return sum + parseFloat(val.currentReceiptAmount || 0)
         }, 0)
         return moneny
     }
-    selectAll (list) {
-        console.log('🚀 --- selectAll --- list', list)
-        this.selectList = list
-        let moneny = this.selectList.reduce((sum, val) => {
+
+    select (val, row) {
+        let flag = true
+        this.$set(row, 'currentReceiptAmount', 0)
+
+        let index = this.newSelect.findIndex(val => val.id == row.id)
+        if (index >= 0) {
+            this.newSelect.splice(index, 1)
+
+            flag = false
+        } else {
+            this.newSelect.push(row)
+            flag = true
+        }
+        console.log('this.newSelect: ', this.newSelect, val)
+        const moneny = this.newSelect.reduce((sum, val) => {
             return sum + parseFloat(val.currentReceiptAmount || 0)
         }, 0)
-        let others = this.selectList.filter(item => item.currentReceiptAmount === '')
-        if (moneny >= this.bankDetail.unpaidAmount) {
-            let temp = this.selectList.filter(item => item.currentReceiptAmount !== '')
-            this.selectList = temp
-            others.forEach(row => {
-                this.hosjoyTableRef.toggleRowSelection(row, false)
-            })
-            this.$message.warning('已选金额不得超过待支付金额')
+        // console.log('currentReceiptAmount: ', row)
+        let cur = this.$minus(this.bankDetail.unReceiptAmount, moneny.toFixed(2)).toString()
+        console.log('cur', cur, this.bankDetail.unReceiptAmount, moneny)
+        if (cur * 1 > row.noReceiptAmount * 1) {
+            this.$set(row, 'currentReceiptAmount', row.noReceiptAmount)
         } else {
-            let index = 0
-            for (let i = 0; i < others.length; i++) {
-                if (moneny <= this.bankDetail.unReceiptAmount) {
-                    if ((moneny + others[i].noReceiptAmount) < this.bankDetail.unReceiptAmount) {
-                        others[i].currentReceiptAmount = others[i].noReceiptAmount
-                        this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(others[i], true)
-                        moneny += others[i].currentReceiptAmount
-                        index = i + 1
-                        let resIndex = this.selectList.findIndex(item => item.billNo == others[i].billNo)
-                        if (resIndex < 0) {
-                            this.selectList.push(others[i])
-                        }
-                    } else {
-                        if (index === i) {
-                            let price = this.bankDetail.unReceiptAmount - moneny
-                            others[i].currentReceiptAmount = price.toFixed(2)
-                            moneny += others[i].currentReceiptAmount
-                            this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(others[i], true)
-                            let resIndex = this.selectList.findIndex(item => item.billNo == others[i].billNo)
-                            if (resIndex < 0) {
-                                this.selectList.push(others[i])
-                            }
-                        }
-                    }
-                    this.disabled = this.selectList.length == 0
-                }
-            }
+            this.$set(row, 'currentReceiptAmount', cur)
         }
-        let next = this.selectList.filter(item => item.currentReceiptAmount === '')
-        next.forEach(row => {
-            this.hosjoyTableRef.toggleRowSelection(row, false)
-        })
-        console.log('🚀this.selectListxxxxxxxxxx', JSON.stringify(this.selectList))
-    }
+        console.log('row.currentReceiptAmount: ', row.currentReceiptAmount)
+        // 如果变长 说明是选中
+        if (flag) {
+            if (row.currentReceiptAmount == 0) {
+                this.$message.warning('不得超过本次账单在这条流水上最多可认领的金额')
+                this.$nextTick(() => {
+                    this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(row, false)
+                })
+                this.newSelect.splice(this.newSelect.length - 1, 1)
+            }
+        } else {
 
-    select (selectList, row) {
-        let resIndex = selectList.findIndex(item => item.billNo == row.billNo)
-        if (resIndex > -1) {
-            console.log('log::::::0勾选')
-            const moneny = this.selectList.reduce((sum, val) => {
-                return sum + parseFloat(val.currentReceiptAmount || 0)
-            }, 0)
-            console.log('🚀 --- moneny --- moneny', moneny)
-            if (moneny >= this.bankDetail.unpaidAmount && this.selectList.length > 0) {
-                this.$message('已选金额不得超过待支付金额')
-                this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(row, false)
-                let index = this.selectList.findIndex(item => item.id == row.id)
-                row.currentReceiptAmount = ''
-                if (index > -1) {
-                    this.selectList.splice(index, 1)
-                }
-            } else {
-                console.log('log::::::4444444', this.selectList)
-                let index = this.selectList.findIndex(item => item.id == row.id)
-                console.log('🚀 --- select --- index', index)
-                if (index < 0) {
-                    this.selectList.push(row)
-                }
-                let curr = (this.bankDetail.unReceiptAmount - moneny).toFixed(2)
-                if (curr > row.noReceiptAmount) {
-                    row.currentReceiptAmount = row.noReceiptAmount
-                } else {
-                    row.currentReceiptAmount = curr
-                }
-            }
-        } else {
-            console.log('log::::::0去勾选')
-            let index = this.selectList.findIndex(item => item.id == row.id)
-            row.currentReceiptAmount = ''
-            if (index > -1) {
-                this.selectList.splice(index, 1)
-            }
-            console.log('去勾选', this.selectList)
         }
-        this.disabled = this.selectList.length == 0
-        console.log('log::::::this.selectList.length', this.selectList)
+        // if (row.currentReceiptAmount < 0) {
+        //     this.$message.warning('不得超过本次账单在这条流水上最多可认领的金额')
+        //     this.$nextTick(() => {
+        //         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(row, false)
+        //     })
+        // }
+        this.disabled = !this.selectList.length
+        // const moneny = oldSelect.reduce((sum, val) => {
+        //     return sum + parseFloat(val.currentReceiptAmount || 0)
+        // }, 0)
+        // this.$set(row, 'currentReceiptAmount', 0)
+        // // let index = this.newSelect.findIndex(val => val.id == row.id)
+        // // console.log('index: ', index)
+        // // if (index >= 0) {
+        // //     this.newSelect.splice(index, 1)
+        // // } else {
+        // //     this.newSelect.push(row)
+        // // }
+        // // this.$forceUpdate()
+        // console.log('this.currentSum', this.currentSum, row.currentReceiptAmount == 0.00)
+        // if (moneny >= this.bankDetail.unpaidAmount) {
+        //     // this.$set(val, val.length - 1, '')
+        //     this.$message.warning('不得超过本次账单在这条流水上最多可认领的金额')
+        //     // this.selectList = []
+        //     this.newSelect.splice(this.newSelect.length - 1, 1)
+        //     this.$nextTick(() => {
+        //         // this.newSelect = oldSelect
+        //         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(row, false)
+        //     })
+        // } else {
+        //     row.checked = !row.checked
+        //     let curr = (this.bankDetail.unpaidAmount - this.currentSum).toFixed(2)
+        //     console.log('curr: ', parseFloat(curr))
+        //     if (parseFloat(curr) > row.noReceiptAmount * 1) {
+        //         // row.currentReceiptAmount = row.noReceiptAmount
+        //     } else {
+        //         this.$set(row, 'currentReceiptAmount', curr)
+        //     }
+        // }
+
+        console.log('newSelect: ', this.newSelect)
     }
 
     // 用于计算选中的列表
     public selectSum () {
+        console.log(222222)
+        this.newSelect = []
         let sum = 0
         let index = 0
         for (let i = 0; i < this.bankList.length; i++) {
@@ -256,19 +253,19 @@ export default class ApproveBill extends Vue {
                     this.bankList[i].currentReceiptAmount = this.bankList[i].noReceiptAmount
                     this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                     sum += this.bankList[i].currentReceiptAmount
+
                     index = i + 1
-                    this.selectList.push(this.bankList[i])
                 } else {
                     if (index === i) {
                         let price = this.bankDetail.unReceiptAmount - sum
                         this.bankList[i].currentReceiptAmount = price.toFixed(2)
                         sum += this.bankList[i].currentReceiptAmount
+
                         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
-                        this.selectList.push(this.bankList[i])
                     }
                     // this.flag = true
                 }
-                this.disabled = this.selectList.length == 0
+                this.newSelect.push(this.bankList[i])
             }
         }
     }
@@ -312,13 +309,13 @@ export default class ApproveBill extends Vue {
     // 确认认领
     public async onSubmit () {
         const currentReceiptAmount = this.selectList.map(item => item.currentReceiptAmount)
-        if (Number(this.selectMoeny) == 0) {
+        console.log('Number(currentReceiptAmount): ', Number(this.selectMoeny))
+        if (Number(this.selectMoeny) == 0 || !this.selectMoeny) {
             this.$message.error('输入的认领金额不得为0')
             return false
         }
 
         const claimFundRequestList = this.selectList.filter(item => item.currentReceiptAmount && Number(item.currentReceiptAmount) > 0)
-
         if (this.bankType == 4) {
             if (this.selectMoeny != this.bankDetail.unReceiptAmount) {
                 this.$message.error('已选金额必须等于批量支付总金额')
@@ -400,7 +397,7 @@ export default class ApproveBill extends Vue {
         text-align: right;
     }
 }
-.dialog-title{
+.dialog-title {
     display: flex;
     align-items: center;
     font-size: 16px;
@@ -410,7 +407,6 @@ export default class ApproveBill extends Vue {
     // top: 10px;
     // left: 120px;
     padding-left: 10px;
-
 }
 /deep/.el-dialog .el-input {
     width: 100%;
