@@ -139,7 +139,7 @@ export default class ApproveBill extends Vue {
             // console.log(parseFloat(val.currentReceiptAmount))
             return sum + parseFloat(val.currentReceiptAmount || 0)
         }, 0)
-        return moneny.toFixed(2)
+        return isNum(moneny, 2)
     }
 
     // 关闭弹窗
@@ -166,7 +166,7 @@ export default class ApproveBill extends Vue {
             others.forEach(row => {
                 this.hosjoyTableRef.toggleRowSelection(row, false)
             })
-            this.$message.warning('已选金额不得超过待支付金额')
+            this.$message('已选金额不得超过待支付金额')
         } else {
             let index = 0
             for (let i = 0; i < others.length; i++) {
@@ -248,6 +248,7 @@ export default class ApproveBill extends Vue {
 
     // 用于计算选中的列表
     public selectSum () {
+        console.log(222222)
         let sum = 0
         let index = 0
         for (let i = 0; i < this.bankList.length; i++) {
@@ -312,13 +313,12 @@ export default class ApproveBill extends Vue {
     // 确认认领
     public async onSubmit () {
         const currentReceiptAmount = this.selectList.map(item => item.currentReceiptAmount)
-        if (Number(this.selectMoeny) == 0) {
+        if (currentReceiptAmount.indexOf('') >= 0 || currentReceiptAmount.indexOf('0') >= 0) {
             this.$message.error('输入的认领金额不得为0')
             return false
         }
 
-        const claimFundRequestList = this.selectList.filter(item => item.currentReceiptAmount && Number(item.currentReceiptAmount) > 0)
-
+        const claimFundRequestList = this.selectList
         if (this.bankType == 4) {
             if (this.selectMoeny != this.bankDetail.unReceiptAmount) {
                 this.$message.error('已选金额必须等于批量支付总金额')
