@@ -196,7 +196,7 @@
                 </el-tabs>
             </div>
         </el-drawer>
-        <UploadPayDialog ref="uploadpaydialog" @onBackSearch="findPaymentOrderList" />
+        <UploadPayDialog ref="uploadpaydialog" @onBackSearch="handleConfirm" />
         <!-- 取消支付单 -->
         <CancelPayment ref="cancelPaymentRef" :visible.sync="visibleCancel" @close="handleCancel" @confirm="handleConfirm"></CancelPayment>
     </div>
@@ -366,6 +366,7 @@ export default {
             }
         },
         onCloseLoanTransferContentVisible () {
+            console.log(this.queryParamsUseQuery)
             this.findPaymentOrderList(this.queryParamsUseQuery)
             this.loanTransferContentVisible = false
             this.operateStatus = null
