@@ -127,10 +127,11 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="seePayEnter(scope.data.row)" v-if="hasSeePayEnterAuth(queryParams.repaymentTypeArrays)">查看凭证</h-button>
-                        <!-- 待支付 支付待确认  出先支付确认 -->
+                    <!-- 待支付 支付待确认  出先支付确认 -->
                     <template v-if="scope.data.row.repaymentType =='1'">
                         <!-- 首付款(支付待确认金额大于0)才显示支付确认 -->
-                        <h-button table @click="onPayDetail(scope.data.row)" v-if="(scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[0].key||scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key) &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)&&!scope.data.row.payBatch">支付确认</h-button>
+                        <h-button table @click="onPayDetail(scope.data.row)"
+                            v-if="(scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[0].key||(scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key&&!scope.data.row.payBatch)) &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)">支付确认</h-button>
                         <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.payBatch&&scope.data.row.paymentFlag==1">
                             批量确认
                         </h-button>
@@ -139,6 +140,7 @@
                         </h-button>
                     </template>
                     <template v-if="scope.data.row.repaymentType =='3'">
+                        <!-- 服务费(支付待确认金额大于0)才显示支付确认 -->
                         <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.showPayBatchConfirm">
                             批量确认
                         </h-button>
@@ -150,6 +152,7 @@
                         </h-button>
                     </template>
                     <template v-if="scope.data.row.repaymentType =='2'">
+                        <!--剩余货款 -->
                         <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.showPayBatchConfirm">
                             批量确认
                         </h-button>
