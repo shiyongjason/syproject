@@ -68,6 +68,20 @@
                         <el-input v-model="queryParams.merchantName" maxlength="50"></el-input>
                     </div>
                 </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">订单类型：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.orderType">
+                            <el-option v-for="item in orderType" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">原订单单号：</div>
+                    <div class="query-col-input">
+                        <el-input v-model.trim="queryParams.originalOrderNo" placeholder="请输入" maxlength="20"></el-input>
+                    </div>
+                </div>
                 <div class="query-cont__col">
                     <h-button type="primary" @click="onQuery">查询</h-button>
                     <h-button @click="onReset">重置</h-button>
@@ -79,7 +93,8 @@
                     {{ paymethodMap.get(scope.data.row.payWay) || '-' }}
                 </template>
                 <template slot="childOrderStatus" slot-scope="scope">
-                    {{ orderStatusMap.get(scope.data.row.childOrderStatus) || '-' }}
+                    <!-- {{ orderStatusMap.get(scope.data.row.childOrderStatus) || '-' }} -->
+                    {{scope.data.row.childOrderStatusDescribe}}
                 </template>
                 <template slot="source" slot-scope="scope">
                     {{ orderChannelMap.get(scope.data.row.source) || '-' }}
@@ -93,7 +108,7 @@
 </template>
 
 <script>
-import { ORDER_STATUS_OPTIONS, ORDER_CHANNERL_OPTIONS, SELF_SUPPORT_OPTIONS, ORDER_STATUS_MAP, ORDER_CHANNERL_MAP, SELF_SUPPORT_MAP, PAY_METHOD_OPTIONS, PAY_METHOD_MAP } from './const'
+import { ORDER_STATUS_OPTIONS, ORDER_CHANNERL_OPTIONS, SELF_SUPPORT_OPTIONS, ORDER_STATUS_MAP, ORDER_CHANNERL_MAP, SELF_SUPPORT_MAP, PAY_METHOD_OPTIONS, PAY_METHOD_MAP, CHILD_ORDER_TYPE } from './const'
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
 export default {
@@ -108,12 +123,15 @@ export default {
             orderStatusMap: ORDER_STATUS_MAP,
             orderChannelMap: ORDER_CHANNERL_MAP,
             selfSupportMap: SELF_SUPPORT_MAP,
+            orderType: CHILD_ORDER_TYPE,
             initParams: {},
             queryParams: {
                 childOrderNo: '',
                 customerName: '',
                 payWay: '',
                 childOrderStatus: '',
+                originalOrderNo: '',
+                orderType: 0,
                 source: '',
                 startPayTime: '',
                 endPayTime: '',
@@ -134,7 +152,8 @@ export default {
                 { label: '订单渠道', prop: 'source' },
                 { label: '自有商品', prop: 'own' },
                 { label: '订单来源', prop: 'sourceMerchantName' },
-                { label: '商品所属', prop: 'merchantName' }
+                { label: '商品所属', prop: 'merchantName' },
+                { label: '售后单号', prop: 'returnOrderNo' }
             ]
         }
     },
