@@ -358,16 +358,6 @@
                                 <el-input type="textarea" rows="5" v-model="item.config" placeholder="输入json配置信息" maxlength="500" show-word-limit></el-input>
                             </el-form-item>
                         </el-col>
-                        <!-- <el-col :span="7">
-                            <el-form-item label="KEY：" label-width="120px">
-                                <el-input v-model="item.subSystemType" placeholder="输入唯一标识" maxlength="50"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="7">
-                            <el-form-item label="Secret：" label-width="120px">
-                                <el-input v-model="item.subSystemType" placeholder="输入密钥" maxlength="50"></el-input>
-                            </el-form-item>
-                        </el-col> -->
                         <el-col :span="3">
                             <el-button type="danger" @click="deleteThirdSystemConfig(index)">删除</el-button>
                         </el-col>
