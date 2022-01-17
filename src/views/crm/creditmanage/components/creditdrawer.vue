@@ -302,6 +302,8 @@ export default {
                 ]
             },
             ruleForm: {
+                startTime: '',
+                endTime: '',
                 projectUpload: [],
                 serviceFee: 0
             },
