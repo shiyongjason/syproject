@@ -6,7 +6,7 @@ export const getPrePayList: (params) => AxiosPromise<IPagePrepaymentResponse> = 
     return axios.get('/project/api/prepayments/boss', { params })
 }
 // 预付款详情
-export const getPrePayDetail: (params) => AxiosPromise<PrepaymentDetailResponse> = (params:number) => {
+export const getPrePayDetail: (params) => AxiosPromise<any> = (params:number) => {
     return axios.get(`/project/api/prepayments/boss/${params}`)
 }
 
