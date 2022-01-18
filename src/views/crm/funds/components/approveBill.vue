@@ -158,16 +158,13 @@ export default class ApproveBill extends Vue {
     }
     selectAll (list) {
         console.log('🚀 --- selectAll --- list', list)
-        if (this.isSelectAllPass) {
-            this.selectList = list
-            return
-        }
+
         this.selectList = list
         let moneny = this.selectList.reduce((sum, val) => {
             return sum + parseFloat(val.currentReceiptAmount || 0)
         }, 0)
         let others = this.selectList.filter(item => item.currentReceiptAmount === '')
-        if (moneny >= this.bankDetail.unpaidAmount) {
+        if (moneny >= this.bankDetail.unpaidAmount && !this.isSelectAllPass) {
             let temp = this.selectList.filter(item => item.currentReceiptAmount !== '')
             this.selectList = temp
             others.forEach(row => {
