@@ -90,6 +90,7 @@ export default class ApproveBill extends Vue {
         pageSize: 10,
         total: 0
     }
+    isSelectAllPass:boolean = false
     get formTableLabel () {
         let formTableLabel: tableLabelProps = [
             // { label: 'id', prop: 'id' },
@@ -134,11 +135,13 @@ export default class ApproveBill extends Vue {
 
     // 获取已选中的认领金额
     get selectMoeny () {
-        console.log('log::::::xxx', this.selectList)
         const moneny = this.selectList.reduce((sum, val) => {
             // console.log(parseFloat(val.currentReceiptAmount))
             return sum + parseFloat(val.currentReceiptAmount || 0)
         }, 0)
+        console.log('log::::::计算和', moneny.toFixed(2))
+        this.isSelectAllPass = moneny == 0
+        console.log('🚀 --- getselectMoeny --- this.isPass', this.isSelectAllPass)
         return moneny.toFixed(2)
     }
 
@@ -155,6 +158,10 @@ export default class ApproveBill extends Vue {
     }
     selectAll (list) {
         console.log('🚀 --- selectAll --- list', list)
+        if (this.isSelectAllPass) {
+            this.selectList = list
+            return
+        }
         this.selectList = list
         let moneny = this.selectList.reduce((sum, val) => {
             return sum + parseFloat(val.currentReceiptAmount || 0)
