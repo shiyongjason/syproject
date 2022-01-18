@@ -1,0 +1,22 @@
+.service-tit{
+    font-size: 16px;
+}
+.service-wrap{
+    padding: 0 10px;
+    .el-row{
+        margin-top: 10px;
+        span{
+            color: #666666;
+        }
+    }
+}
+.project_wrap{
+}
+
+/deep/.el-dialog .el-select{
+    width: 50px !important;
+}
+
+// /deep/.el-dialog .el-input{
+//     width: 100% !important;
+// }
