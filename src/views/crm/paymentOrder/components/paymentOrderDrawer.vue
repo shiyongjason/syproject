@@ -610,7 +610,7 @@
                                                 </td>
                                                 <td>{{ paymentOrderConst.PAYMENT_FLAG.get(paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }}</td>
                                                 <td>
-                                                    <h-button table v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)" @click="openReduleDialog(paymentOrderDetail.respFundResults.arrearFund.fundId,FundsDict.repaymentTypeArrays.list[2].key)">
+                                                    <h-button table v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)&&paymentOrderDetail.respFundResults.arrearFund.paymentFlag === paymentOrderDetail.respFundResults.arrearFund.paymentFlag === paymentFlagKey.WAITING" @click="openReduleDialog(paymentOrderDetail.respFundResults.arrearFund.fundId,FundsDict.repaymentTypeArrays.list[2].key)">
                                                         支付确认
                                                     </h-button>
                                                     <h-button table v-if="(paymentOrderDetail.respFundResults.arrearFund.paymentFlag === paymentFlagKey.PAID)" @click="seePayEnter(paymentOrderDetail.respFundResults.arrearFund,FundsDict.repaymentTypeArrays.list[2].key)">
