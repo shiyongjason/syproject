@@ -79,6 +79,27 @@
                         </div>
                     </div>
                 </div>
+                <div class="table-cont-title between">
+                    <span class="table-title-name">运费信息</span>
+                    <span class="table-title-name between">
+                        <el-input v-model="queryParams.freight" v-isNum:2 v-inputMAX='100000' placeholder="请输入修改后的运费" size="small"></el-input>
+                        <el-button size="small" type="primary" style="margin-left:10px">确定</el-button>
+                    </span>
+                </div>
+                <div class="pb20">
+                    <!-- <basicTable :tableData="basicInfo.freightOrderSkuList" :tableLabel="tableLabel" :multiSelection.sync="multiSelection" :isPagination="false" :isShowIndex="true" :isAction="isAction"> -->
+                    <basicTable :tableData="basicInfo.freightOrderSkuList" :tableLabel="tableLabel" :multiSelection.sync="multiSelection" :isPagination="false" :isShowIndex="true">
+                        <template slot="freightSource" slot-scope="scope">
+                            {{ sourcesPriceMap.get(scope.data.row.freightSource) || '-' }}
+                        </template>
+                        <template slot="status" slot-scope="scope">
+                            {{ freightStatusMap.get(scope.data.row.status) || '-' }}
+                        </template>
+                        <!-- <template slot="action" slot-scope="scope" v-if="basicInfo.status == 10">
+                            <h-button table @click="onseeTask(scope.data.row)">编辑运费价格</h-button>
+                        </template> -->
+                    </basicTable>
+                </div>
                 <div class="table-cont-title">
                     <span class="table-title-name">商品运费明细信息</span>
                 </div>
@@ -175,7 +196,10 @@ export default {
                     { validator: withinDetail, trigger: 'blur' }
                 ]
             },
-            sourceFreight: false
+            sourceFreight: false,
+            queryParams: {
+                freight: ''
+            }
         }
     },
     computed: {
@@ -303,5 +327,10 @@ export default {
 }
 .createPrice {
     padding: 50px 70px;
+}
+.between{
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
 }
 </style>
