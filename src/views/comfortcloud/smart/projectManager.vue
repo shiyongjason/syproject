@@ -345,7 +345,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="7">
-                            <el-form-item label="子系统类型：" label-width="120px">
+                            <el-form-item label="子系统类型：" :prop="`thirdSystemConfigs[${index}].subSystemType`" :rules="rules.subSystemType(item)" label-width="120px">
                                 <el-select v-model="item.subSystemType" placeholder="输入子系统类型" clearable>
                                     <el-option v-for="item in subSystemTypeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
@@ -354,20 +354,10 @@
                     </el-row>
                     <el-row :gutter="12" class="mb20">
                         <el-col :span="14">
-                            <el-form-item label="IP地址/域名：" label-width="120px">
+                            <el-form-item label="IP地址/域名：" :prop="`thirdSystemConfigs[${index}].config`" :rules="rules.config(item)" label-width="120px">
                                 <el-input type="textarea" rows="5" v-model="item.config" placeholder="输入json配置信息" maxlength="500" show-word-limit></el-input>
                             </el-form-item>
                         </el-col>
-                        <!-- <el-col :span="7">
-                            <el-form-item label="KEY：" label-width="120px">
-                                <el-input v-model="item.subSystemType" placeholder="输入唯一标识" maxlength="50"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="7">
-                            <el-form-item label="Secret：" label-width="120px">
-                                <el-input v-model="item.subSystemType" placeholder="输入密钥" maxlength="50"></el-input>
-                            </el-form-item>
-                        </el-col> -->
                         <el-col :span="3">
                             <el-button type="danger" @click="deleteThirdSystemConfig(index)">删除</el-button>
                         </el-col>
@@ -518,6 +508,46 @@ export default {
                 ],
                 feeType: [
                     { required: true, message: '请选择计费方式', trigger: 'change' }
+                ],
+                subSystemType: (item) => [
+                    {
+                        validator: (rule, value, callback) => {
+                            if (item.brandName && !item.subSystemType) {
+                                return callback(new Error('请选择子系统类型'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'change'
+                    }
+                ],
+                config: (item) => [
+                    {
+                        validator: (rule, value, callback) => {
+                            const isJson = (str) => {
+                                if (typeof str == 'string') {
+                                    try {
+                                        const obj = JSON.parse(str)
+                                        if (obj && typeof obj == 'object') {
+                                            return true
+                                        } else {
+                                            return false
+                                        }
+                                    } catch (e) {
+                                        return false
+                                    }
+                                }
+                            }
+                            if (item.brandName && !item.config) {
+                                return callback(new Error('请输入IP地址/域名'))
+                            }
+                            console.log(isJson(item.config))
+                            if (item.config && !isJson(item.config)) {
+                                return callback(new Error('IP地址/域名JSON配置格式不正确'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
                 ]
             },
             loading: false,
@@ -849,7 +879,7 @@ export default {
 
             this.doorlockOption = this.form.projectType.filter(item => item == 18)
 
-            this.isShowEnergy = this.form.projectType.filter(item => item == 101 || item == 102 || item == 103 || item == 104 || item == 112 || item == 113 || item == 114 || item == 120 || item == 4 || item == 3 || item == 5 || item == 6 || item == 7).length > 0
+            this.isShowEnergy = this.form.projectType.filter(item => item == 101 || item == 102 || item == 103 || item == 104 || item == 112 || item == 113 || item == 114 || item == 120 || item == 4 || item == 3 || item == 5 || item == 6 || item == 7 || item == 9).length > 0
             this.isShowAirEnergy = this.form.projectType.filter(item => item == 101 || item == 102 || item == 103 || item == 104 || item == 112 || item == 113 || item == 114 || item == 120).length > 0
 
             this.waterAirRadioOption = this.form.projectType.filter(item => item == 101 || item == 102 || item == 103 || item == 104)[0]

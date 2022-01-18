@@ -302,6 +302,8 @@ export default {
                 ]
             },
             ruleForm: {
+                startTime: '',
+                endTime: '',
                 projectUpload: [],
                 serviceFee: 0
             },
@@ -629,7 +631,9 @@ export default {
             })
         },
         submitForm () {
+            console.log(this.companyId)
             this.isloading = true
+            this.ruleForm.companyId = this.companyId
             this.ruleForm.attachments = JSON.stringify(this.ruleForm.projectUpload)
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
