@@ -358,10 +358,10 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{{ paymentOrderDetail.respFundResults.downpaymentFund.paymentAmount | moneyFormat }}元</td>
-                                            <td>{{ paymentOrderDetail.respFundResults.downpaymentFund.paymentAmount | moneyFormat }}元</td>
+                                            <td>{{ paymentOrderDetail.respFundResults.downpaymentFund.fundAmount | moneyFormat }}元</td>
+                                            <td>{{ paymentOrderDetail.respFundResults.downpaymentFund.unpaidAmount | moneyFormat }}元</td>
                                             <td>{{ paymentOrderDetail.respFundResults.downpaymentFund.paidAmount | moneyFormat }}元</td>
-                                            <td>{{ paymentOrderDetail.respFundResults.downpaymentFund.paymentAmount | moneyFormat }}元</td>
+                                            <td>{{ paymentOrderDetail.respFundResults.downpaymentFund.unconfirmedAmount | moneyFormat }}元</td>
                                             <td> {{ paymentOrderDetail.respFundResults.downpaymentFund.schedulePaymentDate | momentFormat('YYYY-MM-DD') }}
                                                 <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
                                                     <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow('首付款', paymentOrderDetail.respFundResults.downpaymentFund, false)" v-if="canUpdatePaymentInfo(paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag)"
@@ -372,7 +372,7 @@
                                             <td>
                                                 <h-button table class="ml-20"
                                                     v-if="(paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === paymentFlagKey.CONFIRM||paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === paymentFlagKey.WAITING)&&hosAuthCheck(Auths.CRM_DOWN_PAYMENT_FUND_CONFIRM)"
-                                                    @click="openReduleDialog(paymentOrderDetail.respFundResults.downpaymentFund.id,FundsDict.repaymentTypeArrays.list[0].key)">
+                                                    @click="openReduleDialog(paymentOrderDetail.respFundResults.downpaymentFund.fundId,FundsDict.repaymentTypeArrays.list[0].key)">
                                                     支付确认
                                                 </h-button>
                                                 <h-button table class="ml-20" v-if="(paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === paymentFlagKey.PAID)" @click="seePayEnter(paymentOrderDetail.respFundResults.downpaymentFund,FundsDict.repaymentTypeArrays.list[0].key)">
@@ -466,14 +466,14 @@
                                             <tr :key="item.id" v-for="(item,index) in paymentOrderDetail.respFundResults.serviceFund">
                                                 <td>{{ index + 1 }}</td>
                                                 <td>{{item.receivableAmount|moneyFormat}}元</td>
-                                                <td>{{item.paymentAmount|moneyFormat}}元
+                                                <td>{{item.fundAmount|moneyFormat}}元
                                                     <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
                                                         <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow(`第${index + 1}期服务费`, item)" v-if="canUpdatePaymentInfo(item.paymentFlag)" class="info-img-edit">
                                                         </template>
                                                 </td>
-                                                <td>{{item.receivableAmount|moneyFormat}}元</td>
-                                                <td>{{item.receivableAmount|moneyFormat}}元</td>
-                                                <td>{{item.receivableAmount|moneyFormat}}元</td>
+                                                <td>{{item.unpaidAmount|moneyFormat}}元</td>
+                                                <td>{{item.paidAmount|moneyFormat}}元</td>
+                                                <td>{{item.unconfirmedAmount|moneyFormat}}元</td>
                                                 <td>
                                                     {{ item.schedulePaymentDate }}
                                                     <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
@@ -482,7 +482,7 @@
                                                 </td>
                                                 <td>{{ paymentOrderConst.PAYMENT_FLAG.get(item.paymentFlag) }}</td>
                                                 <td>
-                                                    <h-button table v-if="hosAuthCheck(Auths.CRM_SERVICE_FUND_CONFIRM)&&item.paymentFlag === paymentFlagKey.CONFIRM||item.paymentFlag === paymentFlagKey.WAITING" @click="openReduleDialog(item.id, FundsDict.repaymentTypeArrays.list[1].key,item)">
+                                                    <h-button table v-if="hosAuthCheck(Auths.CRM_SERVICE_FUND_CONFIRM)&&item.paymentFlag === paymentFlagKey.CONFIRM||item.paymentFlag === paymentFlagKey.WAITING" @click="openReduleDialog(item.fundId, FundsDict.repaymentTypeArrays.list[1].key,item)">
                                                         支付确认
                                                     </h-button>
                                                       <h-button table v-if="(item.paymentFlag === paymentFlagKey.PAID)" @click="seePayEnter(item,FundsDict.repaymentTypeArrays.list[1].key,item)">
@@ -598,10 +598,10 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>{{ paymentOrderDetail.respFundResults.arrearFund.paymentAmount | moneyFormat }}元</td>
-                                                <td>{{ paymentOrderDetail.respFundResults.arrearFund.paymentAmount | moneyFormat }}元</td>
+                                                <td>{{ paymentOrderDetail.respFundResults.arrearFund.fundAmount | moneyFormat }}元</td>
+                                                <td>{{ paymentOrderDetail.respFundResults.arrearFund.unpaidAmount | moneyFormat }}元</td>
                                                 <td>{{ paymentOrderDetail.respFundResults.arrearFund.paidAmount | moneyFormat }}元</td>
-                                                <td>{{ paymentOrderDetail.respFundResults.arrearFund.paymentAmount | moneyFormat }}元</td>
+                                                <td>{{ paymentOrderDetail.respFundResults.arrearFund.unconfirmedAmount | moneyFormat }}元</td>
                                                 <td> {{ paymentOrderDetail.respFundResults.arrearFund.schedulePaymentDate }}
                                                     <template v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
                                                         <img src="../../../../assets/images/crm-edit.png" alt="" @click="updateRow(`尾款`, paymentOrderDetail.respFundResults.arrearFund, false)" class="info-img-edit"
@@ -610,7 +610,7 @@
                                                 </td>
                                                 <td>{{ paymentOrderConst.PAYMENT_FLAG.get(paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }}</td>
                                                 <td>
-                                                    <h-button table v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)" @click="openReduleDialog(paymentOrderDetail.respFundResults.arrearFund.id,FundsDict.repaymentTypeArrays.list[2].key)">
+                                                    <h-button table v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)" @click="openReduleDialog(paymentOrderDetail.respFundResults.arrearFund.fundId,FundsDict.repaymentTypeArrays.list[2].key)">
                                                         支付确认
                                                     </h-button>
                                                     <h-button table v-if="(paymentOrderDetail.respFundResults.arrearFund.paymentFlag === paymentFlagKey.PAID)" @click="seePayEnter(paymentOrderDetail.respFundResults.arrearFund,FundsDict.repaymentTypeArrays.list[2].key)">
@@ -774,9 +774,9 @@ export default {
         },
         updateRow (labelName, row, hideAmount) {
             this.updateRowVisible = true
-            this.updateForm.amount = row.paymentAmount
+            this.updateForm.amount = row.fundAmount
             this.updateForm.time = row.schedulePaymentDate
-            this.updateForm.id = row.id
+            this.updateForm.id = row.fundId
             this.updateRowLabel = labelName
             if (hideAmount !== undefined) {
                 this.showAmount = hideAmount
@@ -908,7 +908,7 @@ export default {
         seePayEnter (row, type) {
             console.log(row)
             const params = {
-                id: row.id,
+                id: row.fundId,
                 orderId: this.paymentOrderDetail.respFundResults.downpaymentFund.orderId
             }
             this.$emit('findReduleDialog', params, type)
