@@ -169,7 +169,7 @@
                 </template>
                 <div class="pre_wrap">
                     <h4>预付款支付计划：</h4>
-                     <hosJoyTable  ref="hosjoyTable" align="center"  border stripe  :column="tableLabelDetail" :data="planData"></hosJoyTable>
+                    <hosJoyTable ref="hosjoyTable" align="center" border stripe :column="tableLabelDetail" :data="planData"></hosJoyTable>
                 </div>
                 <el-row ype="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>核销人：{{detailForm.writeOffUser||'-'}}</el-col>
@@ -520,19 +520,19 @@ export default class Advancelist extends Vue {
         operatorPhone: '',
         payVouchers: []
     }
-      bankForm:PrepaymentSupplierOnlineBankTransferConfirmRequest={
-          prepaymentOrderId: '',
-          paymentTime: '',
-          attachDocRequestList: []
-      }
+    bankForm:PrepaymentSupplierOnlineBankTransferConfirmRequest={
+        prepaymentOrderId: '',
+        paymentTime: '',
+        attachDocRequestList: []
+    }
     page = {
         total: 0
     }
     private tableLabelDetail:tableLabelProps = [
-        { label: '预付款总金额', prop: 'prepaymentNo' },
-        { label: '待支付', prop: 'purchaseOrderNo' },
-        { label: '已支付', prop: 'applyUser' },
-        { label: '支付待确认', prop: 'applyTime' }
+        { label: '预付款总金额(元)', prop: 'totalAmount' },
+        { label: '待支付(元)', prop: 'surplusAmount' },
+        { label: '已支付(元)', prop: 'paidAmount' },
+        { label: '支付待确认(元)', prop: 'unconfirmedAmount' }
 
     ]
     private tableLabel:tableLabelProps = [
@@ -756,6 +756,7 @@ export default class Advancelist extends Vue {
         this.dialogVisible = true
         const { data } = await Api.getPrePayDetail(v.id)
         this.detailForm = { ...this.detailForm, ...data }
+        this.planData = [{ totalAmount: data.totalAmount, unconfirmedAmount: data.unconfirmedAmount, paidAmount: data.paidAmount, surplusAmount: data.surplusAmount }]
     }
 
     public async onApprovalRecord (v) {
