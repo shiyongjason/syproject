@@ -338,7 +338,7 @@
                 <el-row v-for="(item,index) of form.thirdSystemConfigs" :key="'key' + index">
                     <el-row :gutter="5" class="mb20">
                         <el-col :span="7">
-                            <el-form-item label="品牌名称：" label-width="120px">
+                            <el-form-item label="品牌名称：" :prop="`thirdSystemConfigs[${index}].brandName`" :rules="rules.brandName" label-width="120px">
                                 <el-select v-model="item.brandName" placeholder="输入品牌名称" clearable>
                                     <el-option v-for="item in brandOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
@@ -509,10 +509,14 @@ export default {
                 feeType: [
                     { required: true, message: '请选择计费方式', trigger: 'change' }
                 ],
+                brandName: [
+                    { required: true, message: '请选择品牌名称', trigger: 'change' }
+                ],
                 subSystemType: (item) => [
                     {
+                        required: true,
                         validator: (rule, value, callback) => {
-                            if (item.brandName && !item.subSystemType) {
+                            if (!item.subSystemType) {
                                 return callback(new Error('请选择子系统类型'))
                             }
                             return callback()
@@ -522,6 +526,7 @@ export default {
                 ],
                 config: (item) => [
                     {
+                        required: true,
                         validator: (rule, value, callback) => {
                             const isJson = (str) => {
                                 if (typeof str == 'string') {
@@ -537,10 +542,9 @@ export default {
                                     }
                                 }
                             }
-                            if (item.brandName && !item.config) {
+                            if (!item.config) {
                                 return callback(new Error('请输入IP地址/域名'))
                             }
-                            console.log(isJson(item.config))
                             if (item.config && !isJson(item.config)) {
                                 return callback(new Error('IP地址/域名JSON配置格式不正确'))
                             }
