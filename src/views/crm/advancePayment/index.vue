@@ -151,7 +151,7 @@
                     <el-col :span="10" :offset='1'>审核备注：{{detailForm.approvalRemark||'-'}}</el-col>
                 </el-row>
                 <template v-if="detailForm.prepaymentDetails&&detailForm.prepaymentDetails.length>0">
-                    <el-row ype="flex" class="row-bg" v-for="(item,index) in detailForm.prepaymentDetails" :key="item.id+index">
+                    <!-- <el-row ype="flex" class="row-bg" v-for="(item,index) in detailForm.prepaymentDetails" :key="item.id+index">
                         <el-col :span="10" :offset='1'>预付款支付凭证提交人：{{item.createBy}}({{item.createPhone||'-'}})</el-col>
                         <el-col :span="10" :offset='1'>上传时间：{{ item.createTime | momentFormat }}</el-col>
                         <el-col class="mt10 pay_vouchers" :span="20" :offset='1'>预付款支付凭证：
@@ -164,10 +164,13 @@
                                 -
                             </span>
                         </el-col>
-                        <el-col v-if="(detailForm.status==4||detailForm.status==5||detailForm.status==6)" class="mt10" :span="10" :offset='1'>支付成功时间：{{detailForm.paidTime?moment(detailForm.paidTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
-                    </el-row>
+                          </el-row>-->
+
                 </template>
-                <div class="pre_wrap">
+                 <el-row>
+                 <el-col v-if="(detailForm.status==4||detailForm.status==5||detailForm.status==6)" class="mt10" :span="10" :offset='1'>支付成功时间：{{detailForm.paidTime?moment(detailForm.paidTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
+                 </el-row>
+                <div class="pre_wrap" v-if="detailForm.fund">
                     <h4>预付款支付计划：</h4>
                     <hosJoyTable ref="hosjoyTable" align="center" border stripe :column="tableLabelDetail" :data="planData"></hosJoyTable>
                 </div>
@@ -529,10 +532,10 @@ export default class Advancelist extends Vue {
         total: 0
     }
     private tableLabelDetail:tableLabelProps = [
-        { label: '预付款总金额(元)', prop: 'totalAmount' },
-        { label: '待支付(元)', prop: 'surplusAmount' },
-        { label: '已支付(元)', prop: 'paidAmount' },
-        { label: '支付待确认(元)', prop: 'unconfirmedAmount' }
+        { label: '预付款总金额(元)', prop: 'totalAmount', displayAs: 'money' },
+        { label: '待支付(元)', prop: 'unpaidAmount', displayAs: 'money' },
+        { label: '已支付(元)', prop: 'paidAmount', displayAs: 'money' },
+        { label: '支付待确认(元)', prop: 'unconfirmedAmount', displayAs: 'money' }
 
     ]
     private tableLabel:tableLabelProps = [
@@ -756,7 +759,9 @@ export default class Advancelist extends Vue {
         this.dialogVisible = true
         const { data } = await Api.getPrePayDetail(v.id)
         this.detailForm = { ...this.detailForm, ...data }
-        this.planData = [{ totalAmount: data.totalAmount, unconfirmedAmount: data.unconfirmedAmount, paidAmount: data.paidAmount, surplusAmount: data.surplusAmount }]
+        if (data.fund) {
+            this.planData = [{ totalAmount: data.fund.fundAmount, unconfirmedAmount: data.fund.unconfirmedAmount, paidAmount: data.fund.paidAmount, unpaidAmount: data.fund.unpaidAmount }]
+        }
     }
 
     public async onApprovalRecord (v) {
