@@ -170,7 +170,7 @@
                  <el-row>
                  <el-col v-if="(detailForm.status==4||detailForm.status==5||detailForm.status==6)" class="mt10" :span="10" :offset='1'>支付成功时间：{{detailForm.paidTime?moment(detailForm.paidTime).format('yyyy-MM-DD HH:mm:ss'):'-'}}</el-col>
                  </el-row>
-                <div class="pre_wrap">
+                <div class="pre_wrap" v-if="detailForm.fund">
                     <h4>预付款支付计划：</h4>
                     <hosJoyTable ref="hosjoyTable" align="center" border stripe :column="tableLabelDetail" :data="planData"></hosJoyTable>
                 </div>
