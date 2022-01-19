@@ -341,12 +341,9 @@ export default {
             this.ruleForm.id = ''
             this.offineVisible = true
             // 默认选中线下确认收款方
-            this.ruleForm.payeeName = this.companyName
-            this.handleChangeRadio(this.ruleForm.payeeName)
+            this.ruleForm.payeeName = this.dialogDetail.paymentMain
+            this.handleChangeRadio(this.ruleForm.payeeName, this.dialogDetail.payeeBankAccount)
             console.log('this.ruleForm: ', this.ruleForm)
-            this.$nextTick(() => {
-                this.$refs.ruleForm.clearValidate()
-            })
         },
         handleSubmit () {
             const params = {
@@ -366,9 +363,15 @@ export default {
                 }
             })
         },
-        handleChangeRadio (val) {
+        handleChangeRadio (val, payeeBankAccount) {
             this.payeeAccountList = this.accountList.filter(item => item.payeeName == val)[0].payeeAccountList
             this.ruleForm.id = ''
+            if (payeeBankAccount) {
+                this.ruleForm.id = this.payeeAccountList.filter(i => i.payeeBankAccount == payeeBankAccount)[0].id
+            }
+            this.$nextTick(() => {
+                this.$refs.ruleForm.clearValidate()
+            })
         },
         handleBill (val, type) {
             this.bankBillId = val.fundId
