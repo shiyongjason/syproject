@@ -370,7 +370,7 @@
                             <h-button>上传文件</h-button>
                         </div>
                     </OssFileHosjoyUpload>
-                    <p class="tips">请上传JPG/PNG/JPEG/PDF等主流格式，最多上传9张，单张大小不得超过20M</p>
+                    <p class="tips">请上传JPG/PNG/PDF等主流格式，最多上传9张，单张大小不得超过20M</p>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
