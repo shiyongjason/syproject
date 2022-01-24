@@ -677,8 +677,8 @@ export default {
         submitForm () {
             this.$refs['formVoter'].validate(async (valid) => {
                 if (valid) {
-                    if (this.totalAmount != this.LoanTransferContent.applyAmount) {
-                        this.$message.error(`提示：合计票面金额应等于货款申请金额`)
+                    if (this.totalAmount != this.LoanTransferContent.purchaseAmount) {
+                        this.$message.error(`提示：合计票面金额应等于采购金额`)
                         return
                     }
                     this.billAmountForm.billAmount.map((item, index) => {

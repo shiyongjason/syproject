@@ -206,7 +206,7 @@
                         <el-radio :label=item.id v-for="(item,index) in payeeAccountList" :key=index>{{item.payeeBankName + item.payeeBankAccount}}</el-radio>
                     </el-radio-group> -->
                     <el-select v-model="ruleForm.id" placeholder="请选择">
-                        <el-option v-for="item in payeeAccountList" :key="item.id" :label="item.payeeBankName" :value="item.id">
+                        <el-option v-for="item in payeeAccountList" :key="item.id" :label="item.allName" :value="item.id">
                             <span style="float: left">{{ item.payeeBankName }}</span>
                             <span style="float: right; color: #8492a6; font-size: 13px">{{ item.payeeBankAccount }}</span>
                         </el-option>
@@ -365,6 +365,9 @@ export default {
         },
         handleChangeRadio (val, payeeBankAccount) {
             this.payeeAccountList = this.accountList.filter(item => item.payeeName == val)[0].payeeAccountList
+            this.payeeAccountList.map(val => {
+                val.allName = val.payeeName + '(' + val.payeeBankAccount + ')'
+            })
             this.ruleForm.id = ''
             if (payeeBankAccount) {
                 this.ruleForm.id = this.payeeAccountList.filter(i => i.payeeBankAccount == payeeBankAccount)[0].id
