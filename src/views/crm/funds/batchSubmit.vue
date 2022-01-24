@@ -43,7 +43,7 @@
                 </el-form-item>
                 <el-form-item label="收款方账户：" prop="id">
                     <el-select v-model="ruleForm.id" placeholder="请选择">
-                        <el-option v-for="item in payeeAccountList" :key="item.id" :label="item.payeeBankName" :value="item.id">
+                        <el-option v-for="item in payeeAccountList" :key="item.id" :label="item.allName" :value="item.id">
                             <span style="float: left">{{ item.payeeBankName }}</span>
                             <span style="float: right; color: #8492a6; font-size: 13px">{{ item.payeeBankAccount }}</span>
                         </el-option>
@@ -165,16 +165,24 @@ export default {
             // }).catch(() => {
             // })
         },
-        handleChangeRadio (val) {
+        handleChangeRadio (val, payeeBankAccount) {
             this.payeeAccountList = this.accountList.filter(item => item.payeeName == val)[0].payeeAccountList
-            this.ruleForm.id = ''
+            this.payeeAccountList.map(val => {
+                val.allName = val.payeeName + '(' + val.payeeBankAccount + ')'
+            })
+            if (payeeBankAccount) {
+                console.log('payeeBankAccount: ', payeeBankAccount)
+                this.ruleForm.id = this.payeeAccountList.filter(i => i.payeeBankAccount == payeeBankAccount)[0].id
+            }
         },
         async handleOffine () {
             const { data } = await findPayeeAccount()
             this.accountList = data
             this.ruleForm.id = ''
-            this.ruleForm.payeeName = ''
             this.offineVisible = true
+            // 默认选中线下确认收款方
+            this.ruleForm.payeeName = this.payDetail.paymentMain
+            this.handleChangeRadio(this.ruleForm.payeeName, this.payDetail.payeeBankAccount)
             this.$nextTick(() => {
                 this.$refs.ruleForm.clearValidate()
             })

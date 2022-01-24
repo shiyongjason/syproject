@@ -80,7 +80,7 @@
                     <h-button table @click="onUploadPrePay(slotProps.data.row)" v-if="hosAuthCheck(uploadprepay)&&slotProps.data.row.status==0&&slotProps.data.row.applyAmount > 0">上传预付凭证</h-button>
                     <h-button table v-if="slotProps.data.row.showOnlineBank&&hosAuthCheck(banklink)" @click="handleIsPay(slotProps.data.row)">确认已网银支付</h-button>
                     <h-button table v-if="hosAuthCheck(submitPay)&& (slotProps.data.row.status === 0 || slotProps.data.row.status === 8)" @click="handlePreSubmit(slotProps.data.row)">确认支付</h-button>
-                    <h-button table v-if="hosAuthCheck(onlinePay)&&slotProps.data.row.status === 3" @click="handlePayOnline(slotProps.data.row)">司库支付</h-button>
+                    <h-button table v-if="hosAuthCheck(onlinePay)&&slotProps.data.row.status === 3&&slotProps.data.row.fundPaymentType === 1" @click="handlePayOnline(slotProps.data.row)">司库支付</h-button>
                 </template>
             </hosJoyTable>
         </div>

@@ -23,7 +23,7 @@
             <p><span>经销商：{{ payeeName }}</span><span>账单数量：{{bankDetail.list&&bankDetail.list.length}}</span></p>
         </div>
         <div class="approve">
-            <hosJoyTable showPagination ref="hosjoyTable" align="center" border stripe isShowselection :maxHeight='800'  @select="select" :column="formTableLabel" :data="bankList"
+            <hosJoyTable showPagination ref="hosjoyTable" align="center" border stripe isShowselection :maxHeight='800'  @select="select" :column="formTableLabel" :data="bankList" :selectable="checkSelectable"
                 :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="queryParams.total" @pagination="getList"
                 @select-all="selectAll"
             >
@@ -45,7 +45,6 @@ import { State } from 'vuex-class'
 import { isNum } from '@/utils/validate/format'
 import { CreateElement } from 'vue'
 import * as Api from '../api/index'
-import { Money } from '@/utils/rules'
 
 // 定义类型
 interface Query{
@@ -144,7 +143,9 @@ export default class ApproveBill extends Vue {
         console.log('🚀 --- getselectMoeny --- this.isPass', this.isSelectAllPass)
         return moneny.toFixed(2)
     }
-
+    checkSelectable (row, index) {
+        return row.noReceiptAmount >= 0
+    }
     // 关闭弹窗
     public onCancel (val):void {
         this.$emit('onCancel', false)
@@ -255,24 +256,26 @@ export default class ApproveBill extends Vue {
         let sum = 0
         let index = 0
         for (let i = 0; i < this.bankList.length; i++) {
-            if (sum <= this.bankDetail.unReceiptAmount) {
-                if ((sum + this.bankList[i].noReceiptAmount) < this.bankDetail.unReceiptAmount) {
-                    this.bankList[i].currentReceiptAmount = this.bankList[i].noReceiptAmount
-                    this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
-                    sum += this.bankList[i].currentReceiptAmount
-                    index = i + 1
-                    this.selectList.push(this.bankList[i])
-                } else {
-                    if (index === i) {
-                        let price = this.bankDetail.unReceiptAmount - sum
-                        this.bankList[i].currentReceiptAmount = price.toFixed(2)
-                        sum += this.bankList[i].currentReceiptAmount
+            if (this.bankDetail.unReceiptAmount >= 0) {
+                if (sum <= this.bankDetail.unReceiptAmount) {
+                    if ((sum + this.bankList[i].noReceiptAmount) < this.bankDetail.unReceiptAmount) {
+                        this.bankList[i].currentReceiptAmount = this.bankList[i].noReceiptAmount
                         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
+                        sum += this.bankList[i].currentReceiptAmount
+                        index = i + 1
                         this.selectList.push(this.bankList[i])
-                    }
+                    } else {
+                        if (index === i) {
+                            let price = this.bankDetail.unReceiptAmount - sum
+                            this.bankList[i].currentReceiptAmount = price.toFixed(2)
+                            sum += this.bankList[i].currentReceiptAmount
+                            this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
+                            this.selectList.push(this.bankList[i])
+                        }
                     // this.flag = true
+                    }
+                    this.disabled = this.selectList.length == 0
                 }
-                this.disabled = this.selectList.length == 0
             }
         }
     }

@@ -9,7 +9,7 @@
         </div>
         <div class="approve">
             <hosJoyTable ref="hosjoyTable" isShowIndex align="center" border stripe isShowselection :maxHeight='500' @selection-change="selectChange" :column="formTableLabel" :data="bankList" showPagination
-             :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="queryParams.total" @pagination="getList"
+             :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="queryParams.total" @pagination="getList" :selectable="checkSelectable"
             >
             </hosJoyTable>
         </div>
@@ -99,7 +99,9 @@ export default class ApproveBill extends Vue {
         ]
         return formTableLabel
     }
-
+    checkSelectable (row, index) {
+        return row.unPaidAmount >= 0
+    }
     // 获取checked选中数组
     public selectChange (data):void {
         console.log('data', this.bankList)
@@ -167,18 +169,20 @@ export default class ApproveBill extends Vue {
         let sum = 0
         let index = 0
         for (let i = 0; i < this.bankList.length; i++) {
-            if (sum <= this.bankDetail.unReceiptAmount) {
-                if ((sum + this.bankList[i].unPaidAmount) < this.bankDetail.unReceiptAmount) {
-                    this.bankList[i].claimAmount = this.bankList[i].unPaidAmount
-                    this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
-                    sum += this.bankList[i].unPaidAmount
-                    index = i + 1
-                } else {
-                    if (index === i) {
-                        let price = this.bankDetail.unReceiptAmount - sum
-                        this.bankList[i].claimAmount = isNum(price, 2)
-                        sum += this.bankList[i].claimAmount
+            if (this.bankDetail.unReceiptAmount >= 0) {
+                if (sum <= this.bankDetail.unReceiptAmount) {
+                    if ((sum + this.bankList[i].unPaidAmount) < this.bankDetail.unReceiptAmount) {
+                        this.bankList[i].claimAmount = this.bankList[i].unPaidAmount
                         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
+                        sum += this.bankList[i].unPaidAmount
+                        index = i + 1
+                    } else {
+                        if (index === i) {
+                            let price = this.bankDetail.unReceiptAmount - sum
+                            this.bankList[i].claimAmount = isNum(price, 2)
+                            sum += this.bankList[i].claimAmount
+                            this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
+                        }
                     }
                 }
             }
