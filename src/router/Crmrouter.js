@@ -814,8 +814,8 @@ export default [
                         path: 'serviceedit',
                         name: 'serviceedit',
                         meta: {
-                            title: '服务费发票编辑',
-                            tagName: '服务费发票编辑',
+                            title: '服务费发票申请/编辑',
+                            tagName: '服务费发票申请/编辑',
                             parentName: '服务费发票',
                             isMenu: true,
                             icon: ''

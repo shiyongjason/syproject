@@ -74,7 +74,7 @@
                 <div class="query-cont__col">
                     <h-button type="primary" @click="getList">查询</h-button>
                     <h-button>重置</h-button>
-                    <h-button>申请</h-button>
+                    <h-button type="info" @click="handleEdit">申请</h-button>
                 </div>
             </div>
             <!-- end search bar -->
@@ -216,8 +216,12 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     handleEdit (row) {
-        // 编辑
-        this.$router.push({ path: '/goodwork/manageInvoices/serviceedit' })
+        // 编辑 or 申请
+        if (row) {
+            this.$router.push({ path: '/goodwork/manageInvoices/serviceedit' })
+        } else {
+            this.$router.push({ path: '/goodwork/manageInvoices/serviceedit' })
+        }
     }
 
     handleSubmit (val) {

@@ -50,7 +50,7 @@
                 <p>XXXX.pdf</p>
             </div>
             <div class="mb20 mt20">
-                <h-button @click="handleAdd">取消</h-button>
+                <h-button @click="handleGoBack">取消</h-button>
             </div>
         </div>
     </div>
@@ -118,9 +118,14 @@ export default class Flooredit extends Vue {
         console.log(tab, event)
     }
 
+    handleGoBack () {
+        // 返回
+        this.$router.go(-1)
+        this.setNewTags((this.$route.fullPath).split('?')[0])
+    }
+
     async mounted () {
         this.tableData = [{ code: 11111, name: 2222 }]
-        this.tableForm = [{ code: 11111, name: 2222, categoryPath: 555 }]
     }
 }
 </script>

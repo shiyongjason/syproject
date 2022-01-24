@@ -113,10 +113,10 @@
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='330' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <h-button table  @click="viewDetail(slotProps.data.row.paymentOrderId,slotProps.data.row.status)">查看</h-button>
-                    <h-button table  @click="onShowChangeLoanTransferStatus(slotProps.data.row.loanTransferId)">编辑</h-button>
-                    <h-button table  @click="handleShowProof(slotProps.data.row)">提交</h-button>
-                    <h-button table  @click="handleIsPay(slotProps.data.row)">驳回</h-button>
+                    <h-button table @click="handleLook(slotProps.data.row)">查看</h-button>
+                    <h-button table @click="handleEdit(slotProps.data.row.loanTransferId)">编辑</h-button>
+                    <h-button table @click="handleShowProof(slotProps.data.row)">提交</h-button>
+                    <h-button table @click="handleIsPay(slotProps.data.row)">驳回</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -150,11 +150,6 @@ interface Query extends ReqUpStreamPaymentQuery{
     }
 })
 export default class UpstreamPaymentManagement extends Vue {
-    upstreamPayDetail = UPSTREAM_PAY_DETAIL
-    upstreamPayment = UPSTREAM_PAY_MENT
-    upstreamExport = UPSTREAM_PAY_EXPORT
-    prevproof = PREV_PROOF
-    banklink = UPSTREAM_PAY_BANKLINK
     $refs!: {
         form: HTMLFormElement
     }
@@ -195,89 +190,10 @@ export default class UpstreamPaymentManagement extends Vue {
         'sort.property': null,
         'sort.direction': null
     }
-    private _dialogFormData = {}
-    dialogFormData:ReqSupplierSubmit={
-        id: '',
-        poId: '',
-        paymentOrderId: '',
-        payAmount: '',
-        payDate: moment().format('YYYY-MM-DD'),
-        payVouchers: []
-    }
-    loanTransferStatusForm: ReqLoanTransferChange = {
-        loanTransferId: '',
-        changeType: '',
-        remark: '',
-        updateBy: ''
-    }
-    bankForm:SupplierOnlineBankTransferConfirmRequest={
-        paymentOrderId: '',
-        paymentTime: '',
-        attachDocRequestList: []
-    }
 
-    totalAmount:number = 0
-    status:number = null
-    activeName:string = 'loanHandoverInformation'
-    loanHandoverInformation:LoanTransferInfoResponse = '' as unknown as LoanTransferInfoResponse
-    upstreamPaymentInformation:RespSupplier = '' as unknown as RespSupplier
-    prevPaymentDetail:RespSupplierInfo = '' as unknown as RespSupplierInfo
-    fundsDialogDetail:Record<string, any> ={}
-    PAYMENTSTATUS: Map<number | null, string> = new Map([
-        [null, '-'],
-        [1, '待支付'],
-        [2, '部分支付']
-    ])
     @State('userInfo') userInfo: any
     @Getter('crmmanage/crmdepList') crmdepList!: Array<HCGCommonInterface.Branch>
     @Action('crmmanage/findCrmdeplist') findCrmdeplist!: Function
-
-    get formRules () {
-        let rules = {
-            payAmount: [
-                {
-                    required: true,
-                    validator: (rule, value, callback) => {
-                        // HAM-25441 BOSS-本次支付金额不能输入0元，但是能输入0.0和0.00元
-                        if (value && value == 0) {
-                            return callback(new Error('本次支付金额不能为 0'))
-                        }
-                        if (!value) {
-                            return callback(new Error('本次支付金额不能为空'))
-                        }
-                        return callback()
-                    },
-                    trigger: 'blur'
-                }
-            ],
-            payDate: [
-                { required: true, message: '请选择支付日期' }
-            ],
-            payVouchers: [
-                { required: true, message: '请上传上游支付凭证' }
-            ]
-        }
-        return rules
-    }
-
-    get bankRules () {
-        return {
-            paymentTime: [{ required: true, message: '请选择网银支付时间', trigger: 'change' }],
-            attachDocRequestList: [{ required: true, message: '请上传上游支付凭证', trigger: 'change' }]
-        }
-    }
-
-    get changeRules () {
-        let rules = {
-            changeType: [
-                { required: true, message: '请选择变更交接状态', trigger: 'change' }
-            ],
-            remark: [
-                { required: true, message: '请输入备注', trigger: 'blur' }
-            ]
-        }
-        return rules
-    }
 
     get options () {
         return {
@@ -324,27 +240,14 @@ export default class UpstreamPaymentManagement extends Vue {
         { label: '申请时间', prop: 'poAmount', width: '160', displayAs: 'money' }
     ]
 
-    async viewDetail (paymentOrderId, status) {
-        // 初始化数据
-
+    async handleLook (paymentOrderId, status) {
+        // 查看
+        this.$router.push({ path: '/goodwork/manageInvoices/equipmentdetail' })
     }
 
-    handleShowProof (row) {
-
-    }
-
-    handleIsPay (val) {
-
-    }
-
-    handleSubBank () {
-
-    }
-
-    @validateForm('form')
-    @handleSubmit()
-    async onEnterPay () {
-
+    handleEdit (val) {
+        // 编辑
+        this.$router.push({ path: '/goodwork/manageInvoices/equipmentedit' })
     }
 
     @measure
