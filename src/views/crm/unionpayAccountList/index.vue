@@ -129,7 +129,7 @@ export default class Advancelist extends Vue {
     private id:number|string = null
     private bankBillId:number|string = null
     private records:Array<RespContractSignHistory> = null
-    private accountList:Array<RespContractSignHistory> = null
+    private accountList:Record<any, any> = null
     @Ref('detailRef') readonly detailRefs!: HTMLFormElement;
     @State('userInfo') userInfo: any
     queryParams:Query = {
