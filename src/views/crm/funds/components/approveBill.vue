@@ -225,9 +225,7 @@ export default class ApproveBill extends Vue {
                     this.selectList.splice(index, 1)
                 }
             } else {
-                console.log('log::::::4444444', this.selectList)
                 let index = this.selectList.findIndex(item => item.id == row.id)
-                console.log('🚀 --- select --- index', index)
                 if (index < 0) {
                     this.selectList.push(row)
                 }
@@ -239,16 +237,13 @@ export default class ApproveBill extends Vue {
                 }
             }
         } else {
-            console.log('log::::::0去勾选')
             let index = this.selectList.findIndex(item => item.id == row.id)
             row.currentReceiptAmount = ''
             if (index > -1) {
                 this.selectList.splice(index, 1)
             }
-            console.log('去勾选', this.selectList)
         }
         this.disabled = this.selectList.length == 0
-        console.log('log::::::this.selectList.length', this.selectList)
     }
 
     // 用于计算选中的列表
@@ -256,26 +251,31 @@ export default class ApproveBill extends Vue {
         let sum = 0
         let index = 0
         for (let i = 0; i < this.bankList.length; i++) {
-            if (this.bankDetail.unReceiptAmount >= 0) {
+            if (this.bankList[i].noReceiptAmount >= 0) {
+                console.log('this.bankList[i].noReceiptAmount: ', this.bankList[i].noReceiptAmount)
                 if (sum <= this.bankDetail.unReceiptAmount) {
                     if ((sum + this.bankList[i].noReceiptAmount) < this.bankDetail.unReceiptAmount) {
                         this.bankList[i].currentReceiptAmount = this.bankList[i].noReceiptAmount
                         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                         sum += this.bankList[i].currentReceiptAmount
-                        index = i + 1
                         this.selectList.push(this.bankList[i])
+                        index = i + 1
                     } else {
-                        if (index === i) {
+                        console.log('index: ', index)
+                        if (index == i) {
                             let price = this.bankDetail.unReceiptAmount - sum
                             this.bankList[i].currentReceiptAmount = price.toFixed(2)
                             sum += this.bankList[i].currentReceiptAmount
                             this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                             this.selectList.push(this.bankList[i])
                         }
+
                     // this.flag = true
                     }
                     this.disabled = this.selectList.length == 0
                 }
+            } else {
+                index = i + 1
             }
         }
     }
