@@ -96,7 +96,7 @@
                 <el-row type="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>申请金额(元)：{{detailForm.applyAmount | moneyFormat}}</el-col>
                     <el-col :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
-                    <el-col :span="10" :offset='1'>支付方式： {{ detailForm.paymentType&&paymentTypes[detailForm.paymentType-1].label||'-' }}</el-col>
+                    <el-col :span="10" :offset='1'>支付类型： {{ detailForm.paymentType&&paymentTypes[detailForm.paymentType-1].label||'-' }}</el-col>
                 </el-row>
                 <el-row type="flex" class="row-bg">
                     <el-col :span="16" :offset='1'>付款主体：{{detailForm.paymentCompanyName||'-'}}</el-col>
@@ -734,6 +734,11 @@ export default class Advancelist extends Vue {
                 this.$message.success('提交成功')
                 this.getList()
                 this.examineVisble = false
+            } else {
+                this.$nextTick(() => {
+                    const dom = document.querySelector('.is-error')
+                        dom!.scrollIntoView()
+                })
             }
         })
     }

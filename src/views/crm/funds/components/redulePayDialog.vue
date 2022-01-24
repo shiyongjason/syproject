@@ -54,7 +54,7 @@
                                     <el-col :span="12">
                                         收款方：{{v.receiptName||'-'}}
                                     </el-col>
-                                    <el-col :span="15">
+                                    <el-col :span="24">
                                         收款方账户：{{v.receiptBankName||'-'}} {{v.bankAccountNo||'-'}}
                                     </el-col>
                                 </el-row>
@@ -78,7 +78,7 @@
                                     <el-col :span="12">
                                         收款方：{{v.receiptName||'-'}}
                                     </el-col>
-                                    <el-col :span="18">
+                                    <el-col :span="24">
                                         收款方账户：{{v.receiptBankName||'-'}} {{v.bankAccountNo||'-'}}
                                     </el-col>
                                 </el-row>
@@ -102,7 +102,7 @@
                                     <el-col :span="12">
                                         收款方：{{v.receiptName||'-'}}
                                     </el-col>
-                                    <el-col :span="18">
+                                    <el-col :span="24">
                                         收款方账户：{{v.receiptBankName||'-'}} {{v.bankAccountNo||'-'}}
                                     </el-col>
                                 </el-row>
