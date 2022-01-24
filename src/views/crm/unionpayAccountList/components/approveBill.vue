@@ -185,6 +185,8 @@ export default class ApproveBill extends Vue {
                         }
                     }
                 }
+            } else {
+                index = i + 1
             }
         }
     }
