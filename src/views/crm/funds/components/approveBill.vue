@@ -316,8 +316,8 @@ export default class ApproveBill extends Vue {
     // 确认认领
     public async onSubmit () {
         const currentReceiptAmount = this.selectList.map(item => item.currentReceiptAmount)
-        if (Number(this.selectMoeny) == 0) {
-            this.$message.error('输入的认领金额不得为0')
+        if (Number(this.selectMoeny) == 0 || Number(this.selectMoeny) < 0) {
+            this.$message.error('输入的认领金额不得小于等于0')
             return false
         }
 

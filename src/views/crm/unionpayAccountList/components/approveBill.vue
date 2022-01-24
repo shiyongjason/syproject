@@ -210,8 +210,8 @@ export default class ApproveBill extends Vue {
         const claimPrice = this.selectList.map(item => item.claimAmount)
         console.log('this.selectMoeny: ', this.selectMoeny)
 
-        if (Number(this.selectMoeny) == 0 || !this.selectMoeny) {
-            this.$message.error('输入的认领金额不得为0')
+        if (Number(this.selectMoeny) == 0 || !this.selectMoeny || Number(this.selectMoeny) < 0) {
+            this.$message.error('输入的认领金额不得小于等于0')
             return false
         }
         if (this.selectMoeny > this.bankDetail.unReceiptAmount) {
