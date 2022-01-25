@@ -4,9 +4,8 @@
     <a @click="handle" class="download-default" target="_blank" v-else-if="isType === 'default'">{{aLinkWords}}</a>
     <div class="download-flex" v-else-if="isType==='preview'">
         <div class="pdfimg" v-if="_checkPicType(fileUrl,['.jpg','.gif','.png','.jpeg'])">
-            <a @click="handle">
-                <imageAddToken :file-url="fileUrl" />
-            </a>
+
+                <imageAddToken :file-url="fileUrl" :key="fileUrl"/>
         </div>
         <div class="pdfimg" v-if="_checkPicType(fileUrl,['.pdf'])">
             <a @click="handle"> <img :src="pdfbase"></a>

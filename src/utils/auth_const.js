@@ -240,6 +240,10 @@ export const CRM_FUNDS_DOWN_PAYMENT_FUND_CONFIRM = 109515 // 首付款账单-支
 export const CRM_FUNDS_DOWN_PAYMENT_FUND_SEE = 109516 // 首付款账单-查看凭证
 export const CRM_FUNDS_SERVICE_FUND_CONFIRM = 109517 // 服务费账单-支付确认
 export const CRM_FUNDS_SERVICE_FUND_SEE = 109518 // 服务费账单-查看凭证
+export const CRM_FUNDS_CHARGE_FUND_SEE = 109580 // 预付款-查看凭证
+export const CRM_FUNDS_CHARGE_FUND_CONFIRM = 109581 // 预付款-支付确认
+export const CRM_FUNDS_CHARGE_FUND_UPLOAD = 109582 // 预付款上传凭证
+
 export const CRM_FUNDS_ARREAR_FUND_CONFIRM = 109519 // 尾款账单-支付确认
 export const CRM_FUNDS_ARREAR_FUND_SEE = 109520 // 尾款账单-查看凭证
 export const CRM_FUNDS_DOWN_UPLOAD = 1096001 // 首付款上传
@@ -305,7 +309,7 @@ export const HOLIDAY_EDIT = 800082
 
 // 上游支付
 
-export const UPSTREAM_PAY_DETAIL = 500001// 详情
+export const UPSTREAM_PAY_DETAIL = 500001 // 详情
 // 确认信息 资金部审核
 export const UPSTREAM_PAY_CONFIRM_EX = 500002
 // 确认信息 资金部放款
@@ -433,6 +437,11 @@ export const CRM_UPLOAD_PREPAY = 118506
 export const CRM_UPSTREAM_BANK = 118507
 export const CRM_OPREATE_APPROVE = 118508
 export const CRM_ADVACE_WRITEOFF = 118509
+export const CRM_SUBMIT_PAY = 118510
+export const CRM_ONLINE_PAY = 118513
+// 银企直联入账清单
+export const CRM_ACCOUNT_DETAIL = 118511 // 查看详情
+export const CRM_ACCOUNT_CLAIM = 118512 // 认领账单
 
 // 舒适云智能化 -- 设备升级详情
 export const COMFORT_SMART_DEVICE_UPGRADE_DETAIL = 118505
