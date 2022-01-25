@@ -442,7 +442,8 @@ export const CRM_ONLINE_PAY = 118513
 // 银企直联入账清单
 export const CRM_ACCOUNT_DETAIL = 118511 // 查看详情
 export const CRM_ACCOUNT_CLAIM = 118512 // 认领账单
-
+export const CRM_ACCOUNT_CANCELSUBMIT = 118514
+export const CRM_ACCOUNT_CONTINUE = 118515
 // 舒适云智能化 -- 设备升级详情
 export const COMFORT_SMART_DEVICE_UPGRADE_DETAIL = 118505
 // 权限管理-岗位设置
