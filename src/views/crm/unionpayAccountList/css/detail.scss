@@ -1,0 +1,140 @@
+/deep/::-webkit-scrollbar-thumb {
+	background-color: #d6d1d1 !important;
+}
+/deep/.el-drawer__header {
+	font-size: 18px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #d3d4d6;
+	margin-bottom: 10px;
+}
+/deep/.unionpayDetail {
+	padding: 0 10px 100px 0px;
+	box-sizing: border-box;
+	margin-left: 15px;
+	.el-radio-button__inner {
+		margin-top: 10px;
+		width: 310px;
+	}
+	.el-radio-button__orig-radio:checked + .el-radio-button__inner {
+		background-color: #716a6a;
+		border-color: #716a6a;
+		box-shadow: none;
+		transition: none;
+	}
+}
+.eltagtop {
+	margin-bottom: 15px;
+}
+/deep/.unionpayDetail {
+	position: relative;
+	height: 100%;
+	&-ctx {
+		margin-top: 20px;
+		position: fixed;
+		top: 120px;
+		width: 650px;
+		overflow-y: scroll;
+		.info-title {
+			font-size: 15px;
+			color: #000;
+			font-weight: 600;
+			padding-right: 20px;
+			line-height: 30px;
+		}
+		.info-p {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			font-size: 14px;
+			padding: 5px 20px;
+			color: #333;
+			font-weight: 400;
+			cursor: default;
+			line-height: 15px;
+			box-sizing: border-box;
+		}
+		.unionpay-content {
+			width: 100%;
+			display: flex;
+			position: relative;
+			justify-content: space-between;
+			padding-left: 20px;
+			margin-top: 10px;
+			box-sizing: border-box;
+			align-items: flex-end;
+			.index {
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+			.content {
+				flex: 1;
+				p {
+					display: flex;
+					margin-bottom: 10px;
+					span {
+						flex: 0 0 50%;
+					}
+				}
+			}
+			.btn {
+				flex: 0 0 94px;
+				padding-bottom: 10px;
+			}
+		}
+		.project-information {
+			p {
+				font-size: 14px;
+				color: #333;
+				padding: 5px 10px;
+				background: #f5f5f5;
+				margin-bottom: 10px;
+				border-radius: 5px;
+				word-wrap: break-word;
+				word-break: break-all;
+				span {
+					color: #ff7a45;
+				}
+			}
+		}
+	}
+}
+.noData {
+	text-align: center;
+	padding: 40px;
+	background: #f5f5f5;
+}
+.drawer-footer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 12px 24px;
+	border-top: 1px solid #e5e5ea;
+	background: #fff;
+	z-index: 1000;
+	.drawer-button {
+		text-align: right;
+	}
+}
+.autoflex {
+	display: flex;
+	justify-content: space-between;
+}
+.deldialog {
+	/deep/.el-dialog__body {
+		min-height: 100px;
+		font-size: 16px;
+		padding-top: 20px;
+	}
+}
+/deep/ .area-select .el-input {
+	width: 114px !important;
+}
+
+/deep/ .area-select .el-select {
+	width: 114px !important;
+}
+/deep/ .area-select .el-input__inner {
+	width: 114px !important;
+}
