@@ -31,6 +31,7 @@ switch (env) {
         iotUrl = 'https://testiot.hosjoy.com:2286'
         iotZsUrl = 'https://iot-proxy-test.hosjoy.com'
         ossBucket = 'hosjoy-private-test'
+        ccpBaseUrl = 'https://ccp-test.hosjoy.com/'
         ossOldBucket = 'hosjoy-oss-test'
         ossRegion = 'oss-cn-hangzhou'
         ossAliyun = 'https://oss-aliyun-test.hosjoy.com/'
