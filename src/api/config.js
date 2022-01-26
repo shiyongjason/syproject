@@ -20,7 +20,6 @@ var env = process.env.NODE_ENV === 'development'
             ? 'test' : process.env.VUE_APP_TITLE === 'preview'
                 ? 'preview' : process.env.VUE_APP_TITLE === 'newtest'
                     ? 'newtest' : 'production')
-
 switch (env) {
     case 'development':
         interfaceUrl = 'https://hbp-test.hosjoy.com/'
