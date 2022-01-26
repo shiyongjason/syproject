@@ -22,7 +22,7 @@
                                 <el-col :span="12">
                                     支付时间：{{moment(item.createTime).format('yyyy-MM-DD HH:mm:ss')}}
                                 </el-col>
-                                <el-col :span="12">
+                                <el-col :span="24">
                                     支付凭证：
                                     <div class="remian_voucher">
                                         <span class="img-box" :key="i.id" v-for="(i) in item.attachDocResponseList">
@@ -33,24 +33,26 @@
                                 <el-col :span="12">
                                     操作人：{{item.createBy}} ({{item.createPhone||'-'}})
                                 </el-col>
+                                <el-col :span="12">
+                                    是否批量：{{item.payBatch?'是':'否'}}
+                                </el-col>
+                                <el-col :span="12">
+                                    审核结果：{{paymentFlagMap&&paymentFlagMap.get(item.paymentFlag)}}
+                                </el-col>
                             </el-row>
                             <template v-for="(v,i) in item.bankReceiptRecordList">
                                 <el-row class="dialog_box" v-if="v.receiptType == OFFINE_APPROVEL||v.receiptType == MANUAL_CLAIM_DETAIL" :key="i">
                                     <el-col :span="12">
                                         {{item.receiptType == MANUAL_CLAIM_DETAIL?'认领人':'审核人'}}：{{v.receiptUser}}
                                     </el-col>
-                                    <el-col :span="12">
-                                        审核结果：{{paymentFlagMap&&paymentFlagMap.get(item.paymentFlag)}}
-                                    </el-col>
+
                                     <el-col :span="12">
                                         {{item.receiptType == MANUAL_CLAIM_DETAIL?'认领时间':'审核时间'}}：{{v.paymentConfirmTime | momentFormat}}
                                     </el-col>
                                     <el-col :span="12">
                                         确认方式：{{receiptTypeMap.get(v.receiptType)}}
                                     </el-col>
-                                    <el-col :span="12">
-                                        是否批量：{{item.payBatch?'是':'否'}}
-                                    </el-col>
+
                                     <el-col :span="12">
                                         收款方：{{v.receiptName||'-'}}
                                     </el-col>
@@ -447,13 +449,12 @@ export default {
 }
 .dialog_box {
     box-sizing: border-box;
-    padding-left: 10px;
     &:not(:last-child) {
         padding-bottom: 10px;
         border-bottom: 1px solid #dadada;
     }
     // box-shadow: 2px 2px 4px #dadada;
-    margin-top: 8px;
+    margin-bottom: 8px;
 }
 /deep/.el-dialog .el-select {
     width: 100%;
