@@ -144,17 +144,8 @@
                     </h-button>
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW) && (paymentOrderStatusKey.FINANCE_AUDIT === scope.data.row.status)">审核</h-button>
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW_PROJECT) && (paymentOrderStatusKey.OPERATE_AUDIT === scope.data.row.status)">审核</h-button>
-                    <h-button table @click="$refs.paymentOrderDrawer.tableOpenFundsDialog(scope.data.row.id, scope.data.row.status)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM) && scope.data.row.status == 2">
-                        支付确认
-                    </h-button>
-                    <!-- <h-button table @click="tableOpenPrevPayDialog(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV) && (
-                                  scope.data.row.supplierPayFlag === 1
-                              )">
-                        上游支付
-                    </h-button> -->
-                    <h-button table @click="tableOpenConfirmReceiptDialog(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && (
-                                  scope.data.row.goodsConfirmFlag === 1
-                              )">确认收货</h-button>
+                    <h-button table @click="handleSubConfirmed(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM) &&( scope.data.row.status == 2|| scope.data.row.status == 1|| ((scope.data.row.status == 8||scope.data.row.status == 9)&&scope.data.row.arreaFundId))">支付确认</h-button>
+                    <h-button table @click="tableOpenConfirmReceiptDialog(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && (scope.data.row.goodsConfirmFlag === 1)">确认收货</h-button>
                     <h-button table @click="openDrawer(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_DETAIL)">查看详情</h-button>
                     <h-button table @click="openDrawerPur(scope.data.row)">审批记录</h-button>
                     <!-- dealerCooperationMethod 1 垫资代采 2 代收代付 -->
@@ -163,7 +154,7 @@
                 </template>
             </basicTable>
         </div>
-        <PaymentOrderDrawer :drawer=drawer @backEvent='paymentOrderBackEvent' @openApproveDialog="openApproveDialog" @openPrevPayDialog="openPrevPayDialog" @openFundsDialog="openFundsDialog" @openReduleDialog='openReduleDialog' @openConfirmReceiptDialog="openConfirmReceiptDialog" @openLookReceiptDetail="openLookReceiptDetail" @openLookPrevPaymentDialog="openLookPrevPaymentDialog" :row="paymentOrderRow" ref="paymentOrderDrawer"></PaymentOrderDrawer>
+        <PaymentOrderDrawer :drawer=drawer @backEvent='paymentOrderBackEvent' @openApproveDialog="openApproveDialog" @openPrevPayDialog="openPrevPayDialog" @openFundsDialog="openFundsDialog" @openReduleDialog='openReduleDialog' @findReduleDialog='findReduleDialog' @openConfirmReceiptDialog="openConfirmReceiptDialog" @openLookReceiptDetail="openLookReceiptDetail" @openLookPrevPaymentDialog="openLookPrevPaymentDialog" :row="paymentOrderRow" ref="paymentOrderDrawer"></PaymentOrderDrawer>
         <ApprovePaymentOrder :is-open="approvePaymentVisible" :paymentDetail="paymentDetail" @onClose="approvePaymentVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery"></ApprovePaymentOrder>
         <PrevPaymentDialog :params="paymentParams" :is-open="prevPaymentVisible" @onClose="prevPaymentVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery('prevPaymentVisible')" @onCloseDialogAndQueryDetail="onCloseDialogAndQueryDetail"></PrevPaymentDialog>
         <LookPrevPaymentDialog :params="paymentParams" :is-open="lookPrevPaymentVisible" @onClose="lookPrevPaymentVisible = false"></LookPrevPaymentDialog>
@@ -205,7 +196,7 @@
                 </el-tabs>
             </div>
         </el-drawer>
-        <UploadPayDialog ref="uploadpaydialog" @onBackSearch="findPaymentOrderList" />
+        <UploadPayDialog ref="uploadpaydialog" @onBackSearch="handleConfirm" />
         <!-- 取消支付单 -->
         <CancelPayment ref="cancelPaymentRef" :visible.sync="visibleCancel" @close="handleCancel" @confirm="handleConfirm"></CancelPayment>
     </div>
@@ -375,6 +366,7 @@ export default {
             }
         },
         onCloseLoanTransferContentVisible () {
+            console.log(this.queryParamsUseQuery)
             this.findPaymentOrderList(this.queryParamsUseQuery)
             this.loanTransferContentVisible = false
             this.operateStatus = null
@@ -408,11 +400,13 @@ export default {
         onApproveEnd (val) {
             this.queryParams.endApprovalTime = val
         },
-        fundsDialogClose () {
+        fundsDialogClose (val = true) {
             this.fundsDialogVisible = false
             this.reduleDialogVisible = false
-            this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
-            this.findPaymentOrderList(this.queryParamsUseQuery)
+            if (val) {
+                this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
+                this.findPaymentOrderList(this.queryParamsUseQuery)
+            }
         },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
@@ -465,6 +459,10 @@ export default {
         openReduleDialog (row, status) {
             this.reduleDialogVisible = true
             this.$refs.reduleDialog.findRemainConfirm(row)
+        },
+        findReduleDialog (row) {
+            this.reduleDialogVisible = true
+            this.$refs.reduleDialog.getFundsTicket(row)
         },
         openConfirmReceiptDialog (params) {
             this.paymentParams = params
@@ -532,6 +530,29 @@ export default {
                 jobNumber: this.userInfo.jobNumber,
                 authCode: JSON.parse(sessionStorage.getItem('authCode'))
             })
+        },
+        // 支付确认
+        handleSubConfirmed (row) {
+            console.log('row', row)
+            if (row.status == 8) {
+                this.$confirm('支付单全部收货后，才可支付确认哦～', '收货提示', {
+                    confirmButtonText: '去收货',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    const params = {
+                        paymentOrderId: row.id
+                    }
+                    this.openConfirmReceiptDialog(params)
+                }).catch(() => {
+
+                })
+            } else {
+                // 判断是 尾款的fundId 还是首付款fundId
+                row = { ...row, fundId: row.arreaFundId || row.advanceId }
+                this.$refs.reduleDialog.findRemainConfirm(row, row.repaymentType)
+                this.reduleDialogVisible = true
+            }
         },
         ...mapActions({
             findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList',
