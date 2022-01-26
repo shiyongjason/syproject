@@ -368,7 +368,7 @@ export default {
         handleChangeRadio (val, payeeBankAccount) {
             this.payeeAccountList = this.accountList.filter(item => item.payeeName == val)[0].payeeAccountList
             this.payeeAccountList.map(val => {
-                val.allName = val.payeeName + '(' + val.payeeBankAccount + ')'
+                val.allName = val.payeeBankName + '(' + val.payeeBankAccount + ')'
             })
             this.ruleForm.id = ''
             if (payeeBankAccount) {
