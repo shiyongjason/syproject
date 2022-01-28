@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :close-on-click-modal=false title="认领账单 |" :visible.sync="isOpen" width="60%" :before-close="onCancel" class="payment-dialog">
+    <el-dialog :close-on-click-modal=false title="认领账单 |" :visible.sync="isOpen" width="70%" :before-close="onCancel" class="payment-dialog">
         <div class="refresh" @click="bankDetailInfo">
             <el-button type="primary">刷新</el-button>
         </div>
@@ -8,9 +8,8 @@
             <p><span>付款方：{{ bankDetail.payeeName }}</span><span>已认领金额：{{bankDetail.receiptAmount | moneyFormat }}</span><span>待认领金额：{{bankDetail.unReceiptAmount | moneyFormat }}</span></p>
         </div>
         <div class="approve">
-            <hosJoyTable ref="hosjoyTable" isShowIndex align="center" border stripe isShowselection :maxHeight='500' @selection-change="selectChange" :column="formTableLabel" :data="bankList" showPagination
-             :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="queryParams.total" @pagination="getList" :selectable="checkSelectable"
-            >
+            <hosJoyTable ref="hosjoyTable" isShowIndex align="center" border stripe isShowselection :maxHeight='500' @selection-change="selectChange" :column="formTableLabel" :data="bankList" showPagination :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize"
+                :total="queryParams.total" @pagination="getList" :selectable="checkSelectable">
             </hosJoyTable>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -63,14 +62,15 @@ export default class ApproveBill extends Vue {
     }
     get formTableLabel () {
         let formTableLabel: tableLabelProps = [
-            { label: '账单流水号', prop: 'fundId', width: '120' },
-            { label: '账单类型', prop: 'fundType', width: '100', dicData: fundType },
-            { label: '账单金额', prop: 'paymentAmount', width: '100', displayAs: 'money' },
-            { label: '已支付金额', prop: 'paidAmount', width: '100', displayAs: 'money' },
-            { label: '待支付金额', prop: 'unPaidAmount', width: '100', displayAs: 'money' },
-            { label: '支付待确认', prop: 'unConfirmedAmount', width: '100', displayAs: 'money' },
-            { label: '应支付时间', prop: 'schedulePaymentDate', displayAs: 'YYYY-MM-DD', width: '150' },
-            { label: '支付状态', prop: 'paymentStatus', dicData: status, width: '100' },
+            { label: '支付单编号', prop: 'orderNo' },
+            { label: '账单流水号', prop: 'fundId' },
+            { label: '账单类型', prop: 'fundType', dicData: fundType },
+            { label: '账单金额', prop: 'paymentAmount', displayAs: 'money' },
+            { label: '已支付金额', prop: 'paidAmount', displayAs: 'money' },
+            { label: '待支付金额', prop: 'unPaidAmount', displayAs: 'money' },
+            { label: '支付待确认', prop: 'unConfirmedAmount', displayAs: 'money' },
+            { label: '应支付时间', prop: 'schedulePaymentDate', displayAs: 'YYYY-MM-DD' },
+            { label: '支付状态', prop: 'paymentStatus', dicData: status },
             {
                 label: '本次认领金额',
                 prop: 'claimAmount',
@@ -169,16 +169,19 @@ export default class ApproveBill extends Vue {
         let sum = 0
         let index = 0
         for (let i = 0; i < this.bankList.length; i++) {
-            if (this.bankDetail.unReceiptAmount >= 0) {
+            if (this.bankList[i].unConfirmedAmount > 0 && this.bankList[i].unPaidAmount > 0) {
                 if (sum <= this.bankDetail.unReceiptAmount) {
+                    console.log('this.bankDetail.unReceiptAmount: ', this.bankDetail.unReceiptAmount)
                     if ((sum + this.bankList[i].unPaidAmount) < this.bankDetail.unReceiptAmount) {
                         this.bankList[i].claimAmount = this.bankList[i].unPaidAmount
                         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                         sum += this.bankList[i].unPaidAmount
                         index = i + 1
+                        console.log('index: ', index)
                     } else {
                         if (index === i) {
                             let price = this.bankDetail.unReceiptAmount - sum
+                            console.log('price: ', price)
                             this.bankList[i].claimAmount = isNum(price, 2)
                             sum += this.bankList[i].claimAmount
                             this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
