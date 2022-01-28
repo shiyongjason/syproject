@@ -8,8 +8,11 @@
             <p><span>付款方：{{ bankDetail.payeeName }}</span><span>已认领金额：{{bankDetail.receiptAmount | moneyFormat }}</span><span>待认领金额：{{bankDetail.unReceiptAmount | moneyFormat }}</span></p>
         </div>
         <div class="approve">
-            <hosJoyTable ref="hosjoyTable" isShowIndex align="center" border stripe isShowselection :maxHeight='500' @select="select" :column="formTableLabel" :data="bankList" showPagination :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize"    @select-all="selectAll"
+            <hosJoyTable ref="hosjoyTable" isShowIndex align="center" border stripe isShowselection :maxHeight='500' @select="select" :column="formTableLabel" :data="bankList" showPagination :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" isAction    @select-all="selectAll"
                 :total="queryParams.total" @pagination="getList" :selectable="checkSelectable">
+                  <template #action="slotProps">
+                    <h-button table  @click="viewDetail(slotProps.data.row)">查看详情</h-button>
+                  </template>
             </hosJoyTable>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -238,6 +241,11 @@ export default class ApproveBill extends Vue {
                 this.hosjoyTableRef.toggleRowSelection(item)
             })
         })
+    }
+
+    viewDetail (val) {
+        console.log('val: ', val)
+        this.$router.push({ name: 'funds', params: { fundType: val.fundType, pNo: val.fundId } })
     }
 
     // 用于计算选中的列表
