@@ -11,7 +11,7 @@
             <hosJoyTable ref="hosjoyTable" isShowIndex align="center" border stripe isShowselection :maxHeight='500' @select="select" :column="formTableLabel" :data="bankList" showPagination :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" isAction    @select-all="selectAll"
                 :total="queryParams.total" @pagination="getList" :selectable="checkSelectable">
                   <template #action="slotProps">
-                    <h-button table  @click="viewDetail(slotProps.data.row)">查看详情</h-button>
+                    <h-button table v-if="slotProps.data.row.unConfirmedAmount!=0"  @click="viewDetail(slotProps.data.row)">查看详情</h-button>
                   </template>
             </hosJoyTable>
         </div>
@@ -108,26 +108,28 @@ export default class ApproveBill extends Vue {
         return row.unConfirmedAmount == 0
     }
     // 获取checked选中数组
-    public selectChange (data):void {
-        console.log('data', this.bankList)
-        this.selectList = data
-        this.bankList.forEach(row => {
-            if (this.selectList.includes(row)) {
-                // row.checked = true
-                row.claimAmount = row.claimAmount || row.unPaidAmount
-            } else {
-                // row.checked = false
-                row.claimAmount = null
-            }
-        })
-        this.disabled = !data.length
-    }
+    // public selectChange (data):void {
+    //     console.log('data', this.bankList)
+    //     this.selectList = data
+    //     this.bankList.forEach(row => {
+    //         if (this.selectList.includes(row)) {
+    //             // row.checked = true
+    //             row.claimAmount = row.claimAmount || row.unPaidAmount
+    //         } else {
+    //             // row.checked = false
+    //             row.claimAmount = null
+    //         }
+    //     })
+    //     this.disabled = !data.length
+    // }
     // 获取已选中的认领金额
     get selectMoeny () {
         const moneny = this.selectList.reduce((sum, val) => {
             return sum + parseFloat(val.claimAmount ?? 0)
         }, 0)
+        console.log('log::::::计算和', moneny.toFixed(2))
         this.isSelectAllPass = moneny == 0
+        console.log('🚀 --- getselectMoeny --- this.isPass', this.isSelectAllPass)
         return moneny.toFixed(2)
     }
     get currentSum () {
@@ -160,8 +162,8 @@ export default class ApproveBill extends Vue {
             let index = 0
             for (let i = 0; i < others.length; i++) {
                 if (moneny <= this.bankDetail.unReceiptAmount) {
-                    if ((moneny + others[i].unConfirmedAmount) < this.bankDetail.unReceiptAmount) {
-                        others[i].claimAmount = others[i].unConfirmedAmount
+                    if ((moneny + others[i].unPaidAmount) < this.bankDetail.unReceiptAmount) {
+                        others[i].claimAmount = others[i].unPaidAmount
                         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(others[i], true)
                         moneny += others[i].claimAmount
                         index = i + 1
@@ -193,7 +195,7 @@ export default class ApproveBill extends Vue {
     }
 
     select (selectList, row) {
-        let resIndex = selectList.findIndex(item => item.orderNo == row.orderNo)
+        let resIndex = selectList.findIndex(item => item.fundId == row.fundId)
         if (resIndex > -1) {
             console.log('log::::::0勾选')
             const moneny = this.selectList.reduce((sum, val) => {
@@ -201,7 +203,7 @@ export default class ApproveBill extends Vue {
             }, 0)
             console.log('🚀 --- moneny --- moneny', moneny)
             if (moneny >= this.bankDetail.unReceiptAmount && this.selectList.length > 0) {
-                this.$message.warning('已选金额不得超过待支付金额')
+                this.$message.warning('已选金额不得超过待认领金额')
                 this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(row, false)
                 let index = this.selectList.findIndex(item => item.fundId == row.fundId)
                 row.claimAmount = ''
@@ -221,7 +223,7 @@ export default class ApproveBill extends Vue {
                 }
             }
         } else {
-            let index = this.selectList.findIndex(item => item.id == row.id)
+            let index = this.selectList.findIndex(item => item.fundId == row.fundId)
             row.claimAmount = ''
             if (index > -1) {
                 this.selectList.splice(index, 1)

@@ -566,9 +566,8 @@ export default {
     activated () {
         // 解决HAM-37384bug 批量确认跳转过来因为keep-alive缓存没有执行mounted
         // console.log('this.$route.params: ', this.$route.params.pNo)
-        // this.queryParams.fundId = this.$route.params.pNo || ''
-
-        // this.queryParams.repaymentTypeArrays = this.$route.params.fundType || this.queryParams.repaymentTypeArrays
+        this.queryParams.fundId = this.$route.params.pNo || ''
+        this.queryParams.repaymentTypeArrays = this.$route.params.fundType?.toString() || this.queryParams.repaymentTypeArrays
         this.statusOption = this.FundsDict.paymentFlagArrays.list
         // this.queryParamsTemp = { ...this.queryParams }
         const temp = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
