@@ -100,7 +100,7 @@ export default class ApproveBill extends Vue {
         return formTableLabel
     }
     checkSelectable (row, index) {
-        return row.unPaidAmount >= 0
+        return row.unConfirmedAmount == 0
     }
     // 获取checked选中数组
     public selectChange (data):void {
@@ -169,21 +169,21 @@ export default class ApproveBill extends Vue {
         let sum = 0
         let index = 0
         for (let i = 0; i < this.bankList.length; i++) {
-            if (this.bankList[i].unConfirmedAmount > 0 && this.bankList[i].unPaidAmount > 0) {
+            if (this.bankList[i].unConfirmedAmount == 0) {
                 if (sum <= this.bankDetail.unReceiptAmount) {
-                    console.log('this.bankDetail.unReceiptAmount: ', this.bankDetail.unReceiptAmount)
-                    if ((sum + this.bankList[i].unPaidAmount) < this.bankDetail.unReceiptAmount) {
+                    // console.log('this.bankDetail.unReceiptAmount: ', this.bankDetail.unReceiptAmount, (sum * 1 + this.bankList[i].unPaidAmount * 1))
+                    if ((sum * 1 + this.bankList[i].unPaidAmount * 1) < this.bankDetail.unReceiptAmount) {
                         this.bankList[i].claimAmount = this.bankList[i].unPaidAmount
+                        sum += this.bankList[i].claimAmount * 1
                         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
-                        sum += this.bankList[i].unPaidAmount
                         index = i + 1
-                        console.log('index: ', index)
                     } else {
-                        if (index === i) {
+                        console.log('index: ', index)
+                        if (index == i) {
                             let price = this.bankDetail.unReceiptAmount - sum
                             console.log('price: ', price)
                             this.bankList[i].claimAmount = isNum(price, 2)
-                            sum += this.bankList[i].claimAmount
+                            sum += this.bankList[i].claimAmount * 1
                             this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                         }
                     }
