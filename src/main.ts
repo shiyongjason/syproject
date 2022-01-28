@@ -36,6 +36,9 @@ import './class-component-hooks'
 // 解决bug-keepAlive导致跳转蒙层遮盖
 try {
     HosjoyUI.Drawer.components['el-drawer'].props.modalAppendToBody.default = false
+    // @ts-ignore
+    ElementUI.Dialog.props.modalAppendToBody.default = false
+    console.log(' ElementUI.Dialog: ', ElementUI.Dialog)
 } catch (e) {
     console.log(e)
 }
