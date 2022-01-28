@@ -246,7 +246,7 @@ export default class ApproveBill extends Vue {
         let index = 0
         for (let i = 0; i < this.bankList.length; i++) {
             if (this.bankList[i].unConfirmedAmount == 0) {
-                if (sum <= this.bankDetail.unReceiptAmount) {
+                if (sum < this.bankDetail.unReceiptAmount) {
                     // console.log('this.bankDetail.unReceiptAmount: ', this.bankDetail.unReceiptAmount, (sum * 1 + this.bankList[i].unPaidAmount * 1))
                     if ((sum * 1 + this.bankList[i].unPaidAmount * 1) < this.bankDetail.unReceiptAmount) {
                         this.bankList[i].claimAmount = this.bankList[i].unPaidAmount
