@@ -38,7 +38,7 @@ try {
     HosjoyUI.Drawer.components['el-drawer'].props.modalAppendToBody.default = false
     // @ts-ignore
     ElementUI.Dialog.props.modalAppendToBody.default = false
-    console.log(' ElementUI.Dialog: ', ElementUI.Dialog)
+    // console.log(' ElementUI.Dialog: ', ElementUI.Dialog)
 } catch (e) {
     console.log(e)
 }
