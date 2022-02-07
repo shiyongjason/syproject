@@ -26,7 +26,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">支付方式：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.paymentMethod">
+                        <el-select v-model="queryParams.payMethod">
                             <el-option v-for="[key,value] in paymentMethodOptions" :label="value" :value="key" :key="key"></el-option>
                         </el-select>
                     </div>
@@ -93,32 +93,30 @@
                 <template slot="freightSource" slot-scope="scope">
                     {{ sourcesPriceMap.get(scope.data.row.freightSource) || '-' }}
                 </template>
-                <template slot="paymentMethod" slot-scope="scope">
-                    {{ paymentMethodOptions.get(scope.data.row.paymentMethod) || '-' }}
-                </template>
-                <template slot="capitalSyncStatus" slot-scope="scope">
-                    {{ synchromizedMap.get(scope.data.row.capitalSyncStatus) || '-' }}
-                </template>
                 <template slot="payMethod" slot-scope="scope">
-                    {{ payWayMap.get(scope.data.row.payMethod) || '-' }}
+                    <!-- {{ paymentMethodOptions.get(scope.data.row.payMethod) || '-' }} -->
+                    {{ scope.data.row.payMethodDesc || '-' }}
+                </template>
+                <template slot="ncSyncStatus" slot-scope="scope">
+                    {{ synchromizedMap.get(scope.data.row.ncSyncStatus) || '-' }}
                 </template>
                 <template slot="merchantType" slot-scope="scope">
                     {{ merchantTypeMap.get(scope.data.row.merchantType) || '-' }}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onseeTask(scope.data.row)">查看</h-button>
-                    <!-- TODO付款后才能同步 -->
-                    <h-button table @click="onSynchronous(scope.data.row)">同步</h-button>
-                    <div class="freightpopover">
+                    <!-- 付过款，未关闭，资金同步状态为“已同步”，操作列表不展示“同步”按钮 -->
+                    <h-button table @click="onSynchronous(scope.data.row)" v-if="scope.data.row.status>10&&scope.data.row.status<60&&scope.data.row.ncSyncStatus!=40">同步</h-button>
+                    <div class="freightpopover" v-if="scope.data.row.status<=10">
                         <el-popover placement="left" width='200' :ref="`popover-${scope.data.$index}`" trigger="click" title='运费修改'>
-                        <p>运费金额：￥3399393.00</p>
-                        <p class="amountinput"><el-input v-model="queryParams.freightOrderNo" v-isNum:2 maxlength="50" placeholder="请输入修改的运费金额" size="mini"></el-input></p>
-                        <div style="text-align: right; margin: 0">
-                            <el-button size="mini" type="text" >取消</el-button>
-                            <el-button type="primary" size="mini" @click="()=>ConfirmFreightVisible(scope.data.row,scope.data.$index)">确定</el-button>
-                        </div>
-                        <h-button table slot="reference" @click="()=>theFreightChanges(scope.data.row,scope.data.$index)">运费修改</h-button>
-                    </el-popover>
+                            <p>运费金额：{{typeof scope.data.row.totalAmount === 'number'?`￥${scope.data.row.totalAmount}`:'-'}}</p>
+                            <p class="amountinput"><el-input v-model="amount" v-isNum:2 maxlength="50" placeholder="请输入修改的运费金额" size="mini"></el-input></p>
+                            <div style="text-align: right; margin: 0">
+                                <el-button size="mini" type="text" @click="()=>closeFreightVisible(scope.data.$index)">取消</el-button>
+                                <el-button type="primary" size="mini" @click="()=>ConfirmFreightVisible(scope.data.row,scope.data.$index)">确定</el-button>
+                            </div>
+                            <h-button table slot="reference" @click="()=>theFreightChanges(scope.data.row,scope.data.$index)">运费修改</h-button>
+                        </el-popover>
                     </div>
 
                 </template>
@@ -130,8 +128,9 @@
 
 <script>
 import { FREIGHT_STATUS_OPTIONS, MERCHANT_TYPE_OPTIONS, SOURCES_PRICE_OPTIONS, SYNCHROMIZED_STATE_OPTIONS, FREIGHT_STATUS_MAP, SOURCES_PRICE_MAP, SYNCHROMIZED_STATE_MAP, PAY_WAY_MAP, MERCHANT_TYPE_MAP, PAYMENT_METHOD } from '../const'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapState } from 'vuex'
 import { B2bUrl } from '@/api/config'
+import { syncToNc, putFreightAmount } from '../api/index'
 export default {
     name: 'shippingOrder',
     data () {
@@ -146,8 +145,9 @@ export default {
             synchromizedMap: SYNCHROMIZED_STATE_MAP,
             payWayMap: PAY_WAY_MAP,
             merchantTypeMap: MERCHANT_TYPE_MAP,
+            amount: '',
             queryParams: {
-                paymentMethod: '', // 支付方式
+                payMethod: '', // 支付方式
                 freightOrderNo: '',
                 childOrderNo: '',
                 status: '',
@@ -167,16 +167,16 @@ export default {
                 { label: '关联商品运费订单编号', prop: 'childOrderNo' },
                 { label: '运费商品性质', prop: 'merchantType' },
                 { label: '仓配城市', prop: 'cityName' },
-                { label: '支付方式', prop: 'paymentMethod' },
+                { label: '支付方式', prop: 'payMethod' },
                 { label: '订单生成时间', prop: 'orderTime', formatters: 'dateTime' },
                 { label: '支付时间', prop: 'payTime', formatters: 'dateTime' },
                 { label: '状态', prop: 'status' },
                 { label: '客户名称', prop: 'memberName' },
                 { label: '实付金额', prop: 'finalTotalAmount', formatters: 'moneyShow' },
                 { label: '运费价格来源', prop: 'freightSource' },
-                { label: 'MIS资金同步状态', prop: 'capitalSyncStatus' },
-                { label: '同步备注', prop: '' },
-                { label: '退款时间', prop: '', formatters: 'dateTime' },
+                { label: '资金同步状态', prop: 'ncSyncStatus' },
+                { label: '同步备注', prop: 'ncSyncRemark' },
+                { label: '退款时间', prop: 'refundTime', formatters: 'dateTime' },
                 { label: '商品归属商家', prop: 'merchantName' }
             ],
             tabName: '0',
@@ -184,6 +184,9 @@ export default {
         }
     },
     computed: {
+        ...mapState({
+            userInfo: state => state.userInfo
+        }),
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
@@ -219,9 +222,25 @@ export default {
         })
     },
     methods: {
-        /** 确认修改运费 */
-        ConfirmFreightVisible (row, index) {
+        /** 关闭修改运费 */
+        closeFreightVisible (index) {
             this.$refs[`popover-${index}`].doClose()
+            this.amount = ''
+        },
+        /** 确认修改运费 */
+        async ConfirmFreightVisible (row, index) {
+            if (this.amount === '') {
+                this.$message.error('请输入正确金额')
+                return
+            }
+            await putFreightAmount({
+                freightOrderId: row.id,
+                amount: this.amount,
+                operator: this.userInfo.employeeName
+            })
+            this.$refs[`popover-${index}`].doClose()
+            this.$message.success('修改成功')
+            this.amount = ''
         },
         // 切换状态
         // this.tabName == '0' ? this.queryParams.orderStatus = this.queryParams.orderStatus : this.queryParams.orderStatus = this.tabName
@@ -246,8 +265,10 @@ export default {
             }, 10)
         },
         /** 资金同步操作 */
-        onSynchronous (row) {
-
+        async onSynchronous (row) {
+            await syncToNc(row.id)
+            this.$message.success('同步成功')
+            this.findFreightOrders(this.queryParams)
         },
         // 查询操作
         onQuery () {
@@ -297,7 +318,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .freightpopover{
-    display:inline-block
+    display:inline-block;
 }
 /deep/.freightpopover span{
     margin-left: 5px !important;
