@@ -105,6 +105,8 @@
                     <h-button table @click="openDetail(scope.data.row)">查看合同</h-button>
                     <h-button table @click="getHistory(scope.data.row)">审核记录</h-button>
                     <h-button table @click="onAbolished(scope.data.row)" v-if="scope.data.row.contractStatus!=17 && hosAuthCheck(Auths.CRM_CONTRACT_ABOLISH)">废止</h-button>
+                    <!-- TODO: 判断条件调整 -->
+                    <h-button table @click="onWithdraw(scope.data.row)" v-if="scope.data.row.contractStatus!=17 && hosAuthCheck(Auths.CRM_CONTRACT_WITHDRAW)">撤回</h-button>
                     <h-button table @click="onGetfile(scope.data.row)" v-if="hosAuthCheck(Auths.CONTRACT_PLACE)&&scope.data.row.contractSignType==2&&scope.data.row.contractStatus==12&&!scope.data.row.archive">归档</h-button>
                     <!-- <h-button table @click="onGetfile(scope.data.row)">归档</h-button> -->
                 </template>
@@ -321,6 +323,22 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
+                await getAbolish({
+                    'contractId': val.id,
+                    'phone': this.userInfo.phoneNumber,
+                    'createBy': this.userInfo.employeeName
+                })
+                this.searchList()
+            }).catch(() => {
+            })
+        },
+        onWithdraw (val) {
+            this.$confirm('确定撤回该合同吗？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                // TODO: 撤回操作
                 await getAbolish({
                     'contractId': val.id,
                     'phone': this.userInfo.phoneNumber,

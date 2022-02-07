@@ -235,8 +235,8 @@
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
-                        <!-- 0-100,最多保留2位小数 -->
-                        <el-form-item label="销售毛利率" prop='salesGrossMargin'>
+                        <!-- 0-100,最多保留6位小数 -->
+                        <el-form-item label="加价率" prop='salesGrossMargin'>
                             <el-input placeholder="请输入" v-isNum:6 v-inputMAX='1000' v-model="purForm.salesGrossMargin" maxlength="50">
                                 <template slot="append">%</template>
                             </el-input>
@@ -250,7 +250,14 @@
                                 <template slot="append">{{ salesTotalAmount }}元</template>
                             </el-input>
                         </el-form-item>
-                        <!--  -->
+                        <!-- TODO: 仅可输入数字，区间为[0，100000000），最多保留2位小数。 -->
+                        <el-form-item label="加价额：" prop='salesGrossAmount'>
+                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='100000000' v-model="purForm.salesGrossAmount" maxlength="50">
+                                <template slot="append">元</template>
+                            </el-input>
+                        </el-form-item>
+                    </div>
+                    <div class="form-item">
                         <el-form-item label="剩余货款支付周期：" prop='remainPaymentCycle' style="marginLeft:-9px;">
                             <el-select v-model="purForm.remainPaymentCycle" placeholder="请选择">
                                 <el-option label="1个月" :value="1"></el-option>
@@ -267,11 +274,16 @@
                                 <el-option label="12个月" :value="12"></el-option>
                             </el-select>
                         </el-form-item>
-                    </div>
-                    <div class="form-item">
                         <el-form-item label="专项额度：" prop='projectQuotaAmount'>
                             <el-input v-isNum:2 v-inputMAX='100000000' placeholder="请输入" v-model="purForm.projectQuotaAmount" maxlength="50">
                                 <template slot="append">元</template>
+                            </el-input>
+                        </el-form-item>
+                    </div>
+                    <div class="form-item">
+                        <el-form-item label="ROI(%)：" prop='roi'>
+                            <el-input v-isNum:2 v-inputMAX='1000' placeholder="请输入" v-model="purForm.roi" maxlength="50">
+                                <template slot="append">%</template>
                             </el-input>
                         </el-form-item>
                     </div>

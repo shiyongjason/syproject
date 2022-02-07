@@ -96,7 +96,7 @@
                         </div>
                         <div class="row-filed">
                             <p class="col-filed col-50">
-                                <span class="label">销售毛利率：</span> {{ paymentOrderDetail.payOrderDetail.salesGrossMargin }}%
+                                <span class="label">加价率：</span> {{ paymentOrderDetail.payOrderDetail.salesGrossMargin }}%
                             </p>
                             <p class="col-filed col-50">
                                 <span class="label">销售金额：</span> {{ paymentOrderDetail.payOrderDetail.salesTotalAmount | moneyFormat }}元
