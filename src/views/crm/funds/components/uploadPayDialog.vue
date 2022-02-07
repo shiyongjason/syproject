@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-dialog title="上传支付凭证" :visible.sync="dialogVisible" :close-on-click-modal=false width="45%" :before-close="handleClose">
+        <el-dialog title="上传支付凭证" :visible.sync="dialogVisible"   :modal-append-to-body=false :close-on-click-modal=false width="45%" :before-close="handleClose">
             <div class="uploadpay">
                 <el-form :model="uploadpayForm" :rules="rules" ref="uploadpayForm" label-width="140px">
                     <div v-if="repaymentType == 2 || repaymentType == 3">
