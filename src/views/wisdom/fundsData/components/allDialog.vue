@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-dialog :title="title" :visible.sync="dialogVisible" width="60%" :close-on-click-modal='false' :before-close="handleClose">
+        <el-dialog :title="title" class="dialog-main" :visible.sync="dialogVisible" width="60%" :close-on-click-modal='false' :before-close="handleClose">
             <div class="dialog_wrap">
                 <el-descriptions title="基础信息">
                     <el-descriptions-item label="台账编号">{{dialogDetail.account_standingBookNo || '-'}} <i v-if="hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)" class='el-icon-edit pointer'
@@ -70,6 +70,9 @@
                     <el-descriptions-item label="台账档案编号">{{dialogDetail.account_standingBookArchiveNo||'-'}}
                         <i v-if="hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)" class='el-icon-edit pointer' @click="getAccount(dialogDetail,`${product}-流贷档案信息维护（${dialogDetail.account_standingBookNo} ${dialogDetail.account_loanCompanyName}）`, 'fileinfoDialogVisible')"></i>
                     </el-descriptions-item>
+                     <el-descriptions-item label="备注" v-if="hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE)">{{dialogDetail.account_remark||'-'}}
+                        <i v-if="hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)" class='el-icon-edit pointer' @click="getAccount(dialogDetail,`${product}-流贷备注信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`, 'remarkDialogVisible')"></i>
+                    </el-descriptions-item>
                 </el-descriptions>
                 <!-- 敞口 -->
                 <el-descriptions title="敞口借款账目">
@@ -89,7 +92,7 @@
                     <el-descriptions-item label="到期日">{{dialogDetail.loan_loanEndTime ? moment(dialogDetail.loan_loanEndTime).format('YYYY-MM-DD') : '-'}}</el-descriptions-item>
                     <el-descriptions-item label="还款方式">
                         {{dialogDetail.loan_repaymentType == 1 ? '一次性还款' : '334还款'}}
-                        <i class="'el-icon-edit pointer" @click="getGrantPaymetPlanData(scope.row,'repaymentDialogVisible')"></i>
+                        <i class="el-icon-edit pointer" @click="getGrantPaymetPlanData(dialogDetail,'repaymentDialogVisible')"></i>
                     </el-descriptions-item>
                     <el-descriptions-item label="登记人">
                         {{dialogDetail.loan_registrant||'-'}}
@@ -145,8 +148,9 @@
                     <el-descriptions-item label="实缴逾期罚息">{{dialogDetail.planList_0_overDueInterestPaid|moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="剩余逾期罚息">{{dialogDetail.planList_0_overDueInterestOwe|moneyFormat}}</el-descriptions-item>
 
-                    <el-descriptions-item label="宽限到期日">{{dialogDetail.planList_1_graceTime ? moment(dialogDetail.planList_1_graceTime).format('YYYY-MM-DD') : '-'}}</el-descriptions-item>
-                    <el-descriptions-item label="约定还款日期2">{{dialogDetail.planList_1_endTime ? moment(dialogDetail.planList_1_endTime).format('YYYY-MM-DD') : '-'}}</el-descriptions-item>
+                    <el-descriptions-item label="宽限到期日"  :span="3">{{dialogDetail.planList_1_graceTime ? moment(dialogDetail.planList_1_graceTime).format('YYYY-MM-DD') : '-'}}</el-descriptions-item>
+
+                    <el-descriptions-item  label="约定还款日期2">{{dialogDetail.planList_1_endTime ? moment(dialogDetail.planList_1_endTime).format('YYYY-MM-DD') : '-'}}</el-descriptions-item>
                     <el-descriptions-item label="约定还款金额">{{dialogDetail.planList_1_capitalAmount|moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="累计实际还款本金金额">{{dialogDetail.planList_1_capitalPaid|moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="剩余还款金额">{{dialogDetail.planList_1_capitalOwe|moneyFormat}}</el-descriptions-item>
@@ -160,7 +164,7 @@
                         {{dialogDetail.planList_1_overDueInterestPranayama ? `(${dialogDetail.planList_1_overDueInterestPranayama > 0 ? '+' + dialogDetail.planList_1_overDueInterestPranayama : dialogDetail.planList_1_overDueInterestPranayama})` : ''}}
                     </el-descriptions-item>
                     <el-descriptions-item label="实缴逾期罚息">{{dialogDetail.planList_1_overDueInterestPaid|moneyFormat}}</el-descriptions-item>
-                    <el-descriptions-item label="剩余逾期罚息">{{dialogDetail.planList_1_overDueInterestOwe |moneyFormat}}</el-descriptions-item>
+                    <el-descriptions-item label="剩余逾期罚息"  :span="2">{{dialogDetail.planList_1_overDueInterestOwe |moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="约定还款日期3">{{dialogDetail.planList_2_endTime ? moment(dialogDetail.planList_2_endTime).format('YYYY-MM-DD') : '-'}}</el-descriptions-item>
                     <el-descriptions-item label="宽限到期日">{{dialogDetail.planList_2_graceTime ? moment(dialogDetail.planList_2_graceTime).format('YYYY-MM-DD') : '-'}}</el-descriptions-item>
                     <el-descriptions-item label="约定还款金额">{{dialogDetail.planList_2_capitalAmount |moneyFormat}}</el-descriptions-item>
@@ -181,6 +185,9 @@
                             @click="getGrantPaymetPlanData(dialogDetail, 'regulatingBreathingDialogVisible', true)"></i></el-descriptions-item>
                     <el-descriptions-item label="台账档案编号">{{dialogDetail.account_standingBookArchiveNo||'-'}}
                         <i v-if="hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)" class='el-icon-edit pointer' @click="getAccount(dialogDetail,`${product}-敞口基础信息维护`, 'fileinfoDialogVisible')"></i>
+                    </el-descriptions-item>
+                     <el-descriptions-item label="备注" v-if="hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE)">{{dialogDetail.account_remark||'-'}}
+                        <i v-if="hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)" class='el-icon-edit pointer' @click="getAccount(dialogDetail,`${product}-敞口备注信息维护`, 'remarkDialogVisible')"></i>
                     </el-descriptions-item>
                 </el-descriptions>
             </div>
@@ -256,4 +263,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.dialog_wrap{
+    max-height: 500px;
+    overflow-y: scroll;
+}
 </style>
