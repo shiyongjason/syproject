@@ -303,7 +303,7 @@
         <!-- 票面金额信息 dialog -->
         <el-dialog v-if="openDialogVoter" title="票面金额信息" :close-on-click-modal='false' :visible.sync="openDialogVoter" width="750px" :before-close="()=>onCancel('formVoter')" :modal='false'>
             <div class="dialog-ctx billAmountFormbox">
-                <p style="margin:10px 0">注：合计票面金额应等于货款申请金额 ({{LoanTransferContent.applyAmount|moneyFormat}}元)</p>
+                <p style="margin:10px 0">注：合计票面金额应等于采购金额 ({{LoanTransferContent.purchaseAmount|moneyFormat}}元)</p>
                 <el-form id='elform' :model="billAmountForm" ref="formVoter" label-position="left" label-width="120px">
                     <el-form-item :label="`第 ${index+1} 张票：`" :prop="'billAmount.' + index + '.amount'" v-for="(item,index) in billAmountForm.billAmount" :key="index+'Voter'" :rules="rules">
                         <el-input placeholder="请输入票面金额" @input="(val)=>inputChage(val,item)" :value="money(item.amount)">
@@ -677,8 +677,8 @@ export default {
         submitForm () {
             this.$refs['formVoter'].validate(async (valid) => {
                 if (valid) {
-                    if (this.totalAmount != this.LoanTransferContent.applyAmount) {
-                        this.$message.error(`提示：合计票面金额应等于货款申请金额`)
+                    if (this.totalAmount != this.LoanTransferContent.purchaseAmount) {
+                        this.$message.error(`提示：合计票面金额应等于采购金额`)
                         return
                     }
                     this.billAmountForm.billAmount.map((item, index) => {

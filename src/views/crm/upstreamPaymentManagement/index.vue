@@ -217,7 +217,7 @@
                             <h-button>上传文件</h-button>
                         </div>
                     </OssFileHosjoyUpload>
-                    <p class="tips">支持扩展名：jpg.png.pdf...</p>
+                    <p class="tips">支持扩展名：.jpg.png.pdf...</p>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">

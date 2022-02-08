@@ -16677,6 +16677,8 @@ export interface RespContractCrmSignHistory {
 * @interface RespContractSignHistory
 */
 export interface RespContractSignHistory {
+    [x: string]: any;
+    payeeName: any;
 
     /**
      * 操作人员
@@ -16789,7 +16791,6 @@ export interface RespContractSignHistory {
      * @memberof RespContractSignHistory
      */
     dingCode: string
-
 }
 
 /**
