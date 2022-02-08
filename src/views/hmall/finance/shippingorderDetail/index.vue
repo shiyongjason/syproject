@@ -95,16 +95,16 @@
                     <span class="table-title-name">商品运费明细信息</span>
                 </div>
                 <div class="pb20">
-                    <basicTable :tableData="basicInfo.freightOrderSkuList" :tableLabel="tableLabel" :multiSelection.sync="multiSelection" :isPagination="false" :isShowIndex="true" :isAction="isAction">
+                    <basicTable :tableData="basicInfo.freightOrderSkuList" :tableLabel="tableLabel" :multiSelection.sync="multiSelection" :isPagination="false" :isShowIndex="true">
                         <template slot="freightSource" slot-scope="scope">
                             {{ sourcesPriceMap.get(scope.data.row.freightSource) || '-' }}
                         </template>
                         <template slot="status" slot-scope="scope">
                             {{ freightStatusMap.get(scope.data.row.status) || '-' }}
                         </template>
-                        <template slot="action" slot-scope="scope" v-if="basicInfo.status == 10">
+                        <!-- <template slot="action" slot-scope="scope" v-if="basicInfo.status == 10">
                             <h-button table @click="onseeTask(scope.data.row)">编辑运费价格</h-button>
-                        </template>
+                        </template> -->
                     </basicTable>
                 </div>
                 <div class="table-cont-title">
