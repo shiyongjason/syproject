@@ -108,7 +108,8 @@
                     <!-- 付过款，未关闭，资金同步状态为“已同步”，操作列表不展示“同步”按钮 -->
                     <h-button table @click="onSynchronous(scope.data.row)" v-if="scope.data.row.status>10&&scope.data.row.status<60&&scope.data.row.ncSyncStatus!=40">同步</h-button>
                     <div class="freightpopover" v-if="scope.data.row.status<=10">
-                        <el-popover placement="left" width='200' :ref="`popover-${scope.data.$index}`" trigger="click" title='运费修改'>
+                        <el-popover placement="left" width='200' :ref="`popover-${scope.data.$index}`" trigger="click" title='运费修改'
+                         @show="onPopoverShow">
                             <p>运费金额：{{typeof scope.data.row.totalAmount === 'number'?`￥${scope.data.row.totalAmount}`:'-'}}</p>
                             <p class="amountinput"><el-input v-model="amount" v-isNum:2 v-inputMAX='100000' maxlength="50" placeholder="请输入修改的运费金额" size="mini"></el-input></p>
                             <div style="text-align: right; margin: 0">
@@ -222,6 +223,9 @@ export default {
         })
     },
     methods: {
+        onPopoverShow () {
+            this.amount = ''
+        },
         /** 关闭修改运费 */
         closeFreightVisible (index) {
             this.$refs[`popover-${index}`].doClose()
