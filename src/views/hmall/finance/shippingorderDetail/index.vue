@@ -89,6 +89,9 @@
                 <div class="pb20">
                     <!-- <basicTable :tableData="basicInfo.freightOrderSkuList" :tableLabel="tableLabel" :multiSelection.sync="multiSelection" :isPagination="false" :isShowIndex="true" :isAction="isAction"> -->
                     <basicTable :tableData="basicInfo.freightOrderLogList" :tableLabel="theFreightInformation" :multiSelection.sync="multiSelection" :isPagination="false" :isShowIndex="true">
+                        <template slot="operateMotion" slot-scope="scope">
+                            {{ operatonalMap.get(scope.data.row.operateMotion) || '-' }}
+                        </template>
                     </basicTable>
                 </div>
                 <div class="table-cont-title">
@@ -169,7 +172,7 @@ export default {
             theFreightInformation: [
                 { label: '操作时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '操作人', prop: 'operator' },
-                { label: '内容', prop: 'remark' },
+                { label: '内容', prop: 'operateMotion' },
                 { label: '运费合计', prop: 'amount' }
             ],
             tableLabel: [
@@ -235,6 +238,7 @@ export default {
             this.$refs[`popover-${index}`].doClose()
             this.$message.success('修改成功')
             this.amount = ''
+            this.init()
         },
         async init () {
             if (this.$route.query.id) {

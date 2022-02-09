@@ -302,6 +302,8 @@ export const OPERATIONAL_OPTIONS = [
 ]
 export const OPERATIONAL_MAP = new Map([
     [1, '订单创建'],
+    [2, '运费优惠'],
+    [3, '修改运费'],
     [5, '订单支付'],
     [6, '发货'],
     [7, '发货取消'],
