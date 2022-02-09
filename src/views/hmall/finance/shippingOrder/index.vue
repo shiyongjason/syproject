@@ -241,6 +241,7 @@ export default {
             this.$refs[`popover-${index}`].doClose()
             this.$message.success('修改成功')
             this.amount = ''
+            this.findFreightOrders(this.queryParams)
         },
         // 切换状态
         // this.tabName == '0' ? this.queryParams.orderStatus = this.queryParams.orderStatus : this.queryParams.orderStatus = this.tabName
