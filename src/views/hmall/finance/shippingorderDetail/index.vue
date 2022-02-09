@@ -235,7 +235,6 @@ export default {
                 amount: this.amount,
                 operator: this.userInfo.employeeName
             })
-            this.$refs[`popover-${index}`].doClose()
             this.$message.success('修改成功')
             this.amount = ''
             this.init()
