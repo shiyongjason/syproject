@@ -1,7 +1,7 @@
 <template>
     <div class="page-body">
         <div class="page-table">
-            <hosJoyTable :amountResetTable="amountResetTable" v-if="isShowParent" :collapseShow="collapseShow" ref="hosjoyTable" align="center" border stripe showPagination :column="column" :data="tableData" :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :isAction=true
+            <hosJoyTable :amountResetTable="amountResetTable" v-if="isShowParent" :collapseShow="collapseShow" ref="hosjoyTable" align="center" border stripe showPagination :column="column" :data="tableData" :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :isAction='["1","2", "3"].includes(source)'
                 :pageSize.sync="pagination.pageSize" @pagination="getList" :toggleTable="toggleTable" :localName="localName" :prevLocalName="prevLocalName" :isActionFixed='tableData&&tableData.length>0' actionWidth='120' >
                 <template #action="slotProps">
                     <h-button  table @click="onLook(slotProps.data.row)" >查看详情</h-button>
@@ -31,7 +31,7 @@
         </el-dialog>
         <!-- 重构组件组合 -->
         <allDialog ref="allDialog" @backGetAccount=getAccount @backLoan = getLoan @backGetRespAccountRepaymentPlanData = getRespAccountRepaymentPlanData
-        @backGetGrantPaymetPlanData = getGrantPaymetPlanData></allDialog>
+        @backGetGrantPaymetPlanData = getGrantPaymetPlanData  :soure=source></allDialog>
     </div>
 </template>
 
@@ -79,7 +79,10 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo,
             overdueList: state => state.fundsData.overdueList
-        })
+        }),
+        getAction () {
+            return [2, 3, 4].includes(this.source)
+        }
     },
     props: {
         tableData: {
@@ -145,9 +148,6 @@ export default {
                     this.localName = 'ReimbursementDetailTable::V2.3.2_2'
                     this.$set(this, 'column', this.ReimbursementDetail)
                     this.collapseShow = false
-                }
-                if ([2, 3, 4].indexOf(this.source) > -1) {
-                    this.isShowAction = true
                 }
             },
             deep: true,
@@ -1045,9 +1045,7 @@ export default {
                                         return render
                                             ? <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}<i
                                                 class='el-icon-edit pointer' onClick={() => {
-                                                    this.getAccount(scope.row)
-                                                    this.accountData.title = `${this.product}-流贷备注信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
-                                                    this.remarkDialogVisible = true
+                                                    this.getAccount(scope.row, `${this.product}-流贷备注信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`, 'remarkDialogVisible')
                                                 }}></i></span>
                                             : <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}</span>
                                     },
@@ -1083,9 +1081,7 @@ export default {
                                                 <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
                                             </el-tooltip>
                                             <i class='el-icon-edit pointer' onClick={() => {
-                                                this.getAccount(scope.row)
-                                                this.accountData.title = `${this.product}-分授信基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
-                                                this.misDialogVisible = true
+                                                this.getAccount(scope.row, `${this.product}-分授信基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`, 'misDialogVisible')
                                             }}></i></div> : <div>
                                             <el-tooltip effect="light" placement="top">
                                                 <div
@@ -2400,9 +2396,7 @@ export default {
                                         return render
                                             ? <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}<i
                                                 class='el-icon-edit pointer' onClick={() => {
-                                                    this.getAccount(scope.row)
-                                                    this.accountData.title = `${this.product}-分授信档案信息维护`
-                                                    this.fileinfoDialogVisible = true
+                                                    this.getAccount(scope.row, `${this.product}-分授信档案信息维护`, 'fileinfoDialogVisible')
                                                 }}></i></span>
                                             : <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}</span>
                                     }
@@ -2429,9 +2423,7 @@ export default {
                                         return render
                                             ? <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i
                                                 class='el-icon-edit pointer' onClick={() => {
-                                                    this.getAccount(scope.row)
-                                                    this.accountData.title = `${this.product}-分授信备注信息维护`
-                                                    this.remarkDialogVisible = true
+                                                    this.getAccount(scope.row, `${this.product}-分授信备注信息维护`, 'remarkDialogVisible')
                                                 }}></i></span>
                                             : <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}</span>
                                     },
@@ -3551,9 +3543,7 @@ export default {
                                         return render
                                             ? <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}<i
                                                 class='el-icon-edit pointer' onClick={() => {
-                                                    this.getAccount(scope.row)
-                                                    this.accountData.title = `${this.product}-敞口基础信息维护`
-                                                    this.fileinfoDialogVisible = true
+                                                    this.getAccount(scope.row, `${this.product}-敞口基础信息维护`, 'fileinfoDialogVisible')
                                                 }}></i></span>
                                             : <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}</span>
                                     }
@@ -3584,9 +3574,7 @@ export default {
                                         return render
                                             ? <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i
                                                 class='el-icon-edit pointer' onClick={() => {
-                                                    this.getAccount(scope.row)
-                                                    this.accountData.title = `${this.product}-敞口备注信息维护`
-                                                    this.remarkDialogVisible = true
+                                                    this.getAccount(scope.row, `${this.product}-敞口备注信息维护`, 'remarkDialogVisible')
                                                 }}></i></span>
                                             : <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}</span>
                                     }
