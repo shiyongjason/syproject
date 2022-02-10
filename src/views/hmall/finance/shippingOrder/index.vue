@@ -94,7 +94,7 @@
                     {{ sourcesPriceMap.get(scope.data.row.freightSource) || '-' }}
                 </template>
                 <template slot="payMethod" slot-scope="scope">
-                    <!-- {{ paymentMethodOptions.get(scope.data.row.payMethod) || '-' }} -->
+                    <!-- {{ paymentMethodOptions.get(scope.data.row.payMethod+'') || '-' }} -->
                     {{ scope.data.row.payMethodDesc || '-' }}
                 </template>
                 <template slot="ncSyncStatus" slot-scope="scope">
