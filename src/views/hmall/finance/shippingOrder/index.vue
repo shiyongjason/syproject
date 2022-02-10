@@ -110,7 +110,7 @@
                     <div class="freightpopover" v-if="scope.data.row.status<=10">
                         <el-popover placement="left" width='200' :ref="`popover-${scope.data.$index}`" trigger="click" title='运费修改'
                          @show="onPopoverShow">
-                            <p>运费金额：{{typeof scope.data.row.totalAmount === 'number'?`￥${scope.data.row.totalAmount}`:'-'}}</p>
+                            <p>运费金额：{{typeof scope.data.row.finalTotalAmount === 'number'?`￥${scope.data.row.finalTotalAmount}`:'-'}}</p>
                             <p class="amountinput"><el-input v-model="amount" v-isNum:2 v-inputMAX='100000' maxlength="50" placeholder="请输入修改的运费金额" size="mini"></el-input></p>
                             <div style="text-align: right; margin: 0">
                                 <el-button size="mini" type="text" @click="()=>closeFreightVisible(scope.data.$index)">取消</el-button>
