@@ -74,7 +74,7 @@
                 <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span>已认领金额：{{totalMoney.receiptAmount|moneyFormat}}</span>；<span>可认领金额：{{totalMoney.noReceiptAmount|moneyFormat}}</span></el-tag>
             </div>
             <!-- end search bar -->
-            <hosJoyTable ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='300' isAction
+            <hosJoyTable ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='240' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
                     <h-button table @click="onLook(slotProps.data.row)" v-if="hosAuthCheck(Auth.CRM_ACCOUNT_DETAIL)">查看详情</h-button>
@@ -159,17 +159,18 @@ export default class Advancelist extends Vue {
 
     private tableLabel:tableLabelProps = [
         { label: '入账流水号', prop: 'billNo', width: '150px' },
-        { label: '入账金额(元)', prop: 'totalAmount', displayAs: 'money', width: '100' },
-        { label: '已认领金额(元)', prop: 'receiptAmount', displayAs: 'money', width: '130' },
-        { label: '可认领金额(元)', prop: 'noReceiptAmount', displayAs: 'money', width: '130' },
-        { label: '付款方', prop: 'payeeName' },
-        { label: '付款方账号', prop: 'payeeBankAccount' },
-        { label: '付款银行', prop: 'payeeBankName' },
-        { label: '收款方', prop: 'receiptName', width: '160px' },
-        { label: '银企直联银行', prop: 'receiptBankName' },
-        { label: '银企直联账户', prop: 'receiptBankAccount', width: '160px' },
-        { label: '入账时间', prop: 'receiptTime', displayAs: 'YYYY-MM-DD HH:mm:ss', width: '160px' },
-        { label: '认领状态', prop: 'receiptStatus', dicData: Unionstatus }
+        { label: '入账金额(元)', prop: 'totalAmount', displayAs: 'money', width: '110' },
+        { label: '已认领金额(元)', prop: 'receiptAmount', displayAs: 'money', width: '110' },
+        { label: '可认领金额(元)', prop: 'noReceiptAmount', displayAs: 'money', width: '110' },
+        { label: '付款方', prop: 'payeeName', width: '160' },
+        { label: '入账时间', prop: 'receiptTime', displayAs: 'YYYY-MM-DD HH:mm:ss', width: '150' },
+        { label: '认领状态', prop: 'receiptStatus', dicData: Unionstatus },
+        { label: '付款方账号', prop: 'payeeBankAccount', width: '160' },
+        { label: '付款银行', prop: 'payeeBankName', width: '160' },
+        { label: '收款方', prop: 'receiptName', width: '160' },
+        { label: '银企直联银行', prop: 'receiptBankName', width: '160' },
+        { label: '银企直联账户', prop: 'receiptBankAccount', width: '160' }
+
     ]
     private tableData = []
     get options () {
