@@ -461,6 +461,35 @@ export default {
             // 流贷
             FlowToBorrow: [
                 {
+                    label: '',
+                    minWidth: '120',
+                    prop: 'account_remark',
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
+                    children: [
+                        {
+                            prop: 'account_remark',
+                            label: '备注',
+                            minWidth: '120',
+                            children: [
+                                {
+                                    prop: 'account_remark',
+                                    label: '备注',
+                                    render: (h, scope) => {
+                                        let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
+                                        return render
+                                            ? <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}<i
+                                                class='el-icon-edit pointer' onClick={() => {
+                                                    this.getAccount(scope.row, `${this.product}-流贷备注信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`, 'remarkDialogVisible')
+                                                }}></i></span>
+                                            : <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}</span>
+                                    },
+                                    minWidth: '120'
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
                     prop: 'account_standingBookNo',
                     fixed: true,
                     minWidth: '150',
@@ -1025,39 +1054,41 @@ export default {
                             ]
                         }
                     ]
-                },
-                {
-                    label: '',
-                    minWidth: '120',
-                    prop: 'account_remark',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
-                    children: [
-                        {
-                            prop: 'account_remark',
-                            label: '备注',
-                            minWidth: '120',
-                            children: [
-                                {
-                                    prop: 'account_remark',
-                                    label: '备注',
-                                    render: (h, scope) => {
-                                        let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
-                                        return render
-                                            ? <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}<i
-                                                class='el-icon-edit pointer' onClick={() => {
-                                                    this.getAccount(scope.row, `${this.product}-流贷备注信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`, 'remarkDialogVisible')
-                                                }}></i></span>
-                                            : <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}</span>
-                                    },
-                                    minWidth: '120'
-                                }
-                            ]
-                        }
-                    ]
                 }
             ],
             // 分授信
             PointsCredit: [
+                {
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                    label: '',
+                    prop: 'account_remark',
+                    minWidth: '100',
+                    children: [
+                        {
+                            prop: 'account_remark',
+                            label: '备注',
+                            showOverflowTooltip: true,
+                            minWidth: '100',
+                            children: [
+                                {
+                                    render: (h, scope) => {
+                                        let render = this.hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)
+                                        return render
+                                            ? <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i
+                                                class='el-icon-edit pointer' onClick={() => {
+                                                    this.getAccount(scope.row, `${this.product}-分授信备注信息维护`, 'remarkDialogVisible')
+                                                }}></i></span>
+                                            : <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}</span>
+                                    },
+                                    prop: 'account_remark',
+                                    label: '备注-',
+                                    showOverflowTooltip: true,
+                                    minWidth: '100'
+                                }
+                            ]
+                        }
+                    ]
+                },
                 {
                     fixed: true,
                     prop: '台账编号',
@@ -2404,41 +2435,41 @@ export default {
                             ]
                         }
                     ]
-                },
-                {
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                    label: '',
-                    prop: 'account_remark',
-                    minWidth: '100',
-                    children: [
-                        {
-                            prop: 'account_remark',
-                            label: '备注',
-                            showOverflowTooltip: true,
-                            minWidth: '100',
-                            children: [
-                                {
-                                    render: (h, scope) => {
-                                        let render = this.hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)
-                                        return render
-                                            ? <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i
-                                                class='el-icon-edit pointer' onClick={() => {
-                                                    this.getAccount(scope.row, `${this.product}-分授信备注信息维护`, 'remarkDialogVisible')
-                                                }}></i></span>
-                                            : <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}</span>
-                                    },
-                                    prop: 'account_remark',
-                                    label: '备注-',
-                                    showOverflowTooltip: true,
-                                    minWidth: '100'
-                                }
-                            ]
-                        }
-                    ]
                 }
             ],
             // 敞口
             Exposure: [
+                {
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                    label: '',
+                    minWidth: '100',
+                    prop: 'account_remark',
+                    children: [
+                        {
+                            prop: 'account_remark',
+                            showOverflowTooltip: true,
+                            label: '备注',
+                            minWidth: '100',
+                            children: [
+                                {
+                                    prop: 'account_remark',
+                                    showOverflowTooltip: true,
+                                    label: '备注',
+                                    minWidth: '100',
+                                    render: (h, scope) => {
+                                        let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
+                                        return render
+                                            ? <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i
+                                                class='el-icon-edit pointer' onClick={() => {
+                                                    this.getAccount(scope.row, `${this.product}-敞口备注信息维护`, 'remarkDialogVisible')
+                                                }}></i></span>
+                                            : <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}</span>
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
                 {
                     fixed: true,
                     prop: '台账编号',
@@ -2681,13 +2712,11 @@ export default {
                                     minWidth: '100',
                                     render: (h, scope) => {
                                         let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
-                                        return render ? <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
-                                            class={
-                                                scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_invoiceTime
-                                                    ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
-                                            onClick={async () => {
-                                                await this.getGrantPaymetPlanData(scope.row, 'repaymentDialogVisible')
-                                            }}></i></span>
+                                        return render ? <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i class={scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_invoiceTime
+                                            ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
+                                        onClick={async () => {
+                                            await this.getGrantPaymetPlanData(scope.row, 'repaymentDialogVisible')
+                                        }}></i></span>
                                             : <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}</span>
                                     }
                                 }
@@ -3551,37 +3580,6 @@ export default {
                             ]
                         }
                     ]
-                },
-                {
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
-                    label: '',
-                    minWidth: '100',
-                    prop: 'account_remark',
-                    children: [
-                        {
-                            prop: 'account_remark',
-                            showOverflowTooltip: true,
-                            label: '备注',
-                            minWidth: '100',
-                            children: [
-                                {
-                                    prop: 'account_remark',
-                                    showOverflowTooltip: true,
-                                    label: '备注',
-                                    minWidth: '100',
-                                    render: (h, scope) => {
-                                        let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
-                                        return render
-                                            ? <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i
-                                                class='el-icon-edit pointer' onClick={() => {
-                                                    this.getAccount(scope.row, `${this.product}-敞口备注信息维护`, 'remarkDialogVisible')
-                                                }}></i></span>
-                                            : <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}</span>
-                                    }
-                                }
-                            ]
-                        }
-                    ]
                 }
             ],
             // 还款明细表
@@ -3797,9 +3795,10 @@ export default {
         },
         // 流贷还款信息 流贷没有334还款，只有一次性的
         async getRespAccountRepaymentPlanData (row, title, id, type) {
+            console.log(title)
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             this.respAccountRepaymentPlanData = data
-            this.respAccountRepaymentPlanData[0].otherTitle = title
+            this.$set(this.respAccountRepaymentPlanData[0], 'title', title)
             this.respAccountRepaymentPlanData[0].accountId = id
             this.regulatingBreathingDialogData = JSON.parse(JSON.stringify(this.respAccountRepaymentPlanData))
             this[`${type}`] = true
@@ -3828,6 +3827,7 @@ export default {
             // 是否需要增加计息---
             this[`${type}`] = true
         },
+        // 重置
         async onRepaymentTypeChange (item) {
             const params = {
                 accountId: item.accountId,
@@ -3879,6 +3879,7 @@ export default {
     cursor: pointer;
     margin-left: 10px;
     font-size: 14px;
+    color:#FF7A45
 }
 
 // // 滚动条的滑块
