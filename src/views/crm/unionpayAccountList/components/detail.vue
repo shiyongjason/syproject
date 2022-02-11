@@ -11,7 +11,7 @@
             <div class="unionpayDetail-ctx" :style="radio=='跟进记录'?'bottom:0':'bottom:60px'" >
                 <div v-if="radio=='入账信息'">
                     <div class="info-title">认领信息：</div>
-                    <div class="info-p padLeft20">认领状态：{{ enterAccount.receiptName }}（{{ enterAccount.receiptAmount | moneyFormat }}元/{{ enterAccount.totalAmount | moneyFormat }}元）<h-button v-if="enterAccount.receiptAmount!=enterAccount.totalAmount" @click="onClaimStatus" table>{{ enterAccount.receiptResponseList&&enterAccount.receiptResponseList.length > 0 ? '继续认领' : '去认领' }}</h-button></div>
+                    <div class="info-p padLeft20">认领状态：{{ enterAccount.receiptName }}（{{ enterAccount.receiptAmount | moneyFormat }}元/{{ enterAccount.totalAmount | moneyFormat }}元）<h-button v-if="(enterAccount.receiptAmount!=enterAccount.totalAmount)&&hosAuthCheck(Auth.CRM_ACCOUNT_CONTINUE)" @click="onClaimStatus" table>{{ enterAccount.receiptResponseList&&enterAccount.receiptResponseList.length > 0 ? '继续认领' : '去认领' }}</h-button></div>
                     <div v-show="enterAccount && enterAccount.receiptResponseList.length" class="unionpay-content" v-for="(item, index) in enterAccount.receiptResponseList" :key="index">
                         <div class="index">{{ index + 1 }}，</div>
                         <div class="content">
@@ -20,14 +20,18 @@
                             <p><span>账单流水号：{{ item.fundId }}</span><span>应支付日期：{{ item.schedulePaymentDate | momentFormat('YYYY-MM-DD') }}</span></p>
                             <p><span>认领时间：{{ item.createTime | momentFormat }}</span></p>
                         </div>
-                        <div class="btn"><h-button v-if="item.fundType!=2" table @click="onCancelClaim(item)">取消认领</h-button></div>
+                        <div class="btn"><h-button v-if="item.fundType!=2&&hosAuthCheck(Auth.CRM_ACCOUNT_CANCELSUBMIT)" table @click="onCancelClaim(item)">取消认领</h-button></div>
                     </div>
                     <div v-show="!enterAccount.receiptResponseList|| enterAccount.receiptResponseList&&enterAccount.receiptResponseList.length==0">
                         <p class="noData">暂无认领的账单</p>
                     </div>
                 </div>
                 <div v-if="radio=='认领记录'" class="project-information">
-                    <p v-for="(item, index) in claimFund" :key="index"><span>{{ (item.operatorType!=3) ? item.receiptUser + '('+item.receiptPhone||'-' + ')': '系统自动' }}</span> 在 <span>{{ item.receiptTime | momentFormat }}</span> {{ item.receiptType!=5 ? '认领' : '将' }} <span>{{ item.receiptAmount }}</span> 元{{ item.receiptType!=5  ? '到' : '与' }}{{ item.fundType&&fundType[item.fundType - 1].label }}账单（流水号：{{ item.fundId }}）{{ item.receiptType!=5  ? '' : '取消认领' }}</p>
+                    <p v-for="(item, index) in claimFund" :key="index"><span>{{item.receiptUser }}{{ item.receiptPhone?'('+ item.receiptPhone+ ')':'' }}</span> 在 <span>
+                        {{ item.receiptTime | momentFormat }}</span>
+                        {{ (item.receiptType==5||item.receiptType==6) ? '将' : '认领' }} <span>{{ item.receiptAmount }}</span> 元
+                        {{ (item.receiptType==5||item.receiptType==6)  ? '与' : '到' }}{{ item.fundType&&fundType[item.fundType - 1].label }}账单（流水号：{{ item.fundId }}）
+                        {{ (item.receiptType==5||item.receiptType==6)  ? '取消认领' : '' }}</p>
                     <div v-show="!claimFund.length">
                         <p class="noData">暂无认领记录</p>
                     </div>
@@ -46,6 +50,7 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { State } from 'vuex-class'
 import * as Api from '../api/index'
 import { Phone } from '@/utils/rules'
+import * as Auth from '@/utils/auth_const'
 
 const unionstatus = [{ value: 0, label: '待认领' }, { value: 1, label: '部分认领' }, { value: 2, label: '全部认领' }]
 const fundType = [{ value: 1, label: '首付款' }, { value: 2, label: '尾款' }, { value: 3, label: '服务费' }, { value: 4, label: '预付款' }]
@@ -60,6 +65,7 @@ export default class unionPayDetail extends Vue {
     @State('userInfo') userInfo: any
     validatorPHONE = Phone
     radio: string = '入账信息';
+    Auth:any = Auth
     enterAccount = {
         receiptStatus: 0,
         receiptName: '',
