@@ -47,8 +47,8 @@
                 </div>
             </div>
         </div>
-        <el-dialog id='el-dialog' :title="form.id?'项目编辑':'新建项目'" :visible.sync="addProject" :before-close="cancelDialog" width="1000px" :close-on-click-modal="false">
-            <el-form ref="form" :model="form" :rules="rules" label-width="130px" label-position="right">
+        <el-dialog id='el-dialog' :title="form.id?'项目编辑':'新建项目'" :visible.sync="addProject" :before-close="cancelDialog" width="1280px" :close-on-click-modal="false">
+            <el-form ref="form" :model="form" :rules="rules" label-width="140px" label-position="right">
                 <el-form-item label="项目名称：" prop="projectName">
                     <el-input v-model.trim="form.projectName" show-word-limit placeholder="请输入项目全称" maxlength='50' style="width:356px"></el-input>
                 </el-form-item>
@@ -232,6 +232,9 @@
                                             <el-col :span="4">
                                                 <el-checkbox label="7" value="分体空调">分体空调</el-checkbox>
                                             </el-col>
+                                            <el-col :span="4">
+                                                <el-checkbox label="9" value="水表">水表</el-checkbox>
+                                            </el-col>
                                         </el-checkbox-group>
                                     </el-col>
                                 </el-row>
@@ -258,6 +261,15 @@
                                 </el-col>
                                 <el-col :span="6">
                                     <el-checkbox label="24" value="可燃气体监测">可燃气体监测</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-checkbox label="25" value="火焰监测">火焰监测</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-checkbox label="26" value="有毒有害气体监测">有毒有害气体监测</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-checkbox label="27" value="视频监控">视频监控</el-checkbox>
                                 </el-col>
                             </el-checkbox-group>
                         </el-col>
@@ -304,21 +316,53 @@
                 <el-form-item label="项目包含设备：" prop="deviceTypes">
                     <el-button type="primary" @click="addDeviceTypes">新增</el-button>
                 </el-form-item>
-                <el-form-item label-width="0px" v-for="(item,index) in form.deviceTypes" :key="index">
-                    <el-col :span="10">
-                        <el-form-item label="设备TYPE号：" :prop="'deviceTypes.'+index+'.deviceTypeCode'" :rules="rules.deviceTypeCode">
+                <el-row class="mb20" v-for="(item,index) in form.deviceTypes" :key="index">
+                    <el-col :span="7">
+                        <el-form-item label="设备TYPE号：" label-width="120px" :prop="'deviceTypes.'+index+'.deviceTypeCode'" :rules="rules.deviceTypeCode">
                             <el-input v-model="item.deviceTypeCode" placeholder="请输入设备TYPE号" @change="deviceTypeChange" @focus="deviceTypeFocus(index)" maxlength='10'></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="10">
-                        <el-form-item label="设备名称：" label-width="95px" :prop="'deviceTypes.'+index+'.deviceTypeName'" :rules="rules.deviceTypeName">
+                    <el-col :span="7">
+                        <el-form-item label="设备名称：" label-width="120px" :prop="'deviceTypes.'+index+'.deviceTypeName'" :rules="rules.deviceTypeName">
                             <el-input v-model="item.deviceTypeName" placeholder="--" disabled></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="4">
+                    <el-col :span="3">
                         <el-button type="danger" @click="deleteDeviceTypes(index)">删除</el-button>
                     </el-col>
+                </el-row>
+                <el-divider></el-divider>
+                <el-form-item label="第三方系统接入配置：" label-width="180px">
+                    <el-button type="primary" @click="addThirdSystemConfig">新增</el-button>
                 </el-form-item>
+                <el-row v-for="(item,index) of form.thirdSystemConfigs" :key="'key' + index">
+                    <el-row :gutter="5" class="mb20">
+                        <el-col :span="7">
+                            <el-form-item label="品牌名称：" :prop="`thirdSystemConfigs[${index}].brandName`" :rules="rules.brandName" label-width="120px">
+                                <el-select v-model="item.brandName" placeholder="输入品牌名称" clearable>
+                                    <el-option v-for="item in brandOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="7">
+                            <el-form-item label="子系统类型：" :prop="`thirdSystemConfigs[${index}].subSystemType`" :rules="rules.subSystemType(item)" label-width="120px">
+                                <el-select v-model="item.subSystemType" placeholder="输入子系统类型" clearable>
+                                    <el-option v-for="item in subSystemTypeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="12" class="mb20">
+                        <el-col :span="14">
+                            <el-form-item label="IP地址/域名：" :prop="`thirdSystemConfigs[${index}].config`" :rules="rules.config(item)" label-width="120px">
+                                <el-input type="textarea" rows="5" v-model="item.config" placeholder="输入json配置信息" maxlength="500" show-word-limit></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="3">
+                            <el-button type="danger" @click="deleteThirdSystemConfig(index)">删除</el-button>
+                        </el-col>
+                    </el-row>
+                </el-row>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="cancelDialog">取 消</el-button>
@@ -339,13 +383,13 @@
 </template>
 
 <script>
-
 import { iotUrl, interfaceUrl } from '@/api/config'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { createControlProject, editControlProject } from '../api/index'
 import { getChiness } from '../../hmall/membership/api'
 import * as consts from './const.js'
 import { isNumber } from 'highcharts'
+import { newCache } from '@/utils/index'
 
 const _form = {
     projectName: '',
@@ -363,7 +407,8 @@ const _form = {
     companyLogo: '',
     projectType: [],
     deviceTypes: [],
-    feeType: ''
+    feeType: '',
+    thirdSystemConfigs: []
 }
 
 const _queryParams = {
@@ -378,16 +423,6 @@ const _queryParams = {
 }
 export default {
     name: 'projectManager',
-    watch: {
-        // isShowEnergy (value) {
-
-        // }
-        // 'form.projectType' (val) {
-        //     if (!val.includes(consts.PROJECT_TYPE_KEY.BILLING_SYSTEM)) {
-        //         this.form.feeType = ''
-        //     }
-        // }
-    },
     data () {
         const checkDeviceTypeRule = (rule, value, callback) => {
             let isHas = false
@@ -473,10 +508,54 @@ export default {
                 ],
                 feeType: [
                     { required: true, message: '请选择计费方式', trigger: 'change' }
+                ],
+                brandName: [
+                    { required: true, message: '请选择品牌名称', trigger: 'change' }
+                ],
+                subSystemType: (item) => [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            if (!item.subSystemType) {
+                                return callback(new Error('请选择子系统类型'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'change'
+                    }
+                ],
+                config: (item) => [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            const isJson = (str) => {
+                                if (typeof str == 'string') {
+                                    try {
+                                        const obj = JSON.parse(str)
+                                        if (obj && typeof obj == 'object') {
+                                            return true
+                                        } else {
+                                            return false
+                                        }
+                                    } catch (e) {
+                                        return false
+                                    }
+                                }
+                            }
+                            if (!item.config) {
+                                return callback(new Error('请输入IP地址/域名'))
+                            }
+                            if (item.config && !isJson(item.config)) {
+                                return callback(new Error('IP地址/域名JSON配置格式不正确'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
                 ]
             },
             loading: false,
-            projectTypeOptions: consts.PROJECT_TYPE_OPTIONS,
+            // projectTypeOptions: consts.PROJECT_TYPE_OPTIONS,
             isShowAirConditioning: false,
             airConditioningOption: [],
             isShowLighting: false,
@@ -502,7 +581,9 @@ export default {
             isShowScenePanel: false,
             scenePanelRadioOption: '',
             scenePanelOption: [],
-            energyConservationOption: []
+            energyConservationOption: [],
+            brandOptions: consts.BRAND_OPTIONS,
+            subSystemTypeOptions: consts.SUB_SYSTEM_TYPE_OPTIONS
         }
     },
     computed: {
@@ -567,6 +648,16 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo
         })
+    },
+    watch: {
+        // isShowEnergy (value) {
+
+        // }
+        // 'form.projectType' (val) {
+        //     if (!val.includes(consts.PROJECT_TYPE_KEY.BILLING_SYSTEM)) {
+        //         this.form.feeType = ''
+        //     }
+        // }
     },
     methods: {
         ...mapActions({
@@ -768,7 +859,14 @@ export default {
         },
         async editProject (id) {
             await this.getClouldControlProjectDetail({ id: id })
-            this.form = this.clouldControlProjectDetail
+            this.form = {
+                ...this.clouldControlProjectDetail,
+                thirdSystemConfigs: this.clouldControlProjectDetail.thirdSystemConfigs ? this.clouldControlProjectDetail.thirdSystemConfigs.map(item => {
+                    item.brandName = item.key.split('-')[0]
+                    item.subSystemType = item.key.split('-')[1]
+                    return item
+                }) : []
+            }
             // console.log(this.form.projectType)
             this.airConditioningOption = this.form.projectType.filter(item => item == 1 || item == 2 || item == 12)
             this.isShowAirConditioning = this.airConditioningOption.length > 0
@@ -785,7 +883,7 @@ export default {
 
             this.doorlockOption = this.form.projectType.filter(item => item == 18)
 
-            this.isShowEnergy = this.form.projectType.filter(item => item == 101 || item == 102 || item == 103 || item == 104 || item == 112 || item == 113 || item == 114 || item == 120 || item == 4 || item == 3 || item == 5 || item == 6 || item == 7).length > 0
+            this.isShowEnergy = this.form.projectType.filter(item => item == 101 || item == 102 || item == 103 || item == 104 || item == 112 || item == 113 || item == 114 || item == 120 || item == 4 || item == 3 || item == 5 || item == 6 || item == 7 || item == 9).length > 0
             this.isShowAirEnergy = this.form.projectType.filter(item => item == 101 || item == 102 || item == 103 || item == 104 || item == 112 || item == 113 || item == 114 || item == 120).length > 0
 
             this.waterAirRadioOption = this.form.projectType.filter(item => item == 101 || item == 102 || item == 103 || item == 104)[0]
@@ -797,10 +895,10 @@ export default {
             this.ftAirRadioOption = this.form.projectType.filter(item => item == 120)[0]
             this.isShowFtAir = !!this.ftAirRadioOption
 
-            this.energyOption = this.form.projectType.filter(item => item == 4 || item == 3 || item == 5 || item == 6 || item == 7)
+            this.energyOption = this.form.projectType.filter(item => item == 4 || item == 3 || item == 5 || item == 6 || item == 7 || item == 9)
             this.isShowOtherEnergy = this.energyOption.length > 0
 
-            this.securityOption = this.form.projectType.filter(item => item == 20 || item == 21 || item == 22 || item == 23 || item == 24)
+            this.securityOption = this.form.projectType.filter(item => item == 20 || item == 21 || item == 22 || item == 23 || item == 24 || item == 25 || item == 26 || item == 27)
             this.isShowSecurity = this.securityOption.length > 0
 
             this.isShowScene = this.form.projectType.filter(item => item == 30 || item == 31 || item == 32).length > 0
@@ -813,6 +911,12 @@ export default {
             this.energyConservationOption = this.form.projectType.filter(item => item == 11)
 
             this.addProject = true
+        },
+        addThirdSystemConfig () {
+            this.form.thirdSystemConfigs.push({})
+        },
+        deleteThirdSystemConfig (index) {
+            this.form.thirdSystemConfigs.splice(index, 1)
         },
         async saveProject () {
             this.form.projectType = [
@@ -831,7 +935,11 @@ export default {
                 ...this.scenePanelOption,
                 ...this.energyConservationOption
             ].filter(item => !(item == '' || !isNumber(Number(item))))
-
+            console.log(this.form.thirdSystemConfigs)
+            this.form.thirdSystemConfigs = this.form.thirdSystemConfigs.map(item => {
+                item.key = item.brandName + '-' + item.subSystemType
+                return item
+            })
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     if (this.form.id) {
@@ -844,7 +952,7 @@ export default {
                         this.$refs.form.clearValidate()
                     }
                     this.cancelDialog()
-                    this.onSearch()
+                    this.onQuery()
                 } else {
                     return false
                 }
@@ -858,17 +966,17 @@ export default {
          *
          * @returns 返回处理后的Form
          */
-        _resolveForm () {
-            let resultForm = JSON.parse(JSON.stringify(this.form))
-            // 说明Form中的projectType包含计费系统
-            if (this.showFeeType) {
-                let index = resultForm.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM)
-                if (index >= 0 && resultForm.feeType) {
-                    resultForm.projectType[index] = `${resultForm.projectType[index] * 1 + resultForm.feeType * 1}`
-                }
-            }
-            return resultForm
-        },
+        // _resolveForm () {
+        //     let resultForm = JSON.parse(JSON.stringify(this.form))
+        //     // 说明Form中的projectType包含计费系统
+        //     if (this.showFeeType) {
+        //         let index = resultForm.projectType.indexOf(PROJECT_TYPE_KEY.BILLING_SYSTEM)
+        //         if (index >= 0 && resultForm.feeType) {
+        //             resultForm.projectType[index] = `${resultForm.projectType[index] * 1 + resultForm.feeType * 1}`
+        //         }
+        //     }
+        //     return resultForm
+        // },
         cancelDialog () {
             this.currentDeviceType = null
             this.form = JSON.parse(JSON.stringify(_form))
@@ -915,6 +1023,10 @@ export default {
         this.onSearch()
         this.getAreacode()
         this.getDeviceTypes()
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('projectManager')
+        next()
     }
 }
 </script>
