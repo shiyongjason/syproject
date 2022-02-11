@@ -50,7 +50,7 @@
                 <p>XXXX.pdf</p>
             </div>
             <div class="mb20 mt20">
-                <h-button @click="handleGoBack">取消</h-button>
+                <h-button @click="handleGoBack">返回</h-button>
             </div>
         </div>
     </div>
@@ -97,6 +97,7 @@ export default class Flooredit extends Vue {
     tableLabel: tableLabelProps = [
         { label: '采购发票号码', prop: 'code' },
         { label: '发票金额', prop: 'name' },
+        { label: '开票日期', prop: 'name' },
         { label: '状态', prop: 'categoryPath' }
 
     ]
@@ -104,6 +105,7 @@ export default class Flooredit extends Vue {
     saleTableLabel: tableLabelProps = [
         { label: '销售发票号码', prop: 'code' },
         { label: '发票金额', prop: 'name' },
+        { label: '开票日期', prop: 'name' },
         { label: '状态', prop: 'categoryPath' }
     ]
 

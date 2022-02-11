@@ -19,7 +19,9 @@
                 </el-row>
                 <el-row :gutter="20">
                     <el-col :span="8"><span>发票号码：</span>XXXXXXXXXXXX</el-col>
-                    <el-col :span="16"><span>寄送快递单号：</span>XXXXXXXXXXX</el-col>
+                    <el-col :span="8"><span>寄送快递单号：</span>XXXXXXXXXXX</el-col>
+                    <el-col :span="8"><span>开票日期：</span>XXXXXXXXXXX</el-col>
+
                 </el-row>
                 <el-row :gutter="20">
                     <el-col :span="24"><span>备注信息：</span>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</el-col>
@@ -38,7 +40,7 @@
                 </hosJoyTable>
             </div>
             <div class="mb20 mt20">
-                <h-button @click="handleAdd">返回</h-button>
+                <h-button @click="handleGoBack">返回</h-button>
             </div>
         </div>
     </div>
@@ -109,6 +111,11 @@ export default class Flooredit extends Vue {
     async mounted () {
         this.tableData = [{ code: 11111, name: 2222 }]
         this.tableForm = [{ code: 11111, name: 2222, categoryPath: 555 }]
+    }
+
+    handleGoBack () {
+        this.$router.go(-1)
+        this.setNewTags((this.$route.fullPath).split('?')[0])
     }
 }
 </script>
