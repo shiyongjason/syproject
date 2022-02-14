@@ -228,7 +228,8 @@ export default {
         },
         /** 关闭修改运费 */
         closeFreightVisible (index) {
-            this.$refs[`popover-${index}`].doClose()
+            // this.$refs[`popover-${index}`].doClose()
+            document.body.click()
             this.amount = ''
         },
         /** 确认修改运费 */
@@ -242,7 +243,8 @@ export default {
                 amount: this.amount,
                 operator: this.userInfo.employeeName
             })
-            this.$refs[`popover-${index}`].doClose()
+            // this.$refs[`popover-${index}`].doClose()
+            document.body.click()
             this.$message.success('修改成功')
             this.amount = ''
             this.findFreightOrders(this.queryParams)
