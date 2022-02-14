@@ -64,7 +64,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">资金同步状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.capitalSyncStatus">
+                        <el-select v-model="queryParams.ncSyncStatus">
                             <el-option v-for="item in synchromizedOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
@@ -157,7 +157,7 @@ export default {
                 merchantType: '',
                 freightSource: '',
                 merchantName: '',
-                capitalSyncStatus: '',
+                ncSyncStatus: '',
                 memberName: '',
                 pageNumber: 1,
                 pageSize: 10
