@@ -273,9 +273,13 @@ export default {
         },
         /** 资金同步操作 */
         async onSynchronous (row) {
-            await syncToNc(row.id)
-            this.$message.success('同步成功')
-            this.findFreightOrders(this.queryParams)
+            try {
+                await syncToNc(row.id)
+                this.$message.success('同步成功')
+                this.findFreightOrders(this.queryParams)
+            } catch (error) {
+                this.findFreightOrders(this.queryParams)
+            }
         },
         // 查询操作
         onQuery () {
