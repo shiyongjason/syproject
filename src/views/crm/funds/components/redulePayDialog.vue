@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-dialog :title="title" :visible.sync="isOpen"   :close-on-click-modal=false :modal-append-to-body=false width="670px"  :before-close="()=> $emit('onClose',false)">
+        <el-dialog :title="title" :visible.sync="isOpen"  :close-on-click-modal=false :modal-append-to-body=true width="670px"  :before-close="()=> $emit('onClose',false)">
             <template>
                 <div class="remain_head">
                     <div>总金额：<b>{{dialogDetail.paymentAmount|moneyFormat}}元</b></div>

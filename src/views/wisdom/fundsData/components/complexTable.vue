@@ -2,9 +2,10 @@
     <div class="page-body">
         <div class="page-table">
             <hosJoyTable :amountResetTable="amountResetTable" v-if="isShowParent" :collapseShow="collapseShow" ref="hosjoyTable" align="center" border stripe showPagination :column="column" :data="tableData" :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :isAction='["1","2", "3"].includes(source)'
-                :pageSize.sync="pagination.pageSize" @pagination="getList" :toggleTable="toggleTable" :localName="localName" :prevLocalName="prevLocalName" :isActionFixed='tableData&&tableData.length>0' actionWidth='120' >
+                :pageSize.sync="pagination.pageSize" @pagination="getList" :toggleTable="toggleTable" :localName="localName" :prevLocalName="prevLocalName" :isActionFixed='tableData&&tableData.length>0' actionWidth='220' >
                 <template #action="slotProps">
                     <h-button  table @click="onLook(slotProps.data.row)" >查看详情</h-button>
+                    <h-button  table @click="onJurnal(slotProps.data.row)" >日志</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -32,6 +33,12 @@
         <!-- 重构组件组合 -->
         <allDialog ref="allDialog" @backGetAccount=getAccount @backLoan = getLoan @backGetRespAccountRepaymentPlanData = getRespAccountRepaymentPlanData
         @backGetGrantPaymetPlanData = getGrantPaymetPlanData  :soure=source></allDialog>
+        <!-- 日志操作drawer -->
+         <h-drawer title="项目详情" v-if="drawer" :visible.sync="drawer" :beforeClose="()=>{this.drawer = false}" direction='rtl' size='710px' :wrapperClosable="false">
+            <template #connect>
+                <jurnal/>
+            </template>
+         </h-drawer>
     </div>
 </template>
 
@@ -47,6 +54,7 @@ import regulatingBreathingDialog from './dialog/plan/regulatingBreathingDialog.v
 import AnnualInterestRateDialog from './dialog/plan/AnnualInterestRateDialog.vue'
 import repaymentDialog from './dialog/plan/repaymentDialog.vue'
 import allDialog from './allDialog.vue'
+import jurnal from './journal.vue'
 import { getAccountBasic, getLoan, getRespAccountRepaymentPlan, transformPlanType } from '../api/index'
 import moment from 'moment'
 import { mapState } from 'vuex'
@@ -73,7 +81,8 @@ export default {
         repaymentDialog,
         pointsCreditBillingDialog,
         regulatingBreathingDialog,
-        allDialog
+        allDialog,
+        jurnal
     },
     computed: {
         ...mapState({
@@ -161,6 +170,7 @@ export default {
     },
     data: function () {
         return {
+            drawer: false,
             isShowAction: false,
             tipsDialogVisible: false,
             tipsDialogVisibleContent: '',
@@ -3852,6 +3862,10 @@ export default {
             } else if (val == 1) {
                 item.overDueInterest = 12
             }
+        },
+        // 打开抽屉日志
+        onJurnal (val) {
+            this.drawer = true
         }
     },
     mounted () {

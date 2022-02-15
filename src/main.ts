@@ -42,7 +42,6 @@ try {
     // ElementUI.Dialog.props.appendToBody.default = false
 
     // ElementUI.Tabs.props.modalAppendToBody.default = false
-    console.log(' ElementUI.Dialog: ', ElementUI)
 } catch (e) {
     console.log(e)
 }

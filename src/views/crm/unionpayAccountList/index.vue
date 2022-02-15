@@ -248,8 +248,8 @@ export default class Advancelist extends Vue {
         this.getList()
         this.getAccountList()
     }
-    // beforeUpdate () {
-    //     newCache('UnionpayAccountList')
-    // }
+    beforeUpdate () {
+        newCache('UnionpayAccountList')
+    }
 }
 </script>
