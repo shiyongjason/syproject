@@ -3,40 +3,40 @@
         <div class="page-body-cont">
             <div class="floor-tit">基本信息</div>
             <div class="query-cont-row">
-                <el-form :model="floorForm" :inline="true" :rules="rules" ref="serviceForm" label-width="130px" class="demo-ruleForm">
+                <el-form :model="serviceForm" :inline="true" :rules="rules" ref="serviceForm" label-width="130px" class="demo-ruleForm">
                     <el-row>
-                        <el-form-item label="申请单号：" prop="floorName">
-                            <el-input v-model.trim="floorForm.floorName" maxlength="30"></el-input>
+                        <el-form-item label="申请单号：" prop="invoiceId" v-if="serviceForm.invoiceId">
+                            <el-input v-model.trim="serviceForm.invoiceId" maxlength="30"></el-input>
                         </el-form-item>
-                        <el-form-item label="项目：" prop="floorName">
-                            <el-input v-model.trim="floorForm.floorName" @blur="onInputBlur" maxlength="50">
+                        <el-form-item label="项目：" prop="projectId">
+                            <el-input v-model.trim="serviceForm.projectId" @blur="onInputBlur" maxlength="50">
                                 <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
                             </el-input>
-                            xxxxxx
+                            {{serviceForm.projectName}}
                         </el-form-item>
                         <el-form-item label="所属分部：">
-                            <el-input v-model.trim="floorForm.floorName"  disabled></el-input>
+                            <el-input v-model.trim="serviceForm.deptName"  disabled></el-input>
                         </el-form-item>
                     </el-row>
                     <el-row>
                         <el-form-item label="经销商：">
-                            <el-input v-model.trim="floorForm.floorName"  disabled></el-input>
+                            <el-input v-model.trim="serviceForm.companyName"  disabled></el-input>
                         </el-form-item>
-                        <el-form-item label="收票人：" prop="floorName">
-                            <el-input v-model.trim="floorForm.floorName" maxlength="20"></el-input>
+                        <el-form-item label="收票人：" prop="receiver">
+                            <el-input v-model.trim="serviceForm.receiver" maxlength="20"></el-input>
                         </el-form-item>
-                        <el-form-item label="发票金额：" prop="floorName">
-                            <el-input v-model="selectMoeny" disabled></el-input>
+                        <el-form-item label="发票金额：" >
+                            <el-input v-model="selectMoney"  disabled></el-input>
                         </el-form-item>
-                        <el-form-item label="收票人手机：" prop="floorName">
-                            <el-input type="tel" v-model.trim="floorForm.floorName" maxlength="11"></el-input>
+                        <el-form-item label="收票人手机：" prop="receiverMobile">
+                            <el-input type="tel" v-model.trim="serviceForm.receiverMobile" maxlength="11"></el-input>
                         </el-form-item>
                     </el-row>
-                    <el-form-item label="收票地址：" prop="floorName">
-                        <el-input v-model.trim="floorForm.floorName" maxlength="80"></el-input>
+                    <el-form-item label="收票地址：" prop="receiverAddress">
+                        <el-input v-model.trim="serviceForm.receiverAddress" maxlength="80"></el-input>
                     </el-form-item>
-                    <el-form-item label="备注信息：" prop="floorName">
-                        <el-input type="textarea" show-word-limit v-model="floorForm.floorName" maxlength="255" :autosize="{ minRows: 6, maxRows: 8}"></el-input>
+                    <el-form-item label="备注信息：" prop="remark">
+                        <el-input type="textarea" show-word-limit v-model="serviceForm.remark" maxlength="255" :autosize="{ minRows: 6, maxRows: 8}"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
@@ -93,6 +93,9 @@ import { RespBossShopFloorDetail } from '@/interface/hbp-shop'
 import moment from 'moment'
 import { deepCopy } from '@/utils/utils'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
+import { ServiceInvoiceSubmitRequest } from '@/interface/hbp-project'
+import { Phone } from '@/utils/rules'
+import { updateServiceInvoice } from '../api'
 @Component({
     name: 'Servicedetail',
     components: {
@@ -110,6 +113,7 @@ export default class Serviceedit extends Vue {
     dialogVisible:boolean = false
     projectVisible:boolean = false
     disabled:boolean = true
+
     selectRow = []
     selectData = []
     radio = ''
@@ -118,9 +122,20 @@ export default class Serviceedit extends Vue {
         pageSize: 10,
         inupt: ''
     }
-    floorForm: any={
-        floorName: '',
-        reqBossFloorSpuList: []
+    serviceForm: ServiceInvoiceSubmitRequest={
+        saveOrSubmit: '',
+        invoiceId: '',
+        projectNo: '',
+        projectName: '',
+        deptName: '',
+        invoiceAmount: '',
+        receiver: '',
+        receiverMobile: '',
+        receiverAddress: '',
+        companyName: '',
+        remark: '',
+        deptCode: '',
+        resourceIds: []
     }
 
     page = {
@@ -133,7 +148,7 @@ export default class Serviceedit extends Vue {
         { label: '服务流水号', prop: 'code' },
         { label: '支付单号', prop: 'name' },
         { label: '期数', prop: 'categoryPath', width: '300px' },
-        { label: '金额', prop: 'brandName' },
+        { label: '金额', prop: 'money' },
         { label: '支付成功时间', prop: 'brandName' }
     ]
 
@@ -144,7 +159,7 @@ export default class Serviceedit extends Vue {
         { label: '服务流水号', prop: 'code' },
         { label: '支付单号', prop: 'name' },
         { label: '期数', prop: 'categoryPath' },
-        { label: '金额', prop: 'brandName' },
+        { label: '金额', prop: 'money' },
         { label: '支付成功时间', prop: 'brandName' },
         { label: '是否全部结清', prop: 'brandName' }
     ]
@@ -155,24 +170,37 @@ export default class Serviceedit extends Vue {
         },
         { label: '支付单号', prop: 'name' },
         { label: '期数', prop: 'categoryPath' },
-        { label: '金额', prop: 'brandName' },
+        { label: '金额', prop: 'money' },
         { label: '支付成功时间', prop: 'brandName' },
         { label: '是否全部结清', prop: 'brandName' }
     ]
     // 校验
     get rules () {
         let rules = {
-            floorName: [
-                { required: true, message: '请输入楼层名称', trigger: 'blur' }
+            invoiceId: [
+                { required: true, message: '请输入发票ID', trigger: 'blur' }
+            ],
+            projectId: [
+                { required: true, message: '请输入选择项目', trigger: 'blur' }
+            ],
+            receiver: [
+                { required: true, message: '请输入收票人', trigger: 'blur' }
+            ],
+            receiverMobile: [
+                { required: true, message: '请输入收票人手机', trigger: 'blur' },
+                { validator: Phone, trigger: 'blur' }
+            ],
+            receiverAddress: [
+                { required: true, message: '请输入收票地址', trigger: 'blur' }
             ]
         }
         return rules
     }
 
-    get selectMoeny () {
+    get selectMoney () {
         const moneny = this.selectData.reduce((sum, val) => {
             console.log(val, sum)
-            return sum + parseFloat(val.id ?? 0) * 1
+            return this.$plus(sum, parseFloat(val.money ?? 0) * 1)
         }, 0)
         return moneny.toFixed(2)
     }
@@ -233,11 +261,13 @@ export default class Serviceedit extends Vue {
 
     }
 
-    handleSave () {
+    handleSave (type) {
+        this.serviceForm.saveOrSubmit = type
+        this.serviceForm.resourceIds = this.selectData.map(val => val.id)
         // 保存
-        this.$refs['serviceForm'].validate(valid => {
+        this.$refs['serviceForm'].validate(async valid => {
             if (valid) {
-
+                await updateServiceInvoice(this.serviceForm)
             }
         })
     }
@@ -249,9 +279,9 @@ export default class Serviceedit extends Vue {
     }
 
     async mounted () {
-        this.tableData = [{ id: 200, code: 11111, name: 2222 }]
+        this.tableData = [{ id: 200, code: 11111, name: 2222, money: 100 }]
         this.selectData = this.tableData
-        this.tableForm = [{ id: 201, code: 32, name: 3234, categoryPath: 555 }, { id: 200, code: 11111, name: 2222 }]
+        this.tableForm = [{ id: 201, code: 32, name: 3234, money: 101, categoryPath: 555 }, { id: 200, code: 11111, name: 2222, money: 103 }]
     }
 }
 </script>

@@ -1,6 +1,4 @@
-interface JsonNode{
-
-}
+interface JsonNode{}
 /**
 *
 * @export
@@ -1406,6 +1404,106 @@ export interface BankClaimFundCancelRequest {
      * @memberof BankClaimFundCancelRequest
      */
     updatePhone: string
+
+}
+
+/**
+*
+* @export
+* @interface ServiceInvoiceSubmitRequest
+*/
+export interface ServiceInvoiceSubmitRequest {
+
+    /**
+     * 保存或提交 1 保存 2 提交
+     * @type {number | string}
+     * @memberof ServiceInvoiceSubmitRequest
+     */
+    saveOrSubmit: number | string
+
+    /**
+     * 发票id
+     * @type {number | string}
+     * @memberof ServiceInvoiceSubmitRequest
+     */
+    invoiceId?: number | string
+
+    /**
+     * 项目编码
+     * @type {string}
+     * @memberof ServiceInvoiceSubmitRequest
+     */
+    projectNo: string
+
+    /**
+     * 项目名称
+     * @type {string}
+     * @memberof ServiceInvoiceSubmitRequest
+     */
+    projectName: string
+
+    /**
+     * 所属分部编码
+     * @type {string}
+     * @memberof ServiceInvoiceSubmitRequest
+     */
+    deptCode: string
+
+    /**
+     * 所属分部
+     * @type {string}
+     * @memberof ServiceInvoiceSubmitRequest
+     */
+    deptName: string
+
+    /**
+     * 发票金额
+     * @type {number | string}
+     * @memberof ServiceInvoiceSubmitRequest
+     */
+    invoiceAmount: number | string
+
+    /**
+     * 收票人
+     * @type {string}
+     * @memberof ServiceInvoiceSubmitRequest
+     */
+    receiver: string
+
+    /**
+     * 收票人手机
+     * @type {string}
+     * @memberof ServiceInvoiceSubmitRequest
+     */
+    receiverMobile: string
+
+    /**
+     * 收票地址
+     * @type {string}
+     * @memberof ServiceInvoiceSubmitRequest
+     */
+    receiverAddress: string
+
+    /**
+     * 经销商
+     * @type {string}
+     * @memberof ServiceInvoiceSubmitRequest
+     */
+    companyName: string
+
+    /**
+     * 备注
+     * @type {string}
+     * @memberof ServiceInvoiceSubmitRequest
+     */
+    remark?: string
+
+    /**
+     * 账单id
+     * @type {Array<string>}
+     * @memberof ServiceInvoiceSubmitRequest
+     */
+    resourceIds: Array<string>
 
 }
 
@@ -5232,21 +5330,21 @@ export interface CommonBankFlowRequest {
      * @type {string}
      * @memberof CommonBankFlowRequest
      */
-    date: string
+    date?: string
 
     /**
      *
      * @type {string}
      * @memberof CommonBankFlowRequest
      */
-    startTime: string
+    startTime?: string
 
     /**
      *
      * @type {string}
      * @memberof CommonBankFlowRequest
      */
-    endTime: string
+    endTime?: string
 
     /**
      *
@@ -5678,6 +5776,66 @@ export interface ClaimFundRequest {
 /**
 *
 * @export
+* @interface ServiceInvoiceRejectRequest
+*/
+export interface ServiceInvoiceRejectRequest {
+
+    /**
+     * 发票id
+     * @type {number | string}
+     * @memberof ServiceInvoiceRejectRequest
+     */
+    id: number | string
+
+    /**
+     * 驳回原因
+     * @type {string}
+     * @memberof ServiceInvoiceRejectRequest
+     */
+    rejectReason: string
+
+}
+
+/**
+*
+* @export
+* @interface ServiceInvoiceOpenRequest
+*/
+export interface ServiceInvoiceOpenRequest {
+
+    /**
+     * 发票id
+     * @type {number | string}
+     * @memberof ServiceInvoiceOpenRequest
+     */
+    invoiceId?: number | string
+
+    /**
+     * 发票号码
+     * @type {string}
+     * @memberof ServiceInvoiceOpenRequest
+     */
+    invoiceNumber?: string
+
+    /**
+     * 快递公司
+     * @type {string}
+     * @memberof ServiceInvoiceOpenRequest
+     */
+    deliveryCompanyName?: string
+
+    /**
+     * 快递单号
+     * @type {string}
+     * @memberof ServiceInvoiceOpenRequest
+     */
+    deliveryNo?: string
+
+}
+
+/**
+*
+* @export
 * @interface PrepaymentExamineFailResponse
 */
 export interface PrepaymentExamineFailResponse {
@@ -5808,6 +5966,452 @@ export interface FundPayReceiveRequest {
      * @memberof FundPayReceiveRequest
      */
     payeeAccountId?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface ServiceInvoicePageRequest
+*/
+export interface ServiceInvoicePageRequest {
+
+    /**
+     * 申请单号
+     * @type {string}
+     * @memberof ServiceInvoicePageRequest
+     */
+    invoiceNo?: string
+
+    /**
+     * 所属分部编码
+     * @type {string}
+     * @memberof ServiceInvoicePageRequest
+     */
+    deptCode?: string
+
+    /**
+     * 经销商
+     * @type {string}
+     * @memberof ServiceInvoicePageRequest
+     */
+    companyName?: string
+
+    /**
+     * 发票号码
+     * @type {string}
+     * @memberof ServiceInvoicePageRequest
+     */
+    invoiceNumber?: string
+
+    /**
+     * 项目名称
+     * @type {string}
+     * @memberof ServiceInvoicePageRequest
+     */
+    projectName?: string
+
+    /**
+     * 发票状态，10:申请中，20:已提交 30:已开票
+     * @type {number | string}
+     * @memberof ServiceInvoicePageRequest
+     */
+    invoiceStatus?: number | string
+
+    /**
+     * 快递单号
+     * @type {string}
+     * @memberof ServiceInvoicePageRequest
+     */
+    deliveryNo?: string
+
+    /**
+     * 发票金额
+     * @type {number | string}
+     * @memberof ServiceInvoicePageRequest
+     */
+    invoiceAmount?: number | string
+
+    /**
+     * 申请人
+     * @type {string}
+     * @memberof ServiceInvoicePageRequest
+     */
+    createBy?: string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof ServiceInvoicePageRequest
+     */
+    minInvoiceAmount?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof ServiceInvoicePageRequest
+     */
+    maxInvoiceAmount?: number | string
+
+    /**
+     * 申请时间(起始)
+     * @type {string}
+     * @memberof ServiceInvoicePageRequest
+     */
+    createTimeStart?: string
+
+    /**
+     * 申请时间(终止)
+     * @type {string}
+     * @memberof ServiceInvoicePageRequest
+     */
+    createTimeEnd?: string
+
+}
+
+/**
+*
+* @export
+* @interface IPageServiceInvoicePageResponse
+*/
+export interface IPageServiceInvoicePageResponse {
+
+    /**
+     *
+     * @type {Array<ServiceInvoicePageResponse>}
+     * @memberof IPageServiceInvoicePageResponse
+     */
+    records: Array<ServiceInvoicePageResponse>
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageServiceInvoicePageResponse
+     */
+    total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageServiceInvoicePageResponse
+     */
+    pages: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageServiceInvoicePageResponse
+     */
+    current: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageServiceInvoicePageResponse
+     */
+    size: number | string
+
+}
+
+/**
+*
+* @export
+* @interface ServiceInvoicePageResponse
+*/
+export interface ServiceInvoicePageResponse {
+
+    /**
+     * 发票状态，10:申请中，20:已提交 30:已开票
+     * @type {number | string}
+     * @memberof ServiceInvoicePageResponse
+     */
+    invoiceStatus?: number | string
+
+    /**
+     * 申请单号
+     * @type {string}
+     * @memberof ServiceInvoicePageResponse
+     */
+    invoiceNo?: string
+
+    /**
+     * 项目编号
+     * @type {string}
+     * @memberof ServiceInvoicePageResponse
+     */
+    projectNo?: string
+
+    /**
+     * 项目名称
+     * @type {string}
+     * @memberof ServiceInvoicePageResponse
+     */
+    projectName?: string
+
+    /**
+     * 所属分部
+     * @type {string}
+     * @memberof ServiceInvoicePageResponse
+     */
+    deptName?: string
+
+    /**
+     * 经销商
+     * @type {string}
+     * @memberof ServiceInvoicePageResponse
+     */
+    companyName?: string
+
+    /**
+     * 申请人
+     * @type {string}
+     * @memberof ServiceInvoicePageResponse
+     */
+    createBy?: string
+
+    /**
+     * 申请时间
+     * @type {string}
+     * @memberof ServiceInvoicePageResponse
+     */
+    createTime?: string
+
+    /**
+     * 发票金额
+     * @type {number | string}
+     * @memberof ServiceInvoicePageResponse
+     */
+    invoiceAmount?: number | string
+
+    /**
+     * 发票号码
+     * @type {string}
+     * @memberof ServiceInvoicePageResponse
+     */
+    invoiceNumber?: string
+
+    /**
+     * 寄送快递单号
+     * @type {string}
+     * @memberof ServiceInvoicePageResponse
+     */
+    deliveryNo?: string
+
+}
+
+/**
+* 发票明细
+* @export
+* @interface InvoiceFund
+*/
+export interface InvoiceFund {
+
+    /**
+     * 服务流水号
+     * @type {number | string}
+     * @memberof InvoiceFund
+     */
+    billId?: number | string
+
+    /**
+     * 支付单号
+     * @type {string}
+     * @memberof InvoiceFund
+     */
+    paymentOrderNo?: string
+
+    /**
+     * 期数
+     * @type {number | string}
+     * @memberof InvoiceFund
+     */
+    qishu?: number | string
+
+    /**
+     * 金额
+     * @type {number | string}
+     * @memberof InvoiceFund
+     */
+    amount?: number | string
+
+    /**
+     * 支付成功时间
+     * @type {string}
+     * @memberof InvoiceFund
+     */
+    paySuccessTime?: string
+
+}
+
+/**
+* 操作信息
+* @export
+* @interface OperationLog
+*/
+export interface OperationLog {
+
+    /**
+     * 资源id
+     * @type {number | string}
+     * @memberof OperationLog
+     */
+    resourceId?: number | string
+
+    /**
+     * 资源类型 1 服务费发票 2 设备发票
+     * @type {number | string}
+     * @memberof OperationLog
+     */
+    resourceType?: number | string
+
+    /**
+     * 操作人
+     * @type {string}
+     * @memberof OperationLog
+     */
+    operator?: string
+
+    /**
+     * 操作类型 1 申请 2 提交 3 驳回 4 开票
+     * @type {number | string}
+     * @memberof OperationLog
+     */
+    operationType?: number | string
+
+    /**
+     * 操作描述
+     * @type {string}
+     * @memberof OperationLog
+     */
+    operationDesc?: string
+
+    /**
+     * 备注
+     * @type {string}
+     * @memberof OperationLog
+     */
+    note?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof OperationLog
+     */
+    createTime?: string
+
+}
+
+/**
+*
+* @export
+* @interface ServiceInvoiceDetailResponse
+*/
+export interface ServiceInvoiceDetailResponse {
+
+    /**
+     * 发票id
+     * @type {number | string}
+     * @memberof ServiceInvoiceDetailResponse
+     */
+    invoiceId: number | string
+
+    /**
+     * 项目id
+     * @type {number | string}
+     * @memberof ServiceInvoiceDetailResponse
+     */
+    projectId: number | string
+
+    /**
+     * 项目名称
+     * @type {string}
+     * @memberof ServiceInvoiceDetailResponse
+     */
+    projectName: string
+
+    /**
+     * 所属分部
+     * @type {string}
+     * @memberof ServiceInvoiceDetailResponse
+     */
+    deptName: string
+
+    /**
+     * 发票金额
+     * @type {number | string}
+     * @memberof ServiceInvoiceDetailResponse
+     */
+    invoiceAmount: number | string
+
+    /**
+     * 收票人
+     * @type {string}
+     * @memberof ServiceInvoiceDetailResponse
+     */
+    receiver: string
+
+    /**
+     * 收票人手机
+     * @type {string}
+     * @memberof ServiceInvoiceDetailResponse
+     */
+    receiverMobile: string
+
+    /**
+     * 收票地址
+     * @type {string}
+     * @memberof ServiceInvoiceDetailResponse
+     */
+    receiverAddress: string
+
+    /**
+     * 申请单号
+     * @type {string}
+     * @memberof ServiceInvoiceDetailResponse
+     */
+    invoiceNo: string
+
+    /**
+     * 寄送快递单号
+     * @type {string}
+     * @memberof ServiceInvoiceDetailResponse
+     */
+    deliveryNo: string
+
+    /**
+     * 经销商
+     * @type {string}
+     * @memberof ServiceInvoiceDetailResponse
+     */
+    companyName: string
+
+    /**
+     * 备注
+     * @type {string}
+     * @memberof ServiceInvoiceDetailResponse
+     */
+    remark: string
+
+    /**
+     * 开票日期
+     * @type {string}
+     * @memberof ServiceInvoiceDetailResponse
+     */
+    openTime: string
+
+    /**
+     * 发票明细
+     * @type {Array<InvoiceFund>}
+     * @memberof ServiceInvoiceDetailResponse
+     */
+    resourceList: Array<InvoiceFund>
+
+    /**
+     * 操作信息
+     * @type {Array<OperationLog>}
+     * @memberof ServiceInvoiceDetailResponse
+     */
+    logs: Array<OperationLog>
 
 }
 
@@ -6568,13 +7172,6 @@ export interface IPageRespUpStreamPayment {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageRespUpStreamPayment
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<RespUpStreamPayment>}
      * @memberof IPageRespUpStreamPayment
      */
@@ -6586,6 +7183,13 @@ export interface IPageRespUpStreamPayment {
      * @memberof IPageRespUpStreamPayment
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespUpStreamPayment
+     */
+    pages: number | string
 
     /**
      *
@@ -6968,13 +7572,6 @@ export interface IPageSupplierAccountResponse {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageSupplierAccountResponse
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<SupplierAccountResponse>}
      * @memberof IPageSupplierAccountResponse
      */
@@ -6986,6 +7583,13 @@ export interface IPageSupplierAccountResponse {
      * @memberof IPageSupplierAccountResponse
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageSupplierAccountResponse
+     */
+    pages: number | string
 
     /**
      *
@@ -8785,13 +9389,6 @@ export interface IPageRespPurchaseOrderCrmPage {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageRespPurchaseOrderCrmPage
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<RespPurchaseOrderCrmPage>}
      * @memberof IPageRespPurchaseOrderCrmPage
      */
@@ -8803,6 +9400,13 @@ export interface IPageRespPurchaseOrderCrmPage {
      * @memberof IPageRespPurchaseOrderCrmPage
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespPurchaseOrderCrmPage
+     */
+    pages: number | string
 
     /**
      *
@@ -10040,13 +10644,6 @@ export interface IPageRespPurchaseOrder {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageRespPurchaseOrder
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<RespPurchaseOrder>}
      * @memberof IPageRespPurchaseOrder
      */
@@ -10058,6 +10655,13 @@ export interface IPageRespPurchaseOrder {
      * @memberof IPageRespPurchaseOrder
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespPurchaseOrder
+     */
+    pages: number | string
 
     /**
      *
@@ -10716,13 +11320,6 @@ export interface IPagePrepaymentResponse {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPagePrepaymentResponse
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<PrepaymentResponse>}
      * @memberof IPagePrepaymentResponse
      */
@@ -10734,6 +11331,13 @@ export interface IPagePrepaymentResponse {
      * @memberof IPagePrepaymentResponse
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPagePrepaymentResponse
+     */
+    pages: number | string
 
     /**
      *
@@ -10890,6 +11494,20 @@ export interface PrepaymentResponse {
      * @memberof PrepaymentResponse
      */
     confirmAmount?: number | string
+
+    /**
+     * 账单支付方式:1-银行转帐;2-银行承兑
+     * @type {number | string}
+     * @memberof PrepaymentResponse
+     */
+    fundPaymentType?: number | string
+
+    /**
+     * 上游支付方式 1-银行转帐;2-银行承兑
+     * @type {number | string}
+     * @memberof PrepaymentResponse
+     */
+    supplierPaymentType?: number | string
 
 }
 
@@ -11801,13 +12419,6 @@ export interface IPageRespPaymentOrders {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageRespPaymentOrders
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<RespPaymentOrders>}
      * @memberof IPageRespPaymentOrders
      */
@@ -11819,6 +12430,13 @@ export interface IPageRespPaymentOrders {
      * @memberof IPageRespPaymentOrders
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespPaymentOrders
+     */
+    pages: number | string
 
     /**
      *
@@ -14371,13 +14989,6 @@ export interface IPageRespFundResult {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageRespFundResult
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<RespFundResult>}
      * @memberof IPageRespFundResult
      */
@@ -14389,6 +15000,13 @@ export interface IPageRespFundResult {
      * @memberof IPageRespFundResult
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespFundResult
+     */
+    pages: number | string
 
     /**
      *
@@ -14706,13 +15324,6 @@ export interface IPageLoanTransferAttachDocResponse {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageLoanTransferAttachDocResponse
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<LoanTransferAttachDocResponse>}
      * @memberof IPageLoanTransferAttachDocResponse
      */
@@ -14724,6 +15335,13 @@ export interface IPageLoanTransferAttachDocResponse {
      * @memberof IPageLoanTransferAttachDocResponse
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageLoanTransferAttachDocResponse
+     */
+    pages: number | string
 
     /**
      *
@@ -15325,6 +15943,13 @@ export interface LoanTransferResponse {
      */
     supplierBankNo: string
 
+    /**
+     * 采购金额
+     * @type {number | string}
+     * @memberof LoanTransferResponse
+     */
+    purchaseAmount: number | string
+
 }
 
 /**
@@ -15473,13 +16098,6 @@ export interface IPageInterfaceCompensationMechanismResponse {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageInterfaceCompensationMechanismResponse
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<InterfaceCompensationMechanismResponse>}
      * @memberof IPageInterfaceCompensationMechanismResponse
      */
@@ -15491,6 +16109,13 @@ export interface IPageInterfaceCompensationMechanismResponse {
      * @memberof IPageInterfaceCompensationMechanismResponse
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageInterfaceCompensationMechanismResponse
+     */
+    pages: number | string
 
     /**
      *
@@ -15517,13 +16142,6 @@ export interface IPageRespYear {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageRespYear
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<RespYear>}
      * @memberof IPageRespYear
      */
@@ -15535,6 +16153,13 @@ export interface IPageRespYear {
      * @memberof IPageRespYear
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespYear
+     */
+    pages: number | string
 
     /**
      *
@@ -15649,13 +16274,6 @@ export interface IPageHolidayRecord {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageHolidayRecord
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<HolidayRecord>}
      * @memberof IPageHolidayRecord
      */
@@ -15667,6 +16285,13 @@ export interface IPageHolidayRecord {
      * @memberof IPageHolidayRecord
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageHolidayRecord
+     */
+    pages: number | string
 
     /**
      *
@@ -16074,6 +16699,27 @@ export interface ReqFundAttachDetail {
 export interface PrepaymentFundRequest {
 
     /**
+     * 页码
+     * @type {number | string}
+     * @memberof PrepaymentFundRequest
+     */
+    pageNumber?: number | string
+
+    /**
+     * 每页大小
+     * @type {number | string}
+     * @memberof PrepaymentFundRequest
+     */
+    pageSize?: number | string
+
+    /**
+     *
+     * @type {Sort}
+     * @memberof PrepaymentFundRequest
+     */
+    sort?: Sort
+
+    /**
      * 预付款Id
      * @type {number | string}
      * @memberof PrepaymentFundRequest
@@ -16245,13 +16891,6 @@ export interface IPagePrepaymentFundResponse {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPagePrepaymentFundResponse
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<PrepaymentFundResponse>}
      * @memberof IPagePrepaymentFundResponse
      */
@@ -16263,6 +16902,13 @@ export interface IPagePrepaymentFundResponse {
      * @memberof IPagePrepaymentFundResponse
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPagePrepaymentFundResponse
+     */
+    pages: number | string
 
     /**
      *
@@ -17134,13 +17780,6 @@ export interface IPageRespContract {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageRespContract
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<RespContract>}
      * @memberof IPageRespContract
      */
@@ -17152,6 +17791,13 @@ export interface IPageRespContract {
      * @memberof IPageRespContract
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespContract
+     */
+    pages: number | string
 
     /**
      *
@@ -17489,13 +18135,6 @@ export interface IPageAppletContractResponse {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageAppletContractResponse
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<AppletContractResponse>}
      * @memberof IPageAppletContractResponse
      */
@@ -17507,6 +18146,13 @@ export interface IPageAppletContractResponse {
      * @memberof IPageAppletContractResponse
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageAppletContractResponse
+     */
+    pages: number | string
 
     /**
      *
@@ -17584,13 +18230,6 @@ export interface IPageRespContractTemplate {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageRespContractTemplate
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<RespContractTemplate>}
      * @memberof IPageRespContractTemplate
      */
@@ -17602,6 +18241,13 @@ export interface IPageRespContractTemplate {
      * @memberof IPageRespContractTemplate
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespContractTemplate
+     */
+    pages: number | string
 
     /**
      *
@@ -18170,13 +18816,6 @@ export interface IPageRespContractTemplateVersion {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageRespContractTemplateVersion
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<RespContractTemplateVersion>}
      * @memberof IPageRespContractTemplateVersion
      */
@@ -18188,6 +18827,13 @@ export interface IPageRespContractTemplateVersion {
      * @memberof IPageRespContractTemplateVersion
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespContractTemplateVersion
+     */
+    pages: number | string
 
     /**
      *
@@ -19525,13 +20171,6 @@ export interface IPageRespCAOrg {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageRespCAOrg
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<RespCAOrg>}
      * @memberof IPageRespCAOrg
      */
@@ -19543,6 +20182,13 @@ export interface IPageRespCAOrg {
      * @memberof IPageRespCAOrg
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespCAOrg
+     */
+    pages: number | string
 
     /**
      *
@@ -19741,13 +20387,6 @@ export interface IPageRespCAAccount {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageRespCAAccount
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<RespCAAccount>}
      * @memberof IPageRespCAAccount
      */
@@ -19759,6 +20398,13 @@ export interface IPageRespCAAccount {
      * @memberof IPageRespCAAccount
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageRespCAAccount
+     */
+    pages: number | string
 
     /**
      *
@@ -20017,6 +20663,20 @@ export interface FundPayBatchResponse {
      * @memberof FundPayBatchResponse
      */
     attachDocs: Array<AttachDocResponse>
+
+    /**
+     * 付款主体
+     * @type {string}
+     * @memberof FundPayBatchResponse
+     */
+    paymentMain: string
+
+    /**
+     * 付款主体银行账号
+     * @type {string}
+     * @memberof FundPayBatchResponse
+     */
+    payeeBankAccount: string
 
 }
 
@@ -20449,13 +21109,6 @@ export interface IPageClaimFundResponse {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageClaimFundResponse
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<ClaimFundResponse>}
      * @memberof IPageClaimFundResponse
      */
@@ -20467,6 +21120,13 @@ export interface IPageClaimFundResponse {
      * @memberof IPageClaimFundResponse
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageClaimFundResponse
+     */
+    pages: number | string
 
     /**
      *
@@ -20693,13 +21353,6 @@ export interface IPageBankBillPageResponse {
 
     /**
      *
-     * @type {number | string}
-     * @memberof IPageBankBillPageResponse
-     */
-    pages: number | string
-
-    /**
-     *
      * @type {Array<BankBillPageResponse>}
      * @memberof IPageBankBillPageResponse
      */
@@ -20711,6 +21364,13 @@ export interface IPageBankBillPageResponse {
      * @memberof IPageBankBillPageResponse
      */
     total: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPageBankBillPageResponse
+     */
+    pages: number | string
 
     /**
      *

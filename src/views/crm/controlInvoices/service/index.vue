@@ -5,13 +5,13 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">申请单号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.paymentOrderNo" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.invoiceNo" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">所属分部：</div>
                     <div class="query-col__input">
-                        <el-select placeholder="请选择" v-model="queryParams.subsectionCode" :clearable='true'>
+                        <el-select placeholder="请选择" v-model="queryParams.deptCode" :clearable='true'>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
@@ -25,19 +25,19 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">发票号码：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.companyName" maxlength="20" placeholder="请输入"></el-input>
+                        <el-input type="text" v-model="queryParams.invoiceNumber" maxlength="20" placeholder="请输入"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">项目名称：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.companyName" maxlength="20" placeholder="请输入"></el-input>
+                        <el-input type="text" v-model="queryParams.projectName" maxlength="20" placeholder="请输入"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">状态码：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.supplierPaymentType" placeholder="请选择">
+                        <el-select v-model="queryParams.invoiceStatus" placeholder="请选择">
                             <el-option label="全部" value=""></el-option>
                             <el-option label="银行转账" :value="1"></el-option>
                             <el-option label="银行承兑" :value="2"></el-option>
@@ -47,21 +47,21 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">寄送快递单号：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.supplierCompanyName" maxlength="20" placeholder="请输入"></el-input>
+                        <el-input type="text" v-model="queryParams.deliveryNo" maxlength="20" placeholder="请输入"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">发票金额（元）：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-isNum:2 v-model="queryParams.startNoPayAmount" maxlength="20" placeholder="请输入金额"></el-input>
+                        <el-input type="text" v-isNum:2 v-model="queryParams.minInvoiceAmount" maxlength="20" placeholder="请输入金额"></el-input>
                         <span class="ml10 mr10">-</span>
-                        <el-input type="text" v-isNum:2 v-model="queryParams.endNoPayAmount" maxlength="20" placeholder="请输入金额"></el-input>
+                        <el-input type="text" v-isNum:2 v-model="queryParams.maxInvoiceAmount" maxlength="20" placeholder="请输入金额"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">申请人：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.supplierCompanyName" maxlength="20" placeholder="请输入"></el-input>
+                        <el-input type="text" v-model="queryParams.createBy" maxlength="20" placeholder="请输入"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -93,17 +93,17 @@
             </hosJoyTable>
             <el-dialog :close-on-click-modal='false' title="开票" :visible.sync="isShowInvoice" width="600px" class="prev-payment-dialog" :before-close="handleCancel">
                 <el-form :model="IForm" :rules="IRules" ref="IForm" label-width="150px" class="demo-ruleForm">
-                    <el-form-item label="发票号码：" prop="paymentTime">
-                        <el-input v-model="IForm.paymentTime"></el-input>
+                    <el-form-item label="发票号码：" prop="invoiceNumber">
+                        <el-input v-model="IForm.invoiceNumber"></el-input>
                     </el-form-item>
-                    <el-form-item label="快递公司：" prop="attachDocRequestList">
-                        <el-select v-model="IForm.region" placeholder="请选择活动区域">
+                    <el-form-item label="快递公司：" prop="deliveryCompanyName">
+                        <el-select v-model="IForm.deliveryCompanyName" placeholder="请选择快递公司">
                             <el-option label="区域一" value="shanghai"></el-option>
                             <el-option label="区域二" value="beijing"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="快递单号：" prop="paymentTime">
-                        <el-input v-model="IForm.paymentTime"></el-input>
+                    <el-form-item label="快递单号：" prop="deliveryNo">
+                        <el-input v-model="IForm.deliveryNo"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
@@ -121,14 +121,14 @@ import { Vue, Component } from 'vue-property-decorator'
 import { State, Getter, Action } from 'vuex-class'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import { measure, handleSubmit, validateForm } from '@/decorator/index'
-import { ReqUpStreamPaymentQuery, RespUpStreamPayment } from '@/interface/hbp-project'
-import filters from '@/utils/filters'
+import { ReqUpStreamPaymentQuery, RespUpStreamPayment, ServiceInvoiceOpenRequest } from '@/interface/hbp-project'
+import { updateOpen, updateReject, updateSubmit, getInvoiceList } from '../api/index'
 import { newCache } from '@/utils/index'
 
 // 接口 实现继承
-interface Query extends ReqUpStreamPaymentQuery{
-    [key:string]:any
-}
+// type Query<T> = { [P in keyof T]: T[P] }
+
+const invoiceTyps = [{ value: 10, label: '申请中' }, { value: 20, label: '已提交' }, { value: 30, label: '已开票' }]
 
 @Component({
     name: 'serviceinvoice',
@@ -151,32 +151,32 @@ export default class UpstreamPaymentManagement extends Vue {
     tableData:RespUpStreamPayment[] = []
     private isShowInvoice:boolean = false
     private _queryParams = {}
-    queryParams: Query = {
+    queryParams: Record<string, any> = {
         pageNumber: 1,
         pageSize: 10,
-        paymentMain: '', // 付款主体
-        paymentOrderNo: '',
+        invoiceNo: '',
+        deptCode: '',
         deptName: '',
         companyName: '',
-        supplierPaymentType: '',
-        supplierCompanyName: '',
+        invoiceNumber: '',
         projectName: '',
-        paymentStatus: '',
-        startNoPayAmount: '',
-        endNoPayAmount: '',
-        startInitiateTime: '',
-        endInitiateTime: '',
-        startExpectSupplierPaymentDate: '',
-        endExpectSupplierPaymentDate: '',
+        invoiceStatus: '',
+        deliveryNo: '',
+        createBy: '',
+        minInvoiceAmount: '',
+        maxInvoiceAmount: '',
+        createTimeStart: '',
+        createTimeEnd: '',
         authCode: '',
-        jobNumber: '',
-        subsectionCode: '',
-        loanTransferStatus: '',
-        'sort.property': null,
-        'sort.direction': null
+        jobNumber: ''
+        // 'sort.property': null,
+        // 'sort.direction': null
     }
-    IForm:Record<any, any>={
-
+    IForm:ServiceInvoiceOpenRequest={
+        invoiceId: '',
+        invoiceNumber: '',
+        deliveryCompanyName: '',
+        deliveryNo: ''
     }
 
     @State('userInfo') userInfo: any
@@ -188,30 +188,31 @@ export default class UpstreamPaymentManagement extends Vue {
             type: 'date',
             valueFormat: 'yyyy-MM-dd',
             format: 'yyyy-MM-dd',
-            startTime: this.queryParams.startExpectSupplierPaymentDate,
-            endTime: this.queryParams.endExpectSupplierPaymentDate
+            startTime: this.queryParams.createTimeStart,
+            endTime: this.queryParams.createTimeEnd
         }
     }
 
     get IRules () {
         return {
-            paymentTime: [{ required: true, message: '请输入发票号码', trigger: 'bulr' }],
-            attachDocRequestList: [{ required: true, message: '请上传上游支付凭证', trigger: 'change' }]
+            invoiceNumber: [{ required: true, message: '请输入发票号码', trigger: 'bulr' }],
+            deliveryCompanyName: [{ required: true, message: '请选择快递公司', trigger: 'change' }],
+            deliveryNo: [{ required: true, message: '请输入快递单号', trigger: 'bulr' }]
         }
     }
 
     tableLabel:tableLabelProps = [
-        { label: '状态码', prop: 'paymentOrderNo', width: '100' },
-        { label: '申请单号', prop: 'deptName', width: '130' },
-        { label: '项目编号', prop: 'poAmount', width: '160', displayAs: 'money' },
-        { label: '项目名称', prop: 'poAmount', width: '160', displayAs: 'money' },
-        { label: '所属分部', prop: 'poAmount', width: '160', displayAs: 'money' },
-        { label: '经销商', prop: 'poAmount', width: '160', displayAs: 'money' },
-        { label: '申请人', prop: 'poAmount', width: '160', displayAs: 'money' },
-        { label: '申请时间', prop: 'poAmount', width: '160', displayAs: 'money' },
-        { label: '发票金额', prop: 'poAmount', width: '160', displayAs: 'money' },
-        { label: '发票号码', prop: 'poAmount', width: '160', displayAs: 'money' },
-        { label: '寄送快递单号', prop: 'poAmount', width: '160', displayAs: 'money' }
+        { label: '状态码', prop: 'invoiceStatus', width: '100', dicData: invoiceTyps },
+        { label: '申请单号', prop: 'invoiceNo' },
+        { label: '项目编号', prop: 'projectNo' },
+        { label: '项目名称', prop: 'poAmount' },
+        { label: '所属分部', prop: 'deptName' },
+        { label: '经销商', prop: 'companyName' },
+        { label: '申请人', prop: 'createBy' },
+        { label: '申请时间', prop: 'createTime' },
+        { label: '发票金额', prop: 'invoiceAmount', displayAs: 'money' },
+        { label: '发票号码', prop: 'invoiceNumber' },
+        { label: '寄送快递单号', prop: 'deliveryNo' }
     ]
 
     async handleLook (paymentOrderId, status) {
@@ -235,11 +236,8 @@ export default class UpstreamPaymentManagement extends Vue {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
-        }).then(() => {
-            this.$message({
-                type: 'success',
-                message: '删除成功!'
-            })
+        }).then(async () => {
+            await updateSubmit(val.id)
         }).catch(() => {
 
         })
@@ -262,17 +260,15 @@ export default class UpstreamPaymentManagement extends Vue {
             },
             inputErrorMessage: '驳回原因必填且长度不能超过80'
             // @ts-ignore
-        }).then(({ value }) => {
-            this.$message({
-                type: 'success',
-                message: '你的邮箱是: ' + value
-            })
+        }).then(async ({ value }) => {
+            await updateReject({ id: val.id, rejectReason: value })
         }).catch(() => {
 
         })
     }
 
     handleInvoice (val) {
+        this.IForm.invoiceId = val.id
         // 开票
         this.isShowInvoice = true
     }
@@ -281,16 +277,18 @@ export default class UpstreamPaymentManagement extends Vue {
     }
     handleSure () {
         // 确定
-        this.$refs['IForm'].validate(valid => {
+        this.$refs['IForm'].validate(async valid => {
             if (valid) {
-
+                await updateOpen(this.IForm)
             }
         })
     }
 
     @measure
     async getList () {
-
+        const { data } = await getInvoiceList(this.queryParams)
+        this.tableData = data.records
+        this.page.total = data.total as number
     }
 
     public onStartChange (val): void {
@@ -302,6 +300,7 @@ export default class UpstreamPaymentManagement extends Vue {
 
     async mounted () {
         this.tableData = [{ paymentOrderNo: '123132' }]
+        this.getList()
         await this.findCrmdeplist({
             deptType: 'F',
             pkDeptDoc: this.userInfo.pkDeptDoc,
