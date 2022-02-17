@@ -8,56 +8,56 @@
                         <el-form-item label="申请单号：" prop="floorName">
                             <el-input v-model.trim="equipmentForm.floorName" disabled></el-input>
                         </el-form-item>
-                        <el-form-item label="支付单号：" prop="floorName">
-                            <el-input v-model.trim="equipmentForm.floorName" maxlength="10">
+                        <el-form-item label="支付单号：" prop="paymentOrderNo">
+                            <el-input v-model.trim="equipmentForm.paymentOrderNo" maxlength="10">
                                 <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
                             </el-input>
                         </el-form-item>
                     </el-row>
                     <el-row>
-                        <el-form-item label="项目：" prop="floorName">
-                            xxxxx
+                        <el-form-item label="项目：">
+                            {{equipmentForm.projectName}}
                         </el-form-item>
-                        <el-form-item label="经销商：" prop="floorName">
-                            xxxxxxx
+                        <el-form-item label="经销商：">
+                            {{equipmentForm.companyName}}
                         </el-form-item>
-                        <el-form-item label="上游供应商：" prop="floorName">
-                            xxxxxxxx
+                        <el-form-item label="上游供应商：">
+                            {{equipmentForm.supplierCompanyName}}
                         </el-form-item>
-                        <el-form-item label="所属分部：" prop="floorName">
-                            xxxxxxxx
+                        <el-form-item label="所属分部：">
+                            {{equipmentForm.deptName}}
                         </el-form-item>
                     </el-row>
                     <el-row>
-                        <el-form-item label="采购发票总金额：" prop="floorName">
-                            <el-input v-model.trim="equipmentForm.floorName" maxlength="10"></el-input>
+                        <el-form-item label="采购发票总金额：" prop="purchaseInvoiceAmount">
+                            <el-input v-isNum:2 v-model.trim="equipmentForm.purchaseInvoiceAmount" maxlength="20"></el-input>
                         </el-form-item>
-                        <el-form-item label="mis采购订单号：" prop="floorName">
-                            <el-input v-model.trim="equipmentForm.floorName" maxlength="10"></el-input>
+                        <el-form-item label="mis采购订单号：" prop="misPurchaseOrderNo">
+                            <el-input v-model.trim="equipmentForm.misPurchaseOrderNo" maxlength="10"></el-input>
                         </el-form-item>
-                        <el-form-item label="mis销售订单号：" prop="floorName">
-                            <el-input v-model.trim="equipmentForm.floorName" maxlength="10"></el-input>
+                        <el-form-item label="mis销售订单号：" prop="misSalesOrderNo">
+                            <el-input v-model.trim="equipmentForm.misSalesOrderNo" maxlength="10"></el-input>
                         </el-form-item>
-                        <el-form-item label="销售发票申请金额：" prop="floorName">
-                            <el-input v-model.trim="equipmentForm.floorName" maxlength="10"></el-input>
+                        <el-form-item label="销售发票申请金额：" prop="salesInvoiceAmount">
+                            <el-input  v-isNum:2  v-model.trim="equipmentForm.salesInvoiceAmount" maxlength="10"></el-input>
                         </el-form-item>
-                        <el-form-item label="销售发票收票人：" prop="floorName">
-                            <el-input v-model.trim="equipmentForm.floorName" maxlength="10"></el-input>
+                        <el-form-item label="销售发票收票人：" prop="receiver">
+                            <el-input v-model.trim="equipmentForm.receiver" maxlength="20"></el-input>
                         </el-form-item>
-                        <el-form-item label="收票人手机：" prop="floorName">
-                            <el-input v-model.trim="equipmentForm.floorName" maxlength="10"></el-input>
+                        <el-form-item label="收票人手机：" prop="receiverMobile">
+                            <el-input v-model.trim="equipmentForm.receiverMobile" maxlength="11"></el-input>
                         </el-form-item>
-                        <el-form-item label="收票地址：" prop="floorName">
-                            <el-input v-model.trim="equipmentForm.floorName" maxlength="10"></el-input>
+                        <el-form-item label="收票地址：" prop="receiverAddress">
+                            <el-input v-model.trim="equipmentForm.receiverAddress" maxlength="80"></el-input>
                         </el-form-item>
                     </el-row>
 
                     <el-form-item label="备注信息：" prop="floorName">
-                        <el-input type="textarea" v-model="equipmentForm.floorName" :autosize="{ minRows: 6, maxRows: 8}"></el-input>
+                        <el-input type="textarea" maxlength="255" v-model="equipmentForm.remark" :autosize="{ minRows: 6, maxRows: 8}"></el-input>
                     </el-form-item>
                     <div class="floor-tit">上传附件</div>
-                    <el-form-item label="附件：" prop="imageUrls">
-                        <HosJoyUpload v-model="equipmentForm.imageUrls" :multiple='false' :showPreView='true' :fileSize=10 :fileNum=5 :uploadParameters='uploadParameters' :action="action" @successCb="$refs['imageUrls'].clearValidate()" accept=".jpg,.png,.jpeg,.pdf">
+                    <el-form-item label="附件：" prop="annexes">
+                        <HosJoyUpload v-model="equipmentForm.annexes" :multiple='false' :showPreView='true' :fileSize=10 :fileNum=5 :uploadParameters='uploadParameters' :action="action" @successCb="$refs['annexes'].clearValidate()" accept=".jpg,.png,.jpeg,.pdf">
                         </HosJoyUpload>
                     </el-form-item>
                 </el-form>
@@ -83,7 +83,7 @@
                             <el-button type="primary" @click="getList">查 询</el-button>
                         </el-row>
                     </el-form>
-                    <hosJoyTable ref="hosjoyTable2" align="center" border stripe :column="formTableLabel" :data="tableForm" showPagination :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='330'>
+                    <hosJoyTable ref="hosjoyTable" align="center" border stripe :column="formTableLabel" :data="tableForm" showPagination :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='330'>
                         <template #code="slotProps">
                             <el-radio :label="slotProps.data.$index" v-model="radio" @change.native="getCurrentRow(slotProps.data)">{{''}}</el-radio>
                         </template>
@@ -108,13 +108,12 @@
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
 import { CreateElement } from 'vue'
-import filters from '@/utils/filters'
-import { RespBossShopFloorDetail } from '@/interface/hbp-shop'
 import moment from 'moment'
 import { deepCopy } from '@/utils/utils'
 import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { ccpBaseUrl } from '@/api/config'
+import { EqpInvoiceSubmitRequest } from '@/interface/hbp-project'
 @Component({
     name: 'Servicededit',
     components: {
@@ -140,11 +139,27 @@ export default class Servicedetail extends Vue {
     isDisabled: boolean = true
     dialogVisible:boolean = false
     radio:string=''
-    selectRow = []
     selectData = []
-    equipmentForm: any={
-        floorName: '',
-        imageUrls: []
+    equipmentForm: Partial<EqpInvoiceSubmitRequest>={
+        saveOrSubmit: '',
+        invoiceId: '',
+        paymentOrderId: '',
+        paymentOrderNo: '',
+        projectNo: '',
+        projectName: '',
+        companyName: '',
+        supplierCompanyName: '',
+        purchaseInvoiceAmount: '',
+        salesInvoiceAmount: '',
+        misPurchaseOrderNo: '',
+        misSalesOrderNo: '',
+        receiver: '',
+        receiverMobile: '',
+        receiverAddress: '',
+        deptCode: '',
+        deptName: '',
+        remark: ''
+        // annexes: []
     }
     searchForm:Record<any, any>={
 
@@ -172,11 +187,29 @@ export default class Servicedetail extends Vue {
     // 校验
     get rules () {
         let rules = {
-            floorName: [
-                { required: true, message: '请输入楼层名称', trigger: 'blur' }
+            paymentOrderNo: [
+                { required: true, message: '请输入支付单号', trigger: 'blur' }
             ],
-            imageUrls: [
-                { required: true, message: '请上传品类图标' }
+            purchaseInvoiceAmount: [
+                { required: true, message: '请输入采购金额', trigger: 'blur' }
+            ],
+            misPurchaseOrderNo: [
+                { required: true, message: '请输入mis采购订单号', trigger: 'blur' }
+            ],
+            misSalesOrderNo: [
+                { required: true, message: '请输入mis销售订单号', trigger: 'blur' }
+            ],
+            salesInvoiceAmount: [
+                { required: true, message: '请输入销售发票申请金额', trigger: 'blur' }
+            ],
+            receiver: [
+                { required: true, message: '请输入销售发票收票人', trigger: 'blur' }
+            ],
+            receiverMobile: [
+                { required: true, message: '请输入销售发票收票人手机', trigger: 'blur' }
+            ],
+            receiverAddress: [
+                { required: true, message: '请输入收票地址', trigger: 'blur' }
             ]
         }
         return rules

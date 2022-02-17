@@ -505,7 +505,7 @@ export default class Advancelist extends Vue {
         resource: '',
         remark: ''
     }
-    payForm:PrepaymentSupplierSubmitResponse={
+    payForm:Record<any, any>={
         payVouchers: [],
         prepaymentOrderId: '',
         payAmount: '',

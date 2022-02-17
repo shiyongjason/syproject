@@ -334,7 +334,7 @@ export default class UpstreamPaymentManagement extends Vue {
         'sort.direction': null
     }
     private _dialogFormData = {}
-    dialogFormData:ReqSupplierSubmit={
+    dialogFormData:any={
         id: '',
         poId: '',
         paymentOrderId: '',
@@ -348,7 +348,7 @@ export default class UpstreamPaymentManagement extends Vue {
         remark: '',
         updateBy: ''
     }
-    bankForm:SupplierOnlineBankTransferConfirmRequest={
+    bankForm:any={
         paymentOrderId: '',
         paymentTime: '',
         attachDocRequestList: []

@@ -1508,6 +1508,148 @@ export interface ServiceInvoiceSubmitRequest {
 }
 
 /**
+*
+* @export
+* @interface EqpInvoiceSubmitRequest
+*/
+export interface EqpInvoiceSubmitRequest {
+
+    /**
+     * 保存或提交 1 保存 2 提交
+     * @type {number | string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    saveOrSubmit: number | string
+
+    /**
+     * 发票id
+     * @type {number | string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    invoiceId?: number | string
+
+    /**
+     * 支付单id
+     * @type {number | string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    paymentOrderId?: number | string
+
+    /**
+     * 支付单号
+     * @type {string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    paymentOrderNo?: string
+
+    /**
+     * 项目编码
+     * @type {string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    projectNo: string
+
+    /**
+     * 项目名称
+     * @type {string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    projectName: string
+
+    /**
+     * 经销商
+     * @type {string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    companyName: string
+
+    /**
+     * 上游供应商
+     * @type {string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    supplierCompanyName: string
+
+    /**
+     * 采购发票金额
+     * @type {number | string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    purchaseInvoiceAmount: number | string
+
+    /**
+     * 销售发票金额
+     * @type {number | string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    salesInvoiceAmount: number | string
+
+    /**
+     * mis采购订单号
+     * @type {string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    misPurchaseOrderNo: string
+
+    /**
+     * mis销售订单号
+     * @type {string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    misSalesOrderNo: string
+
+    /**
+     * 收票人
+     * @type {string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    receiver: string
+
+    /**
+     * 收票人手机
+     * @type {string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    receiverMobile: string
+
+    /**
+     * 收票地址
+     * @type {string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    receiverAddress: string
+
+    /**
+     * 所属分部编码
+     * @type {string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    deptCode: string
+
+    /**
+     * 所属分部
+     * @type {string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    deptName: string
+
+    /**
+     * 备注
+     * @type {string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    remark?: string
+
+    /**
+     * 附件
+     * @type {string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    annexes?: string
+
+}
+
+/**
 * 上游支付凭证列表
 * @export
 * @interface PayVoucher
@@ -1585,6 +1727,20 @@ export interface ReqSupplierSubmit {
      * @memberof ReqSupplierSubmit
      */
     payVouchers?: Array<PayVoucher>
+
+    /**
+     * 付款银行
+     * @type {string}
+     * @memberof ReqSupplierSubmit
+     */
+    payeeBankName?: string
+
+    /**
+     * 付款银行账号
+     * @type {string}
+     * @memberof ReqSupplierSubmit
+     */
+    payeeBankAccount: string
 
 }
 
@@ -1677,6 +1833,20 @@ export interface PrepaymentSupplierSubmitResponse {
     payDate: string
 
     /**
+     * 付款银行
+     * @type {string}
+     * @memberof PrepaymentSupplierSubmitResponse
+     */
+    payeeBankName?: string
+
+    /**
+     * 付款银行账号
+     * @type {string}
+     * @memberof PrepaymentSupplierSubmitResponse
+     */
+    payeeBankAccount: string
+
+    /**
      * 上游支付凭证列表
      * @type {Array<PayVoucher>}
      * @memberof PrepaymentSupplierSubmitResponse
@@ -1705,6 +1875,20 @@ export interface SupplierOnlineBankTransferConfirmRequest {
      * @memberof SupplierOnlineBankTransferConfirmRequest
      */
     paymentTime: string
+
+    /**
+     * 付款银行
+     * @type {string}
+     * @memberof SupplierOnlineBankTransferConfirmRequest
+     */
+    payeeBankName?: string
+
+    /**
+     * 付款银行账号
+     * @type {string}
+     * @memberof SupplierOnlineBankTransferConfirmRequest
+     */
+    payeeBankAccount: string
 
     /**
      * 上游支付凭证
@@ -7388,6 +7572,20 @@ export interface RespUpStreamPayment {
      * @memberof RespUpStreamPayment
      */
     paymentMain?: string
+
+    /**
+     * 付款银行
+     * @type {string}
+     * @memberof RespUpStreamPayment
+     */
+    payeeBankName?: string
+
+    /**
+     * 付款银行账号
+     * @type {string}
+     * @memberof RespUpStreamPayment
+     */
+    payeeBankAccount: string
 
 }
 

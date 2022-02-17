@@ -148,7 +148,7 @@ export default class UpstreamPaymentManagement extends Vue {
         sizes: [10, 20, 50, 100],
         total: 0
     }
-    tableData:RespUpStreamPayment[] = []
+    tableData:any[] = []
     private isShowInvoice:boolean = false
     private _queryParams = {}
     queryParams: Record<string, any> = {
@@ -299,7 +299,7 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     async mounted () {
-        this.tableData = [{ paymentOrderNo: '123132' }]
+        // this.tableData = [{ paymentOrderNo: '123132' }]
         this.getList()
         await this.findCrmdeplist({
             deptType: 'F',

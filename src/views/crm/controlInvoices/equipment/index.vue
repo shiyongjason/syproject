@@ -106,7 +106,7 @@
                 <div class="query-cont__col">
                     <h-button type="primary" @click="getList">查询</h-button>
                     <h-button>重置</h-button>
-                    <h-button>申请</h-button>
+                    <h-button @click="handleEdit">申请</h-button>
                 </div>
             </div>
             <!-- end search bar -->
@@ -132,17 +132,9 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import elImageAddToken from '@/components/elImageAddToken/index.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import { measure, handleSubmit, validateForm } from '@/decorator/index'
-import { ReqSupplierSubmit, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, RespUpStreamPayment, ReqLoanTransferChange, LoanTransferInfoResponse, SupplierOnlineBankTransferConfirmRequest } from '@/interface/hbp-project'
-import filters from '@/utils/filters'
-import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT, CHANGE_LOAN_TRANSFER_STATUS, UPSTREAM_PAY_EXPORT, PREV_PROOF, UPSTREAM_PAY_BANKLINK } from '@/utils/auth_const'
-import { newCache } from '@/utils/index'
-
-interface Query extends ReqUpStreamPaymentQuery{
-    [key:string]:any
-}
 
 @Component({
-    name: 'serviceinvoice',
+    name: 'equipmentinvoice',
     components: {
         hosJoyTable,
         OssFileHosjoyUpload,
@@ -161,12 +153,12 @@ export default class UpstreamPaymentManagement extends Vue {
         sizes: [10, 20, 50, 100],
         total: 0
     }
-    tableData:RespUpStreamPayment[] = []
+    tableData:any[] = []
     editorDrawer:boolean = false
 
     private _queryParams = {}
 
-    queryParams: Query = {
+    queryParams: Record<string, any> = {
         pageNumber: 1,
         pageSize: 10,
         paymentMain: '', // 付款主体
@@ -263,11 +255,7 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     async mounted () {
-        this.tableData = [{ paymentOrderNo: '1000' }]
-    }
-
-    beforeUpdate () {
-        newCache('UpstreamPaymentManagement')
+        // this.tableData = [{ paymentOrderNo: '1000' }]
     }
 }
 </script>
