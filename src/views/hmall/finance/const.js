@@ -247,13 +247,15 @@ export const SYNCHROMIZED_STATE_OPTIONS = [
     { label: '未处理', value: '10' },
     { label: '处理中', value: '20' },
     { label: '处理失败', value: '30' },
-    { label: '处理成功', value: '40' }
+    { label: '处理成功', value: '40' },
+    { label: '不处理', value: '50' }
 ]
 export const SYNCHROMIZED_STATE_MAP = new Map([
     [10, '未处理'],
     [20, '处理中'],
     [30, '处理失败'],
-    [40, '处理成功']
+    [40, '处理成功'],
+    [50, '不处理']
 ])
 //  运费类型
 export const FREIGHT_TYPE_OPTIONS = [

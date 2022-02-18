@@ -106,7 +106,7 @@
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onseeTask(scope.data.row)">查看</h-button>
                     <!-- 付过款，未关闭，资金同步状态为“已同步”，操作列表不展示“同步”按钮 -->
-                    <h-button table @click="onSynchronous(scope.data.row)" v-if="scope.data.row.status>10&&scope.data.row.status<60&&scope.data.row.ncSyncStatus!=40">同步</h-button>
+                    <h-button table @click="onSynchronous(scope.data.row)" v-if="scope.data.row.status>10&&scope.data.row.status<60&&scope.data.row.ncSyncStatus!=40&&scope.data.row.status!=50">同步</h-button>
                     <div class="freightpopover" v-if="scope.data.row.status<=10">
                         <el-popover placement="left" width='200' :ref="`popover-${scope.data.$index}`" trigger="click" title='运费修改'
                          @show="onPopoverShow">
