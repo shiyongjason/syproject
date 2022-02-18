@@ -74,13 +74,13 @@ export default class ApproveBill extends Vue {
             { label: '已支付金额', prop: 'paidAmount', displayAs: 'money' },
             { label: '待支付金额', prop: 'unPaidAmount', displayAs: 'money' },
             { label: '支付待确认', prop: 'unConfirmedAmount', displayAs: 'money' },
-            { label: '应支付时间', prop: 'schedulePaymentDate', displayAs: 'YYYY-MM-DD' },
-            { label: '支付状态', prop: 'paymentStatus', dicData: status },
+            { label: '应支付时间', prop: 'schedulePaymentDate', displayAs: 'YYYY-MM-DD', width: '130' },
+            { label: '支付状态', prop: 'paymentStatus', dicData: status, width: '80' },
             {
                 label: '本次认领金额',
                 prop: 'claimAmount',
                 className: 'form-table-header',
-                width: '180',
+                width: '120',
                 render: (h: CreateElement, scope: TableRenderParam) => {
                     return (
                         <div v-show={this.selectList.includes(scope.row)}>
