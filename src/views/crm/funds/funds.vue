@@ -132,18 +132,12 @@
                         <!-- 首付款(支付待确认金额大于0)才显示支付确认 -->
                         <h-button table @click="onPayDetail(scope.data.row)"
                             v-if="(scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[0].key||(scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key&&!scope.data.row.payBatch)) &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)">支付确认</h-button>
-                        <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.payBatch&&scope.data.row.paymentFlag==1">
-                            批量确认
-                        </h-button>
                         <h-button table @click="onUploadPay(scope.data.row)" v-if="(scope.data.row.paymentFlag==0||scope.data.row.paymentFlag==3)&&hosAuthCheck(Auths.CRM_FUNDS_DOWN_UPLOAD)&&scope.data.row.unpaidAmount > 0">
                             上传支付凭证
                         </h-button>
                     </template>
                     <template v-if="scope.data.row.repaymentType =='3'">
                         <!-- 服务费(支付待确认金额大于0)才显示支付确认 -->
-                        <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.showPayBatchConfirm">
-                            批量确认
-                        </h-button>
                         <h-button table @click="onPayDetail(scope.data.row)" v-if="scope.data.row.paymentFlag==PaymentOrderDict.paymentFlag.list[0].key||(scope.data.row.showPayConfirm && scope.data.row.unconfirmedAmount > 0)">
                             支付确认
                         </h-button>
@@ -153,9 +147,6 @@
                     </template>
                     <template v-if="scope.data.row.repaymentType =='2'">
                         <!--剩余货款 -->
-                        <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.showPayBatchConfirm">
-                            批量确认
-                        </h-button>
                         <h-button table @click="onPayDetail(scope.data.row)" v-if="(scope.data.row.paymentFlag==PaymentOrderDict.paymentFlag.list[0].key||scope.data.row.showPayConfirm)">
                             支付确认
                         </h-button>
@@ -496,9 +487,6 @@ export default {
             } else {
                 this.$refs.uploaddialog.onDialogClick(val)
             }
-        },
-        onBatchSumbit (val) {
-            this.$router.push({ path: '/goodwork/batchpsubmit', query: { fundId: val.id } })
         },
         ...mapActions({
             findCrmdeplist: 'crmmanage/findCrmdeplist'

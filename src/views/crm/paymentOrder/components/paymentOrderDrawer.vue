@@ -885,17 +885,12 @@ export default {
         },
         openFundsDialog (val, type, obj) {
             if (obj) {
-                if (val.payBatch) {
-                    // 跳转批量确认页面
-                    this.$router.push({ path: '/goodwork/batchpsubmit', query: { fundId: obj.id } })
-                } else {
-                    const params = {
-                        id: val.id,
-                        orderId: this.paymentOrderDetail.respFundResults.downpaymentFund.orderId,
-                        type: 'downPay'
-                    }
-                    this.$emit('openFundsDialog', params, type)
+                const params = {
+                    id: val.id,
+                    orderId: this.paymentOrderDetail.respFundResults.downpaymentFund.orderId,
+                    type: 'downPay'
                 }
+                this.$emit('openFundsDialog', params, type)
             } else {
                 const params = {
                     id: val.id,

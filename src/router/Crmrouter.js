@@ -291,20 +291,20 @@ export default [
             //     },
             //     component: () => import('@/views/crm/funds/batchPay.vue')
             // },
-            {
-                path: 'batchpsubmit',
-                name: 'batchpsubmit',
-                meta: {
-                    title: '批量支付确认',
-                    tagName: '批量支付确认',
-                    parentName: '好橙工',
-                    isMenu: false,
-                    icon: '',
-                    showMenuAs: '/goodwork/funds'
+            // {
+            //     path: 'batchpsubmit',
+            //     name: 'batchpsubmit',
+            //     meta: {
+            //         title: '批量支付确认',
+            //         tagName: '批量支付确认',
+            //         parentName: '好橙工',
+            //         isMenu: false,
+            //         icon: '',
+            //         showMenuAs: '/goodwork/funds'
 
-                },
-                component: () => import('@/views/crm/funds/batchSubmit.vue')
-            },
+            //     },
+            //     component: () => import('@/views/crm/funds/batchSubmit.vue')
+            // },
             {
                 path: 'contractlist',
                 name: 'contractlist',
