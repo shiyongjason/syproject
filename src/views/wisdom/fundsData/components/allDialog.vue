@@ -3,8 +3,7 @@
         <el-dialog :title="title" class="dialog-main" :visible.sync="dialogVisible" width="60%" :close-on-click-modal='false' :before-close="handleClose">
             <div class="dialog_wrap">
                 <el-descriptions title="基础信息">
-                    <el-descriptions-item label="台账编号">{{dialogDetail.account_standingBookNo || '-'}} <i v-if="hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)" class='el-icon-edit pointer'
-                            @click="getAccount(dialogDetail,`${product}-流贷基础信息维护（${dialogDetail.account_standingBookNo} ${dialogDetail.account_loanCompanyName}）`,'misDialogVisible')"></i>
+                    <el-descriptions-item label="台账编号">{{dialogDetail.account_standingBookNo || '-'}} <i v-if="hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)" class='el-icon-edit pointer' @click="getAccount(dialogDetail,`${product}-流贷基础信息维护（${dialogDetail.account_standingBookNo} ${dialogDetail.account_loanCompanyName}）`,'misDialogVisible')"></i>
                     </el-descriptions-item>
                     <el-descriptions-item label="MIS编码">{{dialogDetail.account_misCode||'-'}}</el-descriptions-item>
                     <el-descriptions-item label="借款单位">{{dialogDetail.account_loanCompanyName||'-'}}</el-descriptions-item>
@@ -13,9 +12,8 @@
                 <!-- 流贷 -->
                 <el-descriptions v-if="first==soure" title="流贷借款账目">
                     <!-- 流贷 -->
-                    <el-descriptions-item label="借款金额">{{dialogDetail.loan_loanAmount| moneyFormat}} <i class='el-icon-edit pointer' v-if="hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)" @click="
-                                                getLoan(dialogDetail,'supplierDialogVisible', `${product}—流贷借款信息维护（${dialogDetail.account_standingBookNo} ${dialogDetail.account_loanCompanyName}）`)
-                                            "></i>
+                    <el-descriptions-item label="借款金额">{{dialogDetail.loan_loanAmount| moneyFormat}} <i class='el-icon-edit pointer' v-if="hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)"
+                    @click="getLoan(dialogDetail,'supplierDialogVisible', `${product}—流贷借款信息维护（${dialogDetail.account_standingBookNo} ${dialogDetail.account_loanCompanyName}）`)"></i>
                     </el-descriptions-item>
                     <el-descriptions-item label="供货商名称">{{dialogDetail.loan_supplier||'-'}}</el-descriptions-item>
                     <el-descriptions-item label="还款方式">{{dialogDetail.loan_repaymentType == 1 ? '一次性还款' : '334还款'}}
@@ -26,14 +24,8 @@
                     <el-descriptions-item label="借款期限">{{dialogDetail.loan_loanDateNum ? `${dialogDetail.loan_loanDateNum}` : '-'}}
                         {{ dialogDetail.loan_loanDateType == 1 ? '个月' : dialogDetail.loan_loanDateType == 2 ? '天' : ''}}</el-descriptions-item>
                     <el-descriptions-item label="应收利息（正常+宽限）">
-                        {{this.$plus(dialogDetail.paymentStatic_interestAmount, dialogDetail.paymentStatic_graceInterestAmount)|moneyFormat
-                    }}
-                        {{dialogDetail.paymentStatic_normalInterestPranayamaTotal +dialogDetail.paymentStatic_graceInterestPranayamaTotal
-                                                ? `(${(dialogDetail.paymentStatic_normalInterestPranayamaTotal + dialogDetail.paymentStatic_graceInterestPranayamaTotal) > 0
-                                                    ? '+' + (this.$plus(dialogDetail.paymentStatic_normalInterestPranayamaTotal, dialogDetail.paymentStatic_graceInterestPranayamaTotal))
-                                                    : (this.$plus(dialogDetail.paymentStatic_normalInterestPranayamaTotal, dialogDetail.paymentStatic_graceInterestPranayamaTotal))})`
-                                                : ''
-                   }}
+                        {{this.$plus(dialogDetail.paymentStatic_interestAmount, dialogDetail.paymentStatic_graceInterestAmount)|moneyFormat}}
+                        {{dialogDetail.paymentStatic_normalInterestPranayamaTotal +dialogDetail.paymentStatic_graceInterestPranayamaTotal? `(${(dialogDetail.paymentStatic_normalInterestPranayamaTotal + dialogDetail.paymentStatic_graceInterestPranayamaTotal) > 0? '+' + (this.$plus(dialogDetail.paymentStatic_normalInterestPranayamaTotal, dialogDetail.paymentStatic_graceInterestPranayamaTotal)): (this.$plus(dialogDetail.paymentStatic_normalInterestPranayamaTotal, dialogDetail.paymentStatic_graceInterestPranayamaTotal))})`: ''}}
                     </el-descriptions-item>
                     <el-descriptions-item label="放款日期">{{dialogDetail.loan_loanStartTime ? moment(dialogDetail.loan_loanStartTime).format('YYYY-MM-DD') : '-'}}</el-descriptions-item>
                     <el-descriptions-item label="到期日">{{dialogDetail.loan_loanEndTime ? moment(dialogDetail.loan_loanEndTime).format('YYYY-MM-DD') : '-'}}</el-descriptions-item>
@@ -88,7 +80,8 @@
                     </el-descriptions-item>
                     <el-descriptions-item label="承兑期限">
                         {{dialogDetail.loan_loanDateNum ? `${dialogDetail.loan_loanDateNum}` : '-'}}
-                        {{dialogDetail.loan_loanDateType == 1 ? '个月' : dialogDetail.loan_loanDateType == 2 ? '天' : ''}}</el-descriptions-item>
+                        {{dialogDetail.loan_loanDateType == 1 ? '个月' : dialogDetail.loan_loanDateType == 2 ? '天' : ''}}
+                        </el-descriptions-item>
                     <el-descriptions-item label="到期日">{{dialogDetail.loan_loanEndTime ? moment(dialogDetail.loan_loanEndTime).format('YYYY-MM-DD') : '-'}}</el-descriptions-item>
                     <el-descriptions-item label="还款方式">
                         {{dialogDetail.loan_repaymentType == 1 ? '一次性还款' : '334还款'}}
@@ -142,14 +135,13 @@
                     </el-descriptions-item>
                     <el-descriptions-item label="累计实收宽限期利息">{{dialogDetail.planList_0_graceInterestPaid|moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="剩余宽限期利息">{{dialogDetail.planList_0_graceInterestOwe|moneyFormat}}</el-descriptions-item>
-                    <el-descriptions-item label="应缴逾期罚息" v-if="!hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE)">{{dialogDetail.planList_0_overDueInterestAmount|moneyFormat}}
+                    <el-descriptions-item label="应缴逾期罚息" v-if="!hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE)">
+                        {{dialogDetail.planList_0_overDueInterestAmount|moneyFormat}}
                         {{dialogDetail.planList_0_overDueInterestPranayama ? `(${dialogDetail.planList_0_overDueInterestPranayama > 0 ? '+' + dialogDetail.planList_0_overDueInterestPranayama : dialogDetail.planList_0_overDueInterestPranayama})` : ''}}
                     </el-descriptions-item>
                     <el-descriptions-item label="实缴逾期罚息">{{dialogDetail.planList_0_overDueInterestPaid|moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="剩余逾期罚息">{{dialogDetail.planList_0_overDueInterestOwe|moneyFormat}}</el-descriptions-item>
-
                     <el-descriptions-item label="宽限到期日" :span="3">{{dialogDetail.planList_1_graceTime ? moment(dialogDetail.planList_1_graceTime).format('YYYY-MM-DD') : '-'}}</el-descriptions-item>
-
                     <el-descriptions-item label="约定还款日期2">{{dialogDetail.planList_1_endTime ? moment(dialogDetail.planList_1_endTime).format('YYYY-MM-DD') : '-'}}</el-descriptions-item>
                     <el-descriptions-item label="约定还款金额">{{dialogDetail.planList_1_capitalAmount|moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="累计实际还款本金金额">{{dialogDetail.planList_1_capitalPaid|moneyFormat}}</el-descriptions-item>
@@ -160,7 +152,8 @@
                     <el-descriptions-item label="累计实收宽限期利息">{{dialogDetail.planList_1_graceInterestPaid|moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="剩余宽限期利息">{{dialogDetail.planList_1_graceInterestOwe|moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="是否逾期">{{dialogDetail.planList_1_isOverDue ? '是' : '否'}}</el-descriptions-item>
-                    <el-descriptions-item label="应缴逾期罚息" v-if="!hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE)">{{dialogDetail.planList_1_overDueInterestAmount |moneyFormat}}
+                    <el-descriptions-item label="应缴逾期罚息" v-if="!hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE)">
+                        {{dialogDetail.planList_1_overDueInterestAmount |moneyFormat}}
                         {{dialogDetail.planList_1_overDueInterestPranayama ? `(${dialogDetail.planList_1_overDueInterestPranayama > 0 ? '+' + dialogDetail.planList_1_overDueInterestPranayama : dialogDetail.planList_1_overDueInterestPranayama})` : ''}}
                     </el-descriptions-item>
                     <el-descriptions-item label="实缴逾期罚息">{{dialogDetail.planList_1_overDueInterestPaid|moneyFormat}}</el-descriptions-item>
@@ -176,7 +169,6 @@
                     </el-descriptions-item>
                     <el-descriptions-item label="累计实收宽限期利息">{{dialogDetail.planList_2_graceInterestPaid |moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="剩余宽限期利息">{{dialogDetail.planList_2_graceInterestOwe |moneyFormat}}</el-descriptions-item>
-
                     <el-descriptions-item label="应缴逾期罚息" v-if="!hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE)">{{dialogDetail.planList_2_overDueInterestAmount |moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="实缴逾期罚息">{{dialogDetail.planList_2_overDueInterestPaid |moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="剩余逾期罚息">{{dialogDetail.planList_2_overDueInterestOwe |moneyFormat}}</el-descriptions-item>
@@ -194,11 +186,12 @@
                     <!-- 分授信 -->
                     <el-descriptions-item label="开票金额">{{dialogDetail.loan_invoiceAmount| moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="开票日期">{{dialogDetail.loan_invoiceTime ? moment(dialogDetail.loan_invoiceTime).format('YYYY-MM-DD') : '-'}}</el-descriptions-item>
-                    <el-descriptions-item label="供货商名称">{{dialogDetail.loan_supplier ? dialogDetail.loan_supplier : '-'}}
+                    <el-descriptions-item label="供货商名称">
+                        {{dialogDetail.loan_supplier ? dialogDetail.loan_supplier : '-'}}
                     </el-descriptions-item>
                     <el-descriptions-item label="借款日期">{{dialogDetail.loan_loanStartTime ? moment(dialogDetail.loan_loanStartTime).format('YYYY-MM-DD') : '-'}}</el-descriptions-item>
                     <el-descriptions-item label="借款金额">{{dialogDetail.loan_loanAmount|moneyFormat}}
-                        <i class='el-icon-edit' v-if="hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)" @click="getLoan(dialogDetail, 'pointsCreditBillingDialogVisible', `${product}-分授信借款信息维护（${dialogDetail.account_standingBookNo} ${dialogDetail.account_loanCompanyName}）`)"></i>
+                        <i class='el-icon-edit pointer' v-if="hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)" @click="getLoan(dialogDetail, 'pointsCreditBillingDialogVisible', `${product}-分授信借款信息维护（${dialogDetail.account_standingBookNo} ${dialogDetail.account_loanCompanyName}）`)"></i>
                     </el-descriptions-item>
                     <el-descriptions-item label="年利率">{{dialogDetail.loan_yearRate ? `${dialogDetail.loan_yearRate}%` : '-'}}</el-descriptions-item>
                     <el-descriptions-item label="借款期限">{{dialogDetail.loan_loanDateNum ? `${dialogDetail.loan_loanDateNum}` : '-'}}{{dialogDetail.loan_loanDateType == 1 ? '个月' : dialogDetail.loan_loanDateType == 2 ? '天' : ''}}</el-descriptions-item>
@@ -230,7 +223,8 @@
                     <el-descriptions-item label="累计应收宽限期利息" v-if="!hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE)">
                         {{dialogDetail.paymentStatic_graceInterestAmount|moneyFormat}}{{dialogDetail.paymentStatic_graceInterestPranayamaTotal ? `(${dialogDetail.paymentStatic_graceInterestPranayamaTotal > 0 ? '+' + dialogDetail.paymentStatic_graceInterestPranayamaTotal :dialogDetail.paymentStatic_graceInterestPranayamaTotal})` : ''}}
                     </el-descriptions-item>
-                    <el-descriptions-item label="累计实收宽限期利息">{{dialogDetail.paymentStatic_graceInterestPaid|moneyFormat}}
+                    <el-descriptions-item label="累计实收宽限期利息">
+                        {{dialogDetail.paymentStatic_graceInterestPaid|moneyFormat}}
                     </el-descriptions-item>
                     <el-descriptions-item label="剩余宽限期利息">{{dialogDetail.paymentStatic_graceInterestOwe|moneyFormat}}
                     </el-descriptions-item>
@@ -260,13 +254,11 @@
                     <el-descriptions-item label="累计实收宽限期利息">{{dialogDetail.planList_0_graceInterestPaid|moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="剩余宽限期利息">{{dialogDetail.planList_0_graceInterestOwe|moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="是否逾期">{{dialogDetail.planList_0_isOverDue ? '是' : '否'}}</el-descriptions-item>
-
                     <el-descriptions-item label="应缴逾期罚息" v-if="!hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE)">{{dialogDetail.planList_0_overDueInterestAmount|moneyFormat}}
                         {{dialogDetail.planList_0_overDueInterestPranayama ? `(${dialogDetail.planList_0_overDueInterestPranayama > 0 ? '+' + dialogDetail.planList_0_overDueInterestPranayama : dialogDetail.planList_0_overDueInterestPranayama})` : ''}}
                     </el-descriptions-item>
                     <el-descriptions-item label="实缴逾期罚息">{{dialogDetail.planList_0_overDueInterestPaid|moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="剩余逾期罚息">{{dialogDetail.planList_0_overDueInterestOwe|moneyFormat}}</el-descriptions-item>
-
                     <el-descriptions-item label="约定还款日期2">{{dialogDetail.planList_1_endTime ? moment(dialogDetail.planList_1_endTime).format('YYYY-MM-DD') : '-'}}</el-descriptions-item>
                     <el-descriptions-item label="宽限还款日">{{dialogDetail.planList_1_graceTime ? moment(dialogDetail.planList_1_graceTime).format('YYYY-MM-DD') : '-'}}</el-descriptions-item>
                     <el-descriptions-item label="约定还款本金金额">{{dialogDetail.planList_1_capitalAmount|moneyFormat}}</el-descriptions-item>
@@ -283,7 +275,8 @@
                     <el-descriptions-item label="累计实收宽限期利息">{{dialogDetail.planList_1_graceInterestPaid|moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="剩余宽限期利息">{{dialogDetail.planList_1_graceInterestOwe |moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="是否逾期">{{dialogDetail.planList_1_isOverDue ? '是' : '否'}}</el-descriptions-item>
-                    <el-descriptions-item label="应缴逾期罚息" v-if="!hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE)">{{dialogDetail.planList_1_overDueInterestAmount|moneyFormat}}
+                    <el-descriptions-item label="应缴逾期罚息" v-if="!hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE)">
+                        {{dialogDetail.planList_1_overDueInterestAmount|moneyFormat}}
                         {{dialogDetail.planList_1_overDueInterestPranayama ? `(${dialogDetail.planList_1_overDueInterestPranayama > 0 ? '+' + dialogDetail.planList_1_overDueInterestPranayama : dialogDetail.planList_1_overDueInterestPranayama})` : ''}}
                     </el-descriptions-item>
                     <el-descriptions-item label="实缴逾期罚息">{{dialogDetail.planList_1_overDueInterestPaid|moneyFormat}}</el-descriptions-item>
@@ -304,7 +297,8 @@
                     <el-descriptions-item label="累计实收宽限期利息">{{dialogDetail.planList_2_graceInterestPaid|moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="剩余宽限期利息">{{dialogDetail.planList_2_graceInterestOwe|moneyFormat}}</el-descriptions-item>
                     <el-descriptions-item label="是否逾期">{{dialogDetail.planList_2_isOverDue ? '是' : '否'}}</el-descriptions-item>
-                    <el-descriptions-item label="应缴逾期罚息" v-if="!hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE)">{{dialogDetail.planList_2_overDueInterestAmount|moneyFormat}}
+                    <el-descriptions-item label="应缴逾期罚息" v-if="!hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE)">
+                        {{dialogDetail.planList_2_overDueInterestAmount|moneyFormat}}
                         {{dialogDetail.planList_2_overDueInterestPranayama ? `(${dialogDetail.planList_2_overDueInterestPranayama > 0 ? '+' + dialogDetail.planList_2_overDueInterestPranayama : dialogDetail.planList_2_overDueInterestPranayama})` : ''}}
                     </el-descriptions-item>
                     <el-descriptions-item label="实缴逾期罚息">{{dialogDetail.planList_2_overDueInterestPaid|moneyFormat}}</el-descriptions-item>
@@ -323,7 +317,6 @@
                 <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
             </span>
         </el-dialog>
-
     </div>
 </template>
 

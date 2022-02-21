@@ -64,3 +64,9 @@ export function downloadCloudAlarmList (params) {
 
 // 根据机构id查询机构：大区 | 分部 | 区域列表
 export const findDepartment = (params) => axios.get(`/uaa/department/${params.pkDeptDoc}/${params.deptType}`)
+
+// 查看日志
+export const findAccountRecords = (params) => axios.get(`backend/api/account/edit-record/page`, { params })
+
+// 审核
+export const updateAccountRecords = (params) => axios.get(`backend/api/account/edit-record/audit`, { params })

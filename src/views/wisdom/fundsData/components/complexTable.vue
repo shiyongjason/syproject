@@ -5,7 +5,7 @@
                 :pageSize.sync="pagination.pageSize" @pagination="getList" :toggleTable="toggleTable" :localName="localName" :prevLocalName="prevLocalName" :isActionFixed='tableData&&tableData.length>0' actionWidth='220' >
                 <template #action="slotProps">
                     <h-button  table @click="onLook(slotProps.data.row)" >查看详情</h-button>
-                    <h-button  table @click="onJurnal(slotProps.data.row)" >日志</h-button>
+                    <h-button  table @click="onJurnal(slotProps.data.row)" >{{slotProps.data.row.auditStatus==1?'待审核':"日志"}}</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -36,7 +36,7 @@
         <!-- 日志操作drawer -->
          <h-drawer title="项目详情" v-if="drawer" :visible.sync="drawer" :beforeClose="()=>{this.drawer = false}" direction='rtl' size='710px' :wrapperClosable="false">
             <template #connect>
-                <jurnal/>
+                <jurnal ref='jurnals'/>
             </template>
          </h-drawer>
     </div>
@@ -130,31 +130,31 @@ export default {
             handler (val) {
                 if (val === '0') {
                     this.prevLocalName = 'TotalColumnTable::'
-                    this.localName = 'TotalColumnTable::V2.3.2_2'
+                    this.localName = 'TotalColumnTable::V2.3.2_3'
                     this.$set(this, 'column', this.TotalColumn)
                     this.collapseShow = true
                 }
                 if (val === '1') {
                     this.prevLocalName = 'FlowToBorrowTable::'
-                    this.localName = 'FlowToBorrowTable::V2.3.2_2'
+                    this.localName = 'FlowToBorrowTable::V2.3.2_3'
                     this.$set(this, 'column', this.FlowToBorrow)
                     this.collapseShow = true
                 }
                 if (val === '2') {
                     this.prevLocalName = 'ExposureTable::'
-                    this.localName = 'ExposureTable::V2.3.2_2'
+                    this.localName = 'ExposureTable::V2.3.2_3'
                     this.$set(this, 'column', this.Exposure)
                     this.collapseShow = true
                 }
                 if (val === '3') {
                     this.prevLocalName = 'PointsCreditTable::'
-                    this.localName = 'PointsCreditTable::V2.3.2_2'
+                    this.localName = 'PointsCreditTable::V2.3.2_3'
                     this.$set(this, 'column', this.PointsCredit)
                     this.collapseShow = true
                 }
                 if (val === '4') {
                     this.prevLocalName = 'ReimbursementDetailTable::'
-                    this.localName = 'ReimbursementDetailTable::V2.3.2_2'
+                    this.localName = 'ReimbursementDetailTable::V2.3.2_3'
                     this.$set(this, 'column', this.ReimbursementDetail)
                     this.collapseShow = false
                 }
@@ -2675,6 +2675,23 @@ export default {
                             ]
                         },
                         {
+                            label: '承兑手续费',
+                            minWidth: '100',
+                            children: [
+                                {
+                                    prop: 'acceptanceFee',
+                                    showOverflowTooltip: true,
+                                    label: '-',
+                                    minWidth: '100',
+                                    render: (h, scope) => {
+                                        return <span>
+                                            {scope.row.acceptanceFee ? `${scope.row.acceptanceFee}` : '-'}
+                                        </span>
+                                    }
+                                }
+                            ]
+                        },
+                        {
                             label: '承兑期限',
                             minWidth: '100',
                             children: [
@@ -3839,6 +3856,7 @@ export default {
         },
         // 重置
         async onRepaymentTypeChange (item) {
+            console.log('item: ', item)
             const params = {
                 accountId: item.accountId,
                 registrant: this.userInfo.employeeName
@@ -3853,7 +3871,11 @@ export default {
             }
             data[0].accountId = this.rowData[0].accountId
             data[0].account_accountType = item.account_accountType
+
+            console.log('this.rowData: ', this.rowData)
+            let _title = this.rowData[0].title
             this.rowData = data
+            this.$set(this.rowData[0], 'title', _title)
             this.getList()
         },
         onStepOver (val, item) {
@@ -3866,6 +3888,10 @@ export default {
         // 打开抽屉日志
         onJurnal (val) {
             this.drawer = true
+            this.$nextTick(() => {
+                console.log(' this.$refs.jurnals: ', this.$refs.jurnals)
+                this.$refs.jurnals.getName(val)
+            })
         }
     },
     mounted () {

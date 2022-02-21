@@ -19,7 +19,7 @@
                     <el-input v-model="examineForm.name"></el-input>
                 </el-form-item>
                 <el-form-item label="活动形式">
-                    <el-input type="textarea" v-model="form.desc"></el-input>
+                    <el-input type="textarea" v-model="examineForm.desc"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -31,7 +31,7 @@
 </template>
 <script lang='tsx'>
 import { Vue, Component, Prop, Emit } from 'vue-property-decorator'
-
+import { findAccountRecords } from '../api/index'
 @Component({
     name: 'xx'
 })
@@ -46,9 +46,11 @@ export default class Journal extends Vue {
     }
 
     // emit 事件 装饰
-    @Emit()
-    getName () {
-
+    // @Emit()
+    async getName (val) {
+        console.log('val: ', val)
+        const { data } = await findAccountRecords({ accountId: val.account_id })
+        console.log('data: ', data)
     }
 
     public onExamine () {

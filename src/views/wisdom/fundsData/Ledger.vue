@@ -120,11 +120,10 @@
             <div class="query-cont-col">
                   <div class="query-col-title">审核状态：</div>
                 <div class="query-col-input">
-                    <el-select v-model="queryParams.repaymentStatus" placeholder="请选择" :clearable=true>
+                    <el-select v-model="queryParams.auditStatus" placeholder="请选择" :clearable=true>
                         <el-option label="全部" value=""></el-option>
-                        <el-option label="正常" :value="1"></el-option>
-                        <el-option label="逾期" :value="2"></el-option>
-                        <el-option label="提前" :value="3"></el-option>
+                        <el-option label="待审核" :value="1"></el-option>
+                        <el-option label="无需审核" :value="2"></el-option>
                     </el-select>
                 </div>
             </div>
@@ -226,6 +225,7 @@ export default {
                 startDate: '',
                 endDate: '',
                 repaymentStatus: '',
+                auditStatus: '',
                 queryEndDate: moment().format('YYYY-MM-DD')
             },
             searchParams: {},
