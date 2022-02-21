@@ -72,46 +72,56 @@
                 <div class="item">
                     <div class="info-layout">
                         <div class="info-layout-item">
-                            <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>申请代付金额(元)：</font>
+                            <font style="flex:0 0 140px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>申请代付金额(元)：</font>
                             <span>{{resolutionDetail.predictLoanAmount|moneyFormat}}</span>
                         </div>
                         <div class="info-layout-item">
-                            <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>经销商首付款比例(%)：</font>
+                            <font style="flex:0 0 160px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>经销商首付款比例(%)：</font>
                             <span>{{resolutionDetail.advancePaymentRate>=0?resolutionDetail.advancePaymentRate:'-'}}%</span>
                         </div>
                     </div>
                     <div class="info-layout">
                         <div class="info-layout-item">
-                            <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>采购总额(元)：</font>
+                            <font style="flex:0 0 140px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>采购总额(元)：</font>
                             <span>{{resolutionDetail.deviceAmount|moneyFormat}}</span>
                         </div>
                         <div class="info-layout-item">
-                            <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>销售毛利率(%)：</font>
+                            <font style="flex:0 0 160px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>加价率(%)：</font>
                             <span>{{resolutionDetail.salesGrossMargin >=0?resolutionDetail.salesGrossMargin :'0'}}%</span>
                         </div>
                     </div>
                     <div class="info-layout">
                         <div class="info-layout-item">
-                            <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>销售总额(元)：</font>
+                            <font style="flex:0 0 140px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>销售总额(元)：</font>
                             <span>{{(resolutionDetail.salesTotalAmount ? resolutionDetail.salesTotalAmount : resolutionDetail.deviceAmount)|moneyFormat}}</span>
                         </div>
                         <div class="info-layout-item">
-                            <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>剩余货款支付周期：</font>
-                            <span>{{resolutionDetail.remainPaymentCycle||'-'}}个月</span>
+                            <font style="flex:0 0 160px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>加价额：</font>
+                            <span>{{resolutionDetail.salesGrossAmount|moneyFormat}}</span>
                         </div>
                     </div>
                     <div class="info-layout">
                         <div class="info-layout-item">
-                            <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>专项额度(元)：</font>
+                            <font style="flex:0 0 140px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>剩余货款支付周期：</font>
+                            <span>{{resolutionDetail.remainPaymentCycle||'-'}}个月</span>
+                        </div>
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 160px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>专项额度(元)：</font>
                             <span>{{resolutionDetail.projectQuotaAmount | moneyFormat}}</span>
                         </div>
                     </div>
                     <div class="info-layout">
-                        <div class="info-layout-item" style="margin-left:10px">
-                            <font style="flex:0 0 135px">执行费率(%)：</font>
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 140px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>ROI(%)：</font>
+                            <span>{{resolutionDetail.roi||'-'}}</span>
                         </div>
                     </div>
-                    <div class="info-layout" style="margin-left:50px">
+                    <div class="info-layout mt10">
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 140px">执行费率(%)：</font>
+                        </div>
+                    </div>
+                    <div class="info-layout">
                         <div class="info-layout-item">
                             <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>银行承兑：</font>
                             <span>{{onCheckZero(resolutionDetail.acceptBankRate)}}%</span>
@@ -122,8 +132,8 @@
                         </div>
                     </div>
                     <div class="info-layout">
-                        <div class="info-layout-item" style="margin-left:10pxmargin-top:20px">
-                            <font style="flex:0 0 135px">采购信息：</font>
+                        <div class="info-layout-item" style="margin-top:20px">
+                            <font style="flex:0 0 140px">采购信息：</font>
                         </div>
                     </div>
                     <div class="table">
@@ -281,7 +291,7 @@
                         </el-form-item>
                     </div>
                     <div class="form-item">
-                        <el-form-item label="ROI(%)：" prop='roi'>
+                        <el-form-item label="ROI：" prop='roi'>
                             <el-input v-isNum:2 v-inputMAX='1000' placeholder="请输入" v-model="purForm.roi" maxlength="50">
                                 <template slot="append">%</template>
                             </el-input>
@@ -417,7 +427,7 @@
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { isNum } from '@/utils/validate/format'
 import utils from '@/utils/filters'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { CreateElement } from 'vue'
 import { getTYCList, getResolutions, resCustomer, resPurchase, getRecordList, initiateDing, finalApproveNo, getProjectLevels } from '../api/index'
 import { useDebounce } from '@/decorator'
@@ -455,8 +465,10 @@ export default class FinalApproval extends Vue {
         'advancePaymentRate': '',
         'deviceAmount': '', // 采购总额
         'predictLoanAmount': '',
-        'salesGrossMargin': '', // 销售毛利率
+        'salesGrossMargin': '', // 加价率
+        'salesGrossAmount': '0', // 加价额
         'salesTotalAmount': '', // 销售总额
+        'roi': '0', // ROI
         'projectQuatoAmount': 0,
         'projectId': '',
         'projectPurchaseList': [
@@ -547,110 +559,6 @@ export default class FinalApproval extends Vue {
         return rules
     }
 
-    get salesTotalAmount () {
-        this.purForm.salesTotalAmount = utils.moneyFormat(this.purForm.deviceAmount * (1 + parseFloat(this.purForm.salesGrossMargin) / 100))
-        return ''
-    }
-
-    get purFormRules () {
-        let rules = {
-            predictLoanAmount: [
-                { required: true, message: '申请代付金额(元)必填', trigger: 'blur' },
-                {
-                    validator: (rule, value, callback) => {
-                        if (value <= 0 || value >= 100000000) {
-                            return callback(new Error('申请代付金额(元)区间为（0，100000000）'))
-                        } else {
-                            callback()
-                        }
-                    },
-                    trigger: 'blur'
-                }
-            ],
-            advancePaymentRate: [{ required: true, message: '首付款比例必选', trigger: 'blur' },
-                {
-                    validator: (rule, value, callback) => {
-                        if (value < 0 || value > 100) {
-                            return callback(new Error('首付款比例区间为 [0，100]'))
-                        } else {
-                            callback()
-                        }
-                    },
-                    trigger: 'blur'
-                }
-            ],
-            deviceAmount: [{ required: true, message: '采购总额必填', trigger: 'blur' },
-                {
-                    validator: (rule, value, callback) => {
-                        if (value <= 0 || value >= 100000000) {
-                            return callback(new Error('采购总额区间为（0，100000000）'))
-                        } else {
-                            callback()
-                        }
-                    },
-                    trigger: 'blur'
-                }
-            ],
-            salesGrossMargin: [{ required: true, message: '销售毛利率必填', trigger: 'blur' },
-                {
-                    validator: (rule, value, callback) => {
-                        if (value < 0 || value >= 1000) {
-                            return callback(new Error('销售毛利率比例区间为 [0，1000)'))
-                        } else {
-                            callback()
-                        }
-                    },
-                    trigger: 'blur'
-                }
-            ],
-            salesTotalAmount: [{ required: true, message: '销售总额必填', trigger: 'blur' }],
-            remainPaymentCycle: [{ required: true, message: '剩余货款支付周期', trigger: 'blur' }],
-            acceptBankRate: [{ required: true, message: '银行承兑执行费率必填', trigger: 'blur' }
-                // {
-                //     validator: (rule, value, callback) => {
-                //         if (value <= 0 || value >= 100) {
-                //             return callback(new Error('银行承兑执行费率区间为（0，100）'))
-                //         } else {
-                //             callback()
-                //         }
-                //     },
-                //     trigger: 'blur'
-                // }
-            ],
-            transferBankRate: [{ required: true, message: '银行转账执行费率必填', trigger: 'blur' }
-                // {
-                //     validator: (rule, value, callback) => {
-                //         if (value <= 0 || value >= 100) {
-                //             return callback(new Error('银行转账执行费率区间为（0，100）'))
-                //         } else {
-                //             callback()
-                //         }
-                //     },
-                //     trigger: 'blur'
-                // }
-            ],
-            projectQuotaAmount: [
-                { required: true, message: '专项额度(元)必填', trigger: 'blur' },
-                {
-                    validator: (rule, value, callback) => {
-                        if (value < 0 || value >= 100000000) {
-                            return callback(new Error('专项额度(元)区间为[0，100000000)'))
-                        } else {
-                            callback()
-                        }
-                    },
-                    trigger: 'blur'
-                }
-            ]
-        }
-        return rules
-    }
-    get lastFormRules () {
-        let rules = {
-            remark: [{ required: true, message: '评审要求必填', trigger: 'blur' }]
-        }
-        return rules
-    }
     tableLabel: tableLabelProps = [
         { label: '上游供应商', prop: 'upstreamSupplierName', width: '120' },
         { label: '设备品牌', prop: 'deviceBrand', width: '120' },
@@ -659,7 +567,7 @@ export default class FinalApproval extends Vue {
         { label: '设备品类', prop: 'deviceCategory' },
         { label: '上游货款方式', prop: 'upstreamLoanType', slot: 'upstreamLoanType', width: '100' },
         { label: '采购折让(%)', prop: 'purchaseDiscountRate', width: '90' }
-    ];
+    ]
 
     formTableLabel: tableLabelProps = [
         {
@@ -863,7 +771,137 @@ export default class FinalApproval extends Vue {
         //         )
         //     }
         // }
-    ];
+    ]
+
+    get purFormRules () {
+        let rules = {
+            predictLoanAmount: [
+                { required: true, message: '申请代付金额(元)必填', trigger: 'blur' },
+                {
+                    validator: (rule, value, callback) => {
+                        if (value <= 0 || value >= 100000000) {
+                            return callback(new Error('申请代付金额(元)区间为（0，100000000）'))
+                        } else {
+                            callback()
+                        }
+                    },
+                    trigger: 'blur'
+                }
+            ],
+            advancePaymentRate: [{ required: true, message: '首付款比例必选', trigger: 'blur' },
+                {
+                    validator: (rule, value, callback) => {
+                        if (value < 0 || value > 100) {
+                            return callback(new Error('首付款比例区间为 [0，100]'))
+                        } else {
+                            callback()
+                        }
+                    },
+                    trigger: 'blur'
+                }
+            ],
+            deviceAmount: [{ required: true, message: '采购总额必填', trigger: 'blur' },
+                {
+                    validator: (rule, value, callback) => {
+                        if (value <= 0 || value >= 100000000) {
+                            return callback(new Error('采购总额区间为（0，100000000）'))
+                        } else {
+                            callback()
+                        }
+                    },
+                    trigger: 'blur'
+                }
+            ],
+            salesGrossMargin: [{ required: true, message: '加价率必填', trigger: 'blur' },
+                {
+                    validator: (rule, value, callback) => {
+                        if (value < 0 || value >= 1000) {
+                            return callback(new Error('加价率比例区间为 [0，1000)'))
+                        } else {
+                            callback()
+                        }
+                    },
+                    trigger: 'blur'
+                }
+            ],
+            salesGrossAmount: [{ required: true, message: '加价额必填', trigger: 'blur' },
+                {
+                    validator: (rule, value, callback) => {
+                        if (value < 0 || value >= 100000000) {
+                            return callback(new Error('加价额比例区间为 [0，100000000)'))
+                        } else {
+                            callback()
+                        }
+                    },
+                    trigger: 'blur'
+                }
+            ],
+            salesTotalAmount: [{ required: true, message: '销售总额必填', trigger: 'blur' }],
+            remainPaymentCycle: [{ required: true, message: '剩余货款支付周期', trigger: 'blur' }],
+            acceptBankRate: [{ required: true, message: '银行承兑执行费率必填', trigger: 'blur' }],
+            transferBankRate: [{ required: true, message: '银行转账执行费率必填', trigger: 'blur' }],
+            projectQuotaAmount: [
+                { required: true, message: '专项额度(元)必填', trigger: 'blur' },
+                {
+                    validator: (rule, value, callback) => {
+                        if (value < 0 || value >= 100000000) {
+                            return callback(new Error('专项额度(元)区间为[0，100000000)'))
+                        } else {
+                            callback()
+                        }
+                    },
+                    trigger: 'blur'
+                }
+            ],
+            roi: [{ required: true, message: 'ROI必填', trigger: 'blur' },
+                {
+                    validator: (rule, value, callback) => {
+                        if (value < 0 || value >= 1000) {
+                            return callback(new Error('ROI区间为 [0，1000)'))
+                        } else {
+                            callback()
+                        }
+                    },
+                    trigger: 'blur'
+                }
+            ]
+        }
+        return rules
+    }
+
+    get lastFormRules () {
+        let rules = {
+            remark: [{ required: true, message: '评审要求必填', trigger: 'blur' }]
+        }
+        return rules
+    }
+
+    get salesTotalAmount () {
+        this.purForm.salesTotalAmount = this.$dividedBy(Math.round(this.purForm.deviceAmount * (100 + this.purForm.salesGrossMargin)), 100).toNumber()
+        return ''
+    }
+
+    watchLocking: boolean = false
+
+    @Watch('purForm.salesGrossMargin', { immediate: true })
+    onSalesGrossMarginChange (val) {
+        if (this.watchLocking) {
+            this.watchLocking = false
+            return
+        }
+        this.purForm.salesGrossAmount = this.$dividedBy(Math.round(this.purForm.deviceAmount * this.purForm.salesGrossMargin), 100).toNumber()
+        this.watchLocking = true
+    }
+
+    @Watch('purForm.salesGrossAmount')
+    onSalesGrossAmountChange (val) {
+        if (this.watchLocking) {
+            this.watchLocking = false
+            return
+        }
+        this.purForm.salesGrossMargin = this.$dividedBy(Math.round(this.purForm.salesGrossAmount / this.purForm.deviceAmount * 100000000), 1000000).toNumber()
+        this.watchLocking = true
+    }
 
     onRenderChild (h: CreateElement, scope: TableRenderParam) {
         return (
