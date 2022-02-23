@@ -255,7 +255,7 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     async mounted () {
-        // this.tableData = [{ paymentOrderNo: '1000' }]
+        this.tableData = [{ paymentOrderNo: '1000' }]
     }
 }
 </script>

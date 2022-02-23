@@ -60,12 +60,12 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
 import { CreateElement } from 'vue'
 import filters from '@/utils/filters'
-import { RespBossShopFloorDetail } from '@/interface/hbp-shop'
+import { getEqpDetail } from '../api/index'
 import moment from 'moment'
 import { deepCopy } from '@/utils/utils'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 @Component({
-    name: 'Flooredit',
+    name: 'equipmentdetail',
     components: {
         hosJoyTable
     }
@@ -78,15 +78,6 @@ export default class Flooredit extends Vue {
     @Action('setNewTags') setNewTags!: Function
 
     activeName:string = 'first'
-    private _queryParams = {}
-    queryParams: any = {
-        pageSize: 10,
-        pageNumber: 1,
-        name: '',
-        categoryContent: '',
-        brandName: '',
-        isOnShelf: 2
-    }
 
     page = {
         sizes: [10, 20, 50, 100],
@@ -126,8 +117,13 @@ export default class Flooredit extends Vue {
         this.setNewTags((this.$route.fullPath).split('?')[0])
     }
 
+    async getEquipDetail () {
+        const { data } = await getEqpDetail('123')
+    }
+
     async mounted () {
-        this.tableData = [{ code: 11111, name: 2222 }]
+        // this.tableData = [{ code: 11111, name: 2222 }]
+        this.getEquipDetail()
     }
 }
 </script>

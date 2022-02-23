@@ -1,4 +1,4 @@
-import { EqpInvoiceSubmitRequest, IPageServiceInvoicePageResponse, ServiceInvoiceDetailResponse, ServiceInvoiceOpenRequest, ServiceInvoiceRejectRequest, ServiceInvoiceSubmitRequest } from '@/interface/hbp-project'
+import { EqpInvoiceDetailResponse, EqpInvoiceSubmitRequest, IPageEqpInvoicePageResponse, IPageServiceInvoicePageResponse, ServiceInvoiceDetailResponse, ServiceInvoiceOpenRequest, InvoiceRejectRequest, ServiceInvoiceSubmitRequest } from '@/interface/hbp-project'
 import axios, { AxiosPromise } from 'axios'
 
 export const updateServiceInvoice: (params: ServiceInvoiceSubmitRequest) => AxiosPromise<void> = (params) => {
@@ -9,7 +9,7 @@ export const updateSubmit: (params: string) => AxiosPromise<void> = (params) => 
     return axios.patch(`/project/boss/service-invoice/submit/${params}`)
 }
 
-export const updateReject: (params: ServiceInvoiceRejectRequest) => AxiosPromise<void> = (params) => {
+export const updateReject: (params: InvoiceRejectRequest) => AxiosPromise<void> = (params) => {
     return axios.patch(`/project/boss/service-invoice/reject`, params)
 }
 
@@ -27,4 +27,12 @@ export const getInvoiceDetail: (params: string) => AxiosPromise<ServiceInvoiceDe
 
 export const updateEqpInvoice: (params: EqpInvoiceSubmitRequest) => AxiosPromise<void> = (params) => {
     return axios.post(`/project/boss/eqp-invoice`)
+}
+// 设备详情
+export const getEqpDetail: (params: string) => AxiosPromise<EqpInvoiceDetailResponse> = (params) => {
+    return axios.get(`/project/boss/eqp-invoice/${params}`)
+}
+// 设备列表
+export const getEqpList: (params: any) => AxiosPromise<IPageEqpInvoicePageResponse> = (params) => {
+    return axios.get(`/project/boss/eqp-invoice`, { params })
 }
