@@ -5,7 +5,7 @@
                 :pageSize.sync="pagination.pageSize" @pagination="getList" :toggleTable="toggleTable" :localName="localName" :prevLocalName="prevLocalName" :isActionFixed='tableData&&tableData.length>0' actionWidth='220' >
                 <template #action="slotProps">
                     <h-button  table @click="onLook(slotProps.data.row)" >查看详情</h-button>
-                    <h-button  table @click="onJurnal(slotProps.data.row)" >{{slotProps.data.row.auditStatus==1?'待审核':"日志"}}</h-button>
+                    <h-button  table @click="onJurnal(slotProps.data.row)" >{{slotProps.data.row.account.auditStatus==1?'待审核':"日志"}}</h-button>
                 </template>
             </hosJoyTable>
         </div>

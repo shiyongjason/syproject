@@ -69,4 +69,4 @@ export const findDepartment = (params) => axios.get(`/uaa/department/${params.pk
 export const findAccountRecords = (params) => axios.get(`backend/api/account/edit-record/page`, { params })
 
 // 审核
-export const updateAccountRecords = (params) => axios.get(`backend/api/account/edit-record/audit`, { params })
+export const updateAccountRecords = (params) => axios.patch(`backend/api/account/edit-record/audit`, { params })
