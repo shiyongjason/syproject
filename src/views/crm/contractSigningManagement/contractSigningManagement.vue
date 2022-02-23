@@ -108,7 +108,6 @@
                     <!-- TODO: 判断条件调整 -->
                     <h-button table @click="onWithdraw(scope.data.row)" v-if="scope.data.row.contractStatus!=17 && hosAuthCheck(Auths.CRM_CONTRACT_WITHDRAW)">撤回</h-button>
                     <h-button table @click="onGetfile(scope.data.row)" v-if="hosAuthCheck(Auths.CONTRACT_PLACE)&&scope.data.row.contractSignType==2&&scope.data.row.contractStatus==12&&!scope.data.row.archive">归档</h-button>
-                    <!-- <h-button table @click="onGetfile(scope.data.row)">归档</h-button> -->
                 </template>
             </hosJoyTable>
         </div>
@@ -116,7 +115,6 @@
         <el-drawer title="查看信息" v-if="drawerVisible" :visible.sync="drawerVisible" :wrapperClosable="false" size='580px' :beforeClose="() => drawerVisible=false" class="contentdrawerbox">
             <div slot="title">审核记录</div>
             <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
-            <!-- {{detailRes.contractStatus == 2?'合同待分财审核':detailRes.contractStatus == 4?'合同待运营审核':detailRes.contractStatus == 6?'合同待法务审核':''}} -->
             <div v-if="drawerVisible" style="text-align: center;font-size: 18px;">{{getContractStatusTxt(detailRes.contractStatus)}}</div>
             <div class="history-css">
                 <div v-if="historyList&&historyList.length==0">暂无数据</div>
@@ -125,23 +123,6 @@
                         <span class="name">{{item.operator}} </span>
                         <span>{{item.operationName}}</span>
                         <template v-if="item.operationName == '编辑了'">
-                            <!-- <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1">
-                                    <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
-                                    从<font>
-
-                                        <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent" :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent]"></el-image>
-                                    </font>
-                                    变为<font>
-                                        <span v-if="JSON.parse(item.operationContent).fieldContent==''">“”</span>
-                                        <template v-else-if="JSON.parse(item.operationContent).fieldContent.indexOf('[{')!=-1">
-                                            <el-image v-for="(imgItem,imgIndex) in JSON.parse(JSON.parse(item.operationContent).fieldContent)" :key="imgIndex" style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="imgItem.fileUrl"
-                                                :preview-src-list="[imgItem.fileUrl]"></el-image>
-                                        </template>
-                                        <template v-else>
-                                            <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
-                                        </template>
-                                    </font>
-                                </span> -->
                             <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1||item.operationContent.indexOf('purch_service_fee_form') != -1">
                                 <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
                                 从<font>
@@ -225,7 +206,6 @@ const _queryParams = {
 }
 const _dicData = [{ value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待运营审核' }, { value: 5, label: '运营审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }, { value: 15, label: '用印发起失败' }, { value: 16, label: '发起线上待客户签署' }, { value: 17, label: '合同废止' }]
 
-const _fileData = [{ value: true, label: '是' }, { value: false, label: '否' }]
 export default {
     name: 'contractSigningManagement',
     components: { hosJoyTable, diffDialog, fileDialog },
@@ -423,10 +403,6 @@ export default {
             })
             this.historyList = data.signHistory
             this.drawerVisible = true
-            console.log('this.drawerVisible: ', this.drawerVisible)
-
-            // this.historyList = data.signHistory
-            // console.log('res: ', res.data)
         },
         reset () {
             this.queryParams = JSON.parse(JSON.stringify(_queryParams))
