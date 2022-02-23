@@ -105,6 +105,7 @@ export default {
                 const element = el.getElementsByTagName('input')[0]
                 element.addEventListener('keyup', () => {
                     element.value = inputMAX(element.value, binding.value)
+                    console.log('🚀 --- element.addEventListener ---  element.value', element.value)
                     if (isNaN(element.value)) element.value = ''
                     vnode.data.model && vnode.data.model.callback(element.value)
                 })

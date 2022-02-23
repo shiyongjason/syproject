@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-dialog :title="title" :visible.sync="isOpen" :close-on-click-modal=false width="670px" :before-close="()=> $emit('onClose',false)">
+        <el-dialog :title="title" :visible.sync="isOpen"   :close-on-click-modal=false :modal-append-to-body=false width="670px"  :before-close="()=> $emit('onClose',false)">
             <template>
                 <div class="remain_head">
                     <div>总金额：<b>{{dialogDetail.paymentAmount|moneyFormat}}元</b></div>
@@ -190,7 +190,7 @@
                 </span>
             </template> -->
         </el-dialog>
-        <el-dialog title="再次确认" :visible.sync="offineVisible" :close-on-click-modal=false width="670px" :before-close="()=>offineVisible = false">
+        <el-dialog title="再次确认" :modal-append-to-body=false  :visible.sync="offineVisible" :close-on-click-modal=false width="670px" :before-close="()=>offineVisible = false">
             <p style="color:red">是否确认使用线下方式确认，如果确认则后面不可再关联流水。</p>
             <div class="remain_title">请确认收款账户信息：</div>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
