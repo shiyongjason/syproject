@@ -34,9 +34,9 @@
         <allDialog ref="allDialog" @backGetAccount=getAccount @backLoan = getLoan @backGetRespAccountRepaymentPlanData = getRespAccountRepaymentPlanData
         @backGetGrantPaymetPlanData = getGrantPaymetPlanData  :soure=source></allDialog>
         <!-- 日志操作drawer -->
-         <h-drawer title="项目详情" v-if="drawer" :visible.sync="drawer" :beforeClose="()=>{this.drawer = false}" direction='rtl' size='710px' :wrapperClosable="false">
+         <h-drawer title="日志" v-if="drawer" :visible.sync="drawer" :beforeClose="()=>{this.drawer = false}" direction='rtl' size='710px' :wrapperClosable="false">
             <template #connect>
-                <jurnal ref='jurnals'/>
+                <jurnal ref='jurnals' @backEvent = onBackDrawer></jurnal>
             </template>
          </h-drawer>
     </div>
@@ -3892,6 +3892,10 @@ export default {
                 console.log(' this.$refs.jurnals: ', this.$refs.jurnals)
                 this.$refs.jurnals.getName(val)
             })
+        },
+        onBackDrawer () {
+            this.drawer = false
+            this.$emit('getList')
         }
     },
     mounted () {
