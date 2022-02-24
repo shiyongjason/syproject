@@ -11,7 +11,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">所属分部：</div>
                     <div class="query-col__input">
-                        <el-select placeholder="请选择" v-model="queryParams.subsectionCode" :clearable='true'>
+                        <el-select placeholder="请选择" v-model="queryParams.deptCode" :clearable='true'>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
@@ -25,27 +25,27 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">采购发票金额（元）：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-isNum:2 v-model="queryParams.startNoPayAmount" maxlength="20" placeholder="请输入金额"></el-input>
+                        <el-input type="text" v-isNum:2 v-model="queryParams.minPurchaseInvoiceAmount" maxlength="20" placeholder="请输入金额"></el-input>
                         <span class="ml10 mr10">-</span>
-                        <el-input type="text" v-isNum:2 v-model="queryParams.endNoPayAmount" maxlength="20" placeholder="请输入金额"></el-input>
+                        <el-input type="text" v-isNum:2 v-model="queryParams.maxPurchaseInvoiceAmount" maxlength="20" placeholder="请输入金额"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">上游供应商：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.companyName" maxlength="20" placeholder="请输入经销商名称"></el-input>
+                        <el-input type="text" v-model="queryParams.supplierCompanyName" maxlength="50" placeholder="请输入经销商名称"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">项目名称：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.companyName" maxlength="20" placeholder="请输入经销商名称"></el-input>
+                        <el-input type="text" v-model="queryParams.projectName" maxlength="50" placeholder="请输入经销商名称"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">状态码：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.supplierPaymentType" placeholder="请选择">
+                        <el-select v-model="queryParams.invoiceStatus" placeholder="请选择">
                             <el-option label="全部" value=""></el-option>
                             <el-option label="银行转账" :value="1"></el-option>
                             <el-option label="银行承兑" :value="2"></el-option>
@@ -55,40 +55,40 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">销售发票金额（元）：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-isNum:2 v-model="queryParams.startNoPayAmount" maxlength="20" placeholder="请输入金额"></el-input>
+                        <el-input type="text" v-isNum:2 v-model="queryParams.minSalesInvoiceAmount" maxlength="20" placeholder="请输入金额"></el-input>
                         <span class="ml10 mr10">-</span>
-                        <el-input type="text" v-isNum:2 v-model="queryParams.endNoPayAmount" maxlength="20" placeholder="请输入金额"></el-input>
+                        <el-input type="text" v-isNum:2 v-model="queryParams.maxSalesInvoiceAmount" maxlength="20" placeholder="请输入金额"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">mis采购订单号：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.supplierCompanyName" maxlength="20" placeholder="请输入上游供应商名称"></el-input>
+                        <el-input type="text" v-model="queryParams.misPurchaseOrderNo" maxlength="50" placeholder="请输入上游供应商名称"></el-input>
                     </div>
                 </div>
 
                 <div class="query-cont__col">
                     <div class="query-col__label">mis销售订单号：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.supplierCompanyName" maxlength="20" placeholder="请输入上游供应商名称"></el-input>
+                        <el-input type="text" v-model="queryParams.misSalesOrderNo" maxlength="50" placeholder="请输入上游供应商名称"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">采购发票号码：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.supplierCompanyName" maxlength="20" placeholder="请输入上游供应商名称"></el-input>
+                        <el-input type="text" v-model="queryParams.misPurchaseInvoiceNo" maxlength="20" placeholder="请输入上游供应商名称"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">销售发票号码：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.supplierCompanyName" maxlength="20" placeholder="请输入上游供应商名称"></el-input>
+                        <el-input type="text" v-model="queryParams.misPurchaseInvoiceNo" maxlength="20" placeholder="请输入上游供应商名称"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">申请人：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.supplierCompanyName" maxlength="20" placeholder="请输入上游供应商名称"></el-input>
+                        <el-input type="text" v-model="queryParams.createBy" maxlength="20" placeholder="请输入上游供应商名称"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -100,7 +100,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">申请单号：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.supplierCompanyName" maxlength="20" placeholder="请输入上游供应商名称"></el-input>
+                        <el-input type="text" v-model="queryParams.invoiceNo" maxlength="20" placeholder="请输入上游供应商名称"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -132,7 +132,7 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import elImageAddToken from '@/components/elImageAddToken/index.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import { measure, handleSubmit, validateForm } from '@/decorator/index'
-
+import { getEqpList } from '../api/index'
 @Component({
     name: 'equipmentinvoice',
     components: {
@@ -161,24 +161,25 @@ export default class UpstreamPaymentManagement extends Vue {
     queryParams: Record<string, any> = {
         pageNumber: 1,
         pageSize: 10,
-        paymentMain: '', // 付款主体
         paymentOrderNo: '',
         deptName: '',
         companyName: '',
-        supplierPaymentType: '',
+        minPurchaseInvoiceAmount: '',
+        maxPurchaseInvoiceAmount: '',
+        minSalesInvoiceAmount: '',
+        maxSalesInvoiceAmount: '',
         supplierCompanyName: '',
         projectName: '',
-        paymentStatus: '',
-        startNoPayAmount: '',
-        endNoPayAmount: '',
-        startInitiateTime: '',
-        endInitiateTime: '',
-        startExpectSupplierPaymentDate: '',
-        endExpectSupplierPaymentDate: '',
+        invoiceStatus: '',
+        misSalesOrderNo: '',
+        misPurchaseInvoiceNo: '',
+        misSaleInvoiceNo: '',
         authCode: '',
         jobNumber: '',
-        subsectionCode: '',
-        loanTransferStatus: '',
+        createBy: '',
+        createTimeStart: '',
+        createTimeEnd: '',
+        invoiceNo: '',
         'sort.property': null,
         'sort.direction': null
     }
@@ -192,20 +193,11 @@ export default class UpstreamPaymentManagement extends Vue {
             type: 'date',
             valueFormat: 'yyyy-MM-dd',
             format: 'yyyy-MM-dd',
-            startTime: this.queryParams.startExpectSupplierPaymentDate,
-            endTime: this.queryParams.endExpectSupplierPaymentDate
+            startTime: this.queryParams.createTimeStart,
+            endTime: this.queryParams.createTimeEnd
         }
     }
 
-    get optionsByPaid () {
-        return {
-            type: 'date',
-            valueFormat: 'yyyy-MM-dd',
-            format: 'yyyy-MM-dd',
-            startTime: this.queryParams.startInitiateTime,
-            endTime: this.queryParams.endInitiateTime
-        }
-    }
     get pickerOptions () {
         return {
             disabledDate (time) {
@@ -216,20 +208,20 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     tableLabel:tableLabelProps = [
-        { label: '状态码', prop: 'paymentOrderNo', width: '100' },
-        { label: '申请单号', prop: 'deptName', width: '130' },
-        { label: '支付单号', prop: 'poAmount', width: '160', displayAs: 'money' },
-        { label: '项目名称', prop: 'poAmount', width: '160', displayAs: 'money' },
-        { label: '经销商', prop: 'poAmount', width: '160', displayAs: 'money' },
-        { label: '上游供应商', prop: 'poAmount', width: '160', displayAs: 'money' },
-        { label: 'mis采购订单号', prop: 'poAmount', width: '160', displayAs: 'money' },
-        { label: 'mis销售订单号', prop: 'poAmount', width: '160', displayAs: 'money' },
-        { label: '采购发票号码', prop: 'poAmount', width: '160', displayAs: 'money' },
-        { label: '采购发票金额', prop: 'poAmount', width: '160', displayAs: 'money' },
-        { label: '销售发票号码', prop: 'poAmount', width: '160', displayAs: 'money' },
-        { label: '销售发票金额', prop: 'poAmount', width: '160', displayAs: 'money' },
-        { label: '申请人', prop: 'poAmount', width: '160', displayAs: 'money' },
-        { label: '申请时间', prop: 'poAmount', width: '160', displayAs: 'money' }
+        { label: '状态码', prop: 'invoiceStatus' },
+        { label: '申请单号', prop: 'invoiceNo', width: '130' },
+        { label: '支付单号', prop: 'paymentOrderNo', width: '160' },
+        { label: '项目名称', prop: 'projectName', width: '160' },
+        { label: '经销商', prop: 'companyName', width: '160' },
+        { label: '上游供应商', prop: 'supplierCompanyName', width: '160' },
+        { label: 'mis采购订单号', prop: 'misPurchaseOrderNo', width: '160' },
+        { label: 'mis销售订单号', prop: 'misSalesOrderNo', width: '160' },
+        { label: '采购发票号码', prop: 'misPurchaseInvoiceNo', width: '160' },
+        { label: '采购发票金额', prop: 'purchaseInvoiceAmount', width: '160', displayAs: 'money' },
+        { label: '销售发票号码', prop: 'misSaleInvoiceNo', width: '160' },
+        { label: '销售发票金额', prop: 'salesInvoiceAmount', width: '160' },
+        { label: '申请人', prop: 'createBy', width: '160' },
+        { label: '申请时间', prop: 'createTime', width: '160' }
     ]
 
     async handleLook (paymentOrderId, status) {
@@ -244,14 +236,15 @@ export default class UpstreamPaymentManagement extends Vue {
 
     @measure
     async getList () {
-
+        const { data } = await getEqpList(this.queryParams)
+        this.tableData = data.records
     }
 
     public onStartChange (val): void {
-        this.queryParams.applyTimeStart = val
+        this.queryParams.createTimeStart = val
     }
     public onEndChange (val): void {
-        this.queryParams.applyTimeEnd = val
+        this.queryParams.createTimeEnd = val
     }
 
     async mounted () {

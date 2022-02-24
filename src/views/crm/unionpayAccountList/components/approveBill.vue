@@ -31,6 +31,7 @@ import { Vue, Component, Prop, Ref } from 'vue-property-decorator'
 import { State } from 'vuex-class'
 import { CreateElement } from 'vue'
 import * as Api from '../api/index'
+import { clearCache } from '@/utils'
 
 // 定义类型
 interface Query{
@@ -247,6 +248,7 @@ export default class ApproveBill extends Vue {
 
     viewDetail (val) {
         console.log('val: ', val)
+        clearCache('funds')
         this.$router.push({ name: 'funds', params: { fundType: val.fundType, pNo: val.fundId } })
     }
 

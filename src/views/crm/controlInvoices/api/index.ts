@@ -36,3 +36,13 @@ export const getEqpDetail: (params: string) => AxiosPromise<EqpInvoiceDetailResp
 export const getEqpList: (params: any) => AxiosPromise<IPageEqpInvoicePageResponse> = (params) => {
     return axios.get(`/project/boss/eqp-invoice`, { params })
 }
+
+// 提交
+export const submitEqp: (params: any) => AxiosPromise<void> = (params) => {
+    return axios.get(`/project/boss/eqp-invoice/submit/${params}`)
+}
+
+// 驳回
+export const rejectEqp: (params: InvoiceRejectRequest) => AxiosPromise<void> = (params) => {
+    return axios.patch(`/project/boss/eqp-invoice/reject`)
+}
