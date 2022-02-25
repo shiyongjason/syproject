@@ -12,13 +12,13 @@
             <div class="journal-wrap_box">
                 内容：<ul>
                     <li v-for="(v,i) in item.contentList" :key="i">
-                        <p style="color:red">{{v.category}}</p>
-                        <template>{{v.desc}} 把 {{v.oldValue}} 修改为 <b style="font-weight:400;color:#409eff">{{v.newValue}}</b></template>
+                        <b style="font-weight:400;color:red">{{v.category}}：</b>
+                        <template>{{v.desc}} 把 “<b style="font-weight:400;color:#409eff">{{v.oldValue}}</b>” 修改为 “<b style="font-weight:400;color:#409eff">{{v.newValue}}</b>”</template>
                     </li>
                 </ul>
             </div>
         </div>
-        <div class="block">
+        <div class="block" v-if="journalList.length>0">
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"  :page-sizes="[10,20]" layout="total, sizes, prev, pager, next, jumper" :total="page.total"
              :current-page="queryParams.pageNumber" :page-size="queryParams.pageZise"  >
             </el-pagination>
