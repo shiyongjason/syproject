@@ -3859,7 +3859,8 @@ export default {
             console.log('item: ', item)
             const params = {
                 accountId: item.accountId,
-                registrant: this.userInfo.employeeName
+                registrant: this.userInfo.employeeName,
+                repaymentType: item.repaymentType == 2 ? 1 : 2
             }
             const { data } = await transformPlanType(params)
             if (data.length == 1) {
