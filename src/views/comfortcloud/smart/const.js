@@ -22,28 +22,28 @@ export const PROJECT_TYPE_KEY = {
     FT_AIR: '12'
 }
 /** 集控系统 */
-export const PROJECT_TYPE_OPTIONS = new Map([
-    ['1', '氟机空调集控系统'],
-    ['2', '水机空调集控系统'],
-    ['12', '分体空调集控系统'],
-    ['13', '普通开关照明集控系统'],
-    ['14', '调光面板照明集控系统'],
-    ['15', '窗帘集控系统'],
-    ['16', '插座集控系统'],
-    ['17', '环境检测系统'],
-    ['18', '门禁系统'],
-    ['3', '计费系统'],
-    ['11', '节能系统']
-])
+// export const PROJECT_TYPE_OPTIONS = new Map([
+//     ['1', '氟机空调集控系统'],
+//     ['2', '水机空调集控系统'],
+//     ['12', '分体空调集控系统'],
+//     ['13', '普通开关照明集控系统'],
+//     ['14', '调光面板照明集控系统'],
+//     ['15', '窗帘集控系统'],
+//     ['16', '插座集控系统'],
+//     ['17', '环境检测系统'],
+//     ['18', '门禁系统'],
+//     ['3', '计费系统'],
+//     ['11', '节能系统']
+// ])
 
-export const FEE_TYPE_OPTIONS = new Map([
-    ['1', '智能电表'],
-    ['0', '智能空开'],
-    ['2', '热量表'],
-    ['3', '时间型'],
-    ['4', '分体空调']
-    // ['5', '计量插座']
-])
+// export const FEE_TYPE_OPTIONS = new Map([
+//     ['1', '智能电表'],
+//     ['0', '智能空开'],
+//     ['2', '热量表'],
+//     ['3', '时间型'],
+//     ['4', '分体空调']
+//     // ['5', '计量插座']
+// ])
 
 // 是否是通用升级
 export const DEVICE_UPGRADE_IS_COMMON_KEY = {
@@ -51,51 +51,12 @@ export const DEVICE_UPGRADE_IS_COMMON_KEY = {
     NO: '0'
 }
 
-// 空调集控系统
-export const AIR_PROJECT_TYPE_OPTIONS = new Map([
-    ['1', '氟机空调'],
-    ['2', '水机空调'],
-    ['12', '分体空调']
-])
+// 品牌名称
+export const BRAND_OPTIONS = [
+    { label: '海康', value: 'hikVision' }
+]
 
-// 照明集控系统
-export const LIGHTING_PROJECT_TYPE_OPTIONS = new Map([
-    ['14', '调光面板'],
-    ['13', '普通开关']
-])
-
-// 插座集控系统
-export const SCOKET_PROJECT_TYPE_OPTIONS = new Map([
-    ['16', '插座集控系统']
-])
-
-// 窗帘集控系统
-export const CURTAIN_PROJECT_TYPE_OPTIONS = new Map([
-    ['15', '电机'],
-    ['19', '面板']
-])
-
-// 环境监测系统environment
-export const ENVIRONMENT_PROJECT_TYPE_OPTIONS = new Map([
-    ['16', '环境监测系统']
-])
-
-// 门禁系统
-export const DOOR_LOCK_PROJECT_TYPE_OPTIONS = new Map([
-    ['16', '门禁系统']
-])
-
-// 安防系统security
-export const SECURITY_PROJECT_TYPE_OPTIONS = new Map([
-    ['20', '人体存在传感器'],
-    ['21', '人体移动传感器'],
-    ['22', '水浸监测'],
-    ['23', '烟雾监测'],
-    ['24', '可燃气体监测']
-])
-
-// 场景管理
-export const SCENE_PROJECT_TYPE_OPTIONS = new Map([
-    ['31', '四键'],
-    ['32', '六键']
-])
+// 子系统类型
+export const SUB_SYSTEM_TYPE_OPTIONS = [
+    { label: '视频监控', value: 'video' }
+]

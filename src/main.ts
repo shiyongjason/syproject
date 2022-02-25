@@ -13,6 +13,7 @@ import '@/assets/style/common.scss'
 import TreeTable from 'tree-table-vue'
 import filters from './utils/filters'
 import commonFun from './utils/common'
+import HosjoyForm from '@/components/HosjoyForm/install.js'
 // @ts-ignore
 import basicTable from './components/CommonTable/CommonTable'
 // @ts-ignore
@@ -36,6 +37,13 @@ import './class-component-hooks'
 // 解决bug-keepAlive导致跳转蒙层遮盖
 try {
     HosjoyUI.Drawer.components['el-drawer'].props.modalAppendToBody.default = false
+    // @ts-ignore
+    // ElementUI.Dialog.props.modalAppendToBody.default = false
+    // // @ts-ignore
+    // ElementUI.Dialog.props.appendToBody.default = false
+
+    // ElementUI.Tabs.props.modalAppendToBody.default = false
+    console.log(' ElementUI.Dialog: ', ElementUI)
 } catch (e) {
     console.log(e)
 }
@@ -46,6 +54,7 @@ Vue.use(ElementUI)
 Vue.use(TreeTable)
 Vue.use(HosjoyUI)
 Vue.use(commonFun)
+Vue.use(HosjoyForm)
 // table公共组件
 Vue.component(
     'basicTable', basicTable

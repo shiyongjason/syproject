@@ -124,27 +124,49 @@
             <div class="approvalcontract-layout-left">
                 <h1>字段/自定义合同条款修订</h1>
                 <div class="setarea" v-if="currentKey">
-                    <p class="setarea-key">{{currentKey.paramName}}：</p>
-                    <div style="display: flex;justify-content: space-between;align-items: center;">
-                        <el-form :rules="rules" :model="currentKey" ref="ruleForm" label-width="100px" class="demo-ruleForm" :style="currentKey.inputStyle==9&&isRenderUpload?'':'width:100%'" @submit.native.prevent>
-                            <el-form-item prop="formValidator" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
-                                <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}">
-                                    <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
-                                    <!--  -->
-                                    <template v-if="value.slotRender" slot-scope="scope">
-                                        <comRender :scope="scope" :render="value.slotRender"></comRender>
-                                    </template>
-                                </component>
-                            </el-form-item>
-                        </el-form>
+                    <!-- 采购单金额 特殊处理-->
+                    <template v-if="currentKey.paramKey ==='purch_batch_amount'">
+                        <div style="display: flex;justify-content: space-between;align-items: center;">
+                            <el-form :rules="rules" :model="currentKey" ref="ruleForm" label-width="100px" class="demo-ruleForm" style="width:300px" @submit.native.prevent>
+                                <p class="setarea-key" style="marginBottom:10px">上游采购金额：</p>
+                                <el-form-item prop="formValidator" >
+                                    <el-input v-model="supplierPurchaseAmount" v-isNum='currentKey.decimal' v-inputMAX="currentKey.calculationRules" placeholder="上游采购金额">
+                                        <template slot="append">{{currentKey.unit}}</template>
+                                    </el-input>
+                                </el-form-item>
+                                <!-- 采购单金额=上游采购金额*（1+项目终审里的加价率salesGrossMargin）保留两位小数 -->
+                                <p class="setarea-key" style="marginBottom:10px">采购单金额：</p>
+                                <el-form-item>
+                                    <el-input placeholder="采购单金额" disabled v-model="purchaseOrderAmount">
+                                        <template slot="append">{{currentKey.unit}}</template>
+                                    </el-input>
+                                </el-form-item>
+                            </el-form>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <p class="setarea-key">{{currentKey.paramName}}：</p>
+                        <div style="display: flex;justify-content: space-between;align-items: center;">
+                            <el-form :rules="rules" :model="currentKey" ref="ruleForm" label-width="100px" class="demo-ruleForm" :style="currentKey.inputStyle==9&&isRenderUpload?'':'width:100%'" @submit.native.prevent>
+                                <el-form-item prop="formValidator" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
+                                    <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}">
+                                        <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
+                                        <!--  -->
+                                        <template v-if="value.slotRender" slot-scope="scope">
+                                            <comRender :scope="scope" :render="value.slotRender"></comRender>
+                                        </template>
+                                    </component>
+                                </el-form-item>
+                            </el-form>
 
-                        <hosjoyUpload v-model="imgArr" :showPreView='false' v-if="isRenderUpload&&currentKey.inputStyle==9" class="upload-editor" drag :action="action" :multiple='!!currentKey.multiple' :fileSize='20' :fileNum='imgArr.length+1' style="width:340px;margin-right:20px;margin-top: -24px;"
-                            accept='.jpeg,.jpg,.png' :uploadParameters='uploadParameters' @successArg='successArg'>
-                            <i class="el-icon-upload"></i>
-                            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em>后点击<em>保存</em></div>
-                            <div class="el-upload__tip" slot="tip">只能上传jpeg/jpg/png文件，且不超过20M</div>
-                        </hosjoyUpload>
-                    </div>
+                            <hosjoyUpload v-model="imgArr" :showPreView='false' v-if="isRenderUpload&&currentKey.inputStyle==9" class="upload-editor" drag :action="action" :multiple='!!currentKey.multiple' :fileSize='20' :fileNum='imgArr.length+1' style="width:340px;margin-right:20px;margin-top: -24px;"
+                                accept='.jpeg,.jpg,.png' :uploadParameters='uploadParameters' @successArg='successArg'>
+                                <i class="el-icon-upload"></i>
+                                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em>后点击<em>保存</em></div>
+                                <div class="el-upload__tip" slot="tip">只能上传jpeg/jpg/png文件，且不超过20M</div>
+                            </hosjoyUpload>
+                        </div>
+                    </template>
                     <div style="margin-bottom:10px;margin-top:-30px;text-indent: 3px;" v-if='imgArr.length > 1'>{{`+${imgArr.length-1} 张图 (多图)`}}</div>
                     <div v-if="serviceFee" v-show='showServiceFee' v-html="serviceFee" style="margin-bottom:20px;margin-top:-10px;overflow-x: scroll;"></div>
                     <h-button v-if="imgArr.length == 0 && isRenderUpload && currentKey.inputStyle == 9 && currentKey.paramValue" style="margin-top:10px" @click="emptyTheImg" type="editor">清空该图片</h-button>
@@ -198,6 +220,7 @@ export default {
     components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt, 'editor': Editor, comRender, serviceFeeToTable },
     data () {
         return {
+            supplierPurchaseAmount: '', // 上游采购金额
             scrollTop: 0,
             showServiceFee: false,
             editordrawerboxSize: '580px',
@@ -282,6 +305,12 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo
         }),
+        /** 采购单金额 = 上游采购金额supplierPurchaseAmount *（1+项目终审里的加价率 salesGrossMargin）保留两位小数 */
+        purchaseOrderAmount () {
+            let res = ''
+            res = (this.supplierPurchaseAmount * (1 + (this.detailRes.salesGrossMargin || 0))).toFixed(2)
+            return isNaN(res) ? '' : res
+        },
         uploadImgServer () {
             return ccpBaseUrl + 'common/files/upload-old'
         },
@@ -356,6 +385,9 @@ export default {
                     tableDomsDrawer[0].setAttribute('contenteditable', false)
                 }
             }
+        },
+        purchaseOrderAmount (val) {
+            this.currentKey.paramValue = val
         }
     },
     methods: {
@@ -439,6 +471,11 @@ export default {
             !this.isDealBack && this.onSaveContent(3)
         },
         checkField (rule, value, callback) {
+            // 采购单金额 判断上游采购金额 supplierPurchaseAmount
+            if (this.currentKey.paramKey === 'purch_batch_amount' && this.supplierPurchaseAmount === '') {
+                callback(new Error(`上游采购金额不能为空`))
+                return
+            }
             if (this.currentKey.required && !this.currentKey.paramValue) {
                 callback(new Error(`${this.currentKey.paramName}不能为空`))
                 return
@@ -714,7 +751,7 @@ export default {
                 }
 
             }
-            console.log(comObj)
+            console.log('comObj:::', comObj)
             return comObj[this.currentKey.inputStyle]
         },
         getTableHtml (array = []) {
@@ -1812,9 +1849,6 @@ export default {
                                     if (this.showServiceFee) {
                                         this.showServiceFee = false
                                     }
-                                    if (this.showServiceFee) {
-                                        this.showServiceFee = false
-                                    }
                                     this.$nextTick(() => {
                                         this.$refs['ruleForm'].resetFields()
                                     })
@@ -1857,6 +1891,7 @@ export default {
             }
             const res = await getContractsContent({ contractId: this.$route.query.id })
             this.detailRes = res.data
+            this.supplierPurchaseAmount = res.data.supplierPurchaseAmount || '' // 上游采购金额
             this.contractContentDiv = res.data.contractContent.replace(/ contenteditable="true"/g, ' contenteditable="false"') // Div版的合同
             this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
             this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
