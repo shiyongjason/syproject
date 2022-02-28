@@ -282,15 +282,14 @@ export default {
                 },
                 { label: '支付单编号', prop: 'paymentOrderNo', width: '150', isHidden: this.queryParams.repaymentTypeArrays == '4' },
                 { label: '支付单金额', prop: 'paymentOrderAmount', width: '150', isHidden: this.queryParams.repaymentTypeArrays == '4' },
-                { label: '期数', prop: 'feeRepaymentOrder', width: '100', isHidden: this.queryParams.repaymentTypeArrays !== '3' },
-                { label: '首付款总金额', prop: 'paymentAmount', width: '150', isHidden: this.queryParams.repaymentTypeArrays !== '1' },
-                { label: '金额', prop: 'paymentAmount', width: '150', isHidden: this.queryParams.repaymentTypeArrays != '3' },
                 { label: '剩余货款总金额', prop: 'paymentAmount', formatters: 'moneyShow', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays !== '2' },
+                { label: '期数', prop: 'feeRepaymentOrder', width: '100', isHidden: this.queryParams.repaymentTypeArrays !== '3' && this.queryParams.repaymentTypeArrays !== '2' },
+                { label: '金额', prop: 'paymentAmount', width: '150', isHidden: this.queryParams.repaymentTypeArrays != '3' && this.queryParams.repaymentTypeArrays !== '2' },
+                { label: '首付款总金额', prop: 'paymentAmount', width: '150', isHidden: this.queryParams.repaymentTypeArrays !== '1' },
                 { label: '预付款金额', prop: 'paymentAmount', formatters: 'moneyShow', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays !== '4' },
                 { label: '已支付金额', prop: 'paidAmount', formatters: 'moneyShow', width: '150', align: 'center' },
                 { label: '支付待确认金额', prop: 'unconfirmedAmount', formatters: 'moneyShow', width: '150', align: 'center' },
                 { label: '待支付金额', prop: 'unpaidAmount', formatters: 'moneyShow', width: '150', align: 'center' },
-
                 { label: '状态', prop: 'paymentFlag', width: '150' },
                 {
                     label: '应支付日期',
