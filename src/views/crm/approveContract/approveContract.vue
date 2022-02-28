@@ -387,7 +387,9 @@ export default {
             }
         },
         purchaseOrderAmount (val) {
-            this.currentKey.paramValue = val
+            if (this.currentKey) {
+                this.currentKey.paramValue = val
+            }
         }
     },
     methods: {
@@ -1087,7 +1089,8 @@ export default {
                 'fieldContent': '', // 编辑内容
                 'contractContent': this.contractDocument.innerHTML.replace(/ contenteditable="true"/g, ' contenteditable="false"'), // 拿input版的合同去提交。法务审核的时候需要用到。
                 'createBy': this.userInfo.employeeName,
-                'contractFieldsList': JSON.stringify(this.contractFieldsList) // 合同字段键值对
+                'contractFieldsList': JSON.stringify(this.contractFieldsList), // 合同字段键值对
+                supplierPurchaseAmount: this.supplierPurchaseAmount // 上游采购金额
             })
             let s = document.getElementsByClassName('approvalcontract-content-layout')
             this.scrollTop = s[0].scrollTop
@@ -1186,7 +1189,8 @@ export default {
                 'fieldContent': JSON.stringify(this.imgArr), // 编辑内容
                 'contractContent': this.contractDocument.innerHTML.replace(/ contenteditable="true"/g, ' contenteditable="false"'), // 拿input版的合同去提交。法务审核的时候需要用到。
                 'createBy': this.userInfo.employeeName,
-                'contractFieldsList': JSON.stringify(contractFieldsList) // 合同字段键值对
+                'contractFieldsList': JSON.stringify(contractFieldsList), // 合同字段键值对
+                supplierPurchaseAmount: this.supplierPurchaseAmount // 上游采购金额
             })
             let s = document.getElementsByClassName('approvalcontract-content-layout')
             this.scrollTop = s[0].scrollTop
@@ -1244,7 +1248,8 @@ export default {
                     'fieldContent': tempObj[propName][0].paramValue, // 编辑内容
                     'contractContent': this.contractDocument.innerHTML.replace(/ contenteditable="true"/g, ' contenteditable="false"'),
                     'createBy': this.userInfo.employeeName,
-                    'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
+                    'contractFieldsList': JSON.stringify(tempArr), // 合同字段键值对
+                    supplierPurchaseAmount: this.supplierPurchaseAmount // 上游采购金额
                 })
                 let s = document.getElementsByClassName('approvalcontract-content-layout')
                 this.scrollTop = s[0].scrollTop
@@ -1650,7 +1655,8 @@ export default {
                     'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
                     'contractContent': this.contractDocument.innerHTML.replace(/ contenteditable="true"/g, ' contenteditable="false"'),
                     'createBy': this.userInfo.employeeName,
-                    'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
+                    'contractFieldsList': JSON.stringify(tempArr), // 合同字段键值对
+                    supplierPurchaseAmount: this.supplierPurchaseAmount // 上游采购金额
                 })
                 if (this.isDealBack) {
                     this.isDealBack = false
@@ -1891,7 +1897,7 @@ export default {
             }
             const res = await getContractsContent({ contractId: this.$route.query.id })
             this.detailRes = res.data
-            this.supplierPurchaseAmount = res.data.supplierPurchaseAmount || '' // 上游采购金额
+            this.supplierPurchaseAmount = res.data.supplierPurchaseAmount // 上游采购金额
             this.contractContentDiv = res.data.contractContent.replace(/ contenteditable="true"/g, ' contenteditable="false"') // Div版的合同
             this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
             this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
