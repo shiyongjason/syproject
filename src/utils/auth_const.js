@@ -221,7 +221,10 @@ export const CRM_PURCHASE_ORDER_SEE_DETAIL = 109503 // 查看详情
 // 好程工 支付单管理
 export const CRM_PAYMENT_REVIEW = 109504 // 审核 -> 待分财审核
 export const CRM_PAYMENT_REVIEW_PROJECT = 109528 // 审核 -> 待项目运营审核
+
+// 2022.02 合同及订单流程优化版本删除掉此按钮，此权限无用
 export const CRM_PAYMENT_CONFIRM = 109505 // 支付确认
+
 export const CRM_PAYMENT_PREV = 109506 // 上游支付 支付单-列表 支付单-drawer
 export const CRM_PAYMENT_CONFIRM_RECEIPT = 109507 // 确认收货 支付单-列表 支付单-drawer
 export const CRM_PAYMENT_DETAIL = 109508 // 查看详情
@@ -232,7 +235,10 @@ export const CRM_PREV_PAYMENT_DETAIL = 109512 // 查看上游支付明细
 export const CRM_ARREAR_FUND_CONFIRM = 109513 // 尾款账单-支付确认
 export const CRM_REVIEW_RECEIPT_DETAIL = 109514 // 查看收货明细
 export const CRM_PAYMENT_REVIEW_DOWN = 109524
+
+// 2022.02 合同及订单流程优化版本删除掉此按钮，此权限无用
 export const CRM_PAYMENT_UPLOADPAY = 1097001 // 上传凭证
+
 export const CRM_PAYMENT_CANCEL = 1097002 // 取消支付单
 
 // 好程工 资金
