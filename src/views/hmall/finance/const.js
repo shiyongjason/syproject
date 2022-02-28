@@ -247,13 +247,15 @@ export const SYNCHROMIZED_STATE_OPTIONS = [
     { label: '未处理', value: '10' },
     { label: '处理中', value: '20' },
     { label: '处理失败', value: '30' },
-    { label: '处理成功', value: '40' }
+    { label: '处理成功', value: '40' },
+    { label: '不处理', value: '50' }
 ]
 export const SYNCHROMIZED_STATE_MAP = new Map([
     [10, '未处理'],
     [20, '处理中'],
     [30, '处理失败'],
-    [40, '处理成功']
+    [40, '处理成功'],
+    [50, '不处理']
 ])
 //  运费类型
 export const FREIGHT_TYPE_OPTIONS = [
@@ -302,6 +304,8 @@ export const OPERATIONAL_OPTIONS = [
 ]
 export const OPERATIONAL_MAP = new Map([
     [1, '订单创建'],
+    [2, '运费优惠'],
+    [3, '修改运费'],
     [5, '订单支付'],
     [6, '发货'],
     [7, '发货取消'],
@@ -388,3 +392,18 @@ export const CHILD_ORDER_TYPE = [
     { label: '常规', value: 1 },
     { label: '售后', value: 2 }
 ]
+
+/** 支付方式 */
+export const PAYMENT_METHOD = new Map([
+    ['', '全部'],
+    ['21', '快捷支付（信用卡）'],
+    ['22', '快捷支付（储蓄卡）'],
+    ['40', '微信支付'],
+    ['42', '微信支付（小程序）'],
+    ['50', '支付宝支付'],
+    ['1', '账期支付'],
+    ['2', '公司转账'],
+    ['10', '钱包支付'],
+    ['11', '活动钱包支付'],
+    ['5', '组合支付']
+])
