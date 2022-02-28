@@ -43,6 +43,13 @@
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
+                        <el-form-item label="承兑手续费" prop="acceptanceFee" >
+                            <el-input v-model='detailData.acceptanceFee' v-isNum:2="detailData.acceptanceFee" maxlength='10' placeholder="请输入承兑手续费">
+                                <template slot="append">%</template>
+                            </el-input>
+                        </el-form-item>
+                    </div>
+                    <div class="query-cont-col">
                         <!-- 第一笔还款维护后，变为不可修改 -->
                         <el-form-item label="承兑期限：" prop="loanDateType">
                             <el-radio style="margin-right:5px" v-model.trim="detailData.loanDateType" :label=1 @change='loanDateNumM' :disabled='detailData.isRepayment || detailData.repaymentType == 2'>月</el-radio>
@@ -100,6 +107,9 @@ export default {
                 loanAmount: [
                     { required: true, message: '请输入敞口金额', trigger: 'blur' }
                 ],
+                acceptanceFee: [
+                    { required: true, message: '请输入承兑手续费', trigger: 'blur' }
+                ],
                 invoiceTime: [
                     { required: true, message: '请选择开票日期', trigger: 'blur' }
                 ],
@@ -143,7 +153,8 @@ export default {
                 registrant: '', // 登记人
                 repaymentType: '', // 还款类型 1：一次性还款 2：334还款
                 supplier: '', // 供货商
-                yearRate: ''// 年利率
+                yearRate: '', // 年利率
+                acceptanceFee: ''
             })
         }
     },
