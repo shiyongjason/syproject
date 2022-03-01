@@ -105,7 +105,6 @@
                     <h-button table @click="openDetail(scope.data.row)">查看合同</h-button>
                     <h-button table @click="getHistory(scope.data.row)">审核记录</h-button>
                     <h-button table @click="onAbolished(scope.data.row)" v-if="scope.data.row.contractStatus!=17 && hosAuthCheck(Auths.CRM_CONTRACT_ABOLISH)">废止</h-button>
-                    <!-- TODO: 判断条件调整 -->
                     <h-button table @click="onWithdraw(scope.data.row)" v-if="showWithdrawBtn(scope.data.row)">撤回</h-button>
                     <h-button table @click="onGetfile(scope.data.row)" v-if="hosAuthCheck(Auths.CONTRACT_PLACE)&&scope.data.row.contractSignType==2&&scope.data.row.contractStatus==12&&!scope.data.row.archive">归档</h-button>
                 </template>
@@ -179,11 +178,14 @@ import {
     getCheckHistory,
     getDiffApi,
     contractTypesNotConfirm,
-    getAbolish
+    getAbolish,
+    contractRecall
 } from './api/index'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { newCache } from '@/utils/index'
 import * as Auths from '@/utils/auth_const'
+import { CONTRACT_STATUS_KEY } from './const'
+
 const _queryParams = {
     pageSize: 10,
     pageNumber: 1,
@@ -262,7 +264,8 @@ export default {
             lastContent: '',
             fileDialog: false,
             archive: '',
-            fileStatus: [{ value: '', label: '全部' }, { value: true, label: '是' }, { value: false, label: '否' }]
+            fileStatus: [{ value: '', label: '全部' }, { value: true, label: '是' }, { value: false, label: '否' }],
+            contractStatusKey: CONTRACT_STATUS_KEY
         }
     },
     computed: {
@@ -312,21 +315,30 @@ export default {
             }).catch(() => {
             })
         },
-        // 撤回按钮展示条件
+        /**
+         * 撤回按钮展示条件
+         * 当合同状态为：待客户签署、发起线上待客户签署、待平台签署状态时才显示
+         *
+         * @param row 合同签署管理列表行信息
+         * @returns true 展示撤回按钮  false 不展示撤回按钮
+         * @summary HAM-39306
+         */
         showWithdrawBtn (row) {
-            return (row.contractStatus == 8 || row.contractStatus == 10 || row.contractStatus == 16) && this.hosAuthCheck(this.Auths.CRM_CONTRACT_WITHDRAW)
+            return (row.contractStatus == this.contractStatusKey.CUSTOMER_SIGN || row.contractStatus == this.contractStatusKey.ONLINE_CUSTOMER_SIGN || row.contractStatus == this.contractStatusKey.PLATFORM_SIGN) && this.hosAuthCheck(this.Auths.CRM_CONTRACT_WITHDRAW)
         },
+        /**
+         * 合同撤回操作
+         * @param val 合同签署管理列表行信息
+         * @summary HAM-39306
+         */
         onWithdraw (val) {
             this.$confirm('确定撤回该合同吗？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                // TODO: 撤回操作
-                await getAbolish({
-                    'contractId': val.id,
-                    'phone': this.userInfo.phoneNumber,
-                    'createBy': this.userInfo.employeeName
+                await contractRecall({
+                    'contractId': val.id
                 })
                 this.searchList()
             }).catch(() => {
