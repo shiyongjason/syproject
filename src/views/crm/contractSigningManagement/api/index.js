@@ -23,3 +23,7 @@ export const getNoTempContracts = (params) => axios.get(`/project/api/contracts/
 export const downNoTempContracts = (params) => axios.get(`/project/api/contracts/download/${params}`)
 // 更新归档
 export const signContractarchive = (params) => axios.post(`/project/api/contract-signs/contract-archive`, params)
+/**
+ * 合同撤回请求
+ */
+export const contractRecall = (params) => axios.post(`/project/api/contracts/recall/${params.contractId}`, params)

@@ -25,6 +25,15 @@
                 <keep-alive :include="cachedInclude" :exclude="cachedExclude" v-else>
                     <router-view></router-view>
                 </keep-alive> -->
+
+                <!-- slot 名称要与 item.porp 保持一致 -->
+                <!-- <div style="padding:20px;background:#fff">
+                    <hosjoy-form v-model="HosjoyFormObj" >
+                        <template v-slot:name>
+                            <el-tag>这是一段 template 类型自定义插槽</el-tag>
+                        </template>
+                    </hosjoy-form>
+                </div> -->
             </el-main>
         </el-container>
         <el-dialog title="密码修改" :visible.sync="editPasswordVisible" class="recharge-password" :before-close="closePassword">
@@ -59,7 +68,6 @@ import NavMenuHead from './NavMenuHead'
 import NavMenuAside from './NavMenuAside'
 import HTags from './Tags'
 import { mapState } from 'vuex'
-
 export default {
     name: 'default-layout',
     components: {
@@ -79,6 +87,59 @@ export default {
         }
 
         return {
+            HosjoyFormObj: {
+                data: {
+                    num: 10
+                },
+                items: [
+                    {
+                        prop: 'x1',
+                        label: () => {
+                            return <el-button>自定义label</el-button>
+                        },
+                        // labelWidth: '100px',
+                        style: 'width:320px'
+                    },
+                    {
+                        prop: 'num',
+                        label: '数字',
+                        component: 'el-slider',
+                        style: 'width:220px'
+
+                    },
+                    {
+                        prop: 'name',
+                        label: 'Template 插槽',
+                        slot: true
+                    },
+                    {
+                        prop: 'user',
+                        label: '人',
+                        // style: 'width:120px',
+                        clearable: true,
+                        directives: ['v-isNum:2', 'v-inputMAX=100']
+                    },
+                    {
+                        prop: 'region',
+                        component: 'el-select',
+                        label: '区域',
+                        options: ['区域一', '区域二']
+                    },
+                    {
+                        component: 'el-button',
+                        type: 'primary',
+                        icon: 'el-icon-search',
+                        round: true,
+                        slots: '查询', // 按钮插槽
+                        on: {
+                            click: () => {
+                                console.log('log::::::', this.HosjoyFormObj.data)
+                                console.log('log::::::this.HosjoyFormObj', this.HosjoyFormObj)
+                            }
+                        }
+                    }
+                ]
+            },
             isCollapse: false,
             editPasswordVisible: false,
             editPassword: {
@@ -215,6 +276,11 @@ export default {
     },
     mounted () {
         this.init()
+        setTimeout(() => {
+            this.HosjoyFormObj.data = {
+                num: 88
+            }
+        }, 2000)
     }
 }
 </script>
