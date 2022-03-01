@@ -6,7 +6,7 @@
                 <el-button size="mini" type="primary" @click="onExamine(item.id)" v-if="item.auditStatus==1">审核</el-button>
             </div>
             <div class="journal-wrap_box">
-                <span>申请时间：{{moment(item.createTime).format('YYYY-MM-DD hh:mm')}}</span>
+                <span>申请时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm')}}</span>
                 <span>申请人：{{item.createBy}}</span>
             </div>
             <div class="journal-wrap_box">
