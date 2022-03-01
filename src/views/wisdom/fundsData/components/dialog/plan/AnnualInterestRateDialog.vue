@@ -393,7 +393,8 @@ export default {
                     this.detailData[0].graceDueDate = this.untilDay
                     let form = {
                         createBy: this.userInfo.employeeName,
-                        planList: [...this.detailData]
+                        planList: [...this.detailData],
+                        repaymentType: 2
                     }
                     await setPlan(form)
                     this.loading = false
