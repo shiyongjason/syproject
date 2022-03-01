@@ -23,7 +23,7 @@
                     <el-descriptions-item label="年利率">{{dialogDetail.loan_yearRate||'-'}}%</el-descriptions-item>
                     <el-descriptions-item label="借款期限">{{dialogDetail.loan_loanDateNum ? `${dialogDetail.loan_loanDateNum}` : '-'}}
                         {{ dialogDetail.loan_loanDateType == 1 ? '个月' : dialogDetail.loan_loanDateType == 2 ? '天' : ''}}</el-descriptions-item>
-                    <el-descriptions-item label="应收利息（正常+宽限）">
+                    <el-descriptions-item label="应收利息（正常+宽限）" v-if="!hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE)">
                         {{this.$plus(dialogDetail.paymentStatic_interestAmount, dialogDetail.paymentStatic_graceInterestAmount)|moneyFormat}}
                         {{dialogDetail.paymentStatic_normalInterestPranayamaTotal +dialogDetail.paymentStatic_graceInterestPranayamaTotal? `(${(dialogDetail.paymentStatic_normalInterestPranayamaTotal + dialogDetail.paymentStatic_graceInterestPranayamaTotal) > 0? '+' + (this.$plus(dialogDetail.paymentStatic_normalInterestPranayamaTotal, dialogDetail.paymentStatic_graceInterestPranayamaTotal)): (this.$plus(dialogDetail.paymentStatic_normalInterestPranayamaTotal, dialogDetail.paymentStatic_graceInterestPranayamaTotal))})`: ''}}
                     </el-descriptions-item>
