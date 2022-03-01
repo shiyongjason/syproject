@@ -104,7 +104,7 @@ export default {
         backPlat (val) {
             this.detailData.loanCompanyCode = val.value ? val.value.selectCode : ''
             this.detailData.loanCompanyName = val.value ? val.value.value : ''
-            this.detailData.subsectionCode = val.value ? val.value.subsectionCode : ''
+            this.detailData.subsectionCode = val.value ? val.value.ehrSubsectionCode : ''
             this.detailData.subsectionName = val.value ? val.value.subsectionName : ''
             this.detailData.misCode = val.value ? val.value.misCode : ''
         },
