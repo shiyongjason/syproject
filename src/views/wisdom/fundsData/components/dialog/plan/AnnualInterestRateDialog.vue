@@ -394,7 +394,7 @@ export default {
                     let form = {
                         createBy: this.userInfo.employeeName,
                         planList: [...this.detailData],
-                        repaymentType: 2
+                        repaymentType: 1
                     }
                     await setPlan(form)
                     this.loading = false
