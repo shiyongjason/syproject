@@ -2685,7 +2685,7 @@ export default {
                                     minWidth: '100',
                                     render: (h, scope) => {
                                         return <span>
-                                            {scope.row.acceptanceFee ? `${scope.row.acceptanceFee}` : '-'}
+                                            {scope.row.loan_acceptanceFee ? `${scope.row.loan_acceptanceFee}` : '-'}
                                         </span>
                                     }
                                 }
@@ -3833,6 +3833,7 @@ export default {
         // 敞口和分授信还款
         async getGrantPaymetPlanData (row, type, isShow = false) {
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
+            console.log('data: ', data)
             this.loanAmount = data.reduce((val, item, index) => {
                 return val + item.capitalAmount
             }, 0)
