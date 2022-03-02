@@ -45,7 +45,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="承兑手续费" prop="acceptanceFee" >
                             <el-input v-model='detailData.acceptanceFee' v-isNum:2="detailData.acceptanceFee" maxlength='10' placeholder="请输入承兑手续费">
-                                <template slot="append">%</template>
+                                <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
                     </div>

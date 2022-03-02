@@ -82,6 +82,9 @@
                         {{dialogDetail.loan_loanDateNum ? `${dialogDetail.loan_loanDateNum}` : '-'}}
                         {{dialogDetail.loan_loanDateType == 1 ? '个月' : dialogDetail.loan_loanDateType == 2 ? '天' : ''}}
                         </el-descriptions-item>
+                          <el-descriptions-item label="承兑手续费">
+                        {{dialogDetail.loan_acceptanceFee ? `${dialogDetail.loan_acceptanceFee}元` : '-'}}
+                        </el-descriptions-item>
                     <el-descriptions-item label="到期日">{{dialogDetail.loan_loanEndTime ? moment(dialogDetail.loan_loanEndTime).format('YYYY-MM-DD') : '-'}}</el-descriptions-item>
                     <el-descriptions-item label="还款方式">
                         {{dialogDetail.loan_repaymentType == 1 ? '一次性还款' : '334还款'}}
