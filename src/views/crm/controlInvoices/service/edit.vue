@@ -49,18 +49,18 @@
                     <el-button size="mini" type="primary" @click="handelDelete(slotProps.data)">删除</el-button>
                 </template>
             </hosJoyTable>
-            <el-dialog title="提示" :visible.sync="dialogVisible" width="50%" :close-on-click-modal="false" :before-close="handleClose">
+            <el-dialog title="信息" :visible.sync="dialogVisible" width="50%" :close-on-click-modal="false" :before-close="handleClose">
                 <hosJoyTable ref="dialogTable" align="center" border stripe @selection-change="handleSelectionChange" isShowselection :column="formTableLabel" :data="tableForm" actionWidth='200'>
                 </hosJoyTable>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="dialogVisible = false">取 消</el-button>
-                    <el-button type="primary" :disabled=disabled @click="handleSelect">确 定</el-button>
+                    <el-button type="primary" :disabled=disabled @click="getList">确 定</el-button>
                 </span>
             </el-dialog>
             <el-dialog title="项目" :visible.sync="projectVisible" width="50%" :close-on-click-modal="false" :before-close="()=>{projectVisible = false}">
                 <div class="project_wrap">
                     <el-row class="mb20">
-                        <el-input v-model="queryParams.input" placeholder="可输入项目编号或者项目名称模糊查询">
+                        <el-input v-model="queryParams.queryString" placeholder="可输入项目编号或者项目名称模糊查询">
                             <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
                         </el-input>
                     </el-row>
@@ -95,7 +95,7 @@ import { deepCopy } from '@/utils/utils'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { ServiceInvoiceSubmitRequest } from '@/interface/hbp-project'
 import { Phone } from '@/utils/rules'
-import { updateServiceInvoice } from '../api'
+import { getProjectPage, getServiceFunds, updateServiceInvoice } from '../api'
 @Component({
     name: 'Servicedetail',
     components: {
@@ -108,6 +108,7 @@ export default class Serviceedit extends Vue {
         form: HTMLFormElement
     }
     @Action('setNewTags') setNewTags!: Function
+    @State('userInfo') userInfo: any
 
     isDisabled: boolean = true
     dialogVisible:boolean = false
@@ -120,9 +121,11 @@ export default class Serviceedit extends Vue {
     queryParams:Record<string, any>={
         pageNumber: 1,
         pageSize: 10,
-        inupt: ''
+        subsectionCode: '',
+        queryString: ''
     }
     serviceForm: ServiceInvoiceSubmitRequest={
+        companyId: '',
         saveOrSubmit: '',
         invoiceId: '',
         projectNo: '',
@@ -156,7 +159,7 @@ export default class Serviceedit extends Vue {
     ]
 
     formTableLabel: tableLabelProps = [
-        { label: '服务流水号', prop: 'code' },
+        { label: '服务费流水号', prop: 'code' },
         { label: '支付单号', prop: 'name' },
         { label: '期数', prop: 'categoryPath' },
         { label: '金额', prop: 'money' },
@@ -168,11 +171,8 @@ export default class Serviceedit extends Vue {
             prop: 'code',
             slot: 'code'
         },
-        { label: '支付单号', prop: 'name' },
-        { label: '期数', prop: 'categoryPath' },
-        { label: '金额', prop: 'money' },
-        { label: '支付成功时间', prop: 'brandName' },
-        { label: '是否全部结清', prop: 'brandName' }
+        { label: '项目编号', prop: 'name' },
+        { label: '项目名称', prop: 'categoryPath' }
     ]
     // 校验
     get rules () {
@@ -210,9 +210,10 @@ export default class Serviceedit extends Vue {
         this.disabled = val.length == 0
         console.log('val: ', val)
     }
-    handleAdd () {
+    async handleAdd () {
         // 发票添加
         this.dialogVisible = true
+        const { data } = await getServiceFunds({ projectId: this.$route.query.projectId })
     }
 
     handleClose () {
@@ -220,15 +221,17 @@ export default class Serviceedit extends Vue {
         console.log('this.$refs ', this.$refs['dialogTable'].clearSelection())
         this.dialogVisible = false
     }
-    handleSearch () {
+    async handleSearch () {
         // 查询项目
         this.projectVisible = true
+        this.getList()
     }
     handleAddProject () {
         // 添加查询的项目
 
     }
     getCurrentRow (row) {
+        this.selectRow = row.row
         console.log('row: ', row.row)
         this.radio = row.$index
     }
@@ -257,8 +260,9 @@ export default class Serviceedit extends Vue {
         this.dialogVisible = false
     }
 
-    getList () {
-
+    async getList () {
+        const { data } = await getProjectPage(this.queryParams)
+        this.tableForm = data.records
     }
 
     handleSave (type) {
@@ -282,6 +286,8 @@ export default class Serviceedit extends Vue {
         this.tableData = [{ id: 200, code: 11111, name: 2222, money: 100 }]
         this.selectData = this.tableData
         this.tableForm = [{ id: 201, code: 32, name: 3234, money: 101, categoryPath: 555 }, { id: 200, code: 11111, name: 2222, money: 103 }]
+
+        this.queryParams.subsectionCode = this.userInfo.belongDeptCode
     }
 }
 </script>

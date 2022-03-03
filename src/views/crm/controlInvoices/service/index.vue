@@ -39,8 +39,8 @@
                     <div class="query-col__input">
                         <el-select v-model="queryParams.invoiceStatus" placeholder="请选择">
                             <el-option label="全部" value=""></el-option>
-                            <el-option label="银行转账" :value="1"></el-option>
-                            <el-option label="银行承兑" :value="2"></el-option>
+                            <el-option  v-for="(item,index) in invoiceTyps"  :label=item.label :value=item.value :key="index"></el-option>
+                            <!-- <el-option label="银行承兑" :value="2"></el-option> -->
                         </el-select>
                     </div>
                 </div>
@@ -73,19 +73,19 @@
 
                 <div class="query-cont__col">
                     <h-button type="primary" @click="getList">查询</h-button>
-                    <h-button>重置</h-button>
-                    <h-button type="primary" @click="handleEdit">申请</h-button>
+                    <h-button @click="handleReset">重置</h-button>
+                    <h-button type="primary" @click="handleEdit()">申请</h-button>
                 </div>
             </div>
             <!-- end search bar -->
              <div class="query-cont__row mb20">
-                <el-tag size="medium" class="tag_top">已筛选 {{111}} 项 <span >累计金额：{{111|moneyFormat}}</span></el-tag>
+                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span >累计金额：{{totalMoney|moneyFormat}}元</span></el-tag>
             </div>
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='330' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
                     <h-button table @click="handleLook(slotProps.data.row.paymentOrderId,slotProps.data.row.status)">查看</h-button>
-                    <h-button table @click="handleEdit(slotProps.data.row.loanTransferId)">编辑</h-button>
+                    <h-button table @click="handleEdit(slotProps.data.row)">编辑</h-button>
                     <h-button table @click="handleSubmit(slotProps.data.row)">提交</h-button>
                     <h-button table @click="handleReject(slotProps.data.row)">驳回</h-button>
                     <h-button table @click="handleInvoice(slotProps.data.row)">开票</h-button>
@@ -122,8 +122,9 @@ import { State, Getter, Action } from 'vuex-class'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import { measure, handleSubmit, validateForm } from '@/decorator/index'
 import { ReqUpStreamPaymentQuery, RespUpStreamPayment, ServiceInvoiceOpenRequest } from '@/interface/hbp-project'
-import { updateOpen, updateReject, updateSubmit, getInvoiceList } from '../api/index'
-import { newCache } from '@/utils/index'
+import { updateOpen, updateReject, updateSubmit, getInvoiceList, getInvoiceTotal } from '../api/index'
+// import { newCache } from '@/utils/index'
+import { deepCopy } from '@/utils/utils'
 
 // 接口 实现继承
 // type Query<T> = { [P in keyof T]: T[P] }
@@ -136,7 +137,7 @@ const invoiceTyps = [{ value: 10, label: '申请中' }, { value: 20, label: '已
         hosJoyTable
     }
 })
-export default class UpstreamPaymentManagement extends Vue {
+export default class ServiceList extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
@@ -149,6 +150,8 @@ export default class UpstreamPaymentManagement extends Vue {
         total: 0
     }
     tableData:any[] = []
+    totalMoney = ''
+    invoiceTyps = invoiceTyps
     private isShowInvoice:boolean = false
     private _queryParams = {}
     queryParams: Record<string, any> = {
@@ -284,11 +287,21 @@ export default class UpstreamPaymentManagement extends Vue {
         })
     }
 
+    handleReset () {
+        this.queryParams = deepCopy(this._queryParams)
+        this.getList()
+    }
+
     @measure
     async getList () {
-        const { data } = await getInvoiceList(this.queryParams)
-        this.tableData = data.records
-        this.page.total = data.total as number
+        await Promise.all([getInvoiceList(this.queryParams), getInvoiceTotal(this.queryParams)]).then(res => {
+            if (res[1].data) {
+                this.tableData = res[0].data.records
+                this.page.total = res[0].data.total as number
+                this.totalMoney = res[1].data
+            }
+            console.log(res)
+        })
     }
 
     public onStartChange (val): void {
@@ -309,6 +322,7 @@ export default class UpstreamPaymentManagement extends Vue {
                 ? JSON.parse(sessionStorage.getItem('authCode') || '')
                 : ''
         })
+        this._queryParams = deepCopy(this.queryParams)
     }
 }
 </script>

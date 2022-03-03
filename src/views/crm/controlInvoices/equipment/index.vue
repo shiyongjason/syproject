@@ -47,8 +47,7 @@
                     <div class="query-col__input">
                         <el-select v-model="queryParams.invoiceStatus" placeholder="请选择">
                             <el-option label="全部" value=""></el-option>
-                            <el-option label="银行转账" :value="1"></el-option>
-                            <el-option label="银行承兑" :value="2"></el-option>
+                             <el-option  v-for="(item,index) in invoiceTyps"  :label=item.label :value=item.value :key="index"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -106,17 +105,20 @@
                 <div class="query-cont__col">
                     <h-button type="primary" @click="getList">查询</h-button>
                     <h-button>重置</h-button>
-                    <h-button @click="handleEdit">申请</h-button>
+                    <h-button @click="handleEdit()">申请</h-button>
                 </div>
             </div>
             <!-- end search bar -->
+            <div class="query-cont__row mb20">
+                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span>累计采购发票金额：{{totalPurchaseInvoiceAmount|moneyFormat}}元</span>，<span>销售发票金额：{{totalSalesInvoiceAmount|moneyFormat}}元</span></el-tag>
+            </div>
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='330' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
                     <h-button table @click="handleLook(slotProps.data.row)">查看</h-button>
-                    <h-button table @click="handleEdit(slotProps.data.row.loanTransferId)">编辑</h-button>
-                    <h-button table @click="handleShowProof(slotProps.data.row)">提交</h-button>
-                    <h-button table @click="handleIsPay(slotProps.data.row)">驳回</h-button>
+                    <h-button table @click="handleEdit(slotProps.data.row)" v-if="slotProps.data.row.invoiceStatus==10">编辑</h-button>
+                    <h-button table @click="handleSubmit(slotProps.data.row)" v-if="slotProps.data.row.invoiceStatus==10">提交</h-button>
+                    <h-button table @click="handleReject(slotProps.data.row)"  v-if="slotProps.data.row.invoiceStatus==20">驳回</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -132,7 +134,10 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import elImageAddToken from '@/components/elImageAddToken/index.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import { measure, handleSubmit, validateForm } from '@/decorator/index'
-import { getEqpList } from '../api/index'
+import { getEqpList, getEqpTotal, rejectEqp, submitEqp } from '../api/index'
+
+const invoiceTyps = [{ value: 10, label: '申请中' }, { value: 20, label: '已提交' }, { value: 30, label: '已开票' }]
+
 @Component({
     name: 'equipmentinvoice',
     components: {
@@ -145,6 +150,7 @@ export default class UpstreamPaymentManagement extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
+    invoiceTyps = invoiceTyps
     uploadParameters = {
         updateUid: '',
         reservedName: false
@@ -155,9 +161,9 @@ export default class UpstreamPaymentManagement extends Vue {
     }
     tableData:any[] = []
     editorDrawer:boolean = false
-
+    totalSalesInvoiceAmount = null
+    totalPurchaseInvoiceAmount = null
     private _queryParams = {}
-
     queryParams: Record<string, any> = {
         pageNumber: 1,
         pageSize: 10,
@@ -208,7 +214,7 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     tableLabel:tableLabelProps = [
-        { label: '状态码', prop: 'invoiceStatus' },
+        { label: '状态码', prop: 'invoiceStatus', dicData: invoiceTyps },
         { label: '申请单号', prop: 'invoiceNo', width: '130' },
         { label: '支付单号', prop: 'paymentOrderNo', width: '160' },
         { label: '项目名称', prop: 'projectName', width: '160' },
@@ -219,25 +225,32 @@ export default class UpstreamPaymentManagement extends Vue {
         { label: '采购发票号码', prop: 'misPurchaseInvoiceNo', width: '160' },
         { label: '采购发票金额', prop: 'purchaseInvoiceAmount', width: '160', displayAs: 'money' },
         { label: '销售发票号码', prop: 'misSaleInvoiceNo', width: '160' },
-        { label: '销售发票金额', prop: 'salesInvoiceAmount', width: '160' },
+        { label: '销售发票金额', prop: 'salesInvoiceAmount', width: '160', displayAs: 'money' },
         { label: '申请人', prop: 'createBy', width: '160' },
         { label: '申请时间', prop: 'createTime', width: '160' }
     ]
 
-    async handleLook (paymentOrderId, status) {
+    async handleLook (val) {
         // 查看
-        this.$router.push({ path: '/goodwork/manageInvoices/equipmentdetail' })
+        this.$router.push({ path: '/goodwork/manageInvoices/equipmentdetail', query: { id: val.id } })
     }
 
     handleEdit (val) {
         // 编辑
-        this.$router.push({ path: '/goodwork/manageInvoices/equipmentedit' })
+        this.$router.push({ path: '/goodwork/manageInvoices/equipmentedit', query: { id: val.id } })
     }
 
     @measure
     async getList () {
-        const { data } = await getEqpList(this.queryParams)
-        this.tableData = data.records
+        await Promise.all([getEqpList(this.queryParams), getEqpTotal(this.queryParams)]).then(res => {
+            console.log('res: ', res)
+            if (res[1].data) {
+                this.tableData = res[0].data.records
+                this.page.total = res[0].data.total as number
+                this.totalPurchaseInvoiceAmount = res[1].data.totalPurchaseInvoiceAmount
+                this.totalSalesInvoiceAmount = res[1].data.totalSalesInvoiceAmount
+            }
+        })
     }
 
     public onStartChange (val): void {
@@ -247,8 +260,49 @@ export default class UpstreamPaymentManagement extends Vue {
         this.queryParams.createTimeEnd = val
     }
 
+    handleReject (val) {
+        // 驳回
+        this.$prompt('请输入驳回原因', '驳回', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            closeOnClickModal: false,
+            inputType: 'textarea',
+            // inputPlaceholder: '驳回原因',
+            inputValidator: (value) => {
+                if (!value) {
+                    return false
+                } else if (value.length > 80) {
+                    return false
+                }
+            },
+            inputErrorMessage: '驳回原因必填且长度不能超过80'
+            // @ts-ignore
+        }).then(async ({ value }) => {
+            await rejectEqp({ id: val.id, rejectReason: value })
+            this.getList()
+        }).catch(() => {
+
+        })
+    }
+
+    @handleSubmit()
+    handleSubmit (val) {
+        // 提交
+        this.$confirm('确认无误，提交?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(async () => {
+            await submitEqp(val.id)
+            this.getList()
+        }).catch(() => {
+
+        })
+    }
+
     async mounted () {
-        this.tableData = [{ paymentOrderNo: '1000' }]
+        // this.tableData = [{ paymentOrderNo: '1000' }]
+        this.getList()
     }
 }
 </script>
