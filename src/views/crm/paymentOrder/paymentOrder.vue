@@ -193,7 +193,6 @@
                 </el-tabs>
             </div>
         </el-drawer>
-        <UploadPayDialog ref="uploadpaydialog" @onBackSearch="handleConfirm" />
         <!-- 取消支付单 -->
         <CancelPayment ref="cancelPaymentRef" :visible.sync="visibleCancel" @close="handleCancel" @confirm="handleConfirm"></CancelPayment>
     </div>
