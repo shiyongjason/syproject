@@ -3868,7 +3868,7 @@ export default {
             console.log(title)
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             this.respAccountRepaymentPlanData = data
-            this.$set(this.respAccountRepaymentPlanData[0], 'title', title)
+            this.$set(this.respAccountRepaymentPlanData[0], 'otherTitle', title)
             this.respAccountRepaymentPlanData[0].accountId = id
             this.regulatingBreathingDialogData = JSON.parse(JSON.stringify(this.respAccountRepaymentPlanData))
             this[`${type}`] = true
