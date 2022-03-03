@@ -1012,7 +1012,7 @@ export default {
          * @summary HAM-40183
          */
         showArrearFundByStage () {
-            return this.paymentOrderDetail.respFundResults.arrearsFunds.every(item => item.paymentFlag == this.paymentFlagKey.WAITING)
+            return this.paymentOrderDetail.respFundResults.arrearsFunds.every(item => item.fundAmount == item.unpaidAmount)
         },
         /**
          * 显示维护尾款分期弹出层并初始化数据
