@@ -1,11 +1,12 @@
 <template>
     <div class="page-body">
         <div class="page-table">
-            <hosJoyTable :amountResetTable="amountResetTable" v-if="isShowParent" :collapseShow="collapseShow" ref="hosjoyTable" align="center" border stripe showPagination :column="column" :data="tableData" :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :isAction='["1","2", "3"].includes(source)'
-                :pageSize.sync="pagination.pageSize" @pagination="getList" :toggleTable="toggleTable" :localName="localName" :prevLocalName="prevLocalName" :isActionFixed='tableData&&tableData.length>0' actionWidth='220' >
+            <hosJoyTable :amountResetTable="amountResetTable" v-if="isShowParent" :collapseShow="collapseShow" ref="hosjoyTable" align="center" border stripe showPagination :column="column" :data="tableData" :total="pagination.total" :pageNumber.sync="pagination.pageNumber"
+                :isAction='["1","2", "3"].includes(source)' :pageSize.sync="pagination.pageSize" @pagination="getList" :toggleTable="toggleTable" :localName="localName" :prevLocalName="prevLocalName" :isActionFixed='tableData&&tableData.length>0' actionWidth='220'>
                 <template #action="slotProps">
-                    <h-button  table @click="onLook(slotProps.data.row)" >查看详情</h-button>
-                    <h-button  table @click="onJurnal(slotProps.data.row)" >{{slotProps.data.row.account.auditStatus==1?'待审核':"日志"}}</h-button>
+                    <h-button table @click="onLook(slotProps.data.row)" v-if="hosTabCheck(1)">查看详情</h-button>
+                    <h-button table @click="onJurnal(slotProps.data.row)" v-if="slotProps.data.row.account.auditStatus!=1&&hosTabCheck(2)">日志</h-button>
+                    <h-button v-if="slotProps.data.row.account.auditStatus==1" table @click="onJurnal(slotProps.data.row)">待审核</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -31,14 +32,13 @@
             <span class="max-height">{{tipsDialogVisibleContent}}</span>
         </el-dialog>
         <!-- 重构组件组合 -->
-        <allDialog ref="allDialog" @backGetAccount=getAccount @backLoan = getLoan @backGetRespAccountRepaymentPlanData = getRespAccountRepaymentPlanData
-        @backGetGrantPaymetPlanData = getGrantPaymetPlanData  :soure=source></allDialog>
+        <allDialog ref="allDialog" @backGetAccount=getAccount @backLoan=getLoan @backGetRespAccountRepaymentPlanData=getRespAccountRepaymentPlanData @backGetGrantPaymetPlanData=getGrantPaymetPlanData :soure=source></allDialog>
         <!-- 日志操作drawer -->
-         <h-drawer title="日志" v-if="drawer" :visible.sync="drawer" :beforeClose="()=>{this.drawer = false}" direction='rtl' size='710px' :wrapperClosable="false">
+        <h-drawer title="日志" v-if="drawer" :visible.sync="drawer" :beforeClose="()=>{this.drawer = false}" direction='rtl' size='710px' :wrapperClosable="false">
             <template #connect>
-                <jurnal ref='jurnals' @backEvent = onBackDrawer></jurnal>
+                <jurnal ref='jurnals' @backEvent=onBackDrawer></jurnal>
             </template>
-         </h-drawer>
+        </h-drawer>
     </div>
 </template>
 
@@ -65,7 +65,13 @@ import {
     WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA,
     WISDOM_FLOWTOBORROW_SHOW_LINE,
     WISDOM_EXPOSURE_SHOW_LINE,
-    WISDOM_POINTSCREDIT_SHOW_LINE
+    WISDOM_POINTSCREDIT_SHOW_LINE,
+    WISDOM_LIST_FLOWTOBORROW_DETAIL,
+    WISDOM_LIST_EXPOSURE_DETAIL,
+    WISDOM_LIST_POINTSCREDIT_DETAIL,
+    WISDOM_LIST_FLOWTOBORROW_RECORDS,
+    WISDOM_LIST_EXPOSURE_RECORDS,
+    WISDOM_LIST_POINTSCREDIT_RECORDS
 } from '@/utils/auth_const'
 
 export default {
@@ -170,6 +176,12 @@ export default {
     },
     data: function () {
         return {
+            WISDOM_LIST_FLOWTOBORROW_DETAIL,
+            WISDOM_LIST_EXPOSURE_DETAIL,
+            WISDOM_LIST_POINTSCREDIT_DETAIL,
+            WISDOM_LIST_FLOWTOBORROW_RECORDS,
+            WISDOM_LIST_EXPOSURE_RECORDS,
+            WISDOM_LIST_POINTSCREDIT_RECORDS,
             drawer: false,
             isShowAction: false,
             tipsDialogVisible: false,
@@ -636,7 +648,7 @@ export default {
                                             class={
                                                 scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_loanStartTime && scope.row.loan_yearRate !== null
                                                     ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
-                                            onClick={ () => {
+                                            onClick={() => {
                                                 this.getRespAccountRepaymentPlanData(scope.row, `${this.product}-流贷还款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`, scope.row.account_id, 'AnnualInterestRateDialogVisible')
                                             }}></i></span>
                                             : <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}</span>
@@ -1026,7 +1038,7 @@ export default {
                                         let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
                                         return render
                                             ? <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}<i
-                                                class='el-icon-edit pointer' onClick={ () => {
+                                                class='el-icon-edit pointer' onClick={() => {
                                                     this.getRespAccountRepaymentPlanData(scope.row, `${this.product}-手动调息（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`, scope.row.account_id, 'regulatingBreathingDialogVisible')
                                                 }}></i></span>
                                             : <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}</span>
@@ -3736,6 +3748,37 @@ export default {
         }
     },
     methods: {
+        // tab切换权限
+        hosTabCheck (val) {
+            if (val == 1) {
+                if (this.source == 1) {
+                    // 流贷
+                    return this.hosAuthCheck(WISDOM_LIST_FLOWTOBORROW_DETAIL)
+                } else if (this.source == 2) {
+                    // 敞口
+                    return this.hosAuthCheck(WISDOM_LIST_EXPOSURE_DETAIL)
+                } else if (this.source == 3) {
+                    // 分授信
+                    return this.hosAuthCheck(WISDOM_LIST_POINTSCREDIT_DETAIL)
+                } else {
+                    return false
+                }
+            } else {
+                if (this.source == 1) {
+                    // 流贷
+                    return this.hosAuthCheck(WISDOM_LIST_FLOWTOBORROW_RECORDS)
+                } else if (this.source == 2) {
+                    // 敞口
+                    return this.hosAuthCheck(WISDOM_LIST_EXPOSURE_RECORDS)
+                } else if (this.source == 3) {
+                    // 分授信
+                    return this.hosAuthCheck(WISDOM_LIST_POINTSCREDIT_RECORDS)
+                } else {
+                    return false
+                }
+            }
+        },
+
         totalColumnTotalDo (tableName, tableDataTotal, more) {
             let newTableDataTotal = { ...tableDataTotal }
             if (more) {
@@ -3925,7 +3968,7 @@ export default {
     cursor: pointer;
     margin-left: 10px;
     font-size: 14px;
-    color:#FF7A45
+    color: #ff7a45;
 }
 
 // // 滚动条的滑块

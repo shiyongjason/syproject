@@ -3,7 +3,7 @@
         <div class="journal-wrap" v-for="(item,index) in journalList" :key="index">
             <div class="journal-wrap_box">
                 <span>状态：{{AuditStatus.get(item.auditStatus)}}</span>
-                <el-button size="mini" type="primary" @click="onExamine(item.id)" v-if="item.auditStatus==1">审核</el-button>
+                <el-button size="mini" type="primary" @click="onExamine(item.id)" v-if="item.auditStatus==1&&hosAuthCheck(WISDOM_LIST_SHENHE)">审核</el-button>
             </div>
             <div class="journal-wrap_box">
                 <span>申请时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm')}}</span>
@@ -48,7 +48,7 @@
 import { Vue, Component, Prop, Emit } from 'vue-property-decorator'
 import { findAccountRecords, updateAccountRecords } from '../api/index'
 import moment from 'moment'
-
+import { WISDOM_LIST_SHENHE } from '@/utils/auth_const'
 const AuditStatus = new Map([[1, '待审核'], [2, '审核通过'], [3, '审核未通过']])
 
 @Component({
@@ -59,6 +59,7 @@ export default class Journal extends Vue {
     $refs!: {
         form: HTMLFormElement;
     };
+    WISDOM_LIST_SHENHE = WISDOM_LIST_SHENHE
     AuditStatus = AuditStatus
     page = {
         total: 0
