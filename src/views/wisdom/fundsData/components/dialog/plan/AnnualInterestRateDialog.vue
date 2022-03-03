@@ -369,7 +369,9 @@ export default {
             query.graceInterestAmount = res.graceInterestAmount || 0
             query.interestAmount = res.interestAmount || 0
             query.overDueInterestAmount = res.overDueInterestAmount || 0
+            this.$set(this.detailData[0], 'overdueList', [])
             this.$forceUpdate()
+            console.log(this.detailData[0])
         },
         // 逾期阶梯切换,没有值就取默认值
         onChange () {
