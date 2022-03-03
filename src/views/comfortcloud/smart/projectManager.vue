@@ -128,11 +128,17 @@
                                 <el-col :span="4">
                                     <el-checkbox value="普通开关" label="13">普通开关</el-checkbox>
                                 </el-col>
+                                <el-col :span="4">
+                                    <el-checkbox value="普通开关(DO)" label="33">普通开关(DO)</el-checkbox>
+                                </el-col>
                             </el-checkbox-group>
                         </el-col>
                     </el-row>
                     <el-checkbox-group v-model="socketOption">
                         <el-checkbox label="16">插座集控系统</el-checkbox>
+                    </el-checkbox-group>
+                    <el-checkbox-group v-model="powerOption">
+                        <el-checkbox label="39">时序电源集控系统</el-checkbox>
                     </el-checkbox-group>
                     <el-row>
                         <el-col :span="4">
@@ -254,16 +260,31 @@
                                     <el-checkbox label="21" value="人体移动传感器">人体移动传感器</el-checkbox>
                                 </el-col>
                                 <el-col :span="6">
+                                    <el-checkbox label="34" value="人体移动传感器(DI)">人体移动传感器(DI)</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
                                     <el-checkbox label="22" value="水浸监测">水浸监测</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-checkbox label="35" value="水浸监测(DI)">水浸监测(DI)</el-checkbox>
                                 </el-col>
                                 <el-col :span="6">
                                     <el-checkbox label="23" value="烟雾监测">烟雾监测</el-checkbox>
                                 </el-col>
                                 <el-col :span="6">
+                                    <el-checkbox label="36" value="烟雾监测(DI)">烟雾监测(DI)</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
                                     <el-checkbox label="24" value="可燃气体监测">可燃气体监测</el-checkbox>
                                 </el-col>
                                 <el-col :span="6">
+                                    <el-checkbox label="38" value="可燃气体监测(DI)">可燃气体监测(DI)</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
                                     <el-checkbox label="25" value="火焰监测">火焰监测</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-checkbox label="37" value="火焰监测(DI)">火焰监测(DI)</el-checkbox>
                                 </el-col>
                                 <el-col :span="6">
                                     <el-checkbox label="26" value="有毒有害气体监测">有毒有害气体监测</el-checkbox>
@@ -573,6 +594,7 @@ export default {
             isShowLighting: false,
             lightingOption: [],
             socketOption: [],
+            powerOption: [],
             isShowCurtain: false,
             curtainRadioOption: '',
             environmentOption: [],
@@ -841,6 +863,7 @@ export default {
             this.isShowLighting = false
             this.lightingOption = []
             this.socketOption = []
+            this.powerOption = []
             this.isShowCurtain = false
             this.curtainRadioOption = ''
             this.environmentOption = []
@@ -879,10 +902,12 @@ export default {
             this.airConditioningOption = this.form.projectType.filter(item => item == 1 || item == 2 || item == 12)
             this.isShowAirConditioning = this.airConditioningOption.length > 0
 
-            this.lightingOption = this.form.projectType.filter(item => item == 13 || item == 14)
+            this.lightingOption = this.form.projectType.filter(item => item == 13 || item == 14 || item == 33)
             this.isShowLighting = this.lightingOption.length > 0
 
             this.socketOption = this.form.projectType.filter(item => item == 16)
+
+            this.powerOption = this.form.projectType.filter(item => item == 39)
 
             this.curtainRadioOption = this.form.projectType.filter(item => item == 15 || item == 19)[0]
             this.isShowCurtain = !!this.curtainRadioOption
@@ -906,7 +931,7 @@ export default {
             this.energyOption = this.form.projectType.filter(item => item == 4 || item == 3 || item == 5 || item == 6 || item == 7 || item == 9)
             this.isShowOtherEnergy = this.energyOption.length > 0
 
-            this.securityOption = this.form.projectType.filter(item => item == 20 || item == 21 || item == 22 || item == 23 || item == 24 || item == 25 || item == 26 || item == 27)
+            this.securityOption = this.form.projectType.filter(item => item == 20 || item == 21 || item == 22 || item == 23 || item == 24 || item == 25 || item == 26 || item == 27 || item == 34 || item == 35 || item == 36 || item == 37 || item == 38)
             this.isShowSecurity = this.securityOption.length > 0
 
             this.isShowScene = this.form.projectType.filter(item => item == 30 || item == 31 || item == 32).length > 0
@@ -934,6 +959,7 @@ export default {
                 ...this.airConditioningOption,
                 ...this.lightingOption,
                 ...this.socketOption,
+                ...this.powerOption,
                 this.curtainRadioOption,
                 ...this.environmentOption,
                 ...this.doorlockOption,
