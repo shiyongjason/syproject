@@ -5,7 +5,7 @@
             <div class="service-wrap">
                 <el-row :gutter="20">
                     <el-col :span="8"><span>申请单号：</span>{{formDetail.invoiceNo}}</el-col>
-                    <el-col :span="8"><span>支付单号：</span>{{}}</el-col>
+                    <el-col :span="8"><span>支付单号：</span>{{formDetail.id}}</el-col>
                     <el-col :span="8"><span>项目：</span>{{formDetail.projectName}}</el-col>
                 </el-row>
                 <el-row :gutter="20">
@@ -16,7 +16,7 @@
                 <el-row :gutter="20">
                     <el-col :span="8"><span>mis采购订单号：</span>{{formDetail.misPurchaseOrderNo}}</el-col>
                     <el-col :span="8"><span>mis销售订单号：</span>{{formDetail.misSalesOrderNo}}</el-col>
-                    <el-col :span="8"><span>采购发票总金额：</span>{{formDetail.purchaseInvoiceAmount}}</el-col>
+                    <el-col :span="8"><span>采购发票总金额：</span>{{formDetail.purchaseInvoiceAmount|moneyFormat}}</el-col>
                 </el-row>
                 <el-row :gutter="20">
                     <el-col :span="8"><span>销售发票收票人：</span>{{formDetail.receiver}}</el-col>
@@ -89,8 +89,8 @@ export default class Equipmentdetail extends Vue {
     tableLabel: tableLabelProps = [
         { label: '采购发票号码', prop: 'misPurchaseInvoiceNo' },
         { label: '发票金额', prop: 'invoiceAmount' },
-        { label: '开票日期', prop: 'name', displayAs: 'YYYY-MM-DD' },
-        { label: '状态', prop: 'status', dicData: [{ value: 1, label: '正常' }, { value: 2, label: '作废' }] }
+        { label: '开票日期', prop: 'openDate', displayAs: 'YYYY-MM-DD' },
+        { label: '状态', prop: 'status', dicData: [{ value: 10, label: '正常' }, { value: 20, label: '作废' }] }
     ]
 
     formDetail = {}
@@ -99,8 +99,8 @@ export default class Equipmentdetail extends Vue {
     saleTableLabel: tableLabelProps = [
         { label: '销售发票号码', prop: 'misSaleInvoiceNo' },
         { label: '发票金额', prop: 'invoiceAmount' },
-        { label: '开票日期', prop: 'name' },
-        { label: '状态', prop: 'status', dicData: [{ value: 1, label: '正常' }, { value: 2, label: '作废' }] }
+        { label: '开票日期', prop: 'openDate', displayAs: 'YYYY-MM-DD' },
+        { label: '状态', prop: 'status', dicData: [{ value: 10, label: '正常' }, { value: 20, label: '作废' }] }
     ]
 
     recordData: any[] = []

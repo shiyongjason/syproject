@@ -227,7 +227,7 @@ export default class UpstreamPaymentManagement extends Vue {
         { label: '销售发票号码', prop: 'misSaleInvoiceNo', width: '160' },
         { label: '销售发票金额', prop: 'salesInvoiceAmount', width: '160', displayAs: 'money' },
         { label: '申请人', prop: 'createBy', width: '160' },
-        { label: '申请时间', prop: 'createTime', width: '160' }
+        { label: '申请时间', prop: 'createTime', width: '160', displayAs: 'YYYY-MM-DD' }
     ]
 
     async handleLook (val) {
@@ -236,8 +236,12 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     handleEdit (val) {
+        if (val) {
+            this.$router.push({ path: '/goodwork/manageInvoices/equipmentedit', query: { id: val.id } })
+        } else {
+            this.$router.push({ path: '/goodwork/manageInvoices/equipmentedit' })
+        }
         // 编辑
-        this.$router.push({ path: '/goodwork/manageInvoices/equipmentedit', query: { id: val.id } })
     }
 
     @measure
@@ -303,6 +307,14 @@ export default class UpstreamPaymentManagement extends Vue {
     async mounted () {
         // this.tableData = [{ paymentOrderNo: '1000' }]
         this.getList()
+        await this.findCrmdeplist({
+            deptType: 'F',
+            pkDeptDoc: this.userInfo.pkDeptDoc,
+            jobNumber: this.userInfo.jobNumber,
+            authCode: sessionStorage.getItem('authCode')
+                ? JSON.parse(sessionStorage.getItem('authCode') || '')
+                : ''
+        })
     }
 }
 </script>

@@ -1429,6 +1429,13 @@ export interface ServiceInvoiceSubmitRequest {
     invoiceId?: number | string
 
     /**
+     * 项目id
+     * @type {number | string}
+     * @memberof ServiceInvoiceSubmitRequest
+     */
+    projectId?: number | string
+
+    /**
      * 项目编码
      * @type {string}
      * @memberof ServiceInvoiceSubmitRequest
@@ -1578,6 +1585,13 @@ export interface EqpInvoiceSubmitRequest {
      * @memberof EqpInvoiceSubmitRequest
      */
     paymentOrderNo?: string
+
+    /**
+     * 项目id
+     * @type {number | string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    projectId?: number | string
 
     /**
      * 项目编码
@@ -6370,6 +6384,13 @@ export interface ServiceInvoiceDetailResponse {
     id: number | string
 
     /**
+     * 项目id
+     * @type {number | string}
+     * @memberof ServiceInvoiceDetailResponse
+     */
+    projectId: number | string
+
+    /**
      * 项目编号
      * @type {number | string}
      * @memberof ServiceInvoiceDetailResponse
@@ -6751,6 +6772,13 @@ export interface EqpInvoiceDetailResponse {
     invoiceNo: string
 
     /**
+     * 项目id
+     * @type {number | string}
+     * @memberof EqpInvoiceDetailResponse
+     */
+    projectId: number | string
+
+    /**
      * 项目编号
      * @type {number | string}
      * @memberof EqpInvoiceDetailResponse
@@ -6942,7 +6970,14 @@ export interface PurchaseInvoiceDetail {
     invoiceAmount?: number | string
 
     /**
-     * 状态
+     * 开票日期
+     * @type {string}
+     * @memberof PurchaseInvoiceDetail
+     */
+    openDate?: string
+
+    /**
+     * 状态  10：正常 20：作废
      * @type {number | string}
      * @memberof PurchaseInvoiceDetail
      */
@@ -6972,7 +7007,14 @@ export interface SaleInvoiceDetail {
     invoiceAmount?: number | string
 
     /**
-     * 状态
+     * 开票日期
+     * @type {string}
+     * @memberof SaleInvoiceDetail
+     */
+    openDate?: string
+
+    /**
+     * 状态  10：正常 20：作废
      * @type {number | string}
      * @memberof SaleInvoiceDetail
      */
@@ -7030,6 +7072,13 @@ export interface EqpInvoicePaymentOrderPageResponse {
      * @memberof EqpInvoicePaymentOrderPageResponse
      */
     projectId?: number | string
+
+    /**
+     * 项目编号
+     * @type {string}
+     * @memberof EqpInvoicePaymentOrderPageResponse
+     */
+    projectNo?: string
 
     /**
      * 项目名称

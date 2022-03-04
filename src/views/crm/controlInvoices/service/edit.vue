@@ -64,7 +64,7 @@
                             <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
                         </el-input>
                     </el-row>
-                    <hosJoyTable ref="hosjoyTable2" align="center" border stripe :column="projectTableLabel" :data="tableForm" showPagination :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='330'>
+                    <hosJoyTable ref="hosjoyTable2" align="center" border stripe :column="projectTableLabel" :data="tableForm" showPagination :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" :height='330'>
                         <template #code="slotProps">
                             <el-radio :label="slotProps.data.$index" v-model="radio" @change.native="getCurrentRow(slotProps.data)">{{''}}</el-radio>
                         </template>
@@ -115,8 +115,8 @@ export default class Serviceedit extends Vue {
     projectVisible:boolean = false
     disabled:boolean = true
 
-    selectRow = []
-    selectData = []
+    selectRow :Record<string, any> = {}
+    selectData:any[] = []
     radio = ''
     queryParams:Record<string, any>={
         pageNumber: 1,
@@ -169,10 +169,11 @@ export default class Serviceedit extends Vue {
     projectTableLabel: tableLabelProps = [
         { label: '选择',
             prop: 'code',
-            slot: 'code'
+            slot: 'code',
+            width: '120'
         },
-        { label: '项目编号', prop: 'name' },
-        { label: '项目名称', prop: 'categoryPath' }
+        { label: '项目编号', prop: 'projectNo' },
+        { label: '项目名称', prop: 'projectName' }
     ]
     // 校验
     get rules () {
@@ -228,8 +229,16 @@ export default class Serviceedit extends Vue {
     }
     handleAddProject () {
         // 添加查询的项目
+        this.serviceForm = {
+            ...this.serviceForm,
+            ...this.selectRow,
+            projectId: this.selectRow.id,
+            deptCode: this.selectRow.subsectionCode
 
+        }
+        this.projectVisible = false
     }
+
     getCurrentRow (row) {
         this.selectRow = row.row
         console.log('row: ', row.row)
@@ -263,6 +272,7 @@ export default class Serviceedit extends Vue {
     async getList () {
         const { data } = await getProjectPage(this.queryParams)
         this.tableForm = data.records
+        this.page.total = data.total
     }
 
     handleSave (type) {
@@ -287,7 +297,7 @@ export default class Serviceedit extends Vue {
         this.selectData = this.tableData
         this.tableForm = [{ id: 201, code: 32, name: 3234, money: 101, categoryPath: 555 }, { id: 200, code: 11111, name: 2222, money: 103 }]
 
-        this.queryParams.subsectionCode = this.userInfo.belongDeptCode
+        this.queryParams.subsectionCode = '1050AL100000000003DM'
     }
 }
 </script>

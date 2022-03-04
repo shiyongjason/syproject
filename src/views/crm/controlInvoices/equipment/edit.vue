@@ -5,7 +5,7 @@
             <div class="query-cont-row">
                 <el-form :model="equipmentForm" :inline="true" :rules="rules" ref="equipmentForm" label-width="150px" class="demo-ruleForm">
                     <el-row>
-                        <el-form-item label="申请单号：" prop="invoiceNo">
+                        <el-form-item label="申请单号：" prop="invoiceNo" v-if="equipmentForm.invoiceNo">
                             <el-input v-model.trim="equipmentForm.invoiceNo" disabled></el-input>
                         </el-form-item>
                         <el-form-item label="支付单号：" prop="paymentOrderNo">
@@ -56,7 +56,7 @@
                     </el-row>
                     <div class="floor-tit">上传附件</div>
                     <el-form-item label="附件：" prop="annexes">
-                        <HosJoyUpload v-model="equipmentForm.annexes" :multiple='false' :showPreView='true' :fileSize=10 :fileNum=5 :uploadParameters='uploadParameters' :action="action" @successCb="$refs['annexes'].clearValidate()" accept=".jpg,.png,.jpeg,.pdf">
+                        <HosJoyUpload v-model="equipmentForm.attachDocs" :multiple='false' :showPreView='true' :fileSize=10 :fileNum=5 :uploadParameters='uploadParameters' :action="action" @successCb="$refs['attachDocs'].clearValidate()" accept=".jpg,.png,.jpeg,.pdf">
                         </HosJoyUpload>
                     </el-form-item>
                 </el-form>
@@ -82,7 +82,7 @@
                             <el-button type="primary" @click="findPageList">查 询</el-button>
                         </el-row>
                     </el-form>
-                    <hosJoyTable ref="hosjoyTable" align="center" border stripe :column="formTableLabel" :data="tableForm" showPagination :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="findPageList" actionWidth='330'>
+                    <hosJoyTable ref="hosjoyTable" align="center" border stripe :column="formTableLabel" :data="tableForm" showPagination :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="findPageList" :height='330'>
                         <template #code="slotProps">
                             <el-radio :label="slotProps.data.$index" v-model="radio" @change.native="getCurrentRow(slotProps.data)">{{''}}</el-radio>
                         </template>
@@ -94,7 +94,7 @@
                 </span>
             </el-dialog>
             <div class="mb20 mt20">
-                <h-button>取消</h-button>
+                <h-button @click="handleGoBack">取消</h-button>
                 <h-button type="primary" @click="handleSave(1)">保存</h-button>
                 <h-button type="primary" @click="handleSave(2)">保存并提交</h-button>
             </div>
@@ -170,7 +170,7 @@ export default class Servicedetail extends Vue {
         deptCode: '',
         deptName: '',
         remark: '',
-        annexes: []
+        attachDocs: []
     }
 
     page = {
@@ -250,8 +250,17 @@ export default class Servicedetail extends Vue {
         this.$refs['equipmentForm'].validate(async valid => {
             if (valid) {
                 await updateEqpInvoice(this.equipmentForm)
+                // 返回
+                this.$router.go(-1)
+                this.setNewTags((this.$route.fullPath).split('?')[0])
             }
         })
+    }
+
+    handleGoBack () {
+        // 返回
+        this.$router.go(-1)
+        this.setNewTags((this.$route.fullPath).split('?')[0])
     }
 
     handleAddOrder () {
@@ -265,7 +274,8 @@ export default class Servicedetail extends Vue {
             supplierCompanyName: this.selectData.supplierCompanyName,
             deptName: this.selectData.deptName,
             companyId: this.selectData.companyId,
-            projectNo: this.selectData.projectId,
+            projectNo: this.selectData.projectNo,
+            projectId: this.selectData.projectId,
             deptCode: this.selectData.deptCode,
             paymentOrderId: this.selectData.id
         }
@@ -284,6 +294,7 @@ export default class Servicedetail extends Vue {
         this._queryParams = deepCopy(this.queryParams)
         if (this.$route.query.id) {
             this.getEquipDetail(this.$route.query.id)
+            this.equipmentForm.invoiceId = this.$route.query.id as unknown as string
         }
         // this.tableForm = [{ id: 201, code: 32, name: 3234, categoryPath: 555 }, { id: 200, code: 11111, name: 2222 }]
     }
