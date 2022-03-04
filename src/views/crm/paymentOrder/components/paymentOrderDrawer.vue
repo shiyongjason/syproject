@@ -551,7 +551,7 @@
                                 </template>
                             </template>
                             <template v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod == 1">
-                                <template v-if="paymentOrderDetail.respFundResults.arrearsFunds">
+                                <template v-if="paymentOrderDetail.respFundResults.arrearsFunds && paymentOrderDetail.respFundResults.arrearsFunds.length > 0">
                                     <div class="row-filed">
                                         <p class="col-filed">
                                             <span class="info-title">尾款支付计划：</span>
