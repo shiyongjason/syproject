@@ -3890,6 +3890,7 @@ export default {
             this.$set(this.rowData[0], 'otherTitle', `${this.product}-手动调息（${row.account_standingBookNo} ${row.account_loanCompanyName}）`)
             this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
             this.$set(this.rowData[0], 'accountId', row.account_id)
+            this.rowData[1] && this.$set(this.rowData[1], 'accountId', row.account_id)
             this.rowData[2] && this.$set(this.rowData[2], 'accountId', row.account_id)
             isShow && this.$set(this.rowData[0], 'regulatingBreathingType', isShow) // 敞口无正常利息
             this.regulatingBreathingDialogData = JSON.parse(JSON.stringify(this.rowData))
