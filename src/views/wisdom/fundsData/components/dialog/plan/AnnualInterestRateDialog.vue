@@ -373,7 +373,7 @@ export default {
             this.$forceUpdate()
             console.log('===', this.detailData[0], this.detailData[0].isStepOverInterest)
             if (this.detailData[0].isStepOverInterest == 0) {
-                this.$set(this.detailData[0], 'overdueList', [])
+                // this.$set(this.detailData[0], 'overdueList', [])
             }
         },
         // 逾期阶梯切换,没有值就取默认值
