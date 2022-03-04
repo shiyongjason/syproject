@@ -3927,6 +3927,8 @@ export default {
             if (val == 2 && item.overdueList.length < 2) {
                 item.overdueList = this.overdueList
             } else if (val == 1) {
+                item.overdueList = []
+                console.log('overdueList: ', item.overdueList)
                 item.overDueInterest = 12
             }
         },
