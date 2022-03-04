@@ -3892,6 +3892,8 @@ export default {
             this.$set(this.rowData[0], 'accountId', row.account_id)
             this.rowData[1] && this.$set(this.rowData[1], 'accountId', row.account_id)
             this.rowData[2] && this.$set(this.rowData[2], 'accountId', row.account_id)
+
+            console.log(this.rowData)
             isShow && this.$set(this.rowData[0], 'regulatingBreathingType', isShow) // 敞口无正常利息
             this.regulatingBreathingDialogData = JSON.parse(JSON.stringify(this.rowData))
             // 重新保留一份数据
@@ -3922,6 +3924,8 @@ export default {
             let _title = this.rowData[0].title
             this.rowData = data
             this.$set(this.rowData[0], 'title', _title)
+            this.rowData[1] && this.$set(this.rowData[1], 'accountId', data[0].accountId)
+            this.rowData[2] && this.$set(this.rowData[2], 'accountId', data[0].accountId)
             this.getList()
         },
         onStepOver (val, item) {
