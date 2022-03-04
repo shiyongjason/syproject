@@ -551,7 +551,7 @@
                                 </template>
                             </template>
                             <template v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod == 1">
-                                <template v-if="paymentOrderDetail.respFundResults.arrearFunds">
+                                <template v-if="paymentOrderDetail.respFundResults.arrearsFunds">
                                     <div class="row-filed">
                                         <p class="col-filed">
                                             <span class="info-title">尾款支付计划：</span>
@@ -659,22 +659,28 @@
                 <h-button type="primary" @click="updateRowEnter">确认</h-button>
             </span>
         </el-dialog>
-        <el-dialog title="维护分期尾款" :visible.sync="arrearFundVisible" :close-on-click-modal="false" width="650px" :before-close="()=> updateRowClose()" class="update-row">
+        <el-dialog title="维护分期尾款" :visible.sync="arrearFundVisible" :close-on-click-modal="false" width="650px" class="update-row">
             <div class="mb10">总尾款：{{paymentOrderDetail.respFundResults.totalArrearsAmount | moneyFormat}}元</div>
-            <basicTable :tableData="arrearFunds" :tableLabel="arrearFundTableLabel" :isPagination="false" :isMultiple="false" :isAction="true" :actionMinWidth=100 >
-                <template slot-scope="scope" slot="schedulePaymentDate">
-                    <el-date-picker v-model="arrearFunds[scope.data.$index].schedulePaymentDate" value-format="yyyy-MM-dd" type="date" placeholder="选择日期时间">
-                    </el-date-picker>
-                </template>
-                <template slot-scope="scope" slot="fundAmount">
-                    <el-input v-model="arrearFunds[scope.data.$index].fundAmount" v-isNegative:2="`updateForm[${scope.data.$index}].fundAmount`" maxlength="18"></el-input>
-                </template>
-                <template slot="action" slot-scope="scope">
-                    <h-button table @click="onDelArrearFund(scope.data.$index)">移除</h-button>
-                </template>
-            </basicTable>
+            <el-form :model="arrearFundsForm" ref="arrearFundsForm">
+                <basicTable :tableData="arrearFundsForm.arrearFunds" :tableLabel="arrearFundTableLabel" :isPagination="false" :isMultiple="false" :isAction="true" :actionMinWidth=100 >
+                    <template slot-scope="scope" slot="schedulePaymentDate">
+                        <el-form-item label-width='0' :prop="`arrearFunds[${scope.data.$index}].schedulePaymentDate`" :rules="rules.schedulePaymentDate">
+                            <el-date-picker v-model="arrearFundsForm.arrearFunds[scope.data.$index].schedulePaymentDate" value-format="yyyy-MM-dd" type="date" placeholder="选择日期时间">
+                            </el-date-picker>
+                        </el-form-item>
+                    </template>
+                    <template slot-scope="scope" slot="fundAmount">
+                        <el-form-item label-width='0' :prop="`arrearFunds[${scope.data.$index}].fundAmount`" :rules="rules.fundAmount">
+                            <el-input v-model="arrearFundsForm.arrearFunds[scope.data.$index].fundAmount" v-isNegative:2="`updateForm[${scope.data.$index}].fundAmount`" maxlength="18"></el-input>
+                        </el-form-item>
+                    </template>
+                    <template slot="action" slot-scope="scope">
+                        <h-button table @click="onDelArrearFund(scope.data.$index)" v-if="arrearFundsForm.arrearFunds.length > 1">移除</h-button>
+                    </template>
+                </basicTable>
+            </el-form>
             <div class="mt10">
-                <a @click="onAddStage">+添加一期</a>
+                <a href="javascript:void(0)" @click="onAddStage">+添加一期</a>
             </div>
             <span slot="footer" class="dialog-footer">
                 <h-button type="assist" @click="arrearFundVisible = false">取消</h-button>
@@ -741,6 +747,12 @@ export default {
                 ],
                 time: [
                     { required: true, message: '请选择时间' }
+                ],
+                schedulePaymentDate: [
+                    { required: true, message: '请输入应支付日期', trigger: 'change' }
+                ],
+                fundAmount: [
+                    { required: true, message: '请输入分期尾款', trigger: 'blur' }
                 ]
             },
             paymentOrderConst,
@@ -755,7 +767,9 @@ export default {
             ],
             tableData: [],
             arrearFundVisible: false,
-            arrearFunds: [],
+            arrearFundsForm: {
+                arrearFunds: []
+            },
             arrearFundTableLabel: [
                 { label: '应支付日期', prop: 'schedulePaymentDate' },
                 { label: '分期尾款', prop: 'fundAmount' }
@@ -995,35 +1009,76 @@ export default {
          * 规则：当所有期数尾款状态为‘待支付’时，显示维护分期尾款按钮
          *
          * @returns true 显示按钮  false 隐藏按钮
+         * @summary HAM-40183
          */
         showArrearFundByStage () {
-            return this.paymentOrderDetail.respFundResults.arrearFunds.every(item => item.paymentFlag == this.paymentFlagKey.WAITING)
+            return this.paymentOrderDetail.respFundResults.arrearsFunds.every(item => item.fundAmount == item.unpaidAmount)
         },
         /**
-         * 显示维护尾款分期弹出层
+         * 显示维护尾款分期弹出层并初始化数据
+         *
+         * @summary HAM-40183
          */
         openArrearFund () {
             this.arrearFundVisible = true
-            this.arrearFunds = deepCopy(this.paymentOrderDetail.respFundResults.arrearFunds)
+            this.arrearFundsForm.arrearFunds = deepCopy(this.paymentOrderDetail.respFundResults.arrearsFunds)
         },
         /**
          * 添加一期尾款操作
+         *
+         * @summary HAM-40183
          */
         onAddStage () {
-            this.arrearFunds.push({
+            this.arrearFundsForm.arrearFunds.push({
                 schedulePaymentDate: '',
                 fundAmount: ''
             })
             return false
         },
+        /**
+         * 删除一期尾款操作
+         *
+         * @summary HAM-40183
+         */
         onDelArrearFund (index) {
-            this.arrearFunds.splice(index, 1)
+            this.arrearFundsForm.arrearFunds.splice(index, 1)
         },
         /**
          * 维护尾款提交操作
+         *
+         * @summary HAM-40183
          */
         updateArrearFund () {
-            // todo
+            // 数据校验，分期尾款金额加总要等于总尾款
+            let total = 0
+            this.arrearFundsForm.arrearFunds.forEach(item => {
+                total += item.fundAmount * 1
+            })
+            if (total !== this.paymentOrderDetail.respFundResults.totalArrearsAmount) {
+                this.$message.error('分期尾款金额加总必须等于总尾款！')
+                return
+            }
+            // 参数处理，先按照应支付日期排序，再重构请求需要的参数
+            this.$refs.arrearFundsForm.validate(async (valid) => {
+                if (valid) {
+                    let params = this.arrearFundsForm.arrearFunds.sort((a, b) => {
+                        return Date.parse(new Date(a.schedulePaymentDate)) - Date.parse(new Date(b.schedulePaymentDate))
+                    })
+                    params = params.map((item, index) => {
+                        let result = {
+                            id: item.fundId || null,
+                            orderId: this.paymentOrderDetail.payOrderDetail.id,
+                            paymentAmount: item.fundAmount * 1,
+                            feeRepaymentOrder: index * 1 + 1,
+                            schedulePaymentDate: item.schedulePaymentDate
+                        }
+                        return result
+                    })
+                    await updateArrearsFundsByStages({ arrearsFundDetailList: params })
+                    this.arrearFundVisible = false
+                    this.getPaymentOrderDetail()
+                }
+            })
         }
     },
     watch: {
@@ -1370,5 +1425,12 @@ th {
 
 .pure-table-bordered tbody > tr:last-child > td {
     border-bottom-width: 0;
+}
+/deep/ .el-dialog .el-input {
+    width: 200px;
+}
+/deep/ .el-form-item__error {
+    text-align: left;
+    position: relative;
 }
 </style>

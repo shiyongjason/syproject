@@ -113,7 +113,7 @@
                     <div class="info-layout">
                         <div class="info-layout-item">
                             <font style="flex:0 0 140px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>ROI(%)：</font>
-                            <span>{{resolutionDetail.roi||'-'}}</span>
+                            <span>{{resolutionDetail.roi||'0'}}%</span>
                         </div>
                     </div>
                     <div class="info-layout mt10">
@@ -877,30 +877,45 @@ export default class FinalApproval extends Vue {
     }
 
     get salesTotalAmount () {
-        this.purForm.salesTotalAmount = this.$dividedBy(Math.round(this.purForm.deviceAmount * (100 + this.purForm.salesGrossMargin)), 100).toNumber()
+        this.purForm.salesTotalAmount = this.$dividedBy(Math.round((this.purForm.deviceAmount * 1 + this.purForm.salesGrossAmount * 1) * 100), 100).toNumber()
         return ''
     }
 
-    watchLocking: boolean = false
+    watchLocking: string = ''
 
     @Watch('purForm.salesGrossMargin', { immediate: true })
     onSalesGrossMarginChange (val) {
-        if (this.watchLocking) {
-            this.watchLocking = false
+        if (this.watchLocking && this.watchLocking !== 'salesGrossMargin') {
+            this.watchLocking = ''
             return
         }
         this.purForm.salesGrossAmount = this.$dividedBy(Math.round(this.purForm.deviceAmount * this.purForm.salesGrossMargin), 100).toNumber()
-        this.watchLocking = true
+        this.watchLocking = 'salesGrossMargin'
     }
 
     @Watch('purForm.salesGrossAmount')
     onSalesGrossAmountChange (val) {
-        if (this.watchLocking) {
-            this.watchLocking = false
+        if (this.watchLocking && this.watchLocking !== 'salesGrossAmount') {
+            this.watchLocking = ''
             return
         }
         this.purForm.salesGrossMargin = this.$dividedBy(Math.round(this.purForm.salesGrossAmount / this.purForm.deviceAmount * 100000000), 1000000).toNumber()
-        this.watchLocking = true
+        this.watchLocking = 'salesGrossAmount'
+    }
+
+    @Watch('purForm.deviceAmount')
+    onDeviceAmountChange (val) {
+        if (this.watchLocking && this.watchLocking !== 'deviceAmount') {
+            this.watchLocking = ''
+            return
+        }
+        if (this.purForm.salesGrossAmount) {
+            this.purForm.salesGrossMargin = this.$dividedBy(Math.round(this.purForm.salesGrossAmount / this.purForm.deviceAmount * 100000000), 1000000).toNumber()
+            this.watchLocking = 'deviceAmount'
+        } else if (this.purForm.salesGrossMargin) {
+            this.purForm.salesGrossAmount = this.$dividedBy(Math.round(this.purForm.deviceAmount * this.purForm.salesGrossMargin), 100).toNumber()
+            this.watchLocking = 'deviceAmount'
+        }
     }
 
     onRenderChild (h: CreateElement, scope: TableRenderParam) {

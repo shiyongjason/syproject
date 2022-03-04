@@ -249,7 +249,7 @@
                             <el-col class="col-padding" :span="10" :offset='1'>销售金额(元)：{{detailForm.salesAmount|moneyFormat}}</el-col>
                         </template>
                         <el-col class="col-padding" :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
-                        <el-col class="col-padding" :span="10" :offset='1'>支付方式： {{detailForm.paymentType&& paymentTypes[detailForm.paymentType-1].label||'-' }}</el-col>
+                        <el-col class="col-padding" :span="10" :offset='1'>支付类型： {{detailForm.paymentType&& paymentTypes[detailForm.paymentType-1].label||'-' }}</el-col>
                         <el-col class="col-padding" :span="10" :offset='1'>上游供应商：{{detailForm.supplierCompanyName||'-'}}</el-col>
                         <el-col class="col-padding" :span="10" :offset='1'>供应商开户行名称：{{detailForm.supplierAccountName||'-'}}</el-col>
                         <el-col class="col-padding" :span="10" :offset='1'>银行联行号：{{detailForm.supplierBankNo||'-'}}</el-col>
