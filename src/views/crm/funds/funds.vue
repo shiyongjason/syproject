@@ -282,7 +282,7 @@ export default {
                 },
                 { label: '支付单编号', prop: 'paymentOrderNo', width: '150', isHidden: this.queryParams.repaymentTypeArrays == '4' },
                 { label: '支付单金额', prop: 'paymentOrderAmount', width: '150', isHidden: this.queryParams.repaymentTypeArrays == '4' },
-                { label: '剩余货款总金额', prop: 'paymentAmount', formatters: 'moneyShow', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays !== '2' },
+                { label: '剩余货款总金额', prop: 'arrearAmount', formatters: 'moneyShow', width: '150', align: 'center', isHidden: this.queryParams.repaymentTypeArrays !== '2' },
                 { label: '期数', prop: 'feeRepaymentOrder', width: '100', isHidden: this.queryParams.repaymentTypeArrays !== '3' && this.queryParams.repaymentTypeArrays !== '2' },
                 { label: '金额', prop: 'paymentAmount', width: '150', isHidden: this.queryParams.repaymentTypeArrays != '3' && this.queryParams.repaymentTypeArrays !== '2' },
                 { label: '首付款总金额', prop: 'paymentAmount', width: '150', isHidden: this.queryParams.repaymentTypeArrays !== '1' },
