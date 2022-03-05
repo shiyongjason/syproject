@@ -80,6 +80,7 @@
                     <h-button table @click="onUploadPrePay(slotProps.data.row)" v-if="hosAuthCheck(uploadprepay)&&slotProps.data.row.status==0&&slotProps.data.row.applyAmount > 0">上传预付凭证</h-button>
                     <h-button table v-if="slotProps.data.row.showOnlineBank&&hosAuthCheck(banklink)" @click="handleIsPay(slotProps.data.row)">确认已网银支付</h-button>
                     <h-button table v-if="hosAuthCheck(submitPay)&& (slotProps.data.row.status === 0 || slotProps.data.row.status === 8)" @click="handlePreSubmit(slotProps.data.row)">确认支付</h-button>
+                    <!--  -->
                     <h-button table v-if="hosAuthCheck(onlinePay)&&slotProps.data.row.status === 3&&slotProps.data.row.fundPaymentType === 1" @click="handlePayOnline(slotProps.data.row)">司库支付</h-button>
                 </template>
             </hosJoyTable>
@@ -151,21 +152,6 @@
                     <el-col :span="10" :offset='1'>审核备注：{{detailForm.approvalRemark||'-'}}</el-col>
                 </el-row>
                 <template v-if="detailForm.prepaymentDetails&&detailForm.prepaymentDetails.length>0">
-                    <!-- <el-row ype="flex" class="row-bg" v-for="(item,index) in detailForm.prepaymentDetails" :key="item.id+index">
-                        <el-col :span="10" :offset='1'>预付款支付凭证提交人：{{item.createBy}}({{item.createPhone||'-'}})</el-col>
-                        <el-col :span="10" :offset='1'>上传时间：{{ item.createTime | momentFormat }}</el-col>
-                        <el-col class="mt10 pay_vouchers" :span="20" :offset='1'>预付款支付凭证：
-                            <div class="advance_wrap-flex" v-if="item.payVouchers.length>0">
-                                <div v-for="(v,index) in item.payVouchers" :key="index">
-                                    <downloadFileAddToken isPreview isType='preview' :file-url="v.fileUrl" :a-link-words="v.fileName" />
-                                </div>
-                            </div>
-                            <span v-if="item.payVouchers&&item.payVouchers.length==0">
-                                -
-                            </span>
-                        </el-col>
-                          </el-row>-->
-
                 </template>
                 <div class="pre_wrap" v-if="detailForm.fund">
                     <h4>预付款支付计划：</h4>
@@ -302,6 +288,14 @@
                         <el-col :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
                         <el-col :span="10" :offset='1'>剩余应上游支付(元)：{{detailForm.surplusAmount|moneyFormat}}</el-col>
                     </el-row>
+                    <el-form-item style="margin-top:20px" label="本次支付账号：" prop="id">
+                        <el-select v-model="payForm.id" placeholder="请选择" @change="handlePayRadio">
+                            <el-option v-for="item in payeeAccountList" :key="item.id" :label="item.allName" :value="item.id">
+                                <span style="float: left">{{ item.payeeBankName }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.payeeBankAccount }}</span>
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
                     <el-form-item style="margin-top:20px" label="本次支付金额：" prop="payAmount">
                         <el-input v-model.trim="payForm.payAmount" maxlength="50" v-isNegative:2="payForm.payAmount"></el-input>
                     </el-form-item>
@@ -358,6 +352,14 @@
         <!-- 网银支付 -->
         <el-dialog :close-on-click-modal='false' title="确认网银支付" :visible.sync="isShowLinkBank" :before-close="()=>{isShowLinkBank = false;bankForm.attachDocRequestList=[]}" width="500px" class="prev-payment-dialog">
             <el-form :model="bankForm" :rules="bankRules" ref="bankForm" label-width="150px" class="demo-ruleForm">
+                <el-form-item label="本次支付账号：" prop="id">
+                    <el-select v-model="bankForm.id" placeholder="请选择" @change="handleAccountRadio">
+                        <el-option v-for="item in payeeAccountList" :key="item.id" :label="item.allName" :value="item.id">
+                            <span style="float: left">{{ item.payeeBankName }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.payeeBankAccount }}</span>
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="网银支付时间：" prop="paymentTime">
                     <el-date-picker v-model="bankForm.paymentTime" value-format='yyyy-MM-dd' type="date" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
                 </el-form-item>
@@ -472,6 +474,7 @@ export default class Advancelist extends Vue {
         applyAmount: ''
     }
     @State('userInfo') userInfo: any
+    payeeAccountList:any[]=[]
     queryParams:Query = {
         pageSize: 10,
         pageNumber: 1,
@@ -509,7 +512,10 @@ export default class Advancelist extends Vue {
         payVouchers: [],
         prepaymentOrderId: '',
         payAmount: '',
-        payDate: ''
+        payDate: '',
+        payPrincipal: '',
+        payeeBankName: '',
+        payeeBankAccount: ''
     }
     prePayForm:Record<string, any>={
         prepaymentOrderId: '',
@@ -520,10 +526,13 @@ export default class Advancelist extends Vue {
         operatorPhone: '',
         payVouchers: []
     }
-    bankForm:PrepaymentSupplierOnlineBankTransferConfirmRequest={
+    bankForm:Partial<PrepaymentSupplierOnlineBankTransferConfirmRequest>={
         prepaymentOrderId: '',
         paymentTime: '',
-        attachDocRequestList: []
+        attachDocRequestList: [],
+        payPrincipal: '',
+        payeeBankName: '',
+        payeeBankAccount: ''
     }
     page = {
         total: 0
@@ -589,12 +598,14 @@ export default class Advancelist extends Vue {
 
     get bankRules () {
         return {
+            id: [{ required: true, message: '请选择本次支付账号', trigger: 'change' }],
             paymentTime: [{ required: true, message: '请选择网银支付时间', trigger: 'change' }],
             attachDocRequestList: [{ required: true, message: '上游支付凭证不能为空', trigger: 'blur' }]
         }
     }
 
     detailRules = {
+        id: [{ required: true, message: '请选择本次支付账号', trigger: 'change' }],
         payVouchers: [
             { required: true, message: '上传上游支付凭证不能为空', trigger: 'blur' }
         ],
@@ -669,6 +680,7 @@ export default class Advancelist extends Vue {
         this.isShowLinkBank = true
         this.bankForm.paymentTime = moment(new Date()).format('YYYY-MM-DD')
         this.bankForm.prepaymentOrderId = val.id
+        this.getBankAccount()
         this.$nextTick(() => {
             this.$refs['bankForm'].clearValidate()
         })
@@ -811,6 +823,34 @@ export default class Advancelist extends Vue {
         this.payForm.payAmount = this.detailForm.surplusAmount
         this.payForm.payDate = moment(new Date()).format('YYYY-MM-DD')
         this.payForm.payVouchers = []
+        this.getBankAccount()
+    }
+
+    async getBankAccount () {
+        const { data } = await Api.findPayeeAccount()
+        data.map(val => {
+            this.payeeAccountList = this.payeeAccountList.concat(val.payeeAccountList)
+        })
+        console.log('aa: ', this.payeeAccountList)
+
+        this.payeeAccountList.map(val => {
+            val.allName = val.payeeBankName + '(' + val.payeeBankAccount + ')'
+        })
+    }
+
+    handleAccountRadio (val) {
+        console.log('val: ', val)
+        const bankInfo = this.payeeAccountList.filter(item => item.id == val)[0]
+        this.bankForm.payPrincipal = bankInfo.payeeName
+        this.bankForm.payeeBankName = bankInfo.payeeBankName
+        this.bankForm.payeeBankAccount = bankInfo.payeeBankAccount
+    }
+
+    handlePayRadio (val) {
+        const bankInfo = this.payeeAccountList.filter(item => item.id == val)[0]
+        this.payForm.payPrincipal = bankInfo.payeeName
+        this.payForm.payeeBankName = bankInfo.payeeBankName
+        this.payForm.payeeBankAccount = bankInfo.payeeBankAccount
     }
 
     public async mounted () {

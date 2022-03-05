@@ -84,11 +84,11 @@
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='330' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <h-button table @click="handleLook(slotProps.data.row.paymentOrderId,slotProps.data.row.status)">查看</h-button>
-                    <h-button table @click="handleEdit(slotProps.data.row)">编辑</h-button>
-                    <h-button table @click="handleSubmit(slotProps.data.row)">提交</h-button>
-                    <h-button table @click="handleReject(slotProps.data.row)">驳回</h-button>
-                    <h-button table @click="handleInvoice(slotProps.data.row)">开票</h-button>
+                    <h-button table @click="handleLook(slotProps.data.row)">查看</h-button>
+                    <h-button table @click="handleEdit(slotProps.data.row)" v-if="slotProps.data.row.invoiceStatus==10">编辑</h-button>
+                    <h-button table @click="handleSubmit(slotProps.data.row)" v-if="slotProps.data.row.invoiceStatus==10">提交</h-button>
+                    <h-button table @click="handleReject(slotProps.data.row)" v-if="slotProps.data.row.invoiceStatus==20">驳回</h-button>
+                    <h-button table @click="handleInvoice(slotProps.data.row)"  v-if="slotProps.data.row.invoiceStatus!=10">开票</h-button>
                 </template>
             </hosJoyTable>
             <el-dialog :close-on-click-modal='false' title="开票" :visible.sync="isShowInvoice" width="600px" class="prev-payment-dialog" :before-close="handleCancel">
@@ -208,7 +208,7 @@ export default class ServiceList extends Vue {
         { label: '状态码', prop: 'invoiceStatus', width: '100', dicData: invoiceTyps },
         { label: '申请单号', prop: 'invoiceNo' },
         { label: '项目编号', prop: 'projectNo' },
-        { label: '项目名称', prop: 'poAmount' },
+        { label: '项目名称', prop: 'projectName' },
         { label: '所属分部', prop: 'deptName' },
         { label: '经销商', prop: 'companyName' },
         { label: '申请人', prop: 'createBy' },
@@ -218,15 +218,16 @@ export default class ServiceList extends Vue {
         { label: '寄送快递单号', prop: 'deliveryNo' }
     ]
 
-    async handleLook (paymentOrderId, status) {
+    async handleLook (row) {
         // 查看
-        this.$router.push({ path: '/goodwork/manageInvoices/servicedetail' })
+        this.$router.push({ path: '/goodwork/manageInvoices/servicedetail', query: { id: row.id } })
     }
 
     handleEdit (row) {
+        console.log('row: ', row)
         // 编辑 or 申请
         if (row) {
-            this.$router.push({ path: '/goodwork/manageInvoices/serviceedit' })
+            this.$router.push({ path: '/goodwork/manageInvoices/serviceedit', query: { id: row.id } })
         } else {
             this.$router.push({ path: '/goodwork/manageInvoices/serviceedit' })
         }
@@ -241,6 +242,7 @@ export default class ServiceList extends Vue {
             type: 'warning'
         }).then(async () => {
             await updateSubmit(val.id)
+            this.getList()
         }).catch(() => {
 
         })
@@ -265,6 +267,7 @@ export default class ServiceList extends Vue {
             // @ts-ignore
         }).then(async ({ value }) => {
             await updateReject({ id: val.id, rejectReason: value })
+            this.getList()
         }).catch(() => {
 
         })
@@ -283,6 +286,7 @@ export default class ServiceList extends Vue {
         this.$refs['IForm'].validate(async valid => {
             if (valid) {
                 await updateOpen(this.IForm)
+                this.isShowInvoice = false
             }
         })
     }

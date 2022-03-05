@@ -93,3 +93,6 @@ export const getMoreBill: (paymentOrderId) => AxiosPromise<BillAmountResponse[]>
 export const updateOnlineBank: (params) => AxiosPromise<void> = (params) => {
     return axios.post('/project/api/supplier-payments/online-bank-payment-confirm', params)
 }
+
+// 帅选 付款账号
+export const findPayeeAccount = () => axios.get('/project/api/bank/receipt/payee-account/list')

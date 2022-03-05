@@ -1,4 +1,4 @@
-import { EqpInvoiceDetailResponse, EqpInvoiceSubmitRequest, IPageEqpInvoicePageResponse, IPageServiceInvoicePageResponse, ServiceInvoiceDetailResponse, ServiceInvoiceOpenRequest, InvoiceRejectRequest, ServiceInvoiceSubmitRequest, ServiceInvoiceFundResponse, EqpTotalInvoiceAmountResponse, IPageEqpInvoicePaymentOrderPageResponse } from '@/interface/hbp-project'
+import { EqpInvoiceDetailResponse, EqpInvoiceSubmitRequest, IPageEqpInvoicePageResponse, IPageServiceInvoicePageResponse, ServiceInvoiceDetailResponse, ServiceInvoiceOpenRequest, InvoiceRejectRequest, ServiceInvoiceSubmitRequest, ServiceInvoiceFundResponse, EqpTotalInvoiceAmountResponse, IPageEqpInvoicePaymentOrderPageResponse, MostRecentInvoiceResponse } from '@/interface/hbp-project'
 import axios, { AxiosPromise } from 'axios'
 
 export const updateServiceInvoice: (params: ServiceInvoiceSubmitRequest) => AxiosPromise<void> = (params) => {
@@ -25,8 +25,13 @@ export const getInvoiceTotal: (params: any) => AxiosPromise<any> = (params) => {
     return axios.get(`/project/boss/service-invoice/total-amount`, { params })
 }
 //  服务费账单列表
-export const getServiceFunds: (params: any) => AxiosPromise<ServiceInvoiceFundResponse> = (params) => {
+export const getServiceFunds: (params: any) => AxiosPromise<ServiceInvoiceFundResponse[]> = (params) => {
     return axios.get(`/project/boss/service-invoice/funds`, { params })
+}
+
+// 服务费  跟进经销商Id查最近一笔发票记录
+export const getMostInvoice: (params: any) => AxiosPromise<MostRecentInvoiceResponse> = (params) => {
+    return axios.get(`/project/boss/service-invoice/most-recent`, { params })
 }
 
 /** 详情 */
