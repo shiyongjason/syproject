@@ -9,7 +9,9 @@
                         </el-form-item>
                         <el-form-item label="本次支付金额：" prop="paidAmount" key="paidAmount">
                             <!-- unpaidAmount-inputMAX指令金额不刷新问题 -->
-                            <el-input v-model="uploadpayForm.paidAmount" v-isNum:2="uploadpayForm.paidAmount" placeholder="请输入" maxlength="50" v-inputMAX='unpaidAmount'><template slot="append">元</template></el-input>
+                            <!-- v-inputMAX:unpaidAmount -->
+                            <!-- v-inputMAX='100' -->
+                            <el-input v-model="uploadpayForm.paidAmount" v-isNum:2="uploadpayForm.paidAmount" placeholder="请输入" maxlength="50" v-inputMAX:unpaidAmount><template slot="append">元</template></el-input>
                             <span style="width:50px;height:50px;text-align:center;margin-left:10px;color:#13C2C2" @click="handleAll">全部</span>
                         </el-form-item>
                     </div>
