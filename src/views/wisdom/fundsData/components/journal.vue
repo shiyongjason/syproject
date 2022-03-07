@@ -18,7 +18,7 @@
                 内容：<ul>
                     <li v-for="(v,i) in item.contentList" :key="i">
                         <b style="font-weight:400;color:#66666">{{v.category}}：</b>
-                        <template>{{v.desc}} 把 “<b style="font-weight:400;color:#409eff">{{v.oldValue}}</b>” 修改为 “<b style="font-weight:400;color:#409eff">{{v.newValue}}</b>”</template>
+                        <template> <b style="font-weight:400;color:#707175">{{v.desc}} ：</b>把 “<b style="font-weight:400;color:#409eff">{{v.oldValue}}</b>” 修改为 “<b style="font-weight:400;color:#409eff">{{v.newValue}}</b>”</template>
                     </li>
                 </ul>
             </div>
