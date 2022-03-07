@@ -4,6 +4,7 @@
             <div class="journal-wrap_box">
                 <span>状态：{{AuditStatus.get(item.auditStatus)}}</span>
                 <el-button size="mini" type="primary" @click="onExamine(item.id)" v-if="item.auditStatus==1&&hosAuthCheck(WISDOM_LIST_SHENHE)">审核</el-button>
+                <span>审核备注：{{item.auditSpec}}</span>
             </div>
             <div class="journal-wrap_box">
                 <span>申请时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm')}}</span>
