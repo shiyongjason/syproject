@@ -6,6 +6,10 @@
                 <el-button size="mini" type="primary" @click="onExamine(item.id)" v-if="item.auditStatus==1&&hosAuthCheck(WISDOM_LIST_SHENHE)">审核</el-button>
                 <span  v-if="item.auditStatus!=1">审核备注：{{item.auditSpec}}</span>
             </div>
+             <div class="journal-wrap_box" v-if="item.auditStatus!=1">
+                <span>审核时间：{{moment(item.auditTime).format('YYYY-MM-DD HH:mm')}}</span>
+                <span>审核人：{{item.auditBy}}</span>
+            </div>
             <div class="journal-wrap_box">
                 <span>申请时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm')}}</span>
                 <span>申请人：{{item.createBy}}</span>
