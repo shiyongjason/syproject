@@ -260,9 +260,6 @@
                                     <el-checkbox label="21" value="人体移动传感器">人体移动传感器</el-checkbox>
                                 </el-col>
                                 <el-col :span="6">
-                                    <el-checkbox label="34" value="人体移动传感器(DI)">人体移动传感器(DI)</el-checkbox>
-                                </el-col>
-                                <el-col :span="6">
                                     <el-checkbox label="22" value="水浸监测">水浸监测</el-checkbox>
                                 </el-col>
                                 <el-col :span="6">
@@ -931,7 +928,7 @@ export default {
             this.energyOption = this.form.projectType.filter(item => item == 4 || item == 3 || item == 5 || item == 6 || item == 7 || item == 9)
             this.isShowOtherEnergy = this.energyOption.length > 0
 
-            this.securityOption = this.form.projectType.filter(item => item == 20 || item == 21 || item == 22 || item == 23 || item == 24 || item == 25 || item == 26 || item == 27 || item == 34 || item == 35 || item == 36 || item == 37 || item == 38)
+            this.securityOption = this.form.projectType.filter(item => item == 20 || item == 21 || item == 22 || item == 23 || item == 24 || item == 25 || item == 26 || item == 27 || item == 35 || item == 36 || item == 37 || item == 38)
             this.isShowSecurity = this.securityOption.length > 0
 
             this.isShowScene = this.form.projectType.filter(item => item == 30 || item == 31 || item == 32).length > 0
