@@ -17,7 +17,7 @@
             <div class="journal-wrap_box">
                 内容：<ul>
                     <li v-for="(v,i) in item.contentList" :key="i">
-                        <b style="font-weight:400;color:red">{{v.category}}：</b>
+                        <b style="font-weight:400;color:#66666">{{v.category}}：</b>
                         <template>{{v.desc}} 把 “<b style="font-weight:400;color:#409eff">{{v.oldValue}}</b>” 修改为 “<b style="font-weight:400;color:#409eff">{{v.newValue}}</b>”</template>
                     </li>
                 </ul>
