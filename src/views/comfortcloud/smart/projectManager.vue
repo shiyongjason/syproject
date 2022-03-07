@@ -145,12 +145,12 @@
                             <el-checkbox v-model="isShowCurtain" @change="onChangeShowCurtain">窗帘集控系统</el-checkbox>
                         </el-col>
                         <el-col :span="20" v-if="isShowCurtain">
-                            <el-radio-group v-model="curtainRadioOption">
+                            <el-checkbox-group v-model="curtainRadioOption">
                                 <el-col :span="4">
-                                    <el-radio label="15" value="电机">电机</el-radio>
-                                    <el-radio label="19" value="面板">面板</el-radio>
+                                    <el-checkbox label="15" value="电机">电机</el-checkbox>
+                                    <el-checkbox label="19" value="面板">面板</el-checkbox>
                                 </el-col>
-                            </el-radio-group>
+                            </el-checkbox-group>
                         </el-col>
                     </el-row>
                     <el-checkbox-group v-model="environmentOption">
@@ -596,7 +596,7 @@ export default {
             socketOption: [],
             powerOption: [],
             isShowCurtain: false,
-            curtainRadioOption: '',
+            curtainRadioOption: [],
             environmentOption: [],
             doorlockOption: [],
             isShowEnergy: false,
@@ -765,7 +765,7 @@ export default {
         onChangeShowCurtain (value) {
             this.isShowCurtain = value
             if (!value) {
-                this.curtainRadioOption = ''
+                this.curtainRadioOption = []
             }
         },
         onChangeShowEnergy (value) {
@@ -865,7 +865,7 @@ export default {
             this.socketOption = []
             this.powerOption = []
             this.isShowCurtain = false
-            this.curtainRadioOption = ''
+            this.curtainRadioOption = []
             this.environmentOption = []
             this.doorlockOption = []
             this.isShowEnergy = false
@@ -909,8 +909,8 @@ export default {
 
             this.powerOption = this.form.projectType.filter(item => item == 39)
 
-            this.curtainRadioOption = this.form.projectType.filter(item => item == 15 || item == 19)[0]
-            this.isShowCurtain = !!this.curtainRadioOption
+            this.curtainRadioOption = this.form.projectType.filter(item => item == 15 || item == 19)
+            this.isShowCurtain = this.curtainRadioOption.length > 0
 
             this.environmentOption = this.form.projectType.filter(item => item == 17)
 
@@ -960,7 +960,7 @@ export default {
                 ...this.lightingOption,
                 ...this.socketOption,
                 ...this.powerOption,
-                this.curtainRadioOption,
+                ...this.curtainRadioOption,
                 ...this.environmentOption,
                 ...this.doorlockOption,
                 this.waterAirRadioOption,
