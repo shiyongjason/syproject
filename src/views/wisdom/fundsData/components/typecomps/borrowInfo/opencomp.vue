@@ -3,7 +3,7 @@
         <!-- 敞口组件-借款信息 -->
         <div class="query-cont-row">
             <div class="query-cont-col">
-                <el-form-item label="开票金额：" prop="loan.invoiceAmount" :rules='rules.invoiceAmount'>
+                <el-form-item label="开票金额11：" prop="loan.invoiceAmount" :rules='rules.invoiceAmount'>
                     <el-input v-model.trim="flowform.invoiceAmount" @input="(val)=>{setDepositProportion(val)}" v-isNum:2="flowform.invoiceAmount" maxlength='20' placeholder="请输入开票金额">
                     </el-input>
                 </el-form-item>
@@ -16,8 +16,9 @@
             </div>
             <div class="query-cont-col">
                 <el-form-item label="保证金比例：" prop="loan.depositProportion" :rules='rules.depositProportion'>
-                    <el-input v-model='flowform.depositProportion' @input="(val)=>{setDepositProportion(val)}" v-isNum:2="flowform.depositProportion" maxlength='20' placeholder="请输入保证金比例">
-                        <template slot="append">%</template></el-input>
+                    <el-input v-model='flowform.depositProportion' v-isNum:2="flowform.depositProportion" maxlength='20' placeholder="请输入保证金比例">
+                        <template slot="append">%</template>
+                    </el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
@@ -43,6 +44,7 @@
                     </el-input>
                 </el-form-item>
             </div>
+
             <div class="query-cont-col">
                 <el-form-item label="开票日期：" prop="loan.invoiceTime" :rules='rules.invoiceTime'>
                     <el-date-picker v-model="flowform.invoiceTime" value-format="yyyy-MM-dd" @change='onChooseTime' format="yyyy-MM-dd" :picker-options="pickerOptionsStart" type="date" placeholder="请选择出票日期">

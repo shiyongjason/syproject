@@ -5,7 +5,7 @@ import router from './router'
 import store from '@/store/index'
 import '@/api/axios.js'
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/display.css'
+import 'element-ui/lib/theme-chalk/index.css'
 import HosjoyUI from 'hosjoy-ui'
 import 'hosjoy-ui/lib/hosjoy-ui.css'
 import '../src/theme/index.css'
@@ -43,7 +43,6 @@ try {
     // ElementUI.Dialog.props.appendToBody.default = false
 
     // ElementUI.Tabs.props.modalAppendToBody.default = false
-    console.log(' ElementUI.Dialog: ', ElementUI)
 } catch (e) {
     console.log(e)
 }

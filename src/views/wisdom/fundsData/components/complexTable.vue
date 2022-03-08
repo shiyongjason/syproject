@@ -1,56 +1,44 @@
 <template>
     <div class="page-body">
         <div class="page-table">
-            <hosJoyTable :amountResetTable="amountResetTable" v-if="isShowParent" :collapseShow="collapseShow" ref="hosjoyTable"
-                         align="center" border stripe showPagination :column="column"
-                         :data="tableData" :total="pagination.total"
-                         :pageNumber.sync="pagination.pageNumber"
-                         :pageSize.sync="pagination.pageSize" @pagination="getList"
-                         :toggleTable="toggleTable" :localName="localName" :prevLocalName="prevLocalName">
+            <hosJoyTable :amountResetTable="amountResetTable" v-if="isShowParent" :collapseShow="collapseShow" ref="hosjoyTable" align="center" border stripe showPagination :column="column" :data="tableData" :total="pagination.total" :pageNumber.sync="pagination.pageNumber"
+                :isAction='["1","2", "3"].includes(source)' :pageSize.sync="pagination.pageSize" @pagination="getList" :toggleTable="toggleTable" :localName="localName" :prevLocalName="prevLocalName" :isActionFixed='tableData&&tableData.length>0' actionWidth='220'>
+                <template #action="slotProps">
+                    <h-button table @click="onLook(slotProps.data.row)" v-if="hosTabCheck(1)">查看详情</h-button>
+                    <h-button table @click="onJurnal(slotProps.data.row)" v-if="slotProps.data.row.account.auditStatus!=1&&hosTabCheck(2)">日志</h-button>
+                    <h-button v-if="slotProps.data.row.account.auditStatus==1" table @click="onJurnal(slotProps.data.row)">待审核</h-button>
+                </template>
             </hosJoyTable>
         </div>
         <!-- 基本信息Dialog -台账编号 -->
-        <misDialog :detailData='accountData' v-if='accountData&&misDialogVisible' :dialogVisible='misDialogVisible'
-                   @onClose="misDialogVisible=false" @reload='getList'/>
+        <misDialog :detailData='accountData' v-if='accountData&&misDialogVisible' :dialogVisible='misDialogVisible' @onClose="misDialogVisible=false" @reload='getList' />
         <!-- 基本信息Dialog -资金档案编号 -->
-        <fileInfoDialog :detailData='accountData' v-if='accountData&&fileinfoDialogVisible'
-                        :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false"
-                        @reload='getList'/>
+        <fileInfoDialog :detailData='accountData' v-if='accountData&&fileinfoDialogVisible' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" @reload='getList' />
         <!-- 基本信息Dialog -备注 -->
-        <remarkDialog :detailData='accountData' v-if='accountData&&remarkDialogVisible'
-                      :dialogVisible='remarkDialogVisible' @onClose="remarkDialogVisible=false" @reload='getList'/>
+        <remarkDialog :detailData='accountData' v-if='accountData&&remarkDialogVisible' :dialogVisible='remarkDialogVisible' @onClose="remarkDialogVisible=false" @reload='getList' />
         <!-- 借款Dialog -流贷 -->
-        <supplierDialog :detailData='loanData' v-if='loanData&&supplierDialogVisible'
-                        :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false"
-                        @reload='getList'/>
+        <supplierDialog :detailData='loanData' v-if='loanData&&supplierDialogVisible' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false" @reload='getList' />
         <!-- 借款Dialog -分授信 -->
-        <pointsCreditBillingDialog :detailData='loanData' v-if='loanData&&pointsCreditBillingDialogVisible'
-                                   :dialogVisible='pointsCreditBillingDialogVisible'
-                                   @onClose="pointsCreditBillingDialogVisible=false" @reload='getList'/>
+        <pointsCreditBillingDialog :detailData='loanData' v-if='loanData&&pointsCreditBillingDialogVisible' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" @reload='getList' />
         <!-- 借款Dialog -敞口 -->
-        <billingDialog :detailData='loanData' v-if='loanData&&billingDialogVisible'
-                       :dialogVisible='billingDialogVisible' @onClose="billingDialogVisible=false" @reload='getList'/>
+        <billingDialog :detailData='loanData' v-if='loanData&&billingDialogVisible' :dialogVisible='billingDialogVisible' @onClose="billingDialogVisible=false" @reload='getList' />
         <!-- 还款Dialog -手动调息 -->
-        <regulatingBreathingDialog :detailData='regulatingBreathingDialogData'
-                                   v-if='regulatingBreathingDialogData&&regulatingBreathingDialogVisible'
-                                   :dialogVisible='regulatingBreathingDialogVisible'
-                                   @onClose="regulatingBreathingDialogVisible=false" @reload='getList'/>
+        <regulatingBreathingDialog :detailData='regulatingBreathingDialogData' v-if='regulatingBreathingDialogData&&regulatingBreathingDialogVisible' :dialogVisible='regulatingBreathingDialogVisible' @onClose="regulatingBreathingDialogVisible=false" @reload='getList' />
         <!-- 还款Dialog -流贷 -->
-        <AnnualInterestRateDialog :detailData='respAccountRepaymentPlanData'
-                                  v-if='respAccountRepaymentPlanData&&AnnualInterestRateDialogVisible'
-                                  :dialogVisible='AnnualInterestRateDialogVisible'
-                                  @onClose="AnnualInterestRateDialogVisible=false" @reload='getList'/>
+        <AnnualInterestRateDialog :detailData='respAccountRepaymentPlanData' v-if='respAccountRepaymentPlanData&&AnnualInterestRateDialogVisible' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" @reload='getList' />
         <!-- 还款Dialog -敞口&&分授信 -->
-        <repaymentDialog ref="repayment" :detailData='rowData' v-if='rowData&&repaymentDialogVisible'
-                         :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false"
-                         @reload='getList' @repaymentTypeChange="onRepaymentTypeChange" @stepOver="onStepOver"/>
-        <el-dialog
-            title="供货商名称"
-            :visible.sync="tipsDialogVisible"
-            :close-on-click-modal='false'
-            width="50%">
+        <repaymentDialog ref="repayment" :detailData='rowData' v-if='rowData&&repaymentDialogVisible' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList' @repaymentTypeChange="onRepaymentTypeChange" @stepOver="onStepOver" />
+        <el-dialog title="供货商名称" :visible.sync="tipsDialogVisible" :close-on-click-modal='false' width="50%">
             <span class="max-height">{{tipsDialogVisibleContent}}</span>
         </el-dialog>
+        <!-- 重构组件组合 -->
+        <allDialog ref="allDialog" @backGetAccount=getAccount @backLoan=getLoan @backGetRespAccountRepaymentPlanData=getRespAccountRepaymentPlanData @backGetGrantPaymetPlanData=getGrantPaymetPlanData :soure=source></allDialog>
+        <!-- 日志操作drawer -->
+        <h-drawer title="日志" v-if="drawer" :visible.sync="drawer" :beforeClose="()=>{this.drawer = false}" direction='rtl' size='710px' :wrapperClosable="false">
+            <template #connect>
+                <jurnal ref='jurnals' @backEvent=onBackDrawer></jurnal>
+            </template>
+        </h-drawer>
     </div>
 </template>
 
@@ -65,6 +53,8 @@ import pointsCreditBillingDialog from './dialog/loan/pointsCreditBillingDialog.v
 import regulatingBreathingDialog from './dialog/plan/regulatingBreathingDialog.vue'
 import AnnualInterestRateDialog from './dialog/plan/AnnualInterestRateDialog.vue'
 import repaymentDialog from './dialog/plan/repaymentDialog.vue'
+import allDialog from './allDialog.vue'
+import jurnal from './journal.vue'
 import { getAccountBasic, getLoan, getRespAccountRepaymentPlan, transformPlanType } from '../api/index'
 import moment from 'moment'
 import { mapState } from 'vuex'
@@ -75,7 +65,13 @@ import {
     WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA,
     WISDOM_FLOWTOBORROW_SHOW_LINE,
     WISDOM_EXPOSURE_SHOW_LINE,
-    WISDOM_POINTSCREDIT_SHOW_LINE
+    WISDOM_POINTSCREDIT_SHOW_LINE,
+    WISDOM_LIST_FLOWTOBORROW_DETAIL,
+    WISDOM_LIST_EXPOSURE_DETAIL,
+    WISDOM_LIST_POINTSCREDIT_DETAIL,
+    WISDOM_LIST_FLOWTOBORROW_RECORDS,
+    WISDOM_LIST_EXPOSURE_RECORDS,
+    WISDOM_LIST_POINTSCREDIT_RECORDS
 } from '@/utils/auth_const'
 
 export default {
@@ -90,13 +86,18 @@ export default {
         billingDialog,
         repaymentDialog,
         pointsCreditBillingDialog,
-        regulatingBreathingDialog
+        regulatingBreathingDialog,
+        allDialog,
+        jurnal
     },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
             overdueList: state => state.fundsData.overdueList
-        })
+        }),
+        getAction () {
+            return [2, 3, 4].includes(this.source)
+        }
     },
     props: {
         tableData: {
@@ -135,31 +136,31 @@ export default {
             handler (val) {
                 if (val === '0') {
                     this.prevLocalName = 'TotalColumnTable::'
-                    this.localName = 'TotalColumnTable::V2.3.2_2'
+                    this.localName = 'TotalColumnTable::V2.3.2_3'
                     this.$set(this, 'column', this.TotalColumn)
                     this.collapseShow = true
                 }
                 if (val === '1') {
                     this.prevLocalName = 'FlowToBorrowTable::'
-                    this.localName = 'FlowToBorrowTable::V2.3.2_2'
+                    this.localName = 'FlowToBorrowTable::V2.3.2_3'
                     this.$set(this, 'column', this.FlowToBorrow)
                     this.collapseShow = true
                 }
                 if (val === '2') {
                     this.prevLocalName = 'ExposureTable::'
-                    this.localName = 'ExposureTable::V2.3.2_2'
+                    this.localName = 'ExposureTable::V2.3.2_3'
                     this.$set(this, 'column', this.Exposure)
                     this.collapseShow = true
                 }
                 if (val === '3') {
                     this.prevLocalName = 'PointsCreditTable::'
-                    this.localName = 'PointsCreditTable::V2.3.2_2'
+                    this.localName = 'PointsCreditTable::V2.3.2_3'
                     this.$set(this, 'column', this.PointsCredit)
                     this.collapseShow = true
                 }
                 if (val === '4') {
                     this.prevLocalName = 'ReimbursementDetailTable::'
-                    this.localName = 'ReimbursementDetailTable::V2.3.2_2'
+                    this.localName = 'ReimbursementDetailTable::V2.3.2_3'
                     this.$set(this, 'column', this.ReimbursementDetail)
                     this.collapseShow = false
                 }
@@ -175,6 +176,14 @@ export default {
     },
     data: function () {
         return {
+            WISDOM_LIST_FLOWTOBORROW_DETAIL,
+            WISDOM_LIST_EXPOSURE_DETAIL,
+            WISDOM_LIST_POINTSCREDIT_DETAIL,
+            WISDOM_LIST_FLOWTOBORROW_RECORDS,
+            WISDOM_LIST_EXPOSURE_RECORDS,
+            WISDOM_LIST_POINTSCREDIT_RECORDS,
+            drawer: false,
+            isShowAction: false,
             tipsDialogVisible: false,
             tipsDialogVisibleContent: '',
             localName: '',
@@ -216,7 +225,7 @@ export default {
                             return (
                                 <el-tooltip placement="top" effect='light'>
                                     <div slot="content">MIS编码：{scope.row.misCode ? scope.row.misCode : '-'}
-                                        <br/>平台公司：{scope.row.loanCompanyName ? scope.row.loanCompanyName : '-'}</div>
+                                        <br />平台公司：{scope.row.loanCompanyName ? scope.row.loanCompanyName : '-'}</div>
                                     <span>{scope.row.misCode ? scope.row.misCode : '-'}</span>
                                 </el-tooltip>
                             )
@@ -474,6 +483,35 @@ export default {
             // 流贷
             FlowToBorrow: [
                 {
+                    label: '',
+                    minWidth: '120',
+                    prop: 'account_remark',
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
+                    children: [
+                        {
+                            prop: 'account_remark',
+                            label: '备注',
+                            minWidth: '120',
+                            children: [
+                                {
+                                    prop: 'account_remark',
+                                    label: '备注',
+                                    render: (h, scope) => {
+                                        let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
+                                        return render
+                                            ? <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}<i
+                                                class='el-icon-edit pointer' onClick={() => {
+                                                    this.getAccount(scope.row, `${this.product}-流贷备注信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`, 'remarkDialogVisible')
+                                                }}></i></span>
+                                            : <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}</span>
+                                    },
+                                    minWidth: '120'
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
                     prop: 'account_standingBookNo',
                     fixed: true,
                     minWidth: '150',
@@ -494,19 +532,17 @@ export default {
                                             <el-tooltip effect="light" placement="top">
                                                 <div
                                                     slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
-                                                    <br/>借款单位：{scope.row.account_loanCompanyName}
-                                                    <br/>欠收本金：{filters.moneyFormat(scope.row.paymentStatic_capitalOwe, 2, false)}</div>
+                                                    <br />借款单位：{scope.row.account_loanCompanyName}
+                                                    <br />欠收本金：{filters.moneyFormat(scope.row.paymentStatic_capitalOwe, 2, false)}</div>
                                                 <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
                                             </el-tooltip>
                                             <i class='el-icon-edit pointer' onClick={() => {
-                                                this.getAccount(scope.row)
-                                                this.accountData.title = `${this.product}-流贷基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
-                                                this.misDialogVisible = true
+                                                this.getAccount(scope.row, `${this.product}-流贷基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`, 'misDialogVisible')
                                             }}></i></div> : <el-tooltip effect="light" placement="top">
                                             <div
                                                 slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
-                                                <br/>借款单位：{scope.row.account_loanCompanyName}
-                                                <br/>欠收本金：{filters.moneyFormat(scope.row.paymentStatic_capitalOwe, 2, false)}</div>
+                                                <br />借款单位：{scope.row.account_loanCompanyName}
+                                                <br />欠收本金：{filters.moneyFormat(scope.row.paymentStatic_capitalOwe, 2, false)}</div>
                                             <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
                                         </el-tooltip>
                                     }
@@ -572,9 +608,7 @@ export default {
                                         let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
                                         return render ? <span>{filters.moneyFormat(scope.row.loan_loanAmount, 2, false)}<i
                                             class='el-icon-edit pointer' onClick={() => {
-                                                this.getLoan(scope.row)
-                                                this.loanData.title = `${this.product}—流贷借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
-                                                this.supplierDialogVisible = true
+                                                this.getLoan(scope.row, 'supplierDialogVisible', `${this.product}—流贷借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`)
                                             }}></i></span> : <span>{filters.moneyFormat(scope.row.loan_loanAmount, 2, false)}</span>
                                     },
                                     label: '-',
@@ -614,11 +648,8 @@ export default {
                                             class={
                                                 scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_loanStartTime && scope.row.loan_yearRate !== null
                                                     ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
-                                            onClick={async () => {
-                                                await this.getRespAccountRepaymentPlanData(scope.row)
-                                                this.respAccountRepaymentPlanData[0].title = `${this.product}-流贷还款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
-                                                this.respAccountRepaymentPlanData[0].accountId = scope.row.account_id
-                                                this.AnnualInterestRateDialogVisible = true
+                                            onClick={() => {
+                                                this.getRespAccountRepaymentPlanData(scope.row, `${this.product}-流贷还款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`, scope.row.account_id, 'AnnualInterestRateDialogVisible')
                                             }}></i></span>
                                             : <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}</span>
                                     },
@@ -1007,12 +1038,8 @@ export default {
                                         let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
                                         return render
                                             ? <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}<i
-                                                class='el-icon-edit pointer' onClick={async () => {
-                                                    await this.getRespAccountRepaymentPlanData(scope.row)
-                                                    this.respAccountRepaymentPlanData[0].otherTitle = `${this.product}-手动调息（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
-                                                    this.respAccountRepaymentPlanData[0].accountId = scope.row.account_id
-                                                    this.regulatingBreathingDialogData = JSON.parse(JSON.stringify(this.respAccountRepaymentPlanData))
-                                                    this.regulatingBreathingDialogVisible = true
+                                                class='el-icon-edit pointer' onClick={() => {
+                                                    this.getRespAccountRepaymentPlanData(scope.row, `${this.product}-手动调息（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`, scope.row.account_id, 'regulatingBreathingDialogVisible')
                                                 }}></i></span>
                                             : <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}</span>
                                     },
@@ -1040,9 +1067,7 @@ export default {
                                         return render
                                             ? <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}<i
                                                 class='el-icon-edit pointer' onClick={() => {
-                                                    this.getAccount(scope.row)
-                                                    this.accountData.title = `${this.product}-流贷档案信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
-                                                    this.fileinfoDialogVisible = true
+                                                    this.getAccount(scope.row, `${this.product}-流贷档案信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`, 'fileinfoDialogVisible')
                                                 }}></i></span>
                                             : <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}</span>
                                     },
@@ -1051,41 +1076,41 @@ export default {
                             ]
                         }
                     ]
-                },
-                {
-                    label: '',
-                    minWidth: '120',
-                    prop: 'account_remark',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
-                    children: [
-                        {
-                            prop: 'account_remark',
-                            label: '备注',
-                            minWidth: '120',
-                            children: [
-                                {
-                                    prop: 'account_remark',
-                                    label: '备注',
-                                    render: (h, scope) => {
-                                        let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
-                                        return render
-                                            ? <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}<i
-                                                class='el-icon-edit pointer' onClick={() => {
-                                                    this.getAccount(scope.row)
-                                                    this.accountData.title = `${this.product}-流贷备注信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
-                                                    this.remarkDialogVisible = true
-                                                }}></i></span>
-                                            : <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}</span>
-                                    },
-                                    minWidth: '120'
-                                }
-                            ]
-                        }
-                    ]
                 }
             ],
             // 分授信
             PointsCredit: [
+                {
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                    label: '',
+                    prop: 'account_remark',
+                    minWidth: '100',
+                    children: [
+                        {
+                            prop: 'account_remark',
+                            label: '备注',
+                            showOverflowTooltip: true,
+                            minWidth: '100',
+                            children: [
+                                {
+                                    render: (h, scope) => {
+                                        let render = this.hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)
+                                        return render
+                                            ? <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i
+                                                class='el-icon-edit pointer' onClick={() => {
+                                                    this.getAccount(scope.row, `${this.product}-分授信备注信息维护`, 'remarkDialogVisible')
+                                                }}></i></span>
+                                            : <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}</span>
+                                    },
+                                    prop: 'account_remark',
+                                    label: '备注-',
+                                    showOverflowTooltip: true,
+                                    minWidth: '100'
+                                }
+                            ]
+                        }
+                    ]
+                },
                 {
                     fixed: true,
                     prop: '台账编号',
@@ -1104,20 +1129,18 @@ export default {
                                             <el-tooltip effect="light" placement="top">
                                                 <div
                                                     slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
-                                                    <br/>借款单位：{scope.row.account_loanCompanyName}
-                                                    <br/>剩余本金：{filters.moneyFormat(scope.row.paymentStatic_capitalOwe, 2, false)}</div>
+                                                    <br />借款单位：{scope.row.account_loanCompanyName}
+                                                    <br />剩余本金：{filters.moneyFormat(scope.row.paymentStatic_capitalOwe, 2, false)}</div>
                                                 <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
                                             </el-tooltip>
                                             <i class='el-icon-edit pointer' onClick={() => {
-                                                this.getAccount(scope.row)
-                                                this.accountData.title = `${this.product}-分授信基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
-                                                this.misDialogVisible = true
+                                                this.getAccount(scope.row, `${this.product}-分授信基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`, 'misDialogVisible')
                                             }}></i></div> : <div>
                                             <el-tooltip effect="light" placement="top">
                                                 <div
                                                     slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
-                                                    <br/>借款单位：{scope.row.account_loanCompanyName}
-                                                    <br/>剩余本金：{filters.moneyFormat(scope.row.paymentStatic_capitalOwe, 2, false)}</div>
+                                                    <br />借款单位：{scope.row.account_loanCompanyName}
+                                                    <br />剩余本金：{filters.moneyFormat(scope.row.paymentStatic_capitalOwe, 2, false)}</div>
                                                 <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
                                             </el-tooltip>
                                         </div>
@@ -1247,9 +1270,7 @@ export default {
                                         let render = this.hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)
                                         return render ? <span>{filters.moneyFormat(scope.row.loan_loanAmount, 2, false)}<i
                                             class='el-icon-edit pointer' onClick={() => {
-                                                this.getLoan(scope.row)
-                                                this.loanData.title = `${this.product}-分授信借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
-                                                this.pointsCreditBillingDialogVisible = true
+                                                this.getLoan(scope.row, 'pointsCreditBillingDialogVisible', `${this.product}-分授信借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`)
                                             }}></i></span> : <span>{filters.moneyFormat(scope.row.loan_loanAmount, 2, false)}</span>
                                     }
                                 }
@@ -1321,8 +1342,7 @@ export default {
                                                 scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_loanStartTime && scope.row.loan_yearRate !== null
                                                     ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
                                             onClick={async () => {
-                                                await this.getGrantPaymetPlanData(scope.row)
-                                                this.repaymentDialogVisible = true
+                                                await this.getGrantPaymetPlanData(scope.row, 'repaymentDialogVisible')
                                             }}></i></span>
                                             : <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}</span>
                                     }
@@ -2399,8 +2419,7 @@ export default {
                                         return render
                                             ? <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}<i
                                                 class='el-icon-edit pointer' onClick={async () => {
-                                                    await this.getGrantPaymetPlanData(scope.row)
-                                                    this.regulatingBreathingDialogVisible = true
+                                                    await this.getGrantPaymetPlanData(scope.row, 'regulatingBreathingDialogVisible')
                                                 }}></i></span>
                                             : <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}</span>
                                     }
@@ -2430,45 +2449,10 @@ export default {
                                         return render
                                             ? <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}<i
                                                 class='el-icon-edit pointer' onClick={() => {
-                                                    this.getAccount(scope.row)
-                                                    this.accountData.title = `${this.product}-分授信档案信息维护`
-                                                    this.fileinfoDialogVisible = true
+                                                    this.getAccount(scope.row, `${this.product}-分授信档案信息维护`, 'fileinfoDialogVisible')
                                                 }}></i></span>
                                             : <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}</span>
                                     }
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                    label: '',
-                    prop: 'account_remark',
-                    minWidth: '100',
-                    children: [
-                        {
-                            prop: 'account_remark',
-                            label: '备注',
-                            showOverflowTooltip: true,
-                            minWidth: '100',
-                            children: [
-                                {
-                                    render: (h, scope) => {
-                                        let render = this.hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)
-                                        return render
-                                            ? <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i
-                                                class='el-icon-edit pointer' onClick={() => {
-                                                    this.getAccount(scope.row)
-                                                    this.accountData.title = `${this.product}-分授信备注信息维护`
-                                                    this.remarkDialogVisible = true
-                                                }}></i></span>
-                                            : <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}</span>
-                                    },
-                                    prop: 'account_remark',
-                                    label: '备注-',
-                                    showOverflowTooltip: true,
-                                    minWidth: '100'
                                 }
                             ]
                         }
@@ -2477,6 +2461,37 @@ export default {
             ],
             // 敞口
             Exposure: [
+                {
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                    label: '',
+                    minWidth: '100',
+                    prop: 'account_remark',
+                    children: [
+                        {
+                            prop: 'account_remark',
+                            showOverflowTooltip: true,
+                            label: '备注',
+                            minWidth: '100',
+                            children: [
+                                {
+                                    prop: 'account_remark',
+                                    showOverflowTooltip: true,
+                                    label: '备注',
+                                    minWidth: '100',
+                                    render: (h, scope) => {
+                                        let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
+                                        return render
+                                            ? <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i
+                                                class='el-icon-edit pointer' onClick={() => {
+                                                    this.getAccount(scope.row, `${this.product}-敞口备注信息维护`, 'remarkDialogVisible')
+                                                }}></i></span>
+                                            : <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}</span>
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
                 {
                     fixed: true,
                     prop: '台账编号',
@@ -2493,20 +2508,18 @@ export default {
                                             <el-tooltip effect="light" placement="top">
                                                 <div
                                                     slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
-                                                    <br/>借款单位：{scope.row.account_loanCompanyName}
-                                                    <br/>剩余敞口：{filters.moneyFormat(scope.row.paymentStatic_capitalOwe, 2, false)}</div>
+                                                    <br />借款单位：{scope.row.account_loanCompanyName}
+                                                    <br />剩余敞口：{filters.moneyFormat(scope.row.paymentStatic_capitalOwe, 2, false)}</div>
                                                 <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
                                             </el-tooltip>
                                             <i class='el-icon-edit pointer' onClick={() => {
-                                                this.getAccount(scope.row)
-                                                this.accountData.title = `${this.product}-敞口基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
-                                                this.misDialogVisible = true
+                                                this.getAccount(scope.row, `${this.product}-敞口基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`, 'misDialogVisible')
                                             }}></i></div> : <div>
                                             <el-tooltip effect="light" placement="top">
                                                 <div
                                                     slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
-                                                    <br/>借款单位：{scope.row.account_loanCompanyName}
-                                                    <br/>剩余敞口：{filters.moneyFormat(scope.row.paymentStatic_capitalOwe, 2, false)}</div>
+                                                    <br />借款单位：{scope.row.account_loanCompanyName}
+                                                    <br />剩余敞口：{filters.moneyFormat(scope.row.paymentStatic_capitalOwe, 2, false)}</div>
                                                 <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
                                             </el-tooltip>
                                         </div>
@@ -2667,10 +2680,25 @@ export default {
                                         let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
                                         return render ? <span>{filters.moneyFormat(scope.row.loan_loanAmount, 2, false)}<i
                                             class='el-icon-edit pointer' onClick={() => {
-                                                this.getLoan(scope.row)
-                                                this.loanData.title = `${this.product}-敞口借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
-                                                this.billingDialogVisible = true
+                                                this.getLoan(scope.row, 'billingDialogVisible', `${this.product}-敞口借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`)
                                             }}></i></span> : <span>{filters.moneyFormat(scope.row.loan_loanAmount, 2, false)}</span>
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            label: '承兑手续费',
+                            minWidth: '100',
+                            children: [
+                                {
+                                    prop: 'acceptanceFee',
+                                    showOverflowTooltip: true,
+                                    label: '-',
+                                    minWidth: '100',
+                                    render: (h, scope) => {
+                                        return <span>
+                                            {scope.row.loan_acceptanceFee ? `${scope.row.loan_acceptanceFee}` : '-'}
+                                        </span>
                                     }
                                 }
                             ]
@@ -2723,14 +2751,11 @@ export default {
                                     minWidth: '100',
                                     render: (h, scope) => {
                                         let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
-                                        return render ? <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
-                                            class={
-                                                scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_invoiceTime
-                                                    ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
-                                            onClick={async () => {
-                                                await this.getGrantPaymetPlanData(scope.row)
-                                                this.repaymentDialogVisible = true
-                                            }}></i></span>
+                                        return render ? <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i class={scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_invoiceTime
+                                            ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
+                                        onClick={async () => {
+                                            await this.getGrantPaymetPlanData(scope.row, 'repaymentDialogVisible')
+                                        }}></i></span>
                                             : <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}</span>
                                     }
                                 }
@@ -3556,8 +3581,7 @@ export default {
                                         return render
                                             ? <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}<i
                                                 class='el-icon-edit pointer' onClick={async () => {
-                                                    await this.getGrantPaymetPlanData(scope.row, true)
-                                                    this.regulatingBreathingDialogVisible = true
+                                                    await this.getGrantPaymetPlanData(scope.row, 'regulatingBreathingDialogVisible', true)
                                                 }}></i></span>
                                             : <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}</span>
                                     }
@@ -3587,44 +3611,9 @@ export default {
                                         return render
                                             ? <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}<i
                                                 class='el-icon-edit pointer' onClick={() => {
-                                                    this.getAccount(scope.row)
-                                                    this.accountData.title = `${this.product}-敞口基础信息维护`
-                                                    this.fileinfoDialogVisible = true
+                                                    this.getAccount(scope.row, `${this.product}-敞口基础信息维护`, 'fileinfoDialogVisible')
                                                 }}></i></span>
                                             : <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}</span>
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
-                    label: '',
-                    minWidth: '100',
-                    prop: 'account_remark',
-                    children: [
-                        {
-                            prop: 'account_remark',
-                            showOverflowTooltip: true,
-                            label: '备注',
-                            minWidth: '100',
-                            children: [
-                                {
-                                    prop: 'account_remark',
-                                    showOverflowTooltip: true,
-                                    label: '备注',
-                                    minWidth: '100',
-                                    render: (h, scope) => {
-                                        let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
-                                        return render
-                                            ? <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i
-                                                class='el-icon-edit pointer' onClick={() => {
-                                                    this.getAccount(scope.row)
-                                                    this.accountData.title = `${this.product}-敞口备注信息维护`
-                                                    this.remarkDialogVisible = true
-                                                }}></i></span>
-                                            : <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}</span>
                                     }
                                 }
                             ]
@@ -3759,6 +3748,37 @@ export default {
         }
     },
     methods: {
+        // tab切换权限
+        hosTabCheck (val) {
+            if (val == 1) {
+                if (this.source == 1) {
+                    // 流贷
+                    return this.hosAuthCheck(WISDOM_LIST_FLOWTOBORROW_DETAIL)
+                } else if (this.source == 2) {
+                    // 敞口
+                    return this.hosAuthCheck(WISDOM_LIST_EXPOSURE_DETAIL)
+                } else if (this.source == 3) {
+                    // 分授信
+                    return this.hosAuthCheck(WISDOM_LIST_POINTSCREDIT_DETAIL)
+                } else {
+                    return false
+                }
+            } else {
+                if (this.source == 1) {
+                    // 流贷
+                    return this.hosAuthCheck(WISDOM_LIST_FLOWTOBORROW_RECORDS)
+                } else if (this.source == 2) {
+                    // 敞口
+                    return this.hosAuthCheck(WISDOM_LIST_EXPOSURE_RECORDS)
+                } else if (this.source == 3) {
+                    // 分授信
+                    return this.hosAuthCheck(WISDOM_LIST_POINTSCREDIT_RECORDS)
+                } else {
+                    return false
+                }
+            }
+        },
+
         totalColumnTotalDo (tableName, tableDataTotal, more) {
             let newTableDataTotal = { ...tableDataTotal }
             if (more) {
@@ -3799,27 +3819,35 @@ export default {
             })
             this.$set(this, 'column', this[tableName])
         },
+        onLook (val) {
+            this.$refs.allDialog.findDetail(val)
+        },
         async getList (val) {
             this.$emit('getList', val)
         },
         // 基本信息
-        async getAccount (row) {
+        async getAccount (row, title, type) {
+            console.log('row, title, type: ', row, title, type)
             const accountId = row.account_id || row.accountId
             const { data } = await getAccountBasic(accountId)
-            this.accountData = { ...this.accountData, ...data }
+            this.accountData = { ...this.accountData, ...data, title }
             this.$set(this.accountData, 'selectName', data.loanCompanyName)
             this.$set(this.accountData, 'selectCode', data.loanCompanyCode)
+            this[`${type}`] = true
         },
         // 借款信息
-        async getLoan (row) {
+        async getLoan (row, type, title) {
+            console.log('row, type, title: ', row, type, title)
             const { data } = await getLoan(row.loan_id)
             this.loanData = {
                 ...this.loanData,
                 ...data,
+                title,
                 loanDateNumM: '',
                 loanDateNumD: '',
                 registrant: this.userInfo.employeeName
             }
+            this[`${type}`] = true
             if (data.loanDateType == 1) {
                 this.$set(this.loanData, 'loanDateNumM', data.loanDateNum)
                 this.loanData.loanEndTimeLoan = data.loanStartTime ? moment(data.loanStartTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD') : '-'
@@ -3836,13 +3864,19 @@ export default {
             }
         },
         // 流贷还款信息 流贷没有334还款，只有一次性的
-        async getRespAccountRepaymentPlanData (row) {
+        async getRespAccountRepaymentPlanData (row, title, id, type) {
+            console.log(title)
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             this.respAccountRepaymentPlanData = data
+            this.$set(this.respAccountRepaymentPlanData[0], 'otherTitle', title)
+            this.respAccountRepaymentPlanData[0].accountId = id
+            this.regulatingBreathingDialogData = JSON.parse(JSON.stringify(this.respAccountRepaymentPlanData))
+            this[`${type}`] = true
         },
         // 敞口和分授信还款
-        async getGrantPaymetPlanData (row, type) {
+        async getGrantPaymetPlanData (row, type, isShow = false) {
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
+            console.log('data: ', data)
             this.loanAmount = data.reduce((val, item, index) => {
                 return val + item.capitalAmount
             }, 0)
@@ -3856,17 +3890,24 @@ export default {
             this.$set(this.rowData[0], 'otherTitle', `${this.product}-手动调息（${row.account_standingBookNo} ${row.account_loanCompanyName}）`)
             this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
             this.$set(this.rowData[0], 'accountId', row.account_id)
+            this.rowData[1] && this.$set(this.rowData[1], 'accountId', row.account_id)
             this.rowData[2] && this.$set(this.rowData[2], 'accountId', row.account_id)
-            type && this.$set(this.rowData[0], 'regulatingBreathingType', type) // 敞口无正常利息
+
+            console.log(this.rowData)
+            isShow && this.$set(this.rowData[0], 'regulatingBreathingType', isShow) // 敞口无正常利息
             this.regulatingBreathingDialogData = JSON.parse(JSON.stringify(this.rowData))
             // 重新保留一份数据
             this.copyGrantdata = [...this.rowData]
             // 是否需要增加计息---
+            this[`${type}`] = true
         },
+        // 重置
         async onRepaymentTypeChange (item) {
+            console.log('item: ', item)
             const params = {
                 accountId: item.accountId,
-                registrant: this.userInfo.employeeName
+                registrant: this.userInfo.employeeName,
+                repaymentType: item.repaymentType == 2 ? 1 : 2
             }
             const { data } = await transformPlanType(params)
             if (data.length == 1) {
@@ -3878,15 +3919,35 @@ export default {
             }
             data[0].accountId = this.rowData[0].accountId
             data[0].account_accountType = item.account_accountType
+
+            console.log('this.rowData: ', this.rowData)
+            let _title = this.rowData[0].title
             this.rowData = data
+            this.$set(this.rowData[0], 'title', _title)
+            this.rowData[1] && this.$set(this.rowData[1], 'accountId', data[0].accountId)
+            this.rowData[2] && this.$set(this.rowData[2], 'accountId', data[0].accountId)
             this.getList()
         },
         onStepOver (val, item) {
             if (val == 2 && item.overdueList.length < 2) {
                 item.overdueList = this.overdueList
             } else if (val == 1) {
+                item.overdueList = []
+                console.log('overdueList: ', item.overdueList)
                 item.overDueInterest = 12
             }
+        },
+        // 打开抽屉日志
+        onJurnal (val) {
+            this.drawer = true
+            this.$nextTick(() => {
+                console.log(' this.$refs.jurnals: ', this.$refs.jurnals)
+                this.$refs.jurnals.getName(val)
+            })
+        },
+        onBackDrawer () {
+            this.drawer = false
+            this.$emit('getList')
         }
     },
     mounted () {
@@ -3897,42 +3958,43 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .red {
-        color: red;
-    }
+.red {
+    color: red;
+}
 
-    /deep/ .cell .hidden {
-        display: none !important;
-    }
+/deep/ .cell .hidden {
+    display: none !important;
+}
 
-    .page-table {
-        width: calc(100% - 1px);
-        margin: 0 auto;
-    }
+.page-table {
+    width: calc(100% - 1px);
+    margin: 0 auto;
+}
 
-    /deep/ .pointer {
-        cursor: pointer;
-        margin-left: 10px;
-        font-size: 14px;
-    }
+/deep/ .pointer {
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 14px;
+    color: #ff7a45;
+}
 
-    // // 滚动条的滑块
-    /deep/ .el-table__body-wrapper::-webkit-scrollbar-thumb {
-        min-height: 20px;
-        background-color: rgba(33, 37, 43, 0.26);
-    }
+// // 滚动条的滑块
+/deep/ .el-table__body-wrapper::-webkit-scrollbar-thumb {
+    min-height: 20px;
+    background-color: rgba(33, 37, 43, 0.26);
+}
 
-    // 台账专属表格样式
-    /deep/ .el-table td,
-    /deep/ .el-table th {
-        padding: 7px 0;
-    }
-    .max-height {
-        display: block;
-        margin: 20px auto;
-        max-height: 300px;
-        overflow: hidden;
-        overflow-y: scroll;
-        min-height: 100px;
-    }
+// 台账专属表格样式
+/deep/ .el-table td,
+/deep/ .el-table th {
+    padding: 7px 0;
+}
+.max-height {
+    display: block;
+    margin: 20px auto;
+    max-height: 300px;
+    overflow: hidden;
+    overflow-y: scroll;
+    min-height: 100px;
+}
 </style>

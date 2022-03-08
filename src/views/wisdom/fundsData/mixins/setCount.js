@@ -35,7 +35,7 @@ export const setCountMixin = {
                 'graceInterest': row.graceInterest, // 宽限期利率
                 // 逾期利率计算集合
                 'overDueInterestCountList': [],
-                'planId': row.id // 还款计划id，就是还款列表planList里面的id
+                'plan': row // 还款计划id，就是还款列表planList里面的id
             }
             if (row.isStepOverInterest == 0) {
                 this.setCountParams.overDueInterestCountList.push({

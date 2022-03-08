@@ -429,6 +429,7 @@ export default {
         },
         async setPlan (planList) {
             await setPlan({
+                repaymentType: this.detailData[0].repaymentType,
                 planList,
                 createBy: this.userInfo.employeeName
             })
