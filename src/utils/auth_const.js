@@ -163,6 +163,17 @@ export const WISDOM_FLOWTOBORROW_SHOW_LINE = 10840
 export const WISDOM_EXPOSURE_SHOW_LINE = 10850
 // 好智慧-资金数据 分授信
 export const WISDOM_POINTSCREDIT_SHOW_LINE = 10860
+// 资金审核
+export const WISDOM_LIST_SHENHE = 10865
+// 资金查看详情
+export const WISDOM_LIST_FLOWTOBORROW_DETAIL = 10866 // 流贷
+export const WISDOM_LIST_EXPOSURE_DETAIL = 10867
+export const WISDOM_LIST_POINTSCREDIT_DETAIL = 10868
+
+// 资金日志
+export const WISDOM_LIST_FLOWTOBORROW_RECORDS = 10875
+export const WISDOM_LIST_EXPOSURE_RECORDS = 10876
+export const WISDOM_LIST_POINTSCREDIT_RECORDS = 10877
 
 // 舒适云-智能玩法编辑 todo 舒适云目前没有添加权限按钮 编辑页面全部预留 key
 export const AUTH_CLOUD_SMART_PLAY_EDIT = 10680
