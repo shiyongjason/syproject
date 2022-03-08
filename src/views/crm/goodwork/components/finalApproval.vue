@@ -877,7 +877,7 @@ export default class FinalApproval extends Vue {
     }
 
     get salesTotalAmount () {
-        this.purForm.salesTotalAmount = this.$dividedBy(Math.round((this.purForm.deviceAmount * 1 + this.purForm.salesGrossAmount * 1) * 100), 100).toNumber()
+        this.purForm.salesTotalAmount = this.$dividedBy(Math.round((this.purForm.deviceAmount * 1 + this.purForm.salesGrossAmount * 1) * 100), 100).toNumber().toFixed(2)
         return ''
     }
 
