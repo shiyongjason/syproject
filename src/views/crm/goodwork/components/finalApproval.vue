@@ -1086,6 +1086,7 @@ export default class FinalApproval extends Vue {
     }
     // 保存采购结论
     submit () {
+        console.log('log::::::1', 1)
         let tableFormList = deepCopy(this.tableForm)
         tableFormList = tableFormList?.map((item:any) => {
             return Object.assign(item, {
@@ -1093,13 +1094,14 @@ export default class FinalApproval extends Vue {
             })
         })
         this.purForm.updateBy = JSON.parse(sessionStorage.getItem('userInfo') || '').employeeName
-        this.purForm.salesGrossMargin = parseFloat(this.purForm.salesGrossMargin)
+
         this.$refs['purchaseConclusionForm'].validate(async (valid) => {
             if (valid) {
+                this.purForm.salesGrossMargin = parseFloat(this.purForm.salesGrossMargin)
                 if (this.onValidTable(tableFormList)) {
                     this.purForm.projectPurchaseList = tableFormList
                     console.log(this.purForm)
-                    await resPurchase(this.purForm)
+                    // await resPurchase(this.purForm)
                     this.onFindRes()
                     this.purchaseConclusionVisible = false
                 }
