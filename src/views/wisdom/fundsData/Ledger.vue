@@ -118,6 +118,16 @@
                 </div>
             </div>
             <div class="query-cont-col">
+                  <div class="query-col-title">审核状态：</div>
+                <div class="query-col-input">
+                    <el-select v-model="queryParams.auditStatus" placeholder="请选择" :clearable=true>
+                        <el-option label="全部" value=""></el-option>
+                        <el-option label="待审核" :value="1"></el-option>
+                        <el-option label="无需审核" :value="2"></el-option>
+                    </el-select>
+                </div>
+            </div>
+            <div class="query-cont-col">
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                 </div>
@@ -215,6 +225,7 @@ export default {
                 startDate: '',
                 endDate: '',
                 repaymentStatus: '',
+                auditStatus: '',
                 queryEndDate: moment().format('YYYY-MM-DD')
             },
             searchParams: {},
@@ -524,13 +535,6 @@ export default {
             })
         },
         onExport () {
-            // const params = {
-            //     regionCode: this.queryParams.regionCode,
-            //     misCode: this.queryParams.misCode,
-            //     loanCompanyName: this.queryParams.loanCompanyName,
-            //     subsectionCode: this.queryParams.subsectionCode,
-            //     standingBookNo: this.queryParams.standingBookNo
-            // }
             downloadCloudAlarmList(this.queryParams)
         }
     }
