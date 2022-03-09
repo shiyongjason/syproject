@@ -128,23 +128,29 @@
                                 <el-col :span="4">
                                     <el-checkbox value="普通开关" label="13">普通开关</el-checkbox>
                                 </el-col>
+                                <el-col :span="4">
+                                    <el-checkbox value="普通开关(DO)" label="33">普通开关(DO)</el-checkbox>
+                                </el-col>
                             </el-checkbox-group>
                         </el-col>
                     </el-row>
                     <el-checkbox-group v-model="socketOption">
                         <el-checkbox label="16">插座集控系统</el-checkbox>
                     </el-checkbox-group>
+                    <el-checkbox-group v-model="powerOption">
+                        <el-checkbox label="39">时序电源集控系统</el-checkbox>
+                    </el-checkbox-group>
                     <el-row>
                         <el-col :span="4">
                             <el-checkbox v-model="isShowCurtain" @change="onChangeShowCurtain">窗帘集控系统</el-checkbox>
                         </el-col>
                         <el-col :span="20" v-if="isShowCurtain">
-                            <el-radio-group v-model="curtainRadioOption">
+                            <el-checkbox-group v-model="curtainRadioOption">
                                 <el-col :span="4">
-                                    <el-radio label="15" value="电机">电机</el-radio>
-                                    <el-radio label="19" value="面板">面板</el-radio>
+                                    <el-checkbox label="15" value="电机">电机</el-checkbox>
+                                    <el-checkbox label="19" value="面板">面板</el-checkbox>
                                 </el-col>
-                            </el-radio-group>
+                            </el-checkbox-group>
                         </el-col>
                     </el-row>
                     <el-checkbox-group v-model="environmentOption">
@@ -257,13 +263,25 @@
                                     <el-checkbox label="22" value="水浸监测">水浸监测</el-checkbox>
                                 </el-col>
                                 <el-col :span="6">
+                                    <el-checkbox label="35" value="水浸监测(DI)">水浸监测(DI)</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
                                     <el-checkbox label="23" value="烟雾监测">烟雾监测</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-checkbox label="36" value="烟雾监测(DI)">烟雾监测(DI)</el-checkbox>
                                 </el-col>
                                 <el-col :span="6">
                                     <el-checkbox label="24" value="可燃气体监测">可燃气体监测</el-checkbox>
                                 </el-col>
                                 <el-col :span="6">
+                                    <el-checkbox label="38" value="可燃气体监测(DI)">可燃气体监测(DI)</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
                                     <el-checkbox label="25" value="火焰监测">火焰监测</el-checkbox>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-checkbox label="37" value="火焰监测(DI)">火焰监测(DI)</el-checkbox>
                                 </el-col>
                                 <el-col :span="6">
                                     <el-checkbox label="26" value="有毒有害气体监测">有毒有害气体监测</el-checkbox>
@@ -304,6 +322,18 @@
                     <el-checkbox-group v-model="energyConservationOption">
                         <el-checkbox label="11">节能系统</el-checkbox>
                     </el-checkbox-group>
+                    <el-row>
+                        <el-col :span="4">
+                            <el-checkbox v-model="isShowZTPlatform" @change="onChangeShowZTPlatform">正泰管理平台</el-checkbox>
+                        </el-col>
+                        <el-col :span="20" v-if="isShowZTPlatform">
+                            <el-checkbox-group v-model="ZTPlatformOption">
+                                <el-col :span="6">
+                                    <el-checkbox label="130" value="综合能源管理">综合能源管理</el-checkbox>
+                                </el-col>
+                            </el-checkbox-group>
+                        </el-col>
+                    </el-row>
                     <!-- <el-checkbox v-for="[key, value] of projectTypeOptions" :key="key" :label="key">
                             {{value}}
                             <el-form-item prop="feeType" v-if="showFeeType && key === projectTypeKey.BILLING_SYSTEM" class="inline-form-item">
@@ -561,8 +591,9 @@ export default {
             isShowLighting: false,
             lightingOption: [],
             socketOption: [],
+            powerOption: [],
             isShowCurtain: false,
-            curtainRadioOption: '',
+            curtainRadioOption: [],
             environmentOption: [],
             doorlockOption: [],
             isShowEnergy: false,
@@ -582,6 +613,8 @@ export default {
             scenePanelRadioOption: '',
             scenePanelOption: [],
             energyConservationOption: [],
+            isShowZTPlatform: false,
+            ZTPlatformOption: [],
             brandOptions: consts.BRAND_OPTIONS,
             subSystemTypeOptions: consts.SUB_SYSTEM_TYPE_OPTIONS
         }
@@ -637,9 +670,6 @@ export default {
             }
             return []
         },
-        // showFeeType () {
-        //     return this.form.projectType.includes(PROJECT_TYPE_KEY.BILLING_SYSTEM)
-        // },
         ...mapGetters({
             clouldControlProjectList: 'clouldControlProjectList',
             clouldControlProjectDetail: 'clouldControlProjectDetail',
@@ -648,16 +678,6 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo
         })
-    },
-    watch: {
-        // isShowEnergy (value) {
-
-        // }
-        // 'form.projectType' (val) {
-        //     if (!val.includes(consts.PROJECT_TYPE_KEY.BILLING_SYSTEM)) {
-        //         this.form.feeType = ''
-        //     }
-        // }
     },
     methods: {
         ...mapActions({
@@ -742,7 +762,7 @@ export default {
         onChangeShowCurtain (value) {
             this.isShowCurtain = value
             if (!value) {
-                this.curtainRadioOption = ''
+                this.curtainRadioOption = []
             }
         },
         onChangeShowEnergy (value) {
@@ -820,12 +840,17 @@ export default {
             this.scenePanelRadioOption = 'false'
         },
         onChaneShowScenePanel (value) {
-            console.log(this.scenePanelRadioOption)
             if (value == 30) {
                 this.isShowScenePanel = false
                 this.scenePanelOption = []
             } else {
                 this.isShowScenePanel = true
+            }
+        },
+        onChangeShowZTPlatform (value) {
+            this.isShowZTPlatform = value
+            if (!value) {
+                this.ZTPlatformOption = []
             }
         },
         addNewProject () {
@@ -835,8 +860,9 @@ export default {
             this.isShowLighting = false
             this.lightingOption = []
             this.socketOption = []
+            this.powerOption = []
             this.isShowCurtain = false
-            this.curtainRadioOption = ''
+            this.curtainRadioOption = []
             this.environmentOption = []
             this.doorlockOption = []
             this.isShowEnergy = false
@@ -856,6 +882,8 @@ export default {
             this.scenePanelRadioOption = ''
             this.scenePanelOption = []
             this.energyConservationOption = []
+            this.isShowZTPlatform = false
+            this.ZTPlatformOption = []
         },
         async editProject (id) {
             await this.getClouldControlProjectDetail({ id: id })
@@ -871,13 +899,15 @@ export default {
             this.airConditioningOption = this.form.projectType.filter(item => item == 1 || item == 2 || item == 12)
             this.isShowAirConditioning = this.airConditioningOption.length > 0
 
-            this.lightingOption = this.form.projectType.filter(item => item == 13 || item == 14)
+            this.lightingOption = this.form.projectType.filter(item => item == 13 || item == 14 || item == 33)
             this.isShowLighting = this.lightingOption.length > 0
 
             this.socketOption = this.form.projectType.filter(item => item == 16)
 
-            this.curtainRadioOption = this.form.projectType.filter(item => item == 15 || item == 19)[0]
-            this.isShowCurtain = !!this.curtainRadioOption
+            this.powerOption = this.form.projectType.filter(item => item == 39)
+
+            this.curtainRadioOption = this.form.projectType.filter(item => item == 15 || item == 19)
+            this.isShowCurtain = this.curtainRadioOption.length > 0
 
             this.environmentOption = this.form.projectType.filter(item => item == 17)
 
@@ -898,7 +928,7 @@ export default {
             this.energyOption = this.form.projectType.filter(item => item == 4 || item == 3 || item == 5 || item == 6 || item == 7 || item == 9)
             this.isShowOtherEnergy = this.energyOption.length > 0
 
-            this.securityOption = this.form.projectType.filter(item => item == 20 || item == 21 || item == 22 || item == 23 || item == 24 || item == 25 || item == 26 || item == 27)
+            this.securityOption = this.form.projectType.filter(item => item == 20 || item == 21 || item == 22 || item == 23 || item == 24 || item == 25 || item == 26 || item == 27 || item == 35 || item == 36 || item == 37 || item == 38)
             this.isShowSecurity = this.securityOption.length > 0
 
             this.isShowScene = this.form.projectType.filter(item => item == 30 || item == 31 || item == 32).length > 0
@@ -909,6 +939,9 @@ export default {
             this.isShowScenePanel = this.scenePanelOption.length > 0
 
             this.energyConservationOption = this.form.projectType.filter(item => item == 11)
+
+            this.ZTPlatformOption = this.form.projectType.filter(item => item == 130)
+            this.isShowZTPlatform = this.ZTPlatformOption > 0
 
             this.addProject = true
         },
@@ -923,7 +956,8 @@ export default {
                 ...this.airConditioningOption,
                 ...this.lightingOption,
                 ...this.socketOption,
-                this.curtainRadioOption,
+                ...this.powerOption,
+                ...this.curtainRadioOption,
                 ...this.environmentOption,
                 ...this.doorlockOption,
                 this.waterAirRadioOption,
@@ -933,7 +967,8 @@ export default {
                 ...this.securityOption,
                 this.scenePanelRadioOption,
                 ...this.scenePanelOption,
-                ...this.energyConservationOption
+                ...this.energyConservationOption,
+                ...this.ZTPlatformOption
             ].filter(item => !(item == '' || !isNumber(Number(item))))
             console.log(this.form.thirdSystemConfigs)
             this.form.thirdSystemConfigs = this.form.thirdSystemConfigs.map(item => {
