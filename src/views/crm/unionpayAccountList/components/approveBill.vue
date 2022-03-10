@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :close-on-click-modal=false title="认领账单 |" :visible.sync="isOpen" :modal=false width="70%" :before-close="onCancel" class="payment-dialog">
+    <el-dialog :close-on-click-modal=false title="认领账单 |" :visible.sync="isOpen" width="70%" :modal=false :before-close="onCancel" class="payment-dialog">
         <div class="refresh" @click="bankDetailInfo">
             <el-button type="primary">刷新</el-button>
         </div>
