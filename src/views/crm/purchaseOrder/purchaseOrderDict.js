@@ -232,6 +232,14 @@ const PurchaseOrderDict = Object.freeze({
         title: '采购单变更弹窗变更字段',
         list: [
             {
+                key: 'supplier_purchase_amount',
+                value: '上游支付金额'
+            },
+            {
+                key: 'sales_gross_amount',
+                value: '加价额'
+            },
+            {
                 key: 'purch_batch_amount',
                 value: '采购单金额'
             },
