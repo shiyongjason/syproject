@@ -15,6 +15,42 @@
                     </HDatePicker>
                 </div>
             </div>
+               <div class="query-cont-col">
+                <div class="query-col__label">状态码：</div>
+                <div class="query-col__input">
+                    <el-input v-model="queryParams.supplierName" placeholder="请输入" maxlength="50"></el-input>
+                </div>
+            </div>
+              <div class="query-cont-col">
+                <div class="query-col__label">开户行：</div>
+                <div class="query-col__input">
+                    <el-input v-model="queryParams.supplierName" placeholder="请输入" maxlength="50"></el-input>
+                </div>
+            </div>
+              <div class="query-cont-col">
+                <div class="query-col__label">账号：</div>
+                <div class="query-col__input">
+                    <el-input v-model="queryParams.supplierName" placeholder="请输入" maxlength="50"></el-input>
+                </div>
+            </div>
+               <div class="query-cont-col">
+                <div class="query-col__label">银行联行行号：</div>
+                <div class="query-col__input">
+                    <el-input v-model="queryParams.supplierName" placeholder="请输入" maxlength="50"></el-input>
+                </div>
+            </div>
+               <div class="query-cont-col">
+                <div class="query-col__label">出票状态：</div>
+                <div class="query-col__input">
+                    <el-input v-model="queryParams.supplierName" placeholder="请输入" maxlength="50"></el-input>
+                </div>
+            </div>
+               <div class="query-cont-col">
+                <div class="query-col__label">转账状态：</div>
+                <div class="query-col__input">
+                    <el-input v-model="queryParams.supplierName" placeholder="请输入" maxlength="50"></el-input>
+                </div>
+            </div>
             <div class="query-cont-col">
                 <h-button type="primary" @click="findPurchaseList({ ...queryParams, pageNumber: 1 })">
                     查询
@@ -52,6 +88,9 @@ export default {
             },
             tableLabel: [
                 { label: '供应商编码', prop: 'supplierCode', width: '150' },
+                { label: '状态码', prop: 'supplierName' },
+                { label: '出票状态', prop: 'supplierName' },
+                { label: '转账状态', prop: 'supplierName' },
                 { label: '供应商名称', prop: 'supplierName' },
                 { label: '开户行', prop: 'supplierAccountName' },
                 { label: '账号', prop: 'supplierAccountNo' },
