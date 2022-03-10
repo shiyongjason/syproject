@@ -752,7 +752,17 @@ export default {
                     { required: true, message: '请输入应支付日期', trigger: 'change' }
                 ],
                 fundAmount: [
-                    { required: true, message: '请输入分期尾款', trigger: 'blur' }
+                    {
+                        required: true,
+                        message: '请输入分期尾款',
+                        trigger: 'blur',
+                        validator: (rule, value, callback) => {
+                            if (value == 0) {
+                                return callback(new Error('分期尾款必须大于0'))
+                            }
+                            return callback()
+                        }
+                    }
                 ]
             },
             paymentOrderConst,
