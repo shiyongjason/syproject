@@ -119,18 +119,16 @@
                 <div class="query-cont__col">
                     <h-button type="primary" @click="getList">查询</h-button>
                     <h-button @click="onReset">重置</h-button>
-                    <h-button @click="onExport" v-if="hosAuthCheck(upstreamExport)">导出列表数据</h-button>
                 </div>
             </div>
             <div class="query-cont__row">
-                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span v-if="totalAmount">累计金额：{{totalAmount|moneyFormat}}</span></el-tag>
+                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span v-if="totalAmount">累计金额：{{totalAmount|moneyFormat}}元</span></el-tag>
             </div>
             <!-- end search bar -->
-            <hosJoyTable localName="V3.5.1" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList"
-                actionWidth='330' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+            <hosJoyTable isShowIndex ref="hosjoyTable" align="center"  border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList"
+                actionWidth='120' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template #action="slotProps">
-                    <h-button table v-if="hosAuthCheck(upstreamPayDetail)" @click="viewDetail(slotProps.data.row.paymentOrderId,slotProps.data.row.status)">查看详情</h-button>
-
+                    <h-button table v-if="hosAuthCheck(UPSTREAM_TOSS)&&slotProps.data.row.ncSyncStatus!=20" @click="onToss(slotProps.data.row)">抛转</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -139,14 +137,12 @@
 </template>
 
 <script lang='tsx'>
-import moment from 'moment'
-import { CreateElement } from 'vue'
 import { Vue, Component } from 'vue-property-decorator'
 import { State, Getter, Action } from 'vuex-class'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import { measure } from '@/decorator/index'
 import * as Api from './api/index'
-import { newCache } from '@/utils/index'
+import { UPSTREAM_TOSS } from '@/utils/auth_const'
 
 @Component({
     name: 'UpstreamPaymentManagement',
@@ -159,6 +155,7 @@ export default class UpstreamPaymentManagement extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
+    UPSTREAM_TOSS = UPSTREAM_TOSS
     uploadParameters = {
         updateUid: '',
         reservedName: false
@@ -243,57 +240,52 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     tableLabel:tableLabelProps = [
-        { label: '支付单编号', prop: 'paymentOrderNo', width: '100' },
-        { label: '所属分部', prop: 'deptName', width: '130' },
-        { label: '经销商', prop: 'companyName', width: '150', resizable: true },
+        { label: '支付单编号', prop: 'orderNo', width: '100' },
+        { label: '所属分部', prop: 'deptName' },
+        { label: '经销商', prop: 'companyName', resizable: true },
         { label: '上游供应商', prop: 'supplierCompanyName', width: '180' },
-        { label: '项目名称', prop: 'projectName', minWidth: '300' },
-        { label: '采购单金额', prop: 'poAmount', width: '160', displayAs: 'money' },
-        {
-            label: '放款交接状态',
-            width: '160',
-            render: (h: CreateElement, scope: TableRenderParam): JSX.Element => this.onRenderLoanTransferStatus(h, scope)
-        },
-        {
-            label: '支付状态/支付次数',
-            width: '150',
-            render: (h: CreateElement, scope:TableRenderParam): JSX.Element => this.onRenderPaymentLabel(h, scope)
-        },
-        {
-            label: '已支付金额/应支付总额（元）',
-            width: '210',
-            render: (h: CreateElement, scope:TableRenderParam): JSX.Element => this.onRenderPaidAmountLabel(h, scope)
-        },
-        { label: '剩余应支付金额（元）', prop: 'noPayAmount', width: '150', displayAs: 'money' },
-        { label: '运营确认时间', prop: 'initiateTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
-        { label: '期望上游支付日期', prop: 'expectSupplierPaymentDate', width: '160', displayAs: 'YYYY-MM-DD' },
-        { label: '付款主体', prop: 'paymentMain', width: '160' },
-        { label: '上游支付方式', prop: 'supplierPaymentType', width: '150', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] }
+        { label: '项目名称', prop: 'projectName', width: '150' },
+        { label: '上游支付（元）', prop: 'paidAmount', width: '130', displayAs: 'money' },
+        { label: '支付日期', prop: 'paidTime', width: '120', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+        { label: '付款主体', prop: 'payPrincipal', width: '150' },
+        { label: '付款类型', prop: 'paymentType', dicData: [{ value: 1, label: '货款' }, { value: 2, label: '费用' }] },
+        { label: '支付账号', prop: 'payAccount', width: '120' },
+        { label: '操作人', prop: 'createBy' },
+        { label: '操作时间', prop: 'createTime', width: '120', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+        { label: '上游支付方式', prop: 'supplierPaymentType', dicData: [{ value: 1, label: '银行转帐' }, { value: 2, label: '银行承兑' }] },
+
+        { label: 'NC凭证信息', prop: 'ncInfo', width: '120' },
+        { label: '抛转人', prop: 'ncSyncUser' },
+        { label: '抛转时间', prop: 'ncSyncTime', width: '120', sortable: 'custom', displayAs: 'YYYY-MM-DD' },
+        { label: '抛转状态', prop: 'ncSyncStatus', width: '130', dicData: [{ value: 10, label: '未抛转' }, { value: 20, label: '抛转成功' }, { value: 30, label: '抛转失败' }] },
+        { label: '失败原因', prop: 'ncSyncFailReason', width: '150', resizable: true }
 
     ]
 
     onStartChange (val): void {
-        this.queryParams.startExpectSupplierPaymentDate = val
+        this.queryParams.minPaidTime = val
     }
     onEndChange (val): void {
-        this.queryParams.endExpectSupplierPaymentDate = val
+        this.queryParams.maxPaidTime = val
     }
     onStartChangePaidTime (val) {
-        this.queryParams.startInitiateTime = val
+        this.queryParams.minCreateTime = val
     }
     onEndChangePaidTime (val) {
-        this.queryParams.endInitiateTime = val
+        this.queryParams.maxCreateTime = val
     }
-    handleTabClick (tab, event): void {
-        this.onRequest()
+    onStartChangeNcTime (val) {
+        this.queryParams.minNcSyncTime = val
     }
-
+    onEndChangeNcTime (val) {
+        this.queryParams.maxNcSyncTime = val
+    }
     @measure
     async getList () {
         const { data: tableData } = await Api.getUpStreamPaymentList(this.queryParams)
         this.tableData = tableData.records || []
         this.page.total = tableData.total as number
-        const { data: totalAmountData } = await Api.getUpStreamPaymentTotalAmountApi(this.queryParams)
+        const { data: totalAmountData } = await Api.getUpStreamPaymentTotal(this.queryParams)
         this.totalAmount = totalAmountData
     }
 
@@ -308,6 +300,13 @@ export default class UpstreamPaymentManagement extends Vue {
         this.getList()
     }
 
+    async onToss (val) {
+        console.log('val: ', val)
+        const { data } = await Api.updateNc(val.id)
+        console.log('data: ', data)
+        this.$message.info(data)
+    }
+
     onReset () {
         this.queryParams = JSON.parse(JSON.stringify(this._queryParams))
         this.getList()
@@ -318,7 +317,6 @@ export default class UpstreamPaymentManagement extends Vue {
         this.queryParams.authCode = AUTHCODE ? JSON.parse(AUTHCODE) : ''
         this.queryParams.jobNumber = this.userInfo.jobNumber
         this._queryParams = JSON.parse(JSON.stringify(this.queryParams))
-        this._dialogFormData = JSON.parse(JSON.stringify(this.dialogFormData))
         this.getList()
         await this.findCrmdeplist({
             deptType: 'F',
@@ -328,10 +326,6 @@ export default class UpstreamPaymentManagement extends Vue {
                 ? JSON.parse(sessionStorage.getItem('authCode') || '')
                 : ''
         })
-    }
-
-    beforeUpdate () {
-        newCache('UpstreamPaymentManagement')
     }
 }
 </script>

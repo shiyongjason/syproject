@@ -475,3 +475,6 @@ export const APPLICATIONLIST_LINK_AUTHENLIST = 1000009
 /* 线索 */
 export const THREAD_DISTRIBUTOR = 1600001
 export const THREAD_SAVE = 1600002
+
+/* 支付单明细 */
+export const UPSTREAM_TOSS = 1586222
