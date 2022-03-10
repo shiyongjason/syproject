@@ -1,4 +1,4 @@
-import { IPageRespUpStreamPayment, ReqUpPaymentLoanHandoverConfirm, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, ReqSupplierSubmit, ReqLoanTransferChange, ReqLoanTransferUpdate, LoanTransferInfoResponse, BillAmountResponse } from '@/interface/hbp-project'
+import { IPageRespUpStreamPayment, ReqUpPaymentLoanHandoverConfirm, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, ReqSupplierSubmit, ReqLoanTransferChange, ReqLoanTransferUpdate, LoanTransferInfoResponse, BillAmountResponse, IPageUpStreamDetailPaymentResponse } from '@/interface/hbp-project'
 import axios, { AxiosPromise } from 'axios'
 
 export const getUpStreamPaymentApi: (params: ReqUpStreamPaymentQuery) => AxiosPromise<IPageRespUpStreamPayment> = (params) => {
@@ -92,4 +92,9 @@ export const getMoreBill: (paymentOrderId) => AxiosPromise<BillAmountResponse[]>
 // 确认网银支付
 export const updateOnlineBank: (params) => AxiosPromise<void> = (params) => {
     return axios.post('/project/api/supplier-payments/online-bank-payment-confirm', params)
+}
+
+//
+export const getUpStreamPaymentList: (params: any) => AxiosPromise<IPageUpStreamDetailPaymentResponse> = (params) => {
+    return axios.get('/project/api/supplier-payments/up-stream-detail/page', { params })
 }
