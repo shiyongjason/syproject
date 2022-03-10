@@ -111,6 +111,25 @@ const attributeComputed = function (key, list) {
     return value || '-'
 }
 
+// 小数位不会千分位
+const numericalMoney = function (value) {
+    // if (money) {
+    //     return money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    // }
+    // return '-'
+    if (value == null) return '-'
+    let money = ''
+    let pointNum = ''
+    let val = value.toString()
+    if (val.indexOf('.') > 0) {
+        money = val.split('.')[0]
+        pointNum = val.split('.')[1]
+        return money.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '.' + pointNum
+    } else {
+        money = val.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        return money
+    }
+}
 export default {
     formatDateDuration,
     money,
@@ -119,5 +138,6 @@ export default {
     momentFormat,
     percentageShow,
     percenShow,
-    attributeComputed
+    attributeComputed,
+    numericalMoney
 }

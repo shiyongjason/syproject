@@ -555,7 +555,7 @@
                                     <div class="row-filed">
                                         <p class="col-filed">
                                             <span class="info-title">尾款支付计划：</span>
-                                            <h-button table @click="openArrearFund">维护分期尾款</h-button>
+                                            <h-button table @click="openArrearFund" v-if="showArrearFundByStage()">维护分期尾款</h-button>
                                         </p>
                                     </div>
                                     <table class="pure-table pure-table-bordered">
