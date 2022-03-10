@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :close-on-click-modal=false title="认领账单 |" :modal=false :modal-append-to-body=false :visible.sync="isOpen" width="70%" :before-close="onCancel" class="payment-dialog">
+    <el-dialog :close-on-click-modal=false title="认领账单 |" :visible.sync="isOpen" width="70%" :before-close="onCancel" class="payment-dialog">
         <div class="refresh" @click="bankDetailInfo">
             <el-button type="primary">刷新</el-button>
         </div>
@@ -8,11 +8,8 @@
             <p><span>付款方：{{ bankDetail.payeeName }}</span><span>已认领金额：{{bankDetail.receiptAmount | moneyFormat }}</span><span>待认领金额：{{bankDetail.unReceiptAmount | moneyFormat }}</span></p>
         </div>
         <div class="approve">
-            <hosJoyTable ref="hosjoyTable" isShowIndex align="center" border stripe isShowselection :maxHeight='500' @select="select" :column="formTableLabel" :data="bankList" showPagination :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" isAction    @select-all="selectAll"
+            <hosJoyTable ref="hosjoyTable" isShowIndex align="center" border stripe isShowselection :maxHeight='500' @selection-change="selectChange" :column="formTableLabel" :data="bankList" showPagination :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize"
                 :total="queryParams.total" @pagination="getList" :selectable="checkSelectable">
-                  <template #action="slotProps">
-                    <h-button table v-if="slotProps.data.row.unConfirmedAmount!=0"  @click="viewDetail(slotProps.data.row)">查看详情</h-button>
-                  </template>
             </hosJoyTable>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -31,7 +28,6 @@ import { Vue, Component, Prop, Ref } from 'vue-property-decorator'
 import { State } from 'vuex-class'
 import { CreateElement } from 'vue'
 import * as Api from '../api/index'
-import { clearCache } from '@/utils'
 
 // 定义类型
 interface Query{
@@ -59,8 +55,6 @@ export default class ApproveBill extends Vue {
     bankList = []
     bankDetail:any = {}
     copyTable = []
-      isSelectAllPass:boolean = false
-
     queryParams:Record<any, any> = {
         pageSize: 10,
         pageNumber: 1,
@@ -109,130 +103,54 @@ export default class ApproveBill extends Vue {
         return row.unConfirmedAmount == 0
     }
     // 获取checked选中数组
-    // public selectChange (data):void {
-    //     console.log('data', this.bankList)
-    //     this.selectList = data
-    //     this.bankList.forEach(row => {
-    //         if (this.selectList.includes(row)) {
-    //             // row.checked = true
-    //             row.claimAmount = row.claimAmount || row.unPaidAmount
-    //         } else {
-    //             // row.checked = false
-    //             row.claimAmount = null
-    //         }
-    //     })
-    //     this.disabled = !data.length
-    // }
+    public selectChange (data):void {
+        console.log('data', this.bankList)
+        this.selectList = data
+        this.bankList.forEach(row => {
+            if (this.selectList.includes(row)) {
+                // row.checked = true
+                row.claimAmount = row.claimAmount || row.unPaidAmount
+            } else {
+                // row.checked = false
+                row.claimAmount = null
+            }
+        })
+        this.disabled = !data.length
+    }
     // 获取已选中的认领金额
     get selectMoeny () {
         const moneny = this.selectList.reduce((sum, val) => {
             return sum + parseFloat(val.claimAmount ?? 0)
         }, 0)
-        console.log('log::::::计算和', moneny.toFixed(2))
-        this.isSelectAllPass = moneny == 0
-        console.log('🚀 --- getselectMoeny --- this.isPass', this.isSelectAllPass)
         return moneny.toFixed(2)
-    }
-    get currentSum () {
-        const moneny = this.selectList.reduce((sum, val) => {
-            return sum + parseFloat(val.claimAmount || 0)
-        }, 0)
-        return moneny
     }
     // 关闭弹窗
     public onCancel (val):void {
         this.$emit('onCancel')
     }
     // 分页点击
-    selectAll (list) {
-        console.log('🚀 --- selectAll --- list', list)
+    // public bankPage (val):void {
+    //     this.queryParams = {
+    //         ...this.queryParams,
+    //         ...val
+    //     }
+    //     this.bankDetailInfo()
+    // }
 
-        this.selectList = list
-        let moneny = this.selectList.reduce((sum, val) => {
-            return sum + parseFloat(val.claimAmount || 0)
-        }, 0)
-        let others = this.selectList.filter(item => item.claimAmount === '')
-        if (moneny >= this.bankDetail.unReceiptAmount && !this.isSelectAllPass) {
-            let temp = this.selectList.filter(item => item.claimAmount !== '')
-            this.selectList = temp
-            others.forEach(row => {
-                this.hosjoyTableRef.toggleRowSelection(row, false)
-            })
-            this.$message.warning('已选金额不得超过待支付金额')
-        } else {
-            let index = 0
-            for (let i = 0; i < others.length; i++) {
-                if (moneny <= this.bankDetail.unReceiptAmount) {
-                    if ((moneny + others[i].unPaidAmount) < this.bankDetail.unReceiptAmount) {
-                        others[i].claimAmount = others[i].unPaidAmount
-                        this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(others[i], true)
-                        moneny += others[i].claimAmount
-                        index = i + 1
-                        let resIndex = this.selectList.findIndex(item => item.fundId == others[i].fundId)
-                        if (resIndex < 0) {
-                            this.selectList.push(others[i])
-                        }
-                    } else {
-                        if (index === i) {
-                            let price = this.bankDetail.unReceiptAmount - moneny
-                            others[i].claimAmount = price.toFixed(2)
-                            moneny += others[i].claimAmount
-                            this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(others[i], true)
-                            let resIndex = this.selectList.findIndex(item => item.fundId == others[i].fundId)
-                            if (resIndex < 0) {
-                                this.selectList.push(others[i])
-                            }
-                        }
-                    }
-                    this.disabled = this.selectList.length == 0
-                }
-            }
-        }
-        let next = this.selectList.filter(item => item.claimAmount === '')
-        next.forEach(row => {
-            this.hosjoyTableRef.toggleRowSelection(row, false)
-        })
-        console.log('🚀this.selectListxxxxxxxxxx', JSON.stringify(this.selectList))
-    }
+    // 获取认领银企账单列表
+    // async bankListInfo () {
+    // this.queryParams.bankBillId = this.bankBillId
+    // const { data } = await Api.getBankList(this.queryParams)
+    // this.bankList = data.records
+    // this.page.total = data.total as number
+    // this.$nextTick(() => {
+    //     this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[0], true)
+    // })
 
-    select (selectList, row) {
-        let resIndex = selectList.findIndex(item => item.fundId == row.fundId)
-        if (resIndex > -1) {
-            console.log('log::::::0勾选')
-            const moneny = this.selectList.reduce((sum, val) => {
-                return sum + parseFloat(val.claimAmount || 0)
-            }, 0)
-            console.log('🚀 --- moneny --- moneny', moneny)
-            if (moneny >= this.bankDetail.unReceiptAmount && this.selectList.length > 0) {
-                this.$message.warning('已选金额不得超过待认领金额')
-                this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(row, false)
-                let index = this.selectList.findIndex(item => item.fundId == row.fundId)
-                row.claimAmount = ''
-                if (index > -1) {
-                    this.selectList.splice(index, 1)
-                }
-            } else {
-                let index = this.selectList.findIndex(item => item.fundId == row.fundId)
-                if (index < 0) {
-                    this.selectList.push(row)
-                }
-                let curr = (this.bankDetail.unReceiptAmount - moneny).toFixed(2)
-                if (curr > row.unPaidAmount) {
-                    row.claimAmount = row.unPaidAmount
-                } else {
-                    row.claimAmount = curr
-                }
-            }
-        } else {
-            let index = this.selectList.findIndex(item => item.fundId == row.fundId)
-            row.claimAmount = ''
-            if (index > -1) {
-                this.selectList.splice(index, 1)
-            }
-        }
-        this.disabled = this.selectList.length == 0
-    }
-
+    // setTimeout(() => {
+    //     this.selectSum()
+    // }, 0)
+    // }
     getList () {
         let start = (this.queryParams.pageNumber - 1) * this.queryParams.pageSize
         let end = this.queryParams.pageNumber * this.queryParams.pageSize
@@ -244,12 +162,6 @@ export default class ApproveBill extends Vue {
                 this.hosjoyTableRef.toggleRowSelection(item)
             })
         })
-    }
-
-    viewDetail (val) {
-        console.log('val: ', val)
-        clearCache('funds')
-        this.$router.push({ name: 'funds', params: { fundType: val.fundType, pNo: val.fundId } })
     }
 
     // 用于计算选中的列表
@@ -265,19 +177,16 @@ export default class ApproveBill extends Vue {
                         sum += this.bankList[i].claimAmount * 1
                         this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
                         index = i + 1
-                        this.selectList.push(this.bankList[i])
                     } else {
                         console.log('index: ', index)
                         if (index == i) {
                             let price = this.bankDetail.unReceiptAmount - sum
                             console.log('price: ', price)
-                            this.bankList[i].claimAmount = price.toFixed(2)
+                            this.bankList[i].claimAmount = isNum(price, 2)
                             sum += this.bankList[i].claimAmount * 1
                             this.hosjoyTableRef && this.hosjoyTableRef.toggleRowSelection(this.bankList[i])
-                            this.selectList.push(this.bankList[i])
                         }
                     }
-                    this.disabled = this.selectList.length == 0
                 }
             } else {
                 index = i + 1

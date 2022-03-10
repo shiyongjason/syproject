@@ -98,3 +98,5 @@ export const updateOnlineBank: (params) => AxiosPromise<void> = (params) => {
 export const getUpStreamPaymentList: (params: any) => AxiosPromise<IPageUpStreamDetailPaymentResponse> = (params) => {
     return axios.get('/project/api/supplier-payments/up-stream-detail/page', { params })
 }
+// 帅选 付款账号
+export const findPayeeAccount = () => axios.get('/project/api/bank/receipt/payee-account/list')

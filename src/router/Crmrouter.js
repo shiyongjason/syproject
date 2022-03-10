@@ -829,7 +829,7 @@ export default [
                             title: '服务费发票申请/编辑',
                             tagName: '服务费发票申请/编辑',
                             parentName: '服务费发票',
-                            isMenu: true,
+                            isMenu: false,
                             icon: ''
                         },
                         component: () => import('@/views/crm/controlInvoices/service/edit.vue')
@@ -841,7 +841,7 @@ export default [
                             title: '查看服务费发票',
                             tagName: '查看服务费发票',
                             parentName: '服务费发票',
-                            isMenu: true,
+                            isMenu: false,
                             icon: ''
                         },
                         component: () => import('@/views/crm/controlInvoices/service/detail.vue')
@@ -865,7 +865,7 @@ export default [
                             title: '设备发票编辑',
                             tagName: '设备发票编辑',
                             parentName: '设备发票',
-                            isMenu: true,
+                            isMenu: false,
                             icon: ''
                         },
                         component: () => import('@/views/crm/controlInvoices/equipment/edit.vue')
@@ -877,7 +877,7 @@ export default [
                             title: '查看设备发票',
                             tagName: '查看设备发票',
                             parentName: '设备发票',
-                            isMenu: true,
+                            isMenu: false,
                             icon: ''
                         },
                         component: () => import('@/views/crm/controlInvoices/equipment/detail.vue')

@@ -100,11 +100,13 @@
                 <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span v-if="totalAmount">累计金额：{{totalAmount|moneyFormat}}</span></el-tag>
             </div>
             <!-- end search bar -->
-            <hosJoyTable localName="V3.5.1" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='330' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+            <hosJoyTable localName="V3.5.1" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList"
+                actionWidth='330' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template #action="slotProps">
                     <h-button table v-if="hosAuthCheck(upstreamPayDetail)" @click="viewDetail(slotProps.data.row.paymentOrderId,slotProps.data.row.status)">查看详情</h-button>
                     <h-button table v-if="slotProps.data.row.showChangeButton" @click="onShowChangeLoanTransferStatus(slotProps.data.row.loanTransferId)">变更交接状态</h-button>
                     <h-button table v-if="hosAuthCheck(prevproof)&&slotProps.data.row.status==2" @click="handleShowProof(slotProps.data.row)">确认首付款到账</h-button>
+                    <!-- v-if="hosAuthCheck(banklink)&&slotProps.data.row.showOnlineBank" -->
                     <h-button table v-if="hosAuthCheck(banklink)&&slotProps.data.row.showOnlineBank" @click="handleIsPay(slotProps.data.row)">确认已网银支付</h-button>
                 </template>
             </hosJoyTable>
@@ -155,7 +157,14 @@
                             <font style="color:#ff7a45">{{prevPaymentDetail.goodsProgress}}%</font>
                         </el-form-item>
                     </div>
-
+                    <el-form-item label="本次支付账号：" prop="id">
+                        <el-select v-model="dialogFormData.id" placeholder="请选择" @change="handleChangeRadio">
+                            <el-option v-for="item in payeeAccountList" :key="item.id" :label="item.allName" :value="item.id">
+                                <span style="float: left">{{ item.payeeBankName }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.payeeBankAccount }}</span>
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
                     <el-form-item label="采购单货款明细：">
                         <elImageAddToken style="width: 100px; height: 100px;margin-right:10px; border:1px solid #dad5d5;    border-radius: 5px;" :fileUrl="pic.fileUrl" :fit="'contain'" v-for="(pic,index) in prevPaymentDetail.poDetail" :key='index'></elImageAddToken>
                     </el-form-item>
@@ -208,6 +217,14 @@
         <!-- 确认网银支付 -->
         <el-dialog :close-on-click-modal='false' title="确认网银支付" :visible.sync="isShowLinkBank" width="600px" class="prev-payment-dialog" :before-close="()=> onBankCancel()">
             <el-form :model="bankForm" :rules="bankRules" ref="bankForm" label-width="150px" class="demo-ruleForm">
+                <el-form-item label="本次支付账号：" prop="id">
+                    <el-select v-model="bankForm.id" placeholder="请选择" @change="handleAccountRadio">
+                        <el-option v-for="item in payeeAccountList" :key="item.id" :label="item.allName" :value="item.id">
+                            <span style="float: left">{{ item.payeeBankName }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.payeeBankAccount }}</span>
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="网银支付时间：" prop="paymentTime">
                     <el-date-picker v-model="bankForm.paymentTime" value-format='yyyy-MM-dd' type="date" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
                 </el-form-item>
@@ -217,7 +234,7 @@
                             <h-button>上传文件</h-button>
                         </div>
                     </OssFileHosjoyUpload>
-                    <p class="tips">支持扩展名：jpg.png.pdf...</p>
+                    <p class="tips">支持扩展名：.jpg.png.pdf...</p>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -334,13 +351,16 @@ export default class UpstreamPaymentManagement extends Vue {
         'sort.direction': null
     }
     private _dialogFormData = {}
-    dialogFormData:ReqSupplierSubmit={
+    dialogFormData:any={
         id: '',
         poId: '',
         paymentOrderId: '',
         payAmount: '',
         payDate: moment().format('YYYY-MM-DD'),
-        payVouchers: []
+        payVouchers: [],
+        payPrincipal: '',
+        payeeBankName: '',
+        payeeBankAccount: ''
     }
     loanTransferStatusForm: ReqLoanTransferChange = {
         loanTransferId: '',
@@ -348,11 +368,12 @@ export default class UpstreamPaymentManagement extends Vue {
         remark: '',
         updateBy: ''
     }
-    bankForm:SupplierOnlineBankTransferConfirmRequest={
+    bankForm:any={
         paymentOrderId: '',
         paymentTime: '',
         attachDocRequestList: []
     }
+    payeeAccountList:any[]=[]
 
     totalAmount:number = 0
     status:number = null
@@ -372,6 +393,9 @@ export default class UpstreamPaymentManagement extends Vue {
 
     get formRules () {
         let rules = {
+            id: [
+                { required: true, message: '请选择本次支付账号' }
+            ],
             payAmount: [
                 {
                     required: true,
@@ -400,6 +424,7 @@ export default class UpstreamPaymentManagement extends Vue {
 
     get bankRules () {
         return {
+            id: [{ required: true, message: '请选择本次支付账号', trigger: 'change' }],
             paymentTime: [{ required: true, message: '请选择网银支付时间', trigger: 'change' }],
             attachDocRequestList: [{ required: true, message: '请上传上游支付凭证', trigger: 'change' }]
         }
@@ -534,6 +559,7 @@ export default class UpstreamPaymentManagement extends Vue {
         this.maxTime = val.loanTransferDate
         this.bankForm.paymentOrderId = val.paymentOrderId
         this.bankForm.paymentTime = moment(new Date()).format('YYYY-MM-DD')
+        this.getBankAccount()
     }
 
     onBankCancel () {
@@ -620,6 +646,36 @@ export default class UpstreamPaymentManagement extends Vue {
         this.prevPaymentDetail = data
         this.dialogFormData.payAmount = this.prevPaymentDetail.surplusAmount
         this.isOpen = true
+        this.getBankAccount()
+    }
+
+    async getBankAccount () {
+        const { data } = await Api.findPayeeAccount()
+        console.log('this.dialogFormData.companyName: ', this.prevPaymentDetail.companyName)
+        data.map(val => {
+            this.payeeAccountList = this.payeeAccountList.concat(val.payeeAccountList)
+        })
+        console.log('aa: ', this.payeeAccountList)
+
+        this.payeeAccountList.map(val => {
+            val.allName = val.payeeBankName + '(' + val.payeeBankAccount + ')'
+        })
+    }
+
+    handleChangeRadio (val) {
+        console.log('val: ', val)
+        const bankInfo = this.payeeAccountList.filter(item => item.id == val)[0]
+        this.dialogFormData.payPrincipal = bankInfo.payeeName
+        this.dialogFormData.payeeBankName = bankInfo.payeeBankName
+        this.dialogFormData.payeeBankAccount = bankInfo.payeeBankAccount
+    }
+
+    handleAccountRadio (val) {
+        console.log('val: ', val)
+        const bankInfo = this.payeeAccountList.filter(item => item.id == val)[0]
+        this.bankForm.payPrincipal = bankInfo.payeeName
+        this.bankForm.payeeBankName = bankInfo.payeeBankName
+        this.bankForm.payeeBankAccount = bankInfo.payeeBankAccount
     }
 
     editorDrawerClose (done:Function): void {

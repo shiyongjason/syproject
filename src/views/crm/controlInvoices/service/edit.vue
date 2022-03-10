@@ -3,54 +3,54 @@
         <div class="page-body-cont">
             <div class="floor-tit">基本信息</div>
             <div class="query-cont-row">
-                <el-form :model="floorForm" :inline="true" :rules="rules" ref="serviceForm" label-width="130px" class="demo-ruleForm">
+                <el-form :model="serviceForm" :inline="true" :rules="rules" ref="serviceForm" label-width="130px" class="demo-ruleForm">
                     <el-row>
-                        <el-form-item label="申请单号：" prop="floorName">
-                            <el-input v-model.trim="floorForm.floorName" maxlength="30"></el-input>
+                        <el-form-item label="申请单号：" prop="invoiceNo" v-if="serviceForm.invoiceNo">
+                            <el-input v-model.trim="serviceForm.invoiceNo" maxlength="30" disabled></el-input>
                         </el-form-item>
-                        <el-form-item label="项目：" prop="floorName">
-                            <el-input v-model.trim="floorForm.floorName" @blur="onInputBlur" maxlength="50">
+                        <el-form-item label="项目：" prop="projectNo">
+                            <el-input v-model.trim="serviceForm.projectNo" @blur="onInputBlur" maxlength="50">
                                 <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
                             </el-input>
-                            xxxxxx
+                            {{serviceForm.projectName}}
                         </el-form-item>
                         <el-form-item label="所属分部：">
-                            <el-input v-model.trim="floorForm.floorName"  disabled></el-input>
+                            <el-input v-model.trim="serviceForm.deptName"  disabled></el-input>
                         </el-form-item>
                     </el-row>
                     <el-row>
                         <el-form-item label="经销商：">
-                            <el-input v-model.trim="floorForm.floorName"  disabled></el-input>
+                            <el-input v-model.trim="serviceForm.companyName"  disabled></el-input>
                         </el-form-item>
-                        <el-form-item label="收票人：" prop="floorName">
-                            <el-input v-model.trim="floorForm.floorName" maxlength="20"></el-input>
+                        <el-form-item label="收票人：" prop="receiver">
+                            <el-input v-model.trim="serviceForm.receiver" maxlength="20"></el-input>
                         </el-form-item>
-                        <el-form-item label="发票金额：" prop="floorName">
-                            <el-input v-model="selectMoeny" disabled></el-input>
+                        <el-form-item label="发票金额：" >
+                            <el-input v-model="selectMoney"  disabled></el-input>
                         </el-form-item>
-                        <el-form-item label="收票人手机：" prop="floorName">
-                            <el-input type="tel" v-model.trim="floorForm.floorName" maxlength="11"></el-input>
+                        <el-form-item label="收票人手机：" prop="receiverMobile">
+                            <el-input type="tel" v-model.trim="serviceForm.receiverMobile" maxlength="11"></el-input>
                         </el-form-item>
                     </el-row>
-                    <el-form-item label="收票地址：" prop="floorName">
-                        <el-input v-model.trim="floorForm.floorName" maxlength="80"></el-input>
+                    <el-form-item label="收票地址：" prop="receiverAddress">
+                        <el-input v-model.trim="serviceForm.receiverAddress" maxlength="80"></el-input>
                     </el-form-item>
-                    <el-form-item label="备注信息：" prop="floorName">
-                        <el-input type="textarea" show-word-limit v-model="floorForm.floorName" maxlength="255" :autosize="{ minRows: 6, maxRows: 8}"></el-input>
+                    <el-form-item label="备注信息：" prop="remark">
+                        <el-input type="textarea" show-word-limit v-model="serviceForm.remark" maxlength="255" :autosize="{ minRows: 6, maxRows: 8}"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
             <div class="floor-tit">发票明细</div>
             <div class="mb20 mt20">
-                <h-button type="primary" @click="handleAdd">添加</h-button>
+                <h-button type="primary" @click="handleAdd" v-if="serviceForm.projectId">添加</h-button>
             </div>
             <hosJoyTable ref="multipleTable" align="center" border :column="tableLabel" :data="tableData" actionWidth='100' isAction :max-height="500" :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
                     <el-button size="mini" type="primary" @click="handelDelete(slotProps.data)">删除</el-button>
                 </template>
             </hosJoyTable>
-            <el-dialog title="提示" :visible.sync="dialogVisible" width="50%" :close-on-click-modal="false" :before-close="handleClose">
-                <hosJoyTable ref="dialogTable" align="center" border stripe @selection-change="handleSelectionChange" isShowselection :column="formTableLabel" :data="tableForm" actionWidth='200'>
+            <el-dialog title="账单信息" :visible.sync="dialogVisible" width="50%" :close-on-click-modal="false" :before-close="handleClose">
+                <hosJoyTable ref="dialogTable" align="center" border stripe @selection-change="handleSelectionChange" isShowselection :column="formTableLabel" :data="tableForm"  :height='330'>
                 </hosJoyTable>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="dialogVisible = false">取 消</el-button>
@@ -60,11 +60,11 @@
             <el-dialog title="项目" :visible.sync="projectVisible" width="50%" :close-on-click-modal="false" :before-close="()=>{projectVisible = false}">
                 <div class="project_wrap">
                     <el-row class="mb20">
-                        <el-input v-model="queryParams.input" placeholder="可输入项目编号或者项目名称模糊查询">
+                        <el-input v-model="queryParams.queryString" placeholder="可输入项目编号或者项目名称模糊查询">
                             <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
                         </el-input>
                     </el-row>
-                    <hosJoyTable ref="hosjoyTable2" align="center" border stripe :column="projectTableLabel" :data="tableForm" showPagination :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='330'>
+                    <hosJoyTable ref="hosjoyTable2" align="center" border stripe :column="projectTableLabel" :data="tableProject" showPagination :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" :height='330'>
                         <template #code="slotProps">
                             <el-radio :label="slotProps.data.$index" v-model="radio" @change.native="getCurrentRow(slotProps.data)">{{''}}</el-radio>
                         </template>
@@ -88,13 +88,15 @@
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
 import { CreateElement } from 'vue'
-import filters from '@/utils/filters'
-import { RespBossShopFloorDetail } from '@/interface/hbp-shop'
 import moment from 'moment'
 import { deepCopy } from '@/utils/utils'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
+import { ServiceInvoiceSubmitRequest } from '@/interface/hbp-project'
+import { Phone } from '@/utils/rules'
+import { getProjectPage, getServiceFunds, updateServiceInvoice, getMostInvoice, getInvoiceDetail } from '../api'
+// import { addAccount } from '@/views/wisdom/fundsData/api'
 @Component({
-    name: 'Servicedetail',
+    name: 'Serviceedit',
     components: {
         hosJoyTable
     }
@@ -105,23 +107,40 @@ export default class Serviceedit extends Vue {
         form: HTMLFormElement
     }
     @Action('setNewTags') setNewTags!: Function
+    @State('userInfo') userInfo: any
 
     isDisabled: boolean = true
     dialogVisible:boolean = false
     projectVisible:boolean = false
     disabled:boolean = true
-    selectRow = []
-    selectData = []
+
+    selectRow :Record<string, any> = {}
+    selectData:any[] = []
     radio = ''
     queryParams:Record<string, any>={
         pageNumber: 1,
         pageSize: 10,
-        inupt: ''
+        subsectionCode: '',
+        queryString: '',
+        projectNo: ''
     }
-    floorForm: any={
-        floorName: '',
-        reqBossFloorSpuList: []
+    serviceForm: ServiceInvoiceSubmitRequest={
+        companyId: null,
+        saveOrSubmit: '',
+        invoiceId: '',
+        projectNo: '',
+        projectName: '',
+        deptName: '',
+        invoiceAmount: '',
+        receiver: '',
+        receiverMobile: '',
+        receiverAddress: '',
+        companyName: '',
+        remark: '',
+        deptCode: '',
+        resourceIds: []
     }
+    _serviceForm:any={}
 
     page = {
         sizes: [10, 20, 50, 100],
@@ -130,88 +149,141 @@ export default class Serviceedit extends Vue {
 
     tableData: any[] = []
     tableLabel: tableLabelProps = [
-        { label: '服务流水号', prop: 'code' },
-        { label: '支付单号', prop: 'name' },
-        { label: '期数', prop: 'categoryPath', width: '300px' },
-        { label: '金额', prop: 'brandName' },
-        { label: '支付成功时间', prop: 'brandName' }
+        { label: '服务流水号', prop: 'id' },
+        { label: '支付单号', prop: 'paymentOrderNo' },
+        { label: '期数', prop: 'feeRepaymentOrder' },
+        { label: '金额', prop: 'paidAmount', displayAs: 'money' },
+        { label: '支付成功时间', prop: 'paidDate', displayAs: 'YYYY-MM-DD HH:mm:ss' }
     ]
 
     tableForm: any[] = [
     ]
 
     formTableLabel: tableLabelProps = [
-        { label: '服务流水号', prop: 'code' },
-        { label: '支付单号', prop: 'name' },
-        { label: '期数', prop: 'categoryPath' },
-        { label: '金额', prop: 'brandName' },
-        { label: '支付成功时间', prop: 'brandName' },
-        { label: '是否全部结清', prop: 'brandName' }
+        { label: '服务费流水号', prop: 'id' },
+        { label: '支付单号', prop: 'paymentOrderNo' },
+        { label: '期数', prop: 'feeRepaymentOrder' },
+        { label: '金额', prop: 'paidAmount', displayAs: 'money' },
+        { label: '支付成功时间', prop: 'paidDate', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+        { label: '是否全部结清', prop: 'settlement', dicData: [{ value: true, label: '是' }, { value: false, label: '否' }] }
     ]
+    tableProject:any[]=[]
     projectTableLabel: tableLabelProps = [
         { label: '选择',
             prop: 'code',
-            slot: 'code'
+            slot: 'code',
+            width: '120'
         },
-        { label: '支付单号', prop: 'name' },
-        { label: '期数', prop: 'categoryPath' },
-        { label: '金额', prop: 'brandName' },
-        { label: '支付成功时间', prop: 'brandName' },
-        { label: '是否全部结清', prop: 'brandName' }
+        { label: '项目编号', prop: 'projectNo' },
+        { label: '项目名称', prop: 'projectName' }
     ]
     // 校验
     get rules () {
         let rules = {
-            floorName: [
-                { required: true, message: '请输入楼层名称', trigger: 'blur' }
+            invoiceId: [
+                { required: true, message: '请输入发票ID', trigger: 'blur' }
+            ],
+            projectId: [
+                { required: true, message: '请输入选择项目', trigger: 'blur' }
+            ],
+            receiver: [
+                { required: true, message: '请输入收票人', trigger: 'blur' }
+            ],
+            receiverMobile: [
+                { required: true, message: '请输入收票人手机', trigger: 'blur' },
+                { validator: Phone, trigger: 'blur' }
+            ],
+            receiverAddress: [
+                { required: true, message: '请输入收票地址', trigger: 'blur' }
             ]
         }
         return rules
     }
 
-    get selectMoeny () {
-        const moneny = this.selectData.reduce((sum, val) => {
+    get selectMoney () {
+        const moneny = this.tableData.reduce((sum, val) => {
             console.log(val, sum)
-            return sum + parseFloat(val.id ?? 0) * 1
+            return this.$plus(sum, parseFloat(val.paidAmount ?? 0) * 1)
         }, 0)
+        this.serviceForm.invoiceAmount = moneny.toFixed(2)
         return moneny.toFixed(2)
+    }
+
+    @Watch('serviceForm.companyId')
+    getInfo (newVal, oldVal) {
+        this.getRecentInvoice()
     }
 
     handleSelectionChange (val) {
         this.selectData = val
         this.disabled = val.length == 0
-        console.log('val: ', val)
+        // console.log('val: ', val)
     }
-    handleAdd () {
+    async handleAdd () {
         // 发票添加
         this.dialogVisible = true
+        const { data } = await getServiceFunds({ projectId: this.serviceForm.projectId })
+        this.tableForm = data
     }
 
     handleClose () {
-        // 发票弹窗关闭
+        // 账单弹窗关闭
         console.log('this.$refs ', this.$refs['dialogTable'].clearSelection())
         this.dialogVisible = false
     }
-    handleSearch () {
+    async handleSearch () {
         // 查询项目
         this.projectVisible = true
+        this.getList()
     }
     handleAddProject () {
         // 添加查询的项目
-
+        this.serviceForm = {
+            ...this.serviceForm,
+            ...this.selectRow,
+            projectId: this.selectRow.id,
+            deptCode: this.selectRow.subsectionCode
+        }
+        this.projectVisible = false
     }
+
     getCurrentRow (row) {
+        this.selectRow = row.row
         console.log('row: ', row.row)
         this.radio = row.$index
     }
 
     async onInputBlur ({ target }) {
+        // 失去焦点查询项目
         console.log('val: ', target.value)
+
+        this.queryParams.projectNo = target.value
+        const { data } = await getProjectPage(this.queryParams)
+        if (data.records.length == 1) {
+            console.log('data.records: ', data.records[0])
+            this.serviceForm = {
+
+                ...this.serviceForm,
+                ...data.records[0],
+                projectId: data.records[0].id,
+                deptCode: data.records[0].subsectionCode
+            }
+            console.log('  this.serviceForm : ', this.serviceForm)
+        } else {
+            if (target.value) {
+                this.$message.warning('项目编号有误')
+                this.serviceForm.projectName = ''
+                this.serviceForm.deptName = ''
+                this.serviceForm.companyId = ''
+                this.serviceForm.companyName = ''
+                this.tableData = []
+            }
+        }
     }
 
     // 删除
     handelDelete (val) {
-        console.log('val, index: ', val)
+        // console.log('val, index: ', val)
         this.tableData.splice(val.$index, 1)
     }
 
@@ -220,7 +292,6 @@ export default class Serviceedit extends Vue {
             console.log(val, this.tableData, this.tableData.includes(val))
             let _index = this.tableData.findIndex(item => val.id == item.id)
             if (_index >= 0) {
-                console.log('_index: ', _index)
                 this.$set(this.tableData, _index, val)
             } else {
                 this.tableData.push(val)
@@ -229,17 +300,51 @@ export default class Serviceedit extends Vue {
         this.dialogVisible = false
     }
 
-    getList () {
-
+    async getList () {
+        this.queryParams.projectNo = ''
+        const { data } = await getProjectPage(this.queryParams)
+        this.tableProject = data.records
+        this.page.total = data.total
     }
 
-    handleSave () {
-        // 保存
-        this.$refs['serviceForm'].validate(valid => {
-            if (valid) {
+    async getRecentInvoice () {
+        if (this.serviceForm.companyId) {
+            const { data } = await getMostInvoice({ companyId: this.serviceForm.companyId })
+            this.serviceForm.receiver = data.receiver
+            this.serviceForm.receiverMobile = data.receiverMobile
+            this.serviceForm.receiverAddress = data.receiverAddress
+        } else {
+            this.serviceForm.receiver = ''
+            this.serviceForm.receiverMobile = ''
+            this.serviceForm.remark = ''
+            this.serviceForm.receiverAddress = ''
+        }
+    }
 
+    handleSave (type) {
+        this.serviceForm.saveOrSubmit = type
+        this.serviceForm.resourceIds = this.tableData.map(val => val.id)
+        // 保存
+        if (type == 2 && this.tableData.length == 0) {
+            this.$message.info('请添加发票明细')
+            return false
+        }
+        this.$refs['serviceForm'].validate(async valid => {
+            if (valid) {
+                await updateServiceInvoice(this.serviceForm)
+                this.handleBack()
             }
         })
+    }
+
+    public async getDetail (id) {
+        const { data } = await getInvoiceDetail(id)
+        // @ts-ignore
+        this.serviceForm = { ...data,
+            invoiceId: data.id
+        }
+        console.log('  this.serviceForm : ', this.serviceForm)
+        this.tableData = data.resourceList
     }
 
     handleBack () {
@@ -249,9 +354,13 @@ export default class Serviceedit extends Vue {
     }
 
     async mounted () {
-        this.tableData = [{ id: 200, code: 11111, name: 2222 }]
-        this.selectData = this.tableData
-        this.tableForm = [{ id: 201, code: 32, name: 3234, categoryPath: 555 }, { id: 200, code: 11111, name: 2222 }]
+        // this.tableData = [{ id: 200, code: 11111, name: 2222, money: 100 }]
+        // this.selectData = this.tableData
+        this._serviceForm = deepCopy(this.serviceForm)
+        this.queryParams.subsectionCode = '1050AL100000000003DM'
+        if (this.$route.query.id) {
+            this.getDetail(this.$route.query.id)
+        }
     }
 }
 </script>

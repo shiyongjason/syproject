@@ -4,28 +4,28 @@
             <div class="service-tit">基本信息</div>
             <div class="service-wrap">
                 <el-row :gutter="20">
-                    <el-col :span="8"><span>申请单号：</span>XXXXX</el-col>
-                    <el-col :span="8"><span>支付单号：</span>XXXXXXXXXXXXX</el-col>
-                    <el-col :span="8"><span>项目：</span>金华市磐安县玉岑山居空调采购项目</el-col>
+                    <el-col :span="8"><span>申请单号：</span>{{formDetail.invoiceNo}}</el-col>
+                    <el-col :span="8"><span>支付单号：</span>{{formDetail.id}}</el-col>
+                    <el-col :span="8"><span>项目：</span>{{formDetail.projectName}}</el-col>
                 </el-row>
                 <el-row :gutter="20">
-                    <el-col :span="8"><span>经销商：</span>江苏橙智云信息技术有限公司</el-col>
-                    <el-col :span="8"><span>上游供应商：</span>江苏橙智云信息技术有限公司</el-col>
-                    <el-col :span="8"><span>采购发票总金额：</span>9,999.99</el-col>
+                    <el-col :span="8"><span>经销商：</span>{{formDetail.companyName}}</el-col>
+                    <el-col :span="8"><span>上游供应商：</span>{{formDetail.supplierCompanyName}}</el-col>
+                    <el-col :span="8"><span>采购发票总金额：</span>{{formDetail.purchaseInvoiceAmount|moneyFormat}}</el-col>
                 </el-row>
                 <el-row :gutter="20">
-                    <el-col :span="8"><span>mis采购订单号：</span>XXXXX</el-col>
-                    <el-col :span="8"><span>mis销售订单号：</span>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</el-col>
-                    <el-col :span="8"><span>采购发票总金额：</span>9,999.99</el-col>
+                    <el-col :span="8"><span>mis采购订单号：</span>{{formDetail.misPurchaseOrderNo}}</el-col>
+                    <el-col :span="8"><span>mis销售订单号：</span>{{formDetail.misSalesOrderNo}}</el-col>
+                    <el-col :span="8"><span>采购发票总金额：</span>{{formDetail.purchaseInvoiceAmount|moneyFormat}}</el-col>
                 </el-row>
                 <el-row :gutter="20">
-                    <el-col :span="8"><span>销售发票收票人：</span>XXXXXXXXXXXX</el-col>
-                    <el-col :span="8"><span>收票人手机：</span>XXXXXXXXXXX</el-col>
-                    <el-col :span="8"><span>收票地址：</span>XXXXXXXXXXX</el-col>
+                    <el-col :span="8"><span>销售发票收票人：</span>{{formDetail.receiver}}</el-col>
+                    <el-col :span="8"><span>收票人手机：</span>{{formDetail.receiverMobile}}</el-col>
+                    <el-col :span="8"><span>收票地址：</span>{{formDetail.receiverAddress}}</el-col>
                 </el-row>
                 <el-row :gutter="20">
-                    <el-col :span="12"><span>所属分部：</span>XXXXXXXXXXX</el-col>
-                    <el-col :span="12"><span>备注信息：</span>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</el-col>
+                    <el-col :span="12"><span>所属分部：</span>{{formDetail.deptName}}</el-col>
+                    <el-col :span="12"><span>备注信息：</span>{{formDetail.remark}}</el-col>
                 </el-row>
             </div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -39,18 +39,19 @@
                 </hosJoyTable>
             </div>
             <div v-if="activeName=='second'">
-                <hosJoyTable align="center" border :column="saleTableLabel" :data="tableData" actionWidth='100' :max-height="500" :isActionFixed='tableData&&tableData.length>0'>
+                <hosJoyTable align="center" border :column="saleTableLabel" :data="saleData" actionWidth='100' :max-height="500" :isActionFixed='tableData&&tableData.length>0'>
                 </hosJoyTable>
             </div>
             <div v-if="activeName=='third'">
-                <hosJoyTable align="center" border :column="recordTableLabel" :data="tableData" actionWidth='100' :max-height="500" :isActionFixed='tableData&&tableData.length>0'>
+                <hosJoyTable align="center" border :column="recordTableLabel" :data="recordData" actionWidth='100' :max-height="500" :isActionFixed='tableData&&tableData.length>0'>
                 </hosJoyTable>
             </div>
             <div v-if="activeName=='four'">
-                <p>XXXX.pdf</p>
+                <!-- <p v-for="(item,index) in fileLists">{{item.fileName}}</p> -->
+                 <elImageAddToken style="width: 100px; height: 100px;margin-right:10px; border:1px solid #dad5d5;    border-radius: 5px;" :fileUrl="pic.fileUrl" :fit="'contain'" v-for="(pic,index) in fileLists" :key='index'></elImageAddToken>
             </div>
             <div class="mb20 mt20">
-                <h-button @click="handleGoBack">取消</h-button>
+                <h-button @click="handleGoBack">返回</h-button>
             </div>
         </div>
     </div>
@@ -59,59 +60,55 @@
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
 import { CreateElement } from 'vue'
-import filters from '@/utils/filters'
-import { RespBossShopFloorDetail } from '@/interface/hbp-shop'
+import { getEqpDetail } from '../api/index'
 import moment from 'moment'
-import { deepCopy } from '@/utils/utils'
+import elImageAddToken from '@/components/elImageAddToken/index.vue'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 @Component({
-    name: 'Flooredit',
+    name: 'equipmentdetail',
     components: {
-        hosJoyTable
+        hosJoyTable,
+        elImageAddToken
     }
 })
 
-export default class Flooredit extends Vue {
+export default class Equipmentdetail extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
     @Action('setNewTags') setNewTags!: Function
 
     activeName:string = 'first'
-    private _queryParams = {}
-    queryParams: any = {
-        pageSize: 10,
-        pageNumber: 1,
-        name: '',
-        categoryContent: '',
-        brandName: '',
-        isOnShelf: 2
-    }
 
     page = {
         sizes: [10, 20, 50, 100],
         total: 0
     }
-
+    fileLists = []
     tableData: any[] = []
     tableLabel: tableLabelProps = [
-        { label: '采购发票号码', prop: 'code' },
-        { label: '发票金额', prop: 'name' },
-        { label: '状态', prop: 'categoryPath' }
-
+        { label: '采购发票号码', prop: 'misPurchaseInvoiceNo' },
+        { label: '发票金额', prop: 'invoiceAmount' },
+        { label: '开票日期', prop: 'openDate', displayAs: 'YYYY-MM-DD' },
+        { label: '状态', prop: 'status', dicData: [{ value: 10, label: '正常' }, { value: 20, label: '作废' }] }
     ]
 
+    formDetail = {}
+
+    saleData: any[] = []
     saleTableLabel: tableLabelProps = [
-        { label: '销售发票号码', prop: 'code' },
-        { label: '发票金额', prop: 'name' },
-        { label: '状态', prop: 'categoryPath' }
+        { label: '销售发票号码', prop: 'misSaleInvoiceNo' },
+        { label: '发票金额', prop: 'invoiceAmount' },
+        { label: '开票日期', prop: 'openDate', displayAs: 'YYYY-MM-DD' },
+        { label: '状态', prop: 'status', dicData: [{ value: 10, label: '正常' }, { value: 20, label: '作废' }] }
     ]
 
+    recordData: any[] = []
     recordTableLabel: tableLabelProps = [
-        { label: '时间', prop: 'code' },
-        { label: '人员', prop: 'name' },
-        { label: '操作', prop: 'categoryPath' },
-        { label: '备注', prop: 'brandName' }
+        { label: '时间', prop: 'createTime', displayAs: 'YYYY-MM-DD HH:mm' },
+        { label: '人员', prop: 'operator' },
+        { label: '操作', prop: 'operationType', dicData: [{ value: 1, label: '申请' }, { value: 2, label: '提交' }, { value: 3, label: '驳回' }, { value: 4, label: '开票' }] },
+        { label: '备注', prop: 'note' }
     ]
 
     handleClick (tab, event) {
@@ -124,8 +121,20 @@ export default class Flooredit extends Vue {
         this.setNewTags((this.$route.fullPath).split('?')[0])
     }
 
+    async getEquipDetail (id) {
+        const { data } = await getEqpDetail(id)
+        this.formDetail = data
+        this.tableData = data.purchaseInvoiceDetails
+        this.saleData = data.saleInvoiceDetails
+        this.recordData = data.logs
+        this.fileLists = data.attachDocs
+    }
+
     async mounted () {
-        this.tableData = [{ code: 11111, name: 2222 }]
+        // this.tableData = [{ code: 11111, name: 2222 }]
+        if (this.$route.query.id) {
+            this.getEquipDetail(this.$route.query.id)
+        }
     }
 }
 </script>
