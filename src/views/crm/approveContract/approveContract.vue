@@ -308,7 +308,7 @@ export default {
         /** 采购单金额 = 上游采购金额supplierPurchaseAmount *（1+项目终审里的加价率 salesGrossMargin）保留两位小数 */
         purchaseOrderAmount () {
             let res = ''
-            res = (this.supplierPurchaseAmount * (1 + (this.detailRes.salesGrossMargin || 0))).toFixed(2)
+            res = (this.supplierPurchaseAmount * (1 + (this.detailRes.salesGrossMargin || 0) / 100)).toFixed(2)
             return isNaN(res) ? '' : res
         },
         uploadImgServer () {
