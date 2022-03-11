@@ -487,8 +487,11 @@ export default {
                 this.queryParams.pageNumber = 1
             }
             let dataJson = JSON.parse(JSON.stringify(this.queryParams))
+            console.log('🚀 --- getList --- dataJson', dataJson)
             // 字段修改 原本使用contractStatus 后续改成contractStatusArrays字段
-            dataJson.contractStatusArrays = dataJson.contractStatus.join(',')
+            if (dataJson.contractStatus) {
+                dataJson.contractStatusArrays = dataJson.contractStatus.join(',')
+            }
             const { data } = await contractSigningList(dataJson)
             if (data) {
                 this.tableData = data.records
