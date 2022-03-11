@@ -157,13 +157,21 @@
                             <font style="color:#ff7a45">{{prevPaymentDetail.goodsProgress}}%</font>
                         </el-form-item>
                     </div>
-                    <el-form-item label="本次支付账号：" prop="id">
-                        <el-select v-model="dialogFormData.id" placeholder="请选择" @change="handleChangeRadio">
+                    <el-form-item label="本次支付账号：" prop="payeeBankName">
+                        <!-- <el-select v-model="dialogFormData.id" placeholder="请选择" @change="handleChangeRadio">
                             <el-option v-for="item in payeeAccountList" :key="item.id" :label="item.allName" :value="item.id">
                                 <span style="float: left">{{ item.payeeBankName }}</span>
                                 <span style="float: right; color: #8492a6; font-size: 13px">{{ item.payeeBankAccount }}</span>
                             </el-option>
-                        </el-select>
+                        </el-select> -->
+                          <HAutocomplete :placeholder="'请选择'" :maxlength=60 @back-event="backPayparam" :selectObj="targetObj" :selectArr="payeeAccountList" v-if="payeeAccountList" :remove-value='true' :isSettimeout=false>
+                        <template slot-scope="scope">
+                            <div style="display:flex;flex-direction: column;">
+                                <span style="">{{ scope.data.payeeBankName }}</span>
+                                <span style=" color: #8492a6; font-size: 12px">{{ scope.data.payeeBankAccount }}</span>
+                            </div>
+                        </template>
+                    </HAutocomplete>
                     </el-form-item>
                     <el-form-item label="采购单货款明细：">
                         <elImageAddToken style="width: 100px; height: 100px;margin-right:10px; border:1px solid #dad5d5;    border-radius: 5px;" :fileUrl="pic.fileUrl" :fit="'contain'" v-for="(pic,index) in prevPaymentDetail.poDetail" :key='index'></elImageAddToken>
@@ -217,13 +225,21 @@
         <!-- 确认网银支付 -->
         <el-dialog :close-on-click-modal='false' title="确认网银支付" :visible.sync="isShowLinkBank" width="600px" class="prev-payment-dialog" :before-close="()=> onBankCancel()">
             <el-form :model="bankForm" :rules="bankRules" ref="bankForm" label-width="150px" class="demo-ruleForm">
-                <el-form-item label="本次支付账号：" prop="id">
-                    <el-select v-model="bankForm.id" placeholder="请选择" @change="handleAccountRadio">
+                <el-form-item label="本次支付账号：" prop="payeeBankName">
+                    <!-- <el-select v-model="bankForm.id" placeholder="请选择" @change="handleAccountRadio">
                         <el-option v-for="item in payeeAccountList" :key="item.id" :label="item.allName" :value="item.id">
                             <span style="float: left">{{ item.payeeBankName }}</span>
                             <span style="float: right; color: #8492a6; font-size: 13px">{{ item.payeeBankAccount }}</span>
                         </el-option>
-                    </el-select>
+                    </el-select> -->
+                      <HAutocomplete :placeholder="'请选择'" :maxlength=60 @back-event="backFindparam" :selectObj="targetObj" :selectArr="payeeAccountList" v-if="payeeAccountList" :remove-value='true' :isSettimeout=true>
+                        <template slot-scope="scope">
+                            <div style="display:flex;flex-direction: column;">
+                                <span style="">{{ scope.data.payeeBankName }}</span>
+                                <span style=" color: #8492a6; font-size: 12px">{{ scope.data.payeeBankAccount }}</span>
+                            </div>
+                        </template>
+                    </HAutocomplete>
                 </el-form-item>
                 <el-form-item label="网银支付时间：" prop="paymentTime">
                     <el-date-picker v-model="bankForm.paymentTime" value-format='yyyy-MM-dd' type="date" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
@@ -263,6 +279,8 @@ import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT, CHANGE_LOAN_TRANSFER_STATUS, UP
 import { LOAN_TRANSFER_STATUS_DONE, UPSTREAM_PAYMENT_STATUS_WAITING } from './const'
 import FundsDialog from '../funds/components/fundsDialog.vue'
 import { newCache } from '@/utils/index'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete.vue'
+
 export const PAYMENTTYPE: Map<number | null, string> = new Map([
     [null, '-'],
     [1, '银行转账'],
@@ -294,7 +312,8 @@ enum TabInfoApi {
         upstreamPaymentInformation,
         OssFileHosjoyUpload,
         elImageAddToken,
-        FundsDialog
+        FundsDialog,
+        HAutocomplete
     }
 })
 export default class UpstreamPaymentManagement extends Vue {
@@ -313,6 +332,10 @@ export default class UpstreamPaymentManagement extends Vue {
     page = {
         sizes: [10, 20, 50, 100],
         total: 0
+    }
+    targetObj = {
+        selectCode: '',
+        selectName: ''
     }
     paymentType = PAYMENTTYPE
     supplierPaymentMethod = SUPPLIERPAYMENTMETHOD
@@ -393,7 +416,7 @@ export default class UpstreamPaymentManagement extends Vue {
 
     get formRules () {
         let rules = {
-            id: [
+            payeeBankName: [
                 { required: true, message: '请选择本次支付账号' }
             ],
             payAmount: [
@@ -424,7 +447,7 @@ export default class UpstreamPaymentManagement extends Vue {
 
     get bankRules () {
         return {
-            id: [{ required: true, message: '请选择本次支付账号', trigger: 'change' }],
+            payeeBankName: [{ required: true, message: '请选择本次支付账号' }],
             paymentTime: [{ required: true, message: '请选择网银支付时间', trigger: 'change' }],
             attachDocRequestList: [{ required: true, message: '请上传上游支付凭证', trigger: 'change' }]
         }
@@ -571,9 +594,11 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     handleSubBank () {
+        console.log('this.bankForm: ', this.bankForm);
         (this.$refs as any).bankForm.validate(async (validate) => {
             if (validate) {
                 await Api.updateOnlineBank(this.bankForm)
+
                 this.isShowLinkBank = false
                 this.getList()
             }
@@ -650,6 +675,7 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     async getBankAccount () {
+        this.payeeAccountList = []
         const { data } = await Api.findPayeeAccount()
         console.log('this.dialogFormData.companyName: ', this.prevPaymentDetail.companyName)
         data.map(val => {
@@ -662,20 +688,44 @@ export default class UpstreamPaymentManagement extends Vue {
         })
     }
 
-    handleChangeRadio (val) {
-        console.log('val: ', val)
-        const bankInfo = this.payeeAccountList.filter(item => item.id == val)[0]
-        this.dialogFormData.payPrincipal = bankInfo.payeeName
-        this.dialogFormData.payeeBankName = bankInfo.payeeBankName
-        this.dialogFormData.payeeBankAccount = bankInfo.payeeBankAccount
+    backPayparam (val) {
+        console.log('val: ', val.value.id)
+        if (val.value) {
+            const bankInfo = this.payeeAccountList.filter(item => item.id == val.value.id)[0]
+            this.dialogFormData.payPrincipal = bankInfo.payeeName
+            this.dialogFormData.payeeBankName = bankInfo.payeeBankName
+            this.dialogFormData.payeeBankAccount = bankInfo.payeeBankAccount
+            this.targetObj = {
+                selectName: bankInfo.payeeBankName,
+                selectCode: bankInfo.payeeBankAccount
+            }
+        } else {
+            this.dialogFormData.payPrincipal = ''
+            this.dialogFormData.payeeBankName = ''
+            this.dialogFormData.payeeBankAccount = ''
+        }
     }
 
-    handleAccountRadio (val) {
+    backFindparam (val) {
         console.log('val: ', val)
-        const bankInfo = this.payeeAccountList.filter(item => item.id == val)[0]
-        this.bankForm.payPrincipal = bankInfo.payeeName
-        this.bankForm.payeeBankName = bankInfo.payeeBankName
-        this.bankForm.payeeBankAccount = bankInfo.payeeBankAccount
+        if (val.value) {
+            const bankInfo = this.payeeAccountList.filter(item => item.id == val.value.id)[0]
+            this.bankForm.payPrincipal = bankInfo.payeeName
+            this.bankForm.payeeBankName = bankInfo.payeeBankName
+            this.bankForm.payeeBankAccount = bankInfo.payeeBankAccount
+            this.targetObj = {
+                selectName: bankInfo.payeeBankName,
+                selectCode: bankInfo.payeeBankAccount
+            }
+        } else {
+            this.targetObj = {
+                selectName: '',
+                selectCode: ''
+            }
+            this.bankForm.payPrincipal = ''
+            this.bankForm.payeeBankName = ''
+            this.bankForm.payeeBankAccount = ''
+        }
     }
 
     editorDrawerClose (done:Function): void {

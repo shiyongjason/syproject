@@ -242,11 +242,11 @@ export default class UpstreamPaymentManagement extends Vue {
     tableLabel:tableLabelProps = [
         { label: '支付单编号', prop: 'orderNo', width: '100' },
         { label: '所属分部', prop: 'deptName' },
-        { label: '经销商', prop: 'companyName', resizable: true },
+        { label: '经销商', prop: 'companyName', width: '180' },
         { label: '上游供应商', prop: 'supplierCompanyName', width: '180' },
         { label: '项目名称', prop: 'projectName', width: '150' },
         { label: '上游支付（元）', prop: 'paidAmount', width: '130', displayAs: 'money' },
-        { label: '支付日期', prop: 'paidTime', width: '120', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+        { label: '支付日期', prop: 'paidTime', width: '120', sortable: 'custom', displayAs: 'YYYY-MM-DD' },
         { label: '付款主体', prop: 'payPrincipal', width: '150' },
         { label: '付款类型', prop: 'paymentType', dicData: [{ value: 1, label: '货款' }, { value: 2, label: '费用' }] },
         { label: '支付账号', prop: 'payAccount', width: '120' },
@@ -256,7 +256,7 @@ export default class UpstreamPaymentManagement extends Vue {
 
         { label: 'NC凭证信息', prop: 'ncInfo', width: '120' },
         { label: '抛转人', prop: 'ncSyncUser' },
-        { label: '抛转时间', prop: 'ncSyncTime', width: '120', sortable: 'custom', displayAs: 'YYYY-MM-DD' },
+        { label: '抛转时间', prop: 'ncSyncTime', width: '120', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '抛转状态', prop: 'ncSyncStatus', width: '130', dicData: [{ value: 10, label: '未抛转' }, { value: 20, label: '抛转成功' }, { value: 30, label: '抛转失败' }] },
         { label: '失败原因', prop: 'ncSyncFailReason', width: '150', resizable: true }
 
