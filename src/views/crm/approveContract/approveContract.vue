@@ -539,12 +539,15 @@ export default {
                                         disabled: !this.currentKey.modify,
                                         style: this.currentKey.unit ? { width: '250px' } : '',
                                         innerHtml: this.currentKey.unit || '',
-                                        maxlength: this.currentKey.maxLength || '',
+                                        maxlength: this.currentKey.unit == '元' && this.currentKey.calculationRules ? this.currentKey.maxLength + 2 : this.currentKey.maxLength || '',
                                         decimal: this.currentKey.decimal || 2,
                                         calculationRules: this.currentKey.calculationRules || ''// 最大值
                                     },
                                     on: {
-                                        input: (val) => { this.currentKey.paramValue = val.trim() }
+                                        input: (val) => {
+                                            console.log('🚀 --- currentKeyToComponent --- val', val)
+                                            this.currentKey.paramValue = val.trim()
+                                        }
                                     }
                                 }
                                 : {
