@@ -159,6 +159,9 @@
                     <el-checkbox-group v-model="doorlockOption">
                         <el-checkbox label="18">门禁系统</el-checkbox>
                     </el-checkbox-group>
+                    <el-checkbox-group v-model="blackboardOption">
+                        <el-checkbox label="34">智能黑板</el-checkbox>
+                    </el-checkbox-group>
                     <el-row>
                         <el-col :span="4">
                             <el-checkbox v-model="isShowEnergy" @change="onChangeShowEnergy">能耗分析系统</el-checkbox>
@@ -596,6 +599,7 @@ export default {
             curtainRadioOption: [],
             environmentOption: [],
             doorlockOption: [],
+            blackboardOption: [],
             isShowEnergy: false,
             isShowAirEnergy: false,
             isShowWaterAir: false,
@@ -865,6 +869,7 @@ export default {
             this.curtainRadioOption = []
             this.environmentOption = []
             this.doorlockOption = []
+            this.blackboardOption = []
             this.isShowEnergy = false
             this.isShowAirEnergy = false
             this.isShowWaterAir = false
@@ -913,6 +918,8 @@ export default {
 
             this.doorlockOption = this.form.projectType.filter(item => item == 18)
 
+            this.blackboardOption = this.form.projectType.filter(item => item == 34)
+
             this.isShowEnergy = this.form.projectType.filter(item => item == 101 || item == 102 || item == 103 || item == 104 || item == 112 || item == 113 || item == 114 || item == 120 || item == 4 || item == 3 || item == 5 || item == 6 || item == 7 || item == 9).length > 0
             this.isShowAirEnergy = this.form.projectType.filter(item => item == 101 || item == 102 || item == 103 || item == 104 || item == 112 || item == 113 || item == 114 || item == 120).length > 0
 
@@ -960,6 +967,7 @@ export default {
                 ...this.curtainRadioOption,
                 ...this.environmentOption,
                 ...this.doorlockOption,
+                ...this.blackboardOption,
                 this.waterAirRadioOption,
                 this.fluorineAirRadioOption,
                 this.ftAirRadioOption,
