@@ -24,13 +24,13 @@
                         </div>
                         <div class="row-filed project">
                             <p class="col-filed">
-                                <span class="label">上游采购金额： </span>{{ paymentOrderDetail.projectInfo.supplierPurchaseAmount | moneyFormat }}
+                                <span class="label">上游采购金额： </span>{{ paymentOrderDetail.payOrderPoDetail.supplierPurchaseAmount | moneyFormat }}
                             </p>
                             <p class="col-filed">
-                                <span class="label">加价率：</span>{{ paymentOrderDetail.projectInfo.salesGrossMargin + "%" }}
+                                <span class="label">加价率：</span>{{ paymentOrderDetail.payOrderPoDetail.salesGrossMargin + "%" }}
                             </p>
                             <p class="col-filed">
-                                <span class="label">加价额：</span>{{ paymentOrderDetail.projectInfo.salesGrossAmount | moneyFormat}}
+                                <span class="label">加价额：</span>{{ paymentOrderDetail.payOrderPoDetail.salesGrossAmount | moneyFormat}}
                             </p>
                         </div>
                         <div class="row-filed">
