@@ -1,4 +1,4 @@
-import { IPageRespUpStreamPayment, ReqUpPaymentLoanHandoverConfirm, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, ReqSupplierSubmit, ReqLoanTransferChange, ReqLoanTransferUpdate, LoanTransferInfoResponse, BillAmountResponse } from '@/interface/hbp-project'
+import { IPageRespUpStreamPayment, ReqUpPaymentLoanHandoverConfirm, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, ReqSupplierSubmit, ReqLoanTransferChange, ReqLoanTransferUpdate, LoanTransferInfoResponse, BillAmountResponse, IPageUpStreamDetailPaymentResponse } from '@/interface/hbp-project'
 import axios, { AxiosPromise } from 'axios'
 
 export const getUpStreamPaymentApi: (params: ReqUpStreamPaymentQuery) => AxiosPromise<IPageRespUpStreamPayment> = (params) => {
@@ -94,5 +94,17 @@ export const updateOnlineBank: (params) => AxiosPromise<void> = (params) => {
     return axios.post('/project/api/supplier-payments/online-bank-payment-confirm', params)
 }
 
+// 明细列表
+export const getUpStreamPaymentList: (params: any) => AxiosPromise<IPageUpStreamDetailPaymentResponse> = (params) => {
+    return axios.get('/project/api/supplier-payments/up-stream-detail/page', { params })
+}
+// 明细总额
+export const getUpStreamPaymentTotal: (params: any) => AxiosPromise<number> = (params) => {
+    return axios.get('/project/api/supplier-payments/up-stream-detail/total-paid-amount', { params })
+}
+// 抛转Nc
+export const updateNc: (params: any) => AxiosPromise<string> = (params) => {
+    return axios.patch(`/project/api/supplier-payments/up-stream-detail/sync-nc/${params}`)
+}
 // 帅选 付款账号
 export const findPayeeAccount = () => axios.get('/project/api/bank/receipt/payee-account/list')

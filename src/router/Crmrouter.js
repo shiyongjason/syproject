@@ -470,6 +470,18 @@ export default [
                 component: () => import('@/views/crm/upstreamPaymentManagement/index.vue')
             },
             {
+                path: 'upstreamPaymentList',
+                name: 'upstreamPaymentList',
+                meta: {
+                    title: '上游支付管理明细',
+                    tagName: '上游支付管理明细',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/upstreamPaymentManagement/list.vue')
+            },
+            {
                 path: 'tianyan',
                 name: 'tianyan',
                 meta: {
