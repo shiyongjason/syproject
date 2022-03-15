@@ -22,6 +22,17 @@
                         <div class="row-filed">
                             <p class="col-filed"><span class="info-title">采购单信息</span></p>
                         </div>
+                        <div class="row-filed project">
+                            <p class="col-filed">
+                                <span class="label">上游采购金额： </span>{{ paymentOrderDetail.projectInfo.supplierPurchaseAmount | moneyFormat }}
+                            </p>
+                            <p class="col-filed">
+                                <span class="label">加价率：</span>{{ paymentOrderDetail.projectInfo.salesGrossMargin + "%" }}
+                            </p>
+                            <p class="col-filed">
+                                <span class="label">加价额：</span>{{ paymentOrderDetail.projectInfo.salesGrossAmount | moneyFormat}}
+                            </p>
+                        </div>
                         <div class="row-filed">
                             <p class="col-filed col-50">
                                 <span class="label">采购单金额：</span>
