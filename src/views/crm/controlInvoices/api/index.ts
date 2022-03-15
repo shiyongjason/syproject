@@ -1,4 +1,4 @@
-import { EqpInvoiceDetailResponse, EqpInvoiceSubmitRequest, IPageEqpInvoicePageResponse, IPageServiceInvoicePageResponse, ServiceInvoiceDetailResponse, ServiceInvoiceOpenRequest, InvoiceRejectRequest, ServiceInvoiceSubmitRequest, ServiceInvoiceFundResponse, EqpTotalInvoiceAmountResponse, IPageEqpInvoicePaymentOrderPageResponse, MostRecentInvoiceResponse } from '@/interface/hbp-project'
+import { EqpInvoiceDetailResponse, EqpInvoiceSubmitRequest, IPageEqpInvoicePageResponse, IPageServiceInvoicePageResponse, ServiceInvoiceDetailResponse, ServiceInvoiceOpenRequest, InvoiceRejectRequest, ServiceInvoiceSubmitRequest, ServiceInvoiceFundResponse, EqpTotalInvoiceAmountResponse, IPageEqpInvoicePaymentOrderPageResponse, MostRecentInvoiceResponse, DeliveryCompanyResponse } from '@/interface/hbp-project'
 import axios, { AxiosPromise } from 'axios'
 
 export const updateServiceInvoice: (params: ServiceInvoiceSubmitRequest) => AxiosPromise<void> = (params) => {
@@ -71,6 +71,12 @@ export const getProjectPage: (params: any) => AxiosPromise<any> = (params) => {
 }
 
 // 设备 支付单开窗列表
-export const geEqpPaymentOrderPage: (params: any) => AxiosPromise<IPageEqpInvoicePaymentOrderPageResponse> = (params) => {
+export const getEqpPaymentOrderPage: (params: any) => AxiosPromise<IPageEqpInvoicePaymentOrderPageResponse> = (params) => {
     return axios.get(`/project/boss/eqp-invoice/payment-order-page`, { params })
+}
+
+// 快递公司
+
+export const getDelivery: () => AxiosPromise<DeliveryCompanyResponse[]> = () => {
+    return axios.get(`/project/boss/service-invoice/delivery-companies`)
 }

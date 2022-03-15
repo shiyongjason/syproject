@@ -84,26 +84,25 @@
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='330' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <h-button table @click="handleLook(slotProps.data.row)">查看</h-button>
-                    <h-button table @click="handleEdit(slotProps.data.row)" v-if="slotProps.data.row.invoiceStatus==10">编辑</h-button>
-                    <h-button table @click="handleSubmit(slotProps.data.row)" v-if="slotProps.data.row.invoiceStatus==10">提交</h-button>
-                    <h-button table @click="handleReject(slotProps.data.row)" v-if="slotProps.data.row.invoiceStatus==20">驳回</h-button>
-                    <h-button table @click="handleInvoice(slotProps.data.row)"  v-if="slotProps.data.row.invoiceStatus!=10">开票</h-button>
+                    <h-button table @click="handleLook(slotProps.data.row)" v-if="hosAuthCheck(INVOICE_SERVICE_LOOK)">查看</h-button>
+                    <h-button table @click="handleEdit(slotProps.data.row)" v-if="hosAuthCheck(INVOICE_SERVICE_EDIT)&&slotProps.data.row.invoiceStatus==10">编辑</h-button>
+                    <h-button table @click="handleSubmit(slotProps.data.row)" v-if="hosAuthCheck(INVOICE_SERVICE_SUBMIT)&&slotProps.data.row.invoiceStatus==10">提交</h-button>
+                    <h-button table @click="handleReject(slotProps.data.row)" v-if="hosAuthCheck(INVOICE_SERVICE_REJECT)&&slotProps.data.row.invoiceStatus==20">驳回</h-button>
+                    <h-button table @click="handleInvoice(slotProps.data.row)"  v-if="hosAuthCheck(INVOICE_SERVICE_OPEN)&&slotProps.data.row.invoiceStatus!=10">开票</h-button>
                 </template>
             </hosJoyTable>
             <el-dialog :close-on-click-modal='false' title="开票" :visible.sync="isShowInvoice" width="600px" class="prev-payment-dialog" :before-close="handleCancel">
                 <el-form :model="IForm" :rules="IRules" ref="IForm" label-width="150px" class="demo-ruleForm">
                     <el-form-item label="发票号码：" prop="invoiceNumber">
-                        <el-input v-model="IForm.invoiceNumber"></el-input>
+                        <el-input v-model="IForm.invoiceNumber" maxlength="20"></el-input>
                     </el-form-item>
                     <el-form-item label="快递公司：" prop="deliveryCompanyName">
                         <el-select v-model="IForm.deliveryCompanyName" placeholder="请选择快递公司">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
+                           <el-option :label="item.companyName" :value="item.companyName" v-for="item in deliveries" :key="item.companyName"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="快递单号：" prop="deliveryNo">
-                        <el-input v-model="IForm.deliveryNo"></el-input>
+                        <el-input v-model="IForm.deliveryNo" maxlength="30"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
@@ -121,10 +120,11 @@ import { Vue, Component } from 'vue-property-decorator'
 import { State, Getter, Action } from 'vuex-class'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import { measure, handleSubmit, validateForm } from '@/decorator/index'
-import { ReqUpStreamPaymentQuery, RespUpStreamPayment, ServiceInvoiceOpenRequest } from '@/interface/hbp-project'
-import { updateOpen, updateReject, updateSubmit, getInvoiceList, getInvoiceTotal } from '../api/index'
+import { ServiceInvoiceOpenRequest } from '@/interface/hbp-project'
+import { updateOpen, updateReject, updateSubmit, getInvoiceList, getInvoiceTotal, getDelivery } from '../api/index'
 // import { newCache } from '@/utils/index'
 import { deepCopy } from '@/utils/utils'
+import { INVOICE_SERVICE_LOOK, INVOICE_SERVICE_EDIT, INVOICE_SERVICE_SUBMIT, INVOICE_SERVICE_OPEN, INVOICE_SERVICE_REJECT } from '@/utils/auth_const'
 
 // 接口 实现继承
 // type Query<T> = { [P in keyof T]: T[P] }
@@ -149,6 +149,12 @@ export default class ServiceList extends Vue {
         sizes: [10, 20, 50, 100],
         total: 0
     }
+    INVOICE_SERVICE_LOOK = INVOICE_SERVICE_LOOK
+    INVOICE_SERVICE_EDIT = INVOICE_SERVICE_EDIT
+    INVOICE_SERVICE_SUBMIT = INVOICE_SERVICE_SUBMIT
+    INVOICE_SERVICE_OPEN = INVOICE_SERVICE_OPEN
+    INVOICE_SERVICE_REJECT = INVOICE_SERVICE_REJECT
+    deliveries:any[]=[]
     tableData:any[] = []
     totalMoney = ''
     invoiceTyps = invoiceTyps
@@ -273,10 +279,12 @@ export default class ServiceList extends Vue {
         })
     }
 
-    handleInvoice (val) {
+    async handleInvoice (val) {
         this.IForm.invoiceId = val.id
         // 开票
         this.isShowInvoice = true
+        const { data } = await getDelivery()
+        this.deliveries = data
     }
     handleCancel () {
         this.isShowInvoice = false

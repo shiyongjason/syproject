@@ -14,12 +14,12 @@
                             </el-input>
                             {{serviceForm.projectName}}
                         </el-form-item>
-                        <el-form-item label="所属分部：">
+                        <el-form-item label="所属分部：" class="deptName">
                             <el-input v-model.trim="serviceForm.deptName"  disabled></el-input>
                         </el-form-item>
                     </el-row>
                     <el-row>
-                        <el-form-item label="经销商：">
+                        <el-form-item label="经销商：" prop="companyName">
                             <el-input v-model.trim="serviceForm.companyName"  disabled></el-input>
                         </el-form-item>
                         <el-form-item label="收票人：" prop="receiver">
@@ -149,7 +149,7 @@ export default class Serviceedit extends Vue {
 
     tableData: any[] = []
     tableLabel: tableLabelProps = [
-        { label: '服务流水号', prop: 'id' },
+        { label: '服务费流水号', prop: 'id' },
         { label: '支付单号', prop: 'paymentOrderNo' },
         { label: '期数', prop: 'feeRepaymentOrder' },
         { label: '金额', prop: 'paidAmount', displayAs: 'money' },
@@ -180,6 +180,9 @@ export default class Serviceedit extends Vue {
     // 校验
     get rules () {
         let rules = {
+            companyName: [
+                { required: true, message: '请输入经销商', trigger: 'blur' }
+            ],
             invoiceId: [
                 { required: true, message: '请输入发票ID', trigger: 'blur' }
             ],
@@ -325,12 +328,13 @@ export default class Serviceedit extends Vue {
         this.serviceForm.saveOrSubmit = type
         this.serviceForm.resourceIds = this.tableData.map(val => val.id)
         // 保存
-        if (type == 2 && this.tableData.length == 0) {
-            this.$message.info('请添加发票明细')
-            return false
-        }
+
         this.$refs['serviceForm'].validate(async valid => {
             if (valid) {
+                if (type == 2 && this.tableData.length == 0) {
+                    this.$message.warning('请添加发票明细')
+                    return false
+                }
                 await updateServiceInvoice(this.serviceForm)
                 this.handleBack()
             }

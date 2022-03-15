@@ -101,7 +101,7 @@ export default class Servicedetail extends Vue {
     recordTableLabel: tableLabelProps = [
         { label: '时间', prop: 'createTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '人员', prop: 'operator' },
-        { label: '资源类型', prop: 'resourceType', dicData: resourceTypes },
+        // { label: '资源类型', prop: 'resourceType', dicData: resourceTypes },
         { label: '操作', prop: 'operationType', dicData: operateTyps },
         { label: '备注', prop: 'note' }
     ]

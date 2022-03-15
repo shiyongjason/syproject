@@ -115,10 +115,10 @@
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='330' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
                 <template #action="slotProps">
-                    <h-button table @click="handleLook(slotProps.data.row)">查看</h-button>
-                    <h-button table @click="handleEdit(slotProps.data.row)" v-if="slotProps.data.row.invoiceStatus==10">编辑</h-button>
-                    <h-button table @click="handleSubmit(slotProps.data.row)" v-if="slotProps.data.row.invoiceStatus==10">提交</h-button>
-                    <h-button table @click="handleReject(slotProps.data.row)"  v-if="slotProps.data.row.invoiceStatus==20">驳回</h-button>
+                    <h-button table @click="handleLook(slotProps.data.row)" v-if="hosAuthCheck(INVOICE_EQUIPT_LOOK)">查看</h-button>
+                    <h-button table @click="handleEdit(slotProps.data.row)" v-if="hosAuthCheck(INVOICE_EQUIPT_EDIT)&&slotProps.data.row.invoiceStatus==10">编辑</h-button>
+                    <h-button table @click="handleSubmit(slotProps.data.row)" v-if="hosAuthCheck(INVOICE_EQUIPT_SUBMIT)&&slotProps.data.row.invoiceStatus==10">提交</h-button>
+                    <h-button table @click="handleReject(slotProps.data.row)"  v-if="hosAuthCheck(INVOICE_EQUIPT_REJECT)&&slotProps.data.row.invoiceStatus==20">驳回</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -135,7 +135,7 @@ import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyU
 import elImageAddToken from '@/components/elImageAddToken/index.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import { measure, handleSubmit, validateForm } from '@/decorator/index'
 import { getEqpList, getEqpTotal, rejectEqp, submitEqp } from '../api/index'
-
+import { INVOICE_EQUIPT_LOOK, INVOICE_EQUIPT_EDIT, INVOICE_EQUIPT_SUBMIT, INVOICE_EQUIPT_OPEN, INVOICE_EQUIPT_REJECT } from '@/utils/auth_const'
 const invoiceTyps = [{ value: 10, label: '申请中' }, { value: 20, label: '已提交' }, { value: 30, label: '已开票' }]
 
 @Component({
@@ -159,6 +159,11 @@ export default class UpstreamPaymentManagement extends Vue {
         sizes: [10, 20, 50, 100],
         total: 0
     }
+    INVOICE_EQUIPT_LOOK = INVOICE_EQUIPT_LOOK
+    INVOICE_EQUIPT_EDIT = INVOICE_EQUIPT_EDIT
+    INVOICE_EQUIPT_SUBMIT = INVOICE_EQUIPT_SUBMIT
+    INVOICE_EQUIPT_OPEN = INVOICE_EQUIPT_OPEN
+    INVOICE_EQUIPT_REJECT = INVOICE_EQUIPT_REJECT
     tableData:any[] = []
     editorDrawer:boolean = false
     totalSalesInvoiceAmount = null

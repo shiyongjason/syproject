@@ -9,7 +9,7 @@
                             <el-input v-model.trim="equipmentForm.invoiceNo" disabled></el-input>
                         </el-form-item>
                         <el-form-item label="支付单号：" prop="paymentOrderNo">
-                            <el-input v-model.trim="equipmentForm.paymentOrderNo" maxlength="50">
+                            <el-input v-model.trim="equipmentForm.paymentOrderNo"  @blur="onInputBlur" maxlength="50">
                                 <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
                             </el-input>
                         </el-form-item>
@@ -51,7 +51,7 @@
                             <el-input type="textarea"  v-model.trim="equipmentForm.receiverAddress" maxlength="80"></el-input>
                         </el-form-item>
                         <el-form-item label="备注信息：" prop="remark">
-                        <el-input type="textarea" maxlength="255" v-model="equipmentForm.remark" :autosize="{ minRows: 6, maxRows: 8}"></el-input>
+                        <el-input type="textarea" maxlength="255" show-word-limit v-model="equipmentForm.remark" :autosize="{ minRows: 6, maxRows: 8}"></el-input>
                     </el-form-item>
                     </el-row>
                     <div class="floor-tit">上传附件</div>
@@ -113,7 +113,7 @@ import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { ccpBaseUrl } from '@/api/config'
 import { EqpInvoiceSubmitRequest } from '@/interface/hbp-project'
-import { geEqpPaymentOrderPage, getEqpDetail, updateEqpInvoice } from '../api'
+import { getEqpPaymentOrderPage, getEqpDetail, updateEqpInvoice } from '../api'
 import { Phone } from '@/utils/rules'
 @Component({
     name: 'Servicededit',
@@ -143,7 +143,8 @@ export default class Servicedetail extends Vue {
         projectName: '',
         supplierCompanyName: '',
         pageSize: 10,
-        pageNumber: 1
+        pageNumber: 1,
+        paymentOrderNoAccurate: ''
     }
     _queryParams : Record<string, any> = {}
     isDisabled: boolean = true
@@ -228,13 +229,15 @@ export default class Servicedetail extends Vue {
     }
 
     async findPageList () {
-        const { data } = await geEqpPaymentOrderPage(this.queryParams)
+        this.queryParams.paymentOrderNoAccurate = ''
+        const { data } = await getEqpPaymentOrderPage(this.queryParams)
         this.tableForm = data.records
         this.page.total = data.total as number
     }
 
     handleReset () {
     // 重置
+        this.queryParams = deepCopy(this._queryParams)
         this.findPageList()
     }
 
@@ -287,6 +290,53 @@ export default class Servicedetail extends Vue {
         const { data } = await getEqpDetail(id)
         // @ts-ignore
         this.equipmentForm = data
+        this.equipmentForm.invoiceId = this.$route.query.id as string
+    }
+
+    async onInputBlur ({ target }) {
+        console.log('val: ', target.value)
+        this.queryParams.paymentOrderNoAccurate = target.value
+        const { data } = await getEqpPaymentOrderPage(this.queryParams)
+        console.log('data: ', data)
+        if (data.records.length == 1) {
+            this.equipmentForm = {
+                ...this.equipmentForm,
+                paymentOrderNo: data.records[0].paymentOrderNo,
+                projectName: data.records[0].projectName,
+                companyName: data.records[0].companyName,
+                supplierCompanyName: data.records[0].supplierCompanyName,
+                deptName: data.records[0].deptName,
+                companyId: data.records[0].companyId,
+                projectNo: data.records[0].projectNo,
+                projectId: data.records[0].projectId,
+                deptCode: data.records[0].deptCode,
+                paymentOrderId: data.records[0].id
+            }
+        } else {
+            if (target.value) {
+                this.$message.warning('支付单有误')
+                this.equipmentForm = {
+                    ...this.equipmentForm,
+                    paymentOrderNo: '',
+                    projectName: '',
+                    companyName: '',
+                    supplierCompanyName: '',
+                    deptName: '',
+                    companyId: '',
+                    projectNo: '',
+                    projectId: '',
+                    deptCode: '',
+                    paymentOrderId: '',
+                    purchaseInvoiceAmount: '',
+                    salesInvoiceAmount: '',
+                    misPurchaseOrderNo: '',
+                    misSalesOrderNo: '',
+                    receiver: '',
+                    receiverMobile: '',
+                    receiverAddress: ''
+                }
+            }
+        }
     }
 
     async mounted () {
@@ -294,7 +344,6 @@ export default class Servicedetail extends Vue {
         this._queryParams = deepCopy(this.queryParams)
         if (this.$route.query.id) {
             this.getEquipDetail(this.$route.query.id)
-            this.equipmentForm.invoiceId = this.$route.query.id as unknown as string
         }
         // this.tableForm = [{ id: 201, code: 32, name: 3234, categoryPath: 555 }, { id: 200, code: 11111, name: 2222 }]
     }
