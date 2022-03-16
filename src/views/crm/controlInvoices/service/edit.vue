@@ -361,7 +361,7 @@ export default class Serviceedit extends Vue {
         // this.tableData = [{ id: 200, code: 11111, name: 2222, money: 100 }]
         // this.selectData = this.tableData
         this._serviceForm = deepCopy(this.serviceForm)
-        this.queryParams.subsectionCode = '1050AL100000000003DM'
+        this.queryParams.subsectionCode = this.userInfo.pkDeptDoc
         if (this.$route.query.id) {
             this.getDetail(this.$route.query.id)
         }

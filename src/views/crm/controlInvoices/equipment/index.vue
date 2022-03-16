@@ -47,7 +47,7 @@
                     <div class="query-col__input">
                         <el-select v-model="queryParams.invoiceStatus" placeholder="请选择">
                             <el-option label="全部" value=""></el-option>
-                             <el-option  v-for="(item,index) in invoiceTyps"  :label=item.label :value=item.value :key="index"></el-option>
+                            <el-option v-for="(item,index) in invoiceTyps" :label=item.label :value=item.value :key="index"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -118,7 +118,7 @@
                     <h-button table @click="handleLook(slotProps.data.row)" v-if="hosAuthCheck(INVOICE_EQUIPT_LOOK)">查看</h-button>
                     <h-button table @click="handleEdit(slotProps.data.row)" v-if="hosAuthCheck(INVOICE_EQUIPT_EDIT)&&slotProps.data.row.invoiceStatus==10">编辑</h-button>
                     <h-button table @click="handleSubmit(slotProps.data.row)" v-if="hosAuthCheck(INVOICE_EQUIPT_SUBMIT)&&slotProps.data.row.invoiceStatus==10">提交</h-button>
-                    <h-button table @click="handleReject(slotProps.data.row)"  v-if="hosAuthCheck(INVOICE_EQUIPT_REJECT)&&slotProps.data.row.invoiceStatus==20">驳回</h-button>
+                    <h-button table @click="handleReject(slotProps.data.row)" v-if="hosAuthCheck(INVOICE_EQUIPT_REJECT)&&slotProps.data.row.invoiceStatus==20">驳回</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -252,8 +252,8 @@ export default class UpstreamPaymentManagement extends Vue {
     @measure
     async getList () {
         await Promise.all([getEqpList(this.queryParams), getEqpTotal(this.queryParams)]).then(res => {
-            console.log('res: ', res)
-            if (res[1].data) {
+            if (res[1]) {
+                console.log('res: ', res)
                 this.tableData = res[0].data.records
                 this.page.total = res[0].data.total as number
                 this.totalPurchaseInvoiceAmount = res[1].data.totalPurchaseInvoiceAmount

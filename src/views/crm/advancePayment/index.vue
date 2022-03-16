@@ -361,12 +361,7 @@
         <el-dialog :close-on-click-modal='false' title="确认网银支付" :visible.sync="isShowLinkBank" :before-close="()=>{isShowLinkBank = false;bankForm.attachDocRequestList=[]}" width="500px" class="prev-payment-dialog">
             <el-form :model="bankForm" :rules="bankRules" ref="bankForm" label-width="150px" class="demo-ruleForm">
                 <el-form-item label="本次支付账号：" prop="payeeBankName">
-                    <!-- <el-select v-model="bankForm.id" placeholder="请选择" @change="handleAccountRadio">
-                        <el-option v-for="item in payeeAccountList" :key="item.id" :label="item.allName" :value="item.id">
-                            <span style="float: left">{{ item.payeeBankName }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.payeeBankAccount }}</span>
-                        </el-option>
-                    </el-select> -->
+
                     <HAutocomplete :placeholder="'请选择'" :maxlength=60 @back-event="backFindparam" :selectObj="targetObj" :selectArr="payeeAccountList" v-if="payeeAccountList" :remove-value='true' :isSettimeout=false>
                         <template slot-scope="scope">
                             <div style="display:flex;flex-direction: column;">
@@ -707,10 +702,17 @@ export default class Advancelist extends Vue {
         this.$nextTick(() => {
             this.$refs['bankForm'].clearValidate()
         })
+        this.targetObj = {
+            selectName: '',
+            selectCode: ''
+        }
+        this.bankForm.payeeBankName = ''
     }
 
     handleSubBank () {
-        (this.$refs as any).bankForm.validate(async (validate) => {
+        console.log(this.bankForm)
+
+        this.$refs['bankForm'].validate(async (validate) => {
             if (validate) {
                 await Api.updateOnlineBank(this.bankForm)
                 this.isShowLinkBank = false
@@ -720,21 +722,6 @@ export default class Advancelist extends Vue {
     }
 
     public onUploadPrePay (val) {
-        // this.prePayForm = {
-        //     ...this.prePayForm,
-        //     payAmount: val.applyAmount,
-        //     confirmAmount: val.confirmAmount,
-        //     paidAmount: val.paidAmount,
-        //     prepaymentOrderId: val.id,
-        //     operator: this.userInfo.employeeName,
-        //     operatorPhone: this.userInfo.phoneNumber
-        // }
-        // this.prePayVisble = true
-
-        // this.$nextTick(() => {
-        //     this.prePayForm.payVouchers = []
-        //     this.$refs['prePayForm'].clearValidate()
-        // })
         this.$refs['uploaddialog'].onDialogClick(val)
     }
 
@@ -847,6 +834,11 @@ export default class Advancelist extends Vue {
         this.payForm.payDate = moment(new Date()).format('YYYY-MM-DD')
         this.payForm.payVouchers = []
         this.getBankAccount()
+        this.targetObj = {
+            selectName: '',
+            selectCode: ''
+        }
+        this.payForm.payeeBankName = ''
     }
 
     async getBankAccount () {
@@ -875,7 +867,6 @@ export default class Advancelist extends Vue {
         console.log('val: ', val.value.id)
         if (val.value) {
             const bankInfo = this.payeeAccountList.filter(item => item.id == val.value.id)[0]
-
             this.bankForm.payPrincipal = bankInfo.payeeName
             this.bankForm.payeeBankName = bankInfo.payeeBankName
             this.bankForm.payeeBankAccount = bankInfo.payeeBankAccount

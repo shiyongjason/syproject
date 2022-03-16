@@ -226,13 +226,8 @@
         <el-dialog :close-on-click-modal='false' title="确认网银支付" :visible.sync="isShowLinkBank" width="600px" class="prev-payment-dialog" :before-close="()=> onBankCancel()">
             <el-form :model="bankForm" :rules="bankRules" ref="bankForm" label-width="150px" class="demo-ruleForm">
                 <el-form-item label="本次支付账号：" prop="payeeBankName">
-                    <!-- <el-select v-model="bankForm.id" placeholder="请选择" @change="handleAccountRadio">
-                        <el-option v-for="item in payeeAccountList" :key="item.id" :label="item.allName" :value="item.id">
-                            <span style="float: left">{{ item.payeeBankName }}</span>
-                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.payeeBankAccount }}</span>
-                        </el-option>
-                    </el-select> -->
-                      <HAutocomplete :placeholder="'请选择'" :maxlength=60 @back-event="backFindparam" :selectObj="targetObj" :selectArr="payeeAccountList" v-if="payeeAccountList" :remove-value='true' :isSettimeout=true>
+
+                      <HAutocomplete :placeholder="'请选择'" :maxlength=60 @back-event="backFindparam" :selectObj="targetObj" :selectArr="payeeAccountList" v-if="payeeAccountList" :remove-value='true' :isSettimeout=false>
                         <template slot-scope="scope">
                             <div style="display:flex;flex-direction: column;">
                                 <span style="">{{ scope.data.payeeBankName }}</span>
@@ -417,7 +412,7 @@ export default class UpstreamPaymentManagement extends Vue {
     get formRules () {
         let rules = {
             payeeBankName: [
-                { required: true, message: '请选择本次支付账号' }
+                { required: true, message: '请选择本次支付账号', trigger: 'change' }
             ],
             payAmount: [
                 {
@@ -447,7 +442,7 @@ export default class UpstreamPaymentManagement extends Vue {
 
     get bankRules () {
         return {
-            payeeBankName: [{ required: true, message: '请选择本次支付账号' }],
+            payeeBankName: [{ required: true, message: '请选择本次支付账号1111', trigger: 'change' }],
             paymentTime: [{ required: true, message: '请选择网银支付时间', trigger: 'change' }],
             attachDocRequestList: [{ required: true, message: '请上传上游支付凭证', trigger: 'change' }]
         }
@@ -582,7 +577,15 @@ export default class UpstreamPaymentManagement extends Vue {
         this.maxTime = val.loanTransferDate
         this.bankForm.paymentOrderId = val.paymentOrderId
         this.bankForm.paymentTime = moment(new Date()).format('YYYY-MM-DD')
+        this.targetObj = {
+            selectName: '',
+            selectCode: ''
+        }
+        this.bankForm.payeeBankName = ''
         this.getBankAccount()
+        this.$nextTick(() => {
+            this.$refs['bankForm'].clearValidate()
+        })
     }
 
     onBankCancel () {
@@ -598,7 +601,6 @@ export default class UpstreamPaymentManagement extends Vue {
         (this.$refs as any).bankForm.validate(async (validate) => {
             if (validate) {
                 await Api.updateOnlineBank(this.bankForm)
-
                 this.isShowLinkBank = false
                 this.getList()
             }
@@ -672,6 +674,11 @@ export default class UpstreamPaymentManagement extends Vue {
         this.dialogFormData.payAmount = this.prevPaymentDetail.surplusAmount
         this.isOpen = true
         this.getBankAccount()
+        this.targetObj = {
+            selectName: '',
+            selectCode: ''
+        }
+        this.dialogFormData.payeeBankName = ''
     }
 
     async getBankAccount () {
@@ -684,7 +691,9 @@ export default class UpstreamPaymentManagement extends Vue {
         console.log('aa: ', this.payeeAccountList)
 
         this.payeeAccountList.map(val => {
-            val.allName = val.payeeBankName + '(' + val.payeeBankAccount + ')'
+            // val.allName = val.payeeBankName + '(' + val.payeeBankAccount + ')'
+            val.value = val.payeeBankName
+            val.selectCode = val.payeeBankAccount
         })
     }
 
@@ -707,25 +716,28 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     backFindparam (val) {
-        console.log('val: ', val)
-        if (val.value) {
-            const bankInfo = this.payeeAccountList.filter(item => item.id == val.value.id)[0]
-            this.bankForm.payPrincipal = bankInfo.payeeName
-            this.bankForm.payeeBankName = bankInfo.payeeBankName
-            this.bankForm.payeeBankAccount = bankInfo.payeeBankAccount
-            this.targetObj = {
-                selectName: bankInfo.payeeBankName,
-                selectCode: bankInfo.payeeBankAccount
-            }
-        } else {
-            this.targetObj = {
-                selectName: '',
-                selectCode: ''
-            }
-            this.bankForm.payPrincipal = ''
-            this.bankForm.payeeBankName = ''
-            this.bankForm.payeeBankAccount = ''
-        }
+        this.bankForm.payeeBankName = 123
+        // console.log('val:11111 ', val)
+        // if (val.value) {
+        //     const bankInfo = this.payeeAccountList.filter(item => item.id == val.value.id)[0]
+        //     this.bankForm.payPrincipal = bankInfo.payeeName
+        //     this.bankForm.payeeBankName = bankInfo.payeeBankName
+        //     this.bankForm.payeeBankAccount = bankInfo.payeeBankAccount
+        //     this.targetObj = {
+        //         selectName: bankInfo.payeeBankName,
+        //         selectCode: bankInfo.payeeBankAccount
+        //     }
+        // } else {
+        //     // this.targetObj = {
+        //     //     selectName: '',
+        //     //     selectCode: ''
+        //     // }
+        //     this.bankForm.payPrincipal = ''
+        //     this.bankForm.payeeBankName = ''
+        //     this.bankForm.payeeBankAccount = ''
+        // }
+        // // this.$refs['bankForm'].clearValidate()
+        // console.log(' this.$refs')
     }
 
     editorDrawerClose (done:Function): void {
