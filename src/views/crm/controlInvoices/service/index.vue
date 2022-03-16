@@ -307,7 +307,7 @@ export default class ServiceList extends Vue {
     @measure
     async getList () {
         await Promise.all([getInvoiceList(this.queryParams), getInvoiceTotal(this.queryParams)]).then(res => {
-            if (res[1].data) {
+            if (res[1]) {
                 this.tableData = res[0].data.records
                 this.page.total = res[0].data.total as number
                 this.totalMoney = res[1].data

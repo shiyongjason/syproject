@@ -872,7 +872,7 @@ export default [
                     },
                     {
                         path: 'equipmentdetail',
-                        name: 'equipmentequipmentdetailedit',
+                        name: 'equipmentdetail',
                         meta: {
                             title: '查看设备发票',
                             tagName: '查看设备发票',

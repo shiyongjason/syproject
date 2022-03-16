@@ -302,6 +302,10 @@ export default class UpstreamPaymentManagement extends Vue {
 
     async onToss (val) {
         console.log('val: ', val)
+        if (val.paymentType == 2) {
+            this.$message.warning('此笔资料的付款类型为费用，暂不支持抛转NC凭证！')
+            return false
+        }
         const { data } = await Api.updateNc(val.id)
         console.log('data: ', data)
         this.$message.info(data)
