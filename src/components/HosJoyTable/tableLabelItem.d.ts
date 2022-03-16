@@ -37,5 +37,7 @@ export interface tableLabelItem<T> extends Partial<ElTableColumn> {
     filterMethod?: (value?: any, row?: any, column?: any) => any,
     /** 多级表头 */
     children?: tableLabelItem<T>[],
+    /** 是否隐藏该列 */
+    isHidden?:boolean,
     // [k: string]: any // element 支持的api只要版本支持，这边都可以用。
 }

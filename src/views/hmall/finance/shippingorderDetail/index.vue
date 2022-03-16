@@ -79,20 +79,35 @@
                         </div>
                     </div>
                 </div>
+                <div class="table-cont-title between">
+                    <span class="table-title-name">运费信息</span>
+                    <span class="table-title-name between" v-if="basicInfo.status<=10">
+                        <el-input v-model="amount" v-isNum:2 v-inputMAX='100000' placeholder="请输入修改后的运费" size="small"></el-input>
+                        <el-button size="small" type="primary" style="margin-left:10px" @click="ConfirmFreightVisible">确定</el-button>
+                    </span>
+                </div>
+                <div class="pb20">
+                    <!-- <basicTable :tableData="basicInfo.freightOrderSkuList" :tableLabel="tableLabel" :multiSelection.sync="multiSelection" :isPagination="false" :isShowIndex="true" :isAction="isAction"> -->
+                    <basicTable :tableData="basicInfo.freightOrderLogList" :tableLabel="theFreightInformation" :multiSelection.sync="multiSelection" :isPagination="false" :isShowIndex="true">
+                        <template slot="operateMotion" slot-scope="scope">
+                            {{ operatonalMap.get(scope.data.row.operateMotion) || '-' }}
+                        </template>
+                    </basicTable>
+                </div>
                 <div class="table-cont-title">
                     <span class="table-title-name">商品运费明细信息</span>
                 </div>
                 <div class="pb20">
-                    <basicTable :tableData="basicInfo.freightOrderSkuList" :tableLabel="tableLabel" :multiSelection.sync="multiSelection" :isPagination="false" :isShowIndex="true" :isAction="isAction">
+                    <basicTable :tableData="basicInfo.freightOrderSkuList" :tableLabel="tableLabel" :multiSelection.sync="multiSelection" :isPagination="false" :isShowIndex="true">
                         <template slot="freightSource" slot-scope="scope">
                             {{ sourcesPriceMap.get(scope.data.row.freightSource) || '-' }}
                         </template>
                         <template slot="status" slot-scope="scope">
                             {{ freightStatusMap.get(scope.data.row.status) || '-' }}
                         </template>
-                        <template slot="action" slot-scope="scope" v-if="basicInfo.status == 10">
+                        <!-- <template slot="action" slot-scope="scope" v-if="basicInfo.status == 10">
                             <h-button table @click="onseeTask(scope.data.row)">编辑运费价格</h-button>
-                        </template>
+                        </template> -->
                     </basicTable>
                 </div>
                 <div class="table-cont-title">
@@ -131,18 +146,35 @@
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { FREIGHT_STATUS_MAP, MERCHANT_TYPE_MAP, SOURCES_PRICE_MAP, OPERATIONAL_MAP } from '../const'
 import { withinDetail } from '@/utils/rules.js'
-import { putFreightPrice } from '../api/index'
+import { putFreightPrice, putFreightAmount } from '../api/index'
 export default {
     name: 'shippingorderDetail',
     data () {
         return {
             merchantTypeMap: MERCHANT_TYPE_MAP,
             sourcesPriceMap: SOURCES_PRICE_MAP,
-            freightStatusMap: FREIGHT_STATUS_MAP,
+            // freightStatusMap: FREIGHT_STATUS_MAP,
+            freightStatusMap: new Map([
+                [10, '待支付'],
+                [15, '待支付尾款'],
+                [20, '待发货'],
+                [30, '待收货'],
+                [40, '已完成'],
+                [50, '已关闭'],
+                [60, '退款中'],
+                [70, '已退款']
+            ]),
             operatonalMap: OPERATIONAL_MAP,
             basicInfo: {},
             logInfo: [],
             multiSelection: [],
+            amount: '',
+            theFreightInformation: [
+                { label: '操作时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '操作人', prop: 'operator' },
+                { label: '内容', prop: 'operateMotion' },
+                { label: '运费合计', prop: 'amount' }
+            ],
             tableLabel: [
                 { label: 'sku编码', prop: 'skuCode' },
                 { label: '商品名称', prop: 'skuName' },
@@ -151,7 +183,7 @@ export default {
                 { label: '价格定义来源', prop: 'freightSource' },
                 { label: '运费合计金额', prop: 'finalTotalAmount' },
                 // { label: '物流券抵扣金额', prop: 'finalSingleAmount' },
-                { label: '实付运费金额', prop: 'finalTotalAmount' },
+                // { label: '实付运费金额', prop: 'finalTotalAmount' },
                 { label: '退款申请时间', prop: 'refundApplyTime', formatters: 'dateTime' },
                 { label: '状态', prop: 'status' }
             ],
@@ -175,7 +207,10 @@ export default {
                     { validator: withinDetail, trigger: 'blur' }
                 ]
             },
-            sourceFreight: false
+            sourceFreight: false,
+            queryParams: {
+                freight: ''
+            }
         }
     },
     computed: {
@@ -190,6 +225,20 @@ export default {
         }
     },
     methods: {
+        async ConfirmFreightVisible () {
+            if (this.amount === '') {
+                this.$message.error('请输入正确金额')
+                return
+            }
+            await putFreightAmount({
+                freightOrderId: this.basicInfo.id,
+                amount: this.amount,
+                operator: this.userInfo.employeeName
+            })
+            this.$message.success('修改成功')
+            this.amount = ''
+            this.init()
+        },
         async init () {
             if (this.$route.query.id) {
                 this.getfreightOrdersInfo()
@@ -303,5 +352,10 @@ export default {
 }
 .createPrice {
     padding: 50px 70px;
+}
+.between{
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
 }
 </style>

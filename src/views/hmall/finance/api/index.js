@@ -193,3 +193,12 @@ export const findOnlinefreightList = (params) => {
 export const findBankInfo = (params) => {
     return axios.get(`${B2bUrl}payment/boss/purchasing-agent-funds/user-info`, { params })
 }
+
+// 资金同步
+export const syncToNc = (freightOrderId) => {
+    return axios.patch(`${B2bUrl}order/boss/freight-orders/sync-to-nc/${freightOrderId}`)
+}
+// 运费修改
+export const putFreightAmount = (params) => {
+    return axios.put(`${B2bUrl}order/boss/freight-orders/update-amount`, params)
+}

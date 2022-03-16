@@ -53,6 +53,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">订单状态：</div>
                     <div class="query-col__input">
+                        <!-- 订单状态，10:待支付，15：待支付尾款 20:待发货，30:待收货，40:已完成,50：已关闭，60退款中，70已退款, 80=退货中, 100=换货中, 110=已换货 -->
                         <el-select v-model="queryParams.childOrderStatus">
                             <el-option label="全部" value=""></el-option>
                             <el-option label="待支付" value="10"></el-option>
@@ -62,6 +63,9 @@
                             <el-option label="已关闭" value="50"></el-option>
                             <el-option label="退款中" value="60"></el-option>
                             <el-option label="已退款" value="70"></el-option>
+                            <el-option label="退货中" value="80"></el-option>
+                            <el-option label="换货中" value="100"></el-option>
+                            <el-option label="已换货" value="110"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -121,6 +125,20 @@
                         </el-date-picker>
                     </div>
                 </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">订单类型：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.orderType">
+                            <el-option v-for="item in orderType" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">原订单单号：</div>
+                    <div class="query-col-input">
+                        <el-input v-model.trim="queryParams.originalOrderNo" placeholder="请输入" maxlength="20"></el-input>
+                    </div>
+                </div>
                 <div class="query-cont__col">
                     <h-button type="primary" @click="onSearch">查询</h-button>
                     <h-button @click="onReset">重置</h-button>
@@ -133,7 +151,7 @@
     </div>
 </template>
 <script>
-import { transactionInfoTableLabel } from './const'
+import { transactionInfoTableLabel, CHILD_ORDER_TYPE } from './const'
 import { downloadTransactionInfoList } from './api'
 import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
@@ -150,6 +168,8 @@ export default {
                 keyManName: '',
                 brandName: '',
                 childOrderStatus: '',
+                originalOrderNo: '',
+                orderType: 0,
                 source: '',
                 payWay: '',
                 merchantName: '',
@@ -159,7 +179,8 @@ export default {
                 endPayTime: ''
             },
             searchParams: {},
-            tableLabel: transactionInfoTableLabel
+            tableLabel: transactionInfoTableLabel,
+            orderType: CHILD_ORDER_TYPE
         }
     },
     computed: {
@@ -220,6 +241,8 @@ export default {
                 keyManName: '',
                 brandName: '',
                 childOrderStatus: '',
+                originalOrderNo: '',
+                orderType: 0,
                 source: '',
                 payWay: '',
                 merchantName: '',

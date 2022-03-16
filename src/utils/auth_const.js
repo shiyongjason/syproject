@@ -163,6 +163,17 @@ export const WISDOM_FLOWTOBORROW_SHOW_LINE = 10840
 export const WISDOM_EXPOSURE_SHOW_LINE = 10850
 // 好智慧-资金数据 分授信
 export const WISDOM_POINTSCREDIT_SHOW_LINE = 10860
+// 资金审核
+export const WISDOM_LIST_SHENHE = 10865
+// 资金查看详情
+export const WISDOM_LIST_FLOWTOBORROW_DETAIL = 10866 // 流贷
+export const WISDOM_LIST_EXPOSURE_DETAIL = 10867
+export const WISDOM_LIST_POINTSCREDIT_DETAIL = 10868
+
+// 资金日志
+export const WISDOM_LIST_FLOWTOBORROW_RECORDS = 10875
+export const WISDOM_LIST_EXPOSURE_RECORDS = 10876
+export const WISDOM_LIST_POINTSCREDIT_RECORDS = 10877
 
 // 舒适云-智能玩法编辑 todo 舒适云目前没有添加权限按钮 编辑页面全部预留 key
 export const AUTH_CLOUD_SMART_PLAY_EDIT = 10680
@@ -240,6 +251,10 @@ export const CRM_FUNDS_DOWN_PAYMENT_FUND_CONFIRM = 109515 // 首付款账单-支
 export const CRM_FUNDS_DOWN_PAYMENT_FUND_SEE = 109516 // 首付款账单-查看凭证
 export const CRM_FUNDS_SERVICE_FUND_CONFIRM = 109517 // 服务费账单-支付确认
 export const CRM_FUNDS_SERVICE_FUND_SEE = 109518 // 服务费账单-查看凭证
+export const CRM_FUNDS_CHARGE_FUND_SEE = 109580 // 预付款-查看凭证
+export const CRM_FUNDS_CHARGE_FUND_CONFIRM = 109581 // 预付款-支付确认
+export const CRM_FUNDS_CHARGE_FUND_UPLOAD = 109582 // 预付款上传凭证
+
 export const CRM_FUNDS_ARREAR_FUND_CONFIRM = 109519 // 尾款账单-支付确认
 export const CRM_FUNDS_ARREAR_FUND_SEE = 109520 // 尾款账单-查看凭证
 export const CRM_FUNDS_DOWN_UPLOAD = 1096001 // 首付款上传
@@ -305,7 +320,7 @@ export const HOLIDAY_EDIT = 800082
 
 // 上游支付
 
-export const UPSTREAM_PAY_DETAIL = 500001// 详情
+export const UPSTREAM_PAY_DETAIL = 500001 // 详情
 // 确认信息 资金部审核
 export const UPSTREAM_PAY_CONFIRM_EX = 500002
 // 确认信息 资金部放款
@@ -433,7 +448,13 @@ export const CRM_UPLOAD_PREPAY = 118506
 export const CRM_UPSTREAM_BANK = 118507
 export const CRM_OPREATE_APPROVE = 118508
 export const CRM_ADVACE_WRITEOFF = 118509
-
+export const CRM_SUBMIT_PAY = 118510
+export const CRM_ONLINE_PAY = 118513
+// 银企直联入账清单
+export const CRM_ACCOUNT_DETAIL = 118511 // 查看详情
+export const CRM_ACCOUNT_CLAIM = 118512 // 认领账单
+export const CRM_ACCOUNT_CANCELSUBMIT = 118514
+export const CRM_ACCOUNT_CONTINUE = 118515
 // 舒适云智能化 -- 设备升级详情
 export const COMFORT_SMART_DEVICE_UPGRADE_DETAIL = 118505
 // 权限管理-岗位设置
@@ -465,3 +486,19 @@ export const APPLICATIONLIST_LINK_AUTHENLIST = 1000009
 /* 线索 */
 export const THREAD_DISTRIBUTOR = 1600001
 export const THREAD_SAVE = 1600002
+
+// 发票按钮权限
+export const INVOICE_SERVICE_LOOK = 1458001
+export const INVOICE_SERVICE_EDIT = 1458002
+export const INVOICE_SERVICE_SUBMIT = 1458003
+export const INVOICE_SERVICE_OPEN = 1458004
+export const INVOICE_SERVICE_REJECT = 1458005
+
+// 发票按钮权限
+export const INVOICE_EQUIPT_LOOK = 1458006
+export const INVOICE_EQUIPT_EDIT = 1458007
+export const INVOICE_EQUIPT_SUBMIT = 1458008
+export const INVOICE_EQUIPT_OPEN = 1458009
+export const INVOICE_EQUIPT_REJECT = 1458010
+/* 支付单明细 */
+export const UPSTREAM_TOSS = 1586222

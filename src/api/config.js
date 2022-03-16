@@ -20,18 +20,17 @@ var env = process.env.NODE_ENV === 'development'
             ? 'test' : process.env.VUE_APP_TITLE === 'preview'
                 ? 'preview' : process.env.VUE_APP_TITLE === 'newtest'
                     ? 'newtest' : 'production')
-
 switch (env) {
     case 'development':
         interfaceUrl = 'http://192.168.20.248:30000/'
         ossUrl = 'http://192.168.20.248:8089/'
         iframeUrl = 'http://devcrm.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        B2bUrl = 'https://b2b-gateway-test.hosjoy.com/'
-        fileUploadUrl = 'https://hbp-test.hosjoy.com/'
+        ccpBaseUrl = 'http://192.168.20.248:8021/'
+        B2bUrl = 'http://192.168.20.248:40000/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
         iotZsUrl = 'https://iot-proxy-test.hosjoy.com'
-        ccpBaseUrl = 'https://ccp-test.hosjoy.com/'
+        ccpBaseUrl = 'https://ccp-test245.hosjoy.com/'
         ossBucket = 'hosjoy-private-test'
         ossOldBucket = 'hosjoy-oss-test'
         ossRegion = 'oss-cn-hangzhou'

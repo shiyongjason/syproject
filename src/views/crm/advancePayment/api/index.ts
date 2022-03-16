@@ -6,7 +6,7 @@ export const getPrePayList: (params) => AxiosPromise<IPagePrepaymentResponse> = 
     return axios.get('/project/api/prepayments/boss', { params })
 }
 // 预付款详情
-export const getPrePayDetail: (params) => AxiosPromise<PrepaymentDetailResponse> = (params:number) => {
+export const getPrePayDetail: (params) => AxiosPromise<any> = (params:number) => {
     return axios.get(`/project/api/prepayments/boss/${params}`)
 }
 
@@ -49,3 +49,10 @@ export const updatePrePay: (params) => AxiosPromise = (params) => {
 export const updateOnlineBank :(params)=>AxiosPromise = (params) => {
     return axios.post(`/project/api/supplier-payments/prepayment/online-bank-payment-confirm`, params)
 }
+// 司库 支付
+export const updatePayOnline :(params)=>AxiosPromise = (params) => {
+    return axios.patch(`/project/api/prepayments/boss/pay-online/${params}`)
+}
+
+// 帅选 付款账号
+export const findPayeeAccount = () => axios.get('/project/api/bank/receipt/payee-account/list')
