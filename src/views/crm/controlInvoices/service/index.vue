@@ -74,7 +74,7 @@
                 <div class="query-cont__col">
                     <h-button type="primary" @click="getList">查询</h-button>
                     <h-button @click="handleReset">重置</h-button>
-                    <h-button type="primary" @click="handleEdit()">申请</h-button>
+                    <h-button type="primary" @click="handleEdit()" v-if="hosAuthCheck(INVOICE_SERVICE_ADD)">申请</h-button>
                 </div>
             </div>
             <!-- end search bar -->
@@ -124,7 +124,7 @@ import { ServiceInvoiceOpenRequest } from '@/interface/hbp-project'
 import { updateOpen, updateReject, updateSubmit, getInvoiceList, getInvoiceTotal, getDelivery } from '../api/index'
 // import { newCache } from '@/utils/index'
 import { deepCopy } from '@/utils/utils'
-import { INVOICE_SERVICE_LOOK, INVOICE_SERVICE_EDIT, INVOICE_SERVICE_SUBMIT, INVOICE_SERVICE_OPEN, INVOICE_SERVICE_REJECT } from '@/utils/auth_const'
+import { INVOICE_SERVICE_LOOK, INVOICE_SERVICE_EDIT, INVOICE_SERVICE_SUBMIT, INVOICE_SERVICE_OPEN, INVOICE_SERVICE_REJECT, INVOICE_SERVICE_ADD } from '@/utils/auth_const'
 
 // 接口 实现继承
 // type Query<T> = { [P in keyof T]: T[P] }
@@ -154,6 +154,7 @@ export default class ServiceList extends Vue {
     INVOICE_SERVICE_SUBMIT = INVOICE_SERVICE_SUBMIT
     INVOICE_SERVICE_OPEN = INVOICE_SERVICE_OPEN
     INVOICE_SERVICE_REJECT = INVOICE_SERVICE_REJECT
+    INVOICE_SERVICE_ADD = INVOICE_SERVICE_ADD
     deliveries:any[]=[]
     tableData:any[] = []
     totalMoney = ''
