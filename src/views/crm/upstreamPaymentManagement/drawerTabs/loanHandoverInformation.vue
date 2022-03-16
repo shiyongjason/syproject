@@ -96,6 +96,9 @@
             <div class="info-layout">
                 <div class="info-layout-item">
                     <font style="flex: 0 0 130px">供应商开户行名称：</font><span>{{data.supplierAccountName||'-'}}</span>
+  (<em v-if="data.supplierLabel" :class="data.supplierLabel&&className.get(data.supplierLabel.code)">
+                                     {{data.supplierLabel.desc}}
+                     </em>)
                 </div>
                 <div class="info-layout-item">
                     <font style="flex: 0 0 85px">银行联行号：</font><span>{{data.supplierBankNo||'-'}}</span>
@@ -304,7 +307,7 @@ import { interfaceUrl } from '@/api/config'
 import ImageAddToken from '@/components/imageAddToken/index.vue'
 import downloadFileAddToken from '@/components/downloadFileAddToken/index.vue'
 import { downloadFile } from '@/utils'
-
+const className = new Map([[0, 'red'], [10, 'red'], [11, 'red'], [12, 'green'], [20, 'red'], [21, 'red'], [22, 'green'], [30, 'red'], [31, 'red'], [32, 'green']])
 @Component({
     name: 'loanHandoverInformation',
     components: {
@@ -330,7 +333,7 @@ export default class LoanHandoverInformation extends Vue {
     upstreamDownBills = UPSTREAM_DOWN_BILLS;
     upstreamReject = UPSTREAM_REJECT;
     upstreamConfirm = UPSTREAM_CONFIRM;
-
+className = className
     paymentType = PAYMENTTYPE;
     infoDialog: boolean = false;
     isMoreBill: boolean = false;

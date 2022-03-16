@@ -1,5 +1,5 @@
 
-import { IPagePrepaymentResponse, PrepaymentDetailResponse, PrepaymentSupplierSubmitResponse, RespContractSignHistory } from '@/interface/hbp-project'
+import { IPagePrepaymentResponse, PrepaymentDetailResponse, PrepaymentSupplierSubmitResponse, RespContractSignHistory, SupplierResponse } from '@/interface/hbp-project'
 import axios, { AxiosPromise } from 'axios'
 
 export const getPrePayList: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
@@ -52,4 +52,10 @@ export const updateOnlineBank :(params)=>AxiosPromise = (params) => {
 // 司库 支付
 export const updatePayOnline :(params)=>AxiosPromise = (params) => {
     return axios.patch(`/project/api/prepayments/boss/pay-online/${params}`)
+}
+
+// OCR
+
+export const bankOcrReceipt :(params)=>AxiosPromise<SupplierResponse> = (params) => {
+    return axios.get(`/project/api/supplier-payments/ocr-bank-receipt`, { params })
 }
