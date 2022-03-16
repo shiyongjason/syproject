@@ -340,7 +340,7 @@ export default class Servicedetail extends Vue {
     }
 
     async mounted () {
-        this.queryParams.deptCode = '1050AL100000000003DM'
+        this.queryParams.deptCode = this.userInfo.pkDeptDoc
         this._queryParams = deepCopy(this.queryParams)
         if (this.$route.query.id) {
             this.getEquipDetail(this.$route.query.id)

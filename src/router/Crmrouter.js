@@ -473,8 +473,8 @@ export default [
                 path: 'upstreamPaymentList',
                 name: 'upstreamPaymentList',
                 meta: {
-                    title: '上游支付管理明细',
-                    tagName: '上游支付管理明细',
+                    title: '上游支付明细',
+                    tagName: '上游支付明细',
                     parentName: '好橙工',
                     isMenu: true,
                     icon: ''

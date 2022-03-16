@@ -104,8 +104,8 @@
                 </div>
                 <div class="query-cont__col">
                     <h-button type="primary" @click="getList">查询</h-button>
-                    <h-button>重置</h-button>
-                    <h-button @click="handleEdit()">申请</h-button>
+                    <h-button @click="handleReset">重置</h-button>
+                    <h-button @click="handleEdit()" v-if="hosAuthCheck(INVOICE_EQUIPT_ADD)">申请</h-button>
                 </div>
             </div>
             <!-- end search bar -->
@@ -135,7 +135,8 @@ import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyU
 import elImageAddToken from '@/components/elImageAddToken/index.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import { measure, handleSubmit, validateForm } from '@/decorator/index'
 import { getEqpList, getEqpTotal, rejectEqp, submitEqp } from '../api/index'
-import { INVOICE_EQUIPT_LOOK, INVOICE_EQUIPT_EDIT, INVOICE_EQUIPT_SUBMIT, INVOICE_EQUIPT_OPEN, INVOICE_EQUIPT_REJECT } from '@/utils/auth_const'
+import { INVOICE_EQUIPT_LOOK, INVOICE_EQUIPT_EDIT, INVOICE_EQUIPT_SUBMIT, INVOICE_EQUIPT_OPEN, INVOICE_EQUIPT_REJECT, INVOICE_EQUIPT_ADD } from '@/utils/auth_const'
+import { deepCopy } from '@/utils/utils'
 const invoiceTyps = [{ value: 10, label: '申请中' }, { value: 20, label: '已提交' }, { value: 30, label: '已开票' }]
 
 @Component({
@@ -164,6 +165,7 @@ export default class UpstreamPaymentManagement extends Vue {
     INVOICE_EQUIPT_SUBMIT = INVOICE_EQUIPT_SUBMIT
     INVOICE_EQUIPT_OPEN = INVOICE_EQUIPT_OPEN
     INVOICE_EQUIPT_REJECT = INVOICE_EQUIPT_REJECT
+    INVOICE_EQUIPT_ADD = INVOICE_EQUIPT_ADD
     tableData:any[] = []
     editorDrawer:boolean = false
     totalSalesInvoiceAmount = null
@@ -242,11 +244,15 @@ export default class UpstreamPaymentManagement extends Vue {
 
     handleEdit (val) {
         if (val) {
+            // 编辑
             this.$router.push({ path: '/goodwork/manageInvoices/equipmentedit', query: { id: val.id } })
         } else {
             this.$router.push({ path: '/goodwork/manageInvoices/equipmentedit' })
         }
-        // 编辑
+    }
+    handleReset () {
+        this.queryParams = deepCopy(this._queryParams)
+        this.getList()
     }
 
     @measure
@@ -320,6 +326,7 @@ export default class UpstreamPaymentManagement extends Vue {
                 ? JSON.parse(sessionStorage.getItem('authCode') || '')
                 : ''
         })
+        this._queryParams = deepCopy(this.queryParams)
     }
 }
 </script>
