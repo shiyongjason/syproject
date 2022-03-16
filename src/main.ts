@@ -5,7 +5,7 @@ import router from './router'
 import store from '@/store/index'
 import '@/api/axios.js'
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/display.css'
+import 'element-ui/lib/theme-chalk/index.css'
 import HosjoyUI from 'hosjoy-ui'
 import 'hosjoy-ui/lib/hosjoy-ui.css'
 import '../src/theme/index.css'
@@ -13,6 +13,7 @@ import '@/assets/style/common.scss'
 import TreeTable from 'tree-table-vue'
 import filters from './utils/filters'
 import commonFun from './utils/common'
+import HosjoyForm from '@/components/HosjoyForm/install.js'
 // @ts-ignore
 import basicTable from './components/CommonTable/CommonTable'
 // @ts-ignore
@@ -42,7 +43,6 @@ try {
     // ElementUI.Dialog.props.appendToBody.default = false
 
     // ElementUI.Tabs.props.modalAppendToBody.default = false
-    console.log(' ElementUI.Dialog: ', ElementUI)
 } catch (e) {
     console.log(e)
 }
@@ -53,6 +53,7 @@ Vue.use(ElementUI)
 Vue.use(TreeTable)
 Vue.use(HosjoyUI)
 Vue.use(commonFun)
+Vue.use(HosjoyForm)
 // table公共组件
 Vue.component(
     'basicTable', basicTable

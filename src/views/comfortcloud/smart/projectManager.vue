@@ -304,6 +304,18 @@
                     <el-checkbox-group v-model="energyConservationOption">
                         <el-checkbox label="11">节能系统</el-checkbox>
                     </el-checkbox-group>
+                    <el-row>
+                        <el-col :span="4">
+                            <el-checkbox v-model="isShowZTPlatform" @change="onChangeShowZTPlatform">正泰管理平台</el-checkbox>
+                        </el-col>
+                        <el-col :span="20" v-if="isShowZTPlatform">
+                            <el-checkbox-group v-model="ZTPlatformOption">
+                                <el-col :span="6">
+                                    <el-checkbox label="130" value="综合能源管理">综合能源管理</el-checkbox>
+                                </el-col>
+                            </el-checkbox-group>
+                        </el-col>
+                    </el-row>
                     <!-- <el-checkbox v-for="[key, value] of projectTypeOptions" :key="key" :label="key">
                             {{value}}
                             <el-form-item prop="feeType" v-if="showFeeType && key === projectTypeKey.BILLING_SYSTEM" class="inline-form-item">
@@ -582,6 +594,8 @@ export default {
             scenePanelRadioOption: '',
             scenePanelOption: [],
             energyConservationOption: [],
+            isShowZTPlatform: false,
+            ZTPlatformOption: [],
             brandOptions: consts.BRAND_OPTIONS,
             subSystemTypeOptions: consts.SUB_SYSTEM_TYPE_OPTIONS
         }
@@ -637,9 +651,6 @@ export default {
             }
             return []
         },
-        // showFeeType () {
-        //     return this.form.projectType.includes(PROJECT_TYPE_KEY.BILLING_SYSTEM)
-        // },
         ...mapGetters({
             clouldControlProjectList: 'clouldControlProjectList',
             clouldControlProjectDetail: 'clouldControlProjectDetail',
@@ -648,16 +659,6 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo
         })
-    },
-    watch: {
-        // isShowEnergy (value) {
-
-        // }
-        // 'form.projectType' (val) {
-        //     if (!val.includes(consts.PROJECT_TYPE_KEY.BILLING_SYSTEM)) {
-        //         this.form.feeType = ''
-        //     }
-        // }
     },
     methods: {
         ...mapActions({
@@ -820,12 +821,17 @@ export default {
             this.scenePanelRadioOption = 'false'
         },
         onChaneShowScenePanel (value) {
-            console.log(this.scenePanelRadioOption)
             if (value == 30) {
                 this.isShowScenePanel = false
                 this.scenePanelOption = []
             } else {
                 this.isShowScenePanel = true
+            }
+        },
+        onChangeShowZTPlatform (value) {
+            this.isShowZTPlatform = value
+            if (!value) {
+                this.ZTPlatformOption = []
             }
         },
         addNewProject () {
@@ -856,6 +862,8 @@ export default {
             this.scenePanelRadioOption = ''
             this.scenePanelOption = []
             this.energyConservationOption = []
+            this.isShowZTPlatform = false
+            this.ZTPlatformOption = []
         },
         async editProject (id) {
             await this.getClouldControlProjectDetail({ id: id })
@@ -910,6 +918,9 @@ export default {
 
             this.energyConservationOption = this.form.projectType.filter(item => item == 11)
 
+            this.ZTPlatformOption = this.form.projectType.filter(item => item == 130)
+            this.isShowZTPlatform = this.ZTPlatformOption > 0
+
             this.addProject = true
         },
         addThirdSystemConfig () {
@@ -933,7 +944,8 @@ export default {
                 ...this.securityOption,
                 this.scenePanelRadioOption,
                 ...this.scenePanelOption,
-                ...this.energyConservationOption
+                ...this.energyConservationOption,
+                ...this.ZTPlatformOption
             ].filter(item => !(item == '' || !isNumber(Number(item))))
             console.log(this.form.thirdSystemConfigs)
             this.form.thirdSystemConfigs = this.form.thirdSystemConfigs.map(item => {

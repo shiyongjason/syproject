@@ -14,6 +14,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import { clearCache, newCache } from '@/utils/index'
+import ElementUI from 'element-ui'
 
 export default {
     data () {
@@ -106,6 +107,10 @@ export default {
         },
         // 设置标签
         setTags (route) {
+            console.log('route: ', route)
+            console.log(' ElementUI.Dialog: ', ElementUI.Dialog)
+            // ElementUI.Dialog.props.modalAppendToBody.default = false
+            // ElementUI.Dialog.props.appendToBody.default = false
             if (route.meta.tagName) {
                 const isExist = this.tagsList.some(item => {
                     let flag = false
@@ -209,6 +214,7 @@ export default {
         let tags = []
         if (this.isReload) {
             tags = JSON.parse(sessionStorage.getItem('tagsList'))
+            console.log('tags: ', tags)
             this.tagUpdate(tags || [])
             this.reloadUpdate(false)
             if (this.$route.path.indexOf('/b2b/') > -1) {
