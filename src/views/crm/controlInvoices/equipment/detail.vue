@@ -35,15 +35,17 @@
                 <el-tab-pane label="文件信息" name="four"></el-tab-pane>
             </el-tabs>
             <div v-if="activeName=='first'">
-                <hosJoyTable align="center" border :column="tableLabel" :data="tableData" :max-height="500" :isActionFixed='tableData&&tableData.length>0'>
+                <p>已核销采购发票金额：{{formDetail.verificationPurchaseInvoiceAmount|moneyFormat}} 在途采购发票金额：{{formDetail.intransitPurchaseInvoiceAmount|moneyFormat}}</p>
+                <hosJoyTable align="center" border :column="tableLabel" :data="tableData" :max-height="500" >
                 </hosJoyTable>
             </div>
             <div v-if="activeName=='second'">
-                <hosJoyTable align="center" border :column="saleTableLabel" :data="saleData" actionWidth='100' :max-height="500" :isActionFixed='tableData&&tableData.length>0'>
+                     <p>销售发票金额：{{formDetail.normalSalesInvoiceAmount|moneyFormat}}</p>
+                <hosJoyTable align="center" border :column="saleTableLabel" :data="saleData" actionWidth='100' :max-height="500" >
                 </hosJoyTable>
             </div>
             <div v-if="activeName=='third'">
-                <hosJoyTable align="center" border :column="recordTableLabel" :data="recordData" actionWidth='100' :max-height="500" :isActionFixed='tableData&&tableData.length>0'>
+                <hosJoyTable align="center" border :column="recordTableLabel" :data="recordData" actionWidth='100' :max-height="500" >
                 </hosJoyTable>
             </div>
             <div v-if="activeName=='four'">
