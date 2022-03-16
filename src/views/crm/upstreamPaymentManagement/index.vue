@@ -389,7 +389,10 @@ export default class UpstreamPaymentManagement extends Vue {
     bankForm:any={
         paymentOrderId: '',
         paymentTime: '',
-        attachDocRequestList: []
+        attachDocRequestList: [],
+        payPrincipal: '',
+        payeeBankName: '',
+        payeeBankAccount: ''
     }
     payeeAccountList:any[]=[]
 
@@ -442,7 +445,7 @@ export default class UpstreamPaymentManagement extends Vue {
 
     get bankRules () {
         return {
-            payeeBankName: [{ required: true, message: '请选择本次支付账号1111', trigger: 'change' }],
+            payeeBankName: [{ required: true, message: '请选择本次支付账号', trigger: 'change' }],
             paymentTime: [{ required: true, message: '请选择网银支付时间', trigger: 'change' }],
             attachDocRequestList: [{ required: true, message: '请上传上游支付凭证', trigger: 'change' }]
         }
@@ -577,15 +580,15 @@ export default class UpstreamPaymentManagement extends Vue {
         this.maxTime = val.loanTransferDate
         this.bankForm.paymentOrderId = val.paymentOrderId
         this.bankForm.paymentTime = moment(new Date()).format('YYYY-MM-DD')
+        this.getBankAccount()
+        this.$nextTick(() => {
+            this.$refs['bankForm'].clearValidate()
+        })
         this.targetObj = {
             selectName: '',
             selectCode: ''
         }
         this.bankForm.payeeBankName = ''
-        this.getBankAccount()
-        this.$nextTick(() => {
-            this.$refs['bankForm'].clearValidate()
-        })
     }
 
     onBankCancel () {
@@ -689,7 +692,6 @@ export default class UpstreamPaymentManagement extends Vue {
             this.payeeAccountList = this.payeeAccountList.concat(val.payeeAccountList)
         })
         console.log('aa: ', this.payeeAccountList)
-
         this.payeeAccountList.map(val => {
             // val.allName = val.payeeBankName + '(' + val.payeeBankAccount + ')'
             val.value = val.payeeBankName
@@ -716,27 +718,25 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     backFindparam (val) {
-        this.bankForm.payeeBankName = 123
         // console.log('val:11111 ', val)
-        // if (val.value) {
-        //     const bankInfo = this.payeeAccountList.filter(item => item.id == val.value.id)[0]
-        //     this.bankForm.payPrincipal = bankInfo.payeeName
-        //     this.bankForm.payeeBankName = bankInfo.payeeBankName
-        //     this.bankForm.payeeBankAccount = bankInfo.payeeBankAccount
-        //     this.targetObj = {
-        //         selectName: bankInfo.payeeBankName,
-        //         selectCode: bankInfo.payeeBankAccount
-        //     }
-        // } else {
-        //     // this.targetObj = {
-        //     //     selectName: '',
-        //     //     selectCode: ''
-        //     // }
-        //     this.bankForm.payPrincipal = ''
-        //     this.bankForm.payeeBankName = ''
-        //     this.bankForm.payeeBankAccount = ''
-        // }
-        // // this.$refs['bankForm'].clearValidate()
+        if (val.value) {
+            const bankInfo = this.payeeAccountList.filter(item => item.id == val.value.id)[0]
+            this.bankForm.payPrincipal = bankInfo.payeeName
+            this.bankForm.payeeBankName = bankInfo.payeeBankName
+            this.bankForm.payeeBankAccount = bankInfo.payeeBankAccount
+            this.targetObj = {
+                selectName: bankInfo.payeeBankName,
+                selectCode: bankInfo.payeeBankAccount
+            }
+        } else {
+            // this.targetObj = {
+            //     selectName: '',
+            //     selectCode: ''
+            // }
+            this.bankForm.payPrincipal = ''
+            this.bankForm.payeeBankName = ''
+            this.bankForm.payeeBankAccount = ''
+        }
         // console.log(' this.$refs')
     }
 
