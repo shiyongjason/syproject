@@ -317,7 +317,6 @@ export default class UpstreamPaymentManagement extends Vue {
 
     async mounted () {
         // this.tableData = [{ paymentOrderNo: '1000' }]
-        this.getList()
         await this.findCrmdeplist({
             deptType: 'F',
             pkDeptDoc: this.userInfo.pkDeptDoc,
@@ -326,7 +325,10 @@ export default class UpstreamPaymentManagement extends Vue {
                 ? JSON.parse(sessionStorage.getItem('authCode') || '')
                 : ''
         })
+        this.queryParams.jobNumber = this.userInfo.jobNumber
+        this.queryParams.authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode') || '') : ''
         this._queryParams = deepCopy(this.queryParams)
+        this.getList()
     }
 }
 </script>

@@ -39,7 +39,7 @@
                     <div class="query-col__input">
                         <el-select v-model="queryParams.invoiceStatus" placeholder="请选择">
                             <el-option label="全部" value=""></el-option>
-                            <el-option  v-for="(item,index) in invoiceTyps"  :label=item.label :value=item.value :key="index"></el-option>
+                            <el-option v-for="(item,index) in invoiceTyps" :label=item.label :value=item.value :key="index"></el-option>
                             <!-- <el-option label="银行承兑" :value="2"></el-option> -->
                         </el-select>
                     </div>
@@ -78,8 +78,8 @@
                 </div>
             </div>
             <!-- end search bar -->
-             <div class="query-cont__row mb20">
-                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span >累计金额：{{totalMoney|moneyFormat}}元</span></el-tag>
+            <div class="query-cont__row mb20">
+                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span>累计金额：{{totalMoney|moneyFormat}}元</span></el-tag>
             </div>
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='330' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
@@ -88,7 +88,7 @@
                     <h-button table @click="handleEdit(slotProps.data.row)" v-if="hosAuthCheck(INVOICE_SERVICE_EDIT)&&slotProps.data.row.invoiceStatus==10">编辑</h-button>
                     <h-button table @click="handleSubmit(slotProps.data.row)" v-if="hosAuthCheck(INVOICE_SERVICE_SUBMIT)&&slotProps.data.row.invoiceStatus==10">提交</h-button>
                     <h-button table @click="handleReject(slotProps.data.row)" v-if="hosAuthCheck(INVOICE_SERVICE_REJECT)&&slotProps.data.row.invoiceStatus==20">驳回</h-button>
-                    <h-button table @click="handleInvoice(slotProps.data.row)"  v-if="hosAuthCheck(INVOICE_SERVICE_OPEN)&&slotProps.data.row.invoiceStatus!=10">开票</h-button>
+                    <h-button table @click="handleInvoice(slotProps.data.row)" v-if="hosAuthCheck(INVOICE_SERVICE_OPEN)&&slotProps.data.row.invoiceStatus!=10">开票</h-button>
                 </template>
             </hosJoyTable>
             <el-dialog :close-on-click-modal='false' title="开票" :visible.sync="isShowInvoice" width="600px" class="prev-payment-dialog" :before-close="handleCancel">
@@ -98,7 +98,7 @@
                     </el-form-item>
                     <el-form-item label="快递公司：" prop="deliveryCompanyName">
                         <el-select v-model="IForm.deliveryCompanyName" placeholder="请选择快递公司">
-                           <el-option :label="item.companyName" :value="item.companyName" v-for="item in deliveries" :key="item.companyName"></el-option>
+                            <el-option :label="item.companyName" :value="item.companyName" v-for="item in deliveries" :key="item.companyName"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="快递单号：" prop="deliveryNo">
@@ -326,7 +326,6 @@ export default class ServiceList extends Vue {
 
     async mounted () {
         // this.tableData = [{ paymentOrderNo: '123132' }]
-        this.getList()
         await this.findCrmdeplist({
             deptType: 'F',
             pkDeptDoc: this.userInfo.pkDeptDoc,
@@ -335,7 +334,10 @@ export default class ServiceList extends Vue {
                 ? JSON.parse(sessionStorage.getItem('authCode') || '')
                 : ''
         })
+        this.queryParams.jobNumber = this.userInfo.jobNumber
+        this.queryParams.authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode') || '') : ''
         this._queryParams = deepCopy(this.queryParams)
+        this.getList()
     }
 }
 </script>
