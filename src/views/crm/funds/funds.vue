@@ -86,6 +86,16 @@
                         </HDatePicker>
                     </div>
                 </div>
+                <div class="query-cont-col" v-if="queryParams.repaymentTypeArrays === '3'">
+                    <div class="query-col__label">发票状态：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.invoiceStatus" placeholder="请选择" :clearable=true>
+                            <template v-for="[key, value] of invoiceStatus">
+                                <el-option v-if="key!==null" :label="value" :value="key" :key="key"></el-option>
+                            </template>
+                        </el-select>
+                    </div>
+                </div>
                 <div class="query-cont-col">
                     <h-button type="primary" @click="onSwtichInfo({...queryParamsUseQuery, pageNumber: 1})">
                         查询
@@ -105,6 +115,9 @@
             <basicTable :tableData="fundsList" :tableLabel="tableLabel" :pagination="fundsListPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=290 :isShowIndex='true'>
                 <template slot="paymentAmount" slot-scope="scope">
                     <span> {{ scope.data.row.paymentAmount | moneyFormat }}</span>
+                </template>
+                <template slot="invoiceStatus" slot-scope="scope">
+                    <span> {{ invoiceStatus.get(scope.data.row.invoiceStatus) }}</span>
                 </template>
                 <template slot="paymentFlag" slot-scope="scope">
                     <span> {{ scope.data.row.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list) }}</span>
@@ -191,7 +204,13 @@ export default {
         return {
             Auths,
             emailStatus: { 1: '待投递', 2: '已投递', 3: '投递失败' },
+            invoiceStatus: new Map([
+                [null, '-'],
+                [10, '未开票'],
+                [20, '已开票']
+            ]),
             queryParams: {
+                invoiceStatus: '',
                 minPaidAmount: '',
                 maxPaidAmount: '',
                 minUnconfirmedAmount: '',
@@ -286,6 +305,7 @@ export default {
                 { label: '支付待确认金额', prop: 'unconfirmedAmount', formatters: 'moneyShow', width: '150', align: 'center' },
                 { label: '待支付金额', prop: 'unpaidAmount', formatters: 'moneyShow', width: '150', align: 'center' },
                 { label: '状态', prop: 'paymentFlag', width: '150' },
+                { label: '发票状态', prop: 'invoiceStatus', width: '150', isHidden: this.queryParams.repaymentTypeArrays !== '3' },
                 {
                     label: '应支付日期',
                     prop: 'schedulePaymentDate',
