@@ -30,7 +30,7 @@
                     </el-row>
                     <el-row>
                         <el-form-item label="采购发票总金额：" prop="purchaseInvoiceAmount">
-                            <el-input v-isNum:2 v-model.trim="equipmentForm.purchaseInvoiceAmount" maxlength="100"></el-input>
+                            <el-input v-isNum:2 v-model.trim="equipmentForm.purchaseInvoiceAmount" maxlength="100" v-inputMAX='100000000'></el-input>
                         </el-form-item>
                         <el-form-item label="mis采购订单号：" prop="misPurchaseOrderNo">
                             <el-input v-model.trim="equipmentForm.misPurchaseOrderNo" maxlength="10"></el-input>
@@ -39,7 +39,7 @@
                             <el-input v-model.trim="equipmentForm.misSalesOrderNo" maxlength="10"></el-input>
                         </el-form-item>
                         <el-form-item label="销售发票申请金额：" prop="salesInvoiceAmount">
-                            <el-input  v-isNum:2  v-model.trim="equipmentForm.salesInvoiceAmount" maxlength="100"></el-input>
+                            <el-input  v-isNum:2  v-model.trim="equipmentForm.salesInvoiceAmount" maxlength="100"  v-inputMAX='100000000'></el-input>
                         </el-form-item>
                         <el-form-item label="销售发票收票人：" prop="receiver">
                             <el-input v-model.trim="equipmentForm.receiver" maxlength="20"></el-input>
