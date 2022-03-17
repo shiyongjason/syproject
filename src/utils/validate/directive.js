@@ -36,7 +36,7 @@ export default {
             bind (el, binding, vnode) {
                 const element = el.getElementsByTagName('input')[0]
                 element.addEventListener('keyup', () => {
-                    element.value = isNum(element.value, binding.arg)
+                    element.value = isNum(element.value, binding.arg || binding.value)
                     if (isNaN(element.value)) element.value = ''
                     vnode.data.model && vnode.data.model.callback(element.value)
                 })
@@ -97,15 +97,17 @@ export default {
         /**
          * @description 限制输入最大值
          * @param number 输入最大值
-         * @example  <el-input v-model="form.a" v-inputMAX="100"></el-input>
+         * @example  <el-input v-model="form.a" v-inputMAX="100"></el-input>  静态参数使用方法！！！！
+         * @example  <el-input v-model="form.a" v-inputMAX:max></el-input> 动态参数使用方法！！！！
          * @example  v-isNum:0 v-inputMAX='100'  0到100，0位小数，可结合使用。
          */
         Vue.directive('inputMAX', {
             bind (el, binding, vnode) {
                 const element = el.getElementsByTagName('input')[0]
                 element.addEventListener('keyup', () => {
-                    element.value = inputMAX(element.value, binding.value)
-                    console.log('🚀 --- element.addEventListener ---  element.value', element.value)
+                    let arg = binding.arg ? vnode.context[binding.arg] : binding.value
+                    // element.value = inputMAX(element.value, binding.value)
+                    element.value = inputMAX(element.value, arg)
                     if (isNaN(element.value)) element.value = ''
                     vnode.data.model && vnode.data.model.callback(element.value)
                 })

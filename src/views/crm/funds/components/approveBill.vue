@@ -293,6 +293,7 @@ export default class ApproveBill extends Vue {
     // 获取认领银企账单详情
     public async bankDetailInfo () {
         const { data: dataInfo } = await Api.findBankReceipt({ payeeName: this.payeeName, receiptStatusArray: '0,1', payeeCompanyId: this.companyId })
+        this.selectList = []
         this.queryParams.total = dataInfo.length
         dataInfo.length > 0 && dataInfo.forEach(item => {
             item.currentReceiptAmount = ''

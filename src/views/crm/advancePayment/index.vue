@@ -98,6 +98,15 @@
                     <el-col :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
                     <el-col :span="10" :offset='1'>支付类型： {{ detailForm.paymentType&&paymentTypes[detailForm.paymentType-1].label||'-' }}</el-col>
                 </el-row>
+                <el-row type="flex" class="row-bg" v-if="detailForm.paymentType == 1">
+                    <el-col :span="10" :offset='1'>采购折让：{{detailForm.purchaseDiscountRate}}%</el-col>
+                    <el-col :span="10" :offset='1'>采购金额(折让后)(元)：{{detailForm.purchaseDiscountAmount|moneyFormat}}</el-col>
+                    <el-col :span="10" :offset='1'>加价率：{{detailForm.salesGrossMargin}}%</el-col>
+                </el-row>
+                <el-row type="flex" class="row-bg" v-if="detailForm.paymentType == 1">
+                    <el-col :span="10" :offset='1'>加价额(元)：{{detailForm.salesGrossAmount|moneyFormat}}</el-col>
+                    <el-col :span="21" :offset='1' style="marginLeft:30px">销售金额(元)：{{detailForm.salesAmount|moneyFormat}}</el-col>
+                </el-row>
                 <el-row type="flex" class="row-bg">
                     <el-col :span="16" :offset='1'>付款主体：{{detailForm.paymentCompanyName||'-'}}</el-col>
                 </el-row>
@@ -212,8 +221,17 @@
                     <h3>上游支付信息</h3>
                     <el-row>
                         <el-col class="col-padding" :span="10" :offset='1'>申请金额(元)：{{detailForm.applyAmount|moneyFormat}}</el-col>
+                        <!-- 当支付类型=货款时，才展示采购折让、采购金额(折让后)、加价率、销售金额 -->
+                        <!-- 支付类型 1.货款，2.费用 -->
+                        <template v-if="detailForm.paymentType == 1">
+                            <el-col class="col-padding" :span="10" :offset='1'>采购折让：{{detailForm.purchaseDiscountRate}}%</el-col>
+                            <el-col class="col-padding" :span="10" :offset='1'>采购金额(折让后)(元)：{{detailForm.purchaseDiscountAmount|moneyFormat}}</el-col>
+                            <el-col class="col-padding" :span="10" :offset='1'>加价率：{{detailForm.salesGrossMargin}}%</el-col>
+                            <el-col class="col-padding" :span="10" :offset='1'>加价额(元)：{{detailForm.salesGrossAmount|moneyFormat}}</el-col>
+                            <el-col class="col-padding" :span="10" :offset='1'>销售金额(元)：{{detailForm.salesAmount|moneyFormat}}</el-col>
+                        </template>
                         <el-col class="col-padding" :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
-                        <el-col class="col-padding" :span="10" :offset='1'>支付方式： {{detailForm.paymentType&& paymentTypes[detailForm.paymentType-1].label||'-' }}</el-col>
+                        <el-col class="col-padding" :span="10" :offset='1'>支付类型： {{detailForm.paymentType&& paymentTypes[detailForm.paymentType-1].label||'-' }}</el-col>
                         <el-col class="col-padding" :span="10" :offset='1'>上游供应商：{{detailForm.supplierCompanyName||'-'}}</el-col>
                         <el-col class="col-padding" :span="10" :offset='1'>供应商开户行名称：{{detailForm.supplierAccountName||'-'}}</el-col>
                         <el-col class="col-padding" :span="10" :offset='1'>银行联行号：{{detailForm.supplierBankNo||'-'}}</el-col>
@@ -687,6 +705,7 @@ export default class Advancelist extends Vue {
         this.id = v.id
         const { data } = await Api.getPrePayDetail(v.id)
         this.detailForm = { ...this.detailForm, ...data }
+        console.log('🚀 --- onApproval --- this.detailForm', this.detailForm)
         this.examineVisble = true
         this.auditForm = {
             resource: '',
@@ -809,6 +828,7 @@ export default class Advancelist extends Vue {
         this.dialogVisible = true
         const { data } = await Api.getPrePayDetail(v.id)
         this.detailForm = { ...this.detailForm, ...data }
+        console.log('🚀 --- onLook --- this.detailForm', this.detailForm)
         if (data.fund) {
             this.planData = [{ totalAmount: data.fund.fundAmount, unconfirmedAmount: data.fund.unconfirmedAmount, paidAmount: data.fund.paidAmount, unpaidAmount: data.fund.unpaidAmount }]
         }
