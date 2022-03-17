@@ -94,7 +94,7 @@
                         <el-form-item label="采购金额(折让后)：">
                             {{ paymentDetail.payOrderDetail.purchaseDiscountAmount | moneyFormat }}元
                         </el-form-item>
-                        <el-form-item label="销售毛利率：">
+                        <el-form-item label="加价率：">
                             {{ paymentDetail.payOrderDetail.salesGrossMargin }}%
                         </el-form-item>
                         <el-form-item label="销售金额：">
@@ -149,7 +149,7 @@
                             <el-form-item label="剩余货款：" label-width="165px">
                                 {{ paymentDetail.payOrderDetail.arrearAmount | moneyFormat }}元
                             </el-form-item>
-                            <el-form-item label="毛利总额：" label-width="165px">
+                            <el-form-item label="加价额：" label-width="165px">
                                 {{ paymentDetail.payOrderDetail.salesGrossTotalAmount | moneyFormat }}元
                             </el-form-item>
                         </template>

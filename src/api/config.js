@@ -30,7 +30,7 @@ switch (env) {
         B2bUrl = 'http://192.168.20.248:40000/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
         iotZsUrl = 'https://iot-proxy-test.hosjoy.com'
-        ccpBaseUrl = 'https://ccp-test245.hosjoy.com/'
+        ccpBaseUrl = 'https://ccp-test.hosjoy.com/'
         ossBucket = 'hosjoy-private-test'
         ossOldBucket = 'hosjoy-oss-test'
         ossRegion = 'oss-cn-hangzhou'

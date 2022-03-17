@@ -25,6 +25,7 @@
                         v-bind="item">
                         <template slot-scope="scope">
                             <slot v-if="item.formatters === 'money'" :name="item.prop" :data="scope">{{scope.row[item.prop] | moneyFormat(3, false)}}</slot>
+                            <slot v-else-if="item.formatters === 'numericalMoney'" :name="item.prop" :data="scope">{{scope.row[item.prop] | numericalMoney}}</slot>
                             <slot v-else-if="item.formatters === 'moneyShow'" :name="item.prop" :data="scope">{{scope.row[item.prop] | moneyFormat}}</slot>
                             <slot v-else-if="item.formatters === 'fundMoney'" :name="item.prop" :data="scope">{{scope.row[item.prop] | moneyFormat(2, false)}}</slot>
                             <slot v-else-if="item.formatters === 'fundMoneyHaveSpot'" :name="item.prop" :data="scope">{{scope.row[item.prop] | moneyFormat(2, false)}}</slot>

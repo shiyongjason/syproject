@@ -245,9 +245,9 @@ export default class UpstreamPaymentManagement extends Vue {
     handleEdit (val) {
         if (val) {
             // 编辑
-            this.$router.push({ path: '/goodwork/manageInvoices/equipmentedit', query: { id: val.id } })
+            this.$router.push({ path: '/goodwork/manageInvoices/equipmentedit', query: { id: val.id, authCode: JSON.parse(sessionStorage.getItem('authCode')) || '' } })
         } else {
-            this.$router.push({ path: '/goodwork/manageInvoices/equipmentedit' })
+            this.$router.push({ path: '/goodwork/manageInvoices/equipmentedit', query: { authCode: JSON.parse(sessionStorage.getItem('authCode')) || '' } })
         }
     }
     handleReset () {
@@ -317,7 +317,6 @@ export default class UpstreamPaymentManagement extends Vue {
 
     async mounted () {
         // this.tableData = [{ paymentOrderNo: '1000' }]
-        this.getList()
         await this.findCrmdeplist({
             deptType: 'F',
             pkDeptDoc: this.userInfo.pkDeptDoc,
@@ -326,7 +325,10 @@ export default class UpstreamPaymentManagement extends Vue {
                 ? JSON.parse(sessionStorage.getItem('authCode') || '')
                 : ''
         })
+        this.queryParams.jobNumber = this.userInfo.jobNumber
+        this.queryParams.authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode') || '') : ''
         this._queryParams = deepCopy(this.queryParams)
+        this.getList()
     }
 }
 </script>
