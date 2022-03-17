@@ -122,7 +122,10 @@ export default class Serviceedit extends Vue {
         pageSize: 10,
         subsectionCode: '',
         queryString: '',
-        projectNo: ''
+        projectNo: '',
+        getProjectPage: '',
+        jobNumber: '',
+        authCode: ''
     }
     serviceForm: ServiceInvoiceSubmitRequest={
         companyId: null,
@@ -362,6 +365,9 @@ export default class Serviceedit extends Vue {
         // this.selectData = this.tableData
         this._serviceForm = deepCopy(this.serviceForm)
         this.queryParams.subsectionCode = this.userInfo.pkDeptDoc
+        this.queryParams.jobNumber = this.userInfo.jobNumber
+        this.queryParams.authCode = this.$route.query.authCode || ''
+        console.log('🚀 --- mounted --- this.queryParams', this.queryParams)
         if (this.$route.query.id) {
             this.getDetail(this.$route.query.id)
         }

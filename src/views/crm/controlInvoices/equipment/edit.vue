@@ -144,7 +144,9 @@ export default class Servicedetail extends Vue {
         supplierCompanyName: '',
         pageSize: 10,
         pageNumber: 1,
-        paymentOrderNoAccurate: ''
+        paymentOrderNoAccurate: '',
+        jobNumber: '',
+        authCode: ''
     }
     _queryParams : Record<string, any> = {}
     isDisabled: boolean = true
@@ -341,6 +343,8 @@ export default class Servicedetail extends Vue {
 
     async mounted () {
         this.queryParams.deptCode = this.userInfo.pkDeptDoc
+        this.queryParams.jobNumber = this.userInfo.jobNumber
+        this.queryParams.authCode = this.$route.query.authCode || ''
         this._queryParams = deepCopy(this.queryParams)
         if (this.$route.query.id) {
             this.getEquipDetail(this.$route.query.id)

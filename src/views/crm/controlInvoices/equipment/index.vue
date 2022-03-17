@@ -245,9 +245,9 @@ export default class UpstreamPaymentManagement extends Vue {
     handleEdit (val) {
         if (val) {
             // 编辑
-            this.$router.push({ path: '/goodwork/manageInvoices/equipmentedit', query: { id: val.id } })
+            this.$router.push({ path: '/goodwork/manageInvoices/equipmentedit', query: { id: val.id, authCode: JSON.parse(sessionStorage.getItem('authCode')) || '' } })
         } else {
-            this.$router.push({ path: '/goodwork/manageInvoices/equipmentedit' })
+            this.$router.push({ path: '/goodwork/manageInvoices/equipmentedit', query: { authCode: JSON.parse(sessionStorage.getItem('authCode')) || '' } })
         }
     }
     handleReset () {

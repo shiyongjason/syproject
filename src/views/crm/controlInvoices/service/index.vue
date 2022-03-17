@@ -234,9 +234,9 @@ export default class ServiceList extends Vue {
         console.log('row: ', row)
         // 编辑 or 申请
         if (row) {
-            this.$router.push({ path: '/goodwork/manageInvoices/serviceedit', query: { id: row.id } })
+            this.$router.push({ path: '/goodwork/manageInvoices/serviceedit', query: { id: row.id, authCode: JSON.parse(sessionStorage.getItem('authCode')) || '' } })
         } else {
-            this.$router.push({ path: '/goodwork/manageInvoices/serviceedit' })
+            this.$router.push({ path: '/goodwork/manageInvoices/serviceedit', query: { authCode: JSON.parse(sessionStorage.getItem('authCode')) || '' } })
         }
     }
 
