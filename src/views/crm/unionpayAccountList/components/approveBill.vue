@@ -296,6 +296,7 @@ export default class ApproveBill extends Vue {
         this.bankDetail = dataInfo
         this.bankList = this.copyTable.slice(0, this.queryParams.pageSize)
         this.queryParams.total = this.copyTable.length
+        this.selectList = []
 
         // 默认选中对应的流水
         this.$nextTick(() => {
