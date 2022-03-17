@@ -107,7 +107,7 @@
                 </el-row>
                 <el-row type="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>银行联行号：{{detailForm.supplierBankNo||'-'}}</el-col>
-                    <el-col :span="10" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo||'-'}}   (<em v-if="detailForm.supplierLabel" :class="detailForm.supplierLabel&&className.get(detailForm.supplierLabel.code)"> {{detailForm.supplierLabel.desc}} </em>)</el-col>
+                    <el-col :span="10" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo||'-'}} (<em v-if="detailForm.supplierLabel" :class="detailForm.supplierLabel&&className.get(detailForm.supplierLabel.code)"> {{detailForm.supplierLabel.desc}} </em>)</el-col>
 
                 </el-row>
                 <el-row type="flex" class="row-bg">
@@ -166,9 +166,9 @@
                     <el-col :span="10" :offset='1'>支付日期：{{item.payDate}}</el-col>
                     <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">操作人：{{item.createBy}}</el-col>
                     <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">操作时间：{{ item.createTime | momentFormat }}</el-col>
-                    <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">实际收款供应商银行账号：{{item.createBy}}</el-col>
-                    <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">实际收款供应商开户行名称{{item.createBy}}</el-col>
-                    <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">实际收款供应商银行联行号：{{item.createBy}}</el-col>
+                    <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">实际收款供应商银行账号：{{item.supplierAccountName}}</el-col>
+                    <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">实际收款供应商开户行名称：{{item.supplierAccountNo}}</el-col>
+                    <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">实际收款供应商银行联行号：{{item.supplierBankNo}}</el-col>
                     <el-col :span="20" :offset='1' class="credentials">上游支付凭证：
                         <div v-if="item.payVouchers&&item.payVouchers.length>0">
                             <!-- 司库返回凭证 showSaasButton区分-->
@@ -299,14 +299,14 @@
                         </OssFileHosjoyUpload>
                         <p class="tips">支持扩展名：jpg.png.pdf...</p>
                     </el-form-item>
-                         <el-form-item label="实际收款供应商银行账号：" prop="supplierAccountNo">
-                       <el-input v-model="payForm.supplierAccountNo" placeholder="请输入" maxlength="25"></el-input>
+                    <el-form-item label="实际收款供应商银行账号：" prop="supplierAccountNo">
+                        <el-input v-model="payForm.supplierAccountNo" placeholder="请输入" maxlength="25"></el-input>
                     </el-form-item>
                     <el-form-item label="实际收款供应商开户行名称：" prop="supplierAccountName">
-                       <el-input v-model="payForm.supplierAccountName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="payForm.supplierAccountName" placeholder="请输入" maxlength="50"></el-input>
                     </el-form-item>
-                     <el-form-item label="实际收款供应商银行联行号：" prop="supplierBankNo">
-                       <el-input v-model="payForm.supplierBankNo" placeholder="请输入" maxlength="12"></el-input>
+                    <el-form-item label="实际收款供应商银行联行号：" prop="supplierBankNo">
+                        <el-input v-model="payForm.supplierBankNo" placeholder="请输入" maxlength="12"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
@@ -485,6 +485,7 @@ export default class Advancelist extends Vue {
         distributor: '',
         applyAmount: ''
     }
+    num:number = 0
     @State('userInfo') userInfo: any
     queryParams:Query = {
         pageSize: 10,
@@ -712,20 +713,27 @@ export default class Advancelist extends Vue {
     }
 
     async backUpload (val) {
+        this.num = this.num + 1
+        console.log('  this.num: ', this.num)
         console.log('val: ', val)
         this.$refs['payForm'].clearValidate('payVouchers')
-        // 第一张图片进行ocr 认证
-
-        let tokenUrl = await OssFileUtils.getUrl(val.fileUrl)
-        const { data } = await Api.bankOcrReceipt({ image: tokenUrl })
-        console.log('data: ', data)
-        if (data.supplierAccountNo !== this.detailForm.supplierBankNo || data.supplierBankNo != this.detailForm.supplierBankNo || data.supplierAccountName != this.detailForm.supplierAccountName) {
-            this.ocrData = data
-            this.ocrData = {
-                ...this.ocrData,
-                supplierBankNo: this.ocrData.supplierBankNo || this.detailForm.supplierBankNo
+        if (this.num == 1) {
+            // 第一张图片进行ocr 认证
+            let tokenUrl = await OssFileUtils.getUrl(val.fileUrl)
+            const { data } = await Api.bankOcrReceipt({ image: tokenUrl })
+            console.log('data: ', data)
+            if (data.supplierAccountName) {
+                if (data.supplierAccountNo !== this.detailForm.supplierBankNo || data.supplierBankNo != this.detailForm.supplierBankNo || data.supplierAccountName != this.detailForm.supplierAccountName) {
+                    this.ocrData = data
+                    this.ocrData = {
+                        ...this.ocrData,
+                        supplierBankNo: this.ocrData.supplierBankNo || this.detailForm.supplierBankNo
+                    }
+                    this.ocrVisible = true
+                }
+            } else {
+                this.$message.info('该图片无法进行OCR识别，请重新上传或手动修改供应商信息')
             }
-            this.ocrVisible = true
         }
     }
 
@@ -854,6 +862,8 @@ export default class Advancelist extends Vue {
         this.payForm.supplierAccountName = this.detailForm.supplierAccountName
         this.payForm.payDate = moment(new Date()).format('YYYY-MM-DD')
         this.payForm.payVouchers = []
+
+        this.num = 0
     }
 
     public async mounted () {
