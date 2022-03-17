@@ -9,7 +9,9 @@
                         </el-form-item>
                         <el-form-item label="本次支付金额：" prop="paidAmount" key="paidAmount">
                             <!-- unpaidAmount-inputMAX指令金额不刷新问题 -->
-                            <el-input v-model="uploadpayForm.paidAmount" v-isNum:2="uploadpayForm.paidAmount" placeholder="请输入" maxlength="50" v-inputMAX='unpaidAmount'><template slot="append">元</template></el-input>
+                            <!-- v-inputMAX:unpaidAmount -->
+                            <!-- v-inputMAX='100' -->
+                            <el-input v-model="uploadpayForm.paidAmount" v-isNum:2="uploadpayForm.paidAmount" placeholder="请输入" maxlength="50" v-inputMAX:unpaidAmount><template slot="append">元</template></el-input>
                             <span style="width:50px;height:50px;text-align:center;margin-left:10px;color:#13C2C2" @click="handleAll">全部</span>
                         </el-form-item>
                     </div>
@@ -30,7 +32,6 @@
                     <span class="uploadpay_third">（请上传JPG/PNG/JPEG等主流图片格式，最多上传9张，单张大小不得超过20M）</span>
                     </p>
                 </el-form>
-                <div v-if="batchNumber>0" class="uploadpay_bot">当前经销商还有{{batchNumber}}条待支付账单，你可能想<b @click="onAllPay">“批量支付”</b>？</div>
             </div>
 
             <span slot="footer" class="dialog-footer">
@@ -43,7 +44,7 @@
 <script>
 import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import { ccpBaseUrl } from '@/api/config'
-import { payVoucher, getBnumber, payOrderVoucher, updateRemainPayment, findDetailByFundId } from '../api/index'
+import { payVoucher, payOrderVoucher, updateRemainPayment, findDetailByFundId } from '../api/index'
 export default {
     name: 'uploadPay',
     components: { HosJoyUpload },
@@ -58,7 +59,6 @@ export default {
             // attachDocs: [],
             fundId: '',
             companyId: '',
-            batchNumber: 0,
             payMoney: 0,
             unpaidAmount: 0,
             repaymentType: '', // 账单类型  2==剩余货款
@@ -80,13 +80,6 @@ export default {
             console.log(val, source, fundMoney)
             this.uploadpayForm.attachDocs = []
             this.unpaidAmount = 0
-            if (val.companyId) {
-                const { data } = await getBnumber({ companyId: val.companyId })
-                this.batchNumber = data
-            } else {
-                // 预付款不需要 批量支付展示
-                this.batchNumber = 0
-            }
             this.dialogVisible = true
             this.fundId = val.fundId || val.advanceId || val.id
             this.companyId = val.companyId
@@ -119,10 +112,6 @@ export default {
         },
         handleSuccessCb () {
 
-        },
-        onAllPay () {
-            this.dialogVisible = false
-            this.$router.push({ path: '/goodwork/batchpay', query: { companyId: this.companyId } })
         },
         handleAll () {
             this.uploadpayForm.paidAmount = this.unpaidAmount
