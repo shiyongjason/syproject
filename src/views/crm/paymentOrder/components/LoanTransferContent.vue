@@ -82,6 +82,9 @@
             <div class="info-layout">
                 <div class="info-layout-item">
                     <font style="flex:0 0 130px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>供应商银行账号：</font><span>{{LoanTransferContent.supplierAccountNo||'-'}}</span>
+                     (<em v-if="LoanTransferContent.supplierLabel" :class="LoanTransferContent.supplierLabel&&className.get(LoanTransferContent.supplierLabel.code)">
+                                     {{LoanTransferContent.supplierLabel.desc}}
+                                </em>)
                 </div>
             </div>
             <div class="info-layout">
@@ -336,6 +339,7 @@ import { isNum } from '@/utils/validate/format'
 import moment from 'moment'
 // api
 import { postPledgeResolution, getMoreBillAmount, getLoanTransferDoc, postLoanTransferDoc, postBillAmount, postLoanTransfersConfirm, getReviewResolution, postSupplierLoan, getHistoryContract, postPledgeSave } from '../api/index'
+const className = new Map([[0, 'red'], [10, 'red'], [11, 'red'], [12, 'green'], [20, 'red'], [21, 'red'], [22, 'green'], [30, 'red'], [31, 'red'], [32, 'green']])
 export default {
     name: 'LoanTransferContent',
     components: { OssFileHosjoyUpload, downloadFileAddToken },
@@ -344,6 +348,7 @@ export default {
         return {
             moment,
             Auths,
+            className,
             suppDialog: false,
             // 上游支付方式:1-银行转帐;2-银行承兑
             upstreamPaymentMethod: {

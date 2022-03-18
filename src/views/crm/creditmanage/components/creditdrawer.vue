@@ -262,12 +262,12 @@ export default {
             tableLabel: [
                 { label: '信用评级', prop: 'creditLevel', width: '' },
                 { label: '服务费', prop: 'serviceFee', width: '150' },
-                { label: '通用额度(万元)', prop: 'purchaseQuota', width: '150', formatters: 'money' },
-                { label: '临时额度(万元)', prop: 'temporaryQuotaAmount', width: '150', formatters: 'money' },
-                { label: '可代采购额度(万元)', prop: 'purchaseAmount', width: '150' },
-                { label: '冻结中额度(万元)', prop: 'purchaseFreezeAmount', width: '150' },
-                { label: '占用中额度(万元)', prop: 'occupyAmount', width: '150', formatters: 'money' },
-                { label: '可用额度(万元)', prop: 'purchaseUsableAmount', width: '150', formatters: 'money' },
+                { label: '通用额度(万元)', prop: 'purchaseQuota', width: '150', formatters: 'numericalMoney' },
+                { label: '临时额度(万元)', prop: 'temporaryQuotaAmount', width: '150', formatters: 'numericalMoney' },
+                { label: '可代采购额度(万元)', prop: 'purchaseAmount', width: '150', formatters: 'numericalMoney' },
+                { label: '冻结中额度(万元)', prop: 'purchaseFreezeAmount', width: '150', formatters: 'numericalMoney' },
+                { label: '占用中额度(万元)', prop: 'occupyAmount', width: '150', formatters: 'numericalMoney' },
+                { label: '可用额度(万元)', prop: 'purchaseUsableAmount', width: '150', formatters: 'numericalMoney' },
                 { label: '信用到期日', prop: 'endTime', width: '180', formatters: 'date' },
                 { label: '状态', prop: 'status' }
             ],

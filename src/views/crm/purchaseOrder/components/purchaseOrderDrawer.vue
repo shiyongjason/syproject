@@ -34,13 +34,22 @@
                         </div>
                         <div class="row-filed">
                             <p class="col-filed">
-                                创建人:
-                                {{ `${purchaseOrderDetail.purchaseOrder.createBy}（${purchaseOrderDetail.purchaseOrder.createPhone}）` }}
+                                创建人：{{ `${purchaseOrderDetail.purchaseOrder.createBy}（${purchaseOrderDetail.purchaseOrder.createPhone}）` }}
                             </p>
                             <p class="col-filed">
-                                创建时间: {{ purchaseOrderDetail.purchaseOrder.createTime | momentFormat }}
+                                创建时间：{{ purchaseOrderDetail.purchaseOrder.createTime | momentFormat }}
                             </p>
                         </div>
+                        <template v-if="purchaseOrderDetail.purchaseOrder.status !== PurchaseOrderDict.status.list[0].key">
+                            <div class="row-filed">
+                                <p class="col-filed">
+                                    提交人：{{ `${purchaseOrderDetail.purchaseOrder.submitBy}（${purchaseOrderDetail.purchaseOrder.submitPhone}）` }}
+                                </p>
+                                <p class="col-filed">
+                                    提交时间：{{ purchaseOrderDetail.purchaseOrder.submitTime | momentFormat }}
+                                </p>
+                            </div>
+                        </template>
                         <div class="row-filed">
                             <div class="col-filed info-img-group">
                                 <span class="label">网银盾照片： </span>
@@ -61,16 +70,22 @@
                                 <p v-else>-</p>
                             </div>
                         </div>
+                        <!-- 状态：1-待提交;2-采购单待确认;3-变更待确认;4-采购中;5-采购单完成;6-采购单关闭 -->
+                        <div class="row-filed" v-if="purchaseOrderDetail.purchaseOrder.status > 3">
+                            <p class="col-filed">
+                                上游采购金额： {{ purchaseOrderDetail.poInfo.supplierPurchaseAmount | moneyFormat }}元
+                            </p>
+                            <template v-if="purchaseOrderDetail.poInfo">
+                                <p class="col-filed">
+                                    加价率： {{ purchaseOrderDetail.poInfo.salesGrossMargin }}%
+                                </p>
+                                <p class="col-filed">
+                                    加价额： {{ purchaseOrderDetail.poInfo.salesGrossAmount }}元
+                                </p>
+                            </template>
+                        </div>
 
                         <template v-if="purchaseOrderDetail.purchaseOrder.status !== PurchaseOrderDict.status.list[0].key">
-                            <div class="row-filed">
-                                <p class="col-filed">
-                                    提交人：{{ `${purchaseOrderDetail.purchaseOrder.submitBy}（${purchaseOrderDetail.purchaseOrder.submitPhone}）` }}
-                                </p>
-                                <p class="col-filed">
-                                    提交时间：{{ purchaseOrderDetail.purchaseOrder.submitTime | momentFormat }}
-                                </p>
-                            </div>
                             <template v-if="purchaseOrderDetail.purchaseOrder && purchaseOrderDetail.purchaseOrder.status !== PurchaseOrderDict.status.list[1].key">
                                 <div class="row-filed">
                                     <p class="col-filed">

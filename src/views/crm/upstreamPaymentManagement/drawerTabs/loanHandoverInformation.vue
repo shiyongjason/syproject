@@ -96,6 +96,9 @@
             <div class="info-layout">
                 <div class="info-layout-item">
                     <font style="flex: 0 0 130px">供应商开户行名称：</font><span>{{data.supplierAccountName||'-'}}</span>
+                    (<em v-if="data.supplierLabel" :class="data.supplierLabel&&className.get(data.supplierLabel.code)">
+                        {{data.supplierLabel.desc}}
+                    </em>)
                 </div>
                 <div class="info-layout-item">
                     <font style="flex: 0 0 85px">银行联行号：</font><span>{{data.supplierBankNo||'-'}}</span>
@@ -160,9 +163,6 @@
                 <div class="info_box">
                     <div class="info_box-icon"><i class="el-icon-s-claim"></i>质押信息：{{data.pledgeNo}}</div>
                 </div>
-                <!-- <div class="info_box">
-              <div class="info_box-icon"><i class="el-icon-s-claim"></i>评审决议流程：{{data.reviewResolutionStatus==1?'已完结':'未完结'}}（{{data.reviewResolutionNo}}）</div>
-        </div> -->
                 <div class="info_box">
                     <div class="info_box-icon"><i class="el-icon-s-claim"></i>货款支付流程：{{data.oaStatus==1?'已完结':'未完结'}}（{{data.oaNo}}）</div>
                 </div>
@@ -257,7 +257,7 @@
                     <el-input type="textarea" v-model.trim="dialogFormData.remark" :autosize="{ minRows: 4, maxRows: 6}" maxlength="500" show-word-limit></el-input>
                 </el-form-item>
                 <!-- v-if="title=='交接'&&data.supplierPaymentType==1"  -->
-                <el-form-item v-if="title=='交接'&&data.supplierPaymentType==1"  label="银行转账方式：" prop="bankTransferMethod" >
+                <el-form-item v-if="title=='交接'&&data.supplierPaymentType==1" label="银行转账方式：" prop="bankTransferMethod">
                     <el-radio-group v-model="dialogFormData.bankTransferMethod">
                         <el-radio label="1">司库线上转账</el-radio>
                         <el-radio label="2">线下网银转账</el-radio>
@@ -304,7 +304,18 @@ import { interfaceUrl } from '@/api/config'
 import ImageAddToken from '@/components/imageAddToken/index.vue'
 import downloadFileAddToken from '@/components/downloadFileAddToken/index.vue'
 import { downloadFile } from '@/utils'
-
+const className = new Map([
+    [0, 'red'],
+    [10, 'red'],
+    [11, 'red'],
+    [12, 'green'],
+    [20, 'red'],
+    [21, 'red'],
+    [22, 'green'],
+    [30, 'red'],
+    [31, 'red'],
+    [32, 'green']
+])
 @Component({
     name: 'loanHandoverInformation',
     components: {
@@ -330,7 +341,7 @@ export default class LoanHandoverInformation extends Vue {
     upstreamDownBills = UPSTREAM_DOWN_BILLS;
     upstreamReject = UPSTREAM_REJECT;
     upstreamConfirm = UPSTREAM_CONFIRM;
-
+    className = className;
     paymentType = PAYMENTTYPE;
     infoDialog: boolean = false;
     isMoreBill: boolean = false;
@@ -352,10 +363,13 @@ export default class LoanHandoverInformation extends Vue {
 
     get formRules () {
         let rules = {
-            bankTransferMethod: [{
-                required: true, message: '银行转账方式必选', trigger: 'change'
-
-            }],
+            bankTransferMethod: [
+                {
+                    required: true,
+                    message: '银行转账方式必选',
+                    trigger: 'change'
+                }
+            ],
             remark: [
                 {
                     required: true,
@@ -373,7 +387,6 @@ export default class LoanHandoverInformation extends Vue {
                     trigger: 'blur'
                 }
             ]
-
         }
         return rules
     }
