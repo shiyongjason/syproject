@@ -96,9 +96,6 @@
             <div class="info-layout">
                 <div class="info-layout-item">
                     <font style="flex: 0 0 130px">供应商开户行名称：</font><span>{{data.supplierAccountName||'-'}}</span>
-                    (<em v-if="data.supplierLabel" :class="data.supplierLabel&&className.get(data.supplierLabel.code)">
-                        {{data.supplierLabel.desc}}
-                    </em>)
                 </div>
                 <div class="info-layout-item">
                     <font style="flex: 0 0 85px">银行联行号：</font><span>{{data.supplierBankNo||'-'}}</span>
@@ -106,7 +103,9 @@
             </div>
             <div class="info-layout">
                 <div class="info-layout-item">
-                    <font style="flex: 0 0 115px">供应商银行账号：</font><span>{{data.supplierAccountNo||'-'}}</span>
+                    <font style="flex: 0 0 115px">供应商银行账号：</font><span>{{data.supplierAccountNo||'-'}}</span> (<em v-if="data.supplierLabel" :class="data.supplierLabel&&className.get(data.supplierLabel.code)">
+                        {{data.supplierLabel.desc}}
+                    </em>)
                 </div>
                 <div class="info-layout-item">
                     <font style="flex: 0 0 130px">期望上游支付日期：</font><span>{{data.expectSupplierPaymentDate||'-'}}</span>
