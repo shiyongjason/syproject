@@ -219,7 +219,7 @@ export default class ServiceList extends Vue {
         { label: '所属分部', prop: 'deptName' },
         { label: '经销商', prop: 'companyName' },
         { label: '申请人', prop: 'createBy' },
-        { label: '申请时间', prop: 'createTime' },
+        { label: '申请时间', prop: 'createTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '发票金额', prop: 'invoiceAmount', displayAs: 'money' },
         { label: '发票号码', prop: 'invoiceNumber' },
         { label: '寄送快递单号', prop: 'deliveryNo' }
