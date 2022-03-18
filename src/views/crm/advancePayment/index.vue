@@ -432,7 +432,6 @@ const className = new Map([[0, 'red'], [10, 'red'], [11, 'red'], [12, 'green'], 
 interface Query{
     [key:string]:any
 }
-
 const paymentTypes = [{ value: 1, label: '货款' }, { value: 2, label: '费用' }]
 
 const preStatus = [{ value: -1, label: '待分财审核' }, { value: 1, label: '待项目运营审核' }, { value: 2, label: '流程审批中' }, { value: 0, label: '预付款待支付' }, { value: 8, label: '预付款支付待确认' }, { value: 3, label: '待支付' }, { value: 4, label: '支付单完成' }, { value: 5, label: '待核销' }, { value: 6, label: '已核销' }, { value: 7, label: '支付单关闭' }]
