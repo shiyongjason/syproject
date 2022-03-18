@@ -292,6 +292,7 @@ export default class ServiceList extends Vue {
             deliveryNo: ''
         }
         this.$refs['IForm'].clearValidate()
+        this.getList()
     }
     handleCancel () {
         this.isShowInvoice = false
