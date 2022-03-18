@@ -281,11 +281,17 @@ export default class ServiceList extends Vue {
     }
 
     async handleInvoice (val) {
-        this.IForm.invoiceId = val.id
         // 开票
         this.isShowInvoice = true
         const { data } = await getDelivery()
         this.deliveries = data
+        this.IForm = {
+            invoiceId: val.id,
+            invoiceNumber: '',
+            deliveryCompanyName: '',
+            deliveryNo: ''
+        }
+        this.$refs['IForm'].clearValidate()
     }
     handleCancel () {
         this.isShowInvoice = false
