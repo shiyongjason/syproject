@@ -89,6 +89,7 @@ import { deepCopy } from '@/utils/utils'
 import { newCache } from '@/utils/index'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { updateInvalidNo, updateValidNo } from './api/index'
+import * as Api from '@/views/crm/supplierSearch/api'
 export default {
     name: 'supplierSearch',
     components: { hosJoyTable },
@@ -121,7 +122,9 @@ export default {
                 { label: '作废人', prop: 'invalidBy' },
                 { label: '作废时间', prop: 'invalidTime', displayAs: 'YYYY-MM-DD HH:mm:ss' }
 
-            ]
+            ],
+            supplierList: [],
+            supplierListPagination: {}
         }
     },
     computed: {
@@ -133,11 +136,11 @@ export default {
                 startTime: this.queryParams.startTime,
                 endTime: this.queryParams.endTime
             }
-        },
-        ...mapGetters({
-            supplierList: 'supplierSearchStore/supplierList',
-            supplierListPagination: 'supplierSearchStore/supplierListPagination'
-        })
+        }
+        // ...mapGetters({
+        //     supplierList: 'supplierSearchStore/supplierList',
+        //     supplierListPagination: 'supplierSearchStore/supplierListPagination'
+        // })
     },
     methods: {
         onStartChange (val) {
@@ -151,6 +154,7 @@ export default {
             this.findPurchaseList(this.queryParams)
         },
         handleSizeChange (val) {
+            console.log('val: ', val)
             this.queryParams.pageSize = val
             this.findPurchaseList(this.queryParams)
         },
@@ -185,13 +189,19 @@ export default {
                 })
             }
         },
-        ...mapActions({
-            findPurchaseList: 'supplierSearchStore/findPurchaseList'
-        })
+        async  findPurchaseList () {
+            const { data } = await Api.getSupplierSearchList(this.queryParams)
+            this.supplierList = data.records || []
+            this.supplierListPagination.total = data.total
+        }
+        // ...mapActions({
+        //     findPurchaseList: 'supplierSearchStore/findPurchaseList'
+        // })
     },
     mounted () {
         this.queryParamsTemp = deepCopy(this.queryParams)
         this.findPurchaseList(this.queryParams)
+        console.log('this.queryParams: ', this.queryParams)
     },
     beforeUpdate () {
         newCache('supplierSearch')
