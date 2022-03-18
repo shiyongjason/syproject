@@ -631,7 +631,7 @@ import moment from 'moment'
 import { downloadFile } from '@/utils'
 import { deepCopy } from '@/utils/utils'
 
-const className = new Map([[0, 'red'], [10, 'red'], [11, 'red'], [12, 'green'], [20, 'red'], [21, 'red'], [22, 'green'], [30, 'red'], [31, 'red'], [32, 'green']])
+const className = new Map([[0, 'red'], [10, 'red'], [11, 'red'], [12, 'green'], [20, 'red'], [21, 'red'], [22, 'green'], [30, 'green'], [31, 'red'], [32, 'green']])
 export default {
     name: 'paymentOrderDrawer',
     props: {
