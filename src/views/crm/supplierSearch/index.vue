@@ -84,7 +84,6 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import { newCache } from '@/utils/index'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
