@@ -325,10 +325,10 @@ export default class ServiceList extends Vue {
     }
 
     public onStartChange (val): void {
-        this.queryParams.applyTimeStart = val
+        this.queryParams.createTimeStart = val
     }
     public onEndChange (val): void {
-        this.queryParams.applyTimeEnd = val
+        this.queryParams.createTimeEnd = val
     }
 
     async mounted () {

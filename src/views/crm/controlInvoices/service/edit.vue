@@ -15,18 +15,18 @@
                             {{serviceForm.projectName}}
                         </el-form-item>
                         <el-form-item label="所属分部：" class="deptName">
-                            <el-input v-model.trim="serviceForm.deptName"  disabled></el-input>
+                            <el-input v-model.trim="serviceForm.deptName" disabled></el-input>
                         </el-form-item>
                     </el-row>
                     <el-row>
                         <el-form-item label="经销商：" prop="companyName">
-                            <el-input v-model.trim="serviceForm.companyName"  disabled></el-input>
+                            <el-input v-model.trim="serviceForm.companyName" disabled></el-input>
                         </el-form-item>
                         <el-form-item label="收票人：" prop="receiver">
                             <el-input v-model.trim="serviceForm.receiver" maxlength="20"></el-input>
                         </el-form-item>
-                        <el-form-item label="发票金额：" >
-                            <el-input v-model="selectMoney"  disabled></el-input>
+                        <el-form-item label="发票金额：">
+                            <el-input v-model="selectMoney" disabled></el-input>
                         </el-form-item>
                         <el-form-item label="收票人手机：" prop="receiverMobile">
                             <el-input type="tel" v-model.trim="serviceForm.receiverMobile" maxlength="11"></el-input>
@@ -50,7 +50,7 @@
                 </template>
             </hosJoyTable>
             <el-dialog title="账单信息" :visible.sync="dialogVisible" width="50%" :close-on-click-modal="false" :before-close="handleClose">
-                <hosJoyTable ref="dialogTable" align="center" border stripe @selection-change="handleSelectionChange" isShowselection :column="formTableLabel" :data="tableForm"  :height='330'>
+                <hosJoyTable ref="dialogTable" align="center" border stripe @selection-change="handleSelectionChange" isShowselection :column="formTableLabel" :data="tableForm" :height='330'>
                 </hosJoyTable>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="dialogVisible = false">取 消</el-button>
@@ -208,7 +208,6 @@ export default class Serviceedit extends Vue {
 
     get selectMoney () {
         const moneny = this.tableData.reduce((sum, val) => {
-            console.log(val, sum)
             return this.$plus(sum, parseFloat(val.paidAmount ?? 0) * 1)
         }, 0)
         this.serviceForm.invoiceAmount = moneny.toFixed(2)
@@ -223,18 +222,35 @@ export default class Serviceedit extends Vue {
     handleSelectionChange (val) {
         this.selectData = val
         this.disabled = val.length == 0
-        // console.log('val: ', val)
+        console.log('val: ', val)
     }
     async handleAdd () {
         // 发票添加
         this.dialogVisible = true
         const { data } = await getServiceFunds({ projectId: this.serviceForm.projectId })
+        console.log('data: ', data)
         this.tableForm = data
+        // console.log(1111, this.tableForm.find(item => { return item.id == '1476479817270034433' }))
+        this.$nextTick(() => {
+            this.$refs['dialogTable'].clearSelection()
+            this.tableData.forEach((row) => {
+                this.$refs['dialogTable'].toggleRowSelection(this.tableForm.find(item => { return row.id === item.id }), true)
+            })
+        })
+
+        // this.tableForm.forEach(val => {
+        //     if (val.id == row.id) {
+        //         console.log('val: ', val)
+        //         this.$refs['dialogTable'].toggleRowSelection(JSON.parse(JSON.stringify(val)))
+        //     }
+        // })
+
+        // tableData
     }
 
     handleClose () {
         // 账单弹窗关闭
-        console.log('this.$refs ', this.$refs['dialogTable'].clearSelection())
+        // console.log('this.$refs ', this.$refs['dialogTable'].clearSelection())
         this.dialogVisible = false
     }
     async handleSearch () {
@@ -255,13 +271,11 @@ export default class Serviceedit extends Vue {
 
     getCurrentRow (row) {
         this.selectRow = row.row
-        console.log('row: ', row.row)
         this.radio = row.$index
     }
 
     async onInputBlur ({ target }) {
         // 失去焦点查询项目
-        console.log('val: ', target.value)
 
         this.queryParams.projectNo = target.value
         const { data } = await getProjectPage(this.queryParams)
@@ -274,7 +288,6 @@ export default class Serviceedit extends Vue {
                 projectId: data.records[0].id,
                 deptCode: data.records[0].subsectionCode
             }
-            console.log('  this.serviceForm : ', this.serviceForm)
         } else {
             if (target.value) {
                 this.$message.warning('项目编号有误')
@@ -294,14 +307,17 @@ export default class Serviceedit extends Vue {
     }
 
     handleSelect () {
+        this.tableData = []
         this.selectData.map(val => {
-            console.log(val, this.tableData, this.tableData.includes(val))
-            let _index = this.tableData.findIndex(item => val.id == item.id)
-            if (_index >= 0) {
-                this.$set(this.tableData, _index, val)
-            } else {
-                this.tableData.push(val)
-            }
+            console.log(val)
+            // let _index = this.tableData.findIndex(item => val.id == item.id)
+            // console.log('_index: ', _index)
+            // if (_index >= 0) {
+            //     this.$set(this.tableData, _index, val)
+            // } else {
+            //     this.tableData.push(val)
+            // }
+            this.tableData.push(val)
         })
         this.dialogVisible = false
     }
