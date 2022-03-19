@@ -219,7 +219,7 @@ export default class ServiceList extends Vue {
         { label: '所属分部', prop: 'deptName' },
         { label: '经销商', prop: 'companyName' },
         { label: '申请人', prop: 'createBy' },
-        { label: '申请时间', prop: 'createTime' },
+        { label: '申请时间', prop: 'createTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '发票金额', prop: 'invoiceAmount', displayAs: 'money' },
         { label: '发票号码', prop: 'invoiceNumber' },
         { label: '寄送快递单号', prop: 'deliveryNo' }
@@ -281,11 +281,18 @@ export default class ServiceList extends Vue {
     }
 
     async handleInvoice (val) {
-        this.IForm.invoiceId = val.id
         // 开票
         this.isShowInvoice = true
         const { data } = await getDelivery()
         this.deliveries = data
+        this.IForm = {
+            invoiceId: val.id,
+            invoiceNumber: '',
+            deliveryCompanyName: '',
+            deliveryNo: ''
+        }
+        this.$refs['IForm'].clearValidate()
+        this.getList()
     }
     handleCancel () {
         this.isShowInvoice = false
@@ -318,10 +325,10 @@ export default class ServiceList extends Vue {
     }
 
     public onStartChange (val): void {
-        this.queryParams.applyTimeStart = val
+        this.queryParams.createTimeStart = val
     }
     public onEndChange (val): void {
-        this.queryParams.applyTimeEnd = val
+        this.queryParams.createTimeEnd = val
     }
 
     async mounted () {
