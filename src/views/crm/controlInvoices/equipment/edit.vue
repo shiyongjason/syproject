@@ -22,24 +22,24 @@
                     <el-row :gutter="20">
                         <el-col :span="8">
                             <el-form-item label="项目：" style="display:flex">
-                                {{equipmentForm.projectName}}
+                                {{equipmentForm.projectName||"-"}}
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
                             <el-form-item label="经销商："  style="display:flex">
-                                {{equipmentForm.companyName}}
+                                {{equipmentForm.companyName||"-"}}
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
                             <el-form-item label="上游供应商：" style="display:flex">
-                                <div>{{equipmentForm.supplierCompanyName}}</div>
+                                <div>{{equipmentForm.supplierCompanyName||"-"}}</div>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="20">
                         <el-col :span="8">
                             <el-form-item label="所属分部：">
-                                {{equipmentForm.deptName}}
+                                {{equipmentForm.deptName||"-"}}
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
