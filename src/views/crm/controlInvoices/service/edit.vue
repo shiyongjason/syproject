@@ -276,13 +276,11 @@ export default class Serviceedit extends Vue {
 
     async onInputBlur ({ target }) {
         // 失去焦点查询项目
-
         this.queryParams.projectNo = target.value
         const { data } = await getProjectPage(this.queryParams)
         if (data.records.length == 1) {
             console.log('data.records: ', data.records[0])
             this.serviceForm = {
-
                 ...this.serviceForm,
                 ...data.records[0],
                 projectId: data.records[0].id,
@@ -291,6 +289,7 @@ export default class Serviceedit extends Vue {
         } else {
             if (target.value) {
                 this.$message.warning('项目编号有误')
+                this.serviceForm.projectNo = ''
                 this.serviceForm.projectName = ''
                 this.serviceForm.deptName = ''
                 this.serviceForm.companyId = ''
