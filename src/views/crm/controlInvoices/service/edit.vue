@@ -189,7 +189,7 @@ export default class Serviceedit extends Vue {
             invoiceId: [
                 { required: true, message: '请输入发票ID', trigger: 'blur' }
             ],
-            projectId: [
+            projectNo: [
                 { required: true, message: '请输入选择项目', trigger: 'blur' }
             ],
             receiver: [
