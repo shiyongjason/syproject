@@ -634,14 +634,15 @@ import moment from 'moment'
 import { downloadFile } from '@/utils'
 import { deepCopy } from '@/utils/utils'
 
-const className = new Map([[0, 'red'],
-    [10, 'red'],
+const className = new Map([
+    [0, 'red'],
+    [10, 'green'],
     [11, 'green'],
     [12, 'red'],
     [20, 'red'],
     [21, 'red'],
     [22, 'red'],
-    [30, 'red'],
+    [30, 'green'],
     [31, 'green'],
     [32, 'red']])
 export default {
