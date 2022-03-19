@@ -11,21 +11,25 @@
                 <el-row :gutter="20">
                     <el-col :span="8"><span>经销商：</span>{{formDetail.companyName}}</el-col>
                     <el-col :span="8"><span>上游供应商：</span>{{formDetail.supplierCompanyName}}</el-col>
-                    <el-col :span="8"><span>采购发票总金额：</span>{{formDetail.purchaseInvoiceAmount|moneyFormat}}</el-col>
+                    <el-col :span="8"><span>支付单采购金额（折让后）：</span>{{formDetail.paymentOrderPurchaseAmount|moneyFormat}}</el-col>
                 </el-row>
                 <el-row :gutter="20">
+                    <el-col :span="8"><span>支付单销售金额：</span>{{formDetail.paymentOrderSalesAmount|moneyFormat}}</el-col>
+                    <el-col :span="8"><span>采购发票总金额：</span>{{formDetail.purchaseInvoiceAmount|moneyFormat}}</el-col>
                     <el-col :span="8"><span>mis采购订单号：</span>{{formDetail.misPurchaseOrderNo}}</el-col>
+                </el-row>
+                <el-row :gutter="20">
                     <el-col :span="8"><span>mis销售订单号：</span>{{formDetail.misSalesOrderNo}}</el-col>
                     <el-col :span="8"><span>采购发票总金额：</span>{{formDetail.purchaseInvoiceAmount|moneyFormat}}</el-col>
+                    <el-col :span="8"><span>销售发票收票人：</span>{{formDetail.receiver}}</el-col>
                 </el-row>
                 <el-row :gutter="20">
-                    <el-col :span="8"><span>销售发票收票人：</span>{{formDetail.receiver}}</el-col>
                     <el-col :span="8"><span>收票人手机：</span>{{formDetail.receiverMobile}}</el-col>
                     <el-col :span="8"><span>收票地址：</span>{{formDetail.receiverAddress}}</el-col>
+                    <el-col :span="8"><span>所属分部：</span>{{formDetail.deptName}}</el-col>
                 </el-row>
                 <el-row :gutter="20">
-                    <el-col :span="12"><span>所属分部：</span>{{formDetail.deptName}}</el-col>
-                    <el-col :span="12"><span>备注信息：</span>{{formDetail.remark}}</el-col>
+                    <el-col><span>备注信息：</span>{{formDetail.remark}}</el-col>
                 </el-row>
             </div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
