@@ -848,23 +848,11 @@ export default {
         },
         openReduleDialog (id, type) {
             console.log('id, type: ', id, type)
-            if (this.paymentOrderDetail.respGoodsAmount.goodsAmount !== this.paymentOrderDetail.respGoodsAmount.totalAmount && type == 2) {
-                this.$confirm('支付单全部收货后，才可支付尾款哦～', '收货提示', {
-                    confirmButtonText: '去收货',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.openConfirmReceipt()
-                }).catch(() => {
-
-                })
-            } else {
-                const params = {
-                    id: id,
-                    orderId: this.paymentOrderDetail.respFundResults.downpaymentFund.orderId
-                }
-                this.$emit('openReduleDialog', params, type)
+            const params = {
+                id: id,
+                orderId: this.paymentOrderDetail.respFundResults.downpaymentFund.orderId
             }
+            this.$emit('openReduleDialog', params, type)
         },
         openFundsDialog (val, type, obj) {
             if (obj) {
