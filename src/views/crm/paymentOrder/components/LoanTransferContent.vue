@@ -339,16 +339,18 @@ import { isNum } from '@/utils/validate/format'
 import moment from 'moment'
 // api
 import { postPledgeResolution, getMoreBillAmount, getLoanTransferDoc, postLoanTransferDoc, postBillAmount, postLoanTransfersConfirm, getReviewResolution, postSupplierLoan, getHistoryContract, postPledgeSave } from '../api/index'
-const className = new Map([[0, 'red'],
-    [10, 'red'],
+const className = new Map([
+    [0, 'red'],
+    [10, 'green'],
     [11, 'green'],
     [12, 'red'],
     [20, 'red'],
     [21, 'red'],
     [22, 'red'],
-    [30, 'red'],
+    [30, 'green'],
     [31, 'green'],
-    [32, 'red']])
+    [32, 'red']
+])
 export default {
     name: 'LoanTransferContent',
     components: { OssFileHosjoyUpload, downloadFileAddToken },
