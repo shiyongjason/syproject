@@ -205,9 +205,9 @@ export default class ServiceList extends Vue {
 
     get IRules () {
         return {
-            invoiceNumber: [{ required: true, message: '请输入发票号码', trigger: 'bulr' }],
-            deliveryCompanyName: [{ required: true, message: '请选择快递公司', trigger: 'change' }],
-            deliveryNo: [{ required: true, message: '请输入快递单号', trigger: 'bulr' }]
+            invoiceNumber: [{ required: true, message: '请输入发票号码', trigger: 'bulr' }]
+            // deliveryCompanyName: [{ required: true, message: '请选择快递公司', trigger: 'change' }],
+            // deliveryNo: [{ required: true, message: '请输入快递单号', trigger: 'bulr' }]
         }
     }
 
