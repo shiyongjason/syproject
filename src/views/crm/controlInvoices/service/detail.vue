@@ -18,7 +18,7 @@
                     <el-col :span="16"><span>收票地址：</span>{{invoiceDetail.receiverAddress}}</el-col>
                 </el-row>
                 <el-row :gutter="20">
-                    <el-col :span="8"><span>发票号码：</span>{{invoiceDetail.invoiceNumber
+                    <el-col :span="8"><span>发票号码：</span>{{invoiceDetail.invoiceNumber||'-'
 }}</el-col>
                     <el-col :span="8"><span>寄送快递单号：</span>{{invoiceDetail.deliveryNo||'-'}}</el-col>
                     <el-col :span="8"><span>开票日期：</span>{{invoiceDetail.openTime?moment(invoiceDetail.openTime).format('yyyy-MM-DD'):"-"}}</el-col>
@@ -33,11 +33,11 @@
                 <el-tab-pane label="操作信息" name="second"></el-tab-pane>
             </el-tabs>
             <div v-if="activeName=='first'">
-                <hosJoyTable align="center" border :column="tableLabel" :data="tableData"  :max-height="500" >
+                <hosJoyTable align="center" border :column="tableLabel" :data="tableData" :max-height="500">
                 </hosJoyTable>
             </div>
             <div v-if="activeName=='second'">
-                <hosJoyTable align="center" border :column="recordTableLabel" :data="tableForm" actionWidth='100'  :max-height="500">
+                <hosJoyTable align="center" border :column="recordTableLabel" :data="tableForm" actionWidth='100' :max-height="500">
                 </hosJoyTable>
             </div>
             <div class="mb20 mt20">
