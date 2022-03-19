@@ -9,7 +9,7 @@
                     <el-col :span="8"><span>所属分部：</span>{{invoiceDetail.deptName}}</el-col>
                 </el-row>
                 <el-row :gutter="20">
-                    <el-col :span="8"><span>收票人：</span>{{invoiceDetail.deptName}}</el-col>
+                    <el-col :span="8"><span>收票人：</span>{{invoiceDetail.receiver}}</el-col>
                     <el-col :span="8"><span>经销商：</span>{{invoiceDetail.companyName}}</el-col>
                     <el-col :span="8"><span>发票金额：</span>{{invoiceDetail.invoiceAmount|moneyFormat}}</el-col>
                 </el-row>
