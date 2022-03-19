@@ -156,7 +156,7 @@ export default class Serviceedit extends Vue {
         { label: '支付单号', prop: 'paymentOrderNo' },
         { label: '期数', prop: 'feeRepaymentOrder' },
         { label: '金额', prop: 'paidAmount', displayAs: 'money' },
-        { label: '支付成功时间', prop: 'paidDate', displayAs: 'YYYY-MM-DD' }
+        { label: '支付成功时间', prop: 'paidDate', displayAs: 'YYYY-MM-DD HH:mm:ss' }
     ]
 
     tableForm: any[] = [
@@ -167,7 +167,7 @@ export default class Serviceedit extends Vue {
         { label: '支付单号', prop: 'paymentOrderNo' },
         { label: '期数', prop: 'feeRepaymentOrder' },
         { label: '金额', prop: 'paidAmount', displayAs: 'money' },
-        { label: '支付成功时间', prop: 'paidDate', displayAs: 'YYYY-MM-DD' },
+        { label: '支付成功时间', prop: 'paidDate', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '是否全部结清', prop: 'settlement', dicData: [{ value: true, label: '是' }, { value: false, label: '否' }] }
     ]
     tableProject:any[]=[]
