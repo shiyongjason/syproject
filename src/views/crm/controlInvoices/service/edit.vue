@@ -9,8 +9,8 @@
                             <el-input v-model.trim="serviceForm.invoiceNo" maxlength="30" disabled></el-input>
                         </el-form-item>
                         <el-form-item label="项目：" prop="projectNo">
-                            <el-input v-model.trim="serviceForm.projectNo" @blur="onInputBlur" maxlength="50">
-                                <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+                            <el-input v-model.trim="serviceForm.projectNo" @blur="onInputBlur" maxlength="50" :disabled='tableData.length>0'>
+                                <el-button slot="append" icon="el-icon-search" :disabled='tableData.length>0' @click="handleSearch"></el-button>
                             </el-input>
                             {{serviceForm.projectName}}
                         </el-form-item>
