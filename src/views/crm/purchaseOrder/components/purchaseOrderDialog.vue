@@ -1,6 +1,7 @@
 <template>
+<div style="z-index:9999;position: absolute;">
     <el-dialog :title="title" :visible.sync="isOpen" width="1000px" :before-close="()=> onClose()"
-               :close-on-click-modal="false" :destroy-on-close="true">
+               :close-on-click-modal="false" :destroy-on-close="true" :modal-append-to-body="false">
         <div class="info-content">
             <div class="row-filed">
                 <div class="col-filed left" v-if="dialogDetail.poInfo && dialogStatus.enter.status === openStatus">
@@ -224,6 +225,8 @@
                 <h-button type="primary" @click="onEnter">确定</h-button>
             </span>
     </el-dialog>
+</div>
+
 </template>
 
 <script>

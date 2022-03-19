@@ -70,3 +70,5 @@ export const getNewAdvance = (paymentOrderId) => axios.get(`/project/api/payment
 export const getHistoryContract = (params) => axios.get(`/project/api/loan-transfers/history-file`, { params })
 // 支付单管理取消支付单
 export const cancelPayment = (params) => axios.post(`/project/api/payment-orders/boss/cancel`, params)
+// 维护尾款分期
+export const updateArrearsFundsByStages = (params) => axios.post(`/project/api/fund/arrears-funds`, params)
