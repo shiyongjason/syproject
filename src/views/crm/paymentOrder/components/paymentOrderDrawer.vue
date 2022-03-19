@@ -144,7 +144,10 @@
                                 <span class="label">供应商开户行名称：</span>
                                 {{paymentOrderDetail.payOrderDetail.supplierAccountName}}
                             </p>
-                            <p class="col-filed col-33">
+
+                        </div>
+                        <div class="row-filed">
+                             <p class="col-filed">
                                 <span class="label">供应商银行账号：</span>
                                 {{paymentOrderDetail.payOrderDetail.supplierAccountNo}}
                                 (<em v-if="paymentOrderDetail.payOrderDetail.supplierLabel" :class="paymentOrderDetail.payOrderDetail.supplierLabel&&className.get(paymentOrderDetail.payOrderDetail.supplierLabel.code)">
