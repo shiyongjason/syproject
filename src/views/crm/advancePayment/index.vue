@@ -427,7 +427,18 @@ import './css/css.scss'
 import * as Api from './api/index'
 import OssFileUtils from '@/utils/OssFileUtils'
 
-const className = new Map([[0, 'red'], [10, 'red'], [11, 'red'], [12, 'green'], [20, 'red'], [21, 'red'], [22, 'green'], [30, 'green'], [31, 'red'], [32, 'green']])
+const className = new Map([
+    [0, 'red'],
+    [10, 'red'],
+    [11, 'green'],
+    [12, 'red'],
+    [20, 'red'],
+    [21, 'red'],
+    [22, 'red'],
+    [30, 'red'],
+    [31, 'green'],
+    [32, 'red']
+])
 // 定义类型
 interface Query{
     [key:string]:any
