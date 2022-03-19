@@ -9,8 +9,8 @@
                             <el-input v-model.trim="serviceForm.invoiceNo" maxlength="30" disabled></el-input>
                         </el-form-item>
                         <el-form-item label="项目：" prop="projectNo">
-                            <el-input v-model.trim="serviceForm.projectNo" @blur="onInputBlur" maxlength="50">
-                                <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+                            <el-input v-model.trim="serviceForm.projectNo" @blur="onInputBlur" maxlength="50" :disabled='tableData.length>0'>
+                                <el-button slot="append" icon="el-icon-search" :disabled='tableData.length>0' @click="handleSearch"></el-button>
                             </el-input>
                             {{serviceForm.projectName}}
                         </el-form-item>
@@ -156,7 +156,7 @@ export default class Serviceedit extends Vue {
         { label: '支付单号', prop: 'paymentOrderNo' },
         { label: '期数', prop: 'feeRepaymentOrder' },
         { label: '金额', prop: 'paidAmount', displayAs: 'money' },
-        { label: '支付成功时间', prop: 'paidDate', displayAs: 'YYYY-MM-DD HH:mm:ss' }
+        { label: '支付成功时间', prop: 'paidDate', displayAs: 'YYYY-MM-DD' }
     ]
 
     tableForm: any[] = [
@@ -167,7 +167,7 @@ export default class Serviceedit extends Vue {
         { label: '支付单号', prop: 'paymentOrderNo' },
         { label: '期数', prop: 'feeRepaymentOrder' },
         { label: '金额', prop: 'paidAmount', displayAs: 'money' },
-        { label: '支付成功时间', prop: 'paidDate', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+        { label: '支付成功时间', prop: 'paidDate', displayAs: 'YYYY-MM-DD' },
         { label: '是否全部结清', prop: 'settlement', dicData: [{ value: true, label: '是' }, { value: false, label: '否' }] }
     ]
     tableProject:any[]=[]
@@ -189,7 +189,7 @@ export default class Serviceedit extends Vue {
             invoiceId: [
                 { required: true, message: '请输入发票ID', trigger: 'blur' }
             ],
-            projectId: [
+            projectNo: [
                 { required: true, message: '请输入选择项目', trigger: 'blur' }
             ],
             receiver: [
