@@ -240,12 +240,12 @@
             <div class="ocr-wrap">
                 <h2>检测到OCR识别的实际收款供应商账号信息与界面信息存在差异</h2>
                 <h3>OCR识别到信息：</h3>
-                <p>实际收款供应商银行账号：{{ocrData.supplierAccountName}}</p>
-                <p>实际收款供应商开户行名称：{{ocrData.supplierAccountNo}}</p>
+                <p>实际收款供应商银行账号：{{ocrData.supplierAccountNo}}</p>
+                <p>实际收款供应商开户行名称：{{ocrData.supplierAccountName}}</p>
                 <p>实际收款供应商银行联行号：{{ocrData.supplierBankNo}}</p>
                 <h3>界面信息：</h3>
-                <p>实际收款供应商银行账号：{{prevPaymentDetail.supplierAccountName}}</p>
-                <p>实际收款供应商开户行名称：{{prevPaymentDetail.supplierAccountNo}}</p>
+                <p>实际收款供应商银行账号：{{prevPaymentDetail.supplierAccountNo}}</p>
+                <p>实际收款供应商开户行名称：{{prevPaymentDetail.supplierAccountName}}</p>
                 <p>实际收款供应商银行联行号：{{prevPaymentDetail.supplierBankNo}}</p>
                 <strong>确定以OCR识别信息为准，覆盖现有界面信息？</strong>
             </div>
@@ -682,9 +682,9 @@ export default class UpstreamPaymentManagement extends Vue {
 
     async onBackOcrInfo (val) {
         this.num = this.num + 1
-        console.log('  this.num: ', this.num)
+        console.log('  this.num: ', this.dialogFormData.payVouchers)
         this.$refs.form.clearValidate()
-        if (this.num == 1) {
+        if (this.dialogFormData.payVouchers.length == 1) {
             // 第一张图片进行ocr 认证
             let tokenUrl = await OssFileUtils.getUrl(val.fileUrl)
             const { data } = await bankOcrReceipt({ image: tokenUrl })
