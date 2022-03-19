@@ -1,58 +1,117 @@
 <template>
-    <div class="page-body B2b">
+    <div class="page-body B2b"  style="minWidth:1300px">
         <div class="page-body-cont">
             <div class="floor-tit">基本信息</div>
             <div class="query-cont-row">
-                <el-form :model="equipmentForm" :inline="true" :rules="rules" ref="equipmentForm" label-width="150px" class="demo-ruleForm">
-                    <el-row>
-                        <el-form-item label="申请单号：" prop="invoiceNo" v-if="equipmentForm.invoiceNo">
-                            <el-input v-model.trim="equipmentForm.invoiceNo" disabled></el-input>
-                        </el-form-item>
-                        <el-form-item label="支付单号：" prop="paymentOrderNo">
-                            <el-input v-model.trim="equipmentForm.paymentOrderNo"  @blur="onInputBlur" maxlength="50">
-                                <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
-                            </el-input>
-                        </el-form-item>
+                <el-form :model="equipmentForm" :inline="true" :rules="rules" ref="equipmentForm" label-width="180px" class="demo-ruleForm">
+                    <el-row :gutter="20">
+                        <el-col :span="8">
+                            <el-form-item label="申请单号：" prop="invoiceNo" v-if="equipmentForm.invoiceNo">
+                                <el-input v-model.trim="equipmentForm.invoiceNo" disabled style="width:155px"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="支付单号：" prop="paymentOrderNo">
+                                <el-input v-model.trim="equipmentForm.paymentOrderNo" @blur="onInputBlur" maxlength="50" style="width:210px">
+                                    <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+                                </el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8"></el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="8">
+                            <el-form-item label="项目：" style="display:flex">
+                                {{equipmentForm.projectName}}
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="经销商："  style="display:flex">
+                                {{equipmentForm.companyName}}
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="上游供应商：" style="display:flex">
+                                <div>{{equipmentForm.supplierCompanyName}}</div>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="8">
+                            <el-form-item label="所属分部：">
+                                {{equipmentForm.deptName}}
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="支付单采购金额(折让后)：">
+                                {{equipmentForm.paymentOrderPurchaseAmount|moneyFormat}}
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="支付单销售金额：">
+                                {{equipmentForm.paymentOrderSalesAmount|moneyFormat}}
+                            </el-form-item>
+                        </el-col>
                     </el-row>
                     <el-row>
-                        <el-form-item label="项目：">
-                            {{equipmentForm.projectName}}
-                        </el-form-item>
-                        <el-form-item label="经销商：">
-                            {{equipmentForm.companyName}}
-                        </el-form-item>
-                        <el-form-item label="上游供应商：">
-                            {{equipmentForm.supplierCompanyName}}
-                        </el-form-item>
-                        <el-form-item label="所属分部：">
-                            {{equipmentForm.deptName}}
-                        </el-form-item>
+                        <el-col :span="8">
+                            <el-form-item label="支付单已开采购发票金额：">
+                                {{equipmentForm.paymentOrderPurchaseInvoiceAmount|moneyFormat}}
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="支付单已开销售发票金额：">
+                                {{equipmentForm.paymentOrderSalesInvoiceAmount|moneyFormat}}
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8"></el-col>
                     </el-row>
                     <el-row>
-                        <el-form-item label="采购发票总金额：" prop="purchaseInvoiceAmount">
-                            <el-input v-isNum:2 v-model.trim="equipmentForm.purchaseInvoiceAmount" maxlength="100" v-inputMAX='100000000'></el-input>
-                        </el-form-item>
-                        <el-form-item label="mis采购订单号：" prop="misPurchaseOrderNo">
-                            <el-input v-model.trim="equipmentForm.misPurchaseOrderNo" maxlength="10"></el-input>
-                        </el-form-item>
-                        <el-form-item label="mis销售订单号：" prop="misSalesOrderNo">
-                            <el-input v-model.trim="equipmentForm.misSalesOrderNo" maxlength="10"></el-input>
-                        </el-form-item>
-                        <el-form-item label="销售发票申请金额：" prop="salesInvoiceAmount">
-                            <el-input  v-isNum:2  v-model.trim="equipmentForm.salesInvoiceAmount" maxlength="100"  v-inputMAX='100000000'></el-input>
-                        </el-form-item>
-                        <el-form-item label="销售发票收票人：" prop="receiver">
-                            <el-input v-model.trim="equipmentForm.receiver" maxlength="20"></el-input>
-                        </el-form-item>
-                        <el-form-item label="收票人手机：" prop="receiverMobile">
-                            <el-input v-model.trim="equipmentForm.receiverMobile" maxlength="11"></el-input>
-                        </el-form-item>
-                        <el-form-item label="收票地址：" prop="receiverAddress">
-                            <el-input type="textarea"  v-model.trim="equipmentForm.receiverAddress" maxlength="80"></el-input>
-                        </el-form-item>
-                        <el-form-item label="备注信息：" prop="remark">
-                        <el-input type="textarea" maxlength="255" show-word-limit v-model="equipmentForm.remark" :autosize="{ minRows: 6, maxRows: 8}"></el-input>
-                    </el-form-item>
+                        <el-col :span="8">
+                            <el-form-item label="采购发票总金额：" prop="purchaseInvoiceAmount">
+                                <el-input v-isNum:2 v-model.trim="equipmentForm.purchaseInvoiceAmount" maxlength="100" v-inputMAX='100000000'></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="mis采购订单号：" prop="misPurchaseOrderNo">
+                                <el-input v-model.trim="equipmentForm.misPurchaseOrderNo" maxlength="10"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="mis销售订单号：" prop="misSalesOrderNo">
+                                <el-input v-model.trim="equipmentForm.misSalesOrderNo" maxlength="10"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="8">
+                            <el-form-item label="销售发票申请金额：" prop="salesInvoiceAmount">
+                                <el-input v-isNum:2 v-model.trim="equipmentForm.salesInvoiceAmount" maxlength="100" v-inputMAX='100000000'></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="销售发票收票人：" prop="receiver">
+                                <el-input v-model.trim="equipmentForm.receiver" maxlength="20"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="收票人手机：" prop="receiverMobile">
+                                <el-input v-model.trim="equipmentForm.receiverMobile" maxlength="11"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="8">
+                            <el-form-item label="收票地址：" prop="receiverAddress">
+                                <el-input type="textarea" v-model.trim="equipmentForm.receiverAddress" maxlength="80"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="备注信息：" prop="remark">
+                                <el-input type="textarea" maxlength="255" show-word-limit v-model="equipmentForm.remark" :autosize="{ minRows: 6, maxRows: 8}"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8"></el-col>
                     </el-row>
                     <div class="floor-tit">上传附件</div>
                     <el-form-item label="附件：" prop="annexes">
@@ -134,7 +193,7 @@ export default class Servicedetail extends Vue {
         updateUid: '',
         reservedName: false
     }
-    action=ccpBaseUrl + 'common/files/upload-old'
+    action = ccpBaseUrl + 'common/files/upload-old'
 
     queryParams: Record<string, any> = {
         deptCode: '',
@@ -148,12 +207,12 @@ export default class Servicedetail extends Vue {
         jobNumber: '',
         authCode: ''
     }
-    _queryParams : Record<string, any> = {}
+    _queryParams: Record<string, any> = {}
     isDisabled: boolean = true
-    dialogVisible:boolean = false
-    radio:string=''
-    selectData : Record<string, any> = {}
-    equipmentForm:Partial<EqpInvoiceSubmitRequest> ={
+    dialogVisible: boolean = false
+    radio: string = ''
+    selectData: Record<string, any> = {}
+    equipmentForm: Partial<EqpInvoiceSubmitRequest> = {
         companyId: '',
         saveOrSubmit: null,
         invoiceId: '',
@@ -238,7 +297,7 @@ export default class Servicedetail extends Vue {
     }
 
     handleReset () {
-    // 重置
+        // 重置
         this.queryParams = deepCopy(this._queryParams)
         this.findPageList()
     }
@@ -312,7 +371,15 @@ export default class Servicedetail extends Vue {
                 projectNo: data.records[0].projectNo,
                 projectId: data.records[0].projectId,
                 deptCode: data.records[0].deptCode,
-                paymentOrderId: data.records[0].id
+                paymentOrderId: data.records[0].id,
+                // @ts-ignore
+                paymentOrderPurchaseAmount: data.records[0].paymentOrderPurchaseAmount,
+                // @ts-ignore
+                paymentOrderSalesAmount: data.records[0].paymentOrderSalesAmount,
+                // @ts-ignore
+                paymentOrderPurchaseInvoiceAmount: data.records[0].paymentOrderPurchaseInvoiceAmount,
+                // @ts-ignore
+                paymentOrderSalesInvoiceAmount: data.records[0].paymentOrderSalesInvoiceAmount
             }
         } else {
             if (target.value) {
@@ -356,5 +423,4 @@ export default class Servicedetail extends Vue {
 
 <style lang='scss' scoped>
 @import "./css/css.scss";
-
 </style>
