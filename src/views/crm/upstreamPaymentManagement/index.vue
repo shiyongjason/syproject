@@ -689,13 +689,13 @@ export default class UpstreamPaymentManagement extends Vue {
             let tokenUrl = await OssFileUtils.getUrl(val.fileUrl)
             const { data } = await bankOcrReceipt({ image: tokenUrl })
             console.log('data: ', data)
+            this.ocrData = data
+            this.ocrData = {
+                ...this.ocrData,
+                supplierBankNo: this.ocrData.supplierBankNo || this.prevPaymentDetail.supplierBankNo
+            }
             if (data.supplierAccountName) {
-                if (data.supplierAccountNo !== this.prevPaymentDetail.supplierBankNo || data.supplierBankNo != this.prevPaymentDetail.supplierBankNo || data.supplierAccountName != this.prevPaymentDetail.supplierAccountName) {
-                    this.ocrData = data
-                    this.ocrData = {
-                        ...this.ocrData,
-                        supplierBankNo: this.ocrData.supplierBankNo || this.prevPaymentDetail.supplierBankNo
-                    }
+                if (this.ocrData.supplierAccountNo !== this.prevPaymentDetail.supplierBankNo || this.ocrData.supplierBankNo != this.prevPaymentDetail.supplierBankNo || this.ocrData.supplierAccountName != this.prevPaymentDetail.supplierAccountName) {
                     this.ocrVisible = true
                 }
             } else {
