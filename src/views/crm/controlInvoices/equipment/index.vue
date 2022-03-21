@@ -234,7 +234,7 @@ export default class UpstreamPaymentManagement extends Vue {
         { label: '销售发票号码', prop: 'misSaleInvoiceNo', width: '160' },
         { label: '销售发票金额', prop: 'salesInvoiceAmount', width: '160', displayAs: 'money' },
         { label: '申请人', prop: 'createBy', width: '160' },
-        { label: '申请时间', prop: 'createTime', width: '160', displayAs: 'YYYY-MM-DD' }
+        { label: '申请时间', prop: 'createTime', width: '160', displayAs: 'YYYY-MM-DD HH:mm:ss' }
     ]
 
     async handleLook (val) {
