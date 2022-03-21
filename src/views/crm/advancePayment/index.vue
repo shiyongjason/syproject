@@ -751,13 +751,13 @@ export default class Advancelist extends Vue {
             let tokenUrl = await OssFileUtils.getUrl(val.fileUrl)
             const { data } = await Api.bankOcrReceipt({ image: tokenUrl })
             console.log('data: ', data)
+            this.ocrData = data
+            this.ocrData = {
+                ...this.ocrData,
+                supplierBankNo: this.ocrData.supplierBankNo || this.detailForm.supplierBankNo
+            }
             if (data.supplierAccountName) {
-                if (data.supplierAccountNo !== this.detailForm.supplierBankNo || data.supplierBankNo != this.detailForm.supplierBankNo || data.supplierAccountName != this.detailForm.supplierAccountName) {
-                    this.ocrData = data
-                    this.ocrData = {
-                        ...this.ocrData,
-                        supplierBankNo: this.ocrData.supplierBankNo || this.detailForm.supplierBankNo
-                    }
+                if (this.ocrData.supplierAccountNo !== this.detailForm.supplierBankNo || this.ocrData.supplierBankNo != this.detailForm.supplierBankNo || this.ocrData.supplierAccountName != this.detailForm.supplierAccountName) {
                     this.ocrVisible = true
                 }
             } else {
