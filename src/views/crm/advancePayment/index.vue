@@ -175,8 +175,8 @@
                     <el-col :span="10" :offset='1'>支付日期：{{item.payDate}}</el-col>
                     <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">操作人：{{item.createBy}}</el-col>
                     <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">操作时间：{{ item.createTime | momentFormat }}</el-col>
-                    <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">实际收款供应商银行账号：{{item.supplierAccountName}}</el-col>
-                    <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">实际收款供应商开户行名称：{{item.supplierAccountNo}}</el-col>
+                    <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">实际收款供应商银行账号：{{item.supplierAccountNo}}</el-col>
+                    <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">实际收款供应商开户行名称：{{item.supplierAccountName}}</el-col>
                     <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">实际收款供应商银行联行号：{{item.supplierBankNo}}</el-col>
                     <el-col :span="20" :offset='1' class="credentials">上游支付凭证：
                         <div v-if="item.payVouchers&&item.payVouchers.length>0">
