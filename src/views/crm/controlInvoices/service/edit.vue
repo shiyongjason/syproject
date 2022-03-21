@@ -216,7 +216,9 @@ export default class Serviceedit extends Vue {
 
     @Watch('serviceForm.companyId')
     getInfo (newVal, oldVal) {
-        this.getRecentInvoice()
+        if (JSON.stringify(this.selectRow) != '{}') {
+            this.getRecentInvoice()
+        }
     }
 
     handleSelectionChange (val) {
