@@ -93,7 +93,7 @@ export default class Servicedetail extends Vue {
         { label: '支付单号', prop: 'paymentOrderNo' },
         { label: '期数', prop: 'feeRepaymentOrder' },
         { label: '金额', prop: 'paidAmount', displayAs: 'money' },
-        { label: '支付成功时间', prop: 'paidDate', displayAs: 'YYYY-MM-DD' }
+        { label: '支付成功时间', prop: 'paidDate', displayAs: 'YYYY-MM-DD HH:mm:ss' }
     ]
 
     tableForm: any[] = [
