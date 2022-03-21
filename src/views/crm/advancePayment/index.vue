@@ -395,9 +395,9 @@
                 <p>实际收款供应商开户行名称：{{ocrData.supplierAccountName}}</p>
                 <p>实际收款供应商银行联行号：{{ocrData.supplierBankNo}}</p>
                 <h3>界面信息：</h3>
-                <p>实际收款供应商银行账号：{{detailForm.supplierAccountNo}}</p>
-                <p>实际收款供应商开户行名称：{{detailForm.supplierAccountName}}</p>
-                <p>实际收款供应商银行联行号：{{detailForm.supplierBankNo}}</p>
+                <p>实际收款供应商银行账号：{{payForm.supplierAccountNo}}</p>
+                <p>实际收款供应商开户行名称：{{payForm.supplierAccountName}}</p>
+                <p>实际收款供应商银行联行号：{{payForm.supplierBankNo}}</p>
                 <strong>确定以OCR识别信息为准，覆盖现有界面信息？</strong>
             </div>
             <span slot="footer" class="dialog-footer">
