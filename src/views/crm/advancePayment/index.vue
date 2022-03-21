@@ -766,7 +766,7 @@ export default class Advancelist extends Vue {
                 supplierBankNo: this.ocrData.supplierBankNo || this.detailForm.supplierBankNo
             }
             if (data.supplierAccountName) {
-                if (this.ocrData.supplierAccountNo !== this.detailForm.supplierBankNo || this.ocrData.supplierBankNo != this.detailForm.supplierBankNo || this.ocrData.supplierAccountName != this.detailForm.supplierAccountName) {
+                if (this.ocrData.supplierAccountNo !== this.payForm.supplierAccountNo || this.ocrData.supplierBankNo != this.payForm.supplierBankNo || this.ocrData.supplierAccountName != this.payForm.supplierAccountName) {
                     this.ocrVisible = true
                 }
             } else {

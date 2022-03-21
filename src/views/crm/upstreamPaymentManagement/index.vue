@@ -704,7 +704,7 @@ export default class UpstreamPaymentManagement extends Vue {
                 supplierBankNo: this.ocrData.supplierBankNo || this.prevPaymentDetail.supplierBankNo
             }
             if (data.supplierAccountName) {
-                if (this.ocrData.supplierAccountNo !== this.prevPaymentDetail.supplierBankNo || this.ocrData.supplierBankNo != this.prevPaymentDetail.supplierBankNo || this.ocrData.supplierAccountName != this.prevPaymentDetail.supplierAccountName) {
+                if (this.ocrData.supplierAccountNo !== this.dialogFormData.supplierAccountNo || this.ocrData.supplierBankNo != this.dialogFormData.supplierBankNo || this.ocrData.supplierAccountName != this.dialogFormData.supplierAccountName) {
                     this.ocrVisible = true
                 }
             } else {
