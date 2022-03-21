@@ -341,7 +341,15 @@ export default class Servicedetail extends Vue {
             projectNo: this.selectData.projectNo,
             projectId: this.selectData.projectId,
             deptCode: this.selectData.deptCode,
-            paymentOrderId: this.selectData.id
+            paymentOrderId: this.selectData.id,
+            // @ts-ignore
+            paymentOrderPurchaseAmount: this.selectData.paymentOrderPurchaseAmount,
+            // @ts-ignore
+            paymentOrderSalesAmount: this.selectData.paymentOrderSalesAmount,
+            // @ts-ignore
+            paymentOrderPurchaseInvoiceAmount: this.selectData.paymentOrderPurchaseInvoiceAmount,
+            // @ts-ignore
+            paymentOrderSalesInvoiceAmount: this.selectData.paymentOrderSalesInvoiceAmount
         }
         console.log('this.equipmentForm: ', this.equipmentForm)
     }
