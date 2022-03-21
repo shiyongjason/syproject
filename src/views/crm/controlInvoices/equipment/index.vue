@@ -306,6 +306,7 @@ export default class UpstreamPaymentManagement extends Vue {
         this.$confirm('确认无误，提交?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
+            closeOnClickModal: false,
             type: 'warning'
         }).then(async () => {
             await submitEqp(val.id)
