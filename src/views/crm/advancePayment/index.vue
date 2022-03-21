@@ -672,6 +672,15 @@ export default class Advancelist extends Vue {
             { required: true, message: '供应商银行账号不能为空', trigger: 'blur' }
         ],
         supplierBankNo: [
+            {
+                required: true,
+                validator: (rule, value, callback) => {
+                    if (!(/^\d{12}$/.test(value))) {
+                        return callback(new Error('请输入正确的12位联行号数字'))
+                    }
+                    return callback()
+                }
+            },
             { required: true, message: '银行联行号不能为空', trigger: 'blur' }
         ]
     }
