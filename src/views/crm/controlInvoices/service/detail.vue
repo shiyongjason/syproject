@@ -33,7 +33,7 @@
                 <el-tab-pane label="操作信息" name="second"></el-tab-pane>
             </el-tabs>
             <div v-if="activeName=='first'">
-                <hosJoyTable align="center" border :column="tableLabel" :data="tableData" :max-height="500">
+                <hosJoyTable align="center" isShowIndex border :column="tableLabel" :data="tableData" :max-height="500">
                 </hosJoyTable>
             </div>
             <div v-if="activeName=='second'">
