@@ -371,7 +371,7 @@
                     <el-date-picker v-model="bankForm.paymentTime" value-format='yyyy-MM-dd' type="date" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="上传上游支付凭证：" prop="attachDocRequestList" style="margin:20px 0">
-                    <OssFileHosjoyUpload v-model="bankForm.attachDocRequestList" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs['bankForm'].clearValidate('attachDocRequestList')" accept=".jpg,.png,.pdf">
+                    <OssFileHosjoyUpload v-model="bankForm.attachDocRequestList" :showPreView='true' :fileSize=20 :fileNum=20 :uploadParameters='uploadParameters' @successCb="$refs['bankForm'].clearValidate('attachDocRequestList')" accept=".jpg,.png,.pdf">
                         <div class="a-line">
                             <h-button>上传文件</h-button>
                         </div>
@@ -672,6 +672,15 @@ export default class Advancelist extends Vue {
             { required: true, message: '供应商银行账号不能为空', trigger: 'blur' }
         ],
         supplierBankNo: [
+            {
+                required: true,
+                validator: (rule, value, callback) => {
+                    if (!(/^\d{12}$/.test(value))) {
+                        return callback(new Error('请输入正确的12位联行号数字'))
+                    }
+                    return callback()
+                }
+            },
             { required: true, message: '银行联行号不能为空', trigger: 'blur' }
         ]
     }
