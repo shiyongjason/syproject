@@ -33,13 +33,13 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">上游供应商：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.supplierCompanyName" maxlength="50" placeholder="请输入经销商名称"></el-input>
+                        <el-input type="text" v-model="queryParams.supplierCompanyName" maxlength="50" placeholder="请输入上游供应商"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">项目名称：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.projectName" maxlength="50" placeholder="请输入经销商名称"></el-input>
+                        <el-input type="text" v-model="queryParams.projectName" maxlength="50" placeholder="请输入项目名称"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -62,32 +62,32 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">mis采购订单号：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.misPurchaseOrderNo" maxlength="50" placeholder="请输入上游供应商名称"></el-input>
+                        <el-input type="text" v-model="queryParams.misPurchaseOrderNo" maxlength="50" placeholder="请输入mis采购订单号"></el-input>
                     </div>
                 </div>
 
                 <div class="query-cont__col">
                     <div class="query-col__label">mis销售订单号：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.misSalesOrderNo" maxlength="50" placeholder="请输入上游供应商名称"></el-input>
+                        <el-input type="text" v-model="queryParams.misSalesOrderNo" maxlength="50" placeholder="请输入mis销售订单号"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">采购发票号码：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.misPurchaseInvoiceNo" maxlength="20" placeholder="请输入上游供应商名称"></el-input>
+                        <el-input type="text" v-model="queryParams.misPurchaseInvoiceNo" maxlength="20" placeholder="请输入采购发票号码"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">销售发票号码：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.misPurchaseInvoiceNo" maxlength="20" placeholder="请输入上游供应商名称"></el-input>
+                        <el-input type="text" v-model="queryParams.misSaleInvoiceNo" maxlength="20" placeholder="请输入销售发票号码"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">申请人：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.createBy" maxlength="20" placeholder="请输入上游供应商名称"></el-input>
+                        <el-input type="text" v-model="queryParams.createBy" maxlength="20" placeholder="请输入申请人"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -99,7 +99,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">申请单号：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.invoiceNo" maxlength="20" placeholder="请输入上游供应商名称"></el-input>
+                        <el-input type="text" v-model="queryParams.invoiceNo" maxlength="20" placeholder="请输入申请单号"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
