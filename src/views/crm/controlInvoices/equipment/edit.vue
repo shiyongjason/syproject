@@ -1,5 +1,5 @@
 <template>
-    <div class="page-body B2b"  style="minWidth:1300px">
+    <div class="page-body B2b" style="minWidth:1300px">
         <div class="page-body-cont">
             <div class="floor-tit">基本信息</div>
             <div class="query-cont-row">
@@ -26,7 +26,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="经销商："  style="display:flex">
+                            <el-form-item label="经销商：" style="display:flex">
                                 {{equipmentForm.companyName||"-"}}
                             </el-form-item>
                         </el-col>
@@ -172,7 +172,7 @@ import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { ccpBaseUrl } from '@/api/config'
 import { EqpInvoiceSubmitRequest } from '@/interface/hbp-project'
-import { getEqpPaymentOrderPage, getEqpDetail, updateEqpInvoice } from '../api'
+import { getEqpPaymentOrderPage, getEqpDetail, updateEqpInvoice, getMostInvoice } from '../api'
 import { Phone } from '@/utils/rules'
 @Component({
     name: 'Servicededit',
@@ -255,7 +255,7 @@ export default class Servicedetail extends Vue {
     get rules () {
         let rules = {
             paymentOrderNo: [
-                { required: true, message: '请输入支付单号', trigger: 'blur' }
+                { required: true, message: '请输入支付单号' }
             ],
             purchaseInvoiceAmount: [
                 { required: true, message: '请输入采购金额', trigger: 'blur' }
@@ -270,17 +270,38 @@ export default class Servicedetail extends Vue {
                 { required: true, message: '请输入销售发票申请金额', trigger: 'blur' }
             ],
             receiver: [
-                { required: true, message: '请输入销售发票收票人', trigger: 'blur' }
+                { required: true, message: '请输入销售发票收票人' }
             ],
             receiverMobile: [
-                { required: true, message: '请输入销售发票收票人手机', trigger: 'blur' },
+                { required: true, message: '请输入销售发票收票人手机' },
                 { validator: Phone, trigger: 'blur' }
             ],
             receiverAddress: [
-                { required: true, message: '请输入收票地址', trigger: 'blur' }
+                { required: true, message: '请输入收票地址' }
             ]
         }
         return rules
+    }
+
+    @Watch('equipmentForm.companyId')
+    getInfo (newVal, oldVal) {
+        if (JSON.stringify(this.selectData) != '{}') {
+            this.getRecentInvoice()
+        }
+    }
+
+    async getRecentInvoice () {
+        if (this.equipmentForm.companyId) {
+            const { data } = await getMostInvoice({ companyId: this.equipmentForm.companyId })
+            this.equipmentForm.receiver = data.receiver
+            this.equipmentForm.receiverMobile = data.receiverMobile
+            this.equipmentForm.receiverAddress = data.receiverAddress
+        } else {
+            this.equipmentForm.receiver = ''
+            this.equipmentForm.receiverMobile = ''
+            this.equipmentForm.remark = ''
+            this.equipmentForm.receiverAddress = ''
+        }
     }
 
     handleSearch () {

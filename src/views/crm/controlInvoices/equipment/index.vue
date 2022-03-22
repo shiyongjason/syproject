@@ -81,7 +81,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">销售发票号码：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.misPurchaseInvoiceNo" maxlength="20" placeholder="请输入销售发票号码"></el-input>
+                        <el-input type="text" v-model="queryParams.misSaleInvoiceNo" maxlength="20" placeholder="请输入销售发票号码"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
