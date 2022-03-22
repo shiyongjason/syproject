@@ -52,9 +52,12 @@
                 <hosJoyTable align="center" border :column="recordTableLabel" :data="recordData" actionWidth='100' :max-height="500" >
                 </hosJoyTable>
             </div>
-            <div v-if="activeName=='four'">
+            <div v-if="activeName=='four'" class="download-wrap">
                 <!-- <p v-for="(item,index) in fileLists">{{item.fileName}}</p> -->
-                 <elImageAddToken style="width: 100px; height: 100px;margin-right:10px; border:1px solid #dad5d5;    border-radius: 5px;" :fileUrl="pic.fileUrl" :fit="'contain'" v-for="(pic,index) in fileLists" :key='index'></elImageAddToken>
+                 <!-- <downloadFileAddToken style="width: 100px; height: 100px;margin-right:10px; border:1px solid #dad5d5;    border-radius: 5px;" :fileUrl="pic.fileUrl" :fit="'contain'" v-for="(pic,index) in fileLists" :key='index'></downloadFileAddToken> -->
+                   <div v-for="(v,index) in fileLists" :key="index" >
+                                <downloadFileAddToken isPreview isType='preview' :file-url="v.fileUrl" :a-link-words="v.fileName" />
+                            </div>
             </div>
             <div class="mb20 mt20">
                 <h-button @click="handleGoBack">返回</h-button>
@@ -68,13 +71,13 @@ import { State, namespace, Getter, Action } from 'vuex-class'
 import { CreateElement } from 'vue'
 import { getEqpDetail } from '../api/index'
 import moment from 'moment'
-import elImageAddToken from '@/components/elImageAddToken/index.vue'
+import downloadFileAddToken from '@/components/downloadFileAddToken/index.vue'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 @Component({
     name: 'equipmentdetail',
     components: {
         hosJoyTable,
-        elImageAddToken
+        downloadFileAddToken
     }
 })
 

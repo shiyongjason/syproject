@@ -244,7 +244,7 @@ export default class Servicedetail extends Vue {
     ]
 
     formTableLabel: tableLabelProps = [
-        { label: 'choose', prop: 'code', slot: 'code' },
+        { label: '单选', prop: 'code', slot: 'code' },
         { label: '支付单号', prop: 'paymentOrderNo' },
         { label: '项目名称', prop: 'projectName' },
         { label: '经销商', prop: 'companyName' },
@@ -311,6 +311,7 @@ export default class Servicedetail extends Vue {
     }
 
     async findPageList () {
+        this.radio = ''
         this.queryParams.paymentOrderNoAccurate = ''
         const { data } = await getEqpPaymentOrderPage(this.queryParams)
         this.tableForm = data.records
