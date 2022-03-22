@@ -15,7 +15,7 @@
             </div>
             <div class="query-cont-col">
                 <el-form-item label="年利率：" prop="loan.yearRate" :rules='rules.yearRate'>
-                    <el-input v-model.trim="flowform.yearRate" v-isNum="flowform.yearRate" maxlength='20' placeholder="请输入年利率"><template slot="append">%</template>
+                    <el-input v-model.trim="flowform.yearRate" v-isNum:2="flowform.yearRate" maxlength='20' placeholder="请输入年利率"><template slot="append">%</template>
                     </el-input>
                 </el-form-item>
             </div>
