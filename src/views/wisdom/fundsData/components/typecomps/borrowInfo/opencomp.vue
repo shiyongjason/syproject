@@ -3,7 +3,7 @@
         <!-- 敞口组件-借款信息 -->
         <div class="query-cont-row">
             <div class="query-cont-col">
-                <el-form-item label="开票金额11：" prop="loan.invoiceAmount" :rules='rules.invoiceAmount'>
+                <el-form-item label="开票金额：" prop="loan.invoiceAmount" :rules='rules.invoiceAmount'>
                     <el-input v-model.trim="flowform.invoiceAmount" @input="(val)=>{setDepositProportion(val)}" v-isNum:2="flowform.invoiceAmount" maxlength='20' placeholder="请输入开票金额">
                     </el-input>
                 </el-form-item>
