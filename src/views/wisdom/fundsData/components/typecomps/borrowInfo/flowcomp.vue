@@ -10,7 +10,7 @@
             </div>
             <div class="query-cont-col">
                 <el-form-item label="借款金额：" prop="loan.loanAmount" :rules='rules.loanAmount'>
-                    <el-input v-model.trim="flowform.loanAmount" v-isNum="flowform.loanAmount" maxlength='20' placeholder="请输入借款金额"><template slot="append">元</template></el-input>
+                    <el-input v-model.trim="flowform.loanAmount" v-isNum:2="flowform.loanAmount" maxlength='20' placeholder="请输入借款金额"><template slot="append">元</template></el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
