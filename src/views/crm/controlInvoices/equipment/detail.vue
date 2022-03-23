@@ -5,7 +5,7 @@
             <div class="service-wrap">
                 <el-row :gutter="20">
                     <el-col :span="8"><span>申请单号：</span>{{formDetail.invoiceNo}}</el-col>
-                    <el-col :span="8"><span>支付单号：</span>{{formDetail.id}}</el-col>
+                    <el-col :span="8"><span>支付单号：</span>{{formDetail.paymentOrderNo}}</el-col>
                     <el-col :span="8"><span>项目：</span>{{formDetail.projectName}}</el-col>
                 </el-row>
                 <el-row :gutter="20">
