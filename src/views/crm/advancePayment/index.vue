@@ -291,7 +291,7 @@
         </el-dialog>
 
         <!-- 确认上游支付 -->
-        <el-dialog title="上游预付款的上游支付" :visible.sync="comfirmVisble" width="600px" :close-on-click-modal=false :before-close="()=>{comfirmVisble = false}">
+        <el-dialog title="上游预付款的上游支付" :visible.sync="comfirmVisble" width="650px" :close-on-click-modal=false :before-close="()=>{comfirmVisble = false}">
             <div class="advance_wrap">
                 <el-form :model="payForm" :rules="detailRules" ref="payForm" label-width="150px" class="demo-ruleForm">
                     <el-row ype="flex" class="row-bg">
@@ -376,7 +376,7 @@
             </span>
         </el-dialog>
         <!-- 网银支付 -->
-        <el-dialog :close-on-click-modal='false' title="确认网银支付" :visible.sync="isShowLinkBank" :before-close="()=>{isShowLinkBank = false;bankForm.attachDocRequestList=[]}" width="500px" class="prev-payment-dialog">
+        <el-dialog :close-on-click-modal='false' title="确认网银支付" :visible.sync="isShowLinkBank" :before-close="()=>{isShowLinkBank = false;bankForm.attachDocRequestList=[]}" width="600px" class="prev-payment-dialog">
             <el-form :model="bankForm" :rules="bankRules" ref="bankForm" label-width="150px" class="demo-ruleForm">
                 <el-form-item label="本次支付账号：" prop="payeeBankName">
 
@@ -426,8 +426,6 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete.vue'
 import { PrepaymentDetailResponse, PrepaymentSupplierOnlineBankTransferConfirmRequest, PrepaymentSupplierSubmitResponse, RespContractSignHistory, SupplierOnlineBankTransferConfirmRequest } from '@/interface/hbp-project'
 import { CRM_ADVACE_UPSTREAMPAY, CRM_ADVACE_APPROVE, CRM_ADVACE_LOOK, CRM_OPREATE_APPROVE, CRM_ADVACE_RECORDS, CRM_UPSTREAM_BANK, CRM_UPLOAD_PREPAY, CRM_ADVACE_WRITEOFF, CRM_SUBMIT_PAY, CRM_ONLINE_PAY } from '@/utils/auth_const'
 import { newCache } from '@/utils/index'
-
-import './css/css.scss'
 import * as Api from './api/index'
 
 // 定义类型
@@ -943,3 +941,7 @@ export default class Advancelist extends Vue {
     }
 }
 </script>
+
+<style lang='scss' scoped>
+@import "./css/css.scss";
+</style>

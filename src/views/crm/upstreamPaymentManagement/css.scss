@@ -56,5 +56,7 @@
             margin: 10px;
         }
     }
-
+    /deep/ .el-form .el-input{
+        width: 350px;
+    }
 }
