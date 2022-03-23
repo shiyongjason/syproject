@@ -208,7 +208,8 @@ export default class Serviceedit extends Vue {
 
     get selectMoney () {
         const moneny = this.tableData.reduce((sum, val) => {
-            return this.$plus(sum, parseFloat(val.paidAmount ?? 0) * 1)
+            console.log('val: ', val)
+            return val && this.$plus(sum, parseFloat(val.paidAmount ?? 0) * 1)
         }, 0)
         this.serviceForm.invoiceAmount = moneny.toFixed(2)
         return moneny.toFixed(2)
@@ -318,7 +319,7 @@ export default class Serviceedit extends Vue {
             // } else {
             //     this.tableData.push(val)
             // }
-            this.tableData.push(val)
+            val && this.tableData.push(val)
         })
         this.dialogVisible = false
     }
