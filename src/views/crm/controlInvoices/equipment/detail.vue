@@ -40,12 +40,12 @@
             </el-tabs>
             <div v-if="activeName=='first'">
                 <p>已核销采购发票金额：{{formDetail.verificationPurchaseInvoiceAmount|moneyFormat}} 在途采购发票金额：{{formDetail.intransitPurchaseInvoiceAmount|moneyFormat}}</p>
-                <hosJoyTable align="center" border :column="tableLabel" :data="tableData" :max-height="500" >
+                <hosJoyTable align="center" isShowIndex border :column="tableLabel" :data="tableData" :max-height="500" >
                 </hosJoyTable>
             </div>
             <div v-if="activeName=='second'">
                      <p>销售发票金额：{{formDetail.normalSalesInvoiceAmount|moneyFormat}}</p>
-                <hosJoyTable align="center" border :column="saleTableLabel" :data="saleData" actionWidth='100' :max-height="500" >
+                <hosJoyTable align="center" isShowIndex border :column="saleTableLabel" :data="saleData" actionWidth='100' :max-height="500" >
                 </hosJoyTable>
             </div>
             <div v-if="activeName=='third'">
