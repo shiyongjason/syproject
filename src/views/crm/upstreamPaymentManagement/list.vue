@@ -143,6 +143,7 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导
 import { measure } from '@/decorator/index'
 import * as Api from './api/index'
 import { UPSTREAM_TOSS } from '@/utils/auth_const'
+import { CreateElement } from 'vue'
 
 @Component({
     name: 'UpstreamPaymentManagement',
@@ -240,8 +241,8 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     tableLabel:tableLabelProps = [
-        { label: '支付单编号', prop: 'orderNo', width: '100' },
-        { label: '所属分部', prop: 'deptName' },
+        { label: '支付单编号', prop: 'orderNo', width: '180' },
+        { label: '所属分部', prop: 'deptName', width: '180' },
         { label: '经销商', prop: 'companyName', width: '180' },
         { label: '上游供应商', prop: 'supplierCompanyName', width: '180' },
         { label: '项目名称', prop: 'projectName', width: '150' },
@@ -249,7 +250,12 @@ export default class UpstreamPaymentManagement extends Vue {
         { label: '支付日期', prop: 'paidTime', width: '120', sortable: 'custom', displayAs: 'YYYY-MM-DD' },
         { label: '付款主体', prop: 'payPrincipal', width: '150' },
         { label: '付款类型', prop: 'paymentType', dicData: [{ value: 1, label: '货款' }, { value: 2, label: '费用' }] },
-        { label: '支付账号', prop: 'payAccount', width: '120' },
+        { label: '支付账号',
+            prop: 'payAccount',
+            width: '250',
+            render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
+                return <span>{scope.row.payAccount}({scope.row.payeeBankName})</span>
+            } },
         { label: '操作人', prop: 'createBy' },
         { label: '操作时间', prop: 'createTime', width: '120', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '上游支付方式', prop: 'supplierPaymentType', dicData: [{ value: 1, label: '银行转帐' }, { value: 2, label: '银行承兑' }] },
