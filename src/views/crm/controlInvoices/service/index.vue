@@ -304,6 +304,7 @@ export default class ServiceList extends Vue {
             if (valid) {
                 await updateOpen(this.IForm)
                 this.isShowInvoice = false
+                this.getList()
             }
         })
     }
