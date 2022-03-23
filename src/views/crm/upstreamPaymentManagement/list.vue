@@ -241,8 +241,8 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     tableLabel:tableLabelProps = [
-        { label: '支付单编号', prop: 'orderNo', width: '100' },
-        { label: '所属分部', prop: 'deptName' },
+        { label: '支付单编号', prop: 'orderNo', width: '180' },
+        { label: '所属分部', prop: 'deptName', width: '180' },
         { label: '经销商', prop: 'companyName', width: '180' },
         { label: '上游供应商', prop: 'supplierCompanyName', width: '180' },
         { label: '项目名称', prop: 'projectName', width: '150' },

@@ -213,8 +213,8 @@ export default class ServiceList extends Vue {
 
     tableLabel:tableLabelProps = [
         { label: '状态码', prop: 'invoiceStatus', width: '100', dicData: invoiceTyps },
-        { label: '申请单号', prop: 'invoiceNo' },
-        { label: '项目编号', prop: 'projectNo' },
+        { label: '申请单号', prop: 'invoiceNo', width: '180' },
+        { label: '项目编号', prop: 'projectNo', width: '180' },
         { label: '项目名称', prop: 'projectName' },
         { label: '所属分部', prop: 'deptName' },
         { label: '经销商', prop: 'companyName' },
