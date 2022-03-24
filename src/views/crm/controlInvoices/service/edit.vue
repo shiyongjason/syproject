@@ -230,7 +230,7 @@ export default class Serviceedit extends Vue {
     async handleAdd () {
         // 发票添加
         this.dialogVisible = true
-        const { data } = await getServiceFunds({ projectId: this.serviceForm.projectId })
+        const { data } = await getServiceFunds({ projectId: this.serviceForm.projectId, invoiceId: this.serviceForm.invoiceId })
         console.log('data: ', data)
         this.tableForm = data
         // console.log(1111, this.tableForm.find(item => { return item.id == '1476479817270034433' }))
@@ -281,6 +281,7 @@ export default class Serviceedit extends Vue {
         // 失去焦点查询项目
         this.queryParams.projectNo = target.value
         const { data } = await getProjectPage(this.queryParams)
+        this.selectRow = data.records[0]
         if (data.records.length == 1) {
             console.log('data.records: ', data.records[0])
             this.serviceForm = {

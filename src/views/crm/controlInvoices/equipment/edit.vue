@@ -388,6 +388,7 @@ export default class Servicedetail extends Vue {
         console.log('val: ', target.value)
         this.queryParams.paymentOrderNoAccurate = target.value
         const { data } = await getEqpPaymentOrderPage(this.queryParams)
+        this.selectData = data.records[0]
         console.log('data: ', data)
         if (data.records.length == 1) {
             this.equipmentForm = {

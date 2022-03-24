@@ -105,7 +105,7 @@
                 <div class="query-cont__col">
                     <h-button type="primary" @click="getList">查询</h-button>
                     <h-button @click="handleReset">重置</h-button>
-                    <h-button @click="handleEdit()" v-if="hosAuthCheck(INVOICE_EQUIPT_ADD)">申请</h-button>
+                    <h-button @click="handleEdit()" type="primary" v-if="hosAuthCheck(INVOICE_EQUIPT_ADD)">申请</h-button>
                 </div>
             </div>
             <!-- end search bar -->
