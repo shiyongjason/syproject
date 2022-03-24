@@ -281,6 +281,7 @@ export default class Serviceedit extends Vue {
         // 失去焦点查询项目
         this.queryParams.projectNo = target.value
         const { data } = await getProjectPage(this.queryParams)
+        this.selectRow = data.records[0]
         if (data.records.length == 1) {
             console.log('data.records: ', data.records[0])
             this.serviceForm = {
