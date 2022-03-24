@@ -107,7 +107,7 @@ export default class Equipmentdetail extends Vue {
     saleData: any[] = []
     saleTableLabel: tableLabelProps = [
         { label: '销售发票号码', prop: 'misSaleInvoiceNo' },
-        { label: '发票金额', prop: 'invoiceAmount' },
+        { label: '发票金额', prop: 'invoiceAmount', displayAs: 'money' },
         { label: '开票日期', prop: 'openDate', displayAs: 'YYYY-MM-DD' },
         { label: '状态', prop: 'status', dicData: [{ value: 10, label: '正常' }, { value: 20, label: '作废' }] }
     ]
