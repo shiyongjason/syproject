@@ -20,7 +20,7 @@
                 </el-row>
                 <el-row :gutter="20">
                     <el-col :span="8"><span>mis销售订单号：</span>{{formDetail.misSalesOrderNo}}</el-col>
-                    <el-col :span="8"><span>销售开票申请总金额：</span>{{formDetail.paymentOrderSalesInvoiceAmount|moneyFormat}}</el-col>
+                    <el-col :span="8"><span>销售开票申请总金额：</span>{{formDetail.salesInvoiceAmount|moneyFormat}}</el-col>
                     <el-col :span="8"><span>销售发票收票人：</span>{{formDetail.receiver}}</el-col>
                 </el-row>
                 <el-row :gutter="20">
