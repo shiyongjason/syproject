@@ -187,20 +187,20 @@ export default class Serviceedit extends Vue {
                 { required: true, message: '请输入经销商', trigger: 'blur' }
             ],
             invoiceId: [
-                { required: true, message: '请输入发票ID', trigger: 'blur' }
+                { required: true, message: '请输入发票ID' }
             ],
             projectNo: [
-                { required: true, message: '请输入选择项目', trigger: 'blur' }
+                { required: true, message: '请输入选择项目' }
             ],
             receiver: [
-                { required: true, message: '请输入收票人', trigger: 'blur' }
+                { required: true, message: '请输入收票人' }
             ],
             receiverMobile: [
-                { required: true, message: '请输入收票人手机', trigger: 'blur' },
-                { validator: Phone, trigger: 'blur' }
+                { required: true, message: '请输入收票人手机' },
+                { validator: Phone }
             ],
             receiverAddress: [
-                { required: true, message: '请输入收票地址', trigger: 'blur' }
+                { required: true, message: '请输入收票地址' }
             ]
         }
         return rules
@@ -325,6 +325,7 @@ export default class Serviceedit extends Vue {
     }
 
     async getList () {
+        this.radio = ''
         this.queryParams.projectNo = ''
         const { data } = await getProjectPage(this.queryParams)
         this.tableProject = data.records
