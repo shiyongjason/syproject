@@ -197,7 +197,7 @@ export default class Serviceedit extends Vue {
             ],
             receiverMobile: [
                 { required: true, message: '请输入收票人手机' },
-                { validator: Phone, trigger: 'blur' }
+                { validator: Phone }
             ],
             receiverAddress: [
                 { required: true, message: '请输入收票地址' }
@@ -325,6 +325,7 @@ export default class Serviceedit extends Vue {
     }
 
     async getList () {
+        this.radio = ''
         this.queryParams.projectNo = ''
         const { data } = await getProjectPage(this.queryParams)
         this.tableProject = data.records
