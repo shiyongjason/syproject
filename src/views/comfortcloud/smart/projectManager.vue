@@ -337,6 +337,9 @@
                             </el-checkbox-group>
                         </el-col>
                     </el-row>
+                    <el-checkbox-group v-model="centralVentilationOption">
+                        <el-checkbox label="65">新风系统</el-checkbox>
+                    </el-checkbox-group>
                     <!-- <el-checkbox v-for="[key, value] of projectTypeOptions" :key="key" :label="key">
                             {{value}}
                             <el-form-item prop="feeType" v-if="showFeeType && key === projectTypeKey.BILLING_SYSTEM" class="inline-form-item">
@@ -423,6 +426,7 @@ import { getChiness } from '../../hmall/membership/api'
 import * as consts from './const.js'
 import { isNumber } from 'highcharts'
 import { newCache } from '@/utils/index'
+import { deepCopy } from '@/utils/utils'
 
 const _form = {
     projectName: '',
@@ -619,6 +623,7 @@ export default {
             energyConservationOption: [],
             isShowZTPlatform: false,
             ZTPlatformOption: [],
+            centralVentilationOption: [],
             brandOptions: consts.BRAND_OPTIONS,
             subSystemTypeOptions: consts.SUB_SYSTEM_TYPE_OPTIONS
         }
@@ -889,12 +894,13 @@ export default {
             this.energyConservationOption = []
             this.isShowZTPlatform = false
             this.ZTPlatformOption = []
+            this.centralVentilationOption = []
         },
         async editProject (id) {
             await this.getClouldControlProjectDetail({ id: id })
             this.form = {
                 ...this.clouldControlProjectDetail,
-                thirdSystemConfigs: this.clouldControlProjectDetail.thirdSystemConfigs ? this.clouldControlProjectDetail.thirdSystemConfigs.map(item => {
+                thirdSystemConfigs: this.clouldControlProjectDetail.thirdSystemConfigs ? deepCopy(this.clouldControlProjectDetail.thirdSystemConfigs).map(item => {
                     item.brandName = item.key.split('-')[0]
                     item.subSystemType = item.key.split('-')[1]
                     return item
@@ -950,6 +956,8 @@ export default {
             this.ZTPlatformOption = this.form.projectType.filter(item => item == 130)
             this.isShowZTPlatform = this.ZTPlatformOption > 0
 
+            this.centralVentilationOption = this.form.projectType.filter(item => item == 65)
+
             this.addProject = true
         },
         addThirdSystemConfig () {
@@ -976,7 +984,8 @@ export default {
                 this.scenePanelRadioOption,
                 ...this.scenePanelOption,
                 ...this.energyConservationOption,
-                ...this.ZTPlatformOption
+                ...this.ZTPlatformOption,
+                ...this.centralVentilationOption
             ].filter(item => !(item == '' || !isNumber(Number(item))))
             console.log(this.form.thirdSystemConfigs)
             this.form.thirdSystemConfigs = this.form.thirdSystemConfigs.map(item => {
