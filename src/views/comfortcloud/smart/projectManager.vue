@@ -375,14 +375,14 @@
                     <el-row :gutter="5" class="mb20">
                         <el-col :span="7">
                             <el-form-item label="品牌名称：" :prop="`thirdSystemConfigs[${index}].brandName`" :rules="rules.brandName" label-width="120px">
-                                <el-select v-model="item.brandName" placeholder="输入品牌名称" clearable>
+                                <el-select v-model="item.brandName" placeholder="输入品牌名称" @change="onChangeBrand(item,index)" clearable>
                                     <el-option v-for="item in brandOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
                         <el-col :span="7">
                             <el-form-item label="子系统类型：" :prop="`thirdSystemConfigs[${index}].subSystemType`" :rules="rules.subSystemType(item)" label-width="120px">
-                                <el-select v-model="item.subSystemType" placeholder="输入子系统类型" clearable>
+                                <el-select v-model="item.subSystemType" placeholder="输入子系统类型" @change="onChangeSubSystem" clearable>
                                     <el-option v-for="item in subSystemTypeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
@@ -687,6 +687,12 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo
         })
+        // brandOptions () {
+        //     const result = consts.BRAND_OPTIONS.map(item => {
+
+        //     })
+        //     return result
+        // }
     },
     methods: {
         ...mapActions({
@@ -694,6 +700,23 @@ export default {
             getClouldControlProjectDetail: 'getClouldControlProjectDetail',
             getDeviceTypes: 'getClouldControlProjectDevicesTypes'
         }),
+        onChangeBrand (row, index) {
+            if (row.brandName) {
+                const result = consts.SUB_SYSTEM_TYPE_OPTIONS.filter(item => row.brandName == item.parentValue)
+                this.subSystemTypeOptions = result.length > 0 ? result : consts.SUB_SYSTEM_TYPE_OPTIONS
+                consts.BRAND_OPTIONS.forEach((item) => {
+                    if (item.value == row.brandName) {
+                        this.$set(this.form.thirdSystemConfigs[index], 'config', item.config)
+                    }
+                })
+            } else {
+                this.$set(this.form.thirdSystemConfigs[index], 'config', '')
+            }
+        },
+        onChangeSubSystem (value) {
+            const result = consts.BRAND_OPTIONS.filter(item => item.subValue.indexOf(value) > -1)
+            this.brandOptions = result.length > 0 ? result : consts.BRAND_OPTIONS
+        },
         uploadSuccess (val) {
             this.form.companyLogo = val.imageUrl
         },

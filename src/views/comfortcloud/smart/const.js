@@ -53,12 +53,12 @@ export const DEVICE_UPGRADE_IS_COMMON_KEY = {
 
 // 品牌名称
 export const BRAND_OPTIONS = [
-    { label: '海康', value: 'hikVision' },
-    { label: '正泰', value: 'techsel' }
+    { label: '海康', value: 'hikVision', subValue: ['video'], config: '{"key": "", "secret": "", "brandName": "海康", "accessAddress": ""}' },
+    { label: '正泰', value: 'techsel', subValue: ['management'], config: '{"loginName": "", "passward": "", "domain": "", "accessAddress": ""}' }
 ]
 
 // 子系统类型
 export const SUB_SYSTEM_TYPE_OPTIONS = [
-    { label: '视频监控', value: 'video' },
-    { label: '综合能源管理', value: 'management' }
+    { label: '视频监控', value: 'video', parentValue: 'hikVision' },
+    { label: '综合能源管理', value: 'management', parentValue: 'techsel' }
 ]
