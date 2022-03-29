@@ -75,8 +75,8 @@
             <hosJoyTable v-if="supplierList" isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="supplierList" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="supplierListPagination.total" @pagination="findPurchaseList"
                 actionWidth='120' isAction :isActionFixed='supplierList&&supplierList.length>0'>
                    <template #action="slotProps">
-                    <h-button table v-if="slotProps.data.row.invalidStatus==0"  @click="onHandleOperate(slotProps.data.row)">作废</h-button>
-                    <h-button table v-if="slotProps.data.row.invalidStatus==1" @click="onHandleOperate(slotProps.data.row)">取消作废</h-button>
+                    <h-button table v-if="slotProps.data.row.invalidStatus==0&&hosAuthCheck(SUPPLIER_NO)"  @click="onHandleOperate(slotProps.data.row)">作废</h-button>
+                    <h-button table v-if="slotProps.data.row.invalidStatus==1&&hosAuthCheck(SUPPLIER_YES)" @click="onHandleOperate(slotProps.data.row)">取消作废</h-button>
                    </template>
             </hosJoyTable>
         </div>
@@ -88,6 +88,7 @@ import { deepCopy } from '@/utils/utils'
 import { newCache } from '@/utils/index'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { updateInvalidNo, updateValidNo } from './api/index'
+import { SUPPLIER_YES, SUPPLIER_NO } from '@/utils/auth_const'
 import * as Api from '@/views/crm/supplierSearch/api'
 export default {
     name: 'supplierSearch',
@@ -95,6 +96,8 @@ export default {
     data () {
         return {
             queryParams: {
+                SUPPLIER_YES,
+                SUPPLIER_NO,
                 pageNumber: 1,
                 pageSize: 10,
                 startTime: '',
