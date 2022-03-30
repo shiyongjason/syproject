@@ -95,9 +95,10 @@ export default {
     components: { hosJoyTable },
     data () {
         return {
+            SUPPLIER_YES,
+            SUPPLIER_NO,
             queryParams: {
-                SUPPLIER_YES,
-                SUPPLIER_NO,
+
                 pageNumber: 1,
                 pageSize: 10,
                 startTime: '',
