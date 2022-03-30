@@ -1,5 +1,11 @@
 .row-bg {
 	padding: 10px 0;
+    em{
+        font-style: normal;
+    }
+    .green{
+        color: green;
+    }
 }
 .tag_top {
 	margin-bottom: 10px;
@@ -101,5 +107,29 @@
     h4{
         font-size: 15px;
         padding-bottom: 10px;
+    }
+}
+.ocr-wrap{
+    h2{
+        font-size: 16px;
+    }
+    p{
+        margin-bottom: 10px;
+    }
+    h3{
+        font-size: 15px;
+        color: #ff7a45;
+    }
+    strong{
+        font-size: 16px;
+        color: red;
+    }
+}
+.col-padding{
+    em{
+        font-style: normal;
+    }
+    .green{
+        color: green;
     }
 }
