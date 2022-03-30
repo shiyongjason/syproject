@@ -235,7 +235,7 @@
                         <el-col class="col-padding" :span="10" :offset='1'>上游供应商：{{detailForm.supplierCompanyName||'-'}}</el-col>
                         <el-col class="col-padding" :span="10" :offset='1'>供应商开户行名称：{{detailForm.supplierAccountName||'-'}}</el-col>
                         <el-col class="col-padding" :span="10" :offset='1'>银行联行号：{{detailForm.supplierBankNo||'-'}}</el-col>
-                        <el-col class="col-padding" :span="10" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo||'-'}}</el-col>
+                        <el-col class="col-padding" :span="10" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo||'-'}}(<em v-if="detailForm.supplierLabel" :class="detailForm.supplierLabel&&className.get(detailForm.supplierLabel.code)"> {{detailForm.supplierLabel.desc}} </em>)</el-col>
                         <el-col class="col-padding" :span="10" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>备注信息：{{detailForm.applyRemark||'-'}}</el-col>
                         <el-col class="col-padding disFlex" :span="23" :offset='1'>附件：
