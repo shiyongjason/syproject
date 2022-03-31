@@ -23,6 +23,7 @@ const mutations = {
 }
 const actions = {
     async findPurchaseList ({ commit }, params) {
+        console.log('params: ', params)
         const { data } = await Api.getSupplierSearchList(params)
         commit(Type.SUPPLIER_SEARCH_LIST, data)
     }

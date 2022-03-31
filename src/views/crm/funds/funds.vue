@@ -405,43 +405,15 @@ export default {
             this.onSwtichInfo(this.queryParamsUseQuery)
         },
         onPayDetail (row) {
-            if (row.paymentOrderStatus == 8 && this.queryParams.repaymentTypeArrays == 2) {
-                // 货款先进去校验
-                this.$confirm('支付单全部收货后，才可支付尾款哦～', '收货提示', {
-                    confirmButtonText: '去收货',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.paymentParams = { paymentOrderId: row.orderId }
-                    this.confirmReceiptVisible = true
-                }).catch(() => {
-
-                })
-            } else {
-                this.$refs.reduleDialog.findRemainConfirm(row, row.repaymentType)
-                this.reduleDialogVisible = true
-            }
+            this.$refs.reduleDialog.findRemainConfirm(row, row.repaymentType)
+            this.reduleDialogVisible = true
         },
         seePayEnter (row) {
             this.$refs.reduleDialog.getFundsTicket(row, row.repaymentType)
             this.reduleDialogVisible = true
         },
         onUploadPay (val) {
-            if (val.paymentOrderStatus == 8 && this.queryParams.repaymentTypeArrays == 2) {
-                // 货款先进去校验
-                this.$confirm('支付单全部收货后，才可支付尾款哦～', '收货提示', {
-                    confirmButtonText: '去收货',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.paymentParams = { paymentOrderId: val.orderId }
-                    this.confirmReceiptVisible = true
-                }).catch(() => {
-
-                })
-            } else {
-                this.$refs.uploaddialog.onDialogClick(val)
-            }
+            this.$refs.uploaddialog.onDialogClick(val)
         },
         onCloseDialogAndQuery () {
             this.confirmReceiptVisible = false

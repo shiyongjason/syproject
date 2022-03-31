@@ -55,12 +55,30 @@
                             -
                         </p>
                     </div>
-                    <p>
+                    <div class="word-box">
                         <span class="label">
                             支付日期：
                         </span>
                         {{ item.payDate }}
-                    </p>
+                    </div>
+                   <div class="word-box">
+                        <span class="label">
+                            实际收款供应商银行账号：
+                        </span>
+                        {{ item.supplierAccountNo }}
+                    </div>
+                   <div class="word-box">
+                        <span class="label">
+                            实际收款供应商开户行名称：
+                        </span>
+                        {{ item.supplierAccountName }}
+                    </div>
+                    <div class="word-box">
+                        <span class="label">
+                            实际收款供应商银行联行号：
+                        </span>
+                        {{ item.supplierBankNo }}
+                    </div>
                 </li>
             </ul>
         </div>
@@ -196,5 +214,8 @@ li {
     max-height: 480px;
     overflow-x: hidden;
     overflow-y: scroll;
+}
+.word-box{
+    margin-top: 5px;
 }
 </style>
