@@ -493,3 +493,6 @@ export const APPLICATIONLIST_LINK_AUTHENLIST = 1000009
 /* 线索 */
 export const THREAD_DISTRIBUTOR = 1600001
 export const THREAD_SAVE = 1600002
+// 供应商查询
+export const SUPPLIER_YES = 1405001
+export const SUPPLIER_NO = 1405002
