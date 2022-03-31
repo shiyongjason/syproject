@@ -303,13 +303,9 @@ import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT, CHANGE_LOAN_TRANSFER_STATUS, UP
 import { LOAN_TRANSFER_STATUS_DONE, UPSTREAM_PAYMENT_STATUS_WAITING } from './const'
 import FundsDialog from '../funds/components/fundsDialog.vue'
 import { newCache } from '@/utils/index'
-<<<<<<< HEAD
 import HAutocomplete from '@/components/autoComplete/HAutocomplete.vue'
-
-=======
 import OssFileUtils from '@/utils/OssFileUtils'
 import { bankOcrReceipt } from '../advancePayment/api'
->>>>>>> origin/master
 export const PAYMENTTYPE: Map<number | null, string> = new Map([
     [null, '-'],
     [1, '银行转账'],
@@ -362,15 +358,12 @@ export default class UpstreamPaymentManagement extends Vue {
         sizes: [10, 20, 50, 100],
         total: 0
     }
-<<<<<<< HEAD
     targetObj = {
         selectCode: '',
         selectName: ''
     }
-=======
     ocrVisible:boolean = false
     ocrData:any = {}
->>>>>>> origin/master
     paymentType = PAYMENTTYPE
     supplierPaymentMethod = SUPPLIERPAYMENTMETHOD
     tableData:RespUpStreamPayment[] = []
