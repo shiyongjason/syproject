@@ -80,8 +80,7 @@
                     <h-button table @click="onUploadPrePay(slotProps.data.row)" v-if="hosAuthCheck(uploadprepay)&&slotProps.data.row.status==0&&slotProps.data.row.applyAmount > 0">上传预付凭证</h-button>
                     <h-button table v-if="slotProps.data.row.showOnlineBank&&hosAuthCheck(banklink)" @click="handleIsPay(slotProps.data.row)">确认已网银支付</h-button>
                     <h-button table v-if="hosAuthCheck(submitPay)&& (slotProps.data.row.status === 0 || slotProps.data.row.status === 8)" @click="handlePreSubmit(slotProps.data.row)">确认支付</h-button>
-                    <!--  -->
-                    <h-button table v-if="hosAuthCheck(onlinePay)&&slotProps.data.row.status === 3&&slotProps.data.row.fundPaymentType === 1" @click="handlePayOnline(slotProps.data.row)">司库支付</h-button>
+                    <h-button table v-if="hosAuthCheck(onlinePay)&&slotProps.data.row.status === 3&&slotProps.data.row.fundPaymentType === 1&&slotProps.data.row.syncSaasTrade === 3" @click="handlePayOnline(slotProps.data.row)">司库支付</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -117,7 +116,8 @@
                 </el-row>
                 <el-row type="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>银行联行号：{{detailForm.supplierBankNo||'-'}}</el-col>
-                    <el-col :span="10" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo||'-'}}</el-col>
+                    <el-col :span="10" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo||'-'}} (<em v-if="detailForm.supplierLabel" :class="detailForm.supplierLabel&&className.get(detailForm.supplierLabel.code)"> {{detailForm.supplierLabel.desc}} </em>)</el-col>
+
                 </el-row>
                 <el-row type="flex" class="row-bg">
                     <el-col :span="10" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate||'-'}}</el-col>
@@ -125,11 +125,6 @@
                 </el-row>
                 <el-row type="flex" class="row-bg">
                     <el-col class="pay_vouchers mtNone" :span="20" :offset='1'>附件：
-                        <!-- <div class="disFlex" v-if="detailForm.attachDocList && detailForm.attachDocList.length>0">
-                            <span class="img-box" :key="item.fileUrl" v-for="item in detailForm.attachDocList" @click="goDetail(item.fileUrl)">
-                                <img :src="item.fileUrl" alt="">
-                            </span>
-                        </div> -->
                         <div class="advance_wrap-flex" v-if="detailForm.attachDocList &&detailForm.attachDocList.length>0">
                             <div v-for="(v,index) in detailForm.attachDocList" :key="index">
                                 <downloadFileAddToken isPreview isType='preview' :file-url="v.fileUrl" :a-link-words="v.fileName" />
@@ -160,8 +155,6 @@
                     <el-col :span="10" :offset='1'>审核结果：{{detailForm.approvalStatus==1?'通过':detailForm.approvalStatus==2?'不通过':'-'}}</el-col>
                     <el-col :span="10" :offset='1'>审核备注：{{detailForm.approvalRemark||'-'}}</el-col>
                 </el-row>
-                <template v-if="detailForm.prepaymentDetails&&detailForm.prepaymentDetails.length>0">
-                </template>
                 <div class="pre_wrap" v-if="detailForm.fund">
                     <h4>预付款支付计划：</h4>
                     <hosJoyTable ref="hosjoyTable" align="center" border stripe :column="tableLabelDetail" :data="planData"></hosJoyTable>
@@ -182,6 +175,9 @@
                     <el-col :span="10" :offset='1'>支付日期：{{item.payDate}}</el-col>
                     <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">操作人：{{item.createBy}}</el-col>
                     <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">操作时间：{{ item.createTime | momentFormat }}</el-col>
+                    <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">实际收款供应商银行账号：{{item.supplierAccountNo}}</el-col>
+                    <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">实际收款供应商开户行名称：{{item.supplierAccountName}}</el-col>
+                    <el-col :span="10" :offset='1' v-if="!detailForm.showSaasButton">实际收款供应商银行联行号：{{item.supplierBankNo}}</el-col>
                     <el-col :span="20" :offset='1' class="credentials">上游支付凭证：
                         <div v-if="item.payVouchers&&item.payVouchers.length>0">
                             <!-- 司库返回凭证 showSaasButton区分-->
@@ -239,7 +235,7 @@
                         <el-col class="col-padding" :span="10" :offset='1'>上游供应商：{{detailForm.supplierCompanyName||'-'}}</el-col>
                         <el-col class="col-padding" :span="10" :offset='1'>供应商开户行名称：{{detailForm.supplierAccountName||'-'}}</el-col>
                         <el-col class="col-padding" :span="10" :offset='1'>银行联行号：{{detailForm.supplierBankNo||'-'}}</el-col>
-                        <el-col class="col-padding" :span="10" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo||'-'}}</el-col>
+                        <el-col class="col-padding" :span="10" :offset='1'>供应商银行账号：{{detailForm.supplierAccountNo||'-'}}(<em v-if="detailForm.supplierLabel" :class="detailForm.supplierLabel&&className.get(detailForm.supplierLabel.code)"> {{detailForm.supplierLabel.desc}} </em>)</el-col>
                         <el-col class="col-padding" :span="10" :offset='1'>期望上游支付日期：{{detailForm.expectSupplierPaymentDate||'-'}}</el-col>
                         <el-col class="col-padding" :span="23" :offset='1'>备注信息：{{detailForm.applyRemark||'-'}}</el-col>
                         <el-col class="col-padding disFlex" :span="23" :offset='1'>附件：
@@ -291,9 +287,9 @@
         </el-dialog>
 
         <!-- 确认上游支付 -->
-        <el-dialog title="上游预付款的上游支付" :visible.sync="comfirmVisble" width="650px" :close-on-click-modal=false :before-close="()=>{comfirmVisble = false}">
+        <el-dialog title="上游预付款的上游支付" :visible.sync="comfirmVisble" width="700px" :close-on-click-modal=false :before-close="()=>{comfirmVisble = false}">
             <div class="advance_wrap">
-                <el-form :model="payForm" :rules="detailRules" ref="payForm" label-width="150px" class="demo-ruleForm">
+                <el-form :model="payForm" :rules="detailRules" ref="payForm" label-width="220px" class="demo-ruleForm">
                     <el-row ype="flex" class="row-bg">
                         <el-col :span="10" :offset='1'>经销商：{{detailForm.distributor||'-'}}</el-col>
                         <el-col :span="10" :offset='1'>项目：{{detailForm.projectName||'-'}}</el-col>
@@ -330,12 +326,21 @@
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="上传上游支付凭证：" prop="payVouchers" style="margin:20px 0">
-                        <OssFileHosjoyUpload v-model="payForm.payVouchers" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.payForm.clearValidate('payVouchers')" accept=".jpg,.png,.pdf">
+                        <OssFileHosjoyUpload v-model="payForm.payVouchers" :showPreView='true' :fileSize=20 :fileNum=20 :uploadParameters='uploadParameters' @successArg="backUpload" :multiple=false accept=".jpg,.png,.pdf">
                             <div class="a-line">
                                 <h-button>上传文件</h-button>
                             </div>
                         </OssFileHosjoyUpload>
                         <p class="tips">支持扩展名：jpg.png.pdf...</p>
+                    </el-form-item>
+                    <el-form-item label="实际收款供应商银行账号：" prop="supplierAccountNo">
+                        <el-input v-model="payForm.supplierAccountNo" placeholder="请输入" maxlength="25"></el-input>
+                    </el-form-item>
+                    <el-form-item label="实际收款供应商开户行名称：" prop="supplierAccountName">
+                        <el-input v-model="payForm.supplierAccountName" placeholder="请输入" maxlength="50"></el-input>
+                    </el-form-item>
+                    <el-form-item label="实际收款供应商银行联行号：" prop="supplierBankNo">
+                        <el-input v-model="payForm.supplierBankNo" placeholder="请输入" maxlength="12"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
@@ -393,7 +398,7 @@
                     <el-date-picker v-model="bankForm.paymentTime" value-format='yyyy-MM-dd' type="date" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="上传上游支付凭证：" prop="attachDocRequestList" style="margin:20px 0">
-                    <OssFileHosjoyUpload v-model="bankForm.attachDocRequestList" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.bankForm.clearValidate('attachDocRequestList')" accept=".jpg,.png,.pdf">
+                    <OssFileHosjoyUpload v-model="bankForm.attachDocRequestList" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs['bankForm'].clearValidate('attachDocRequestList')" accept=".jpg,.png,.pdf">
                         <div class="a-line">
                             <h-button>上传文件</h-button>
                         </div>
@@ -408,6 +413,25 @@
         </el-dialog>
         <UploadDialog ref="uploaddialog" @onBackSearch="getList"></UploadDialog>
         <ReduleDialog :is-open="reduleDialogVisible" ref="reduleDialog" @onClose="fundsDialogClose"></ReduleDialog>
+        <!-- OCR 信息确认 -->
+        <el-dialog title="OCR识别信息确认" :visible.sync="ocrVisible" width="30%" :before-close="()=>{ocrVisible = false}">
+            <div class="ocr-wrap">
+                <h2>检测到OCR识别的实际收款供应商账号信息与界面信息存在差异</h2>
+                <h3>OCR识别到信息：</h3>
+                <p>实际收款供应商银行账号：{{ocrData.supplierAccountNo}}</p>
+                <p>实际收款供应商开户行名称：{{ocrData.supplierAccountName}}</p>
+                <p>实际收款供应商银行联行号：{{ocrData.supplierBankNo}}</p>
+                <h3>界面信息：</h3>
+                <p>实际收款供应商银行账号：{{payForm.supplierAccountNo}}</p>
+                <p>实际收款供应商开户行名称：{{payForm.supplierAccountName}}</p>
+                <p>实际收款供应商银行联行号：{{payForm.supplierBankNo}}</p>
+                <strong>确定以OCR识别信息为准，覆盖现有界面信息？</strong>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="()=>{ocrVisible = false}">不覆盖</el-button>
+                <el-button type="primary" @click="onSaveCover">确定覆盖</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -427,12 +451,24 @@ import { PrepaymentDetailResponse, PrepaymentSupplierOnlineBankTransferConfirmRe
 import { CRM_ADVACE_UPSTREAMPAY, CRM_ADVACE_APPROVE, CRM_ADVACE_LOOK, CRM_OPREATE_APPROVE, CRM_ADVACE_RECORDS, CRM_UPSTREAM_BANK, CRM_UPLOAD_PREPAY, CRM_ADVACE_WRITEOFF, CRM_SUBMIT_PAY, CRM_ONLINE_PAY } from '@/utils/auth_const'
 import { newCache } from '@/utils/index'
 import * as Api from './api/index'
+import OssFileUtils from '@/utils/OssFileUtils'
 
+const className = new Map([
+    [0, 'red'],
+    [10, 'green'],
+    [11, 'green'],
+    [12, 'red'],
+    [20, 'red'],
+    [21, 'red'],
+    [22, 'red'],
+    [30, 'green'],
+    [31, 'green'],
+    [32, 'red']
+])
 // 定义类型
 interface Query{
     [key:string]:any
 }
-
 const paymentTypes = [{ value: 1, label: '货款' }, { value: 2, label: '费用' }]
 
 const preStatus = [{ value: -1, label: '待分财审核' }, { value: 1, label: '待项目运营审核' }, { value: 2, label: '流程审批中' }, { value: 0, label: '预付款待支付' }, { value: 8, label: '预付款支付待确认' }, { value: 3, label: '待支付' }, { value: 4, label: '支付单完成' }, { value: 5, label: '待核销' }, { value: 6, label: '已核销' }, { value: 7, label: '支付单关闭' }]
@@ -479,6 +515,7 @@ export default class Advancelist extends Vue {
                    selectName: '',
                    selectCode: ''
                }
+    className = className
     reduleDialogVisible:boolean = false
     advancewriteoff = CRM_ADVACE_WRITEOFF
     advancepay = CRM_ADVACE_UPSTREAMPAY
@@ -495,6 +532,7 @@ export default class Advancelist extends Vue {
     private comfirmVisble:boolean = false
     private examineVisble:boolean = false
     private recordVisible:boolean = false
+    private ocrVisible:boolean = false
     private _queryParams:Query = {}
     private totalMoney:number = 0
     private id:number|string = null
@@ -506,6 +544,7 @@ export default class Advancelist extends Vue {
         distributor: '',
         applyAmount: ''
     }
+    num:number = 0
     @State('userInfo') userInfo: any
     payeeAccountList:any[]=[]
     queryParams:Query = {
@@ -548,7 +587,10 @@ export default class Advancelist extends Vue {
         payDate: '',
         payPrincipal: '',
         payeeBankName: '',
-        payeeBankAccount: ''
+        payeeBankAccount: '',
+        supplierAccountName: '',
+        supplierAccountNo: '',
+        supplierBankNo: ''
     }
     prePayForm:Record<string, any>={
         prepaymentOrderId: '',
@@ -567,6 +609,7 @@ export default class Advancelist extends Vue {
         payeeBankName: '',
         payeeBankAccount: ''
     }
+    ocrData:Record<any, any> = {}
     page = {
         total: 0
     }
@@ -661,6 +704,24 @@ export default class Advancelist extends Vue {
                 },
                 trigger: 'blur'
             }
+        ],
+        supplierAccountName: [
+            { required: true, message: '供应商开户行名称不能为空', trigger: 'blur' }
+        ],
+        supplierAccountNo: [
+            { required: true, message: '供应商银行账号不能为空', trigger: 'blur' }
+        ],
+        supplierBankNo: [
+            {
+                required: true,
+                validator: (rule, value, callback) => {
+                    if (!(/^\d{12}$/.test(value))) {
+                        return callback(new Error('请输入正确的12位联行号数字'))
+                    }
+                    return callback()
+                }
+            },
+            { required: true, message: '银行联行号不能为空', trigger: 'blur' }
         ]
     }
 
@@ -738,6 +799,41 @@ export default class Advancelist extends Vue {
         })
     }
 
+    async backUpload (val) {
+        this.num = this.num + 1
+        console.log('  this.num: ', this.num)
+        console.log('val: ', val)
+        this.$refs['payForm'].clearValidate('payVouchers')
+        if (this.payForm.payVouchers.length == 1) {
+            // 第一张图片进行ocr 认证
+            let tokenUrl = await OssFileUtils.getUrl(val.fileUrl)
+            const { data } = await Api.bankOcrReceipt({ image: tokenUrl })
+            console.log('data: ', data)
+            this.ocrData = data
+            this.ocrData = {
+                ...this.ocrData,
+                supplierBankNo: this.ocrData.supplierBankNo || this.detailForm.supplierBankNo
+            }
+            if (data.supplierAccountName) {
+                if (this.ocrData.supplierAccountNo !== this.payForm.supplierAccountNo || this.ocrData.supplierBankNo != this.payForm.supplierBankNo || this.ocrData.supplierAccountName != this.payForm.supplierAccountName) {
+                    this.ocrVisible = true
+                }
+            } else {
+                this.$message.info('该图片无法进行OCR识别，请重新上传或手动修改供应商信息')
+            }
+        }
+    }
+
+    onSaveCover () {
+        this.payForm = {
+            ...this.payForm,
+            supplierAccountNo: this.ocrData.supplierAccountNo,
+            supplierBankNo: this.ocrData.supplierBankNo || this.detailForm.supplierBankNo,
+            supplierAccountName: this.ocrData.supplierAccountName
+        }
+        this.ocrVisible = false
+    }
+
     public onUploadPrePay (val) {
         this.$refs['uploaddialog'].onDialogClick(val)
     }
@@ -782,7 +878,7 @@ export default class Advancelist extends Vue {
         })
     }
 
-    //
+    // 确定支付
     public onSubmitPay () {
         this.payForm.prepaymentOrderId = this.detailForm.id
         this.$refs['payForm'].validate(async value => {
@@ -849,6 +945,9 @@ export default class Advancelist extends Vue {
             this.$refs['payForm'].clearValidate()
         })
         this.payForm.payAmount = this.detailForm.surplusAmount
+        this.payForm.supplierAccountNo = this.detailForm.supplierAccountNo
+        this.payForm.supplierBankNo = this.detailForm.supplierBankNo
+        this.payForm.supplierAccountName = this.detailForm.supplierAccountName
         this.payForm.payDate = moment(new Date()).format('YYYY-MM-DD')
         this.payForm.payVouchers = []
         this.getBankAccount()
@@ -922,6 +1021,8 @@ export default class Advancelist extends Vue {
         this.payForm.payPrincipal = bankInfo.payeeName
         this.payForm.payeeBankName = bankInfo.payeeBankName
         this.payForm.payeeBankAccount = bankInfo.payeeBankAccount
+
+        this.num = 0
     }
 
     public async mounted () {

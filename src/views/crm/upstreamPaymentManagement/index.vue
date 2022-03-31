@@ -130,7 +130,7 @@
         </el-drawer>
         <el-dialog v-if="isOpen" :close-on-click-modal='false' title="上游支付" :visible.sync="isOpen" width="850px" :before-close="()=> onCancel()" class="prev-payment-dialog">
             <div class="dialog-ctx">
-                <el-form id='elform' :model="dialogFormData" :rules="formRules" label-width="150px" ref="form">
+                <el-form id='elform' :model="dialogFormData" :rules="formRules" label-width="220px" ref="form">
                     <div class="dialog-flex-layout">
                         <el-form-item label="经销商：">
                             {{ prevPaymentDetail.companyName }}
@@ -187,12 +187,21 @@
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="上传上游支付凭证：" prop="payVouchers" style="margin-bottom:20px">
-                        <OssFileHosjoyUpload v-model="dialogFormData.payVouchers" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.form.clearValidate()" accept=".jpg,.png,.pdf">
+                        <OssFileHosjoyUpload v-model="dialogFormData.payVouchers" :showPreView='true' :fileSize=20 :fileNum=20 :uploadParameters='uploadParameters' @successArg="onBackOcrInfo" accept=".jpg,.png,.pdf">
                             <div class="a-line">
                                 <h-button>上传文件</h-button>
                             </div>
                         </OssFileHosjoyUpload>
                         <p class="tips">支持扩展名：jpg.png.pdf...</p>
+                    </el-form-item>
+                     <el-form-item label="实际收款供应商银行账号：" prop="supplierAccountNo">
+                        <el-input v-model="dialogFormData.supplierAccountNo" placeholder="请输入" maxlength="25"></el-input>
+                    </el-form-item>
+                    <el-form-item label="实际收款供应商开户行名称：" prop="supplierAccountName">
+                        <el-input v-model="dialogFormData.supplierAccountName" placeholder="请输入" maxlength="50"></el-input>
+                    </el-form-item>
+                    <el-form-item label="实际收款供应商银行联行号：" prop="supplierBankNo">
+                        <el-input v-model="dialogFormData.supplierBankNo" placeholder="请输入" maxlength="12"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
@@ -247,11 +256,31 @@
                     </OssFileHosjoyUpload>
                     <p class="tips">支持扩展名：.jpg.png.pdf...</p>
                 </el-form-item>
+
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <h-button @click="onBankCancel()">取消</h-button>
                 <h-button type="primary" @click="handleSubBank">确定</h-button>
             </div>
+        </el-dialog>
+        <!-- OCR 信息确认 -->
+        <el-dialog title="OCR识别信息确认" :visible.sync="ocrVisible" width="30%" :before-close="()=>{ocrVisible = false}">
+            <div class="ocr-wrap">
+                <h2>检测到OCR识别的实际收款供应商账号信息与界面信息存在差异</h2>
+                <h3>OCR识别到信息：</h3>
+                <p>实际收款供应商银行账号：{{ocrData.supplierAccountNo}}</p>
+                <p>实际收款供应商开户行名称：{{ocrData.supplierAccountName}}</p>
+                <p>实际收款供应商银行联行号：{{ocrData.supplierBankNo}}</p>
+                <h3>界面信息：</h3>
+                <p>实际收款供应商银行账号：{{dialogFormData.supplierAccountNo}}</p>
+                <p>实际收款供应商开户行名称：{{dialogFormData.supplierAccountName}}</p>
+                <p>实际收款供应商银行联行号：{{dialogFormData.supplierBankNo}}</p>
+                <strong>确定以OCR识别信息为准，覆盖现有界面信息？</strong>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="()=>{ocrVisible = false}">不覆盖</el-button>
+                <el-button type="primary" @click="onSaveCover">确定覆盖</el-button>
+            </span>
         </el-dialog>
     </div>
 </template>
@@ -274,8 +303,13 @@ import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT, CHANGE_LOAN_TRANSFER_STATUS, UP
 import { LOAN_TRANSFER_STATUS_DONE, UPSTREAM_PAYMENT_STATUS_WAITING } from './const'
 import FundsDialog from '../funds/components/fundsDialog.vue'
 import { newCache } from '@/utils/index'
+<<<<<<< HEAD
 import HAutocomplete from '@/components/autoComplete/HAutocomplete.vue'
 
+=======
+import OssFileUtils from '@/utils/OssFileUtils'
+import { bankOcrReceipt } from '../advancePayment/api'
+>>>>>>> origin/master
 export const PAYMENTTYPE: Map<number | null, string> = new Map([
     [null, '-'],
     [1, '银行转账'],
@@ -328,10 +362,15 @@ export default class UpstreamPaymentManagement extends Vue {
         sizes: [10, 20, 50, 100],
         total: 0
     }
+<<<<<<< HEAD
     targetObj = {
         selectCode: '',
         selectName: ''
     }
+=======
+    ocrVisible:boolean = false
+    ocrData:any = {}
+>>>>>>> origin/master
     paymentType = PAYMENTTYPE
     supplierPaymentMethod = SUPPLIERPAYMENTMETHOD
     tableData:RespUpStreamPayment[] = []
@@ -392,10 +431,14 @@ export default class UpstreamPaymentManagement extends Vue {
         attachDocRequestList: [],
         payPrincipal: '',
         payeeBankName: '',
-        payeeBankAccount: ''
-    }
-    payeeAccountList:any[]=[]
+        payeeBankAccount: '',
+        supplierAccountName: '',
+        supplierAccountNo: '',
+        supplierBankNo: ''
 
+    }
+      payeeAccountList:any[]=[]
+    num:number = 0
     totalAmount:number = 0
     status:number = null
     activeName:string = 'loanHandoverInformation'
@@ -438,6 +481,24 @@ export default class UpstreamPaymentManagement extends Vue {
             ],
             payVouchers: [
                 { required: true, message: '请上传上游支付凭证' }
+            ],
+            supplierAccountName: [
+                { required: true, message: '供应商开户行名称不能为空' }
+            ],
+            supplierAccountNo: [
+                { required: true, message: '供应商银行账号不能为空' }
+            ],
+            supplierBankNo: [
+                {
+                    required: true,
+                    validator: (rule, value, callback) => {
+                        if (!(/^\d{12}$/.test(value))) {
+                            return callback(new Error('请输入正确的12位联行号数字'))
+                        }
+                        return callback()
+                    }
+                },
+                { required: true, message: '供应商银行联行号不能为空' }
             ]
         }
         return rules
@@ -675,6 +736,12 @@ export default class UpstreamPaymentManagement extends Vue {
         const { data } = await Api.getPayInfoApi(this.paymentOrderId)
         this.prevPaymentDetail = data
         this.dialogFormData.payAmount = this.prevPaymentDetail.surplusAmount
+        this.dialogFormData = {
+            ...this.dialogFormData,
+            supplierAccountName: data.supplierAccountName,
+            supplierAccountNo: data.supplierAccountNo,
+            supplierBankNo: data.supplierBankNo
+        }
         this.isOpen = true
         this.getBankAccount()
         this.targetObj = {
@@ -738,11 +805,46 @@ export default class UpstreamPaymentManagement extends Vue {
             this.bankForm.payeeBankAccount = ''
         }
         // console.log(' this.$refs')
+        this.num = 0
     }
 
     editorDrawerClose (done:Function): void {
         this.activeName = 'loanHandoverInformation'
         done()
+    }
+
+    async onBackOcrInfo (val) {
+        this.num = this.num + 1
+        console.log('  this.num: ', this.dialogFormData.payVouchers)
+        this.$refs.form.clearValidate()
+        if (this.dialogFormData.payVouchers.length == 1) {
+            // 第一张图片进行ocr 认证
+            let tokenUrl = await OssFileUtils.getUrl(val.fileUrl)
+            const { data } = await bankOcrReceipt({ image: tokenUrl })
+            console.log('data: ', data)
+            this.ocrData = data
+            this.ocrData = {
+                ...this.ocrData,
+                supplierBankNo: this.ocrData.supplierBankNo || this.prevPaymentDetail.supplierBankNo
+            }
+            if (data.supplierAccountName) {
+                if (this.ocrData.supplierAccountNo !== this.dialogFormData.supplierAccountNo || this.ocrData.supplierBankNo != this.dialogFormData.supplierBankNo || this.ocrData.supplierAccountName != this.dialogFormData.supplierAccountName) {
+                    this.ocrVisible = true
+                }
+            } else {
+                this.$message.info('该图片无法进行OCR识别，请重新上传或手动修改供应商信息')
+            }
+        }
+    }
+
+    onSaveCover () {
+        this.dialogFormData = {
+            ...this.dialogFormData,
+            supplierAccountNo: this.ocrData.supplierAccountNo,
+            supplierBankNo: this.ocrData.supplierBankNo || this.prevPaymentDetail.supplierBankNo,
+            supplierAccountName: this.ocrData.supplierAccountName
+        }
+        this.ocrVisible = false
     }
 
     onCancel (): void {

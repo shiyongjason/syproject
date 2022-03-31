@@ -1,5 +1,11 @@
 .row-bg {
 	padding: 10px 0;
+    em{
+        font-style: normal;
+    }
+    .green{
+        color: green;
+    }
 }
 .tag_top {
 	margin-bottom: 10px;
@@ -108,8 +114,27 @@
         width: 350px;
     }
 }
-.advance_wrap{
-    /deep/ .el-form .el-input{
-        width: 350px;
+.ocr-wrap{
+    h2{
+        font-size: 16px;
+    }
+    p{
+        margin-bottom: 10px;
+    }
+    h3{
+        font-size: 15px;
+        color: #ff7a45;
+    }
+    strong{
+        font-size: 16px;
+        color: red;
+    }
+}
+.col-padding{
+    em{
+        font-style: normal;
+    }
+    .green{
+        color: green;
     }
 }
