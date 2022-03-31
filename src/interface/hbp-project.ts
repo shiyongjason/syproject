@@ -1,4 +1,6 @@
-export interface JsonNode{}
+export interface JsonNode{
+
+}
 /**
 *
 * @export
