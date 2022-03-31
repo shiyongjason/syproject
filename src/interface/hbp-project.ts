@@ -1,4 +1,6 @@
-export interface JsonNode{}
+export interface JsonNode{
+
+}
 /**
 *
 * @export
@@ -545,6 +547,20 @@ export interface ReqContract {
      */
     submitterMobile?: string
 
+    /**
+     * 上游采购金额
+     * @type {number | string}
+     * @memberof ReqContract
+     */
+    supplierPurchaseAmount?: number | string
+
+    /**
+     * 加价率
+     * @type {number | string}
+     * @memberof ReqContract
+     */
+    salesGrossMargin?: number | string
+
 }
 
 /**
@@ -744,6 +760,20 @@ export interface Contract {
      * @memberof Contract
      */
     archive: boolean
+
+    /**
+     * 上游采购金额
+     * @type {number | string}
+     * @memberof Contract
+     */
+    supplierPurchaseAmount: number | string
+
+    /**
+     * 加价率
+     * @type {number | string}
+     * @memberof Contract
+     */
+    salesGrossMargin: number | string
 
 }
 
@@ -1077,6 +1107,20 @@ export interface RespContract {
      * @memberof RespContract
      */
     archive: boolean
+
+    /**
+     * 上游采购金额
+     * @type {number | string}
+     * @memberof RespContract
+     */
+    supplierPurchaseAmount: number | string
+
+    /**
+     * 加价率
+     * @type {number | string}
+     * @memberof RespContract
+     */
+    salesGrossMargin: number | string
 
 }
 
@@ -1517,7 +1561,7 @@ export interface ServiceInvoiceSubmitRequest {
      * @type {Array<string>}
      * @memberof ServiceInvoiceSubmitRequest
      */
-    resourceIds: Array<string>
+    resourceIds?: Array<string>
 
 }
 
@@ -1627,6 +1671,20 @@ export interface EqpInvoiceSubmitRequest {
      * @memberof EqpInvoiceSubmitRequest
      */
     supplierCompanyName: string
+
+    /**
+     * 支付单采购金额（折让后）
+     * @type {number | string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    paymentOrderPurchaseAmount?: number | string
+
+    /**
+     * 支付单销售金额
+     * @type {number | string}
+     * @memberof EqpInvoiceSubmitRequest
+     */
+    paymentOrderSalesAmount?: number | string
 
     /**
      * 采购发票金额
@@ -1807,6 +1865,27 @@ export interface ReqSupplierSubmit {
      */
     payeeBankAccount: string
 
+    /**
+     * 实际收款供应商银行联行号
+     * @type {string}
+     * @memberof ReqSupplierSubmit
+     */
+    supplierBankNo?: string
+
+    /**
+     * 实际收款供应商开户行名称
+     * @type {string}
+     * @memberof ReqSupplierSubmit
+     */
+    supplierAccountName?: string
+
+    /**
+     * 实际收款供应商银行账号
+     * @type {string}
+     * @memberof ReqSupplierSubmit
+     */
+    supplierAccountNo?: string
+
 }
 
 /**
@@ -1915,6 +1994,27 @@ export interface PrepaymentSupplierSubmitResponse {
      * @memberof PrepaymentSupplierSubmitResponse
      */
     payVouchers: Array<PayVoucher>
+
+    /**
+     * 实际收款供应商银行联行号
+     * @type {string}
+     * @memberof PrepaymentSupplierSubmitResponse
+     */
+    supplierBankNo?: string
+
+    /**
+     * 实际收款供应商开户行名称
+     * @type {string}
+     * @memberof PrepaymentSupplierSubmitResponse
+     */
+    supplierAccountName?: string
+
+    /**
+     * 实际收款供应商银行账号
+     * @type {string}
+     * @memberof PrepaymentSupplierSubmitResponse
+     */
+    supplierAccountNo?: string
 
 }
 
@@ -2488,11 +2588,18 @@ export interface ResolutionDingInitRequest {
     applierMobile: string
 
     /**
-     * 销售毛利率(%)
+     * 加价率(%)
      * @type {number | string}
      * @memberof ResolutionDingInitRequest
      */
     salesGrossMargin?: number | string
+
+    /**
+     * 加价金额
+     * @type {number | string}
+     * @memberof ResolutionDingInitRequest
+     */
+    salesGrossAmount?: number | string
 
     /**
      * 销售总额(元)
@@ -2500,6 +2607,13 @@ export interface ResolutionDingInitRequest {
      * @memberof ResolutionDingInitRequest
      */
     salesTotalAmount?: number | string
+
+    /**
+     * roi
+     * @type {number | string}
+     * @memberof ResolutionDingInitRequest
+     */
+    roi?: number | string
 
 }
 
@@ -2828,6 +2942,27 @@ export interface PoInfo {
      * @memberof PoInfo
      */
     updateBy?: string
+
+    /**
+     * 上游采购金额
+     * @type {number | string}
+     * @memberof PoInfo
+     */
+    supplierPurchaseAmount?: number | string
+
+    /**
+     * 加价率
+     * @type {number | string}
+     * @memberof PoInfo
+     */
+    salesGrossMargin?: number | string
+
+    /**
+     * 加价额
+     * @type {number | string}
+     * @memberof PoInfo
+     */
+    salesGrossAmount?: number | string
 
     /**
      * 是否删除 0：否 1：是
@@ -3314,6 +3449,41 @@ export interface PrepaymentOrderRequest {
      * @memberof PrepaymentOrderRequest
      */
     attachDocRequestList: Array<AttachDocRequest>
+
+    /**
+     * 采购折让（%）
+     * @type {number | string}
+     * @memberof PrepaymentOrderRequest
+     */
+    purchaseDiscountRate?: number | string
+
+    /**
+     * 采购金额（折让后）
+     * @type {number | string}
+     * @memberof PrepaymentOrderRequest
+     */
+    purchaseDiscountAmount?: number | string
+
+    /**
+     * 加价率（%）
+     * @type {number | string}
+     * @memberof PrepaymentOrderRequest
+     */
+    salesGrossMargin?: number | string
+
+    /**
+     * 加价金额
+     * @type {number | string}
+     * @memberof PrepaymentOrderRequest
+     */
+    salesGrossAmount?: number | string
+
+    /**
+     * 销售金额
+     * @type {number | string}
+     * @memberof PrepaymentOrderRequest
+     */
+    salesAmount?: number | string
 
 }
 
@@ -3803,7 +3973,7 @@ export interface ReqPaymentOrderApply {
     distributorId: number | string
 
     /**
-     * 销售毛利率(%)
+     * 加价率(%)
      * @type {number | string}
      * @memberof ReqPaymentOrderApply
      */
@@ -4189,6 +4359,66 @@ export interface ReqFundConfirm {
 }
 
 /**
+* 尾款账单明细
+* @export
+* @interface ArrearsFundDetailAddRequest
+*/
+export interface ArrearsFundDetailAddRequest {
+
+    /**
+     * 账单id
+     * @type {number | string}
+     * @memberof ArrearsFundDetailAddRequest
+     */
+    id?: number | string
+
+    /**
+     * 支付单Id
+     * @type {number | string}
+     * @memberof ArrearsFundDetailAddRequest
+     */
+    orderId?: number | string
+
+    /**
+     * 支付金额
+     * @type {number | string}
+     * @memberof ArrearsFundDetailAddRequest
+     */
+    paymentAmount?: number | string
+
+    /**
+     * 账单期数
+     * @type {number | string}
+     * @memberof ArrearsFundDetailAddRequest
+     */
+    feeRepaymentOrder?: number | string
+
+    /**
+     * 应支付日期
+     * @type {string}
+     * @memberof ArrearsFundDetailAddRequest
+     */
+    schedulePaymentDate?: string
+
+}
+
+/**
+*
+* @export
+* @interface ArrearsFundModifyRequest
+*/
+export interface ArrearsFundModifyRequest {
+
+    /**
+     * 尾款账单明细
+     * @type {Array<ArrearsFundDetailAddRequest>}
+     * @memberof ArrearsFundModifyRequest
+     */
+    arrearsFundDetailList?: Array<ArrearsFundDetailAddRequest>
+
+}
+
+/**
 * 凭证链接
 * @export
 * @interface AttachDoc
@@ -4296,7 +4526,7 @@ export interface ReqFund {
     repaymentType?: number | string
 
     /**
-     * 服务费期数
+     * 账单期数
      * @type {number | string}
      * @memberof ReqFund
      */
@@ -5216,6 +5446,13 @@ export interface ReqContractEditRecord {
      */
     createBy?: string
 
+    /**
+     * 上游采购金额
+     * @type {number | string}
+     * @memberof ReqContractEditRecord
+     */
+    supplierPurchaseAmount?: number | string
+
 }
 
 /**
@@ -5602,6 +5839,13 @@ export interface CommonBankFlowRequest {
 
     /**
      *
+     * @type {Array<number | string>}
+     * @memberof CommonBankFlowRequest
+     */
+    filterBanks?: Array<number | string>
+
+    /**
+     *
      * @type {string}
      * @memberof CommonBankFlowRequest
      */
@@ -5789,7 +6033,7 @@ export interface Fund {
     repaymentType?: number | string
 
     /**
-     * 服务费期数
+     * 账单期数
      * @type {number | string}
      * @memberof Fund
      */
@@ -6503,6 +6747,13 @@ export interface ServiceInvoiceDetailResponse {
     invoiceNo: string
 
     /**
+     * 申请单号
+     * @type {string}
+     * @memberof ServiceInvoiceDetailResponse
+     */
+    invoiceNumber: string
+
+    /**
      * 寄送快递单号
      * @type {string}
      * @memberof ServiceInvoiceDetailResponse
@@ -6907,6 +7158,34 @@ export interface EqpInvoiceDetailResponse {
     supplierCompanyName: string
 
     /**
+     * 支付单采购金额（折让后）
+     * @type {number | string}
+     * @memberof EqpInvoiceDetailResponse
+     */
+    paymentOrderPurchaseAmount: number | string
+
+    /**
+     * 支付单销售金额
+     * @type {number | string}
+     * @memberof EqpInvoiceDetailResponse
+     */
+    paymentOrderSalesAmount: number | string
+
+    /**
+     * 支付单已开采购发票金额
+     * @type {number | string}
+     * @memberof EqpInvoiceDetailResponse
+     */
+    paymentOrderPurchaseInvoiceAmount: number | string
+
+    /**
+     * 支付单已开销售发票金额
+     * @type {number | string}
+     * @memberof EqpInvoiceDetailResponse
+     */
+    paymentOrderSalesInvoiceAmount: number | string
+
+    /**
      * 采购发票金额
      * @type {number | string}
      * @memberof EqpInvoiceDetailResponse
@@ -7208,6 +7487,34 @@ export interface EqpInvoicePaymentOrderPageResponse {
      */
     applyDate?: string
 
+    /**
+     * 支付单采购金额（折让后）
+     * @type {number | string}
+     * @memberof EqpInvoicePaymentOrderPageResponse
+     */
+    paymentOrderPurchaseAmount?: number | string
+
+    /**
+     * 支付单销售金额
+     * @type {number | string}
+     * @memberof EqpInvoicePaymentOrderPageResponse
+     */
+    paymentOrderSalesAmount?: number | string
+
+    /**
+     * 支付单已开采购发票金额
+     * @type {number | string}
+     * @memberof EqpInvoicePaymentOrderPageResponse
+     */
+    paymentOrderPurchaseInvoiceAmount?: number | string
+
+    /**
+     * 支付单已开销售发票金额
+     * @type {number | string}
+     * @memberof EqpInvoicePaymentOrderPageResponse
+     */
+    paymentOrderSalesInvoiceAmount?: number | string
+
 }
 
 /**
@@ -7442,6 +7749,27 @@ export interface RespSupplierDetail {
      */
     orderType: number | string
 
+    /**
+     * 实际收款供应商银行联行号
+     * @type {string}
+     * @memberof RespSupplierDetail
+     */
+    supplierBankNo: string
+
+    /**
+     * 实际收款供应商开户行名称
+     * @type {string}
+     * @memberof RespSupplierDetail
+     */
+    supplierAccountName: string
+
+    /**
+     * 实际收款供应商银行账号
+     * @type {string}
+     * @memberof RespSupplierDetail
+     */
+    supplierAccountNo: string
+
 }
 
 /**
@@ -7541,6 +7869,27 @@ export interface RespSupplierInfo {
      * @memberof RespSupplierInfo
      */
     purchaseOrderId: number | string
+
+    /**
+     * 实际收款供应商银行联行号
+     * @type {string}
+     * @memberof RespSupplierInfo
+     */
+    supplierBankNo: string
+
+    /**
+     * 实际收款供应商开户行名称
+     * @type {string}
+     * @memberof RespSupplierInfo
+     */
+    supplierAccountName: string
+
+    /**
+     * 实际收款供应商银行账号
+     * @type {string}
+     * @memberof RespSupplierInfo
+     */
+    supplierAccountNo: string
 
 }
 
@@ -7662,6 +8011,13 @@ export interface RespLoanHandoverInfo {
      * @memberof RespLoanHandoverInfo
      */
     supplierAccountNo: string
+
+    /**
+     *
+     * @type {SupplierLabelResponse}
+     * @memberof RespLoanHandoverInfo
+     */
+    supplierLabel: SupplierLabelResponse
 
     /**
      * 期望上游支付日期
@@ -7806,6 +8162,45 @@ export interface RespUpPaymentLoanHandoverParam {
      * @memberof RespUpPaymentLoanHandoverParam
      */
     remark?: string
+
+}
+
+/**
+* 供应商标签
+* @export
+* @interface SupplierLabelResponse
+*/
+export interface SupplierLabelResponse {
+
+    /**
+     * 标记位:0-新账号
+10-转账过
+11-转账过，信息一致
+12-转账过，信息不一致
+20-转账过，未出票
+21-转账过，未出票，信息一致
+22-转账过，未出票，信息不一致
+30-出票过
+31-出票过，信息一致
+32-出票过，信息不一致
+     * @type {number | string}
+     * @memberof SupplierLabelResponse
+     */
+    code: number | string
+
+    /**
+     * 标签描述
+     * @type {string}
+     * @memberof SupplierLabelResponse
+     */
+    desc: string
+
+    /**
+     * 提示语
+     * @type {string}
+     * @memberof SupplierLabelResponse
+     */
+    tip: string
 
 }
 
@@ -8582,58 +8977,37 @@ export interface SaasTradeQueryResponse {
 /**
 *
 * @export
-* @interface SupplierAccountPageRequest
+* @interface SupplierResponse
 */
-export interface SupplierAccountPageRequest {
+export interface SupplierResponse {
 
     /**
-     * 页码
-     * @type {number | string}
-     * @memberof SupplierAccountPageRequest
+     * 供应商开户行名称
+     * @type {string}
+     * @memberof SupplierResponse
      */
-    pageNumber?: number | string
+    supplierAccountName: string
 
     /**
-     * 每页大小
-     * @type {number | string}
-     * @memberof SupplierAccountPageRequest
+     * 供应商银行账号
+     * @type {string}
+     * @memberof SupplierResponse
      */
-    pageSize?: number | string
+    supplierAccountNo: string
+
+    /**
+     * 银行联行行号
+     * @type {string}
+     * @memberof SupplierResponse
+     */
+    supplierBankNo: string
 
     /**
      *
-     * @type {Sort}
-     * @memberof SupplierAccountPageRequest
+     * @type {SupplierLabelResponse}
+     * @memberof SupplierResponse
      */
-    sort?: Sort
-
-    /**
-     * 供应商名称
-     * @type {string}
-     * @memberof SupplierAccountPageRequest
-     */
-    supplierName?: string
-
-    /**
-     * 创建人
-     * @type {string}
-     * @memberof SupplierAccountPageRequest
-     */
-    createBy?: string
-
-    /**
-     * 查询开始日期
-     * @type {string}
-     * @memberof SupplierAccountPageRequest
-     */
-    startTime?: string
-
-    /**
-     * 查询结束日期
-     * @type {string}
-     * @memberof SupplierAccountPageRequest
-     */
-    endTime?: string
+    supplierLabel: SupplierLabelResponse
 
 }
 
@@ -8751,35 +9125,40 @@ export interface SupplierAccountResponse {
      */
     createTime?: string
 
-}
-
-/**
-*
-* @export
-* @interface SupplierResponse
-*/
-export interface SupplierResponse {
+    /**
+     * 出票状态：0未出票 1出票过
+     * @type {number | string}
+     * @memberof SupplierAccountResponse
+     */
+    invoiceStatus?: number | string
 
     /**
-     * 供应商开户行名称
-     * @type {Array<string>}
-     * @memberof SupplierResponse
+     * 转账状态：0未转账 1转账过
+     * @type {number | string}
+     * @memberof SupplierAccountResponse
      */
-    supplierAccountName: Array<string>
+    accountStatus?: number | string
 
     /**
-     * 供应商银行账号
-     * @type {Array<string>}
-     * @memberof SupplierResponse
+     * 作废状态：0正常 1作废
+     * @type {number | string}
+     * @memberof SupplierAccountResponse
      */
-    supplierAccountNo: Array<string>
+    invalidStatus?: number | string
 
     /**
-     * 银行联行行号
-     * @type {Array<string>}
-     * @memberof SupplierResponse
+     * 作废人
+     * @type {string}
+     * @memberof SupplierAccountResponse
      */
-    supplierBankNo: Array<string>
+    invalidBy?: string
+
+    /**
+     * 作废时间
+     * @type {string}
+     * @memberof SupplierAccountResponse
+     */
+    invalidTime?: string
 
 }
 
@@ -9347,6 +9726,27 @@ export interface RespCrmPurchaseOrderDetail {
      * @memberof RespCrmPurchaseOrderDetail
      */
     contracts: Array<RespCrmPurchaseOrderDetail$Contract>
+
+    /**
+     * 上游采购金额
+     * @type {number | string}
+     * @memberof RespCrmPurchaseOrderDetail
+     */
+    supplierPurchaseAmount: number | string
+
+    /**
+     * 加价率
+     * @type {number | string}
+     * @memberof RespCrmPurchaseOrderDetail
+     */
+    salesGrossMargin: number | string
+
+    /**
+     * 加价额
+     * @type {number | string}
+     * @memberof RespCrmPurchaseOrderDetail
+     */
+    salesGrossAmount: number | string
 
 }
 
@@ -10745,6 +11145,13 @@ export interface RespPurchaseOrderCrmPage {
      */
     contractTypeNumberList?: Array<RespContractTypeNumber>
 
+    /**
+     * 上游采购金额
+     * @type {number | string}
+     * @memberof RespPurchaseOrderCrmPage
+     */
+    supplierPurchaseAmount?: number | string
+
 }
 
 /**
@@ -11208,7 +11615,7 @@ export interface RespPayOrderDetail {
     dealerCooperationMethod?: number | string
 
     /**
-     * 银行联行号
+     * 供应商银行联行号
      * @type {string}
      * @memberof RespPayOrderDetail
      */
@@ -11227,6 +11634,13 @@ export interface RespPayOrderDetail {
      * @memberof RespPayOrderDetail
      */
     supplierAccountNo?: string
+
+    /**
+     *
+     * @type {SupplierLabelResponse}
+     * @memberof RespPayOrderDetail
+     */
+    supplierLabel?: SupplierLabelResponse
 
     /**
      * 期望上游支付日期
@@ -11299,7 +11713,7 @@ export interface RespPayOrderDetail {
     salesGrossTotalAmount?: number | string
 
     /**
-     * 销售毛利率
+     * 加价率
      * @type {number | string}
      * @memberof RespPayOrderDetail
      */
@@ -12106,7 +12520,7 @@ export interface ApplyPaymentOrderResponse {
     poNumber: number | string
 
     /**
-     * 销售毛利率
+     * 加价率
      * @type {number | string}
      * @memberof ApplyPaymentOrderResponse
      */
@@ -12583,6 +12997,13 @@ export interface PrepaymentResponse {
      */
     supplierPaymentType?: number | string
 
+    /**
+     * 上游支付同步Saas处理结果
+     * @type {number | string}
+     * @memberof PrepaymentResponse
+     */
+    syncSaasTrade?: number | string
+
 }
 
 /**
@@ -12619,6 +13040,13 @@ export interface ProjectInfoResponse {
      * @memberof ProjectInfoResponse
      */
     companyName: string
+
+    /**
+     * 加价率
+     * @type {number | string}
+     * @memberof ProjectInfoResponse
+     */
+    salesGrossMargin: number | string
 
     /**
      * 项目终审采购信息-上游供应商
@@ -12968,6 +13396,13 @@ export interface PrepaymentDetailResponse {
     supplierAccountNo: string
 
     /**
+     *
+     * @type {SupplierLabelResponse}
+     * @memberof PrepaymentDetailResponse
+     */
+    supplierLabel: SupplierLabelResponse
+
+    /**
      * 期望上游支付日期
      * @type {string}
      * @memberof PrepaymentDetailResponse
@@ -13134,6 +13569,41 @@ export interface PrepaymentDetailResponse {
      * @memberof PrepaymentDetailResponse
      */
     fund: FundClaimResponse
+
+    /**
+     * 采购折让（%）
+     * @type {number | string}
+     * @memberof PrepaymentDetailResponse
+     */
+    purchaseDiscountRate: number | string
+
+    /**
+     * 采购金额（折让后）
+     * @type {number | string}
+     * @memberof PrepaymentDetailResponse
+     */
+    purchaseDiscountAmount: number | string
+
+    /**
+     * 加价率（%）
+     * @type {number | string}
+     * @memberof PrepaymentDetailResponse
+     */
+    salesGrossMargin: number | string
+
+    /**
+     * 加价金额
+     * @type {number | string}
+     * @memberof PrepaymentDetailResponse
+     */
+    salesGrossAmount: number | string
+
+    /**
+     * 销售金额
+     * @type {number | string}
+     * @memberof PrepaymentDetailResponse
+     */
+    salesAmount: number | string
 
 }
 
@@ -14164,7 +14634,7 @@ export interface PaymentOrderInfo {
     paymentOrderNo?: string
 
     /**
-     * 销售毛利率
+     * 加价率
      * @type {number | string}
      * @memberof PaymentOrderInfo
      */
@@ -14287,6 +14757,13 @@ export interface RespFundDetailResult {
     serviceFund?: Array<ServiceFundClaimResponse>
 
     /**
+     * 尾款账单列表
+     * @type {Array<ServiceFundClaimResponse>}
+     * @memberof RespFundDetailResult
+     */
+    arrearsFunds?: Array<ServiceFundClaimResponse>
+
+    /**
      * 当前服务费合计
      * @type {number | string}
      * @memberof RespFundDetailResult
@@ -14299,6 +14776,20 @@ export interface RespFundDetailResult {
      * @memberof RespFundDetailResult
      */
     totalPaidAmount?: number | string
+
+    /**
+     * 当前尾款合计
+     * @type {number | string}
+     * @memberof RespFundDetailResult
+     */
+    totalArrearsAmount?: number | string
+
+    /**
+     * 已成功支付尾款合计
+     * @type {number | string}
+     * @memberof RespFundDetailResult
+     */
+    totalArrearsPaidAmount?: number | string
 
     /**
      *
@@ -14352,6 +14843,27 @@ export interface RespPayOrderPoDetail {
      * @memberof RespPayOrderPoDetail
      */
     poAmount?: number | string
+
+    /**
+     * 上游采购金额
+     * @type {number | string}
+     * @memberof RespPayOrderPoDetail
+     */
+    supplierPurchaseAmount?: number | string
+
+    /**
+     * 加价率
+     * @type {number | string}
+     * @memberof RespPayOrderPoDetail
+     */
+    salesGrossMargin?: number | string
+
+    /**
+     * 加价额
+     * @type {number | string}
+     * @memberof RespPayOrderPoDetail
+     */
+    salesGrossAmount?: number | string
 
     /**
      *
@@ -14572,7 +15084,7 @@ export interface RespSupplierAmount {
 }
 
 /**
-* 服务费账单列表
+* 尾款账单列表
 * @export
 * @interface ServiceFundClaimResponse
 */
@@ -15216,7 +15728,7 @@ export interface RespAppPaymentOrder {
     salesGrossTotalAmount: number | string
 
     /**
-     * 销售毛利率
+     * 加价率
      * @type {number | string}
      * @memberof RespAppPaymentOrder
      */
@@ -15467,7 +15979,7 @@ export interface ReqServiceFeeQuery {
     terms?: number | string
 
     /**
-     * 销售毛利率(%)
+     * 加价率(%)
      * @type {number | string}
      * @memberof ReqServiceFeeQuery
      */
@@ -15504,7 +16016,7 @@ export interface RespServiceFeeResult {
     arrearAmount: number | string
 
     /**
-     * 销售毛利率(%)
+     * 加价率(%)
      * @type {number | string}
      * @memberof RespServiceFeeResult
      */
@@ -15585,7 +16097,7 @@ export interface ServiceFundResponse {
     paymentAmount?: number | string
 
     /**
-     * 服务费期数
+     * 账单期数
      * @type {number | string}
      * @memberof ServiceFundResponse
      */
@@ -16148,6 +16660,13 @@ export interface RespFundResult {
     paymentOrderAmount: number | string
 
     /**
+     * 剩余尾款总金额
+     * @type {number | string}
+     * @memberof RespFundResult
+     */
+    arrearAmount: number | string
+
+    /**
      * 还款类型：1-首付款；2-剩余货款；3-服务费；
      * @type {number | string}
      * @memberof RespFundResult
@@ -16155,7 +16674,7 @@ export interface RespFundResult {
     repaymentType: number | string
 
     /**
-     * 服务费期数
+     * 账单期数
      * @type {number | string}
      * @memberof RespFundResult
      */
@@ -16683,6 +17202,13 @@ export interface LoanTransferInfoResponse {
     supplierBankNo: string
 
     /**
+     *
+     * @type {SupplierLabelResponse}
+     * @memberof LoanTransferInfoResponse
+     */
+    supplierLabel: SupplierLabelResponse
+
+    /**
      * 期望上游支付日期
      * @type {string}
      * @memberof LoanTransferInfoResponse
@@ -17030,6 +17556,13 @@ export interface LoanTransferResponse {
      * @memberof LoanTransferResponse
      */
     supplierBankNo: string
+
+    /**
+     *
+     * @type {SupplierLabelResponse}
+     * @memberof LoanTransferResponse
+     */
+    supplierLabel: SupplierLabelResponse
 
     /**
      * 采购金额
@@ -17527,7 +18060,7 @@ export interface FundResponse {
     repaymentType: number | string
 
     /**
-     * 服务费期数
+     * 账单期数
      * @type {number | string}
      * @memberof FundResponse
      */
@@ -18528,7 +19061,7 @@ export interface RespMonthStaticFundDetail {
     repaymentType?: number | string
 
     /**
-     * 服务费期数
+     * 账单期数
      * @type {number | string}
      * @memberof RespMonthStaticFundDetail
      */
@@ -21041,6 +21574,20 @@ export interface RespContractRecord {
      * @memberof RespContractRecord
      */
     contractArchives: Array<RespContractArchive>
+
+    /**
+     * 上游采购金额
+     * @type {number | string}
+     * @memberof RespContractRecord
+     */
+    supplierPurchaseAmount: number | string
+
+    /**
+     * 加价率
+     * @type {number | string}
+     * @memberof RespContractRecord
+     */
+    salesGrossMargin: number | string
 
 }
 

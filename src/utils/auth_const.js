@@ -512,3 +512,6 @@ export const INVOICE_EQUIPT_ADD = 1458090
 
 /* 支付单明细 */
 export const UPSTREAM_TOSS = 1586222
+// 供应商查询
+export const SUPPLIER_YES = 1405001
+export const SUPPLIER_NO = 1405002

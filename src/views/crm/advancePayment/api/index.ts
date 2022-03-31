@@ -1,5 +1,5 @@
 
-import { IPagePrepaymentResponse, PrepaymentDetailResponse, PrepaymentSupplierSubmitResponse, RespContractSignHistory } from '@/interface/hbp-project'
+import { IPagePrepaymentResponse, PrepaymentDetailResponse, PrepaymentSupplierSubmitResponse, RespContractSignHistory, SupplierResponse } from '@/interface/hbp-project'
 import axios, { AxiosPromise } from 'axios'
 
 export const getPrePayList: (params) => AxiosPromise<IPagePrepaymentResponse> = (params) => {
@@ -56,3 +56,8 @@ export const updatePayOnline :(params)=>AxiosPromise = (params) => {
 
 // 帅选 付款账号
 export const findPayeeAccount = () => axios.get('/project/api/bank/receipt/payee-account/list')
+// OCR
+
+export const bankOcrReceipt :(params)=>AxiosPromise<SupplierResponse> = (params) => {
+    return axios.get(`/project/api/supplier-payments/ocr-bank-receipt`, { params })
+}
