@@ -48,8 +48,7 @@ if (!userInfo && token) {
     userInfo = jwtDecode(token)
     sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
 }
-// const userInfo = sessionStorage.getItem('userInfo')
-// const userdata = sessionStorage.getItem('user_data')
+
 const store = new Vuex.Store({
     state: {
         'loading': false,

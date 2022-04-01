@@ -135,7 +135,7 @@ export default {
                     })
                     const { data: userData } = await getUserdata({ loginName: this.loginForm.phone })
                     if (userData.code != 400) {
-                        sessionStorage.setItem('user_Data', JSON.stringify(userData.data))
+                        localStorage.setItem('user_Data', JSON.stringify(userData.data))
                         this.sendMessage(userData.data)
                     }
                     // await this.findMenuList()

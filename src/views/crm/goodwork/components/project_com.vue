@@ -446,6 +446,7 @@ export default {
             const dataJson = JSON.parse(JSON.stringify(this.projectForm))
             delete dataJson.customerRoleArr
             this.$refs.ruleForm.validate(async (valid) => {
+                console.log('valid: ', valid)
                 if (valid) {
                     try {
                         await putProjectDetail(dataJson)
@@ -459,6 +460,10 @@ export default {
                         this.$emit('onBackLoad', false)
                     }
                 } else {
+                    this.$nextTick(() => {
+                        const dom = document.querySelector('.is-error')
+                        dom.scrollIntoView()
+                    })
                     this.$emit('onBackLoad', false)
                 }
             })

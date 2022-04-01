@@ -109,6 +109,11 @@
         padding-bottom: 10px;
     }
 }
+.prev-payment-dialog{
+    /deep/ .el-form .el-input{
+        width: 350px;
+    }
+}
 .ocr-wrap{
     h2{
         font-size: 16px;

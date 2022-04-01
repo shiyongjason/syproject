@@ -2,6 +2,36 @@
 /**
 *
 * @export
+* @interface AddressResponse
+*/
+export interface AddressResponse {
+
+    /**
+     * 当前位置
+     * @type {string}
+     * @memberof AddressResponse
+     */
+    address?: string
+
+    /**
+     * 当前日期
+     * @type {string}
+     * @memberof AddressResponse
+     */
+    date?: string
+
+    /**
+     * 当前时间
+     * @type {LocalTime}
+     * @memberof AddressResponse
+     */
+    time?: LocalTime
+
+}
+
+/**
+*
+* @export
 * @interface AppletStaffInfoResponse
 */
 export interface AppletStaffInfoResponse {
@@ -33,6 +63,36 @@ export interface AppletStaffInfoResponse {
      * @memberof AppletStaffInfoResponse
      */
     userInfo?: StaffInfoResponse
+
+}
+
+/**
+*
+* @export
+* @interface Assistant
+*/
+export interface Assistant {
+
+    /**
+     * 客户经理工号
+     * @type {string}
+     * @memberof Assistant
+     */
+    assignedUserId?: string
+
+    /**
+     * 客户经理手机号
+     * @type {string}
+     * @memberof Assistant
+     */
+    assignedUserMobile?: string
+
+    /**
+     * 客户经理姓名
+     * @type {string}
+     * @memberof Assistant
+     */
+    assignedUserName?: string
 
 }
 
@@ -339,226 +399,122 @@ export interface BusinessLicense {
 /**
 *
 * @export
-* @interface Clue
+* @interface ClueFlowUpRequest
 */
-export interface Clue {
+export interface ClueFlowUpRequest {
 
     /**
-     * 详细地址
-     * @type {string}
-     * @memberof Clue
+     * 跟进事件id 线索id/客户id/1.0项目id/2.0项目id
+     * @type {number | string}
+     * @memberof ClueFlowUpRequest
      */
-    address?: string
+    bizId?: number | string
 
     /**
-     * 市id
+     * 跟进内容
      * @type {string}
-     * @memberof Clue
+     * @memberof ClueFlowUpRequest
      */
-    cityId?: string
+    content?: string
 
     /**
-     * 市名称
+     * 创建人
      * @type {string}
-     * @memberof Clue
-     */
-    cityName?: string
-
-    /**
-     * 企业名称
-     * @type {string}
-     * @memberof Clue
-     */
-    companyName?: string
-
-    /**
-     * 区id
-     * @type {string}
-     * @memberof Clue
-     */
-    countryId?: string
-
-    /**
-     * 区名称
-     * @type {string}
-     * @memberof Clue
-     */
-    countryName?: string
-
-    /**
-     * 创建者名称
-     * @type {string}
-     * @memberof Clue
+     * @memberof ClueFlowUpRequest
      */
     createBy?: string
 
     /**
-     * 创建者手机号
+     * 创建人手机号
      * @type {string}
-     * @memberof Clue
+     * @memberof ClueFlowUpRequest
      */
     createPhone?: string
 
     /**
-     * 创建时间
+     * 当前商机 1：有已中标项目 2：有尚未中标项目 3：已从别处用过资 4：从区域供货商拿货 5：从厂家拿货 6：以上信息均无
      * @type {string}
-     * @memberof Clue
+     * @memberof ClueFlowUpRequest
      */
-    createTime?: string
+    currentBusinessOpportunities?: string
 
     /**
-     * 创建者企业微信id（boss创建为空）
+     * 本次拜访价值 1：有集采线索项目 2：有合作（严选）线索项目 3：有合作（分润）线索项目 4：线索商户，暂无项目 5：此为KOL关键人
      * @type {string}
-     * @memberof Clue
+     * @memberof ClueFlowUpRequest
      */
-    customerCorpUserId?: string
+    currentVisitValue?: string
 
     /**
-     * 客户经理所属分部
-     * @type {string}
-     * @memberof Clue
+     * 跟进阶段 1：初步建立联系 2：初步达成意向 3：方案已推介 4：客户已评级 5：项目推进中 6：首次交易成功 7：合作关闭
+     * @type {number | string}
+     * @memberof ClueFlowUpRequest
      */
-    customerDeptName?: string
-
-    /**
-     * 客户经理手机号
-     * @type {string}
-     * @memberof Clue
-     */
-    customerMobile?: string
-
-    /**
-     * 客户经理名称
-     * @type {string}
-     * @memberof Clue
-     */
-    customerName?: string
-
-    /**
-     * 主营品牌
-     * @type {string}
-     * @memberof Clue
-     */
-    deviceBrand?: string
-
-    /**
-     * 主营品类 1：空调 2：采暖 3：新风 4：净水 5：智能化 6：辅材 7：电梯 8：其他
-     * @type {string}
-     * @memberof Clue
-     */
-    deviceCategory?: string
+    flowUpProcess?: number | string
 
     /**
      * 主键id
      * @type {number | string}
-     * @memberof Clue
+     * @memberof ClueFlowUpRequest
      */
     id?: number | string
 
     /**
-     * 来源 1：好橙工 2：享钱 3：单分享 4：crm 5：第三方渠道
+     * 下次跟进时间
+     * @type {string}
+     * @memberof ClueFlowUpRequest
+     */
+    nextFlowTime?: string
+
+    /**
+     * 下一步计划 1：见到关键人 2：初步达成意向 3：推进评级 4：等过会 5：给报价 6：给客户的需求清单（严选业务）
      * @type {number | string}
-     * @memberof Clue
+     * @memberof ClueFlowUpRequest
      */
-    origin?: number | string
+    nextStepPlan?: number | string
 
     /**
-     * 省id
+     * 随访人员
+     * @type {Array<FlowUpPartnerRequest>}
+     * @memberof ClueFlowUpRequest
+     */
+    partners?: Array<FlowUpPartnerRequest>
+
+    /**
+     * 当面拜访->现场图片        电话/微信沟通/邮件->附件
+     * @type {Array<string>}
+     * @memberof ClueFlowUpRequest
+     */
+    picUrls?: Array<string>
+
+    /**
+     * 备注
      * @type {string}
-     * @memberof Clue
+     * @memberof ClueFlowUpRequest
      */
-    provinceId?: string
+    remark?: string
 
     /**
-     * 省名称
+     * 跟进类型 1：当面拜访 2：电话/微信沟通/邮件等
+     * @type {number | string}
+     * @memberof ClueFlowUpRequest
+     */
+    type?: number | string
+
+    /**
+     * 客户标签(逗号隔开)：1：可发展为集采会员 2：有集采PLUS机会: 3：有严选供应链机会 4：可助力品牌合作 5：可发展为区域KOL
      * @type {string}
-     * @memberof Clue
+     * @memberof ClueFlowUpRequest
      */
-    provinceName?: string
+    userTag?: string
 
     /**
-     * 转化成功 0：否 1：是
+     * 拜访目标
      * @type {string}
-     * @memberof Clue
+     * @memberof ClueFlowUpRequest
      */
-    transferred?: string
+    visitTarget?: string
 
-    /**
-     * 更新人
-     * @type {string}
-     * @memberof Clue
-     */
-    updateBy?: string
-
-    /**
-     * 更新时间
-     * @type {string}
-     * @memberof Clue
-     */
-    updateTime?: string
-
-    /**
-     * 客户手机号
-     * @type {string}
-     * @memberof Clue
-     */
-    userMobile?: string
-
-    /**
-     * 客户姓名
-     * @type {string}
-     * @memberof Clue
-     */
-    userName?: string
-
-    /**
-     * 老客户信息
-     * @type {string}
-     * @memberof Clue
-     */
-    oldCompanyName?: string
-
-    /**
-     * 厂商信息
-     * @type {string}
-     * @memberof Clue
-     */
-    manufacturer?: string
-
-    /**
-     * 婚姻状况
-     * @type {string}
-     * @memberof Clue
-     */
-    maritalStatus?: string
-
-    /**
-     * 从业年限
-     * @type {string}
-     * @memberof Clue
-     */
-    workingYears?: string
-
-    /**
-     * 客户来源
-     * @type {string}
-     * @memberof Clue
-     */
-    userSource?: string
-
-    /**
-     * 常做项目类型后台传值
-     * @type {string}
-     * @memberof Clue
-     */
-     usualProjectType?: string
-
-    /**
-     * 常做项目类型
-     * @type {Array}
-     * @memberof Clue
-     */
-     projectType?: Array<number>
 }
 
 /**
@@ -746,11 +702,11 @@ export interface CompanyContactRequest {
     operator: string
 
     /**
-     * 角色
-     * @type {number | string}
+     * 角色,多个,连接
+     * @type {Array<number | string>}
      * @memberof CompanyContactRequest
      */
-    roleCode: number | string
+    roleCodes: Array<number | string>
 
 }
 
@@ -790,11 +746,971 @@ export interface CompanyContactResponse {
     id?: number | string
 
     /**
-     * 角色
-     * @type {number | string}
+     * 角色编码
+     * @type {Array<number | string>}
      * @memberof CompanyContactResponse
      */
-    roleCode?: number | string
+    roleCodes?: Array<number | string>
+
+    /**
+     * 角色名称
+     * @type {string}
+     * @memberof CompanyContactResponse
+     */
+    roleNames?: string
+
+}
+
+/**
+*
+* @export
+* @interface CompanyCreditBossDetailResponse
+*/
+export interface CompanyCreditBossDetailResponse {
+
+    /**
+     * 公司id
+     * @type {number | string}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    companyId?: number | string
+
+    /**
+     * 公司名称
+     * @type {string}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    companyName?: string
+
+    /**
+     * 公司类型 0:无标签 1：主企业 2：子企业
+     * @type {number | string}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    companyType?: number | string
+
+    /**
+     * 信用是否冻结
+     * @type {boolean}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    creditFreeze?: boolean
+
+    /**
+     * 信用等级
+     * @type {string}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    creditLevel?: string
+
+    /**
+     * 信用到期时间
+     * @type {string}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    endTime?: string
+
+    /**
+     * 通用额度（冻结）
+     * @type {number | string}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    freezeAmount?: number | string
+
+    /**
+     * 信用冻结开始时间
+     * @type {string}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    freezeEndTime?: string
+
+    /**
+     * 信用冻结开始时间
+     * @type {string}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    freezeStartTime?: string
+
+    /**
+     * 信用id
+     * @type {number | string}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    id?: number | string
+
+    /**
+     * 主企业id 注：子企业才返回
+     * @type {number | string}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    mainCompanyId?: number | string
+
+    /**
+     * 主企业名称 注：子企业才返回
+     * @type {string}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    mainCompanyName?: string
+
+    /**
+     * 占用中额度
+     * @type {number | string}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    occupyAmount?: number | string
+
+    /**
+     * 可代采额度(累计)
+     * @type {number | string}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    purchaseAmount?: number | string
+
+    /**
+     * 可代采额度(冻结)
+     * @type {number | string}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    purchaseFreezeAmount?: number | string
+
+    /**
+     * 通用额度 (累计)
+     * @type {number | string}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    purchaseQuota?: number | string
+
+    /**
+     * 剩余代采购额度【可代采额度-冻结中额度】
+     * @type {number | string}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    purchaseUsableAmount?: number | string
+
+    /**
+     * 服务费
+     * @type {number | string}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    serviceFee?: number | string
+
+    /**
+     * 信用状态
+     * @type {boolean}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    status?: boolean
+
+    /**
+     * 临时额度（冻结）
+     * @type {number | string}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    temporaryFreezeAmount?: number | string
+
+    /**
+     * 临时额度(累计)
+     * @type {number | string}
+     * @memberof CompanyCreditBossDetailResponse
+     */
+    temporaryQuotaAmount?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface CompanyCreditChangeRecordDetail
+*/
+export interface CompanyCreditChangeRecordDetail {
+
+    /**
+     * 变更后内容
+     * @type {string}
+     * @memberof CompanyCreditChangeRecordDetail
+     */
+    contentAfterChange?: string
+
+    /**
+     * 变更前内容
+     * @type {string}
+     * @memberof CompanyCreditChangeRecordDetail
+     */
+    contentBeforeChange?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof CompanyCreditChangeRecordDetail
+     */
+    createTime?: string
+
+    /**
+     * 字段名称
+     * @type {string}
+     * @memberof CompanyCreditChangeRecordDetail
+     */
+    fieldName?: string
+
+    /**
+     * 主键
+     * @type {number | string}
+     * @memberof CompanyCreditChangeRecordDetail
+     */
+    id?: number | string
+
+    /**
+     * 企业信用id
+     * @type {number | string}
+     * @memberof CompanyCreditChangeRecordDetail
+     */
+    recordId?: number | string
+
+    /**
+     * 保存值
+     * @type {string}
+     * @memberof CompanyCreditChangeRecordDetail
+     */
+    saveValue?: string
+
+    /**
+     * 类型 1：变更 2：保存
+     * @type {number | string}
+     * @memberof CompanyCreditChangeRecordDetail
+     */
+    type?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface CompanyCreditChangeRecordResponse
+*/
+export interface CompanyCreditChangeRecordResponse {
+
+    /**
+     * 企业信用修改记录详情
+     * @type {Array<CompanyCreditChangeRecordDetail>}
+     * @memberof CompanyCreditChangeRecordResponse
+     */
+    companyCreditChangeRecordDetailList?: Array<CompanyCreditChangeRecordDetail>
+
+    /**
+     * 企业信用id
+     * @type {number | string}
+     * @memberof CompanyCreditChangeRecordResponse
+     */
+    companyCreditId?: number | string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof CompanyCreditChangeRecordResponse
+     */
+    createBy?: string
+
+    /**
+     * 创建人手机号
+     * @type {string}
+     * @memberof CompanyCreditChangeRecordResponse
+     */
+    createPhone?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof CompanyCreditChangeRecordResponse
+     */
+    createTime?: string
+
+    /**
+     * 主键
+     * @type {number | string}
+     * @memberof CompanyCreditChangeRecordResponse
+     */
+    id?: number | string
+
+    /**
+     * 标签字段
+     * @type {string}
+     * @memberof CompanyCreditChangeRecordResponse
+     */
+    labelField?: string
+
+    /**
+     * 类型 1：关联了当前企业 2：和当前企业取消了关联 3：当前企业和A进行关联 4：当前企业和A取消了关联 5：通用额度设置 6：新增临时额度 7：临时额度手动设置 8：临时额度自动失效 9：开启风控冻结 10：解除风控冻结 11：风控冻结自动解除
+     * @type {number | string}
+     * @memberof CompanyCreditChangeRecordResponse
+     */
+    type?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface CompanyCreditFreezeRequest
+*/
+export interface CompanyCreditFreezeRequest {
+
+    /**
+     * 公司id
+     * @type {number | string}
+     * @memberof CompanyCreditFreezeRequest
+     */
+    companyId?: number | string
+
+    /**
+     * 操作人
+     * @type {string}
+     * @memberof CompanyCreditFreezeRequest
+     */
+    createBy?: string
+
+    /**
+     * 操作人手机号
+     * @type {string}
+     * @memberof CompanyCreditFreezeRequest
+     */
+    createPhone?: string
+
+    /**
+     * 状态 true：冻结 false：解冻
+     * @type {boolean}
+     * @memberof CompanyCreditFreezeRequest
+     */
+    creditFreeze?: boolean
+
+    /**
+     * 信用冻结结束时间
+     * @type {string}
+     * @memberof CompanyCreditFreezeRequest
+     */
+    freezeEndTime?: string
+
+    /**
+     * 冻结说明
+     * @type {string}
+     * @memberof CompanyCreditFreezeRequest
+     */
+    freezeRemark?: string
+
+    /**
+     * 信用冻结开始时间
+     * @type {string}
+     * @memberof CompanyCreditFreezeRequest
+     */
+    freezeStartTime?: string
+
+}
+
+/**
+*
+* @export
+* @interface CompanyCreditResponse
+*/
+export interface CompanyCreditResponse {
+
+    /**
+     * 公司id
+     * @type {number | string}
+     * @memberof CompanyCreditResponse
+     */
+    companyId?: number | string
+
+    /**
+     * 公司名称
+     * @type {string}
+     * @memberof CompanyCreditResponse
+     */
+    companyName?: string
+
+    /**
+     * 信用等级
+     * @type {string}
+     * @memberof CompanyCreditResponse
+     */
+    creditLevel?: string
+
+    /**
+     * 资料状态 1：待提交 2：已提交 3：已通过 4：已打回
+     * @type {number | string}
+     * @memberof CompanyCreditResponse
+     */
+    documentStatus?: number | string
+
+    /**
+     * 评级到期时间
+     * @type {string}
+     * @memberof CompanyCreditResponse
+     */
+    endTime?: string
+
+    /**
+     * 可代采额度(累计)
+     * @type {number | string}
+     * @memberof CompanyCreditResponse
+     */
+    purchaseAmount?: number | string
+
+    /**
+     * 可代采额度(冻结)
+     * @type {number | string}
+     * @memberof CompanyCreditResponse
+     */
+    purchaseFreezeAmount?: number | string
+
+    /**
+     * 通用额度 (累计)
+     * @type {number | string}
+     * @memberof CompanyCreditResponse
+     */
+    purchaseQuota?: number | string
+
+    /**
+     * 可代采额度(可用)
+     * @type {number | string}
+     * @memberof CompanyCreditResponse
+     */
+    purchaseUsableAmount?: number | string
+
+    /**
+     * 服务费
+     * @type {number | string}
+     * @memberof CompanyCreditResponse
+     */
+    serviceFee?: number | string
+
+    /**
+     * 临时额度（冻结）
+     * @type {number | string}
+     * @memberof CompanyCreditResponse
+     */
+    temporaryFreezeAmount?: number | string
+
+    /**
+     * 临时额度明细
+     * @type {Array<临时额度明细>}
+     * @memberof CompanyCreditResponse
+     */
+    temporaryQuota?: Array<临时额度明细>
+
+    /**
+     * 临时额度(累计)
+     * @type {number | string}
+     * @memberof CompanyCreditResponse
+     */
+    temporaryQuotaAmount?: number | string
+
+    /**
+     * 临时额度(可用)
+     * @type {number | string}
+     * @memberof CompanyCreditResponse
+     */
+    temporaryUsableAmount?: number | string
+
+    /**
+     * 通用额度（冻结）
+     * @type {number | string}
+     * @memberof CompanyCreditResponse
+     */
+    universalFreezeAmount?: number | string
+
+    /**
+     * 通用额度(可用)
+     * @type {number | string}
+     * @memberof CompanyCreditResponse
+     */
+    universalUsableAmount?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface CompanyCreditShareRequest
+*/
+export interface CompanyCreditShareRequest {
+
+    /**
+     * 子公司id
+     * @type {number | string}
+     * @memberof CompanyCreditShareRequest
+     */
+    childCompanyId?: number | string
+
+    /**
+     * 主公司id
+     * @type {number | string}
+     * @memberof CompanyCreditShareRequest
+     */
+    mainCompanyId?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface CompanyLabelResponse
+*/
+export interface CompanyLabelResponse {
+
+    /**
+     * 详细地址
+     * @type {string}
+     * @memberof CompanyLabelResponse
+     */
+    addressName?: string
+
+    /**
+     * 认证状态 1：未认证 2：认证中 3：认证成功 4：认证失败
+     * @type {number | string}
+     * @memberof CompanyLabelResponse
+     */
+    authenticationStatus?: number | string
+
+    /**
+     * 认证时间
+     * @type {string}
+     * @memberof CompanyLabelResponse
+     */
+    authenticationTime?: string
+
+    /**
+     * 城市id
+     * @type {string}
+     * @memberof CompanyLabelResponse
+     */
+    cityId?: string
+
+    /**
+     * 市名称
+     * @type {string}
+     * @memberof CompanyLabelResponse
+     */
+    cityName?: string
+
+    /**
+     * 企业编码
+     * @type {string}
+     * @memberof CompanyLabelResponse
+     */
+    companyCode?: string
+
+    /**
+     * 企业标签 0：未关联任何企业 1：已关联其他主企业 2：已被其他企业关联 3：当前企业 4：已关联当前企业
+     * @type {number | string}
+     * @memberof CompanyLabelResponse
+     */
+    companyLabel?: number | string
+
+    /**
+     * 企业全称
+     * @type {string}
+     * @memberof CompanyLabelResponse
+     */
+    companyName?: string
+
+    /**
+     * 区id
+     * @type {string}
+     * @memberof CompanyLabelResponse
+     */
+    countryId?: string
+
+    /**
+     * 区/县名称
+     * @type {string}
+     * @memberof CompanyLabelResponse
+     */
+    countryName?: string
+
+    /**
+     * 创建人id
+     * @type {number | string}
+     * @memberof CompanyLabelResponse
+     */
+    createBy?: number | string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof CompanyLabelResponse
+     */
+    createTime?: string
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof CompanyLabelResponse
+     */
+    id?: number | string
+
+    /**
+     * 是否删除
+     * @type {boolean}
+     * @memberof CompanyLabelResponse
+     */
+    isDeleted?: boolean
+
+    /**
+     * 省id
+     * @type {string}
+     * @memberof CompanyLabelResponse
+     */
+    provinceId?: string
+
+    /**
+     * 省名称
+     * @type {string}
+     * @memberof CompanyLabelResponse
+     */
+    provinceName?: string
+
+    /**
+     * 企业来源 1 B2B 2 CRM
+     * @type {number | string}
+     * @memberof CompanyLabelResponse
+     */
+    source?: number | string
+
+    /**
+     * 维护人id
+     * @type {number | string}
+     * @memberof CompanyLabelResponse
+     */
+    updateBy?: number | string
+
+    /**
+     * 更新时间
+     * @type {string}
+     * @memberof CompanyLabelResponse
+     */
+    updateTime?: string
+
+}
+
+/**
+*
+* @export
+* @interface CompanyQuotaChangeResponse
+*/
+export interface CompanyQuotaChangeResponse {
+
+    /**
+     * 变更后冻结额度
+     * @type {number | string}
+     * @memberof CompanyQuotaChangeResponse
+     */
+    afterFreezeQuotaAmount?: number | string
+
+    /**
+     * 变更后总额度
+     * @type {number | string}
+     * @memberof CompanyQuotaChangeResponse
+     */
+    afterTotalQuotaAmount?: number | string
+
+    /**
+     * 变更前冻结额度
+     * @type {number | string}
+     * @memberof CompanyQuotaChangeResponse
+     */
+    beforeFreezeQuotaAmount?: number | string
+
+    /**
+     * 变更前总额度
+     * @type {number | string}
+     * @memberof CompanyQuotaChangeResponse
+     */
+    beforeTotalQuotaAmount?: number | string
+
+    /**
+     * 变动额度
+     * @type {number | string}
+     * @memberof CompanyQuotaChangeResponse
+     */
+    changeAmount?: number | string
+
+    /**
+     * 变动类型 1：增加 2：扣减 3：冻结 4：释放
+     * @type {number | string}
+     * @memberof CompanyQuotaChangeResponse
+     */
+    changedType?: number | string
+
+    /**
+     * 企业公司id
+     * @type {number | string}
+     * @memberof CompanyQuotaChangeResponse
+     */
+    companyId?: number | string
+
+    /**
+     * 企业公司名称
+     * @type {string}
+     * @memberof CompanyQuotaChangeResponse
+     */
+    companyName?: string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof CompanyQuotaChangeResponse
+     */
+    createBy?: string
+
+    /**
+     * 创建人手机号
+     * @type {string}
+     * @memberof CompanyQuotaChangeResponse
+     */
+    createPhone?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof CompanyQuotaChangeResponse
+     */
+    createTime?: string
+
+    /**
+     * 分部名称
+     * @type {string}
+     * @memberof CompanyQuotaChangeResponse
+     */
+    deptName?: string
+
+    /**
+     * 事件类型 1：通用额度设置 2：客户临时额度设置 3：评审决议通过 4：评审决议变更通过 5：临时额度自动失效 6：临时额度手动失效 7: 提交支付单 8：尾款支付成功 9：支付单取消
+     * @type {number | string}
+     * @memberof CompanyQuotaChangeResponse
+     */
+    eventType?: number | string
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof CompanyQuotaChangeResponse
+     */
+    id?: number | string
+
+    /**
+     * 支付单编码
+     * @type {string}
+     * @memberof CompanyQuotaChangeResponse
+     */
+    paymentOrderNo?: string
+
+    /**
+     * 项目编码
+     * @type {string}
+     * @memberof CompanyQuotaChangeResponse
+     */
+    projectNo?: string
+
+    /**
+     * 额度类型 1：通用额度 2：客户临时额度 3：项目专项额度
+     * @type {number | string}
+     * @memberof CompanyQuotaChangeResponse
+     */
+    quotaType?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface CompanyTemporaryQuotaPageResp
+*/
+export interface CompanyTemporaryQuotaPageResp {
+
+    /**
+     * 公司id
+     * @type {number | string}
+     * @memberof CompanyTemporaryQuotaPageResp
+     */
+    companyId?: number | string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof CompanyTemporaryQuotaPageResp
+     */
+    createBy?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof CompanyTemporaryQuotaPageResp
+     */
+    createTime?: string
+
+    /**
+     * 失效时间
+     * @type {string}
+     * @memberof CompanyTemporaryQuotaPageResp
+     */
+    expireTime?: string
+
+    /**
+     * 冻结额度金额（万）
+     * @type {number | string}
+     * @memberof CompanyTemporaryQuotaPageResp
+     */
+    freezeAmount?: number | string
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof CompanyTemporaryQuotaPageResp
+     */
+    id?: number | string
+
+    /**
+     * 临时额度金额（万）
+     * @type {number | string}
+     * @memberof CompanyTemporaryQuotaPageResp
+     */
+    quotaAmount?: number | string
+
+    /**
+     * 说明
+     * @type {string}
+     * @memberof CompanyTemporaryQuotaPageResp
+     */
+    remark?: string
+
+    /**
+     * 状态 0：生效 1：失效
+     * @type {number | string}
+     * @memberof CompanyTemporaryQuotaPageResp
+     */
+    status?: number | string
+
+    /**
+     * 修改人
+     * @type {string}
+     * @memberof CompanyTemporaryQuotaPageResp
+     */
+    updateBy?: string
+
+    /**
+     * 修改时间
+     * @type {string}
+     * @memberof CompanyTemporaryQuotaPageResp
+     */
+    updateTime?: string
+
+}
+
+/**
+*
+* @export
+* @interface CompanyTemporaryQuotaRequest
+*/
+export interface CompanyTemporaryQuotaRequest {
+
+    /**
+     * 公司id
+     * @type {number | string}
+     * @memberof CompanyTemporaryQuotaRequest
+     */
+    companyId?: number | string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof CompanyTemporaryQuotaRequest
+     */
+    createBy?: string
+
+    /**
+     * 创建人手机号
+     * @type {string}
+     * @memberof CompanyTemporaryQuotaRequest
+     */
+    createPhone?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof CompanyTemporaryQuotaRequest
+     */
+    createTime?: string
+
+    /**
+     * 失效时间
+     * @type {string}
+     * @memberof CompanyTemporaryQuotaRequest
+     */
+    expireTime?: string
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof CompanyTemporaryQuotaRequest
+     */
+    id?: number | string
+
+    /**
+     * 临时额度金额
+     * @type {number | string}
+     * @memberof CompanyTemporaryQuotaRequest
+     */
+    quotaAmount?: number | string
+
+    /**
+     * 说明
+     * @type {string}
+     * @memberof CompanyTemporaryQuotaRequest
+     */
+    remark?: string
+
+    /**
+     * 修改人
+     * @type {string}
+     * @memberof CompanyTemporaryQuotaRequest
+     */
+    updateBy?: string
+
+    /**
+     * 修改时间
+     * @type {string}
+     * @memberof CompanyTemporaryQuotaRequest
+     */
+    updateTime?: string
+
+}
+
+/**
+*
+* @export
+* @interface CompanyTemporaryQuotaStatusRequest
+*/
+export interface CompanyTemporaryQuotaStatusRequest {
+
+    /**
+     * 操作人
+     * @type {string}
+     * @memberof CompanyTemporaryQuotaStatusRequest
+     */
+    createBy?: string
+
+    /**
+     * 操作人手机号
+     * @type {string}
+     * @memberof CompanyTemporaryQuotaStatusRequest
+     */
+    createPhone?: string
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof CompanyTemporaryQuotaStatusRequest
+     */
+    id?: number | string
 
 }
 
@@ -959,6 +1875,650 @@ export interface CreditDocument {
 /**
 *
 * @export
+* @interface CreditShareCompanyResponse
+*/
+export interface CreditShareCompanyResponse {
+
+    /**
+     * 企业id
+     * @type {number | string}
+     * @memberof CreditShareCompanyResponse
+     */
+    companyId?: number | string
+
+    /**
+     * 企业名称
+     * @type {string}
+     * @memberof CreditShareCompanyResponse
+     */
+    companyName?: string
+
+    /**
+     * 关联日期
+     * @type {string}
+     * @memberof CreditShareCompanyResponse
+     */
+    shareTime?: string
+
+}
+
+/**
+*
+* @export
+* @interface CrmCompanyDetailReponse
+*/
+export interface CrmCompanyDetailReponse {
+
+    /**
+     * 代理级别 1：一级代理商 2：经销商 3：其他
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    agentLevel?: number | string
+
+    /**
+     * 认证时间
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    authenticationTime?: string
+
+    /**
+     * 业务类型及比例
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    businessType?: string
+
+    /**
+     * 橙工采标签：0-未激活， 1-初级，2-橙级
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    chengGongCaiLable?: number | string
+
+    /**
+     * 市id
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    cityId?: string
+
+    /**
+     * 市名称
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    cityName?: string
+
+    /**
+     * 企业code
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    companyCode?: string
+
+    /**
+     * 企业id
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    companyId?: number | string
+
+    /**
+     * 企业名称
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    companyName?: string
+
+    /**
+     * 企业类型 1：体系内 2：体系外
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    companyType?: number | string
+
+    /**
+     * 联系地址
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    contactAddress?: string
+
+    /**
+     * 区id
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    countryId?: string
+
+    /**
+     * 区名称
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    countryName?: string
+
+    /**
+     * 创建人手机号
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    createBy?: number | string
+
+    /**
+     * 创建人工号
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    createCode?: string
+
+    /**
+     * 创建人姓名
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    createName?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    createTime?: string
+
+    /**
+     * 企业信用
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    creditLevel?: string
+
+    /**
+     * 客户分类：1黑名单 2白名单 3待审核
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    customerType?: number | string
+
+    /**
+     * 发展在线公司编码
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    developOnlineCompanyCode?: string
+
+    /**
+     * 发展在线公司名称
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    developOnlineCompanyName?: string
+
+    /**
+     * 主营品牌
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    deviceBrand?: string
+
+    /**
+     * 主营品类 1：空调 2：采暖 3：新风 4：净水 5：智能化 6：辅材 7：电梯 8：其他 9:电器 10:热水器
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    deviceCategory?: number | string
+
+    /**
+     * 企业邮箱
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    email?: string
+
+    /**
+     * 成立日期
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    estiblishTime?: string
+
+    /**
+     * 是否隐藏
+     * @type {boolean}
+     * @memberof CrmCompanyDetailReponse
+     */
+    hidden?: boolean
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    id?: number | string
+
+    /**
+     * 是否认证
+     * @type {boolean}
+     * @memberof CrmCompanyDetailReponse
+     */
+    isAuthentication?: boolean
+
+    /**
+     * 是否关联平台公司
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    isRelated?: number | string
+
+    /**
+     * 法人证件号
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    legalCardNumber?: string
+
+    /**
+     * 法人姓名
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    legalName?: string
+
+    /**
+     * 主辅材品牌
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    materialsBrand?: string
+
+    /**
+     * 主辅材渠道 1：厂商直采 2：一节囤货商采购 3：经销商采购
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    materialsChannel?: string
+
+    /**
+     * 1.一般会员
+2.认证会员
+3.评级会员
+4.签约会员
+5.交易会员
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    memberTag?: number | string
+
+    /**
+     * 姓名
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    name?: string
+
+    /**
+     * 认证人姓名
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    openName?: string
+
+    /**
+     * 认证人手机号
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    openPhone?: string
+
+    /**
+     * 手机号
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    phone?: string
+
+    /**
+     * EHR分部主键
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    pkDeptdoc?: string
+
+    /**
+     * 项目列表
+     * @type {Array<RespProject>}
+     * @memberof CrmCompanyDetailReponse
+     */
+    projects?: Array<RespProject>
+
+    /**
+     * 省id
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    provinceId?: string
+
+    /**
+     * 省名称
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    provinceName?: string
+
+    /**
+     * 采购额度
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    purchaseQuota?: number | string
+
+    /**
+     * 建筑资质
+     * @type {Array<TianyanCompanyQualification>}
+     * @memberof CrmCompanyDetailReponse
+     */
+    qualification?: Array<TianyanCompanyQualification>
+
+    /**
+     * 注册资本
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    regCapital?: string
+
+    /**
+     * 经营状态
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    regStatus?: string
+
+    /**
+     * 服务能力 1：有 2：无
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    serviceCapability?: number | string
+
+    /**
+     * 服务能力
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    serviceCapabilityDetail?: string
+
+    /**
+     * 服务费
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    serviceFee?: number | string
+
+    /**
+     * 次年服务费折扣
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    serviceFeeDiscount?: number | string
+
+    /**
+     * 纳税人识别号
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    taxpayerIdNumber?: string
+
+    /**
+     * 近3年的年度工程规模 1：1000万以内 2：1001-3000万 3：3001-5000万 4:5001-1亿 5：1亿-2亿 6:2亿以上
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    threeYearProjectScale?: number | string
+
+    /**
+     * 天眼查公司id
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    tyCompanyId?: number | string
+
+    /**
+     * 项目类别 1：地产项目 2：政府共建项目 3：市政项目 3：办公楼 4：厂房 5：其他
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    type?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    unClaimTotalAmount?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    unPaidTotalAmount?: number | string
+
+    /**
+     * 会员id
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    userId?: number | string
+
+    /**
+     * 企业vip等级
+     * @type {string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    vipRule?: string
+
+    /**
+     * vip目标
+     * @type {number | string}
+     * @memberof CrmCompanyDetailReponse
+     */
+    vipTarget?: number | string
+
+}
+
+/**
+* crm用户隐藏工程项目信息response
+* @export
+* @interface CrmHiddenProjectResponse
+*/
+export interface CrmHiddenProjectResponse {
+
+    /**
+     * 公司id
+     * @type {number | string}
+     * @memberof CrmHiddenProjectResponse
+     */
+    companyId?: number | string
+
+    /**
+     * 公司名称
+     * @type {string}
+     * @memberof CrmHiddenProjectResponse
+     */
+    companyName?: string
+
+    /**
+     * 过会金额
+     * @type {number | string}
+     * @memberof CrmHiddenProjectResponse
+     */
+    deviceAmount?: number | string
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof CrmHiddenProjectResponse
+     */
+    id?: number | string
+
+    /**
+     * 项目级别
+     * @type {string}
+     * @memberof CrmHiddenProjectResponse
+     */
+    levels?: string
+
+    /**
+     * 项目名称
+     * @type {string}
+     * @memberof CrmHiddenProjectResponse
+     */
+    projectName?: string
+
+    /**
+     * 项目编号
+     * @type {string}
+     * @memberof CrmHiddenProjectResponse
+     */
+    projectNo?: string
+
+    /**
+     * 已采购金额
+     * @type {number | string}
+     * @memberof CrmHiddenProjectResponse
+     */
+    purchaseAmount?: number | string
+
+    /**
+     * 状态 1：待提交2：初审中 3：资料收集中 12：资料待审核 4：待立项  5：审核未通过 11：待终审 6：待签约 7：待放款 8：贷中 9：项目完成 10:信息待完善 13: 终审通过 14：终审未通过
+     * @type {number | string}
+     * @memberof CrmHiddenProjectResponse
+     */
+    status?: number | string
+
+    /**
+     * 提交时间,格式为:yyyy-MM-dd HH:mm:ss
+     * @type {string}
+     * @memberof CrmHiddenProjectResponse
+     */
+    submitTime?: string
+
+}
+
+/**
+* crm用户工程项目信息response
+* @export
+* @interface CrmProjectResponse
+*/
+export interface CrmProjectResponse {
+
+    /**
+     * 公司id
+     * @type {number | string}
+     * @memberof CrmProjectResponse
+     */
+    companyId?: number | string
+
+    /**
+     * 公司名称
+     * @type {string}
+     * @memberof CrmProjectResponse
+     */
+    companyName?: string
+
+    /**
+     * 过会金额
+     * @type {number | string}
+     * @memberof CrmProjectResponse
+     */
+    deviceAmount?: number | string
+
+    /**
+     * 是否隐藏 true:隐藏 false：没有隐藏
+     * @type {boolean}
+     * @memberof CrmProjectResponse
+     */
+    hidden?: boolean
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof CrmProjectResponse
+     */
+    id?: number | string
+
+    /**
+     * 项目级别
+     * @type {string}
+     * @memberof CrmProjectResponse
+     */
+    levels?: string
+
+    /**
+     * 项目名称
+     * @type {string}
+     * @memberof CrmProjectResponse
+     */
+    projectName?: string
+
+    /**
+     * 项目编号
+     * @type {string}
+     * @memberof CrmProjectResponse
+     */
+    projectNo?: string
+
+    /**
+     * 已采购金额
+     * @type {number | string}
+     * @memberof CrmProjectResponse
+     */
+    purchaseAmount?: number | string
+
+    /**
+     * 状态 1：待提交2：初审中 3：资料收集中 12：资料待审核 4：待立项  5：审核未通过 11：待终审 6：待签约 7：待放款 8：贷中 9：项目完成 10:信息待完善 13: 终审通过 14：终审未通过
+     * @type {number | string}
+     * @memberof CrmProjectResponse
+     */
+    status?: number | string
+
+    /**
+     * 提交时间,格式为:yyyy-MM-dd HH:mm:ss
+     * @type {string}
+     * @memberof CrmProjectResponse
+     */
+    submitTime?: string
+
+}
+
+/**
+*
+* @export
+* @interface CrmUserHideRequest
+*/
+export interface CrmUserHideRequest {
+
+    /**
+     * 业务id（客户id或公司id或项目id）
+     * @type {number | string}
+     * @memberof CrmUserHideRequest
+     */
+    bizId?: number | string
+
+    /**
+     * 企业微信用户id
+     * @type {string}
+     * @memberof CrmUserHideRequest
+     */
+    userId?: string
+
+}
+
+/**
+*
+* @export
 * @interface CrmWhiteListRecord
 */
 export interface CrmWhiteListRecord {
@@ -1097,6 +2657,13 @@ export interface CustomerBackLogWork {
      * @memberof CustomerBackLogWork
      */
     received?: number | string
+
+    /**
+     * 拒绝原因
+     * @type {string}
+     * @memberof CustomerBackLogWork
+     */
+    refuseReason?: string
 
     /**
      * 说明
@@ -1240,6 +2807,29 @@ export interface ExternalAttribute {
 /**
 *
 * @export
+* @interface FlowUpCountResponse
+*/
+export interface FlowUpCountResponse {
+
+    /**
+     * 当面拜访次数
+     * @type {number | string}
+     * @memberof FlowUpCountResponse
+     */
+    directCount?: number | string
+
+    /**
+     * 累计跟进次数
+     * @type {number | string}
+     * @memberof FlowUpCountResponse
+     */
+    total?: number | string
+
+}
+
+/**
+*
+* @export
 * @interface FlowUpDynamic
 */
 export interface FlowUpDynamic {
@@ -1298,16 +2888,104 @@ export interface FlowUpDynamic {
 /**
 *
 * @export
+* @interface FlowUpPartner
+*/
+export interface FlowUpPartner {
+
+    /**
+     * 随访人员工号
+     * @type {string}
+     * @memberof FlowUpPartner
+     */
+    assignedUserId?: string
+
+    /**
+     * 随访人员手机号
+     * @type {string}
+     * @memberof FlowUpPartner
+     */
+    assignedUserMobile?: string
+
+    /**
+     * 随访人员名称
+     * @type {string}
+     * @memberof FlowUpPartner
+     */
+    assignedUserName?: string
+
+    /**
+     * 线索id
+     * @type {number | string}
+     * @memberof FlowUpPartner
+     */
+    flowUpId?: number | string
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof FlowUpPartner
+     */
+    id?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface FlowUpPartnerRequest
+*/
+export interface FlowUpPartnerRequest {
+
+    /**
+     * 客户经理工号
+     * @type {string}
+     * @memberof FlowUpPartnerRequest
+     */
+    assignedUserId?: string
+
+    /**
+     * 客户经理手机号
+     * @type {string}
+     * @memberof FlowUpPartnerRequest
+     */
+    assignedUserMobile?: string
+
+    /**
+     * 客户经理姓名
+     * @type {string}
+     * @memberof FlowUpPartnerRequest
+     */
+    assignedUserName?: string
+
+}
+
+/**
+*
+* @export
 * @interface FlowUpRequest
 */
 export interface FlowUpRequest {
 
     /**
-     * 跟进事件id 线索id/客户id/1.0项目id/2.0项目id
-     * @type {number | string}
+     * 协助内容
+     * @type {string}
      * @memberof FlowUpRequest
      */
-    bizId?: number | string
+    assistantRemark?: string
+
+    /**
+     * (2.0项目)协助人员列表
+     * @type {Array<Assistant>}
+     * @memberof FlowUpRequest
+     */
+    assistants?: Array<Assistant>
+
+    /**
+     * 跟进事件id 线索id/客户id/1.0项目id/2.0项目id
+     * @type {string}
+     * @memberof FlowUpRequest
+     */
+    bizId?: string
 
     /**
      * 事件类型 1：线索  2：客户 3：1.0项目 4: 2.0项目
@@ -1345,6 +3023,13 @@ export interface FlowUpRequest {
     createBy?: string
 
     /**
+     * 创建人企业微信id
+     * @type {string}
+     * @memberof FlowUpRequest
+     */
+    createCorpUserId?: string
+
+    /**
      * 创建人手机号
      * @type {string}
      * @memberof FlowUpRequest
@@ -1353,7 +3038,6 @@ export interface FlowUpRequest {
 
     /**
      * (2.0项目)跟进节点 1：首次沟通 2：需求确认 3：提供方案/报价 4：商务洽谈，待签约 5：已签约 6：已回款 7：无需跟进
-     *          跟进阶段 1：初步建立联系 2：初步达成意向 3：方案已推介 4：客户已评级 5：项目推进中 6：首次交易成功 7：合作关闭
      * @type {number | string}
      * @memberof FlowUpRequest
      */
@@ -1381,7 +3065,14 @@ export interface FlowUpRequest {
     noNeedFlowReason?: string
 
     /**
-     * 现场图片
+     * 随访人员
+     * @type {Array<FlowUpPartnerRequest>}
+     * @memberof FlowUpRequest
+     */
+    partners?: Array<FlowUpPartnerRequest>
+
+    /**
+     * 当面拜访->现场图片        电话/微信沟通/邮件->附件
      * @type {Array<string>}
      * @memberof FlowUpRequest
      */
@@ -1401,26 +3092,6 @@ export interface FlowUpRequest {
      */
     type?: number | string
 
-    /**
-     * 更新人
-     * @type {string}
-     * @memberof FlowUpRequest
-     */
-    updateBy?: string
-
-    /**
-     * 更新人手机号
-     * @type {string}
-     * @memberof FlowUpRequest
-     */
-    updatePhone?: string
-
-    /**
-     * 客户标签(逗号隔开)：1：可发展为集采会员 2：有集采PLUS机会: 3：有严选供应链机会 4：可助力品牌合作 5：可发展为区域KOL
-     * @type {string}
-     * @memberof FlowUpRequest
-     */
-     userTag?: string
 }
 
 /**
@@ -1445,11 +3116,25 @@ export interface FlowUpResponse {
     bizType?: number | string
 
     /**
+     * 公司名称
+     * @type {string}
+     * @memberof FlowUpResponse
+     */
+    companyName?: string
+
+    /**
      * 跟进内容
      * @type {string}
      * @memberof FlowUpResponse
      */
     content?: string
+
+    /**
+     * 创建人微信头像
+     * @type {string}
+     * @memberof FlowUpResponse
+     */
+    createAvatar?: string
 
     /**
      * 创建人
@@ -1471,6 +3156,13 @@ export interface FlowUpResponse {
      * @memberof FlowUpResponse
      */
     createTime?: string
+
+    /**
+     * 协助代办信息
+     * @type {Array<CustomerBackLogWork>}
+     * @memberof FlowUpResponse
+     */
+    customerBackLogWorks?: Array<CustomerBackLogWork>
 
     /**
      * 企业微信消息
@@ -1499,6 +3191,13 @@ export interface FlowUpResponse {
      * @memberof FlowUpResponse
      */
     picUrls?: Array<string>
+
+    /**
+     * 项目名称
+     * @type {string}
+     * @memberof FlowUpResponse
+     */
+    projectName?: string
 
     /**
      * 2.0项目详情
@@ -1547,49 +3246,202 @@ export interface FlowUpResponse {
 /**
 *
 * @export
-* @interface IPageCustomerBackLogWork
+* @interface IPageCompanyQuotaChangeResponse
 */
-export interface IPageCustomerBackLogWork {
+export interface IPageCompanyQuotaChangeResponse {
 
     /**
      *
      * @type {number | string}
-     * @memberof IPage«CustomerBackLogWork»
+     * @memberof IPage«CompanyQuotaChangeResponse»
      */
     current?: number | string
 
     /**
      *
      * @type {number | string}
-     * @memberof IPage«CustomerBackLogWork»
+     * @memberof IPage«CompanyQuotaChangeResponse»
      */
     pages?: number | string
 
     /**
      *
-     * @type {Array<CustomerBackLogWork>}
-     * @memberof IPage«CustomerBackLogWork»
+     * @type {Array<CompanyQuotaChangeResponse>}
+     * @memberof IPage«CompanyQuotaChangeResponse»
      */
-    records?: Array<CustomerBackLogWork>
+    records?: Array<CompanyQuotaChangeResponse>
 
     /**
      *
      * @type {boolean}
-     * @memberof IPage«CustomerBackLogWork»
+     * @memberof IPage«CompanyQuotaChangeResponse»
      */
     searchCount?: boolean
 
     /**
      *
      * @type {number | string}
-     * @memberof IPage«CustomerBackLogWork»
+     * @memberof IPage«CompanyQuotaChangeResponse»
      */
     size?: number | string
 
     /**
      *
      * @type {number | string}
-     * @memberof IPage«CustomerBackLogWork»
+     * @memberof IPage«CompanyQuotaChangeResponse»
+     */
+    total?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface IPageCompanyTemporaryQuotaPageResp
+*/
+export interface IPageCompanyTemporaryQuotaPageResp {
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«CompanyTemporaryQuotaPageResp»
+     */
+    current?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«CompanyTemporaryQuotaPageResp»
+     */
+    pages?: number | string
+
+    /**
+     *
+     * @type {Array<CompanyTemporaryQuotaPageResp>}
+     * @memberof IPage«CompanyTemporaryQuotaPageResp»
+     */
+    records?: Array<CompanyTemporaryQuotaPageResp>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPage«CompanyTemporaryQuotaPageResp»
+     */
+    searchCount?: boolean
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«CompanyTemporaryQuotaPageResp»
+     */
+    size?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«CompanyTemporaryQuotaPageResp»
+     */
+    total?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface IPageCrmHiddenProjectResponse
+*/
+export interface IPageCrmHiddenProjectResponse {
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«CrmHiddenProjectResponse»
+     */
+    current?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«CrmHiddenProjectResponse»
+     */
+    pages?: number | string
+
+    /**
+     *
+     * @type {Array<CrmHiddenProjectResponse>}
+     * @memberof IPage«CrmHiddenProjectResponse»
+     */
+    records?: Array<CrmHiddenProjectResponse>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPage«CrmHiddenProjectResponse»
+     */
+    searchCount?: boolean
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«CrmHiddenProjectResponse»
+     */
+    size?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«CrmHiddenProjectResponse»
+     */
+    total?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface IPageCrmProjectResponse
+*/
+export interface IPageCrmProjectResponse {
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«CrmProjectResponse»
+     */
+    current?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«CrmProjectResponse»
+     */
+    pages?: number | string
+
+    /**
+     *
+     * @type {Array<CrmProjectResponse>}
+     * @memberof IPage«CrmProjectResponse»
+     */
+    records?: Array<CrmProjectResponse>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPage«CrmProjectResponse»
+     */
+    searchCount?: boolean
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«CrmProjectResponse»
+     */
+    size?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«CrmProjectResponse»
      */
     total?: number | string
 
@@ -1649,6 +3501,57 @@ export interface IPageFlowUpResponse {
 /**
 *
 * @export
+* @interface IPageProjectFlowUpResponse
+*/
+export interface IPageProjectFlowUpResponse {
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«ProjectFlowUpResponse»
+     */
+    current?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«ProjectFlowUpResponse»
+     */
+    pages?: number | string
+
+    /**
+     *
+     * @type {Array<ProjectFlowUpResponse>}
+     * @memberof IPage«ProjectFlowUpResponse»
+     */
+    records?: Array<ProjectFlowUpResponse>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPage«ProjectFlowUpResponse»
+     */
+    searchCount?: boolean
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«ProjectFlowUpResponse»
+     */
+    size?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«ProjectFlowUpResponse»
+     */
+    total?: number | string
+
+}
+
+/**
+*
+* @export
 * @interface IPageProjectPunchRecord
 */
 export interface IPageProjectPunchRecord {
@@ -1692,6 +3595,57 @@ export interface IPageProjectPunchRecord {
      *
      * @type {number | string}
      * @memberof IPage«ProjectPunchRecord»
+     */
+    total?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface IPageProjectSchemeResponse
+*/
+export interface IPageProjectSchemeResponse {
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«ProjectSchemeResponse»
+     */
+    current?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«ProjectSchemeResponse»
+     */
+    pages?: number | string
+
+    /**
+     *
+     * @type {Array<ProjectSchemeResponse>}
+     * @memberof IPage«ProjectSchemeResponse»
+     */
+    records?: Array<ProjectSchemeResponse>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPage«ProjectSchemeResponse»
+     */
+    searchCount?: boolean
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«ProjectSchemeResponse»
+     */
+    size?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«ProjectSchemeResponse»
      */
     total?: number | string
 
@@ -1955,57 +3909,6 @@ export interface IPageRespCompanyVipApply {
 /**
 *
 * @export
-* @interface IPageRespCompanyVipAssigner
-*/
-export interface IPageRespCompanyVipAssigner {
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPage«RespCompanyVipAssigner»
-     */
-    current?: number | string
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPage«RespCompanyVipAssigner»
-     */
-    pages?: number | string
-
-    /**
-     *
-     * @type {Array<RespCompanyVipAssigner>}
-     * @memberof IPage«RespCompanyVipAssigner»
-     */
-    records?: Array<RespCompanyVipAssigner>
-
-    /**
-     *
-     * @type {boolean}
-     * @memberof IPage«RespCompanyVipAssigner»
-     */
-    searchCount?: boolean
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPage«RespCompanyVipAssigner»
-     */
-    size?: number | string
-
-    /**
-     *
-     * @type {number | string}
-     * @memberof IPage«RespCompanyVipAssigner»
-     */
-    total?: number | string
-
-}
-
-/**
-*
-* @export
 * @interface IPageRespCompanyVipManager
 */
 export interface IPageRespCompanyVipManager {
@@ -2159,6 +4062,57 @@ export interface IPageRespCrmCompanyPage {
 /**
 *
 * @export
+* @interface IPageRespCrmCustomerBackLogWork
+*/
+export interface IPageRespCrmCustomerBackLogWork {
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«RespCrmCustomerBackLogWork»
+     */
+    current?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«RespCrmCustomerBackLogWork»
+     */
+    pages?: number | string
+
+    /**
+     *
+     * @type {Array<RespCrmCustomerBackLogWork>}
+     * @memberof IPage«RespCrmCustomerBackLogWork»
+     */
+    records?: Array<RespCrmCustomerBackLogWork>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPage«RespCrmCustomerBackLogWork»
+     */
+    searchCount?: boolean
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«RespCrmCustomerBackLogWork»
+     */
+    size?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«RespCrmCustomerBackLogWork»
+     */
+    total?: number | string
+
+}
+
+/**
+*
+* @export
 * @interface IPageRespCrmUserRegisterRecommend
 */
 export interface IPageRespCrmUserRegisterRecommend {
@@ -2202,6 +4156,57 @@ export interface IPageRespCrmUserRegisterRecommend {
      *
      * @type {number | string}
      * @memberof IPage«RespCrmUserRegisterRecommend»
+     */
+    total?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface IPageRespCustomerBackLogWork
+*/
+export interface IPageRespCustomerBackLogWork {
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«RespCustomerBackLogWork»
+     */
+    current?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«RespCustomerBackLogWork»
+     */
+    pages?: number | string
+
+    /**
+     *
+     * @type {Array<RespCustomerBackLogWork>}
+     * @memberof IPage«RespCustomerBackLogWork»
+     */
+    records?: Array<RespCustomerBackLogWork>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPage«RespCustomerBackLogWork»
+     */
+    searchCount?: boolean
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«RespCustomerBackLogWork»
+     */
+    size?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«RespCustomerBackLogWork»
      */
     total?: number | string
 
@@ -2510,6 +4515,417 @@ export interface IPageRespWxCompanyMember {
      * @memberof IPage«RespWxCompanyMember»
      */
     total?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface IPageUserFlowUpResp
+*/
+export interface IPageUserFlowUpResp {
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«UserFlowUpResp»
+     */
+    current?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«UserFlowUpResp»
+     */
+    pages?: number | string
+
+    /**
+     *
+     * @type {Array<UserFlowUpResp>}
+     * @memberof IPage«UserFlowUpResp»
+     */
+    records?: Array<UserFlowUpResp>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPage«UserFlowUpResp»
+     */
+    searchCount?: boolean
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«UserFlowUpResp»
+     */
+    size?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof IPage«UserFlowUpResp»
+     */
+    total?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface IntelligentRequest
+*/
+export interface IntelligentRequest {
+
+    /**
+     *
+     * @type {string}
+     * @memberof IntelligentRequest
+     */
+    intelligentSystemDetail?: string
+
+    /**
+     *
+     * @type {string}
+     * @memberof IntelligentRequest
+     */
+    intelligentSystemName?: string
+
+    /**
+     *
+     * @type {Array<number | string>}
+     * @memberof IntelligentRequest
+     */
+    schemeId?: Array<number | string>
+
+}
+
+/**
+*
+* @export
+* @interface LiveRoomEnableRequest
+*/
+export interface LiveRoomEnableRequest {
+
+    /**
+     * 品牌logo_url
+     * @type {string}
+     * @memberof LiveRoomEnableRequest
+     */
+    brandLogoUrl?: string
+
+    /**
+     * 品牌视频url
+     * @type {string}
+     * @memberof LiveRoomEnableRequest
+     */
+    brandVideoUrl?: string
+
+    /**
+     * 产品介绍
+     * @type {string}
+     * @memberof LiveRoomEnableRequest
+     */
+    productIntroduc?: string
+
+    /**
+     * 直播间id(微信直播房间id)
+     * @type {number | string}
+     * @memberof LiveRoomEnableRequest
+     */
+    roomId?: number | string
+
+    /**
+     * 落地页名称(直播房间名称)
+     * @type {string}
+     * @memberof LiveRoomEnableRequest
+     */
+    roomName?: string
+
+}
+
+/**
+*
+* @export
+* @interface LiveRoomResponse
+*/
+export interface LiveRoomResponse {
+
+    /**
+     * 主播名
+     * @type {string}
+     * @memberof LiveRoomResponse
+     */
+    anchorName?: string
+
+    /**
+     * 品牌logo_url
+     * @type {string}
+     * @memberof LiveRoomResponse
+     */
+    brandLogoUrl?: string
+
+    /**
+     * 品牌视频url
+     * @type {string}
+     * @memberof LiveRoomResponse
+     */
+    brandVideoUrl?: string
+
+    /**
+     * 是否关闭评论 【0：开启，1：关闭】（若关闭，观众端将隐藏评论入口，直播开始后不允许开启）
+     * @type {number | string}
+     * @memberof LiveRoomResponse
+     */
+    closeComment?: number | string
+
+    /**
+     * 是否关闭货架 【0：开启，1：关闭】（若关闭，观众端将隐藏商品货架，直播开始后不允许开启）
+     * @type {number | string}
+     * @memberof LiveRoomResponse
+     */
+    closeGoods?: number | string
+
+    /**
+     * 是否关闭客服 【0：开启，1：关闭】 默认关闭客服（直播开始后允许开启）
+     * @type {number | string}
+     * @memberof LiveRoomResponse
+     */
+    closeKf?: number | string
+
+    /**
+     * 是否关闭点赞 【0：开启，1：关闭】（若关闭，观众端将隐藏点赞按钮，直播开始后不允许开启）
+     * @type {number | string}
+     * @memberof LiveRoomResponse
+     */
+    closeLike?: number | string
+
+    /**
+     * 是否关闭回放 【0：开启，1：关闭】默认关闭回放（直播开始后允许开启）
+     * @type {number | string}
+     * @memberof LiveRoomResponse
+     */
+    closeReplay?: number | string
+
+    /**
+     * 直播间背景图链接
+     * @type {string}
+     * @memberof LiveRoomResponse
+     */
+    coverImg?: string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof LiveRoomResponse
+     */
+    createBy?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof LiveRoomResponse
+     */
+    createTime?: string
+
+    /**
+     * 直播计划结束时间
+     * @type {string}
+     * @memberof LiveRoomResponse
+     */
+    endTime?: string
+
+    /**
+     * 官方收录封面
+     * @type {string}
+     * @memberof LiveRoomResponse
+     */
+    feedsImg?: string
+
+    /**
+     * 是否放在首页 0 否 1是
+     * @type {boolean}
+     * @memberof LiveRoomResponse
+     */
+    homePage?: boolean
+
+    /**
+     * id
+     * @type {number | string}
+     * @memberof LiveRoomResponse
+     */
+    id?: number | string
+
+    /**
+     * 是否开启官方收录，1 开启，0 关闭
+     * @type {number | string}
+     * @memberof LiveRoomResponse
+     */
+    isFeedsPublic?: number | string
+
+    /**
+     * 直播间状态。101：直播中，102：未开始，103已结束，104禁播，105：暂停，106：异常，107：已过期
+     * @type {number | string}
+     * @memberof LiveRoomResponse
+     */
+    liveStatus?: number | string
+
+    /**
+     * 直播类型，1 推流 0 手机直播
+     * @type {number | string}
+     * @memberof LiveRoomResponse
+     */
+    liveType?: number | string
+
+    /**
+     * 房间名称
+     * @type {string}
+     * @memberof LiveRoomResponse
+     */
+    name?: string
+
+    /**
+     * 产品介绍
+     * @type {string}
+     * @memberof LiveRoomResponse
+     */
+    productIntroduc?: string
+
+    /**
+     * 直播间商品列表
+     * @type {Array<RespRoomGoods>}
+     * @memberof LiveRoomResponse
+     */
+    roomGoodsList?: Array<RespRoomGoods>
+
+    /**
+     * 直播间id(微信直播房间id)
+     * @type {number | string}
+     * @memberof LiveRoomResponse
+     */
+    roomId?: number | string
+
+    /**
+     * 落地页名称(直播房间名称)
+     * @type {string}
+     * @memberof LiveRoomResponse
+     */
+    roomName?: string
+
+    /**
+     * 直播间分享图链接
+     * @type {string}
+     * @memberof LiveRoomResponse
+     */
+    shareImg?: string
+
+    /**
+     * 直播间开始时间，列表按照start_time降序排列
+     * @type {string}
+     * @memberof LiveRoomResponse
+     */
+    startTime?: string
+
+    /**
+     * 状态1.启用 2.禁用（落地页启用/禁用）
+     * @type {number | string}
+     * @memberof LiveRoomResponse
+     */
+    status?: number | string
+
+    /**
+     * 更新人
+     * @type {string}
+     * @memberof LiveRoomResponse
+     */
+    updateBy?: string
+
+    /**
+     * 更新时间
+     * @type {string}
+     * @memberof LiveRoomResponse
+     */
+    updateTime?: string
+
+}
+
+/**
+*
+* @export
+* @interface LiveRoomSaveRequest
+*/
+export interface LiveRoomSaveRequest {
+
+    /**
+     * 品牌logo_url
+     * @type {string}
+     * @memberof LiveRoomSaveRequest
+     */
+    brandLogoUrl?: string
+
+    /**
+     * 品牌视频url
+     * @type {string}
+     * @memberof LiveRoomSaveRequest
+     */
+    brandVideoUrl?: string
+
+    /**
+     * 产品介绍
+     * @type {string}
+     * @memberof LiveRoomSaveRequest
+     */
+    productIntroduc?: string
+
+    /**
+     * 直播间id(微信直播房间id)
+     * @type {number | string}
+     * @memberof LiveRoomSaveRequest
+     */
+    roomId?: number | string
+
+    /**
+     * 落地页名称(直播房间名称)
+     * @type {string}
+     * @memberof LiveRoomSaveRequest
+     */
+    roomName?: string
+
+}
+
+/**
+*
+* @export
+* @interface LocalTime
+*/
+export interface LocalTime {
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof LocalTime
+     */
+    hour?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof LocalTime
+     */
+    minute?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof LocalTime
+     */
+    nano?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof LocalTime
+     */
+    second?: number | string
 
 }
 
@@ -3016,6 +5432,13 @@ export interface Project {
     contractAmount?: number | string
 
     /**
+     * 合作机会分析
+     * @type {string}
+     * @memberof Project
+     */
+    cooperationAnalyse?: string
+
+    /**
      * 创建人
      * @type {string}
      * @memberof Project
@@ -3028,6 +5451,13 @@ export interface Project {
      * @memberof Project
      */
     createTime?: string
+
+    /**
+     * 客户角色
+     * @type {string}
+     * @memberof Project
+     */
+    customerRole?: string
 
     /**
      * 是否删除 0：否 1：是
@@ -3051,7 +5481,7 @@ export interface Project {
     deptName?: string
 
     /**
-     * 设备款总额
+     * 采购总额(元)
      * @type {number | string}
      * @memberof Project
      */
@@ -3079,7 +5509,7 @@ export interface Project {
     estimateSignTime?: string
 
     /**
-     * 预估赊销时间,格式为:yyyy-MM-dd
+     * 预估借款时间,格式为:yyyy-MM-dd
      * @type {string}
      * @memberof Project
      */
@@ -3135,6 +5565,13 @@ export interface Project {
     maxPurchaseAmount?: number | string
 
     /**
+     * 其他客户角色
+     * @type {string}
+     * @memberof Project
+     */
+    otherCustomerRole?: string
+
+    /**
      * 承兑备注
      * @type {string}
      * @memberof Project
@@ -3177,6 +5614,13 @@ export interface Project {
     progress?: number | string
 
     /**
+     * 项目专项额冻结
+     * @type {number | string}
+     * @memberof Project
+     */
+    projectFreezeAmount?: number | string
+
+    /**
      * 项目名称
      * @type {string}
      * @memberof Project
@@ -3189,6 +5633,20 @@ export interface Project {
      * @memberof Project
      */
     projectNo?: string
+
+    /**
+     * 项目专项额度
+     * @type {number | string}
+     * @memberof Project
+     */
+    projectQuotaAmount?: number | string
+
+    /**
+     * 项目专项额度可用
+     * @type {number | string}
+     * @memberof Project
+     */
+    projectQuotaUsableAmount?: number | string
 
     /**
      * 交付款比例
@@ -3205,6 +5663,13 @@ export interface Project {
     remainPaymentCycle?: number | string
 
     /**
+     * 评审决议备注
+     * @type {string}
+     * @memberof Project
+     */
+    resolutionRemark?: string
+
+    /**
      * 评审决议状态 1：待提交 2：审批中 3：审批未通过 4：审批通过 5：变更决议待发起 6：变更决议审批中 7：变更决议审批未通过 8：变更决议审批通过
      * @type {number | string}
      * @memberof Project
@@ -3212,11 +5677,18 @@ export interface Project {
     resolutionStatus?: number | string
 
     /**
-     * 评审决议号
-     * @type {string}
+     * 销售毛利率(%)
+     * @type {number | string}
      * @memberof Project
      */
-    reviewResolutionNo?: string
+    salesGrossMargin?: number | string
+
+    /**
+     * 销售总额(元)
+     * @type {number | string}
+     * @memberof Project
+     */
+    salesTotalAmount?: number | string
 
     /**
      * 项目服务费
@@ -3393,6 +5865,320 @@ export interface ProjectAudit {
 /**
 *
 * @export
+* @interface ProjectFlowUpDetailResponse
+*/
+export interface ProjectFlowUpDetailResponse {
+
+    /**
+     * 跟进事件id
+     * @type {number | string}
+     * @memberof ProjectFlowUpDetailResponse
+     */
+    bizId?: number | string
+
+    /**
+     * 事件类型 1：线索  2：客户 3：1.0项目 4: 2.0项目
+     * @type {number | string}
+     * @memberof ProjectFlowUpDetailResponse
+     */
+    bizType?: number | string
+
+    /**
+     * 经销商
+     * @type {string}
+     * @memberof ProjectFlowUpDetailResponse
+     */
+    companyName?: string
+
+    /**
+     * 跟进内容
+     * @type {string}
+     * @memberof ProjectFlowUpDetailResponse
+     */
+    content?: string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof ProjectFlowUpDetailResponse
+     */
+    createBy?: string
+
+    /**
+     * 创建人手机号
+     * @type {string}
+     * @memberof ProjectFlowUpDetailResponse
+     */
+    createPhone?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof ProjectFlowUpDetailResponse
+     */
+    createTime?: string
+
+    /**
+     * 协助人员列表
+     * @type {Array<CustomerBackLogWork>}
+     * @memberof ProjectFlowUpDetailResponse
+     */
+    customerBackLogWorks?: Array<CustomerBackLogWork>
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof ProjectFlowUpDetailResponse
+     */
+    id?: number | string
+
+    /**
+     * 下次跟进时间
+     * @type {string}
+     * @memberof ProjectFlowUpDetailResponse
+     */
+    nextFlowTime?: string
+
+    /**
+     * 随访人员
+     * @type {Array<FlowUpPartner>}
+     * @memberof ProjectFlowUpDetailResponse
+     */
+    partners?: Array<FlowUpPartner>
+
+    /**
+     * 现场图片
+     * @type {Array<string>}
+     * @memberof ProjectFlowUpDetailResponse
+     */
+    picUrls?: Array<string>
+
+    /**
+     * 项目名称
+     * @type {string}
+     * @memberof ProjectFlowUpDetailResponse
+     */
+    projectName?: string
+
+    /**
+     * 备注
+     * @type {string}
+     * @memberof ProjectFlowUpDetailResponse
+     */
+    remark?: string
+
+    /**
+     * 跟进类型 1：当面拜访 2：电话/微信沟通/邮件等
+     * @type {number | string}
+     * @memberof ProjectFlowUpDetailResponse
+     */
+    type?: number | string
+
+    /**
+     * 更新人
+     * @type {string}
+     * @memberof ProjectFlowUpDetailResponse
+     */
+    updateBy?: string
+
+    /**
+     * 更新人手机号
+     * @type {string}
+     * @memberof ProjectFlowUpDetailResponse
+     */
+    updatePhone?: string
+
+    /**
+     * 更新时间
+     * @type {string}
+     * @memberof ProjectFlowUpDetailResponse
+     */
+    updateTime?: string
+
+}
+
+/**
+*
+* @export
+* @interface ProjectFlowUpResponse
+*/
+export interface ProjectFlowUpResponse {
+
+    /**
+     * 跟进事件id 线索id/客户id/1.0项目id/2.0项目id
+     * @type {number | string}
+     * @memberof ProjectFlowUpResponse
+     */
+    bizId?: number | string
+
+    /**
+     * 事件类型 1：线索  2：客户 3：1.0项目 4: 2.0项目
+     * @type {number | string}
+     * @memberof ProjectFlowUpResponse
+     */
+    bizType?: number | string
+
+    /**
+     * 经销商名称
+     * @type {string}
+     * @memberof ProjectFlowUpResponse
+     */
+    companyName?: string
+
+    /**
+     * 跟进内容
+     * @type {string}
+     * @memberof ProjectFlowUpResponse
+     */
+    content?: string
+
+    /**
+     * 创建人微信头像
+     * @type {string}
+     * @memberof ProjectFlowUpResponse
+     */
+    createAvatar?: string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof ProjectFlowUpResponse
+     */
+    createBy?: string
+
+    /**
+     * 创建人手机号
+     * @type {string}
+     * @memberof ProjectFlowUpResponse
+     */
+    createPhone?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof ProjectFlowUpResponse
+     */
+    createTime?: string
+
+    /**
+     * 协助代办信息
+     * @type {Array<CustomerBackLogWork>}
+     * @memberof ProjectFlowUpResponse
+     */
+    customerBackLogWorks?: Array<CustomerBackLogWork>
+
+    /**
+     * 企业微信消息
+     * @type {FlowUpDynamic}
+     * @memberof ProjectFlowUpResponse
+     */
+    flowUpDynamic?: FlowUpDynamic
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof ProjectFlowUpResponse
+     */
+    id?: number | string
+
+    /**
+     * 下次跟进时间
+     * @type {string}
+     * @memberof ProjectFlowUpResponse
+     */
+    nextFlowTime?: string
+
+    /**
+     * 随访人员
+     * @type {Array<FlowUpPartner>}
+     * @memberof ProjectFlowUpResponse
+     */
+    partners?: Array<FlowUpPartner>
+
+    /**
+     * 现场图片
+     * @type {Array<string>}
+     * @memberof ProjectFlowUpResponse
+     */
+    picUrls?: Array<string>
+
+    /**
+     * 项目名称
+     * @type {string}
+     * @memberof ProjectFlowUpResponse
+     */
+    projectName?: string
+
+    /**
+     * 备注
+     * @type {string}
+     * @memberof ProjectFlowUpResponse
+     */
+    remark?: string
+
+    /**
+     * 跟进类型 1：当面拜访 2：电话/微信沟通/邮件等
+     * @type {number | string}
+     * @memberof ProjectFlowUpResponse
+     */
+    type?: number | string
+
+    /**
+     * 更新人
+     * @type {string}
+     * @memberof ProjectFlowUpResponse
+     */
+    updateBy?: string
+
+    /**
+     * 更新人手机号
+     * @type {string}
+     * @memberof ProjectFlowUpResponse
+     */
+    updatePhone?: string
+
+    /**
+     * 更新时间
+     * @type {string}
+     * @memberof ProjectFlowUpResponse
+     */
+    updateTime?: string
+
+}
+
+/**
+*
+* @export
+* @interface ProjectProcessNode
+*/
+export interface ProjectProcessNode {
+
+    /**
+     * 2.0项目进度节点-节点key
+     * @type {number | string}
+     * @memberof ProjectProcessNode
+     */
+    nodeKey?: number | string
+
+    /**
+     * 2.0项目进度节点-节点名称
+     * @type {string}
+     * @memberof ProjectProcessNode
+     */
+    nodeName?: string
+
+    /**
+     * 2.0项目进度节点-节点状态,0=置灰 1=点亮
+     * @type {number | string}
+     * @memberof ProjectProcessNode
+     */
+    nodeStatus?: number | string
+
+}
+
+/**
+*
+* @export
 * @interface ProjectPunchRecord
 */
 export interface ProjectPunchRecord {
@@ -3437,56 +6223,226 @@ export interface ProjectPunchRecord {
 /**
 *
 * @export
-* @interface ProjectPurchase
+* @interface ProjectPurchaseRequest
 */
-export interface ProjectPurchase {
+export interface ProjectPurchaseRequest {
 
     /**
-     * 所属项目id/发起决议变更快照id
+     * 银行承兑自定义费率
      * @type {number | string}
-     * @memberof ProjectPurchase
+     * @memberof ProjectPurchaseRequest
      */
-    ascriptionId?: number | string
+    acceptanceRate?: number | string
+
+    /**
+     * 银行承兑费率类型 1：执行费率 2：自定义费率
+     * @type {number | string}
+     * @memberof ProjectPurchaseRequest
+     */
+    acceptanceRateType?: number | string
 
     /**
      * 设备品牌
      * @type {string}
-     * @memberof ProjectPurchase
+     * @memberof ProjectPurchaseRequest
      */
     deviceBrand?: string
 
     /**
-     * 设备品类 1：空调 2：采暖 3：新风 4：净水 5：智能化 6：辅材 7：电梯 8：其他 9:电器 10:热水器
-     * @type {number | string}
-     * @memberof ProjectPurchase
+     * 设备品类类型 1：空调 2：采暖 3：新风 4：净水 5：智能化 6：辅材 7：电梯 8：其他 9:电器 10:热水器
+     * @type {Array<number | string>}
+     * @memberof ProjectPurchaseRequest
      */
-    deviceCategory?: number | string
+    deviceCategoryType?: Array<number | string>
 
     /**
      * 项目采购信息id
      * @type {number | string}
-     * @memberof ProjectPurchase
+     * @memberof ProjectPurchaseRequest
      */
     id?: number | string
 
     /**
-     * 上游接受的付款方式 1：现金 2：承兑
-     * @type {number | string}
-     * @memberof ProjectPurchase
+     * 其他：设备品类
+     * @type {string}
+     * @memberof ProjectPurchaseRequest
      */
-    upstreamPayType?: number | string
+    otherDeviceCategory?: string
 
     /**
-     * 上游供应商
+     * 采购折让(%)
+     * @type {number | string}
+     * @memberof ProjectPurchaseRequest
+     */
+    purchaseDiscountRate?: number | string
+
+    /**
+     * 银行转账自定义费率
+     * @type {number | string}
+     * @memberof ProjectPurchaseRequest
+     */
+    transferRate?: number | string
+
+    /**
+     * 银行转账费率类型 1：执行费率 2：自定义费率
+     * @type {number | string}
+     * @memberof ProjectPurchaseRequest
+     */
+    transferRateType?: number | string
+
+    /**
+     * 上游货款方式 1：先款后货 2：先货后款
+     * @type {number | string}
+     * @memberof ProjectPurchaseRequest
+     */
+    upstreamLoanType?: number | string
+
+    /**
+     * 上游接受的付款方式 1：现金 2：承兑 , 多个逗号隔开
+     * @type {Array<number | string>}
+     * @memberof ProjectPurchaseRequest
+     */
+    upstreamPayType?: Array<number | string>
+
+    /**
+     * 上游供应商名称
      * @type {string}
-     * @memberof ProjectPurchase
+     * @memberof ProjectPurchaseRequest
      */
     upstreamSupplierName?: string
 
     /**
      * 上游供应商类型 1：厂商 2：代理商 3：经销商
      * @type {number | string}
-     * @memberof ProjectPurchase
+     * @memberof ProjectPurchaseRequest
+     */
+    upstreamSupplierType?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface ProjectPurchaseResponse
+*/
+export interface ProjectPurchaseResponse {
+
+    /**
+     * 银行承兑自定义费率
+     * @type {number | string}
+     * @memberof ProjectPurchaseResponse
+     */
+    acceptanceRate?: number | string
+
+    /**
+     * 银行承兑费率类型 1：执行费率 2：自定义费率
+     * @type {number | string}
+     * @memberof ProjectPurchaseResponse
+     */
+    acceptanceRateType?: number | string
+
+    /**
+     * 所属项目id/发起决议变更快照id
+     * @type {number | string}
+     * @memberof ProjectPurchaseResponse
+     */
+    ascriptionId?: number | string
+
+    /**
+     * 设备品牌
+     * @type {string}
+     * @memberof ProjectPurchaseResponse
+     */
+    deviceBrand?: string
+
+    /**
+     * 设备品类
+     * @type {string}
+     * @memberof ProjectPurchaseResponse
+     */
+    deviceCategory?: string
+
+    /**
+     * 设备品类类型 1：空调 2：采暖 3：新风 4：净水 5：智能化 6：辅材 7：电梯 8：其他 9:电器 10:热水器
+     * @type {string}
+     * @memberof ProjectPurchaseResponse
+     */
+    deviceCategoryType?: string
+
+    /**
+     * 项目采购信息id
+     * @type {number | string}
+     * @memberof ProjectPurchaseResponse
+     */
+    id?: number | string
+
+    /**
+     * 设备品类类型其他：设备品类名称
+     * @type {string}
+     * @memberof ProjectPurchaseResponse
+     */
+    otherDeviceCategory?: string
+
+    /**
+     * 采购折让(%)
+     * @type {number | string}
+     * @memberof ProjectPurchaseResponse
+     */
+    purchaseDiscountRate?: number | string
+
+    /**
+     * 银行转账自定义费率
+     * @type {number | string}
+     * @memberof ProjectPurchaseResponse
+     */
+    transferRate?: number | string
+
+    /**
+     * 银行转账费率类型 1：执行费率 2：自定义费率
+     * @type {number | string}
+     * @memberof ProjectPurchaseResponse
+     */
+    transferRateType?: number | string
+
+    /**
+     * 上游货款方式 1：先款后货 2：先货后款
+     * @type {number | string}
+     * @memberof ProjectPurchaseResponse
+     */
+    upstreamLoanType?: number | string
+
+    /**
+     * 上游接受的付款方式 1：现金 2：承兑 , 多个逗号隔开
+     * @type {Array<number | string>}
+     * @memberof ProjectPurchaseResponse
+     */
+    upstreamPayType?: Array<number | string>
+
+    /**
+     * 上游接受的付款方式
+     * @type {Array<string>}
+     * @memberof ProjectPurchaseResponse
+     */
+    upstreamPayTypeName?: Array<string>
+
+    /**
+     * 上游支付方式
+     * @type {Array<UpstreamPayTypeResponse>}
+     * @memberof ProjectPurchaseResponse
+     */
+    upstreamPayTypeResponseList?: Array<UpstreamPayTypeResponse>
+
+    /**
+     * 上游供应商
+     * @type {string}
+     * @memberof ProjectPurchaseResponse
+     */
+    upstreamSupplierName?: string
+
+    /**
+     * 上游供应商类型 1：厂商 2：代理商 3：经销商
+     * @type {number | string}
+     * @memberof ProjectPurchaseResponse
      */
     upstreamSupplierType?: number | string
 
@@ -3546,6 +6502,187 @@ export interface ProjectResolutionRecordDetail {
 /**
 *
 * @export
+* @interface ProjectSchemeDetailResponse
+*/
+export interface ProjectSchemeDetailResponse {
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof ProjectSchemeDetailResponse
+     */
+    createTime?: string
+
+    /**
+     * 生效时间
+     * @type {string}
+     * @memberof ProjectSchemeDetailResponse
+     */
+    effectiveTime?: string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof ProjectSchemeDetailResponse
+     */
+    id?: number | string
+
+    /**
+     * 方案详情
+     * @type {string}
+     * @memberof ProjectSchemeDetailResponse
+     */
+    schemeDetail?: string
+
+    /**
+     * 方案图片
+     * @type {string}
+     * @memberof ProjectSchemeDetailResponse
+     */
+    schemeImage?: string
+
+    /**
+     * 方案标题
+     * @type {string}
+     * @memberof ProjectSchemeDetailResponse
+     */
+    schemeTitle?: string
+
+    /**
+     * 方案视频
+     * @type {string}
+     * @memberof ProjectSchemeDetailResponse
+     */
+    schemeVideo?: string
+
+}
+
+/**
+*
+* @export
+* @interface ProjectSchemeRequest
+*/
+export interface ProjectSchemeRequest {
+
+    /**
+     * 创建人手机号，创建时必填
+     * @type {string}
+     * @memberof ProjectSchemeRequest
+     */
+    createPhone?: string
+
+    /**
+     * 生效时间
+     * @type {string}
+     * @memberof ProjectSchemeRequest
+     */
+    effectiveTime: string
+
+    /**
+     * 方案id
+     * @type {number | string}
+     * @memberof ProjectSchemeRequest
+     */
+    id?: number | string
+
+    /**
+     * 操作人
+     * @type {string}
+     * @memberof ProjectSchemeRequest
+     */
+    operator: string
+
+    /**
+     * 方案详情
+     * @type {string}
+     * @memberof ProjectSchemeRequest
+     */
+    schemeDetail: string
+
+    /**
+     * 方案缩略图
+     * @type {string}
+     * @memberof ProjectSchemeRequest
+     */
+    schemeImage: string
+
+    /**
+     * 方案标题
+     * @type {string}
+     * @memberof ProjectSchemeRequest
+     */
+    schemeTitle: string
+
+    /**
+     * 方案视频
+     * @type {string}
+     * @memberof ProjectSchemeRequest
+     */
+    schemeVideo?: string
+
+}
+
+/**
+*
+* @export
+* @interface ProjectSchemeResponse
+*/
+export interface ProjectSchemeResponse {
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof ProjectSchemeResponse
+     */
+    createBy?: string
+
+    /**
+     * 创建人手机号
+     * @type {string}
+     * @memberof ProjectSchemeResponse
+     */
+    createPhone?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof ProjectSchemeResponse
+     */
+    createTime?: string
+
+    /**
+     * 生效时间
+     * @type {string}
+     * @memberof ProjectSchemeResponse
+     */
+    effectiveTime?: string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof ProjectSchemeResponse
+     */
+    id?: number | string
+
+    /**
+     * 方案图片
+     * @type {string}
+     * @memberof ProjectSchemeResponse
+     */
+    schemeImage?: string
+
+    /**
+     * 方案标题
+     * @type {string}
+     * @memberof ProjectSchemeResponse
+     */
+    schemeTitle?: string
+
+}
+
+/**
+*
+* @export
 * @interface ProjectSupplyFlowUp
 */
 export interface ProjectSupplyFlowUp {
@@ -3596,6 +6733,71 @@ export interface ProjectSupplyFlowUp {
      * 项目id
      * @type {number | string}
      * @memberof ProjectSupplyFlowUp
+     */
+    projectId?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface QuotaFreezeRequest
+*/
+export interface QuotaFreezeRequest {
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof QuotaFreezeRequest
+     */
+    arrearAmount?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof QuotaFreezeRequest
+     */
+    companyId?: number | string
+
+    /**
+     *
+     * @type {string}
+     * @memberof QuotaFreezeRequest
+     */
+    createBy?: string
+
+    /**
+     *
+     * @type {string}
+     * @memberof QuotaFreezeRequest
+     */
+    createPhone?: string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof QuotaFreezeRequest
+     */
+    paymentOrderId?: number | string
+
+    /**
+     *
+     * @type {string}
+     * @memberof QuotaFreezeRequest
+     */
+    paymentOrderNo?: string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof QuotaFreezeRequest
+     */
+    poId?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof QuotaFreezeRequest
      */
     projectId?: number | string
 
@@ -3716,10 +6918,17 @@ export interface ReqAssignmentCustomer {
 
     /**
      * 线索id
-     * @type {number | string}
+     * @type {Array<number | string>}
      * @memberof ReqAssignmentCustomer
      */
-    clueId?: number | string
+    clueId?: Array<number | string>
+
+    /**
+     * 客户经理分部
+     * @type {string}
+     * @memberof ReqAssignmentCustomer
+     */
+    customerDeptName?: string
 
     /**
      * 客户经理手机号
@@ -3917,6 +7126,13 @@ export interface ReqBossCrmCompany {
     authenticationTimeOrder?: string
 
     /**
+     * 橙工采标签：0-未激活， 1-初级，2-橙级
+     * @type {number | string}
+     * @memberof ReqBossCrmCompany
+     */
+    chengGongCaiLable?: number | string
+
+    /**
      * 企业名称
      * @type {string}
      * @memberof ReqBossCrmCompany
@@ -4030,6 +7246,78 @@ export interface ReqBossCrmCompany {
 /**
 *
 * @export
+* @interface ReqBossProjectRefund
+*/
+export interface ReqBossProjectRefund {
+
+    /**
+     * 合同附件
+     * @type {Array<string>}
+     * @memberof ReqBossProjectRefund
+     */
+    contractAttachments?: Array<string>
+
+    /**
+     * 合同号
+     * @type {string}
+     * @memberof ReqBossProjectRefund
+     */
+    contractNo?: string
+
+    /**
+     * 是否已回款,1=已回款 0=未回款
+     * @type {number | string}
+     * @memberof ReqBossProjectRefund
+     */
+    hasRefunded?: number | string
+
+    /**
+     * 操作人名称
+     * @type {string}
+     * @memberof ReqBossProjectRefund
+     */
+    operatorName?: string
+
+    /**
+     * 操作人手机号
+     * @type {string}
+     * @memberof ReqBossProjectRefund
+     */
+    operatorPhone?: string
+
+    /**
+     * 项目id
+     * @type {number | string}
+     * @memberof ReqBossProjectRefund
+     */
+    projectId?: number | string
+
+    /**
+     * 回款金额
+     * @type {number | string}
+     * @memberof ReqBossProjectRefund
+     */
+    refundAmount?: number | string
+
+    /**
+     * 回款支付方式
+     * @type {number | string}
+     * @memberof ReqBossProjectRefund
+     */
+    refundPayType?: number | string
+
+    /**
+     * 支付凭证
+     * @type {Array<string>}
+     * @memberof ReqBossProjectRefund
+     */
+    refundPics?: Array<string>
+
+}
+
+/**
+*
+* @export
 * @interface ReqBusinessLicense
 */
 export interface ReqBusinessLicense {
@@ -4046,6 +7334,57 @@ export interface ReqBusinessLicense {
 /**
 *
 * @export
+* @interface ReqChenggongcaiOperation
+*/
+export interface ReqChenggongcaiOperation {
+
+    /**
+     * 公司id
+     * @type {number | string}
+     * @memberof ReqChenggongcaiOperation
+     */
+    companyId?: number | string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof ReqChenggongcaiOperation
+     */
+    createBy?: string
+
+    /**
+     * 创建人手机号
+     * @type {string}
+     * @memberof ReqChenggongcaiOperation
+     */
+    createByMobile?: string
+
+    /**
+     * 操作模式 1-初级，2-橙级
+     * @type {number | string}
+     * @memberof ReqChenggongcaiOperation
+     */
+    operateFlag?: number | string
+
+    /**
+     * 推荐客户经理Id
+     * @type {string}
+     * @memberof ReqChenggongcaiOperation
+     */
+    recommendCustomerId?: string
+
+    /**
+     * userId
+     * @type {number | string}
+     * @memberof ReqChenggongcaiOperation
+     */
+    userId?: number | string
+
+}
+
+/**
+*
+* @export
 * @interface ReqClueAdd
 */
 export interface ReqClueAdd {
@@ -4056,6 +7395,13 @@ export interface ReqClueAdd {
      * @memberof ReqClueAdd
      */
     address?: string
+
+    /**
+     * 中标信息
+     * @type {string}
+     * @memberof ReqClueAdd
+     */
+    bidInfo?: string
 
     /**
      * 市id
@@ -4077,6 +7423,13 @@ export interface ReqClueAdd {
      * @memberof ReqClueAdd
      */
     companyName?: string
+
+    /**
+     * 已合作甲方
+     * @type {string}
+     * @memberof ReqClueAdd
+     */
+    cooperatedFirstParty?: string
 
     /**
      * 区id
@@ -4149,11 +7502,39 @@ export interface ReqClueAdd {
     deviceCategory?: string
 
     /**
+     * 厂商信息
+     * @type {string}
+     * @memberof ReqClueAdd
+     */
+    manufacturer?: string
+
+    /**
+     * 婚姻状态 1：未婚 2：已婚 3：离异
+     * @type {number | string}
+     * @memberof ReqClueAdd
+     */
+    maritalStatus?: number | string
+
+    /**
+     * 老客户信息
+     * @type {string}
+     * @memberof ReqClueAdd
+     */
+    oldCompanyName?: string
+
+    /**
      * 来源 1：好橙工 2：享钱 3：单分享 4：crm 5：第三方渠道
      * @type {number | string}
      * @memberof ReqClueAdd
      */
     origin?: number | string
+
+    /**
+     * 合作伙伴
+     * @type {string}
+     * @memberof ReqClueAdd
+     */
+    partner?: string
 
     /**
      * 省id
@@ -4170,6 +7551,13 @@ export interface ReqClueAdd {
     provinceName?: string
 
     /**
+     * 客户座机号
+     * @type {string}
+     * @memberof ReqClueAdd
+     */
+    telephone?: string
+
+    /**
      * 客户手机号
      * @type {string}
      * @memberof ReqClueAdd
@@ -4182,6 +7570,34 @@ export interface ReqClueAdd {
      * @memberof ReqClueAdd
      */
     userName?: string
+
+    /**
+     * 客户来源 1：销售自拓 2：会销活动 3：厂商介绍 4:老客户转介绍 5:总部分配 6: 客户继承 7：其他
+     * @type {number | string}
+     * @memberof ReqClueAdd
+     */
+    userSource?: number | string
+
+    /**
+     * 常做项目类型 1:居住建筑 2:市政建筑 3:企事业建筑 4:商业娱乐建筑 5:生产性建筑 6:其他
+     * @type {string}
+     * @memberof ReqClueAdd
+     */
+    usualProjectType?: string
+
+    /**
+     * 常用区域品牌名称
+     * @type {string}
+     * @memberof ReqClueAdd
+     */
+    usualRegionBrand?: string
+
+    /**
+     * 从业年限 1:3年以下 2: 3-5年 3: 5-8年 4: 8-10年 5：10-15年 6:15-20年 7：20年以上
+     * @type {number | string}
+     * @memberof ReqClueAdd
+     */
+    workingYears?: number | string
 
 }
 
@@ -4198,6 +7614,13 @@ export interface ReqClueUpdate {
      * @memberof ReqClueUpdate
      */
     address?: string
+
+    /**
+     * 中标信息
+     * @type {string}
+     * @memberof ReqClueUpdate
+     */
+    bidInfo?: string
 
     /**
      * 市id
@@ -4219,6 +7642,13 @@ export interface ReqClueUpdate {
      * @memberof ReqClueUpdate
      */
     companyName?: string
+
+    /**
+     * 已合作甲方
+     * @type {string}
+     * @memberof ReqClueUpdate
+     */
+    cooperatedFirstParty?: string
 
     /**
      * 区id
@@ -4277,11 +7707,39 @@ export interface ReqClueUpdate {
     id?: number | string
 
     /**
+     * 厂商信息
+     * @type {string}
+     * @memberof ReqClueUpdate
+     */
+    manufacturer?: string
+
+    /**
+     * 婚姻状态 1：未婚 2：已婚 3：离异
+     * @type {number | string}
+     * @memberof ReqClueUpdate
+     */
+    maritalStatus?: number | string
+
+    /**
+     * 老客户信息
+     * @type {string}
+     * @memberof ReqClueUpdate
+     */
+    oldCompanyName?: string
+
+    /**
      * 来源 1：好橙工 2：享钱 3：单分享 4：crm 5：第三方渠道
      * @type {number | string}
      * @memberof ReqClueUpdate
      */
     origin?: number | string
+
+    /**
+     * 合作伙伴
+     * @type {string}
+     * @memberof ReqClueUpdate
+     */
+    partner?: string
 
     /**
      * 省id
@@ -4296,6 +7754,13 @@ export interface ReqClueUpdate {
      * @memberof ReqClueUpdate
      */
     provinceName?: string
+
+    /**
+     * 客户座机号
+     * @type {string}
+     * @memberof ReqClueUpdate
+     */
+    telephone?: string
 
     /**
      * 更新人
@@ -4317,6 +7782,34 @@ export interface ReqClueUpdate {
      * @memberof ReqClueUpdate
      */
     userName?: string
+
+    /**
+     * 客户来源 1：销售自拓 2：会销活动 3：厂商介绍 4:老客户转介绍 5:总部分配 6: 客户继承 7：其他
+     * @type {number | string}
+     * @memberof ReqClueUpdate
+     */
+    userSource?: number | string
+
+    /**
+     * 常做项目类型 1:居住建筑 2:市政建筑 3:企事业建筑 4:商业娱乐建筑 5:生产性建筑 6:其他
+     * @type {string}
+     * @memberof ReqClueUpdate
+     */
+    usualProjectType?: string
+
+    /**
+     * 常用区域品牌名称
+     * @type {string}
+     * @memberof ReqClueUpdate
+     */
+    usualRegionBrand?: string
+
+    /**
+     * 从业年限 1:3年以下 2: 3-5年 3: 5-8年 4: 8-10年 5：10-15年 6:15-20年 7：20年以上
+     * @type {number | string}
+     * @memberof ReqClueUpdate
+     */
+    workingYears?: number | string
 
 }
 
@@ -5528,22 +9021,6 @@ export interface ReqCrmMember {
 /**
 *
 * @export
-* @interface ReqCrmUserConfirm
-*/
-export interface ReqCrmUserConfirm {
-
-    /**
-     * 主键id
-     * @type {number | string}
-     * @memberof ReqCrmUserConfirm
-     */
-    id?: number | string
-
-}
-
-/**
-*
-* @export
 * @interface ReqCrmUserName
 */
 export interface ReqCrmUserName {
@@ -5626,6 +9103,50 @@ export interface ReqCrmWhiteListRecord {
      * @memberof ReqCrmWhiteListRecord
      */
     operatorPhone?: string
+
+}
+
+/**
+*
+* @export
+* @interface ReqCustomerReceivedBackLog
+*/
+export interface ReqCustomerReceivedBackLog {
+
+    /**
+     * 修改人
+     * @type {string}
+     * @memberof ReqCustomerReceivedBackLog
+     */
+    createBy?: string
+
+    /**
+     * 修改人手机号
+     * @type {string}
+     * @memberof ReqCustomerReceivedBackLog
+     */
+    createPhone?: string
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof ReqCustomerReceivedBackLog
+     */
+    id?: number | string
+
+    /**
+     * 是否接受 0：否  1：是
+     * @type {number | string}
+     * @memberof ReqCustomerReceivedBackLog
+     */
+    received?: number | string
+
+    /**
+     * 拒绝原因
+     * @type {string}
+     * @memberof ReqCustomerReceivedBackLog
+     */
+    refuseReason?: string
 
 }
 
@@ -5860,6 +9381,13 @@ export interface ReqProject {
     contractAmount?: number | string
 
     /**
+     * 合作机会分析
+     * @type {string}
+     * @memberof ReqProject
+     */
+    cooperationAnalyse?: string
+
+    /**
      * 创建人
      * @type {string}
      * @memberof ReqProject
@@ -5879,6 +9407,13 @@ export interface ReqProject {
      * @memberof ReqProject
      */
     createTime?: string
+
+    /**
+     * 客户角色
+     * @type {string}
+     * @memberof ReqProject
+     */
+    customerRole?: string
 
     /**
      * 货到付款比例
@@ -5923,7 +9458,7 @@ export interface ReqProject {
     estimateSignTime?: string
 
     /**
-     * 预估赊销时间,格式为:yyyy-MM-dd
+     * 预估借款时间,格式为:yyyy-MM-dd
      * @type {string}
      * @memberof ReqProject
      */
@@ -5970,6 +9505,13 @@ export interface ReqProject {
      * @memberof ReqProject
      */
     maxPurchaseAmount?: number | string
+
+    /**
+     * 其他客户角色
+     * @type {string}
+     * @memberof ReqProject
+     */
+    otherCustomerRole?: string
 
     /**
      * 承兑备注
@@ -6040,13 +9582,6 @@ export interface ReqProject {
      * @memberof ReqProject
      */
     remainPaymentCycle?: number | string
-
-    /**
-     * 评审决议号
-     * @type {string}
-     * @memberof ReqProject
-     */
-    reviewResolutionNo?: string
 
     /**
      * 状态 1：待提交2：初审中 3：资料收集中 12：资料待审核 4：待立项  5：审核未通过 11：待终审 6：待签约 7：待放款 8：贷中 9：项目完成 10:信息待完善 13: 终审通过 14：终审未通过
@@ -6344,13 +9879,6 @@ export interface ReqProjectFinalAudit {
     result?: number | string
 
     /**
-     * 评审决议号
-     * @type {string}
-     * @memberof ReqProjectFinalAudit
-     */
-    reviewResolutionNo?: string
-
-    /**
      * 工程项目资料信息表
      * @type {Array<RiskCheckProjectDocPo>}
      * @memberof ReqProjectFinalAudit
@@ -6615,6 +10143,13 @@ export interface ReqProjectSupply {
     cityName?: string
 
     /**
+     * 企业编码-不用传
+     * @type {string}
+     * @memberof ReqProjectSupply
+     */
+    companyCode?: string
+
+    /**
      * 企业id
      * @type {number | string}
      * @memberof ReqProjectSupply
@@ -6622,18 +10157,11 @@ export interface ReqProjectSupply {
     companyId?: number | string
 
     /**
-     * 合同附件,boss签约时传入
-     * @type {Array<string>}
-     * @memberof ReqProjectSupply
-     */
-    contractAttachmentsList?: Array<string>
-
-    /**
-     * 合同编号,boss签约时传入
+     * 企业名称
      * @type {string}
      * @memberof ReqProjectSupply
      */
-    contractNo?: string
+    companyName?: string
 
     /**
      * 区编码
@@ -6655,6 +10183,13 @@ export interface ReqProjectSupply {
      * @memberof ReqProjectSupply
      */
     createBy?: string
+
+    /**
+     * 创建人手机号-不用传
+     * @type {string}
+     * @memberof ReqProjectSupply
+     */
+    createPhone?: string
 
     /**
      * 创建时间-不用传
@@ -6692,6 +10227,13 @@ export interface ReqProjectSupply {
     estimatedDeliverTime?: string
 
     /**
+     * 项目预计交付时间-字符串,如：2021-06-18-不用传
+     * @type {string}
+     * @memberof ReqProjectSupply
+     */
+    estimatedDeliverTimeString?: string
+
+    /**
      * 预估签约金额
      * @type {number | string}
      * @memberof ReqProjectSupply
@@ -6711,6 +10253,20 @@ export interface ReqProjectSupply {
      * @memberof ReqProjectSupply
      */
     generalGoodsList?: Array<number | string>
+
+    /**
+     * 可从总部采购的产品列表字符串,以逗号间隔-不用传
+     * @type {string}
+     * @memberof ReqProjectSupply
+     */
+    generalGoodsNames?: string
+
+    /**
+     * 是否已回款 1=是 0=否
+     * @type {number | string}
+     * @memberof ReqProjectSupply
+     */
+    hasRefunded?: number | string
 
     /**
      * 项目id,编辑时必传
@@ -6741,11 +10297,25 @@ export interface ReqProjectSupply {
     projectBuildingTypeList?: Array<number | string>
 
     /**
+     * 项目建筑类型列表字符串,以逗号间隔-不用传
+     * @type {string}
+     * @memberof ReqProjectSupply
+     */
+    projectBuildingTypeNames?: string
+
+    /**
      * 工程项目智能化需求 1：需集控方案 2：需能源监测功能 3：需节能计费功能 4：需智能面板 5：其他
      * @type {Array<number | string>}
      * @memberof ReqProjectSupply
      */
     projectIntelligentNeedsList?: Array<number | string>
+
+    /**
+     * 工程项目智能化需求列表字符串,以逗号间隔-不用传
+     * @type {string}
+     * @memberof ReqProjectSupply
+     */
+    projectIntelligentNeedsNames?: string
 
     /**
      * 项目名称
@@ -6755,11 +10325,18 @@ export interface ReqProjectSupply {
     projectName?: string
 
     /**
-     * 项目角色 1：设备供应商 2：辅材供应商 3：安装供应商 4：系统集成商 5：总包 6：分包 7：其他
+     * 客户角色 1：设备供应商 2：辅材供应商 3：安装供应商 4：系统集成商 5：总包 6：分包 7：其他
      * @type {Array<number | string>}
      * @memberof ReqProjectSupply
      */
     projectRoleList?: Array<number | string>
+
+    /**
+     * 项目角色列表字符串,以逗号间隔-不用传
+     * @type {string}
+     * @memberof ReqProjectSupply
+     */
+    projectRoleNames?: string
 
     /**
      * 供应链产品所处阶段 1：采购阶段-辅材未定 2：采购阶段-辅材已定 3：项目跟踪阶段-方案未定 4：项目跟踪阶段-方案已定 5：招投标阶段 6：无在谈在投项目
@@ -6767,6 +10344,13 @@ export interface ReqProjectSupply {
      * @memberof ReqProjectSupply
      */
     projectStep?: number | string
+
+    /**
+     * 项目所处的阶段,返回如: 采购阶段-辅材未定-不用传
+     * @type {string}
+     * @memberof ReqProjectSupply
+     */
+    projectStepString?: string
 
     /**
      * 省编码
@@ -6788,6 +10372,13 @@ export interface ReqProjectSupply {
      * @memberof ReqProjectSupply
      */
     updateBy?: string
+
+    /**
+     * 最近更新人手机号-不用传
+     * @type {string}
+     * @memberof ReqProjectSupply
+     */
+    updatePhone?: string
 
     /**
      * 最近更新时间-不用传
@@ -6935,6 +10526,92 @@ export interface ReqUserAuthenticationNotify {
 /**
 *
 * @export
+* @interface ReqUserBasic
+*/
+export interface ReqUserBasic {
+
+    /**
+     * 已合作甲方
+     * @type {string}
+     * @memberof ReqUserBasic
+     */
+    cooperatedFirstParty?: string
+
+    /**
+     * 厂商信息
+     * @type {string}
+     * @memberof ReqUserBasic
+     */
+    manufacturer?: string
+
+    /**
+     * 婚姻状态 1：未婚 2：已婚 3：离异
+     * @type {number | string}
+     * @memberof ReqUserBasic
+     */
+    maritalStatus?: number | string
+
+    /**
+     * 老客户信息
+     * @type {string}
+     * @memberof ReqUserBasic
+     */
+    oldCompanyName?: string
+
+    /**
+     * 合作伙伴
+     * @type {string}
+     * @memberof ReqUserBasic
+     */
+    partner?: string
+
+    /**
+     * 修改人
+     * @type {string}
+     * @memberof ReqUserBasic
+     */
+    updateBy?: string
+
+    /**
+     * 用户id
+     * @type {number | string}
+     * @memberof ReqUserBasic
+     */
+    userId?: number | string
+
+    /**
+     * 客户来源 1：销售自拓 2：会销活动 3：厂商介绍 4:老客户转介绍 5:总部分配 6: 客户继承 7：其他
+     * @type {number | string}
+     * @memberof ReqUserBasic
+     */
+    userSource?: number | string
+
+    /**
+     * 常做项目类型 1:居住建筑 2:市政建筑 3:企事业建筑 4:商业娱乐建筑 5:生产性建筑 6:其他
+     * @type {string}
+     * @memberof ReqUserBasic
+     */
+    usualProjectType?: string
+
+    /**
+     * 常用区域品牌名称
+     * @type {string}
+     * @memberof ReqUserBasic
+     */
+    usualRegionBrand?: string
+
+    /**
+     * 从业年限 1:3年以下 2: 3-5年 3: 5-8年 4: 8-10年 5：10-15年 6:15-20年 7：20年以上
+     * @type {number | string}
+     * @memberof ReqUserBasic
+     */
+    workingYears?: number | string
+
+}
+
+/**
+*
+* @export
 * @interface ReqWeiXinShare
 */
 export interface ReqWeiXinShare {
@@ -6963,7 +10640,7 @@ export interface ResolutionApproveRequest {
     projectId?: number | string
 
     /**
-     * 审核备注
+     * 评审要求
      * @type {string}
      * @memberof ResolutionApproveRequest
      */
@@ -6982,6 +10659,22 @@ export interface ResolutionApproveRequest {
      * @memberof ResolutionApproveRequest
      */
     updateByMobile?: string
+
+}
+
+/**
+*
+* @export
+* @interface ResolutionChangeConfirmRequest
+*/
+export interface ResolutionChangeConfirmRequest {
+
+    /**
+     * 当前登录的用户
+     * @type {string}
+     * @memberof ResolutionChangeConfirmRequest
+     */
+    userName?: string
 
 }
 
@@ -7079,6 +10772,13 @@ export interface ResolutionDetailResponse {
     contractAmount?: number | string
 
     /**
+     * 分部名称
+     * @type {string}
+     * @memberof ResolutionDetailResponse
+     */
+    deptName?: string
+
+    /**
      * 设备款总额
      * @type {number | string}
      * @memberof ResolutionDetailResponse
@@ -7114,7 +10814,21 @@ export interface ResolutionDetailResponse {
     projectName?: string
 
     /**
-     * 剩余代采购额度(元)
+     * 项目编号
+     * @type {string}
+     * @memberof ResolutionDetailResponse
+     */
+    projectNo?: string
+
+    /**
+     * 专项额度（元）
+     * @type {number | string}
+     * @memberof ResolutionDetailResponse
+     */
+    projectQuotaAmount?: number | string
+
+    /**
+     * 可用额度(元)
      * @type {number | string}
      * @memberof ResolutionDetailResponse
      */
@@ -7135,7 +10849,7 @@ export interface ResolutionDetailResponse {
     remainPaymentCycle?: number | string
 
     /**
-     * 备注信息
+     * 评审要求
      * @type {string}
      * @memberof ResolutionDetailResponse
      */
@@ -7143,10 +10857,10 @@ export interface ResolutionDetailResponse {
 
     /**
      * 项目采购信息
-     * @type {Array<ResolutionPurchaseResponse>}
+     * @type {Array<ProjectPurchaseResponse>}
      * @memberof ResolutionDetailResponse
      */
-    resolutionPurchaseList?: Array<ResolutionPurchaseResponse>
+    resolutionPurchaseList?: Array<ProjectPurchaseResponse>
 
     /**
      * 评审决议状态 1：待提交 2：审批中 3：审批未通过 4：审批通过 5：变更决议待发起 6：变更决议审批中 7：变更决议审批未通过 8：变更决议审批通过
@@ -7154,6 +10868,20 @@ export interface ResolutionDetailResponse {
      * @memberof ResolutionDetailResponse
      */
     resolutionStatus?: number | string
+
+    /**
+     * 销售毛利率(%)
+     * @type {number | string}
+     * @memberof ResolutionDetailResponse
+     */
+    salesGrossMargin?: number | string
+
+    /**
+     * 销售总额(元)
+     * @type {number | string}
+     * @memberof ResolutionDetailResponse
+     */
+    salesTotalAmount?: number | string
 
     /**
      * 项目状态 1：待提交 2：初审中 3：资料收集中 4：待立项 5：审核未通过 6：待签约 7：待放款 8：贷中 9：合作完成 10：信息待完善 11：待终审 12：资料待审核 13：终审通过 14：终审不通过
@@ -7237,7 +10965,7 @@ export interface ResolutionPurchaseRequest {
     applierMobile?: string
 
     /**
-     * 设备款总额
+     * 采购总额
      * @type {number | string}
      * @memberof ResolutionPurchaseRequest
      */
@@ -7259,10 +10987,17 @@ export interface ResolutionPurchaseRequest {
 
     /**
      * 项目采购信息
-     * @type {Array<ProjectPurchase>}
+     * @type {Array<ProjectPurchaseRequest>}
      * @memberof ResolutionPurchaseRequest
      */
-    projectPurchaseList?: Array<ProjectPurchase>
+    projectPurchaseList?: Array<ProjectPurchaseRequest>
+
+    /**
+     * 专项额度（元）
+     * @type {number | string}
+     * @memberof ResolutionPurchaseRequest
+     */
+    projectQuotaAmount?: number | string
 
     /**
      * 剩余货款支付周期（月）
@@ -7272,11 +11007,18 @@ export interface ResolutionPurchaseRequest {
     remainPaymentCycle?: number | string
 
     /**
-     * 备注信息 注：评审决议变更时必填
+     * 评审要求 注：评审决议变更时必填
      * @type {string}
      * @memberof ResolutionPurchaseRequest
      */
     remark?: string
+
+    /**
+     * 销售毛利率(%)
+     * @type {number | string}
+     * @memberof ResolutionPurchaseRequest
+     */
+    salesGrossMargin?: number | string
 
     /**
      * 银行转账执行费率
@@ -7297,67 +11039,16 @@ export interface ResolutionPurchaseRequest {
 /**
 *
 * @export
-* @interface ResolutionPurchaseResponse
-*/
-export interface ResolutionPurchaseResponse {
-
-    /**
-     * 所属项目id/发起决议变更快照id
-     * @type {number | string}
-     * @memberof ResolutionPurchaseResponse
-     */
-    ascriptionId?: number | string
-
-    /**
-     * 设备品牌
-     * @type {string}
-     * @memberof ResolutionPurchaseResponse
-     */
-    deviceBrand?: string
-
-    /**
-     * 设备品类 1：空调 2：采暖 3：新风 4：净水 5：智能化 6：辅材 7：电梯 8：其他 9:电器 10:热水器
-     * @type {number | string}
-     * @memberof ResolutionPurchaseResponse
-     */
-    deviceCategory?: number | string
-
-    /**
-     * 项目采购信息id
-     * @type {number | string}
-     * @memberof ResolutionPurchaseResponse
-     */
-    id?: number | string
-
-    /**
-     * 上游接受的付款方式 1：银行转账 2：银行承兑
-     * @type {number | string}
-     * @memberof ResolutionPurchaseResponse
-     */
-    upstreamPayType?: number | string
-
-    /**
-     * 上游供应商
-     * @type {string}
-     * @memberof ResolutionPurchaseResponse
-     */
-    upstreamSupplierName?: string
-
-    /**
-     * 上游供应商类型 1：厂商 2：代理商 3：经销商
-     * @type {number | string}
-     * @memberof ResolutionPurchaseResponse
-     */
-    upstreamSupplierType?: number | string
-
-}
-
-/**
-*
-* @export
 * @interface ResolutionRecordResponse
 */
 export interface ResolutionRecordResponse {
+
+    /**
+     * 审核结果 1：待审核 2：审核通过 3：审核不通过
+     * @type {number | string}
+     * @memberof ResolutionRecordResponse
+     */
+    approvalStatus?: number | string
 
     /**
      * 创建人
@@ -7381,18 +11072,11 @@ export interface ResolutionRecordResponse {
     dingId?: string
 
     /**
-     * 是否生效
+     * 是否查看
      * @type {boolean}
      * @memberof ResolutionRecordResponse
      */
-    effective?: boolean
-
-    /**
-     * 主键ID
-     * @type {number | string}
-     * @memberof ResolutionRecordResponse
-     */
-    id?: number | string
+    lookOver?: boolean
 
     /**
      * 项目id
@@ -7403,10 +11087,10 @@ export interface ResolutionRecordResponse {
 
     /**
      * 最新采购信息
-     * @type {Array<ProjectPurchase>}
+     * @type {Array<ProjectPurchaseResponse>}
      * @memberof ResolutionRecordResponse
      */
-    projectPurchaseList?: Array<ProjectPurchase>
+    projectPurchaseList?: Array<ProjectPurchaseResponse>
 
     /**
      * 修改记录详情
@@ -7423,14 +11107,14 @@ export interface ResolutionRecordResponse {
     recordTitle?: string
 
     /**
-     * 记录类型 1：编辑 2：发起流程 3：钉钉流程节点 4：钉钉审批结果
+     * 记录类型 1：编辑 2：发起评审决议流程 3：评审决议钉钉流程节点审批 4：评审决议钉钉审批结果 5：发起评审决议变更流程 6：评审决议变更钉钉流程节点审批 7：评审决议变更钉钉审批结果
      * @type {number | string}
      * @memberof ResolutionRecordResponse
      */
     recordType?: number | string
 
     /**
-     * 备注
+     * 评审要求
      * @type {string}
      * @memberof ResolutionRecordResponse
      */
@@ -7460,6 +11144,13 @@ export interface RespAccountDetailInfo {
     b2bCompanyList?: Array<RespCompany>
 
     /**
+     * 已合作甲方
+     * @type {string}
+     * @memberof RespAccountDetailInfo
+     */
+    cooperatedFirstParty?: string
+
+    /**
      * 企业微信id
      * @type {string}
      * @memberof RespAccountDetailInfo
@@ -7481,11 +11172,67 @@ export interface RespAccountDetailInfo {
     crmCompanyList?: Array<RespCompany>
 
     /**
+     * 基础信息是否填写完整 true：是 false：否
+     * @type {boolean}
+     * @memberof RespAccountDetailInfo
+     */
+    finishResult?: boolean
+
+    /**
+     * 跟进阶段 1：初步建立联系 2：初步达成意向 3：方案已推介 4：客户已评级 5：项目推进中 6：首次交易成功 7：合作关闭
+     * @type {number | string}
+     * @memberof RespAccountDetailInfo
+     */
+    flowUpProcess?: number | string
+
+    /**
+     * 是否隐藏
+     * @type {boolean}
+     * @memberof RespAccountDetailInfo
+     */
+    hidden?: boolean
+
+    /**
+     * 客户分级
+     * @type {string}
+     * @memberof RespAccountDetailInfo
+     */
+    level?: string
+
+    /**
+     * 厂商信息
+     * @type {string}
+     * @memberof RespAccountDetailInfo
+     */
+    manufacturer?: string
+
+    /**
+     * 婚姻状态 1：未婚 2：已婚 3：离异
+     * @type {number | string}
+     * @memberof RespAccountDetailInfo
+     */
+    maritalStatus?: number | string
+
+    /**
      * 姓名
      * @type {string}
      * @memberof RespAccountDetailInfo
      */
     name?: string
+
+    /**
+     * 老客户信息
+     * @type {string}
+     * @memberof RespAccountDetailInfo
+     */
+    oldCompanyName?: string
+
+    /**
+     * 合作伙伴
+     * @type {string}
+     * @memberof RespAccountDetailInfo
+     */
+    partner?: string
 
     /**
      * 账号来源
@@ -7495,6 +11242,13 @@ export interface RespAccountDetailInfo {
     source?: string
 
     /**
+     * 客户分类
+     * @type {string}
+     * @memberof RespAccountDetailInfo
+     */
+    userClass?: string
+
+    /**
      * 用户id
      * @type {string}
      * @memberof RespAccountDetailInfo
@@ -7502,11 +11256,53 @@ export interface RespAccountDetailInfo {
     userId?: string
 
     /**
+     * 客户来源 1：销售自拓 2：会销活动 3：厂商介绍 4:老客户转介绍 5:总部分配 6: 客户继承 7：其他
+     * @type {number | string}
+     * @memberof RespAccountDetailInfo
+     */
+    userSource?: number | string
+
+    /**
+     * 客户标签(逗号隔开)：1：可发展为集采会员 2：有集采PLUS机会: 3：有严选供应链机会 4：可助力品牌合作 5：可发展为区域KOL
+     * @type {string}
+     * @memberof RespAccountDetailInfo
+     */
+    userTag?: string
+
+    /**
      * 账号
      * @type {string}
      * @memberof RespAccountDetailInfo
      */
     username?: string
+
+    /**
+     * 常做项目类型 1:居住建筑 2:市政建筑 3:企事业建筑 4:商业娱乐建筑 5:生产性建筑 6:其他
+     * @type {string}
+     * @memberof RespAccountDetailInfo
+     */
+    usualProjectType?: string
+
+    /**
+     * 常做项目类型名称
+     * @type {string}
+     * @memberof RespAccountDetailInfo
+     */
+    usualProjectTypeName?: string
+
+    /**
+     * 常用区域品牌名称
+     * @type {string}
+     * @memberof RespAccountDetailInfo
+     */
+    usualRegionBrand?: string
+
+    /**
+     * 从业年限 1:3年以下 2: 3-5年 3: 5-8年 4: 8-10年 5：10-15年 6:15-20年 7：20年以上
+     * @type {number | string}
+     * @memberof RespAccountDetailInfo
+     */
+    workingYears?: number | string
 
     /**
      * 关联的微信用户
@@ -7832,6 +11628,13 @@ export interface RespBossCluePage {
     provinceName?: string
 
     /**
+     * 更新时间
+     * @type {string}
+     * @memberof RespBossCluePage
+     */
+    updateTime?: string
+
+    /**
      * 客户手机号
      * @type {string}
      * @memberof RespBossCluePage
@@ -7860,6 +11663,13 @@ export interface RespBossCrmCompanyPage {
      * @memberof RespBossCrmCompanyPage
      */
     authenticationTime?: string
+
+    /**
+     * 橙工采标签：0-未激活， 1-初级，2-橙级
+     * @type {number | string}
+     * @memberof RespBossCrmCompanyPage
+     */
+    chengGongCaiLable?: number | string
 
     /**
      * 城市id
@@ -8010,6 +11820,50 @@ export interface RespBossCrmCompanyPage {
 /**
 *
 * @export
+* @interface RespBossProjectInfo
+*/
+export interface RespBossProjectInfo {
+
+    /**
+     * 分页列表数据
+     * @type {Page«RespBossProjectSupply»}
+     * @memberof RespBossProjectInfo
+     */
+    projectPage?: string
+
+    /**
+     * 已筛选&项目数
+     * @type {number | string}
+     * @memberof RespBossProjectInfo
+     */
+    totalProjectNum?: number | string
+
+    /**
+     * 已回款金额
+     * @type {number | string}
+     * @memberof RespBossProjectInfo
+     */
+    totalRefundAmount?: number | string
+
+    /**
+     * 已回款
+     * @type {number | string}
+     * @memberof RespBossProjectInfo
+     */
+    totalRefundNum?: number | string
+
+    /**
+     * 已签约
+     * @type {number | string}
+     * @memberof RespBossProjectInfo
+     */
+    totalSignedNum?: number | string
+
+}
+
+/**
+*
+* @export
 * @interface RespBossProjectSupply
 */
 export interface RespBossProjectSupply {
@@ -8036,11 +11890,32 @@ export interface RespBossProjectSupply {
     adminUserName?: string
 
     /**
+     * BOSS端展示按钮类型,0=不展示 1=展示签约按钮 2=展示回款按钮
+     * @type {number | string}
+     * @memberof RespBossProjectSupply
+     */
+    buttonShowType?: number | string
+
+    /**
+     *
+     * @type {string}
+     * @memberof RespBossProjectSupply
+     */
+    cityName?: string
+
+    /**
      * 公司名称
      * @type {string}
      * @memberof RespBossProjectSupply
      */
     companyName?: string
+
+    /**
+     *
+     * @type {string}
+     * @memberof RespBossProjectSupply
+     */
+    countryName?: string
 
     /**
      *
@@ -8183,14 +12058,14 @@ export interface RespBossProjectSupply {
     projectName?: string
 
     /**
-     * 项目角色列表,返回名称列表
+     * 客户角色列表,返回名称列表
      * @type {Array<string>}
      * @memberof RespBossProjectSupply
      */
     projectRoleList?: Array<string>
 
     /**
-     * 项目角色列表字符串,以逗号间隔
+     * 客户角色列表字符串,以逗号间隔
      * @type {string}
      * @memberof RespBossProjectSupply
      */
@@ -8202,6 +12077,13 @@ export interface RespBossProjectSupply {
      * @memberof RespBossProjectSupply
      */
     projectStepString?: string
+
+    /**
+     *
+     * @type {string}
+     * @memberof RespBossProjectSupply
+     */
+    provinceName?: string
 
     /**
      * 签约回款额
@@ -8466,6 +12348,13 @@ export interface RespChart {
 export interface RespCompany {
 
     /**
+     * 橙工采标签：0-未激活， 1-初级，2-橙级
+     * @type {number | string}
+     * @memberof RespCompany
+     */
+    chengGongCaiLable?: number | string
+
+    /**
      * 企业code
      * @type {string}
      * @memberof RespCompany
@@ -8487,6 +12376,13 @@ export interface RespCompany {
     companyName?: string
 
     /**
+     * 信用到期时间
+     * @type {string}
+     * @memberof RespCompany
+     */
+    creditEndTime?: string
+
+    /**
      * 企业信用
      * @type {string}
      * @memberof RespCompany
@@ -8499,6 +12395,20 @@ export interface RespCompany {
      * @memberof RespCompany
      */
     customerType?: number | string
+
+    /**
+     * 已采购规模
+     * @type {number | string}
+     * @memberof RespCompany
+     */
+    hasPurchaseQuota?: number | string
+
+    /**
+     * 已采购规模内容
+     * @type {string}
+     * @memberof RespCompany
+     */
+    hasPurchaseQuotaContent?: string
 
     /**
      * 认证状态 0：未认证 1：已认证
@@ -8526,6 +12436,13 @@ export interface RespCompany {
     performance?: boolean
 
     /**
+     * 项目数量
+     * @type {number | string}
+     * @memberof RespCompany
+     */
+    projectNum?: number | string
+
+    /**
      * 项目列表
      * @type {Array<RespProject>}
      * @memberof RespCompany
@@ -8538,6 +12455,13 @@ export interface RespCompany {
      * @memberof RespCompany
      */
     purchaseQuota?: number | string
+
+    /**
+     * 剩余采购额度
+     * @type {number | string}
+     * @memberof RespCompany
+     */
+    remainPurchaseQuota?: number | string
 
     /**
      * 角色信息
@@ -8566,6 +12490,27 @@ export interface RespCompany {
      * @memberof RespCompany
      */
     serviceFeeDiscount?: number | string
+
+    /**
+     * 2.0项目数量
+     * @type {number | string}
+     * @memberof RespCompany
+     */
+    supplyProjectNum?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof RespCompany
+     */
+    unClaimTotalAmount?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof RespCompany
+     */
+    unPaidTotalAmount?: number | string
 
     /**
      * 企业vip
@@ -8728,6 +12673,20 @@ export interface RespCompanyCreditDetail {
     companyName?: string
 
     /**
+     * 企业共享类型 1：主企业 2：子企业
+     * @type {number | string}
+     * @memberof RespCompanyCreditDetail
+     */
+    companyShareType?: number | string
+
+    /**
+     * 冻结状态
+     * @type {boolean}
+     * @memberof RespCompanyCreditDetail
+     */
+    creditFreeze?: boolean
+
+    /**
      * 信用等级
      * @type {string}
      * @memberof RespCompanyCreditDetail
@@ -8749,6 +12708,13 @@ export interface RespCompanyCreditDetail {
     endTime?: string
 
     /**
+     * 冻结额度
+     * @type {number | string}
+     * @memberof RespCompanyCreditDetail
+     */
+    freezeQuota?: number | string
+
+    /**
      * 主键id
      * @type {number | string}
      * @memberof RespCompanyCreditDetail
@@ -8756,11 +12722,32 @@ export interface RespCompanyCreditDetail {
     id?: number | string
 
     /**
-     * 采购额度
+     * 占用额度
+     * @type {number | string}
+     * @memberof RespCompanyCreditDetail
+     */
+    occupyQuota?: number | string
+
+    /**
+     * 通用额度
      * @type {number | string}
      * @memberof RespCompanyCreditDetail
      */
     purchaseQuota?: number | string
+
+    /**
+     * 额度共享企业列表
+     * @type {Array<RespCrmCompany>}
+     * @memberof RespCompanyCreditDetail
+     */
+    quotaShareCompanies?: Array<RespCrmCompany>
+
+    /**
+     * 剩余代采额度
+     * @type {number | string}
+     * @memberof RespCompanyCreditDetail
+     */
+    remainQuota?: number | string
 
     /**
      * 说明
@@ -8782,6 +12769,13 @@ export interface RespCompanyCreditDetail {
      * @memberof RespCompanyCreditDetail
      */
     startTime?: string
+
+    /**
+     * 临时额度
+     * @type {number | string}
+     * @memberof RespCompanyCreditDetail
+     */
+    temporaryQuota?: number | string
 
 }
 
@@ -8902,6 +12896,13 @@ export interface RespCompanyCreditManager {
     endTime?: string
 
     /**
+     * 首次评级时间
+     * @type {string}
+     * @memberof RespCompanyCreditManager
+     */
+    firstLevelTime?: string
+
+    /**
      * 采购额度
      * @type {number | string}
      * @memberof RespCompanyCreditManager
@@ -8935,6 +12936,87 @@ export interface RespCompanyCreditManager {
      * @memberof RespCompanyCreditManager
      */
     updateTime?: string
+
+}
+
+/**
+*
+* @export
+* @interface RespCompanyEntity
+*/
+export interface RespCompanyEntity {
+
+    /**
+     * 企业编码
+     * @type {string}
+     * @memberof RespCompanyEntity
+     */
+    companyCode?: string
+
+    /**
+     * 企业id
+     * @type {number | string}
+     * @memberof RespCompanyEntity
+     */
+    companyId?: number | string
+
+    /**
+     * 企业名称
+     * @type {string}
+     * @memberof RespCompanyEntity
+     */
+    companyName?: string
+
+}
+
+/**
+*
+* @export
+* @interface RespCompanyProjectInfo
+*/
+export interface RespCompanyProjectInfo {
+
+    /**
+     * 管理员姓名
+     * @type {string}
+     * @memberof RespCompanyProjectInfo
+     */
+    adminUserName?: string
+
+    /**
+     * 管理员手机号
+     * @type {string}
+     * @memberof RespCompanyProjectInfo
+     */
+    adminUserPhone?: string
+
+    /**
+     * 客户经理姓名
+     * @type {string}
+     * @memberof RespCompanyProjectInfo
+     */
+    customerName?: string
+
+    /**
+     * 客户经理手机号
+     * @type {string}
+     * @memberof RespCompanyProjectInfo
+     */
+    customerPhone?: string
+
+    /**
+     * 分部编码
+     * @type {string}
+     * @memberof RespCompanyProjectInfo
+     */
+    subsectionCode?: string
+
+    /**
+     * 分部名称
+     * @type {string}
+     * @memberof RespCompanyProjectInfo
+     */
+    subsectionName?: string
 
 }
 
@@ -9102,92 +13184,6 @@ export interface RespCompanyVipApply {
      * @memberof RespCompanyVipApply
      */
     updateTime?: string
-
-}
-
-/**
-*
-* @export
-* @interface RespCompanyVipAssigner
-*/
-export interface RespCompanyVipAssigner {
-
-    /**
-     * 分配的签约人信息
-     * @type {string}
-     * @memberof RespCompanyVipAssigner
-     */
-    assignedUserId?: string
-
-    /**
-     * 分配的签约人手机号
-     * @type {string}
-     * @memberof RespCompanyVipAssigner
-     */
-    assignedUserMobile?: string
-
-    /**
-     * 分配的签约人名称
-     * @type {string}
-     * @memberof RespCompanyVipAssigner
-     */
-    assignedUserName?: string
-
-    /**
-     * 企业名称
-     * @type {string}
-     * @memberof RespCompanyVipAssigner
-     */
-    companyName?: string
-
-    /**
-     * 企业vip id
-     * @type {number | string}
-     * @memberof RespCompanyVipAssigner
-     */
-    companyVipId?: number | string
-
-    /**
-     * 创建人
-     * @type {string}
-     * @memberof RespCompanyVipAssigner
-     */
-    createBy?: string
-
-    /**
-     * 创建时间
-     * @type {string}
-     * @memberof RespCompanyVipAssigner
-     */
-    createTime?: string
-
-    /**
-     * 主键id
-     * @type {number | string}
-     * @memberof RespCompanyVipAssigner
-     */
-    id?: number | string
-
-    /**
-     * 是否接受 0：否 1：是 2：失效
-     * @type {number | string}
-     * @memberof RespCompanyVipAssigner
-     */
-    received?: number | string
-
-    /**
-     * 说明
-     * @type {string}
-     * @memberof RespCompanyVipAssigner
-     */
-    remark?: string
-
-    /**
-     * 事件类型 1：分配人员 2：老客户跟进提醒 3：项目跟进提醒 4：项目合同签约跟进提醒
-     * @type {number | string}
-     * @memberof RespCompanyVipAssigner
-     */
-    type?: number | string
 
 }
 
@@ -9598,6 +13594,20 @@ export interface RespCrmClue {
     address?: string
 
     /**
+     * 线索头像
+     * @type {string}
+     * @memberof RespCrmClue
+     */
+    avatarUrl?: string
+
+    /**
+     * 中标信息
+     * @type {string}
+     * @memberof RespCrmClue
+     */
+    bidInfo?: string
+
+    /**
      * 市id
      * @type {string}
      * @memberof RespCrmClue
@@ -9617,6 +13627,13 @@ export interface RespCrmClue {
      * @memberof RespCrmClue
      */
     companyName?: string
+
+    /**
+     * 已合作甲方
+     * @type {string}
+     * @memberof RespCrmClue
+     */
+    cooperatedFirstParty?: string
 
     /**
      * 区id
@@ -9654,6 +13671,27 @@ export interface RespCrmClue {
     createTime?: string
 
     /**
+     * 客户经理所属分部
+     * @type {string}
+     * @memberof RespCrmClue
+     */
+    customerDeptName?: string
+
+    /**
+     * 客户经理手机号
+     * @type {string}
+     * @memberof RespCrmClue
+     */
+    customerMobile?: string
+
+    /**
+     * 客户经理名称
+     * @type {string}
+     * @memberof RespCrmClue
+     */
+    customerName?: string
+
+    /**
      * 主营品牌
      * @type {string}
      * @memberof RespCrmClue
@@ -9682,11 +13720,39 @@ export interface RespCrmClue {
     id?: number | string
 
     /**
+     * 厂商信息
+     * @type {string}
+     * @memberof RespCrmClue
+     */
+    manufacturer?: string
+
+    /**
+     * 婚姻状态 1：未婚 2：已婚 3：离异
+     * @type {number | string}
+     * @memberof RespCrmClue
+     */
+    maritalStatus?: number | string
+
+    /**
+     * 老客户信息
+     * @type {string}
+     * @memberof RespCrmClue
+     */
+    oldCompanyName?: string
+
+    /**
      * 来源 1：好橙工 2：享钱 3：单分享 4：crm 5：第三方渠道
      * @type {number | string}
      * @memberof RespCrmClue
      */
     origin?: number | string
+
+    /**
+     * 合作伙伴
+     * @type {string}
+     * @memberof RespCrmClue
+     */
+    partner?: string
 
     /**
      * 省id
@@ -9703,11 +13769,11 @@ export interface RespCrmClue {
     provinceName?: string
 
     /**
-     * 转化成功 0：否 1：是
+     * 客户座机号
      * @type {string}
      * @memberof RespCrmClue
      */
-    transferred?: string
+    telephone?: string
 
     /**
      * 更新人
@@ -9737,6 +13803,41 @@ export interface RespCrmClue {
      */
     userName?: string
 
+    /**
+     * 客户来源 1：销售自拓 2：会销活动 3：厂商介绍 4:老客户转介绍 5:总部分配 6: 客户继承 7：其他
+     * @type {number | string}
+     * @memberof RespCrmClue
+     */
+    userSource?: number | string
+
+    /**
+     * 常做项目类型 1:居住建筑 2:市政建筑 3:企事业建筑 4:商业娱乐建筑 5:生产性建筑 6:其他
+     * @type {string}
+     * @memberof RespCrmClue
+     */
+    usualProjectType?: string
+
+    /**
+     * 常做项目类型名称
+     * @type {string}
+     * @memberof RespCrmClue
+     */
+    usualProjectTypeName?: string
+
+    /**
+     * 常用区域品牌名称
+     * @type {string}
+     * @memberof RespCrmClue
+     */
+    usualRegionBrand?: string
+
+    /**
+     * 从业年限 1:3年以下 2: 3-5年 3: 5-8年 4: 8-10年 5：10-15年 6:15-20年 7：20年以上
+     * @type {number | string}
+     * @memberof RespCrmClue
+     */
+    workingYears?: number | string
+
 }
 
 /**
@@ -9745,6 +13846,13 @@ export interface RespCrmClue {
 * @interface RespCrmCluePage
 */
 export interface RespCrmCluePage {
+
+    /**
+     * 线索头像
+     * @type {string}
+     * @memberof RespCrmCluePage
+     */
+    avatarUrl?: string
 
     /**
      * 创建时间
@@ -9759,6 +13867,13 @@ export interface RespCrmCluePage {
      * @memberof RespCrmCluePage
      */
     friend?: boolean
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof RespCrmCluePage
+     */
+    id?: number | string
 
     /**
      * 是否注册
@@ -9810,6 +13925,13 @@ export interface RespCrmCompany {
      * @memberof RespCrmCompany
      */
     businessType?: string
+
+    /**
+     * 橙工采标签：0-未激活， 1-初级，2-橙级
+     * @type {number | string}
+     * @memberof RespCrmCompany
+     */
+    chengGongCaiLable?: number | string
 
     /**
      * 市id
@@ -10110,6 +14232,13 @@ export interface RespCrmCompanyBossDetail {
      * @memberof RespCrmCompanyBossDetail
      */
     businessType?: string
+
+    /**
+     * 橙工采标签：0-未激活， 1-初级，2-橙级
+     * @type {number | string}
+     * @memberof RespCrmCompanyBossDetail
+     */
+    chengGongCaiLable?: number | string
 
     /**
      * 城市id
@@ -10603,6 +14732,13 @@ export interface RespCrmCompanyDetail {
     businessType?: string
 
     /**
+     * 橙工采标签：0-未激活， 1-初级，2-橙级
+     * @type {number | string}
+     * @memberof RespCrmCompanyDetail
+     */
+    chengGongCaiLable?: number | string
+
+    /**
      * 市id
      * @type {string}
      * @memberof RespCrmCompanyDetail
@@ -11001,6 +15137,13 @@ export interface RespCrmCompanyPage {
     businessType?: string
 
     /**
+     * 橙工采标签：0-未激活， 1-初级，2-橙级
+     * @type {number | string}
+     * @memberof RespCrmCompanyPage
+     */
+    chengGongCaiLable?: number | string
+
+    /**
      * 市id
      * @type {string}
      * @memberof RespCrmCompanyPage
@@ -11092,6 +15235,13 @@ export interface RespCrmCompanyPage {
     createTime?: string
 
     /**
+     * 信用到期时间
+     * @type {string}
+     * @memberof RespCrmCompanyPage
+     */
+    creditEndTime?: string
+
+    /**
      * 企业信用
      * @type {string}
      * @memberof RespCrmCompanyPage
@@ -11139,6 +15289,20 @@ export interface RespCrmCompanyPage {
      * @memberof RespCrmCompanyPage
      */
     email?: string
+
+    /**
+     * 已采购规模
+     * @type {number | string}
+     * @memberof RespCrmCompanyPage
+     */
+    hasPurchaseQuota?: number | string
+
+    /**
+     * 已采购规模内容
+     * @type {string}
+     * @memberof RespCrmCompanyPage
+     */
+    hasPurchaseQuotaContent?: string
 
     /**
      * 主键id
@@ -11257,6 +15421,20 @@ export interface RespCrmCompanyPage {
     provinceName?: string
 
     /**
+     * 可代采购额度
+     * @type {number | string}
+     * @memberof RespCrmCompanyPage
+     */
+    purchaseQuota?: number | string
+
+    /**
+     * 剩余采购额度
+     * @type {number | string}
+     * @memberof RespCrmCompanyPage
+     */
+    remainPurchaseQuota?: number | string
+
+    /**
      * 服务能力 1：有 2：无
      * @type {number | string}
      * @memberof RespCrmCompanyPage
@@ -11269,6 +15447,13 @@ export interface RespCrmCompanyPage {
      * @memberof RespCrmCompanyPage
      */
     serviceCapabilityDetail?: string
+
+    /**
+     * 2.0项目数量
+     * @type {number | string}
+     * @memberof RespCrmCompanyPage
+     */
+    supplyProjectNum?: number | string
 
     /**
      * 纳税人识别号
@@ -11391,9 +15576,158 @@ export interface RespCrmCpAuthentication {
 /**
 *
 * @export
+* @interface RespCrmCustomerBackLogWork
+*/
+export interface RespCrmCustomerBackLogWork {
+
+    /**
+     * 分配的客户经理工号
+     * @type {string}
+     * @memberof RespCrmCustomerBackLogWork
+     */
+    assignedUserId?: string
+
+    /**
+     * 分配的客户经理手机号
+     * @type {string}
+     * @memberof RespCrmCustomerBackLogWork
+     */
+    assignedUserMobile?: string
+
+    /**
+     * 分配的客户经理姓名
+     * @type {string}
+     * @memberof RespCrmCustomerBackLogWork
+     */
+    assignedUserName?: string
+
+    /**
+     * vip所属分部
+     * @type {string}
+     * @memberof RespCrmCustomerBackLogWork
+     */
+    companyName?: string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof RespCrmCustomerBackLogWork
+     */
+    createBy?: string
+
+    /**
+     * crm创建人企业微信id
+     * @type {string}
+     * @memberof RespCrmCustomerBackLogWork
+     */
+    createCorpUserId?: string
+
+    /**
+     * 创建人所属分部
+     * @type {string}
+     * @memberof RespCrmCustomerBackLogWork
+     */
+    createDeptName?: string
+
+    /**
+     * 创建人手机号
+     * @type {string}
+     * @memberof RespCrmCustomerBackLogWork
+     */
+    createPhone?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof RespCrmCustomerBackLogWork
+     */
+    createTime?: string
+
+    /**
+     * 事件id
+     * @type {number | string}
+     * @memberof RespCrmCustomerBackLogWork
+     */
+    eventId?: number | string
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof RespCrmCustomerBackLogWork
+     */
+    id?: number | string
+
+    /**
+     * 是否接受 0：否 1：是
+     * @type {number | string}
+     * @memberof RespCrmCustomerBackLogWork
+     */
+    received?: number | string
+
+    /**
+     * 拒绝原因
+     * @type {string}
+     * @memberof RespCrmCustomerBackLogWork
+     */
+    refuseReason?: string
+
+    /**
+     * 说明
+     * @type {string}
+     * @memberof RespCrmCustomerBackLogWork
+     */
+    remark?: string
+
+    /**
+     * 2.0项目所属客户经理
+     * @type {string}
+     * @memberof RespCrmCustomerBackLogWork
+     */
+    supplyProjectCustomerName?: string
+
+    /**
+     * 2.0项目所属分部
+     * @type {string}
+     * @memberof RespCrmCustomerBackLogWork
+     */
+    supplyProjectDeptName?: string
+
+    /**
+     * 事件类型 1：分配人员 2：老客户跟进提醒 3：1.0项目跟进提醒 4：1.0项目合同签约跟进提醒 5:2.0项目分配
+     * @type {number | string}
+     * @memberof RespCrmCustomerBackLogWork
+     */
+    type?: number | string
+
+    /**
+     * 修改人
+     * @type {string}
+     * @memberof RespCrmCustomerBackLogWork
+     */
+    updateBy?: string
+
+    /**
+     * 修改时间
+     * @type {string}
+     * @memberof RespCrmCustomerBackLogWork
+     */
+    updateTime?: string
+
+}
+
+/**
+*
+* @export
 * @interface RespCrmListCount
 */
 export interface RespCrmListCount {
+
+    /**
+     * 线索个数
+     * @type {number | string}
+     * @memberof RespCrmListCount
+     */
+    clueCount?: number | string
 
     /**
      * 项目数量
@@ -11410,6 +15744,13 @@ export interface RespCrmListCount {
     crmCompanyCount?: number | string
 
     /**
+     * 2.0项目数量
+     * @type {number | string}
+     * @memberof RespCrmListCount
+     */
+    supplyProjectCount?: number | string
+
+    /**
      * 客户数量
      * @type {number | string}
      * @memberof RespCrmListCount
@@ -11421,9 +15762,517 @@ export interface RespCrmListCount {
 /**
 *
 * @export
+* @interface RespCrmNoHandlerBackLogWork
+*/
+export interface RespCrmNoHandlerBackLogWork {
+
+    /**
+     * 未处理事项值
+     * @type {Array<RespCrmCustomerBackLogWork>}
+     * @memberof RespCrmNoHandlerBackLogWork
+     */
+    customerBackLogWorkList?: Array<RespCrmCustomerBackLogWork>
+
+    /**
+     * 未处理事项数量
+     * @type {number | string}
+     * @memberof RespCrmNoHandlerBackLogWork
+     */
+    number?: number | string
+
+}
+
+/**
+* 工程项目信息表
+* @export
+* @interface RespCrmProject
+*/
+export interface RespCrmProject {
+
+    /**
+     * 银行承兑执行费率
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    acceptBankRate?: number | string
+
+    /**
+     * 验收款比例
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    acceptancePaymentProportion?: number | string
+
+    /**
+     * 项目地址
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    address?: string
+
+    /**
+     * 预付款比例
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    advancePaymentProportion?: number | string
+
+    /**
+     * 首付款比例
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    advancePaymentRate?: number | string
+
+    /**
+     * 附件地址
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    attachmentUrl?: string
+
+    /**
+     * 审计结算款比例
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    auditCalculationPaymentProportion?: number | string
+
+    /**
+     * 企业code
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    companyCode?: string
+
+    /**
+     * 公司id
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    companyId?: number | string
+
+    /**
+     * 公司名称
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    companyName?: string
+
+    /**
+     * 联系地址
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    contactAddress?: string
+
+    /**
+     * 项目合同金额
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    contractAmount?: number | string
+
+    /**
+     * 合作机会分析
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    cooperationAnalyse?: string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    createBy?: string
+
+    /**
+     * 创建人手机号
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    createByMobile?: string
+
+    /**
+     * 创建时间,格式为:yyyy-MM-dd HH:mm:ss
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    createTime?: string
+
+    /**
+     * 客户角色
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    customerRole?: string
+
+    /**
+     * 客户角色名称
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    customerRoleName?: string
+
+    /**
+     * 企业顾客类型
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    customerType?: number | string
+
+    /**
+     * 货到付款比例
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    deliveryPaymentProportion?: number | string
+
+    /**
+     * 所属分部名称
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    deptName?: string
+
+    /**
+     * 设备总额
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    deviceAmount?: number | string
+
+    /**
+     * 设备品牌
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    deviceBrand?: string
+
+    /**
+     * 设备品类 1：空调 2：采暖 3：新风 4：净水 5：智能化 6：辅材 7：电梯 8：其他 9:电器 10:热水器
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    deviceCategory?: number | string
+
+    /**
+     * 资料审核状态 1：待提交 2：已提交 3：审核通过 4：审核驳回
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    docAfterStatus?: number | string
+
+    /**
+     * 项目待完善进度
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    docProgress?: number | string
+
+    /**
+     * 企业邮箱
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    email?: string
+
+    /**
+     * 预估签约时间
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    estimateSignTime?: string
+
+    /**
+     * 预估借款时间,格式为:yyyy-MM-dd
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    estimatedLoanTime?: string
+
+    /**
+     * 甲方名称
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    firstPartName?: string
+
+    /**
+     * 是否隐藏
+     * @type {boolean}
+     * @memberof RespCrmProject
+     */
+    hidden?: boolean
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    id?: number | string
+
+    /**
+     * 安装进度款比例
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    installProgressPaymentProportion?: number | string
+
+    /**
+     * 是否认证
+     * @type {boolean}
+     * @memberof RespCrmProject
+     */
+    isAuthentication?: boolean
+
+    /**
+     * 项目级别
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    levels?: string
+
+    /**
+     * 借款周期
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    loanMonth?: number | string
+
+    /**
+     * 回款方式 1：预付款 2：货到付款 3：安装进度款 4：验收 5：交付 6：审计结算 7：其他
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    loanPayType?: number | string
+
+    /**
+     * 最大采购金额
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    maxPurchaseAmount?: number | string
+
+    /**
+     * 其他客户角色
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    otherCustomerRole?: string
+
+    /**
+     * 承兑备注
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    payAcceptanceRemark?: string
+
+    /**
+     * 其他回款方式内容
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    payOtherText?: string
+
+    /**
+     * 回款比例
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    payProportion?: number | string
+
+    /**
+     * EHR部门主键
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    pkDeptDoc?: string
+
+    /**
+     * 赊销金额
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    predictLoanAmount?: number | string
+
+    /**
+     * 工程项目进度 1：项目跟踪阶段 2：招投标 3：合同已签订 4：项目已开工
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    progress?: number | string
+
+    /**
+     * 提交资料数量
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    projectDocCount?: number | string
+
+    /**
+     * 项目名称
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    projectName?: string
+
+    /**
+     * 项目编号
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    projectNo?: string
+
+    /**
+     * 项目提交人
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    projectSubmitName?: string
+
+    /**
+     * 项目提交人手机号
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    projectSubmitPhone?: string
+
+    /**
+     * 是否有打卡记录
+     * @type {boolean}
+     * @memberof RespCrmProject
+     */
+    pushRecord?: boolean
+
+    /**
+     * 交付款比例
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    realPaymentProportion?: number | string
+
+    /**
+     * 剩余货款支付周期（月）
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    remainPaymentCycle?: number | string
+
+    /**
+     * 项目服务费
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    serviceCharge?: number | string
+
+    /**
+     * 状态 1：待提交2：初审中 3：资料收集中 12：资料待审核 4：待立项  5：审核未通过 11：待终审 6：待签约 7：待放款 8：贷中 9：项目完成 10:信息待完善 13: 终审通过 14：终审未通过
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    status?: number | string
+
+    /**
+     * 提交时间,格式为:yyyy-MM-dd HH:mm:ss
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    submitTime?: string
+
+    /**
+     * 提交人
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    submitUser?: string
+
+    /**
+     * 资料模板总数
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    templateCount?: number | string
+
+    /**
+     * 银行转账执行费率
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    transferBankRate?: number | string
+
+    /**
+     * 项目类别 1：地产项目 2：政府共建项目 3：市政项目 3：办公楼 4：厂房 5：其他
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    type?: number | string
+
+    /**
+     * 修改人
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    updateBy?: string
+
+    /**
+     * 修改时间,格式为:yyyy-MM-dd HH:mm:ss
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    updateTime?: string
+
+    /**
+     * 上游接受的付款方式 1：现金 2：承兑
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    upstreamPayType?: string
+
+    /**
+     * 上游供应商承诺兑现时间（月）
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    upstreamPromiseMonth?: number | string
+
+    /**
+     * 上游供应商名称
+     * @type {string}
+     * @memberof RespCrmProject
+     */
+    upstreamSupplierName?: string
+
+    /**
+     * 上游供应商类型 1：厂商 2：代理商 3：经销商
+     * @type {number | string}
+     * @memberof RespCrmProject
+     */
+    upstreamSupplierType?: number | string
+
+}
+
+/**
+*
+* @export
 * @interface RespCrmProjectSupply
 */
 export interface RespCrmProjectSupply {
+
+    /**
+     * 企业名称
+     * @type {string}
+     * @memberof RespCrmProjectSupply
+     */
+    companyName?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof RespCrmProjectSupply
+     */
+    createTime?: string
 
     /**
      * 跟进节点 1：首次沟通 2：产品介绍演示 3：代理政策沟通 4：商务洽谈，待签约 5：已签约 6：已回款 7：无需跟进
@@ -11502,6 +16351,92 @@ export interface RespCrmUserRegisterRecommend {
 /**
 *
 * @export
+* @interface RespCustomerBackLogWork
+*/
+export interface RespCustomerBackLogWork {
+
+    /**
+     * 分配的签约人信息
+     * @type {string}
+     * @memberof RespCustomerBackLogWork
+     */
+    assignedUserId?: string
+
+    /**
+     * 分配的签约人手机号
+     * @type {string}
+     * @memberof RespCustomerBackLogWork
+     */
+    assignedUserMobile?: string
+
+    /**
+     * 分配的签约人名称
+     * @type {string}
+     * @memberof RespCustomerBackLogWork
+     */
+    assignedUserName?: string
+
+    /**
+     * 企业名称
+     * @type {string}
+     * @memberof RespCustomerBackLogWork
+     */
+    companyName?: string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof RespCustomerBackLogWork
+     */
+    createBy?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof RespCustomerBackLogWork
+     */
+    createTime?: string
+
+    /**
+     * 事件id
+     * @type {number | string}
+     * @memberof RespCustomerBackLogWork
+     */
+    eventId?: number | string
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof RespCustomerBackLogWork
+     */
+    id?: number | string
+
+    /**
+     * 是否接受 0：否 1：是 2：失效
+     * @type {number | string}
+     * @memberof RespCustomerBackLogWork
+     */
+    received?: number | string
+
+    /**
+     * 说明
+     * @type {string}
+     * @memberof RespCustomerBackLogWork
+     */
+    remark?: string
+
+    /**
+     * 事件类型 1：分配人员 2：老客户跟进提醒 3：项目跟进提醒 4：项目合同签约跟进提醒 5:2.0项目分配 6:项目分配同意 7：项目分配拒绝
+     * @type {number | string}
+     * @memberof RespCustomerBackLogWork
+     */
+    type?: number | string
+
+}
+
+/**
+*
+* @export
 * @interface RespDepartmentMemberStatics
 */
 export interface RespDepartmentMemberStatics {
@@ -11556,6 +16491,29 @@ export interface RespDictionary {
      * @memberof RespDictionary
      */
     value?: string
+
+}
+
+/**
+*
+* @export
+* @interface RespDictionaryList
+*/
+export interface RespDictionaryList {
+
+    /**
+     * item对应的字典表
+     * @type {Array<RespDictionary>}
+     * @memberof RespDictionaryList
+     */
+    dictionaryList?: Array<RespDictionary>
+
+    /**
+     * item值
+     * @type {string}
+     * @memberof RespDictionaryList
+     */
+    item?: string
 
 }
 
@@ -11678,6 +16636,180 @@ export interface RespIndustryAll {
 /**
 *
 * @export
+* @interface RespLiveInfo
+*/
+export interface RespLiveInfo {
+
+    /**
+     * 房间列表
+     * @type {Array<RespLiveRoom>}
+     * @memberof RespLiveInfo
+     */
+    liveRooms?: Array<RespLiveRoom>
+
+}
+
+/**
+*
+* @export
+* @interface RespLiveReplay
+*/
+export interface RespLiveReplay {
+
+    /**
+     * 视频创建时间
+     * @type {number | string}
+     * @memberof RespLiveReplay
+     */
+    createTime?: number | string
+
+    /**
+     * 视频失效时间
+     * @type {number | string}
+     * @memberof RespLiveReplay
+     */
+    expireTime?: number | string
+
+    /**
+     * 回放视频链接
+     * @type {string}
+     * @memberof RespLiveReplay
+     */
+    mediaUrl?: string
+
+}
+
+/**
+*
+* @export
+* @interface RespLiveRoom
+*/
+export interface RespLiveRoom {
+
+    /**
+     * 主播名
+     * @type {string}
+     * @memberof RespLiveRoom
+     */
+    anchorName?: string
+
+    /**
+     * 是否关闭评论 【0：开启，1：关闭】（若关闭，观众端将隐藏评论入口，直播开始后不允许开启）
+     * @type {number | string}
+     * @memberof RespLiveRoom
+     */
+    closeComment?: number | string
+
+    /**
+     * 是否关闭货架 【0：开启，1：关闭】（若关闭，观众端将隐藏商品货架，直播开始后不允许开启）
+     * @type {number | string}
+     * @memberof RespLiveRoom
+     */
+    closeGoods?: number | string
+
+    /**
+     * 是否关闭客服 【0：开启，1：关闭】 默认关闭客服（直播开始后允许开启）
+     * @type {number | string}
+     * @memberof RespLiveRoom
+     */
+    closeKf?: number | string
+
+    /**
+     * 是否关闭点赞 【0：开启，1：关闭】（若关闭，观众端将隐藏点赞按钮，直播开始后不允许开启）
+     * @type {number | string}
+     * @memberof RespLiveRoom
+     */
+    closeLike?: number | string
+
+    /**
+     * 是否关闭回放 【0：开启，1：关闭】默认关闭回放（直播开始后允许开启）
+     * @type {number | string}
+     * @memberof RespLiveRoom
+     */
+    closeReplay?: number | string
+
+    /**
+     * 直播间背景图链接
+     * @type {string}
+     * @memberof RespLiveRoom
+     */
+    coverImg?: string
+
+    /**
+     * 直播计划结束时间
+     * @type {string}
+     * @memberof RespLiveRoom
+     */
+    endTime?: string
+
+    /**
+     * 官方收录封面
+     * @type {string}
+     * @memberof RespLiveRoom
+     */
+    feedsImg?: string
+
+    /**
+     * 是否开启官方收录，1 开启，0 关闭
+     * @type {number | string}
+     * @memberof RespLiveRoom
+     */
+    isFeedsPublic?: number | string
+
+    /**
+     * 直播间状态。101：直播中，102：未开始，103已结束，104禁播，105：暂停，106：异常，107：已过期
+     * @type {number | string}
+     * @memberof RespLiveRoom
+     */
+    liveStatus?: number | string
+
+    /**
+     * 直播类型，1 推流 0 手机直播
+     * @type {number | string}
+     * @memberof RespLiveRoom
+     */
+    liveType?: number | string
+
+    /**
+     * 房间名称
+     * @type {string}
+     * @memberof RespLiveRoom
+     */
+    name?: string
+
+    /**
+     * 直播间商品列表
+     * @type {Array<RespRoomGoods>}
+     * @memberof RespLiveRoom
+     */
+    roomGoodsList?: Array<RespRoomGoods>
+
+    /**
+     * 房间id
+     * @type {number | string}
+     * @memberof RespLiveRoom
+     */
+    roomId?: number | string
+
+    /**
+     * 直播间分享图链接
+     * @type {string}
+     * @memberof RespLiveRoom
+     */
+    shareImg?: string
+
+    /**
+     * 直播间开始时间，列表按照start_time降序排列
+     * @type {string}
+     * @memberof RespLiveRoom
+     */
+    startTime?: string
+
+}
+
+/**
+*
+* @export
 * @interface RespLoanAmount
 */
 export interface RespLoanAmount {
@@ -11711,6 +16843,13 @@ export interface RespMemberUserInfo {
      * @memberof RespMemberUserInfo
      */
     avatarUrl?: string
+
+    /**
+     * 名称
+     * @type {string}
+     * @memberof RespMemberUserInfo
+     */
+    name?: string
 
     /**
      * 微信昵称
@@ -11834,6 +16973,13 @@ export interface RespProject {
     contractAmount?: number | string
 
     /**
+     * 合作机会分析
+     * @type {string}
+     * @memberof RespProject
+     */
+    cooperationAnalyse?: string
+
+    /**
      * 创建人
      * @type {string}
      * @memberof RespProject
@@ -11853,6 +16999,20 @@ export interface RespProject {
      * @memberof RespProject
      */
     createTime?: string
+
+    /**
+     * 客户角色
+     * @type {string}
+     * @memberof RespProject
+     */
+    customerRole?: string
+
+    /**
+     * 客户角色名称
+     * @type {string}
+     * @memberof RespProject
+     */
+    customerRoleName?: string
 
     /**
      * 企业顾客类型
@@ -11897,6 +17057,13 @@ export interface RespProject {
     deviceCategory?: number | string
 
     /**
+     * 钉钉审批人
+     * @type {string}
+     * @memberof RespProject
+     */
+    dingApprover?: string
+
+    /**
      * 资料审核状态 1：待提交 2：已提交 3：审核通过 4：审核驳回
      * @type {number | string}
      * @memberof RespProject
@@ -11925,11 +17092,18 @@ export interface RespProject {
     estimateSignTime?: string
 
     /**
-     * 预估赊销时间,格式为:yyyy-MM-dd
+     * 预估借款时间,格式为:yyyy-MM-dd
      * @type {string}
      * @memberof RespProject
      */
     estimatedLoanTime?: string
+
+    /**
+     * 终审通过时间
+     * @type {string}
+     * @memberof RespProject
+     */
+    finalReviewPassTime?: string
 
     /**
      * 甲方名称
@@ -11988,6 +17162,13 @@ export interface RespProject {
     maxPurchaseAmount?: number | string
 
     /**
+     * 其他客户角色
+     * @type {string}
+     * @memberof RespProject
+     */
+    otherCustomerRole?: string
+
+    /**
      * 承兑备注
      * @type {string}
      * @memberof RespProject
@@ -12037,6 +17218,13 @@ export interface RespProject {
     projectDocCount?: number | string
 
     /**
+     * 项目专项额冻结
+     * @type {number | string}
+     * @memberof RespProject
+     */
+    projectFreezeAmount?: number | string
+
+    /**
      * 项目名称
      * @type {string}
      * @memberof RespProject
@@ -12051,6 +17239,20 @@ export interface RespProject {
     projectNo?: string
 
     /**
+     * 项目专项额度
+     * @type {number | string}
+     * @memberof RespProject
+     */
+    projectQuotaAmount?: number | string
+
+    /**
+     * 项目专项额度可用
+     * @type {number | string}
+     * @memberof RespProject
+     */
+    projectQuotaUsableAmount?: number | string
+
+    /**
      * 项目提交人
      * @type {string}
      * @memberof RespProject
@@ -12063,6 +17265,13 @@ export interface RespProject {
      * @memberof RespProject
      */
     projectSubmitPhone?: string
+
+    /**
+     * 已采购金额
+     * @type {number | string}
+     * @memberof RespProject
+     */
+    purchaseAmount?: number | string
 
     /**
      * 是否有打卡记录
@@ -12086,11 +17295,25 @@ export interface RespProject {
     remainPaymentCycle?: number | string
 
     /**
-     * 评审决议号
-     * @type {string}
+     * 评审决议状态
+     * @type {number | string}
      * @memberof RespProject
      */
-    reviewResolutionNo?: string
+    resolutionStatus?: number | string
+
+    /**
+     * 销售毛利率(%)
+     * @type {number | string}
+     * @memberof RespProject
+     */
+    salesGrossMargin?: number | string
+
+    /**
+     * 销售总额(元)
+     * @type {number | string}
+     * @memberof RespProject
+     */
+    salesTotalAmount?: number | string
 
     /**
      * 项目服务费
@@ -12363,13 +17586,6 @@ export interface RespProjectApproveDoc {
     remark?: string
 
     /**
-     * 评审决议号
-     * @type {string}
-     * @memberof RespProjectApproveDoc
-     */
-    reviewResolutionNo?: string
-
-    /**
      * 银行转账执行费率
      * @type {number | string}
      * @memberof RespProjectApproveDoc
@@ -12447,6 +17663,29 @@ export interface RespProjectLevel {
      * @memberof RespProjectLevel
      */
     startTime?: string
+
+}
+
+/**
+*
+* @export
+* @interface RespProjectSupplyProcess
+*/
+export interface RespProjectSupplyProcess {
+
+    /**
+     * 2.0项目进度节点列表,无需跟进原因
+     * @type {string}
+     * @memberof RespProjectSupplyProcess
+     */
+    noFlowReason?: string
+
+    /**
+     * 2.0项目进度节点列表,顺序展示即可
+     * @type {Array<ProjectProcessNode>}
+     * @memberof RespProjectSupplyProcess
+     */
+    projectProcessNodes?: Array<ProjectProcessNode>
 
 }
 
@@ -12786,6 +18025,88 @@ export interface RespRiskCheckProjectDetail {
      * @memberof RespRiskCheckProjectDetail
      */
     respRiskCheckDocTemplateList?: Array<RespRiskCheckDocTemplate>
+
+}
+
+/**
+*
+* @export
+* @interface RespRoomGoods
+*/
+export interface RespRoomGoods {
+
+    /**
+     * 商品封面图链接
+     * @type {string}
+     * @memberof RespRoomGoods
+     */
+    coverImg?: string
+
+    /**
+     * 商品id
+     * @type {number | string}
+     * @memberof RespRoomGoods
+     */
+    goodsId?: number | string
+
+    /**
+     * 商品名称
+     * @type {string}
+     * @memberof RespRoomGoods
+     */
+    name?: string
+
+    /**
+     * 商品价格（分）
+     * @type {number | string}
+     * @memberof RespRoomGoods
+     */
+    price?: number | string
+
+    /**
+     * 商品价格，使用方式看price_type
+     * @type {number | string}
+     * @memberof RespRoomGoods
+     */
+    price2?: number | string
+
+    /**
+     * 价格类型，1：一口价（只需要传入price，price2不传） 2：价格区间（price字段为左边界，price2字段为右边界，price和price2必传） 3：显示折扣价（price字段为原价，price2字段为现价， price和price2必传）
+     * @type {number | string}
+     * @memberof RespRoomGoods
+     */
+    priceType?: number | string
+
+    /**
+     * 第三方商品appid ,当前小程序商品则为空
+3.获取直播间回放
+     * @type {string}
+     * @memberof RespRoomGoods
+     */
+    thirdPartyAppid?: string
+
+    /**
+     * 商品小程序路径
+     * @type {string}
+     * @memberof RespRoomGoods
+     */
+    url?: string
+
+}
+
+/**
+*
+* @export
+* @interface RespRoomLiveReplay
+*/
+export interface RespRoomLiveReplay {
+
+    /**
+     * 回放视频列表
+     * @type {Array<RespLiveReplay>}
+     * @memberof RespRoomLiveReplay
+     */
+    respLiveReplayList?: Array<RespLiveReplay>
 
 }
 
@@ -14090,6 +19411,1161 @@ export interface TianyanCompanyQualification {
 /**
 *
 * @export
+* @interface UpstreamPayTypeResponse
+*/
+export interface UpstreamPayTypeResponse {
+
+    /**
+     * 费率
+     * @type {number | string}
+     * @memberof UpstreamPayTypeResponse
+     */
+    rate?: number | string
+
+    /**
+     * 上游支付方式
+     * @type {number | string}
+     * @memberof UpstreamPayTypeResponse
+     */
+    upstreamPayType?: number | string
+
+    /**
+     * 上游支付方式名称
+     * @type {string}
+     * @memberof UpstreamPayTypeResponse
+     */
+    upstreamPayTypeName?: string
+
+}
+
+/**
+*
+* @export
+* @interface UserBasicResp
+*/
+export interface UserBasicResp {
+
+    /**
+     * 已合作甲方
+     * @type {string}
+     * @memberof UserBasicResp
+     */
+    cooperatedFirstParty?: string
+
+    /**
+     * 信息是否完整
+     * @type {boolean}
+     * @memberof UserBasicResp
+     */
+    finishResult?: boolean
+
+    /**
+     * 厂商信息
+     * @type {string}
+     * @memberof UserBasicResp
+     */
+    manufacturer?: string
+
+    /**
+     * 婚姻状态 1：未婚 2：已婚 3：离异
+     * @type {number | string}
+     * @memberof UserBasicResp
+     */
+    maritalStatus?: number | string
+
+    /**
+     * 老客户信息
+     * @type {string}
+     * @memberof UserBasicResp
+     */
+    oldCompanyName?: string
+
+    /**
+     * 合作伙伴
+     * @type {string}
+     * @memberof UserBasicResp
+     */
+    partner?: string
+
+    /**
+     * 修改人
+     * @type {string}
+     * @memberof UserBasicResp
+     */
+    updateBy?: string
+
+    /**
+     * 用户id
+     * @type {number | string}
+     * @memberof UserBasicResp
+     */
+    userId?: number | string
+
+    /**
+     * 客户来源 1：销售自拓 2：会销活动 3：厂商介绍 4:老客户转介绍 5:总部分配 6: 客户继承 7：其他
+     * @type {number | string}
+     * @memberof UserBasicResp
+     */
+    userSource?: number | string
+
+    /**
+     * 常做项目类型 1:居住建筑 2:市政建筑 3:企事业建筑 4:商业娱乐建筑 5:生产性建筑 6:其他
+     * @type {string}
+     * @memberof UserBasicResp
+     */
+    usualProjectType?: string
+
+    /**
+     * 常做项目类型名称
+     * @type {string}
+     * @memberof UserBasicResp
+     */
+    usualProjectTypeName?: string
+
+    /**
+     * 常用区域品牌名称
+     * @type {string}
+     * @memberof UserBasicResp
+     */
+    usualRegionBrand?: string
+
+    /**
+     * 从业年限 1:3年以下 2: 3-5年 3: 5-8年 4: 8-10年 5：10-15年 6:15-20年 7：20年以上
+     * @type {number | string}
+     * @memberof UserBasicResp
+     */
+    workingYears?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface UserBusinessInfoAddReq
+*/
+export interface UserBusinessInfoAddReq {
+
+    /**
+     * 是否有其他子公司 false：无 true：有
+     * @type {boolean}
+     * @memberof UserBusinessInfoAddReq
+     */
+    affiliatedSubsidiary?: boolean
+
+    /**
+     * 经营区域（多选） 1：华东 2：华中 3：华北 4：西北 5：西南 6：全国
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    businessArea?: string
+
+    /**
+     * 业务类型和比例
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    businessType?: string
+
+    /**
+     * 城市id
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    cityId?: string
+
+    /**
+     * 城市名称
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    cityName?: string
+
+    /**
+     * 公司规模：1：1000万以下 2：1000万-2000万 3：2000万-3000万 4：3000万-5000万 5：5000万-1亿 6：1亿以上
+     * @type {number | string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    companyScale?: number | string
+
+    /**
+     * 已合作甲方
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    cooperatedFirstParty?: string
+
+    /**
+     * 区id
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    countryId?: string
+
+    /**
+     * 区名称
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    countryName?: string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    createBy?: string
+
+    /**
+     * 主设备品牌
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    deviceBrand?: string
+
+    /**
+     * 主设备品类 1：中央空调系统 2：供暖系统 3：热水器 4：净水系统 5：新风系统 6：智能系统 7：整装木做 8：电梯 9：其他
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    deviceCategory?: string
+
+    /**
+     * 主辅材品牌
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    materialsBrand?: string
+
+    /**
+     * 主辅材采购渠道 1：厂商 2：一级囤货商 3：经销
+     * @type {number | string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    materialsChannel?: number | string
+
+    /**
+     * 合作伙伴
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    partner?: string
+
+    /**
+     * 工程专业人员 1：项目经理 2：预决算 3：图纸设计 4：工程技术 5：施工安装 6：售后维保
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    projectProfessionals?: string
+
+    /**
+     * 工程资质 1：建筑工程施工总承包 2：机电工程施工总承包 3：电子与智能化工程专业承包 4：建筑机电安装工程专业承包 5：建筑装修装饰工程专业承包
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    projectQualification?: string
+
+    /**
+     * 工程获取方式 1：单项目投标 2：政府集采大盘 3：总包方合作 4：设计院合作 5：厂商合作 6：其他
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    projectSourceType?: string
+
+    /**
+     * 工程类型 1： 居住建筑 2：市政建筑 3：企事业建筑 4：商业娱乐建筑 5：生产性建筑 6：其他
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    projectType?: string
+
+    /**
+     * 省id
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    provinceId?: string
+
+    /**
+     * 省名称
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    provinceName?: string
+
+    /**
+     * 近期工程项目名称
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    recentProjectName?: string
+
+    /**
+     * 工程服务能力 false：无 true：有
+     * @type {boolean}
+     * @memberof UserBusinessInfoAddReq
+     */
+    serviceCapability?: boolean
+
+    /**
+     * 子公司主要经营类型 1：批发商 2：零售商 3：服务商 4：工程商
+     * @type {string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    subsidiaryRunType?: string
+
+    /**
+     * 用户id
+     * @type {number | string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    userId?: number | string
+
+    /**
+     * 有无工程资质 0：无工程资质 1：有工程资质
+     * @type {number | string}
+     * @memberof UserBusinessInfoAddReq
+     */
+    withProjectQualification?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface UserBusinessInfoResp
+*/
+export interface UserBusinessInfoResp {
+
+    /**
+     * 是否有其他子公司 false：无 true：有
+     * @type {boolean}
+     * @memberof UserBusinessInfoResp
+     */
+    affiliatedSubsidiary?: boolean
+
+    /**
+     * 经营区域（多选） 1：华东 2：华中 3：华北 4：西北 5：西南 6：全国
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    businessArea?: string
+
+    /**
+     * 经营区域名称（多选） 1：华东 2：华中 3：华北 4：西北 5：西南 6：全国
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    businessAreaName?: string
+
+    /**
+     * 业务类型和比例
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    businessType?: string
+
+    /**
+     * 城市id
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    cityId?: string
+
+    /**
+     * 城市名称
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    cityName?: string
+
+    /**
+     * 公司规模：1：1000万以下 2：1000万-2000万 3：2000万-3000万 4：3000万-5000万 5：5000万-1亿 6：1亿以上
+     * @type {number | string}
+     * @memberof UserBusinessInfoResp
+     */
+    companyScale?: number | string
+
+    /**
+     * 公司规模名称
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    companyScaleName?: string
+
+    /**
+     * 已合作甲方
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    cooperatedFirstParty?: string
+
+    /**
+     * 区id
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    countryId?: string
+
+    /**
+     * 区名称
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    countryName?: string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    createBy?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    createTime?: string
+
+    /**
+     * 主设备品牌
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    deviceBrand?: string
+
+    /**
+     * 主设备品类 1：中央空调系统 2：供暖系统 3：热水器 4：净水系统 5：新风系统 6：智能系统 7：整装木做 8：电梯 9：其他
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    deviceCategory?: string
+
+    /**
+     * 主设备品类名称
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    deviceCategoryName?: string
+
+    /**
+     * 已填字段数量
+     * @type {number | string}
+     * @memberof UserBusinessInfoResp
+     */
+    finishNumber?: number | string
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof UserBusinessInfoResp
+     */
+    id?: number | string
+
+    /**
+     * 主辅材品牌
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    materialsBrand?: string
+
+    /**
+     * 主辅材采购渠道 1：厂商 2：一级囤货商 3：经销
+     * @type {number | string}
+     * @memberof UserBusinessInfoResp
+     */
+    materialsChannel?: number | string
+
+    /**
+     * 主辅材采购渠道名称
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    materialsChannelName?: string
+
+    /**
+     * 合作伙伴
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    partner?: string
+
+    /**
+     * 工程专业人员名称
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    projectProfessionalNames?: string
+
+    /**
+     * 工程专业人员 1：项目经理 2：预决算 3：图纸设计 4：工程技术 5：施工安装 6：售后维保
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    projectProfessionals?: string
+
+    /**
+     * 工程资质 1：建筑工程施工总承包 2：机电工程施工总承包 3：电子与智能化工程专业承包 4：建筑机电安装工程专业承包 5：建筑装修装饰工程专业承包
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    projectQualification?: string
+
+    /**
+     * 工程资质名称
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    projectQualificationName?: string
+
+    /**
+     * 工程获取方式 1：单项目投标 2：政府集采大盘 3：总包方合作 4：设计院合作 5：厂商合作 6：其他
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    projectSourceType?: string
+
+    /**
+     * 工程获取方式名称
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    projectSourceTypeName?: string
+
+    /**
+     * 工程类型 1： 居住建筑 2：市政建筑 3：企事业建筑 4：商业娱乐建筑 5：生产性建筑 6：其他
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    projectType?: string
+
+    /**
+     * 工程类型名称
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    projectTypeName?: string
+
+    /**
+     * 省id
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    provinceId?: string
+
+    /**
+     * 省名称
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    provinceName?: string
+
+    /**
+     * 近期工程项目名称
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    recentProjectName?: string
+
+    /**
+     * 工程服务能力 false：无 true：有
+     * @type {boolean}
+     * @memberof UserBusinessInfoResp
+     */
+    serviceCapability?: boolean
+
+    /**
+     * 子公司主要经营类型 1：批发商 2：零售商 3：服务商 4：工程商
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    subsidiaryRunType?: string
+
+    /**
+     * 子公司主要经营类型 1：批发商 2：零售商 3：服务商 4：工程商
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    subsidiaryRunTypeName?: string
+
+    /**
+     * 字段总数
+     * @type {number | string}
+     * @memberof UserBusinessInfoResp
+     */
+    totalNumber?: number | string
+
+    /**
+     * 修改人
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    updateBy?: string
+
+    /**
+     * 修改时间
+     * @type {string}
+     * @memberof UserBusinessInfoResp
+     */
+    updateTime?: string
+
+    /**
+     * 用户id
+     * @type {number | string}
+     * @memberof UserBusinessInfoResp
+     */
+    userId?: number | string
+
+    /**
+     * 有无工程资质 0：无工程资质 1：有工程资质
+     * @type {number | string}
+     * @memberof UserBusinessInfoResp
+     */
+    withProjectQualification?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface UserBusinessInfoUpdateReq
+*/
+export interface UserBusinessInfoUpdateReq {
+
+    /**
+     * 是否有其他子公司 false：无 true：有
+     * @type {boolean}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    affiliatedSubsidiary?: boolean
+
+    /**
+     * 经营区域（多选） 1：华东 2：华中 3：华北 4：西北 5：西南 6：全国
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    businessArea?: string
+
+    /**
+     * 业务类型和比例
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    businessType?: string
+
+    /**
+     * 城市id
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    cityId?: string
+
+    /**
+     * 城市名称
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    cityName?: string
+
+    /**
+     * 公司规模：1：1000万以下 2：1000万-2000万 3：2000万-3000万 4：3000万-5000万 5：5000万-1亿 6：1亿以上
+     * @type {number | string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    companyScale?: number | string
+
+    /**
+     * 已合作甲方
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    cooperatedFirstParty?: string
+
+    /**
+     * 区id
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    countryId?: string
+
+    /**
+     * 区名称
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    countryName?: string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    createBy?: string
+
+    /**
+     * 主设备品牌
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    deviceBrand?: string
+
+    /**
+     * 主设备品类 1：中央空调系统 2：供暖系统 3：热水器 4：净水系统 5：新风系统 6：智能系统 7：整装木做 8：电梯 9：其他
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    deviceCategory?: string
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    id?: number | string
+
+    /**
+     * 主辅材品牌
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    materialsBrand?: string
+
+    /**
+     * 主辅材采购渠道 1：厂商 2：一级囤货商 3：经销
+     * @type {number | string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    materialsChannel?: number | string
+
+    /**
+     * 合作伙伴
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    partner?: string
+
+    /**
+     * 工程专业人员 1：项目经理 2：预决算 3：图纸设计 4：工程技术 5：施工安装 6：售后维保
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    projectProfessionals?: string
+
+    /**
+     * 工程资质 1：建筑工程施工总承包 2：机电工程施工总承包 3：电子与智能化工程专业承包 4：建筑机电安装工程专业承包 5：建筑装修装饰工程专业承包
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    projectQualification?: string
+
+    /**
+     * 工程获取方式 1：单项目投标 2：政府集采大盘 3：总包方合作 4：设计院合作 5：厂商合作 6：其他
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    projectSourceType?: string
+
+    /**
+     * 工程类型 1： 居住建筑 2：市政建筑 3：企事业建筑 4：商业娱乐建筑 5：生产性建筑 6：其他
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    projectType?: string
+
+    /**
+     * 省id
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    provinceId?: string
+
+    /**
+     * 省名称
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    provinceName?: string
+
+    /**
+     * 近期工程项目名称
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    recentProjectName?: string
+
+    /**
+     * 工程服务能力 false：无 true：有
+     * @type {boolean}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    serviceCapability?: boolean
+
+    /**
+     * 子公司主要经营类型 1：批发商 2：零售商 3：服务商 4：工程商
+     * @type {string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    subsidiaryRunType?: string
+
+    /**
+     * 用户id
+     * @type {number | string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    userId?: number | string
+
+    /**
+     * 有无工程资质 0：无工程资质 1：有工程资质
+     * @type {number | string}
+     * @memberof UserBusinessInfoUpdateReq
+     */
+    withProjectQualification?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface UserFlowUpRequest
+*/
+export interface UserFlowUpRequest {
+
+    /**
+     * 跟进事件id 线索id/客户id/1.0项目id/2.0项目id
+     * @type {number | string}
+     * @memberof UserFlowUpRequest
+     */
+    bizId?: number | string
+
+    /**
+     * 跟进内容
+     * @type {string}
+     * @memberof UserFlowUpRequest
+     */
+    content?: string
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof UserFlowUpRequest
+     */
+    createBy?: string
+
+    /**
+     * 创建人手机号
+     * @type {string}
+     * @memberof UserFlowUpRequest
+     */
+    createPhone?: string
+
+    /**
+     * 当前商机 1：有已中标项目 2：有尚未中标项目 3：已从别处用过资 4：从区域供货商拿货 5：从厂家拿货 6：以上信息均无
+     * @type {string}
+     * @memberof UserFlowUpRequest
+     */
+    currentBusinessOpportunities?: string
+
+    /**
+     * 本次拜访价值 1：有集采线索项目 2：有合作（严选）线索项目 3：有合作（分润）线索项目 4：线索商户，暂无项目 5：此为KOL关键人
+     * @type {string}
+     * @memberof UserFlowUpRequest
+     */
+    currentVisitValue?: string
+
+    /**
+     * 当前阶段 1：初步建立联系 2：初步达成意向 3：方案已推介 4：客户已评级 5：项目推进中 6：首次交易成功 7：合作关闭
+     * @type {number | string}
+     * @memberof UserFlowUpRequest
+     */
+    flowUpProcess?: number | string
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof UserFlowUpRequest
+     */
+    id?: number | string
+
+    /**
+     * 下次跟进时间
+     * @type {string}
+     * @memberof UserFlowUpRequest
+     */
+    nextFlowTime?: string
+
+    /**
+     * 下一步计划 1：见到关键人 2：初步达成意向 3：推进评级 4：等过会 5：给报价 6：给客户的需求清单（严选业务）
+     * @type {number | string}
+     * @memberof UserFlowUpRequest
+     */
+    nextStepPlan?: number | string
+
+    /**
+     * 随访人员
+     * @type {Array<FlowUpPartnerRequest>}
+     * @memberof UserFlowUpRequest
+     */
+    partners?: Array<FlowUpPartnerRequest>
+
+    /**
+     * 当面拜访->现场图片        电话/微信沟通/邮件->附件
+     * @type {Array<string>}
+     * @memberof UserFlowUpRequest
+     */
+    picUrls?: Array<string>
+
+    /**
+     * 备注
+     * @type {string}
+     * @memberof UserFlowUpRequest
+     */
+    remark?: string
+
+    /**
+     * 跟进类型 1：当面拜访 2：电话/微信沟通/邮件等
+     * @type {number | string}
+     * @memberof UserFlowUpRequest
+     */
+    type?: number | string
+
+    /**
+     * 客户标签(逗号隔开)：1：可发展为集采会员 2：有集采PLUS机会: 3：有严选供应链机会 4：可助力品牌合作 5：可发展为区域KOL
+     * @type {string}
+     * @memberof UserFlowUpRequest
+     */
+    userTag?: string
+
+    /**
+     * 拜访目标
+     * @type {string}
+     * @memberof UserFlowUpRequest
+     */
+    visitTarget?: string
+
+}
+
+/**
+*
+* @export
+* @interface UserFlowUpResp
+*/
+export interface UserFlowUpResp {
+
+    /**
+     * 头像
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    avatarUrl?: string
+
+    /**
+     * 跟进事件id 线索id/客户id/1.0项目id/2.0项目id
+     * @type {number | string}
+     * @memberof UserFlowUpResp
+     */
+    bizId?: number | string
+
+    /**
+     * 事件类型 1：线索  2：客户 3：1.0项目 4: 2.0项目
+     * @type {number | string}
+     * @memberof UserFlowUpResp
+     */
+    bizType?: number | string
+
+    /**
+     * 企业名称
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    companyName?: string
+
+    /**
+     * 跟进内容
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    content?: string
+
+    /**
+     * 头像
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    createAvatar?: string
+
+    /**
+     * 跟进人
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    createBy?: string
+
+    /**
+     * 跟进人手机号
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    createPhone?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    createTime?: string
+
+    /**
+     * 当前商机 1：有已中标项目 2：有尚未中标项目 3：已从别处用过资 4：从区域供货商拿货 5：从厂家拿货 6：以上信息均无
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    currentBusinessOpportunities?: string
+
+    /**
+     * 当前商机名称
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    currentBusinessOpportunitiesName?: string
+
+    /**
+     * 本次拜访价值 1：有集采线索项目 2：有合作（严选）线索项目 3：有合作（分润）线索项目 4：线索商户，暂无项目 5：此为KOL关键人
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    currentVisitValue?: string
+
+    /**
+     * 本次拜访价值名称
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    currentVisitValueName?: string
+
+    /**
+     * 企业微信消息
+     * @type {FlowUpDynamic}
+     * @memberof UserFlowUpResp
+     */
+    flowUpDynamic?: FlowUpDynamic
+
+    /**
+     * 跟进阶段 1：初步建立联系 2：初步达成意向 3：方案已推介 4：客户已评级 5：项目推进中 6：首次交易成功 7：合作关闭
+     * @type {number | string}
+     * @memberof UserFlowUpResp
+     */
+    flowUpProcess?: number | string
+
+    /**
+     * 主键id
+     * @type {number | string}
+     * @memberof UserFlowUpResp
+     */
+    id?: number | string
+
+    /**
+     * 下次跟进时间
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    nextFlowTime?: string
+
+    /**
+     * 下一步计划 1：见到关键人 2：初步达成意向 3：推进评级 4：等过会 5：给报价 6：给客户的需求清单（严选业务）
+     * @type {number | string}
+     * @memberof UserFlowUpResp
+     */
+    nextStepPlan?: number | string
+
+    /**
+     * 下一步计划名称
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    nextStepPlanName?: string
+
+    /**
+     * 随访人员
+     * @type {Array<FlowUpPartner>}
+     * @memberof UserFlowUpResp
+     */
+    partners?: Array<FlowUpPartner>
+
+    /**
+     * 当面拜访->现场图片        电话/微信沟通/邮件->附件
+     * @type {Array<string>}
+     * @memberof UserFlowUpResp
+     */
+    picUrls?: Array<string>
+
+    /**
+     * 备注
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    remark?: string
+
+    /**
+     * 跟进类型 1：当面拜访 2：电话/微信沟通/邮件等
+     * @type {number | string}
+     * @memberof UserFlowUpResp
+     */
+    type?: number | string
+
+    /**
+     * 修改人
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    updateBy?: string
+
+    /**
+     * 修改人手机号
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    updatePhone?: string
+
+    /**
+     * 更新时间
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    updateTime?: string
+
+    /**
+     * 用户id
+     * @type {number | string}
+     * @memberof UserFlowUpResp
+     */
+    userId?: number | string
+
+    /**
+     * 客户姓名
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    userName?: string
+
+    /**
+     * 客户标签(逗号隔开)：1：可发展为集采会员 2：有集采PLUS机会: 3：有严选供应链机会 4：可助力品牌合作 5：可发展为区域KOL
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    userTag?: string
+
+    /**
+     * 拜访目标
+     * @type {string}
+     * @memberof UserFlowUpResp
+     */
+    visitTarget?: string
+
+}
+
+/**
+*
+* @export
 * @interface UserRole
 */
 export interface UserRole {
@@ -14527,6 +21003,36 @@ export interface WxCpUser {
 }
 
 /**
+*
+* @export
+* @interface 临时额度明细
+*/
+export interface 临时额度明细 {
+
+    /**
+     * 到期时间(失效时间)
+     * @type {string}
+     * @memberof 临时额度明细
+     */
+    expireTime?: string
+
+    /**
+     * 冻结总额
+     * @type {number | string}
+     * @memberof 临时额度明细
+     */
+    freezeAmount?: number | string
+
+    /**
+     * 临时额度
+     * @type {number | string}
+     * @memberof 临时额度明细
+     */
+    quotaAmount?: number | string
+
+}
+
+/**
 * 企业
 * @export
 * @interface 企业
@@ -14637,5 +21143,218 @@ export interface 企业 {
      * @memberof 企业
      */
     userId?: number | string
+
+}
+
+/**
+*
+* @export
+* @interface 小程序展示智能化系统列表
+*/
+export interface 小程序展示智能化系统列表 {
+
+    /**
+     * id
+     * @type {number | string}
+     * @memberof 小程序展示智能化系统列表
+     */
+    id?: number | string
+
+    /**
+     * 智能化系统详情
+     * @type {string}
+     * @memberof 小程序展示智能化系统列表
+     */
+    intelligentSystemDetail?: string
+
+    /**
+     * 智能化系统名称
+     * @type {string}
+     * @memberof 小程序展示智能化系统列表
+     */
+    intelligentSystemName?: string
+
+    /**
+     *
+     * @type {string}
+     * @memberof 小程序展示智能化系统列表
+     */
+    schemeName?: string
+
+    /**
+     * 是否有关联工程案例
+     * @type {boolean}
+     * @memberof 小程序展示智能化系统列表
+     */
+    schemeRelation?: boolean
+
+}
+
+/**
+*
+* @export
+* @interface 工程方案
+*/
+export interface 工程方案 {
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof 工程方案
+     */
+    createTime?: string
+
+    /**
+     * id
+     * @type {number | string}
+     * @memberof 工程方案
+     */
+    id?: number | string
+
+    /**
+     * 方案详情
+     * @type {string}
+     * @memberof 工程方案
+     */
+    schemeDetail?: string
+
+    /**
+     * 缩略图
+     * @type {string}
+     * @memberof 工程方案
+     */
+    schemeImage?: string
+
+    /**
+     * 方案名称
+     * @type {string}
+     * @memberof 工程方案
+     */
+    schemeTitle?: string
+
+}
+
+/**
+*
+* @export
+* @interface 智能化系统关联方案列表
+*/
+export interface 智能化系统关联方案列表 {
+
+    /**
+     * id
+     * @type {number | string}
+     * @memberof 智能化系统关联方案列表
+     */
+    id?: number | string
+
+    /**
+     * 方案名称
+     * @type {string}
+     * @memberof 智能化系统关联方案列表
+     */
+    schemeTitle?: string
+
+}
+
+/**
+*
+* @export
+* @interface 智能化系统列表
+*/
+export interface 智能化系统列表 {
+
+    /**
+     * 创建人
+     * @type {string}
+     * @memberof 智能化系统列表
+     */
+    createBy?: string
+
+    /**
+     * 创建时间
+     * @type {string}
+     * @memberof 智能化系统列表
+     */
+    createTime?: string
+
+    /**
+     * id
+     * @type {number | string}
+     * @memberof 智能化系统列表
+     */
+    id?: number | string
+
+    /**
+     * 智能化系统名称
+     * @type {string}
+     * @memberof 智能化系统列表
+     */
+    intelligentSystemName?: string
+
+    /**
+     * 工程方案名称
+     * @type {string}
+     * @memberof 智能化系统列表
+     */
+    schemeName?: string
+
+    /**
+     * 更新人
+     * @type {string}
+     * @memberof 智能化系统列表
+     */
+    updateBy?: string
+
+    /**
+     * 更新时间
+     * @type {string}
+     * @memberof 智能化系统列表
+     */
+    updateTime?: string
+
+}
+
+/**
+*
+* @export
+* @interface 智能化系统详情
+*/
+export interface 智能化系统详情 {
+
+    /**
+     * id
+     * @type {number | string}
+     * @memberof 智能化系统详情
+     */
+    id?: number | string
+
+    /**
+     * 智能化系统详情
+     * @type {string}
+     * @memberof 智能化系统详情
+     */
+    intelligentSystemDetail?: string
+
+    /**
+     * 智能化系统名称
+     * @type {string}
+     * @memberof 智能化系统详情
+     */
+    intelligentSystemName?: string
+
+    /**
+     * 工程方案ID
+     * @type {Array<number | string>}
+     * @memberof 智能化系统详情
+     */
+    schemeId?: Array<number | string>
+
+    /**
+     * 是否有关联工程案例
+     * @type {boolean}
+     * @memberof 智能化系统详情
+     */
+    schemeRelation?: boolean
 
 }

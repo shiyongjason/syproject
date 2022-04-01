@@ -379,7 +379,7 @@ import {
 } from './api/index'
 import OssFileUtils from '@/utils/OssFileUtils'
 import { State, namespace, Action, Getter } from 'vuex-class'
-import { Clue, FlowUpRequest } from '@/interface/hbp-member'
+import { FlowUpRequest } from '@/interface/hbp-member'
 import { validateForm, handleSubmit } from '@/decorator'
 import {
     THREAD_ORIGIN,
@@ -424,7 +424,7 @@ const _flowUpRequest = {
 export default class ThreadDetail extends Vue {
     @State('userInfo') userInfo: any;
     @Prop({ type: Boolean, required: true, default: false }) drawer: boolean;
-    @Prop({ type: Object, required: true }) threadDetail: Clue;
+    @Prop({ type: Object, required: true }) threadDetail: any;
     @Action('vipApply/findContract') findContract: Function;
     @Getter('vipApply/contracts') contracts: any;
     @Watch('getCity')
@@ -539,7 +539,7 @@ export default class ThreadDetail extends Vue {
     };
     recordsData: any[] = [];
     recordsPagination = '';
-    flowUpRequest: FlowUpRequest = JSON.parse(JSON.stringify(_flowUpRequest))
+    flowUpRequest: FlowUpRequest & {createBy:any, userTag:any } = JSON.parse(JSON.stringify(_flowUpRequest))
     opportunityForm:Record<string, any>={
         currentVisitValue: [],
         currentBusinessOpportunities: []
