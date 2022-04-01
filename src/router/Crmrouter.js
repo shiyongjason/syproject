@@ -470,6 +470,18 @@ export default [
                 component: () => import('@/views/crm/upstreamPaymentManagement/index.vue')
             },
             {
+                path: 'upstreamPaymentList',
+                name: 'upstreamPaymentList',
+                meta: {
+                    title: '上游支付明细',
+                    tagName: '上游支付明细',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/upstreamPaymentManagement/list.vue')
+            },
+            {
                 path: 'tianyan',
                 name: 'tianyan',
                 meta: {
@@ -788,6 +800,89 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/crm/quotaMonitor/index.vue')
+            },
+            {
+                path: 'manageInvoices',
+                meta: {
+                    title: '发票管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'servicelist',
+                        name: 'servicelist',
+                        meta: {
+                            title: '服务费发票列表',
+                            tagName: '服务费发票列表',
+                            parentName: '服务费发票',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/crm/controlInvoices/service/index.vue')
+                    },
+                    {
+                        path: 'serviceedit',
+                        name: 'serviceedit',
+                        meta: {
+                            title: '服务费发票申请/编辑',
+                            tagName: '服务费发票申请/编辑',
+                            parentName: '服务费发票',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/crm/controlInvoices/service/edit.vue')
+                    },
+                    {
+                        path: 'servicedetail',
+                        name: 'servicedetail',
+                        meta: {
+                            title: '查看服务费发票',
+                            tagName: '查看服务费发票',
+                            parentName: '服务费发票',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/crm/controlInvoices/service/detail.vue')
+                    },
+                    {
+                        path: 'equipmentlist',
+                        name: 'equipmentlist',
+                        meta: {
+                            title: '设备发票列表',
+                            tagName: '设备发票列表',
+                            parentName: '设备发票',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/crm/controlInvoices/equipment/index.vue')
+                    },
+                    {
+                        path: 'equipmentedit',
+                        name: 'equipmentedit',
+                        meta: {
+                            title: '设备发票编辑',
+                            tagName: '设备发票编辑',
+                            parentName: '设备发票',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/crm/controlInvoices/equipment/edit.vue')
+                    },
+                    {
+                        path: 'equipmentdetail',
+                        name: 'equipmentdetail',
+                        meta: {
+                            title: '查看设备发票',
+                            tagName: '查看设备发票',
+                            parentName: '设备发票',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/crm/controlInvoices/equipment/detail.vue')
+                    }
+                ]
             }
         ]
     }

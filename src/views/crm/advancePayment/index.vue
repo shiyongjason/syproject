@@ -302,6 +302,22 @@
                         <el-col :span="10" :offset='1'>上游支付方式：{{supplierPaymentType.get(detailForm.supplierPaymentType)}}</el-col>
                         <el-col :span="10" :offset='1'>剩余应上游支付(元)：{{detailForm.surplusAmount|moneyFormat}}</el-col>
                     </el-row>
+                    <el-form-item style="margin-top:20px" label="本次支付账号：" prop="payeeBankName">
+                        <!-- <el-select v-model="payForm.id" placeholder="请选择" @change="handlePayRadio">
+                            <el-option v-for="item in payeeAccountList" :key="item.id" :label="item.allName" :value="item.id">
+                                <span style="float: left">{{ item.payeeBankName }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.payeeBankAccount }}</span>
+                            </el-option>
+                        </el-select> -->
+                         <HAutocomplete :placeholder="'请选择'" :maxlength=60 @back-event="backPayparam" :selectObj="targetObj" :selectArr="payeeAccountList" v-if="payeeAccountList" :remove-value='true' :isSettimeout=false>
+                        <template slot-scope="scope">
+                            <div style="display:flex;flex-direction: column;">
+                                <span style="">{{ scope.data.payeeBankName }}</span>
+                                <span style=" color: #8492a6; font-size: 12px">{{ scope.data.payeeBankAccount }}</span>
+                            </div>
+                        </template>
+                    </HAutocomplete>
+                    </el-form-item>
                     <el-form-item style="margin-top:20px" label="本次支付金额：" prop="payAmount">
                         <el-input v-model.trim="payForm.payAmount" maxlength="50" v-isNegative:2="payForm.payAmount"></el-input>
                     </el-form-item>
@@ -365,8 +381,19 @@
             </span>
         </el-dialog>
         <!-- 网银支付 -->
-        <el-dialog :close-on-click-modal='false' title="确认网银支付" :visible.sync="isShowLinkBank" :before-close="()=>{isShowLinkBank = false;bankForm.attachDocRequestList=[]}" width="500px" class="prev-payment-dialog">
+        <el-dialog :close-on-click-modal='false' title="确认网银支付" :visible.sync="isShowLinkBank" :before-close="()=>{isShowLinkBank = false;bankForm.attachDocRequestList=[]}" width="600px" class="prev-payment-dialog">
             <el-form :model="bankForm" :rules="bankRules" ref="bankForm" label-width="150px" class="demo-ruleForm">
+                <el-form-item label="本次支付账号：" prop="payeeBankName">
+
+                    <HAutocomplete :placeholder="'请选择'" :maxlength=60 @back-event="backFindparam" :selectObj="targetObj" :selectArr="payeeAccountList" v-if="payeeAccountList" :remove-value='true' :isSettimeout=false>
+                        <template slot-scope="scope">
+                            <div style="display:flex;flex-direction: column;">
+                                <span style="">{{ scope.data.payeeBankName }}</span>
+                                <span style=" color: #8492a6; font-size: 12px">{{ scope.data.payeeBankAccount }}</span>
+                            </div>
+                        </template>
+                    </HAutocomplete>
+                </el-form-item>
                 <el-form-item label="网银支付时间：" prop="paymentTime">
                     <el-date-picker v-model="bankForm.paymentTime" value-format='yyyy-MM-dd' type="date" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
                 </el-form-item>
@@ -419,11 +446,10 @@ import downloadFileAddToken from '@/components/downloadFileAddToken/index.vue'
 import { deepCopy } from '@/utils/utils'
 import UploadDialog from '../funds/components/uploadPayDialog.vue'
 import ReduleDialog from '../funds/components/redulePayDialog.vue'
-
+import HAutocomplete from '@/components/autoComplete/HAutocomplete.vue'
 import { PrepaymentDetailResponse, PrepaymentSupplierOnlineBankTransferConfirmRequest, PrepaymentSupplierSubmitResponse, RespContractSignHistory, SupplierOnlineBankTransferConfirmRequest } from '@/interface/hbp-project'
 import { CRM_ADVACE_UPSTREAMPAY, CRM_ADVACE_APPROVE, CRM_ADVACE_LOOK, CRM_OPREATE_APPROVE, CRM_ADVACE_RECORDS, CRM_UPSTREAM_BANK, CRM_UPLOAD_PREPAY, CRM_ADVACE_WRITEOFF, CRM_SUBMIT_PAY, CRM_ONLINE_PAY } from '@/utils/auth_const'
 import { newCache } from '@/utils/index'
-import './css/css.scss'
 import * as Api from './api/index'
 import OssFileUtils from '@/utils/OssFileUtils'
 
@@ -466,7 +492,8 @@ enum SubmitApi {
         ImageAddToken,
         downloadFileAddToken,
         UploadDialog,
-        ReduleDialog
+        ReduleDialog,
+        HAutocomplete
     }
 })
 export default class Advancelist extends Vue {
@@ -484,6 +511,10 @@ export default class Advancelist extends Vue {
          [1, '银行转账'],
          [2, '银行承兑']
      ])
+               targetObj= {
+                   selectName: '',
+                   selectCode: ''
+               }
     className = className
     reduleDialogVisible:boolean = false
     advancewriteoff = CRM_ADVACE_WRITEOFF
@@ -515,6 +546,7 @@ export default class Advancelist extends Vue {
     }
     num:number = 0
     @State('userInfo') userInfo: any
+    payeeAccountList:any[]=[]
     queryParams:Query = {
         pageSize: 10,
         pageNumber: 1,
@@ -548,11 +580,14 @@ export default class Advancelist extends Vue {
         resource: '',
         remark: ''
     }
-    payForm:PrepaymentSupplierSubmitResponse={
+    payForm:Record<any, any>={
         payVouchers: [],
         prepaymentOrderId: '',
         payAmount: '',
         payDate: '',
+        payPrincipal: '',
+        payeeBankName: '',
+        payeeBankAccount: '',
         supplierAccountName: '',
         supplierAccountNo: '',
         supplierBankNo: ''
@@ -566,10 +601,13 @@ export default class Advancelist extends Vue {
         operatorPhone: '',
         payVouchers: []
     }
-    bankForm:PrepaymentSupplierOnlineBankTransferConfirmRequest={
+    bankForm:Partial<PrepaymentSupplierOnlineBankTransferConfirmRequest>={
         prepaymentOrderId: '',
         paymentTime: '',
-        attachDocRequestList: []
+        attachDocRequestList: [],
+        payPrincipal: '',
+        payeeBankName: '',
+        payeeBankAccount: ''
     }
     ocrData:Record<any, any> = {}
     page = {
@@ -636,12 +674,14 @@ export default class Advancelist extends Vue {
 
     get bankRules () {
         return {
+            payeeBankName: [{ required: true, message: '请选择本次支付账号', trigger: 'change' }],
             paymentTime: [{ required: true, message: '请选择网银支付时间', trigger: 'change' }],
             attachDocRequestList: [{ required: true, message: '上游支付凭证不能为空', trigger: 'blur' }]
         }
     }
 
     detailRules = {
+        payeeBankName: [{ required: true, message: '请选择本次支付账号', trigger: 'change' }],
         payVouchers: [
             { required: true, message: '上传上游支付凭证不能为空', trigger: 'blur' }
         ],
@@ -684,6 +724,7 @@ export default class Advancelist extends Vue {
             { required: true, message: '银行联行号不能为空', trigger: 'blur' }
         ]
     }
+
     public onStartChange (val): void {
         this.queryParams.applyTimeStart = val
     }
@@ -735,13 +776,21 @@ export default class Advancelist extends Vue {
         this.isShowLinkBank = true
         this.bankForm.paymentTime = moment(new Date()).format('YYYY-MM-DD')
         this.bankForm.prepaymentOrderId = val.id
+        this.getBankAccount()
         this.$nextTick(() => {
             this.$refs['bankForm'].clearValidate()
         })
+        this.targetObj = {
+            selectName: '',
+            selectCode: ''
+        }
+        this.bankForm.payeeBankName = ''
     }
 
     handleSubBank () {
-        (this.$refs as any).bankForm.validate(async (validate) => {
+        console.log(this.bankForm)
+
+        this.$refs['bankForm'].validate(async (validate) => {
             if (validate) {
                 await Api.updateOnlineBank(this.bankForm)
                 this.isShowLinkBank = false
@@ -901,6 +950,77 @@ export default class Advancelist extends Vue {
         this.payForm.supplierAccountName = this.detailForm.supplierAccountName
         this.payForm.payDate = moment(new Date()).format('YYYY-MM-DD')
         this.payForm.payVouchers = []
+        this.getBankAccount()
+        this.targetObj = {
+            selectName: '',
+            selectCode: ''
+        }
+        this.payForm.payeeBankName = ''
+    }
+
+    async getBankAccount () {
+        this.payeeAccountList = []
+        const { data } = await Api.findPayeeAccount()
+        data.map(val => {
+            this.payeeAccountList = this.payeeAccountList.concat(val.payeeAccountList)
+        })
+        console.log('aa: ', this.payeeAccountList)
+
+        this.payeeAccountList.map(val => {
+            // val.allName = val.payeeBankName + '(' + val.payeeBankAccount + ')'
+            val.value = val.payeeBankName
+            val.selectCode = val.payeeBankAccount
+        })
+    }
+
+    handleAccountRadio (val) {
+        const bankInfo = this.payeeAccountList.filter(item => item.id == val)[0]
+        this.bankForm.payPrincipal = bankInfo.payeeName
+        this.bankForm.payeeBankName = bankInfo.payeeBankName
+        this.bankForm.payeeBankAccount = bankInfo.payeeBankAccount
+    }
+
+    backFindparam (val) {
+        console.log('val: ', val.value.id)
+        if (val.value) {
+            const bankInfo = this.payeeAccountList.filter(item => item.id == val.value.id)[0]
+            this.bankForm.payPrincipal = bankInfo.payeeName
+            this.bankForm.payeeBankName = bankInfo.payeeBankName
+            this.bankForm.payeeBankAccount = bankInfo.payeeBankAccount
+            this.targetObj = {
+                selectName: bankInfo.payeeBankName,
+                selectCode: bankInfo.payeeBankAccount
+            }
+        } else {
+            this.bankForm.payPrincipal = ''
+            this.bankForm.payeeBankName = ''
+            this.bankForm.payeeBankAccount = ''
+        }
+    }
+
+    backPayparam (val) {
+        console.log('val: ', val.value.id)
+        if (val.value) {
+            const bankInfo = this.payeeAccountList.filter(item => item.id == val.value.id)[0]
+            this.payForm.payPrincipal = bankInfo.payeeName
+            this.payForm.payeeBankName = bankInfo.payeeBankName
+            this.payForm.payeeBankAccount = bankInfo.payeeBankAccount
+            this.targetObj = {
+                selectName: bankInfo.payeeBankName,
+                selectCode: bankInfo.payeeBankAccount
+            }
+        } else {
+            this.payForm.payPrincipal = ''
+            this.payForm.payeeBankName = ''
+            this.payForm.payeeBankAccount = ''
+        }
+    }
+
+    handlePayRadio (val) {
+        const bankInfo = this.payeeAccountList.filter(item => item.id == val)[0]
+        this.payForm.payPrincipal = bankInfo.payeeName
+        this.payForm.payeeBankName = bankInfo.payeeBankName
+        this.payForm.payeeBankAccount = bankInfo.payeeBankAccount
 
         this.num = 0
     }
@@ -922,3 +1042,7 @@ export default class Advancelist extends Vue {
     }
 }
 </script>
+
+<style lang='scss' scoped>
+@import "./css/css.scss";
+</style>

@@ -54,6 +54,8 @@ export const updatePayOnline :(params)=>AxiosPromise = (params) => {
     return axios.patch(`/project/api/prepayments/boss/pay-online/${params}`)
 }
 
+// 帅选 付款账号
+export const findPayeeAccount = () => axios.get('/project/api/bank/receipt/payee-account/list')
 // OCR
 
 export const bankOcrReceipt :(params)=>AxiosPromise<SupplierResponse> = (params) => {

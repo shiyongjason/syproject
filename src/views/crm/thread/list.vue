@@ -310,7 +310,7 @@ import detail from './detail.vue'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import { ThreadQeuryModel } from './const/model'
 import { THREAD_ORIGIN, DEVICE_CATEGORY, MARITAL_STATUS, EMPLOYED_AGE, CUSTOM_SOURCE, PROJECT_TYPE } from './const/index'
-import { Clue, RespBossCluePage } from '@/interface/hbp-member'
+import { RespBossCluePage } from '@/interface/hbp-member'
 import { THREAD_DISTRIBUTOR } from '@/utils/auth_const'
 import { Phone } from '@/utils/rules'
 import { newCache } from '@/utils/index'
@@ -462,7 +462,7 @@ export default class Thread extends Vue {
     tableData: RespBossCluePage[] = []
     currentThread: RespBossCluePage = null
     canDispatchList: string[] = []
-    threadDetail: Clue = {}
+    threadDetail: any = {}
     distributorVisible: boolean = false
     threadVisible: boolean = false
     isloading: boolean = false
@@ -474,13 +474,13 @@ export default class Thread extends Vue {
         clueId: [],
         customerDeptName: ''
     }
-    threadForm: Clue = {
+    threadForm: any = {
         provinceId: '',
         cityId: '',
         countryId: ''
     }
-    selectThread: Clue[] = []
-    numberSelectThread: { [name: number]: Clue[] } = {}
+    selectThread: any = []
+    numberSelectThread: { [name: number]: any } = {}
     timeout = null
     stateN: string = ''
     get authOptions () {
@@ -516,7 +516,7 @@ export default class Thread extends Vue {
     }
 
     get getCityString () {
-        return (row: Clue) => {
+        return (row: any) => {
             if (row.provinceName && row.cityName) {
                 return row.provinceName + row.cityName
             }
@@ -654,7 +654,7 @@ export default class Thread extends Vue {
         this.threadForm.customerDeptName = item.deptName
     }
 
-    dialogCheckChange (item: Clue[]) {
+    dialogCheckChange (item: any) {
         const number = this.queryParams.pageNumber
         if (!this.isPatgaion || this.selectThread.length === 0) {
             this.numberSelectThread = {
