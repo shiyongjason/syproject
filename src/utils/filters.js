@@ -43,7 +43,7 @@ const moneyFormat = function (val, decimalPlaces = 2, hasPad = true) {
         }
         // val参数可能是字符串，字符串不能调用toFixed，所以之前做了转数字的处理
         val = hasPad ? (val * 1).toFixed(decimalPlaces).toString() : val.toString()
-        return val.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        return money(val)
     } else if (val === 0) {
         // 这里防止decimalPlaces传递成字符串，做了兼容处理
         return hasPad ? '0.'.padEnd(decimalPlaces - 0 + 2, 0) : 0

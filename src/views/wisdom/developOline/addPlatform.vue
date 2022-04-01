@@ -44,7 +44,7 @@ export default {
     name: 'addplatform',
     data () {
         return {
-            userDate: JSON.parse(sessionStorage.getItem('user_Data')),
+            userDate: JSON.parse(localStorage.getItem('user_Data')),
             active: 1,
             activeName: '1',
             type: this.$route.query.type,
