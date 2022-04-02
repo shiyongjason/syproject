@@ -430,7 +430,7 @@ export default class UpstreamPaymentManagement extends Vue {
         supplierBankNo: ''
 
     }
-      payeeAccountList:any[]=[]
+    payeeAccountList:any[]=[]
     num:number = 0
     totalAmount:number = 0
     status:number = null
@@ -754,20 +754,20 @@ export default class UpstreamPaymentManagement extends Vue {
         console.log('aa: ', this.payeeAccountList)
         this.payeeAccountList.map(val => {
             // val.allName = val.payeeBankName + '(' + val.payeeBankAccount + ')'
-            val.value = val.payeeBankName
+            val.value = val.payeeBankName + '(' + val.payeeBankAccount + ')'
             val.selectCode = val.payeeBankAccount
         })
     }
 
     backPayparam (val) {
-        console.log('val: ', val.value.id)
+        console.log('val: ', val)
         if (val.value) {
             const bankInfo = this.payeeAccountList.filter(item => item.id == val.value.id)[0]
             this.dialogFormData.payPrincipal = bankInfo.payeeName
             this.dialogFormData.payeeBankName = bankInfo.payeeBankName
             this.dialogFormData.payeeBankAccount = bankInfo.payeeBankAccount
             this.targetObj = {
-                selectName: bankInfo.payeeBankName,
+                selectName: bankInfo.payeeBankName + '(' + bankInfo.payeeBankAccount + ')',
                 selectCode: bankInfo.payeeBankAccount
             }
         } else {

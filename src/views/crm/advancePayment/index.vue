@@ -968,7 +968,7 @@ export default class Advancelist extends Vue {
 
         this.payeeAccountList.map(val => {
             // val.allName = val.payeeBankName + '(' + val.payeeBankAccount + ')'
-            val.value = val.payeeBankName
+            val.value = val.payeeBankName + '(' + val.payeeBankAccount + ')'
             val.selectCode = val.payeeBankAccount
         })
     }
@@ -988,7 +988,7 @@ export default class Advancelist extends Vue {
             this.bankForm.payeeBankName = bankInfo.payeeBankName
             this.bankForm.payeeBankAccount = bankInfo.payeeBankAccount
             this.targetObj = {
-                selectName: bankInfo.payeeBankName,
+                selectName: bankInfo.payeeBankName + '(' + bankInfo.payeeBankAccount + ')',
                 selectCode: bankInfo.payeeBankAccount
             }
         } else {
