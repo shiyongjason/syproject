@@ -1,3 +1,5 @@
+import { map } from 'lodash'
+
 // 项目类型key值
 export const PROJECT_TYPE_KEY = {
     // 氟机空调集控系统
@@ -53,10 +55,19 @@ export const DEVICE_UPGRADE_IS_COMMON_KEY = {
 
 // 品牌名称
 export const BRAND_OPTIONS = [
-    { label: '海康', value: 'hikVision' }
+    {
+        label: '海康',
+        value: 'hikVision',
+        config: '{"key": "", "secret": "", "brandName": "海康", "accessAddress": ""}'
+    },
+    {
+        label: '正泰',
+        value: 'techsel',
+        config: '{"loginName": "", "passward": "", "domain": "", "accessAddress": ""}'
+    }
 ]
 
-// 子系统类型
-export const SUB_SYSTEM_TYPE_OPTIONS = [
-    { label: '视频监控', value: 'video' }
-]
+export const SUB_SYSTEM_TYPE_OPTIONS = new Map([
+    ['hikVision', [{ label: '视频监控', value: 'video' }]],
+    ['techsel', [{ label: '综合能源管理', value: 'management' }]]
+])

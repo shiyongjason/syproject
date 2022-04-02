@@ -337,6 +337,9 @@
                             </el-checkbox-group>
                         </el-col>
                     </el-row>
+                    <el-checkbox-group v-model="centralVentilationOption">
+                        <el-checkbox label="65">新风系统</el-checkbox>
+                    </el-checkbox-group>
                     <!-- <el-checkbox v-for="[key, value] of projectTypeOptions" :key="key" :label="key">
                             {{value}}
                             <el-form-item prop="feeType" v-if="showFeeType && key === projectTypeKey.BILLING_SYSTEM" class="inline-form-item">
@@ -372,7 +375,7 @@
                     <el-row :gutter="5" class="mb20">
                         <el-col :span="7">
                             <el-form-item label="品牌名称：" :prop="`thirdSystemConfigs[${index}].brandName`" :rules="rules.brandName" label-width="120px">
-                                <el-select v-model="item.brandName" placeholder="输入品牌名称" clearable>
+                                <el-select v-model="item.brandName" placeholder="输入品牌名称" @change="onChangeBrand(item,index)" clearable>
                                     <el-option v-for="item in brandOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
@@ -380,7 +383,7 @@
                         <el-col :span="7">
                             <el-form-item label="子系统类型：" :prop="`thirdSystemConfigs[${index}].subSystemType`" :rules="rules.subSystemType(item)" label-width="120px">
                                 <el-select v-model="item.subSystemType" placeholder="输入子系统类型" clearable>
-                                    <el-option v-for="item in subSystemTypeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                    <el-option v-for="item in subSystemTypeOptions.get(item.brandName)" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -423,6 +426,7 @@ import { getChiness } from '../../hmall/membership/api'
 import * as consts from './const.js'
 import { isNumber } from 'highcharts'
 import { newCache } from '@/utils/index'
+import { deepCopy } from '@/utils/utils'
 
 const _form = {
     projectName: '',
@@ -619,6 +623,7 @@ export default {
             energyConservationOption: [],
             isShowZTPlatform: false,
             ZTPlatformOption: [],
+            centralVentilationOption: [],
             brandOptions: consts.BRAND_OPTIONS,
             subSystemTypeOptions: consts.SUB_SYSTEM_TYPE_OPTIONS
         }
@@ -689,6 +694,18 @@ export default {
             getClouldControlProjectDetail: 'getClouldControlProjectDetail',
             getDeviceTypes: 'getClouldControlProjectDevicesTypes'
         }),
+        onChangeBrand (row, index) {
+            this.$set(this.form.thirdSystemConfigs[index], 'subSystemType', '')
+            if (row.brandName) {
+                consts.BRAND_OPTIONS.forEach((item) => {
+                    if (item.value == row.brandName) {
+                        this.$set(this.form.thirdSystemConfigs[index], 'config', item.config)
+                    }
+                })
+            } else {
+                this.$set(this.form.thirdSystemConfigs[index], 'config', '')
+            }
+        },
         uploadSuccess (val) {
             this.form.companyLogo = val.imageUrl
         },
@@ -889,17 +906,23 @@ export default {
             this.energyConservationOption = []
             this.isShowZTPlatform = false
             this.ZTPlatformOption = []
+            this.centralVentilationOption = []
         },
         async editProject (id) {
             await this.getClouldControlProjectDetail({ id: id })
             this.form = {
                 ...this.clouldControlProjectDetail,
-                thirdSystemConfigs: this.clouldControlProjectDetail.thirdSystemConfigs ? this.clouldControlProjectDetail.thirdSystemConfigs.map(item => {
+                thirdSystemConfigs: this.clouldControlProjectDetail.thirdSystemConfigs ? deepCopy(this.clouldControlProjectDetail.thirdSystemConfigs).map(item => {
                     item.brandName = item.key.split('-')[0]
                     item.subSystemType = item.key.split('-')[1]
                     return item
                 }) : []
             }
+            // this.clouldControlProjectDetail.thirdSystemConfigs.forEach((item, index) => {
+            //     this.onChangeBrand(item.key.split('-')[0], index)
+            //     this.onChangeSubSystem(item.key.split('-')[1])
+            // })
+            //
             // console.log(this.form.projectType)
             this.airConditioningOption = this.form.projectType.filter(item => item == 1 || item == 2 || item == 12)
             this.isShowAirConditioning = this.airConditioningOption.length > 0
@@ -950,6 +973,8 @@ export default {
             this.ZTPlatformOption = this.form.projectType.filter(item => item == 130)
             this.isShowZTPlatform = this.ZTPlatformOption > 0
 
+            this.centralVentilationOption = this.form.projectType.filter(item => item == 65)
+
             this.addProject = true
         },
         addThirdSystemConfig () {
@@ -976,7 +1001,8 @@ export default {
                 this.scenePanelRadioOption,
                 ...this.scenePanelOption,
                 ...this.energyConservationOption,
-                ...this.ZTPlatformOption
+                ...this.ZTPlatformOption,
+                ...this.centralVentilationOption
             ].filter(item => !(item == '' || !isNumber(Number(item))))
             console.log(this.form.thirdSystemConfigs)
             this.form.thirdSystemConfigs = this.form.thirdSystemConfigs.map(item => {
