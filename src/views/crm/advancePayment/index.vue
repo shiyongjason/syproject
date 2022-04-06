@@ -1006,7 +1006,7 @@ export default class Advancelist extends Vue {
             this.payForm.payeeBankName = bankInfo.payeeBankName
             this.payForm.payeeBankAccount = bankInfo.payeeBankAccount
             this.targetObj = {
-                selectName: bankInfo.payeeBankName,
+                selectName: bankInfo.payeeBankName + '(' + bankInfo.payeeBankAccount + ')',
                 selectCode: bankInfo.payeeBankAccount
             }
         } else {
