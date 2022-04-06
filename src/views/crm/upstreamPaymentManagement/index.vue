@@ -785,7 +785,7 @@ export default class UpstreamPaymentManagement extends Vue {
             this.bankForm.payeeBankName = bankInfo.payeeBankName
             this.bankForm.payeeBankAccount = bankInfo.payeeBankAccount
             this.targetObj = {
-                selectName: bankInfo.payeeBankName,
+                selectName: bankInfo.payeeBankName + '(' + bankInfo.payeeBankAccount + ')',
                 selectCode: bankInfo.payeeBankAccount
             }
         } else {
